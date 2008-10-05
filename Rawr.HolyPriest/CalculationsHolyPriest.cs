@@ -49,6 +49,7 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
+                    "Basic Stats:Spell Power",
 					"Basic Stats:Healing",
 					"Basic Stats:Mp5",
 					"Basic Stats:Regen InFSR",
@@ -58,15 +59,16 @@ namespace Rawr.HolyPriest
                     "Basic Stats:Global Cooldown",
                     "Spells:Renew",
                     "Spells:Greater Heal",
+                    "Spells:Heal",
                     "Spells:Flash Heal",
 				    "Spells:Binding Heal",
                     "Spells:Prayer of Mending",
                     "Spells:PoH",
+				    "Spells:Holy Nova",
 				    "Spells:CoH",
                     "Spells:Power Word Shield",
-                    "Spells:Heal",
-				    "Spells:Holy Nova",
                     "Spells:Lightwell",
+                    "Spells:Penance",
                     "Spells:Gift of the Naaru"
 				};
                 return _characterDisplayCalculationLabels;
@@ -142,7 +144,7 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
                 (calculatedStats.BasicStats.CritRating / 22.08) + 1.24 + character.PriestTalents.HolySpecialization, 2);
 
-            calculatedStats.BasicStats.SpellPower += calculatedStats.BasicStats.Spirit * character.PriestTalents.SpiritualGuidance * 0.05f / 1.88f;
+            calculatedStats.BasicStats.SpellPower += calculatedStats.BasicStats.Spirit * character.PriestTalents.SpiritualGuidance * 0.05f;
             
             calculatedStats.HealPoints = calculatedStats.BasicStats.SpellPower * 1.88f
                 + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min * 15f / 120f)
@@ -271,7 +273,7 @@ namespace Rawr.HolyPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)) / 1.88f;
+			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
 
@@ -307,7 +309,8 @@ namespace Rawr.HolyPriest
                                                 CircleOfHealing.GetAllRanks(p.BasicStats, character, 5),
                                                 HolyNova.GetAllRanks(p.BasicStats, character, 3),
                                                 HolyNova.GetAllRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 5)
+                                                HolyNova.GetAllRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -347,7 +350,8 @@ namespace Rawr.HolyPriest
                                                 CircleOfHealing.GetAllRanks(p.BasicStats, character, 5),
                                                 HolyNova.GetAllRanks(p.BasicStats, character, 3),
                                                 HolyNova.GetAllRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 5)
+                                                HolyNova.GetAllRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -387,7 +391,8 @@ namespace Rawr.HolyPriest
                                                 CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
                                                 HolyNova.GetAllCommonRanks(p.BasicStats, character, 3),
                                                 HolyNova.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5)
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -427,7 +432,8 @@ namespace Rawr.HolyPriest
                                                 CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
                                                 HolyNova.GetAllCommonRanks(p.BasicStats, character, 3),
                                                 HolyNova.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5)
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)

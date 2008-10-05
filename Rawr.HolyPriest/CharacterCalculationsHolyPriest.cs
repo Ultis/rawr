@@ -67,6 +67,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
+            dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
             dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
             dictValues.Add("Regen InFSR", RegenInFSR.ToString("0"));
@@ -94,11 +95,15 @@ namespace Rawr.HolyPriest
             else
                 dictValues.Add("CoH", "- *No required talents");
 
-
             if (character.PriestTalents.Lightwell > 0)
                 dictValues.Add("Lightwell", new Lightwell(BasicStats, character).ToString());
             else
                 dictValues.Add("Lightwell", "- *No required talents");
+
+            if (character.PriestTalents.Penance > 0)
+                dictValues.Add("Penance", new Penance(BasicStats, character).ToString());
+            else
+                dictValues.Add("Penance", "- *No required talents");
             
             if(Race == Character.CharacterRace.Draenei)
                 dictValues.Add("Gift of the Naaru", new GiftOfTheNaaru(BasicStats, character).ToString());

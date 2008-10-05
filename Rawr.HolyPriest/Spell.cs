@@ -28,7 +28,7 @@ namespace Rawr.HolyPriest
             BaseMana[77] = 0;
             BaseMana[78] = 0;
             BaseMana[79] = 0;
-            BaseMana[80] = 0;
+            BaseMana[80] = 3863;
         }
 
         public BaseSpell(int rank, float minHeal, float maxHeal, int manaCostBase, float castTime, float rankCoef, float hotDuration)
@@ -231,7 +231,7 @@ namespace Rawr.HolyPriest
             };
 
 		public FlashHeal(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Flash Heal", 0.4286f, Color.YellowGreen)
+            : base(stats, baseSpellTable[rank - 1], "Flash Heal", 1.5f / 3.5f, Color.YellowGreen)
         {
             Calculate(stats, character, rank);
         }
@@ -283,7 +283,7 @@ namespace Rawr.HolyPriest
             };
 
 		public Heal(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Heal", 0.8571f, Color.DarkGreen)
+            : base(stats, baseSpellTable[rank - 1], "Heal", 3.0f / 3.5f, Color.DarkGreen)
         {
             Calculate(stats, character, rank);
         }
@@ -338,7 +338,7 @@ namespace Rawr.HolyPriest
             };
 
 		public GreaterHeal(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Greater Heal", 0.8571f, Color.DarkSeaGreen)
+            : base(stats, baseSpellTable[rank - 1], "Greater Heal", 3f / 3.5f, Color.DarkSeaGreen)
         {
             Calculate(stats, character, rank);
         }
@@ -422,7 +422,7 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfHealing(Stats stats, Character character, int rank, int targets)
-            : base(stats, baseSpellTable[rank - 1], "Prayer of Healing (" + targets + " targets)", 0.2857f, targetColors[targets - 1])
+            : base(stats, baseSpellTable[rank - 1], "Prayer of Healing (" + targets + " targets)", 3f / 3.5f * 0.5f, targetColors[targets - 1])
         {
             Targets = targets;
             Calculate(stats, character, rank);
@@ -522,7 +522,7 @@ namespace Rawr.HolyPriest
         }
 
         public CircleOfHealing(Stats stats, Character character, int rank, int targets)
-            : base(stats, baseSpellTable[rank - 1], "Circle of Healing (" + targets + " targets)", 0.2143f, targetColors[targets - 1])
+            : base(stats, baseSpellTable[rank - 1], "Circle of Healing (" + targets + " targets)", 1.5f / 3.5f * 0.5f, targetColors[targets - 1])
         {
             Targets = targets;
             Calculate(stats, character, rank);
@@ -716,7 +716,7 @@ namespace Rawr.HolyPriest
         }
 
         public BindingHeal(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Binding Heal", 0.4286f, Color.Purple)
+            : base(stats, baseSpellTable[rank - 1], "Binding Heal", 1.5f / 3.5f, Color.Purple)
         {
             Calculate(stats, character, rank);
         }
@@ -805,7 +805,7 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfMending(Stats stats, Character character, int rank, int targets)
-            : base(stats, baseSpellTable[rank - 1], "Prayer of Mending (" + targets + " targets)", 0.4286f, targetColors[targets - 1])
+            : base(stats, baseSpellTable[rank - 1], "Prayer of Mending (" + targets + " targets)", 2.3f / 3.5f, targetColors[targets - 1])
         {
             Targets = targets;
             Calculate(stats, character, rank);
@@ -889,7 +889,7 @@ namespace Rawr.HolyPriest
         }
 
         public PowerWordShield(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Power Word Shield", 0.3f, Color.SlateGray)
+            : base(stats, baseSpellTable[rank - 1], "Power Word Shield", 1.5f / 3.5f, Color.SlateGray)
         {
             Calculate(stats, character, rank);
         }
@@ -1003,6 +1003,76 @@ namespace Rawr.HolyPriest
         }
     }
 
+    public class Penance : Spell
+    {
+        private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
+        /*                Rank MinHeal MaxHeal ManaCost CastTime RankCoef    */
+            new BaseSpell(1,    670,    756,     16,    2f,   0f),
+            new BaseSpell(2,    805,    909,     16,    2f,   0f)
+            };
+
+        public Penance(Stats stats, Character character, int rank)
+            : base(stats, baseSpellTable[rank - 1], "Penance", 3f / 3.5f, Color.Gray)
+        {
+            Calculate(stats, character, rank);
+        }
+
+        public Penance(Stats stats, Character character)
+            : this(stats, character, baseSpellTable.Count)
+        { }
+
+        public static List<Spell> GetAllRanks(Stats stats, Character character)
+        {
+            List<Spell> list = new List<Spell>(baseSpellTable.Count);
+            for (int i = 1; i <= baseSpellTable.Count; i++)
+                list.Add(new Penance(stats, character, i));
+
+            return list;
+        }
+
+        public static List<Spell> GetAllCommonRanks(Stats stats, Character character)
+        {
+            return new List<Spell> { new Penance(stats, character, 2) };
+        }
+
+        protected void Calculate(Stats stats, Character character, int rank)
+        {
+            Rank = rank;
+            MinHeal = (baseSpellTable[Rank - 1].MinHeal +
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) * HealingCoef)
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+
+            MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
+                stats.SpellPower * 1.88f * (1 - baseSpellTable[Rank - 1].RankCoef) * HealingCoef)
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+
+            ManaCost = (int)Math.Round(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]
+                * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
+
+            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.SpellHasteRating / 15.7f / 100f);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *HpS: {1}\r\nHpM: {2}\r\nMin Tick: {3}\r\nMax Tick: {4}\r\nAvg Tick: {5}\r\nMax Crit Tick: {6}\r\nAvg Crit Tick: {7}\r\nMin Heal: {8}\r\nMax Heal: {9}\r\nAvg Crit: {10}\r\nMax Crit: {11}\r\nCast: {12}\r\nCost: {13}",
+                AvgHeal.ToString("0"),
+                HpS.ToString("0.00"),
+                HpM.ToString("0.00"),
+                (MinHeal / 3).ToString("0.00"),
+                (MaxHeal / 3).ToString("0.00"),
+                (AvgHeal / 3).ToString("0.00"),
+                (MaxCrit / 3).ToString("0.00"),
+                (AvgCrit / 3).ToString("0.00"),
+                AvgHeal.ToString("0.00"),
+                MinHeal.ToString("0"),
+                MaxHeal.ToString("0"),
+                AvgCrit.ToString("0"),
+                MaxCrit.ToString("0"),
+                CastTime.ToString("0.00"),
+                ManaCost.ToString("0"));
+        }
+    }
+
     public class GiftOfTheNaaru : Spell
     {
         private static readonly List<BaseSpell> baseSpellTable = new List<BaseSpell>(){   
@@ -1014,7 +1084,7 @@ namespace Rawr.HolyPriest
             : this(stats, character, baseSpellTable.Count) { }
 
         public GiftOfTheNaaru(Stats stats, Character character, int rank)
-            : base(stats, baseSpellTable[rank - 1], "Gift of the Naaru", 1f, 15f, Color.Green)
+            : base(stats, baseSpellTable[rank - 1], "Gift of the Naaru", 15f / 15f, 15f, Color.Green)
         {
             Calculate(stats, character, rank);
         }
