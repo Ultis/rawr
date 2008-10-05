@@ -165,10 +165,13 @@ namespace Rawr
 			code.AppendFormat("public {0}() {{ }}\r\n", className);
 			code.AppendFormat("public {0}(string talents)\r\n", className);
 			code.Append("{\r\n");
+			code.Append("if (talents.Length == _data.Length)\r\n");
+			code.Append("{\r\n");
 			code.Append("List<int> data = new List<int>();\r\n");
 			code.Append("foreach (Char digit in talents)\r\n");
 			code.Append("data.Add(int.Parse(digit.ToString()));\r\n");
-            code.Append("data.CopyTo(0, _data, 0, Math.Min(_data.Length, data.Count));\r\n");
+			code.Append("data.CopyTo(_data);\r\n");
+			code.Append("}\r\n");
 			code.Append("}\r\n");
 			//code.AppendFormat("\r\npublic override string ToString()\r\n", className);
 			//code.Append("{\r\n");

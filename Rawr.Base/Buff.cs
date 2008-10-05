@@ -964,7 +964,7 @@ namespace Rawr
 			{
 				Name = "Improved Judgement of the Crusade",
 				Category = BuffCategory.Debuffs,
-				Stats = new Stats() { Crit = 3, SpellCrit = 3 }
+				Stats = new Stats() { Crit = 0.03f, SpellCrit = 0.03f }
 			});
             defaultBuffs.Add(new Buff()
             {
