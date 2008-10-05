@@ -98,7 +98,8 @@ namespace Rawr
 			get { return _talents; }
 			set
 			{
-				_talents = value;
+                _talents = value;
+                if (_character != null) _character.CurrentTalents = value;
 				UpdateTrees();
 			}
 		}
