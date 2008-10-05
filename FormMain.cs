@@ -30,9 +30,9 @@ namespace Rawr
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr (Beta {0})";
+		private System.Threading.Timer _timerCheckForUpdates;
 
         private FormRelevantItemRefinement _itemRefinement;
-
         public FormRelevantItemRefinement ItemRefinement
         {
             get
@@ -96,6 +96,29 @@ namespace Rawr
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+		}
+
+		private bool _checkForUpdatesEnabled = true;
+		void _timerCheckForUpdates_Callback(object data)
+		{
+			if (_checkForUpdatesEnabled)
+			{
+				string latestVersion = new Rawr.WebRequestWrapper().GetLatestVersionString();
+				if (!string.IsNullOrEmpty(latestVersion))
+				{
+					string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+					if (currentVersion != latestVersion)
+					{
+						_checkForUpdatesEnabled = false;
+						DialogResult result = MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Would you like to open goto the Rawr site to download the new version?",
+							latestVersion), "New Version Released!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+						if (result == DialogResult.Yes)
+						{
+							Help.ShowHelp(null, "http://www.codeplex.com/Rawr");
+						}
+					}
+				}
+			}
 		}
 
         void Calculations_ModelChanging(object sender, EventArgs e)
@@ -471,6 +494,8 @@ namespace Rawr
 			Character.ToString();//Load the saved character
 
 			StatusMessaging.Ready = true;
+			_timerCheckForUpdates = new System.Threading.Timer(new System.Threading.TimerCallback(_timerCheckForUpdates_Callback));
+			_timerCheckForUpdates.Change(3000, 1000 * 60 * 60 * 8); //Check for updates 3 sec after the form loads, and then again every 8 hours
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)

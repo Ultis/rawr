@@ -238,6 +238,15 @@ namespace Rawr
 			_domains.Add(Character.CharacterRegion.CN, "cn");
 		}
 
+		public string GetLatestVersionString()
+		{
+			string html = DownloadText("http://www.codeplex.com/Rawr");
+			if (!html.Contains("{Current Version: ")) return string.Empty;
+			html = html.Substring(html.IndexOf("{Current Version: ") + "{Current Version: ".Length);
+			if (!html.Contains("}")) return string.Empty;
+			html = html.Substring(0, html.IndexOf("}"));
+			return html;
+		}
 
 		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
 		{
