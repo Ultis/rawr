@@ -373,35 +373,34 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
 
             // Healing enchants (add spell damage too)
-			defaultEnchants.Add(new Enchant(3001, "Glyph of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 35 / 1.88f, Mp5 = 7 }));
+			defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
 
-			defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 33 / 1.88f, Mp5 = 4 }));
-			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 22 / 1.88f, Mp5 = 6 }));
-			defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower =29 / 1.88f }));
+            defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
+			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
+			defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
-			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 31 / 1.88f, Mp5 = 5 }));
-			defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 33 / 1.88f }));
+			defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
 
-			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 35 / 1.88f }));
+			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
             defaultEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 10 }));
 
-			defaultEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 66 / 1.88f, Stamina = 20 }));
-			defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 46 / 1.88f, Stamina = 15 }));
+            defaultEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
+			defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
 
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Chest, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Feet, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Legs, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Hands, new Stats() { Mp5 = 3 }));
 
-			defaultEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellPower = 20 / 1.88f }));
+			defaultEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellPower = 12 }));
 
-			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { SpellPower = 81 / 1.88f }));
+			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { SpellPower = 40 }));
 
             defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 12 }));
 
-			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 30 / 1.88f }));
+			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 16 }));
 
             defaultEnchants.Add(new Enchant(2648, "Steelweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 12 }));
             defaultEnchants.Add(new Enchant(3004, "Glyph of the Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 18, Resilience = 20 }));
@@ -453,8 +452,8 @@ namespace Rawr
 			//Sapphiron Enchants
 			defaultEnchants.Add(new Enchant(2721, "Power of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, SpellPower = 15 }));
 			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
-			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 31 / 1.88f, Mp5 = 5 }));
-			defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
+			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
+            defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
 
 
             #region Enchants to Delete

@@ -659,7 +659,7 @@ namespace Rawr
                         // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
                         else if (spellDesc.StartsWith("Increases healing done by up to "))
                         {
-							stats.SpellPower += int.Parse(spellDesc.Split(' ')[6]) / 1.88f;
+							stats.SpellPower += (float)Math.Round(int.Parse(spellDesc.Split(' ')[6]) / 1.88f);
                             spellDesc = spellDesc.Substring(spellDesc.IndexOf("damage done by up to "));
                             spellDesc = spellDesc.Substring("damage done by up to ".Length);
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" for all magical spells and effects."));
@@ -1065,11 +1065,17 @@ namespace Rawr
 								//case "Healing and +2 Spell Damage":
 								//case "Healing and +1 Spell Damage":
 									if (socketBonusValue == 0)
-										sockets.Stats.SpellPower = int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f;
+										sockets.Stats.SpellPower = (float)Math.Round(int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f);
 									else
-										sockets.Stats.SpellPower = socketBonusValue / 1.88f;
+										sockets.Stats.SpellPower = (float)Math.Round(socketBonusValue / 1.88f);
 									break;
-								case "Crit Rating":
+                                case "Spell Damage":
+                                    // Only update Spell Damage if its not already set (Incase its an old heal bonus)
+                                    if (sockets.Stats.SpellPower == 0)
+                                        sockets.Stats.SpellPower = socketBonusValue;
+                                    //sockets.Stats.Healing = socketBonusValue;
+                                    break;
+                                case "Crit Rating":
 								case "Crit Strike Rating":
 								case "Critical Rating":
 								case "Critical Strike Rating":
@@ -1084,10 +1090,6 @@ namespace Rawr
 								case "Resilience":
 								case "Resilience Rating":
 									sockets.Stats.Resilience = socketBonusValue;
-									break;
-								case "Spell Damage":
-									sockets.Stats.SpellPower = socketBonusValue;
-									//sockets.Stats.Healing = socketBonusValue;
 									break;
 								//case "Spell Damage and Healing":
 								//    sockets.Stats.SpellDamageRating = socketBonusValue;
@@ -1205,21 +1207,6 @@ namespace Rawr
                                     case "Defense Rating":
                                         stats.DefenseRating = gemBonusValue;
                                         break;
-									case "Healing":
-										stats.SpellPower = gemBonusValue / 1.88f;
-										break;
-									//case "Healing +4 Spell Damage":
-									//    stats.Healing = gemBonusValue;
-									//    stats.SpellDamageRating = 4;
-									//    break;
-									//case "Healing +3 Spell Damage":
-									//    stats.Healing = gemBonusValue;
-									//    stats.SpellDamageRating = 3;
-									//    break;
-									//case "Healing +2 Spell Damage":
-									//    stats.Healing = gemBonusValue;
-									//    stats.SpellDamageRating = 2;
-									//    break;
                                     case "Hit Rating":
                                         stats.HitRating = gemBonusValue;
                                         break;
@@ -1258,12 +1245,15 @@ namespace Rawr
                                         stats.HasteRating = gemBonusValue;
                                         break;
                                     case "Spell Damage":
+                                        // Ignore spell damage from gem if Healing has already been applied, as it might be a "9 Healing 3 Spell" gem. 
+                                        if (stats.SpellPower == 0)
+                                            stats.SpellPower = gemBonusValue;
+                                        break;
                                     case "Spell Damage and Healing":
                                         stats.SpellPower = gemBonusValue;
-                                        // Because Spell Damage is parsed on Teardrop (Red Gem), but not on Runed (Red Gem)
-                                        // We need to add Healing from Spell Damage if and only if we have not already parsed a healing bonus
-                                        if (stats.SpellPower == 0)
-											stats.SpellPower = gemBonusValue / 1.88f;
+                                        break;
+                                    case "Healing":
+                                        stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
                                         break;
                                     case "Spell Crit":
                                     case "Spell Crit Rating":

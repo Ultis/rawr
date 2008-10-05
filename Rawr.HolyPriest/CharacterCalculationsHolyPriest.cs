@@ -68,7 +68,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
             dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
-            dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
+            //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
             dictValues.Add("Regen InFSR", RegenInFSR.ToString("0"));
             dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
@@ -83,7 +83,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());
             dictValues.Add("Greater Heal", new GreaterHeal(BasicStats, character).ToString());
-            dictValues.Add("Heal", new Heal(BasicStats, character).ToString());
+            //dictValues.Add("Heal", new Heal(BasicStats, character).ToString());
             dictValues.Add("PoH", new PrayerOfHealing(BasicStats, character).ToString());
             dictValues.Add("Binding Heal", new BindingHeal(BasicStats, character).ToString());
             dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, character).ToString());
