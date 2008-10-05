@@ -31,16 +31,15 @@ namespace Rawr.Healadin
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
-					"Basic Stats:Spirit",
-					"Basic Stats:Healing",
+					"Basic Stats:Spell Power",
 					"Basic Stats:Mp5",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Haste",
 					"Cycle Stats:Total Healed",
+					"Cycle Stats:Total Mana",
 					"Cycle Stats:Average Hps",
 					"Cycle Stats:Average Hpm",
 					"Cycle Stats:Holy Light Time",
-					"Cycle Stats:Holy Light Healing",
                     "Spell Stats:Flash of Light",
                     "Spell Stats:Holy Light",
                     "Spell Stats:Holy Shock"
@@ -123,11 +122,9 @@ namespace Rawr.Healadin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            //_cachedCharacter = character;
             Stats stats = GetCharacterStats(character, additionalItem);
-            CharacterCalculationsHealadin calculatedStats = new CharacterCalculationsHealadin();
-            //CharacterCalculationsHealadin oldStats = _cachedCharacterStatsWithSlotEmpty as CharacterCalculationsHealadin;
-            calculatedStats.BasicStats = stats;
+            CharacterCalculationsHealadin calc = new CharacterCalculationsHealadin();
+            calc.BasicStats = stats;
             PaladinTalents talents = character.PaladinTalents;
 
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
@@ -136,53 +133,52 @@ namespace Rawr.Healadin
             float baseMana = 2672;
             float time = calcOpts.Length * 60;
 			float length = time * activity;
-            float totalMana = stats.Mana + (time * stats.Mp5 / 5) + (calcOpts.Spriest > 0 ? stats.Mana * .0025f * time : 0) +
+            calc.TotalMana = stats.Mana + (time * stats.Mp5 / 5) + (calcOpts.Spriest > 0 ? stats.Mana * .0025f * time : 0) +
                 ((1 + stats.BonusManaPotion) * calcOpts.ManaAmt) + calcOpts.Spiritual;
             if (stats.MementoProc > 0)
             {
-                totalMana += (float)Math.Ceiling(time / 60 - .25) * stats.MementoProc * 3;
+                calc.TotalMana += (float)Math.Ceiling(time / 60 - .25) * stats.MementoProc * 3;
             }
 
             #region Flash of Light
-            float fol_heal = (623f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier);
+            calc.FoLHeal = (623f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier);
             float fol_baseMana = baseMana * .07f;
-            float fol_crit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
-            float fol_avgMana = fol_baseMana * (1 - .6f * fol_crit);
-            float fol_avgHeal = fol_heal * (1f + .5f * fol_crit);
-            float fol_castTime = 1.5f / (1f + stats.SpellHaste);
-            float fol_hps = fol_avgHeal / fol_castTime;
-            float fol_mps = fol_avgMana / fol_castTime;
+            calc.FoLCrit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
+            float fol_avgMana = fol_baseMana * (1 - .6f * calc.FoLCrit);
+            float fol_avgHeal = calc.FoLHeal * (1f + .5f * calc.FoLCrit);
+            calc.FoLCastTime = 1.5f / (1f + stats.SpellHaste);
+            calc.FoLHPS = fol_avgHeal / calc.FoLCastTime;
+            float fol_mps = fol_avgMana / calc.FoLCastTime;
             #endregion
 
             #region Holy Light
-            float hl_heal = (2978f + (stats.HLHeal + stats.SpellPower) * 1.66f) * (1f + talents.HealingLight * .04f);
+            calc.HLHeal = (2978f + (stats.HLHeal + stats.SpellPower) * 1.66f) * (1f + talents.HealingLight * .04f);
             float hl_baseMana = baseMana * .29f;
-            float hl_crit = stats.SpellCrit + stats.HLCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
-            float hl_avgMana = hl_baseMana * (1 - .6f * hl_crit);
-            float hl_avgHeal = hl_heal * (1f + .5f * hl_crit);
-            float hl_castTime = 2f / (1f + stats.SpellHaste);
-            float hl_hps = hl_avgHeal / hl_castTime;
-            float hl_mps = hl_avgMana / hl_castTime;
+            calc.HLCrit = stats.SpellCrit + stats.HLCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
+            float hl_avgMana = hl_baseMana * (1 - .6f * calc.HLCrit);
+            float hl_avgHeal = calc.HLHeal * (1f + .5f * calc.HLCrit);
+            calc.HLCastTime = 2f / (1f + stats.SpellHaste);
+            calc.HLHPS = hl_avgHeal / calc.HLCastTime;
+            float hl_mps = hl_avgMana / calc.HLCastTime;
             #endregion
 
-            float hl_time = Math.Min(length, Math.Max(0, (totalMana - (length * fol_mps)) / (hl_mps - fol_mps)));
+            float hl_time = Math.Min(length, Math.Max(0, (calc.TotalMana - (length * fol_mps)) / (hl_mps - fol_mps)));
             float fol_time = length - hl_time;
             if (hl_time == 0)
             {
-                fol_time = Math.Min(length, totalMana / fol_mps);
+                fol_time = Math.Min(length, calc.TotalMana / fol_mps);
             }
-            calculatedStats.TimeHL = hl_time / length;
+            calc.HLTime = hl_time / length;
 
-            float fol_healing = fol_time * fol_mps;
-            float hl_healing = hl_time * hl_mps;
+            float fol_healing = fol_time * calc.FoLHPS;
+            float hl_healing = hl_time * calc.HLHPS;
 
-            calculatedStats.Healed += fol_healing + hl_healing;
-            calculatedStats.HLHPS = fol_hps;
-            calculatedStats.FoLHPS = hl_hps;
+            calc.TotalHealed = fol_healing + hl_healing;
 
-            calculatedStats.OverallPoints = calculatedStats.ThroughputPoints = calculatedStats.Healed / time;
+            calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
+            calc.OverallPoints = calc.ThroughputPoints = calc.AvgHPS = calc.TotalHealed / time;
 
-            return calculatedStats;
+            return calc;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -222,6 +218,7 @@ namespace Rawr.Healadin
             statsTotal.SpellHaste = statsTotal.HasteRating / 1570;
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
+
             return statsTotal;
         }
 
@@ -333,7 +330,7 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal) > 0;

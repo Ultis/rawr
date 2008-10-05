@@ -27,20 +27,22 @@ namespace Rawr.Healadin
             set { _subPoints[0] = value; }
         }
 
-  /*      public float LongevityPoints
-        {
-            get { return _subPoints[1]; }
-            set { _subPoints[1] = value; }
-        }*/
-
-
         public float AvgHPS { get; set; }
         public float AvgHPM { get; set; }
-        public float Healed { get; set; }
-        public float TimeHL { get; set; }
-        public float HealHL { get; set; }
+        public float TotalHealed { get; set; }
+        public float TotalMana { get; set; }
+
+        public float HLTime { get; set; }
+        public float HLHeal { get; set; }
         public float HLHPS { get; set; }
+        public float HLCrit { get; set; }
+        public float HLCastTime { get; set; }
+
+        public float FoLTime { get; set; }
+        public float FoLHeal { get; set; }
         public float FoLHPS { get; set; }
+        public float FoLCrit { get; set; }
+        public float FoLCastTime { get; set; }
 
         private Stats _basicStats;
         public Stats BasicStats
@@ -58,18 +60,17 @@ namespace Rawr.Healadin
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", BasicStats.Healing.ToString());
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
             dictValues.Add("Mp5", BasicStats.Mp5.ToString());
-            dictValues.Add("Spell Crit", "nyi");
-            dictValues.Add("Spell Haste", "nyi");
-            dictValues.Add("Total Healed", Math.Round(Healed).ToString());
+            dictValues.Add("Spell Crit", string.Format("{0}%", Math.Round(BasicStats.SpellCrit * 100, 2)));
+            dictValues.Add("Spell Haste", string.Format("{0}%", Math.Round(BasicStats.SpellHaste * 100, 2)));
+            dictValues.Add("Total Healed", Math.Round(TotalHealed).ToString());
+            dictValues.Add("Total Mana", Math.Round(TotalMana).ToString());
             dictValues.Add("Average Hps", Math.Round(AvgHPS).ToString());
             dictValues.Add("Average Hpm", Math.Round(AvgHPM, 2).ToString());
-            dictValues.Add("Holy Light Time", Math.Round(TimeHL * 100).ToString() + "%");
-            dictValues.Add("Holy Light Healing", Math.Round(HealHL * 100).ToString() + "%");
-            dictValues.Add("Flash of Light", "nyi");
-            dictValues.Add("Holy Light", "nyi");
+            dictValues.Add("Holy Light Time", Math.Round(HLTime * 100).ToString() + "%");
+            dictValues.Add("Flash of Light", string.Format("{0} hps", Math.Round(FoLHPS)));
+            dictValues.Add("Holy Light", string.Format("{0} hps", Math.Round(HLHPS)));
             dictValues.Add("Holy Shock", "nyi");
             return dictValues;
         }
