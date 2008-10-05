@@ -126,9 +126,9 @@ namespace Rawr.Tree
                 BasicStats.SpellCrit, BasicStats.CritRating.ToString()));
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\nGlobal cooldown is {2} seconds", 
-                Math.Round(BasicStats.SpellHasteRating / 15.7, 2),
-                BasicStats.SpellHasteRating.ToString(),
-                Math.Round((1.5f * 1570f) / (1570f + BasicStats.SpellHasteRating), 2)));
+                Math.Round(BasicStats.HasteRating / 15.7, 2),
+                BasicStats.HasteRating.ToString(),
+                Math.Round((1.5f * 1570f) / (1570f + BasicStats.HasteRating), 2)));
 
             dictValues.Add("Mana per Cast (5%)", BasicStats.ManaRestorePerCast_5_15.ToString());
 

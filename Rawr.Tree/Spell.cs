@@ -163,7 +163,7 @@ namespace Rawr.Tree
 
         protected void Calculate(Character character, Stats stats)
         {
-            CastTime /= (1 + (stats.SpellHasteRating / 1570f));
+            CastTime /= (1 + (stats.HasteRating / 1570f));
             if (CastTime < 1.0f)
                 CastTime = 1.0f;
         }

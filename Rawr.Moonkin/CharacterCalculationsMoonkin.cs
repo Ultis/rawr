@@ -86,7 +86,7 @@ namespace Rawr.Moonkin
             retVal.Add("Spirit", baseStats.Spirit.ToString());
             retVal.Add("Spell Hit", String.Format("{0:F}%", 100 * SpellHit));
             retVal.Add("Spell Crit", String.Format("{0:F}%", 100 * SpellCrit));
-            retVal.Add("Spell Haste", baseStats.SpellHasteRating.ToString());
+            retVal.Add("Spell Haste", baseStats.HasteRating.ToString());
             retVal.Add("Arcane Damage", ArcaneDamage.ToString());
             retVal.Add("Nature Damage", NatureDamage.ToString());
             retVal.Add("O5SR Per Second", String.Format("{0:F}", ManaRegen));

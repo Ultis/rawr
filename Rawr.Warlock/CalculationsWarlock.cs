@@ -344,7 +344,7 @@ namespace Rawr.Warlock
             int targetLevel = calculations.CalculationOptions.TargetLevel;
             calculations.HitPercent = calculations.BasicStats.HitRating / 12.62f;
             calculations.CritPercent = calculations.BasicStats.CritRating / 22.08f;
-            calculations.HastePercent = calculations.BasicStats.SpellHasteRating / 15.77f;
+            calculations.HastePercent = calculations.BasicStats.HasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
             if (calculations.GlobalCooldown < 1)
                 calculations.GlobalCooldown = 1;
@@ -372,7 +372,7 @@ namespace Rawr.Warlock
             //Band of the Eternal Sage
             totalStats.SpellPower += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
-            calculations.HastePercent = totalStats.SpellHasteRating / 15.77f;
+            calculations.HastePercent = totalStats.HasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
             if (calculations.GlobalCooldown < 1)
                 calculations.GlobalCooldown = 1;
@@ -534,8 +534,8 @@ namespace Rawr.Warlock
             statsTotal.CritRating += (1.701f + statsTotal.Intellect / 82 + options.DemonicTactics + options.Backlash + options.Devastation) * 22.08f;
 
             //spell haste rating
-            statsTotal.SpellHasteRating += statsTotal.DrumsOfBattle * 30 / 120;
-            statsTotal.SpellHasteRating += statsTotal.SpellHasteFor20SecOnUse2Min / 6;
+            statsTotal.HasteRating += statsTotal.DrumsOfBattle * 30 / 120;
+            statsTotal.HasteRating += statsTotal.SpellHasteFor20SecOnUse2Min / 6;
 
             //mp5
             statsTotal.Mp5 += 100; //Assume Super Mana Potions (TODO: Add some kind of potion selector)
@@ -632,7 +632,7 @@ namespace Rawr.Warlock
                         new Item() { Stats = new Stats() { SpellShadowDamageRating = 1 } }, 
                         new Item() { Stats = new Stats() { SpellFireDamageRating = 1 } }, 
                         new Item() { Stats = new Stats() { CritRating = 1 } },
-                        new Item() { Stats = new Stats() { SpellHasteRating = 1 } },
+                        new Item() { Stats = new Stats() { HasteRating = 1 } },
                         new Item() { Stats = new Stats() { HitRating = 1 } },
                         new Item() { Stats = new Stats() { Mp5 = 1 } }
                     };
@@ -689,7 +689,7 @@ namespace Rawr.Warlock
                         new Item() { Stats = new Stats() { SpellShadowDamageRating = 14.3f } }, 
                         new Item() { Stats = new Stats() { SpellFireDamageRating = 14.3f } }, 
                         new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { SpellHasteRating = 10 } },
+                        new Item() { Stats = new Stats() { HasteRating = 10 } },
                         new Item() { Stats = new Stats() { HitRating = 10 } },
                         new Item() { Stats = new Stats() { Mp5 = 4 } }
                     };
@@ -800,7 +800,7 @@ namespace Rawr.Warlock
                 SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 SpellPenetration = stats.SpellPenetration,
-                SpellHasteRating = stats.SpellHasteRating,
+                HasteRating = stats.HasteRating,
                 HitRating = stats.HitRating,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
@@ -847,7 +847,7 @@ namespace Rawr.Warlock
                 + stats.Spirit
                 + stats.Mp5
                 + stats.CritRating
-                + stats.SpellHasteRating
+                + stats.HasteRating
                 + stats.HitRating
                 + stats.SpellPower
                 + stats.SpellFireDamageRating

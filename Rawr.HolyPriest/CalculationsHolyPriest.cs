@@ -169,7 +169,7 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
                calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
                 + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
-                + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.SpellHasteRating / 15.7f / 100f)) / (60f * 5f)
+                + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
                 + (calculatedStats.BasicStats.BonusManaPotion * 2400f * 5f / 120f)
                 + procSpiritRegen + procSpiritRegen2
                 + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
@@ -179,7 +179,7 @@ namespace Rawr.HolyPriest
                 + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
                 + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
                         
-            calculatedStats.HastePoints = calculatedStats.BasicStats.SpellHasteRating / 2f
+            calculatedStats.HastePoints = calculatedStats.BasicStats.HasteRating / 2f
                 + calculatedStats.BasicStats.SpellHasteFor20SecOnUse2Min * 20f / 120f / 2f;
 
             calculatedStats.OverallPoints = calculatedStats.HealPoints + calculatedStats.RegenPoints + calculatedStats.HastePoints;
@@ -462,7 +462,7 @@ namespace Rawr.HolyPriest
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
-                SpellHasteRating = stats.SpellHasteRating,
+                HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
@@ -489,7 +489,7 @@ namespace Rawr.HolyPriest
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating
-                + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
+                + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
                 + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration
                 + stats.HealingDoneFor15SecOnUse2Min + stats.HealingDoneFor20SecOnUse2Min

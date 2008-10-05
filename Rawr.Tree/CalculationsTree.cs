@@ -313,7 +313,7 @@ namespace Rawr.Tree
                     CharacterCalculationsTree calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsTree;
 
                     CharacterCalculationsTree calcMp5Value = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Mp5 = 4 * multiplier } }) as CharacterCalculationsTree;
-                    CharacterCalculationsTree calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellHasteRating = 10 * multiplier } }) as CharacterCalculationsTree;
+                    CharacterCalculationsTree calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10 * multiplier } }) as CharacterCalculationsTree;
                     CharacterCalculationsTree calcSpiritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 10 * multiplier } }) as CharacterCalculationsTree;
                     CharacterCalculationsTree calcIntValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 10 * multiplier } }) as CharacterCalculationsTree;
 
@@ -322,7 +322,7 @@ namespace Rawr.Tree
                     return new ComparisonCalculationBase[] { 
 						GetRelativeValue (new Stats() {SpellPower = 22 / 1.88f}, 5, 10, "22 Healing", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Mp5 = 4}, 5, 10, "4 Mp5", character, calcBaseValue),
-                        GetRelativeValue (new Stats() {SpellHasteRating = 10}, 1, 15, "10 Spell Haste", character, calcBaseValue),
+                        GetRelativeValue (new Stats() {HasteRating = 10}, 1, 15, "10 Spell Haste", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Spirit = 10}, 5, 10, "10 Spirit", character, calcBaseValue),
                         GetRelativeValue (new Stats() {Intellect = 10}, 5, 10, "10 Intellect", character, calcBaseValue),
                         GetRelativeValue (new Stats() {SpellPower = 11 / 1.88f, Spirit = 5}, 5, 10, "11 Healing 5 Spirit", character, calcBaseValue),
@@ -342,7 +342,7 @@ namespace Rawr.Tree
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
-                SpellHasteRating = stats.SpellHasteRating,
+                HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
@@ -374,7 +374,7 @@ namespace Rawr.Tree
         public override bool HasRelevantStats(Stats stats)
         {
             if (stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f
-                + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
+                + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal
                 + stats.ManaRestorePerCast_5_15 + stats.LifebloomFinalHealBonus + stats.RegrowthExtraTicks
                 + stats.BonusHealingTouchMultiplier + stats.TreeOfLifeAura

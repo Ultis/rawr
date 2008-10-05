@@ -2440,9 +2440,10 @@ namespace Rawr
 		{
 			HitRating = Math.Max(HitRating, SpellHitRating);
 			CritRating = Math.Max(CritRating, SpellCritRating);
+			HasteRating = Math.Max(HasteRating, SpellHasteRating);
 			SpellPower = Math.Max(SpellPower, Math.Max(SpellDamageRating, (float)Math.Floor(Healing / 1.88f)));
 			
-			SpellHitRating = SpellCritRating = SpellDamageRating = Healing = 0;
+			SpellHitRating = SpellCritRating = SpellHasteRating = SpellDamageRating = Healing = 0;
 		}
 
         #region Multiplicative Handling

@@ -82,7 +82,7 @@ namespace Rawr.Healadin
                 Math.Round(_spells[0].SpellCrit * 100 - 5 - BasicStats.FoLCrit, 2), BasicStats.CritRating.ToString(),
                 Math.Round(_spells[0].SpellCrit * 100, 2), Math.Round(_spells[1].SpellCrit * 100, 2)));
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\nFoL Cast Time: {2} sec\nHL Cast Time: {3} sec",
-                Math.Round(BasicStats.SpellHasteRating/15.7,2), BasicStats.SpellHasteRating.ToString(), Math.Round(_spells[0].CastTime,2), Math.Round(_spells[1].CastTime,2)));
+                Math.Round(BasicStats.HasteRating/15.7,2), BasicStats.HasteRating.ToString(), Math.Round(_spells[0].CastTime,2), Math.Round(_spells[1].CastTime,2)));
             dictValues.Add("Total Healed", Math.Round(Healed).ToString());
             dictValues.Add("Average Hps", Math.Round(AvgHPS).ToString());
             dictValues.Add("Average Hpm", Math.Round(AvgHPM, 2).ToString());

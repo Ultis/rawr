@@ -551,7 +551,7 @@ namespace Rawr.RestoSham
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
-                SpellHasteRating = stats.SpellHasteRating,
+                HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
@@ -569,7 +569,7 @@ namespace Rawr.RestoSham
         public override bool HasRelevantStats(Stats stats)
           {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating +
-                    stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
+                    stats.HasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
                     stats.BonusManaPotion + stats.CHManaReduction + stats.CHHealIncrease + stats.LHWManaReduction +
                     stats.ManaSpringMp5Increase + stats.ManaRestorePerCast_5_15 + stats.ShatteredSunRestoProc) > 0;
           }

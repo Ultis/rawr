@@ -262,7 +262,7 @@ namespace Rawr
 
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusCritSpellRating")) { stats.CritRating = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHitSpellRating")) { stats.HitRating = int.Parse(node.InnerText); }
-                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.SpellHasteRating = int.Parse(node.InnerText); }
+                foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusHasteSpellRating")) { stats.HasteRating = int.Parse(node.InnerText); }
 
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
@@ -699,7 +699,7 @@ namespace Rawr
                         {
                             spellDesc = spellDesc.Substring("Improves spell haste rating by".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
-                            stats.SpellHasteRating += int.Parse(spellDesc);
+                            stats.HasteRating += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Improves spell critical strike rating by"))
                         {
@@ -1107,7 +1107,7 @@ namespace Rawr
 									sockets.Stats.CritRating = socketBonusValue;
 									break;
 								case "Spell Haste Rating":
-									sockets.Stats.SpellHasteRating = socketBonusValue;
+									sockets.Stats.HasteRating = socketBonusValue;
 									break;
 								case "Spirit":
 									sockets.Stats.Spirit = socketBonusValue;
@@ -1255,7 +1255,7 @@ namespace Rawr
                                         stats.HitRating = gemBonusValue;
                                         break;
                                     case "Spell Haste Rating":
-                                        stats.SpellHasteRating = gemBonusValue;
+                                        stats.HasteRating = gemBonusValue;
                                         break;
                                     case "Spell Damage":
                                     case "Spell Damage and Healing":

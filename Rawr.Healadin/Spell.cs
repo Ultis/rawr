@@ -67,7 +67,7 @@ namespace Rawr.Healadin
         {
             float bonus, multi, bol = 0, cost;
             spellCrit = .08336f + stats.Intellect / 8000 + stats.CritRating / 2208;
-            castTime = baseCastTime / (1 + stats.SpellHasteRating / 1570);
+            castTime = baseCastTime / (1 + stats.HasteRating / 1570);
             
             if (name.Equals("Holy Light"))
             {

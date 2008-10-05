@@ -122,7 +122,7 @@ namespace Rawr.HolyPriest
             CastTime = baseSpell.CastTime;
             HealingCoef = coef;
             HotDuration = hotDuration;
-            GlobalCooldown = 1.5f * (1 - stats.SpellHasteRating / 15.7f / 100f);
+            GlobalCooldown = 1.5f * (1 - stats.HasteRating / 15.7f / 100f);
             GraphColor = col;
         }
 
@@ -132,7 +132,7 @@ namespace Rawr.HolyPriest
 
         public static float GetGlobalCooldown(Stats stats)
         {
-            return 1.5f * (1 - stats.SpellHasteRating / 15.7f / 100f);
+            return 1.5f * (1 - stats.HasteRating / 15.7f / 100f);
         }
 
         public override string ToString()
@@ -266,7 +266,7 @@ namespace Rawr.HolyPriest
                 * (character.PriestTalents.EmpoweredHealing * 0.02f + HealingCoef)) 
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
-            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.SpellHasteRating / 15.7f / 100f);
+            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.HasteRating / 15.7f / 100f);
 
             ManaCost = (int)Math.Round(ManaCostBase / 100f * BaseMana[character.Level]);
         }
@@ -320,7 +320,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
 
             CastTime = (baseSpellTable[Rank - 1].CastTime - character.PriestTalents.DivineFury * 0.1f)
-                * (1 - stats.SpellHasteRating / 15.7f / 100f);
+                * (1 - stats.HasteRating / 15.7f / 100f);
         }
     }
 
@@ -380,7 +380,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
 
             CastTime = (baseSpellTable[Rank - 1].CastTime - character.PriestTalents.DivineFury * 0.1f) 
-                * (1 - stats.SpellHasteRating / 15.7f / 100f);
+                * (1 - stats.HasteRating / 15.7f / 100f);
         }
     }
 
@@ -755,7 +755,7 @@ namespace Rawr.HolyPriest
 
             ManaCost = (int)Math.Round(ManaCostBase / 100f * BaseMana[character.Level]);
             
-            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.SpellHasteRating / 15.7f / 100f);
+            CastTime = baseSpellTable[Rank - 1].CastTime * (1 - stats.HasteRating / 15.7f / 100f);
         }
 
         public override string ToString()

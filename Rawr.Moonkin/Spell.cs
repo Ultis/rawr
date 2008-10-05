@@ -817,7 +817,7 @@ namespace Rawr.Moonkin
                 float effectiveArcaneDamage = calcs.ArcaneDamage;
                 float effectiveNatureDamage = calcs.NatureDamage;
                 float effectiveSpellCrit = calcs.BasicStats.CritRating;
-                float effectiveSpellHaste = calcs.BasicStats.SpellHasteRating;
+                float effectiveSpellHaste = calcs.BasicStats.HasteRating;
                 float effectiveMana = GetEffectiveManaPool(character, calcs);
 
                 // Trinkets

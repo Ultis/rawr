@@ -59,7 +59,7 @@ namespace Rawr.RestoSham
 
             // Cast time is considered to be the global cooldown (which won't reduce below 1 sec):
 
-            CastTime = Math.Max(SpellRanks[Rank].CastTime / (1 + (stats.SpellHasteRating / 1570)), 1.0f);
+            CastTime = Math.Max(SpellRanks[Rank].CastTime / (1 + (stats.HasteRating / 1570)), 1.0f);
             
             // Mana not reduced by Tidal Focus:
             
@@ -202,7 +202,7 @@ namespace Rawr.RestoSham
             
             //points = CalculationsRestoSham.GetTalentPoints("Improved Healing Wave", "Restoration", character.AllTalents);
             float baseTime = SpellRanks[Rank].CastTime - (.1f * character.ShamanTalents.ImprovedHealingWave);
-            CastTime = baseTime / (1 + (stats.SpellHasteRating / 1570));
+            CastTime = baseTime / (1 + (stats.HasteRating / 1570));
           }
 
         protected override SpellRank[] SpellRanks
@@ -392,7 +392,7 @@ namespace Rawr.RestoSham
             
             // Compute spell cast time:
             
-            CastTime = SpellRanks[Rank].CastTime / (1 + (stats.SpellHasteRating / 1570));
+            CastTime = SpellRanks[Rank].CastTime / (1 + (stats.HasteRating / 1570));
             
             // Compute mana cost:
             

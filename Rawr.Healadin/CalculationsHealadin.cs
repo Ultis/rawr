@@ -345,7 +345,7 @@ namespace Rawr.Healadin
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
-                SpellHasteRating = stats.SpellHasteRating,
+                HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
@@ -366,7 +366,7 @@ namespace Rawr.Healadin
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating
-                + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
+                + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal) > 0;
         }

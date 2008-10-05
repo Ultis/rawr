@@ -54,7 +54,7 @@ namespace Rawr.RestoSham
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
-                       Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
+                       Math.Round(BasicStats.HasteRating / 15.7, 2), BasicStats.HasteRating.ToString()));
             values.Add("Total Mana Pool", Math.Round(TotalManaPool, 0).ToString());
             values.Add("Average Heal", Math.Round(AverageHeal, 0).ToString());
             values.Add("Average Cast Time", Math.Round(AverageCastTime, 2).ToString());
