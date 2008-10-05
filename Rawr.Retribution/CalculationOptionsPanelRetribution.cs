@@ -338,6 +338,54 @@ namespace Rawr.Retribution
             else { calcOpts.HammerOfWrath = true; }
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbSoCGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbSoCGlyph.Checked) { calcOpts.GlyphOfSoC = true; }
+            else { calcOpts.GlyphOfSoC = true; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbAWGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbAWGlyph.Checked) { calcOpts.GlyphOfAW = true; }
+            else { calcOpts.GlyphOfAW = true; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbConsecGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbConsecGlyph.Checked) { calcOpts.GlyphOfConsec = true; }
+            else { calcOpts.GlyphOfConsec = true; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbCSGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbCSGlyph.Checked) { calcOpts.GlyphOfCS = true; }
+            else { calcOpts.GlyphOfCS = true; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbJudgeGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbJudgeGlyph.Checked) { calcOpts.GlyphOfJudge = true; }
+            else { calcOpts.GlyphOfJudge = true; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbSenseGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (cbSenseGlyph.Checked) { calcOpts.GlyphOfSenseUD = true; }
+            else { calcOpts.GlyphOfSenseUD = true; }
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 	[Serializable]
@@ -377,6 +425,7 @@ namespace Rawr.Retribution
 		public int SanctifiedSeals = 0;
 		public int Vengeance = 0;
         public int CrusaderStrike = 0;
+	    public int ImprovedJudgements = 0;
 
         // new talents in 3.0
 	    public int TheArtOfWar = 0;
@@ -386,6 +435,14 @@ namespace Rawr.Retribution
 	    public int SwiftRetribution = 0;
 	    public int RighteousVengeance = 0;
 	    public int DivineStorm = 0;
+
+        // glyphs
+        public bool GlyphOfSoC = false;
+        public bool GlyphOfAW = false;
+        public bool GlyphOfConsec = false;
+        public bool GlyphOfCS = false;
+        public bool GlyphOfJudge = false;
+        public bool GlyphOfSenseUD = false;
 
 		public bool TalentsSaved = false;
 	}

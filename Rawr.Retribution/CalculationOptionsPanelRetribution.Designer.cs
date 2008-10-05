@@ -57,6 +57,14 @@
             this.rbDrumsWar = new System.Windows.Forms.RadioButton();
             this.rbDrumsNone = new System.Windows.Forms.RadioButton();
             this.cbWindfuryEffect = new System.Windows.Forms.CheckBox();
+            this.gbMajorGlyph = new System.Windows.Forms.GroupBox();
+            this.cbJudgeGlyph = new System.Windows.Forms.CheckBox();
+            this.cbCSGlyph = new System.Windows.Forms.CheckBox();
+            this.cbConsecGlyph = new System.Windows.Forms.CheckBox();
+            this.cbAWGlyph = new System.Windows.Forms.CheckBox();
+            this.cbSoCGlyph = new System.Windows.Forms.CheckBox();
+            this.gbMinorGlyph = new System.Windows.Forms.GroupBox();
+            this.cbSenseGlyph = new System.Windows.Forms.CheckBox();
             this.gbSealChoice.SuspendLayout();
             this.gbSkillUsage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
@@ -65,6 +73,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbFerociousInspiration)).BeginInit();
             this.gbFaction.SuspendLayout();
             this.gbDrums.SuspendLayout();
+            this.gbMajorGlyph.SuspendLayout();
+            this.gbMinorGlyph.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -254,7 +264,7 @@
             // btnGraph
             // 
             this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGraph.Location = new System.Drawing.Point(66, 774);
+            this.btnGraph.Location = new System.Drawing.Point(66, 784);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
             this.btnGraph.TabIndex = 5;
@@ -421,11 +431,109 @@
             this.cbWindfuryEffect.UseVisualStyleBackColor = true;
             this.cbWindfuryEffect.CheckedChanged += new System.EventHandler(this.cbWindfuryEffect_CheckedChanged);
             // 
+            // gbMajorGlyph
+            // 
+            this.gbMajorGlyph.Controls.Add(this.cbJudgeGlyph);
+            this.gbMajorGlyph.Controls.Add(this.cbCSGlyph);
+            this.gbMajorGlyph.Controls.Add(this.cbConsecGlyph);
+            this.gbMajorGlyph.Controls.Add(this.cbAWGlyph);
+            this.gbMajorGlyph.Controls.Add(this.cbSoCGlyph);
+            this.gbMajorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbMajorGlyph.Location = new System.Drawing.Point(8, 578);
+            this.gbMajorGlyph.Name = "gbMajorGlyph";
+            this.gbMajorGlyph.Size = new System.Drawing.Size(185, 148);
+            this.gbMajorGlyph.TabIndex = 33;
+            this.gbMajorGlyph.TabStop = false;
+            this.gbMajorGlyph.Text = "Major Glyphs";
+            // 
+            // cbJudgeGlyph
+            // 
+            this.cbJudgeGlyph.AutoSize = true;
+            this.cbJudgeGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbJudgeGlyph.Location = new System.Drawing.Point(6, 120);
+            this.cbJudgeGlyph.Name = "cbJudgeGlyph";
+            this.cbJudgeGlyph.Size = new System.Drawing.Size(135, 19);
+            this.cbJudgeGlyph.TabIndex = 32;
+            this.cbJudgeGlyph.Text = "Glyph of Judgement";
+            this.cbJudgeGlyph.UseVisualStyleBackColor = true;
+            this.cbJudgeGlyph.CheckedChanged += new System.EventHandler(this.cbJudgeGlyph_CheckedChanged);
+            // 
+            // cbCSGlyph
+            // 
+            this.cbCSGlyph.AutoSize = true;
+            this.cbCSGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCSGlyph.Location = new System.Drawing.Point(6, 95);
+            this.cbCSGlyph.Name = "cbCSGlyph";
+            this.cbCSGlyph.Size = new System.Drawing.Size(157, 19);
+            this.cbCSGlyph.TabIndex = 31;
+            this.cbCSGlyph.Text = "Glyph of Crusader Strike";
+            this.cbCSGlyph.UseVisualStyleBackColor = true;
+            this.cbCSGlyph.CheckedChanged += new System.EventHandler(this.cbCSGlyph_CheckedChanged);
+            // 
+            // cbConsecGlyph
+            // 
+            this.cbConsecGlyph.AutoSize = true;
+            this.cbConsecGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbConsecGlyph.Location = new System.Drawing.Point(6, 70);
+            this.cbConsecGlyph.Name = "cbConsecGlyph";
+            this.cbConsecGlyph.Size = new System.Drawing.Size(145, 19);
+            this.cbConsecGlyph.TabIndex = 30;
+            this.cbConsecGlyph.Text = "Glyph of Consecration";
+            this.cbConsecGlyph.UseVisualStyleBackColor = true;
+            this.cbConsecGlyph.CheckedChanged += new System.EventHandler(this.cbConsecGlyph_CheckedChanged);
+            // 
+            // cbAWGlyph
+            // 
+            this.cbAWGlyph.AutoSize = true;
+            this.cbAWGlyph.Location = new System.Drawing.Point(6, 45);
+            this.cbAWGlyph.Name = "cbAWGlyph";
+            this.cbAWGlyph.Size = new System.Drawing.Size(158, 19);
+            this.cbAWGlyph.TabIndex = 0;
+            this.cbAWGlyph.Text = "Glyph of Avenging Wrath";
+            this.cbAWGlyph.UseVisualStyleBackColor = true;
+            this.cbAWGlyph.CheckedChanged += new System.EventHandler(this.cbAWGlyph_CheckedChanged);
+            // 
+            // cbSoCGlyph
+            // 
+            this.cbSoCGlyph.AutoSize = true;
+            this.cbSoCGlyph.Location = new System.Drawing.Point(6, 20);
+            this.cbSoCGlyph.Name = "cbSoCGlyph";
+            this.cbSoCGlyph.Size = new System.Drawing.Size(172, 19);
+            this.cbSoCGlyph.TabIndex = 0;
+            this.cbSoCGlyph.Text = "Glyph of Seal of Command";
+            this.cbSoCGlyph.UseVisualStyleBackColor = true;
+            this.cbSoCGlyph.CheckedChanged += new System.EventHandler(this.cbSoCGlyph_CheckedChanged);
+            // 
+            // gbMinorGlyph
+            // 
+            this.gbMinorGlyph.Controls.Add(this.cbSenseGlyph);
+            this.gbMinorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbMinorGlyph.Location = new System.Drawing.Point(8, 732);
+            this.gbMinorGlyph.Name = "gbMinorGlyph";
+            this.gbMinorGlyph.Size = new System.Drawing.Size(185, 46);
+            this.gbMinorGlyph.TabIndex = 34;
+            this.gbMinorGlyph.TabStop = false;
+            this.gbMinorGlyph.Text = "Minor Glyphs";
+            // 
+            // cbSenseGlyph
+            // 
+            this.cbSenseGlyph.AutoSize = true;
+            this.cbSenseGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbSenseGlyph.Location = new System.Drawing.Point(5, 20);
+            this.cbSenseGlyph.Name = "cbSenseGlyph";
+            this.cbSenseGlyph.Size = new System.Drawing.Size(155, 19);
+            this.cbSenseGlyph.TabIndex = 33;
+            this.cbSenseGlyph.Text = "Glyph of Sense Undead";
+            this.cbSenseGlyph.UseVisualStyleBackColor = true;
+            this.cbSenseGlyph.CheckedChanged += new System.EventHandler(this.cbSenseGlyph_CheckedChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.gbMinorGlyph);
+            this.Controls.Add(this.gbMajorGlyph);
             this.Controls.Add(this.cbWindfuryEffect);
             this.Controls.Add(this.gbDrums);
             this.Controls.Add(this.chkBloodLust);
@@ -439,7 +547,7 @@
             this.Controls.Add(this.gbSkillUsage);
             this.Controls.Add(this.gbSealChoice);
             this.Name = "CalculationOptionsPanelRetribution";
-            this.Size = new System.Drawing.Size(209, 800);
+            this.Size = new System.Drawing.Size(209, 820);
             this.gbSealChoice.ResumeLayout(false);
             this.gbSealChoice.PerformLayout();
             this.gbSkillUsage.ResumeLayout(false);
@@ -453,6 +561,10 @@
             this.gbFaction.PerformLayout();
             this.gbDrums.ResumeLayout(false);
             this.gbDrums.PerformLayout();
+            this.gbMajorGlyph.ResumeLayout(false);
+            this.gbMajorGlyph.PerformLayout();
+            this.gbMinorGlyph.ResumeLayout(false);
+            this.gbMinorGlyph.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -489,5 +601,13 @@
         private System.Windows.Forms.RadioButton rbDrumsNone;
         private System.Windows.Forms.CheckBox chkHoW;
         private System.Windows.Forms.CheckBox cbWindfuryEffect;
+        private System.Windows.Forms.GroupBox gbMajorGlyph;
+        private System.Windows.Forms.CheckBox cbConsecGlyph;
+        private System.Windows.Forms.CheckBox cbAWGlyph;
+        private System.Windows.Forms.CheckBox cbSoCGlyph;
+        private System.Windows.Forms.CheckBox cbCSGlyph;
+        private System.Windows.Forms.CheckBox cbJudgeGlyph;
+        private System.Windows.Forms.GroupBox gbMinorGlyph;
+        private System.Windows.Forms.CheckBox cbSenseGlyph;
     }
 }

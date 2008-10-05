@@ -180,8 +180,8 @@ namespace Rawr.Retribution
             float crusade = 1f + 0.02f*(float) calcOpts.Crusade;
             float vengeance = 1f + 0.03f*(float) calcOpts.Vengeance;
             float retriAura = 1f + 0.1f*(float) calcOpts.SanctifiedRetribution;
-            float spellPower = stats.AttackPower*((float) calcOpts.SheathOfLight*.1f) + stats.SpellDamageRating;
-            stats.SpellDamageRating += spellPower;
+            float spellPower = stats.AttackPower*((float) calcOpts.SheathOfLight*.1f) + stats.SpellPower;
+            stats.SpellPower += spellPower;
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
                 // Covers all % spell damage increases.  Misery, FI.
             float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
@@ -193,8 +193,9 @@ namespace Rawr.Retribution
             float judgeCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
             float csCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f;
             float dsCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
-            
-            float whiteAvgDam = 0f;
+
+            //new for 3.0 model, need these global for the method
+            float whiteAvgDam = 0f, socAvgDmg = 0f, sobAvgDmg = 0f, socProcChanceCoeff = 0f;
 
             // Avenging Wrath -- Calculating uptime
             float fightDuration = calcOpts.FightLength * 60;
@@ -209,13 +210,13 @@ namespace Rawr.Retribution
             if (partialUptime < 0) partialUptime = 0;
             float totalUptime = partialUptime + noOfFullAW * 20f;
             float avWrath = 1f + 0.30f * totalUptime / fightDuration;
-
+            
             // Combined damage multipliers
             float allDamMult = avWrath * crusade * impretriAura;
             float holyDamMult = allDamMult * spellPowerMult * retriAura * vengeance;
             float physDamMult = allDamMult * physPowerMult * twoHandedSpec * vengeance;
 
-            float dpsWhite = 0f, dpsSeal = 0f, dpsWindfury = 0f, dpsCrusader = 0f, dpsDivineStorm = 0f, dpsJudgement = 0f, dpsConsecration = 0f, dpsExorcism = 0f;
+            float dpsWhite = 0f, dpsSeal = 0f, dpsSoC = 0f, dpsSoB = 0f, dpsWindfury = 0f, dpsCrusader = 0f, dpsDivineStorm = 0f, dpsJudgement = 0f, dpsConsecration = 0f, dpsExorcism = 0f;
             float baseSpeed = 1f, hastedSpeed = 1f, baseDamage = 0f, mitigation = 1f;
             float whiteHit = 0f, physCrits = 0f, totalMiss = 0f, spellCrits = 0f, spellResist = 0f;
             float chanceToGlance = 0.25f, glancingAmount = 0.35f;
@@ -225,8 +226,7 @@ namespace Rawr.Retribution
                 baseSpeed = character.MainHand.Speed;
                 baseDamage = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f + stats.WeaponDamage;
             }
-
-
+            
             #region Attack Speed
             {
                 hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 1576f));
@@ -324,6 +324,14 @@ namespace Rawr.Retribution
             }
             #endregion
 
+            #region Windfury Application
+            {
+                if (calcOpts.Windfury)
+                {
+                    hastedSpeed /= 1.2f;
+                }
+            }
+            #endregion
 
             #region White Damage
             {
@@ -362,42 +370,37 @@ namespace Rawr.Retribution
 
             #region Seal
             {
-                float sealActualPPM = 0f, sealAvgDam = 0f, windProcRate = .2f;
-                if (calcOpts.Seal == 0) // Seal of Command
-                {
-                    float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f, socWeapDmgMult = 0.56f;
+                float socActualPPM = 0f, sobActualPPM = 0f;
 
-                    // Find real PPM.  Procs 7 times per minute before misses
-                    sealActualPPM = socPPM * (1f - totalMiss);
-                   // Seal Damage per hit
-                    sealAvgDam = socWeapDmgMult * whiteHit * twoHandedSpec;
-                    sealAvgDam = sealAvgDam * holyDamMult + socHolyCoeff * jotc;
-                }
-                else // Seal of Blood
-                {
-                    // Find real PPM.  Procs on every hit.
-                    sealActualPPM = (60f / hastedSpeed) * (1 - totalMiss);
+                float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f, socWeapDmgMult = 0.56f;
 
-                    // Seal Damage per hit
-                    sealAvgDam = 0.35f * whiteHit * holyDamMult * twoHandedSpec;
+                // Find real PPM.  Procs 7 times per minute before misses
+                socActualPPM = socPPM * (1f - totalMiss);
+                socProcChanceCoeff = socPPM / hastedSpeed;
+                
+                if (calcOpts.GlyphOfSoC)
+                {
+                    socProcChanceCoeff += .2f;
                 }
+
+                // Seal Damage per hit
+                socAvgDmg = socWeapDmgMult * whiteHit * twoHandedSpec;
+                socAvgDmg = socAvgDmg * holyDamMult + socHolyCoeff * jotc;
+
+                // Find real PPM.  Procs on every hit.
+                sobActualPPM = (60f / hastedSpeed) * (1 - totalMiss);
+
+                // Seal Damage per hit
+                sobAvgDmg = 0.35f * whiteHit * holyDamMult * twoHandedSpec;
 
                 // Seal average damage per proc
-                sealAvgDam *= (1f + physCrits * physCritMult - totalMiss) * partialResist;
+                socAvgDmg *= (1f + physCrits * physCritMult - totalMiss) * partialResist;
+                sobAvgDmg *= (1f + physCrits * physCritMult - totalMiss) * partialResist;
 
-                // Total Seal DPS
-                dpsSeal = sealAvgDam * sealActualPPM / 60f;
-            }
-            #endregion
+                dpsSoC = socAvgDmg * socActualPPM / 60f;
+                dpsSoB = sobAvgDmg * sobActualPPM / 60f;
 
-            #region Windfury
-            if (calcOpts.Windfury)
-            {
-                //Windfury changed in 3.0, only provides a flat 20% haste effect.
-                float wfHasteAmount = 0.2f;
-
-                // Total Windfury DPS
-                dpsWindfury = (dpsSeal + dpsWhite) * wfHasteAmount;
+                //NOTE: Seals can now proc off of "melee" hits, so I had to add in seal damage for CS, DS, and Judgements for 3.0
             }
             #endregion
 
@@ -414,8 +417,16 @@ namespace Rawr.Retribution
                     // Crusader Strike average damage per swing
                     crusAvgDam *= (1f + physCrits * physCritMult * csCritMult - totalMiss) * mitigation;
 
+                    if (calcOpts.GlyphOfCS)
+                    {
+                        crusAvgDam *= 1.2f;
+                    }
+
                     // Total Crusader Strike DPS
                     dpsCrusader = crusAvgDam/crusCD;
+
+                    dpsSoC += socAvgDmg * (60f / crusCD) * socProcChanceCoeff;
+                    dpsSoB += sobAvgDmg * (60f / crusCD);
                 }
             }
             #endregion
@@ -433,6 +444,9 @@ namespace Rawr.Retribution
                     dsAvgDam = dsHit*(1f + physCrits * spellCritMult * dsCritMult - totalMiss);
 
                     dpsDivineStorm = dsAvgDam/dsCD;
+
+                    dpsSoC += socAvgDmg * (60f / dsCD) * socProcChanceCoeff;
+                    dpsSoB += sobAvgDmg * (60f / dsCD);
                 }
             }
             #endregion
@@ -443,25 +457,43 @@ namespace Rawr.Retribution
                 float judgeCrit = physCrits + (0.05f * (float)calcOpts.Fanaticism);
                 float socDamMult = 0.30f, sobDamMult = .45f, apMult = 0.2f, spdmgMult = 0.32f;
 
+                if (calcOpts.ImprovedJudgements == 0)
+                {
+                    judgeCD = 9.5f;
+                }
+                else if (calcOpts.ImprovedJudgements == 1)
+                {
+                    judgeCD = 10.5f;
+                }
+
                 float sealHit = 0f;
                 if (calcOpts.Seal == 0) // SoC
                 {
-                    sealHit = socDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellDamageRating;
+                    sealHit = socDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellPower;
                 }
                 else // SoB/SotM
                 {
-                    sealHit = sobDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellDamageRating;
+                    sealHit = sobDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellPower;
                 }
 
                 judgeAvgDam = sealHit * holyDamMult;
+
+                if (calcOpts.GlyphOfJudge)
+                {
+                    judgeAvgDam *= 1.1f;
+                }
+
                 dpsJudgement = judgeAvgDam / judgeCD;
+
+                dpsSoC += socAvgDmg * (60f / judgeCD) * socProcChanceCoeff;
+                dpsSoB += sobAvgDmg * (60f / judgeCD);
             }
             #endregion
 
             #region Consecration
             if (calcOpts.ConsecRank != 0)
             {
-                float consCD = 9f, consCoeff = 0.952f, consAvgDam = 0f;
+                float consCD = 12f, consCoeff = 0.952f, consAvgDam = 0f;
                 int consRank = calcOpts.ConsecRank;
 
                 // Consecration damage pre-resists
@@ -478,6 +510,11 @@ namespace Rawr.Retribution
 
                 // Consecration average damage post-resists.
                 consAvgDam *= partialResist;
+
+                if (calcOpts.GlyphOfConsec)  //lasts longer per cast, so a drop more DPS since it isn't used on cooldown
+                {
+                    consAvgDam *= (5f / 4f);
+                }
 
                 // Total Consecration DPS
                 dpsConsecration = consAvgDam / consCD;
@@ -510,7 +547,8 @@ namespace Rawr.Retribution
             calcs.EnemyMitigation = 1 - mitigation;
 
             calcs.WhiteDPS = dpsWhite;
-            calcs.SealDPS = dpsSeal;
+            calcs.SealOfBloodDPS = dpsSoB;
+            calcs.SealOfCommandDPS = dpsSoC;
             calcs.WindfuryDPS = dpsWindfury;
             calcs.CrusaderDPS = dpsCrusader;
             calcs.JudgementDPS = dpsJudgement;
@@ -518,7 +556,24 @@ namespace Rawr.Retribution
             calcs.ExorcismDPS = dpsExorcism;
             calcs.DivineStormDPS = dpsDivineStorm;
 
-            calcs.DPSPoints = dpsWhite + dpsSeal + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism + dpsDivineStorm;
+            float curSealDPS = 0f;
+
+            if (calcOpts.Seal == 0)
+            {
+                curSealDPS = dpsSoC;
+            }
+            else
+            {
+                curSealDPS = dpsSoB;
+            }
+
+            calcs.DPSPoints = dpsWhite + curSealDPS + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism + dpsDivineStorm;
+
+            if (calcOpts.GlyphOfSenseUD)
+            {
+                calcs.DPSPoints *= 1.01f;
+            }
+
             calcs.OverallPoints = calcs.DPSPoints;
 
             #region Hammer of Wrath
@@ -526,7 +581,12 @@ namespace Rawr.Retribution
                 if (calcOpts.HammerOfWrath)
                 {
                     float howHit = 0f, how70Base = 771, spdmgMult = 0.15f, apMult = 0.15f;
-                    howHit = how70Base + spdmgMult * stats.SpellDamageRating + apMult * stats.AttackPower;
+                    howHit = how70Base + spdmgMult * stats.SpellPower + apMult * stats.AttackPower;
+
+                    if (calcOpts.GlyphOfAW)
+                    {
+                        
+                    }
                 }
             }
             #endregion
@@ -817,29 +877,26 @@ namespace Rawr.Retribution
         public void GetTalents(Character character)
         {
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-            if (!calcOpts.TalentsSaved)
-            {
-				//calcOpts.Precision = character.PaladinTalents.Precision; //TODO: Talent Removed in 3.0
-				calcOpts.Crusade = character.PaladinTalents.Crusade;
-				calcOpts.TwoHandedSpec = character.PaladinTalents.TwoHandedWeaponSpecialization;
-				calcOpts.ImprovedRetributionAura = character.PaladinTalents.ImprovedRetributionAura; 
-				calcOpts.SanctifiedSeals = character.PaladinTalents.SanctifiedSeals;
-				calcOpts.Fanaticism = character.PaladinTalents.Fanaticism;
-				calcOpts.Vengeance = character.PaladinTalents.Vengeance;
-				calcOpts.Conviction = character.PaladinTalents.Conviction;
-				calcOpts.DivineStrength = character.PaladinTalents.DivineStrength;
-                calcOpts.CrusaderStrike = character.PaladinTalents.CrusaderStrike;
 
-                calcOpts.TheArtOfWar = character.PaladinTalents.TheArtOfWar;
-	            calcOpts.SanctifiedRetribution = character.PaladinTalents.SanctifiedRetribution;
-	            calcOpts.SanctifiedWrath = character.PaladinTalents.SanctifiedWrath;
-	            calcOpts.SheathOfLight = character.PaladinTalents.SheathOfLight;
-	            calcOpts.SwiftRetribution = character.PaladinTalents.SwiftRetribution;
-	            calcOpts.RighteousVengeance = character.PaladinTalents.RighteousVengeance;
-                calcOpts.DivineStorm = character.PaladinTalents.DivineStorm;
+			//calcOpts.Precision = character.PaladinTalents.Precision; //TODO: Talent Removed in 3.0
+			calcOpts.Crusade = character.PaladinTalents.Crusade;
+			calcOpts.TwoHandedSpec = character.PaladinTalents.TwoHandedWeaponSpecialization;
+			calcOpts.ImprovedRetributionAura = character.PaladinTalents.ImprovedRetributionAura; 
+			calcOpts.SanctifiedSeals = character.PaladinTalents.SanctifiedSeals;
+			calcOpts.Fanaticism = character.PaladinTalents.Fanaticism;
+			calcOpts.Vengeance = character.PaladinTalents.Vengeance;
+			calcOpts.Conviction = character.PaladinTalents.Conviction;
+			calcOpts.DivineStrength = character.PaladinTalents.DivineStrength;
+            calcOpts.CrusaderStrike = character.PaladinTalents.CrusaderStrike;
+            calcOpts.ImprovedJudgements = character.PaladinTalents.ImprovedJudgements;
 
-				calcOpts.TalentsSaved = true;
-            }
+            calcOpts.TheArtOfWar = character.PaladinTalents.TheArtOfWar;
+            calcOpts.SanctifiedRetribution = character.PaladinTalents.SanctifiedRetribution;
+            calcOpts.SanctifiedWrath = character.PaladinTalents.SanctifiedWrath;
+            calcOpts.SheathOfLight = character.PaladinTalents.SheathOfLight;
+            calcOpts.SwiftRetribution = character.PaladinTalents.SwiftRetribution;
+            calcOpts.RighteousVengeance = character.PaladinTalents.RighteousVengeance;
+            calcOpts.DivineStorm = character.PaladinTalents.DivineStorm;
         }
     }
 }

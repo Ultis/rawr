@@ -34,11 +34,18 @@ namespace Rawr.Retribution
             set { _whiteDPS = value; }
         }
 
-        private float _sealDPS;
-        public float SealDPS
+        private float _sealOfBloodDPS;
+        public float SealOfBloodDPS
         {
-            get { return _sealDPS; }
-            set { _sealDPS = value; }
+            get { return _sealOfBloodDPS; }
+            set { _sealOfBloodDPS = value; }
+        }
+
+        private float _sealOfCommandDPS;
+        public float SealOfCommandDPS
+        {
+            get { return _sealOfCommandDPS; }
+            set { _sealOfCommandDPS = value; }
         }
 
         private float _windfuryDPS;
