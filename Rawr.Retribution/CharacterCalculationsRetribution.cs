@@ -55,6 +55,13 @@ namespace Rawr.Retribution
             set { _crusaderDPS = value; }
         }
 
+        private float _divineStormDPS;
+        public float DivineStormDPS
+        {
+            get { return _divineStormDPS; }
+            set { _divineStormDPS = value; }
+        }
+
         private float judgementDPS;
         public float JudgementDPS
         {
