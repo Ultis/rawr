@@ -205,7 +205,7 @@ namespace Rawr.Retribution
             dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, effectiveArmor));
 
             dictValues.Add("White", WhiteDPS.ToString("N2"));
-            dictValues.Add("Seal", SealDPS.ToString("N2"));
+            dictValues.Add("Seal", SealOfBloodDPS.ToString("N2"));
             dictValues.Add("Windfury", WindfuryDPS.ToString("N2"));
             dictValues.Add("Crusader Strike", CrusaderDPS.ToString("N2"));
             dictValues.Add("Judgement", JudgementDPS.ToString("N2"));
