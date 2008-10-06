@@ -561,10 +561,12 @@ namespace Rawr.Retribution
             if (calcOpts.Seal == 0)
             {
                 curSealDPS = dpsSoC;
+                calcs.SealDPS = dpsSoC;
             }
             else
             {
                 curSealDPS = dpsSoB;
+                calcs.SealDPS = dpsSoB;
             }
 
             calcs.DPSPoints = dpsWhite + curSealDPS + dpsWindfury + dpsCrusader + dpsJudgement + dpsConsecration + dpsExorcism + dpsDivineStorm;
