@@ -132,6 +132,7 @@
             // 
             // metaButton1
             // 
+            this.metaButton1.BackColor = System.Drawing.Color.Gray;
             this.metaButton1.Character = null;
             this.metaButton1.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
             this.metaButton1.ItemIcon = null;
@@ -143,7 +144,8 @@
             this.metaButton1.TabIndex = 3;
             this.metaButton1.Tag = 1;
             this.metaButton1.Text = "Meta";
-            this.metaButton1.UseVisualStyleBackColor = true;
+            this.metaButton1.UseVisualStyleBackColor = false;
+            this.metaButton1.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // blueButton1
             // 
@@ -160,6 +162,7 @@
             this.blueButton1.Tag = 1;
             this.blueButton1.Text = "Blue";
             this.blueButton1.UseVisualStyleBackColor = false;
+            this.blueButton1.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // yellowButton1
             // 
@@ -176,6 +179,7 @@
             this.yellowButton1.Tag = 1;
             this.yellowButton1.Text = "Yellow";
             this.yellowButton1.UseVisualStyleBackColor = false;
+            this.yellowButton1.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // redButton1
             // 
@@ -192,6 +196,7 @@
             this.redButton1.Tag = 1;
             this.redButton1.Text = "Red";
             this.redButton1.UseVisualStyleBackColor = false;
+            this.redButton1.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // button7
             // 
@@ -232,6 +237,7 @@
             // 
             // metaButton2
             // 
+            this.metaButton2.BackColor = System.Drawing.Color.Gray;
             this.metaButton2.Character = null;
             this.metaButton2.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
             this.metaButton2.ItemIcon = null;
@@ -243,7 +249,8 @@
             this.metaButton2.TabIndex = 3;
             this.metaButton2.Tag = 2;
             this.metaButton2.Text = "Meta";
-            this.metaButton2.UseVisualStyleBackColor = true;
+            this.metaButton2.UseVisualStyleBackColor = false;
+            this.metaButton2.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // blueButton2
             // 
@@ -260,6 +267,8 @@
             this.blueButton2.Tag = 2;
             this.blueButton2.Text = "Blue";
             this.blueButton2.UseVisualStyleBackColor = false;
+            this.blueButton2.Click += new System.EventHandler(this.buttonGem_Click);
+            this.blueButton2.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // yellowButton2
             // 
@@ -276,6 +285,8 @@
             this.yellowButton2.Tag = 2;
             this.yellowButton2.Text = "Yellow";
             this.yellowButton2.UseVisualStyleBackColor = false;
+            this.yellowButton2.Click += new System.EventHandler(this.buttonGem_Click);
+            this.yellowButton2.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // redButton2
             // 
@@ -292,6 +303,8 @@
             this.redButton2.Tag = 2;
             this.redButton2.Text = "Red";
             this.redButton2.UseVisualStyleBackColor = false;
+            this.redButton2.Click += new System.EventHandler(this.buttonGem_Click);
+            this.redButton2.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // groupBox3
             // 
@@ -321,6 +334,7 @@
             // 
             // metaButton3
             // 
+            this.metaButton3.BackColor = System.Drawing.Color.Gray;
             this.metaButton3.Character = null;
             this.metaButton3.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
             this.metaButton3.ItemIcon = null;
@@ -332,7 +346,8 @@
             this.metaButton3.TabIndex = 3;
             this.metaButton3.Tag = 3;
             this.metaButton3.Text = "Meta";
-            this.metaButton3.UseVisualStyleBackColor = true;
+            this.metaButton3.UseVisualStyleBackColor = false;
+            this.metaButton3.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // blueButton3
             // 
@@ -349,6 +364,7 @@
             this.blueButton3.Tag = 3;
             this.blueButton3.Text = "Blue";
             this.blueButton3.UseVisualStyleBackColor = false;
+            this.blueButton3.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // yellowButton3
             // 
@@ -365,6 +381,7 @@
             this.yellowButton3.Tag = 3;
             this.yellowButton3.Text = "Yellow";
             this.yellowButton3.UseVisualStyleBackColor = false;
+            this.yellowButton3.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // redButton3
             // 
@@ -381,6 +398,7 @@
             this.redButton3.Tag = 3;
             this.redButton3.Text = "Red";
             this.redButton3.UseVisualStyleBackColor = false;
+            this.redButton3.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // groupBox4
             // 
@@ -410,6 +428,7 @@
             // 
             // metaButton4
             // 
+            this.metaButton4.BackColor = System.Drawing.Color.Gray;
             this.metaButton4.Character = null;
             this.metaButton4.CharacterSlot = Rawr.Character.CharacterSlot.Metas;
             this.metaButton4.ItemIcon = null;
@@ -421,7 +440,8 @@
             this.metaButton4.TabIndex = 3;
             this.metaButton4.Tag = 4;
             this.metaButton4.Text = "Meta";
-            this.metaButton4.UseVisualStyleBackColor = true;
+            this.metaButton4.UseVisualStyleBackColor = false;
+            this.metaButton4.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // blueButton4
             // 
@@ -438,6 +458,7 @@
             this.blueButton4.Tag = 4;
             this.blueButton4.Text = "Blue";
             this.blueButton4.UseVisualStyleBackColor = false;
+            this.blueButton4.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // yellowButton4
             // 
@@ -454,6 +475,7 @@
             this.yellowButton4.Tag = 4;
             this.yellowButton4.Text = "Yellow";
             this.yellowButton4.UseVisualStyleBackColor = false;
+            this.yellowButton4.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // redButton4
             // 
@@ -470,12 +492,13 @@
             this.redButton4.Tag = 4;
             this.redButton4.Text = "Red";
             this.redButton4.UseVisualStyleBackColor = false;
+            this.redButton4.Leave += new System.EventHandler(this.buttonGem_Click);
             // 
             // FormMassGemReplacement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(496, 128);
+            this.ClientSize = new System.Drawing.Size(496, 394);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -485,7 +508,9 @@
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
             this.Name = "FormMassGemReplacement";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormMassGemReplacement";
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
