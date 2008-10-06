@@ -120,7 +120,13 @@ namespace Rawr
                 {
                     if (defaultBuffs[defaultBuffIndex].Name == _allBuffs[allBuffIndex].Name)
                     {
-                        if (defaultBuffs[defaultBuffIndex].Stats != _allBuffs[allBuffIndex].Stats)
+                        if (defaultBuffs[defaultBuffIndex].Stats != _allBuffs[allBuffIndex].Stats ||
+							defaultBuffs[defaultBuffIndex].Category != _allBuffs[allBuffIndex].Category ||
+							defaultBuffs[defaultBuffIndex].ConflictingBuffs != _allBuffs[allBuffIndex].ConflictingBuffs ||
+							defaultBuffs[defaultBuffIndex].RequiredBuff != _allBuffs[allBuffIndex].RequiredBuff ||
+							defaultBuffs[defaultBuffIndex].SetName != _allBuffs[allBuffIndex].SetName ||
+							defaultBuffs[defaultBuffIndex].SetThreshold != _allBuffs[allBuffIndex].SetThreshold ||
+							defaultBuffs[defaultBuffIndex].Type != _allBuffs[allBuffIndex].Type)
                         {
                             if (defaultBuffs[defaultBuffIndex].Stats == null)
                             {
@@ -128,8 +134,14 @@ namespace Rawr
                             }
                             else
                             {
-                                _allBuffs[allBuffIndex].Stats = defaultBuffs[defaultBuffIndex].Stats;
-                            }
+								_allBuffs[allBuffIndex].Stats = defaultBuffs[defaultBuffIndex].Stats;
+								_allBuffs[allBuffIndex].Category = defaultBuffs[defaultBuffIndex].Category;
+								_allBuffs[allBuffIndex].ConflictingBuffs = defaultBuffs[defaultBuffIndex].ConflictingBuffs;
+								_allBuffs[allBuffIndex].RequiredBuff = defaultBuffs[defaultBuffIndex].RequiredBuff;
+								_allBuffs[allBuffIndex].SetName = defaultBuffs[defaultBuffIndex].SetName;
+								_allBuffs[allBuffIndex].SetThreshold = defaultBuffs[defaultBuffIndex].SetThreshold;
+								_allBuffs[allBuffIndex].Type = defaultBuffs[defaultBuffIndex].Type;
+							}
                         }
                         found = true;   
                         break;
