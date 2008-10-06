@@ -93,7 +93,7 @@ namespace Rawr.HolyPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Spell HpS", "Spell HpM", "Spell HpS All", "Spell HpM All" };
+                    _customChartNames = new string[] { "Spell HpS", "Spell HpM", "Spell AoE HpS", "Spell AoE HpM" };
                 return _customChartNames;
             }
         }
@@ -289,28 +289,20 @@ namespace Rawr.HolyPriest
 
             switch (chartName)
             {
-                case "Spell HpS All":
+                case "Spell AoE HpS":
                     _currentChartName = "Spell HpS";
                     p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     spellList = new List<Spell>[] {
-                                                Renew.GetAllRanks(p.BasicStats, character),
-                                                FlashHeal.GetAllRanks(p.BasicStats, character), 
-                                                GreaterHeal.GetAllRanks(p.BasicStats, character),
-                                                Heal.GetAllRanks(p.BasicStats, character),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 3),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 4),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 5),
-                                                BindingHeal.GetAllRanks(p.BasicStats, character),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 3),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 4),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 5),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 3),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 4),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 5),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 3),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 5),
-                                                Penance.GetAllRanks(p.BasicStats, character)
+                                                Renew.GetAllCommonRanks(p.BasicStats, character),
+                                                FlashHeal.GetAllCommonRanks(p.BasicStats, character), 
+                                                GreaterHeal.GetAllCommonRanks(p.BasicStats, character),
+                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                BindingHeal.GetAllCommonRanks(p.BasicStats, character),
+                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllCommonRanks(p.BasicStats, character),
+                                                PowerWordShield.GetAllCommonRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -330,28 +322,20 @@ namespace Rawr.HolyPriest
                     }
 
                     return comparisonList.ToArray();
-                case "Spell HpM All":
+                case "Spell AoE HpM":
                     _currentChartName = "Spell HpM";
                     p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     spellList = new List<Spell>[] {
-                                                Renew.GetAllRanks(p.BasicStats, character),
-                                                FlashHeal.GetAllRanks(p.BasicStats, character), 
-                                                GreaterHeal.GetAllRanks(p.BasicStats, character),
-                                                Heal.GetAllRanks(p.BasicStats, character),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 3),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 4),
-                                                PrayerOfHealing.GetAllRanks(p.BasicStats, character, 5),
-                                                BindingHeal.GetAllRanks(p.BasicStats, character),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 3),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 4),
-                                                PrayerOfMending.GetAllRanks(p.BasicStats, character, 5),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 3),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 4),
-                                                CircleOfHealing.GetAllRanks(p.BasicStats, character, 5),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 3),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllRanks(p.BasicStats, character, 5),
-                                                Penance.GetAllRanks(p.BasicStats, character)
+                                                Renew.GetAllCommonRanks(p.BasicStats, character),
+                                                FlashHeal.GetAllCommonRanks(p.BasicStats, character), 
+                                                GreaterHeal.GetAllCommonRanks(p.BasicStats, character),
+                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                BindingHeal.GetAllCommonRanks(p.BasicStats, character),
+                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                Penance.GetAllCommonRanks(p.BasicStats, character),
+                                                PowerWordShield.GetAllCommonRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -378,21 +362,14 @@ namespace Rawr.HolyPriest
                                                 Renew.GetAllCommonRanks(p.BasicStats, character),
                                                 FlashHeal.GetAllCommonRanks(p.BasicStats, character), 
                                                 GreaterHeal.GetAllCommonRanks(p.BasicStats, character),
-                                                Heal.GetAllCommonRanks(p.BasicStats, character),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 1),
                                                 BindingHeal.GetAllCommonRanks(p.BasicStats, character),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                Penance.GetAllRanks(p.BasicStats, character)
+                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                Penance.GetAllCommonRanks(p.BasicStats, character),
+                                                PowerWordShield.GetAllCommonRanks(p.BasicStats, character)
+
                                             };
 
                     foreach (List<Spell> spells in spellList)
@@ -419,21 +396,13 @@ namespace Rawr.HolyPriest
                                                 Renew.GetAllCommonRanks(p.BasicStats, character),
                                                 FlashHeal.GetAllCommonRanks(p.BasicStats, character), 
                                                 GreaterHeal.GetAllCommonRanks(p.BasicStats, character),
-                                                Heal.GetAllCommonRanks(p.BasicStats, character),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
+                                                PrayerOfHealing.GetAllCommonRanks(p.BasicStats, character, 1),
                                                 BindingHeal.GetAllCommonRanks(p.BasicStats, character),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 3),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 4),
-                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 5),
-                                                Penance.GetAllRanks(p.BasicStats, character)
+                                                PrayerOfMending.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                CircleOfHealing.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                HolyNova.GetAllCommonRanks(p.BasicStats, character, 1),
+                                                Penance.GetAllCommonRanks(p.BasicStats, character),
+                                                PowerWordShield.GetAllCommonRanks(p.BasicStats, character)
                                             };
 
                     foreach (List<Spell> spells in spellList)

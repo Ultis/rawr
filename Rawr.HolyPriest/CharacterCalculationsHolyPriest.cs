@@ -78,7 +78,7 @@ namespace Rawr.HolyPriest
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.HasteRating / 15.7, 2), BasicStats.HasteRating.ToString()));
-            dictValues.Add("Global Cooldown", Spell.GetGlobalCooldown(BasicStats).ToString("0.00"));
+            dictValues.Add("Global Cooldown", Math.Max(1.0f, 1.5f / (1 + BasicStats.HasteRating / 15.7f / 100)).ToString("0.00"));
 
             dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());
