@@ -168,6 +168,7 @@
             // 
             // trackBarTargetArmor
             // 
+            this.trackBarTargetArmor.BackColor = System.Drawing.Color.White;
             this.trackBarTargetArmor.LargeChange = 1000;
             this.trackBarTargetArmor.Location = new System.Drawing.Point(79, 65);
             this.trackBarTargetArmor.Maximum = 9000;

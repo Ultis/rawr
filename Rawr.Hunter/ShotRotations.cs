@@ -24,13 +24,15 @@ namespace Rawr.Hunter
         double totalStaticHaste;
         double effectiveRAPAgainstMob;
         double abilitiesCritDmgModifier;
+        double yellowCritDmgModifier;
         double weaponDamageAverage;
         double ammoDamage;
         double talentModifiers;
         double armorReduction;
+        double talentedArmorReduction;
 
 
-        public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
+        public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double yellowCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
@@ -39,11 +41,15 @@ namespace Rawr.Hunter
             this.totalStaticHaste = totalStaticHaste;
             this.effectiveRAPAgainstMob = effectiveRAPAgainstMob;
             this.abilitiesCritDmgModifier = abilitiesCritDmgModifier;
+            this.yellowCritDmgModifier = yellowCritDmgModifier;
             this.weaponDamageAverage = weaponDamageAverage;
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
             double targetArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
             this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+
+            targetArmor = options.TargetArmor * (1.0 - character.HunterTalents.PiercingShots * 0.02) - calculatedStats.BasicStats.ArmorPenetration;
+            this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
 
 
@@ -128,7 +134,7 @@ namespace Rawr.Hunter
 
         protected void ShotChimera(RotationInfo info, int steadyshots)
         {
-            double chimCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
+            double chimCritDmgModifier = yellowCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
             double critHitModifier = (calculatedStats.BasicStats.Crit * chimCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
 
             double chimeraDmg = weaponDamageAverage * 1.25;
@@ -144,7 +150,7 @@ namespace Rawr.Hunter
 
             chimeraDmg *= critHitModifier * talentModifiers;
 
-            info.rotationDmg += chimeraDmg;
+            info.rotationDmg += chimeraDmg + 2.0/3.0 * serpentStingDmg * talentModifiers; // Add Serpent Sting dmg for 10 sec
             info.rotationTime += 1.5;
 
         }
@@ -152,7 +158,7 @@ namespace Rawr.Hunter
         protected void ShotExplosive(RotationInfo info)
         {
             double explosiveCrit = calculatedStats.BasicStats.Crit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
-            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (explosiveCrit * yellowCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
 
             double explosiveShotDmg = 0.08 * (effectiveRAPAgainstMob + hawkRAPBonus) + 238; // TODO: Level80
 
@@ -174,7 +180,7 @@ namespace Rawr.Hunter
 
             double steadyShotCastTime = 2.0 / totalStaticHaste;
 
-            info.rotationDmg += steadyShotDmg * armorReduction;
+            info.rotationDmg += steadyShotDmg * talentedArmorReduction;
             info.rotationTime += steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5;
         }
 

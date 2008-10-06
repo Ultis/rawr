@@ -92,6 +92,7 @@
     <Compile Include="CharacterCalculationsHunter.cs" />
     <Compile Include="ComparisonCalculationHunter.cs" />
     <Compile Include="HunterEnums.cs" />
+    <Compile Include="PetCalculations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CalculationOptionsPanelHunter.resx">
       <DependentUpon>CalculationOptionsPanelHunter.cs</DependentUpon>

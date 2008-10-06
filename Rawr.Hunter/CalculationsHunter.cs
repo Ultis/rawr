@@ -35,6 +35,7 @@ namespace Rawr.Hunter
          * Serpent's Swiftness
          * 
          ***** Marksmanship:
+         * Focused Aim+
          * Lethal Shots
          * Mortal Shots
          * Careful Aim
@@ -45,11 +46,11 @@ namespace Rawr.Hunter
          * Wild Quiver
          * Improved Steady Shot+
          * Chimera Shot
+         * Piercing Shots
          * 
          ***** Survival:
          * Survival Instincts
          * Survivalist
-         * Surefooted
          * Hunter vs. Wild+
          * Killer Instinct
          * Lightning Reflexes
@@ -384,7 +385,7 @@ namespace Rawr.Hunter
             #region Critical Hit Damage
 
             double autoshotCritDmgModifier = 1.0;
-            double abilitiesCritDmgModifier = 1.0 + character.HunterTalents.MortalShots * 0.6;
+            double abilitiesCritDmgModifier = 1.0 + character.HunterTalents.MortalShots * 0.06;
 
             #endregion
 
@@ -449,7 +450,7 @@ namespace Rawr.Hunter
 
             #region Rotations
 
-            ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, options, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
+            ShotRotationCalculator rotation = new ShotRotationCalculator(character, calculatedStats, options, totalStaticHaste, effectiveRAPAgainstMob, abilitiesCritDmgModifier, autoshotCritDmgModifier, weaponDamageAverage, ammoDamage, talentModifiers);
 
             double bestDPS = 0.0;
 
@@ -478,9 +479,14 @@ namespace Rawr.Hunter
             }
             #endregion
 
+            #region Pet
+
+            PetCalculations pet = new PetCalculations(character, calculatedStats, options);
+
+            #endregion
 
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
-            calculatedStats.PetDpsPoints = 0.0f;
+            calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
             return calculatedStats;
@@ -644,7 +650,7 @@ namespace Rawr.Hunter
 				// TODO: Implement properly
 
 				//surefooted
-				talents.Hit += (talentTree.Surefooted * 0.01f);
+				talents.Hit += (talentTree.FocusedAim * 0.01f);
 
 				//Lighting Reflexes
 				talents.BonusAgilityMultiplier = ((1.0f + talents.BonusAgilityMultiplier) * (1.0f + .03f * talentTree.LightningReflexes)) - 1.0f;
