@@ -61,8 +61,6 @@ namespace Rawr.Tree
 
             upDownMaxCycleDuration.Value = (decimal) calcOpts.MaxCycleDuration;
 
-            enforceMeta.Checked = Character.EnforceMetagemRequirements;
-
             if (calcOpts.ShattrathFaction == "Scryer")
             {
                 shattScryer.Checked = true;
@@ -363,15 +361,6 @@ namespace Rawr.Tree
             }
         }
 
-        private void enforceMeta_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                Character.EnforceMetagemRequirements = enforceMeta.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void shattNone_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading && shattNone.Checked)
@@ -574,7 +563,6 @@ namespace Rawr.Tree
             return xml.ToString();
         }
 
-        public bool EnforceMetagemRequirements = false;
         public float FightLength = 5;
         public float ManaPotAmt = 2400;
         public float ManaPotDelay = 2.5f;

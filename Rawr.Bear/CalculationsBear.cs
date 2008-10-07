@@ -65,7 +65,8 @@ namespace Rawr
 					"Complex Stats:Dodge",
 					"Complex Stats:Miss",
 					"Complex Stats:Mitigation",
-					"Complex Stats:Dodge + Miss",
+					"Complex Stats:Avoidance PreDR",
+					"Complex Stats:Avoidance PostDR",
 					"Complex Stats:Total Mitigation",
 					"Complex Stats:Damage Taken",
 					"Complex Stats:Chance to be Crit",
@@ -198,7 +199,7 @@ you are being killed by burst damage, focus on Survival Points.",
 		{
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			int targetLevel = calcOpts.TargetLevel;
-			int characterLevel = (int)Math.Floor(calcOpts.TargetLevel / 10f);
+			int characterLevel = character.Level;
 			Stats stats = GetCharacterStats(character, additionalItem);
 			float levelDifference = (targetLevel - characterLevel) * 0.2f;
 			
@@ -209,23 +210,25 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.TargetLevel = targetLevel;
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
+			float dodgeNonDR = stats.Dodge - levelDifference;
+			float missNonDR = stats.Miss - levelDifference;
 			float dodgePreDR = stats.Agility / 20f + (stats.DodgeRating / (984f / 52f)) + (defSkill * 0.04f);
 			float missPreDR = (defSkill * 0.04f);
 			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
 			float missPostDR = 1f / (1f / 116.890707f + 0.972f / missPreDR);
-			float dodgeTotal = stats.Dodge - levelDifference + dodgePostDR;
-			float missTotal = stats.Miss - levelDifference + missPostDR;
+			float dodgeTotal = dodgeNonDR + dodgePostDR;
+			float missTotal = missNonDR + missPostDR;
 
 			calculatedStats.Miss = missTotal;
 			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
-			calculatedStats.Mitigation = Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f) * (1 - stats.DamageTakenMultiplier);
-			calculatedStats.AvoidancePreDR = calculatedStats.Dodge + calculatedStats.Miss;
-			calculatedStats.AvoidancePostDR = calculatedStats.Dodge + calculatedStats.Miss;
+			calculatedStats.Mitigation = 100 - ((100 - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * stats.DamageTakenMultiplier);
+			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
+			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
 			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction;
 			calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
 
 			//Out of 100 attacks, you'll take...
-			float crits = Math.Min(Math.Max(0f, 100f - calculatedStats.AvoidancePostDR), (2f + levelDifference) - calculatedStats.CappedCritReduction);
+			float crits = Math.Min(Math.Max(0f, 100f - calculatedStats.AvoidancePostDR), (5f + levelDifference) - calculatedStats.CappedCritReduction);
 			//float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
 			float hits = Math.Max(0f, 100f - (crits + calculatedStats.AvoidancePostDR));
 			//Apply armor and multipliers for each attack type...
@@ -252,7 +255,6 @@ you are being killed by burst damage, focus on Survival Points.",
             return calculatedStats;
         }
         
-#if !OLD_THREAT
         private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, CalculationOptionsBear calcOpts)
         {
             float targetArmor = 7700;
@@ -388,116 +390,6 @@ you are being killed by burst damage, focus on Survival Points.",
             
 
         }
-#else
-       private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, CalculationOptionsBear calcOpts)
-        {
-            float targetArmor = 7700;
-            float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-            float modArmor = 1-(baseArmor / (baseArmor + 10557.5f));
-
-            float critMultiplier = 2 * (1 + stats.BonusCritMultiplier);
-            float attackPower = stats.AttackPower + ((1 + stats.BonusAttackPowerMultiplier));
-
-
-            float hasteBonus = stats.HasteRating / 15.76f / 100f;
-            float attackSpeed = (2.5f ) / (1f + hasteBonus);
-
-
-            float hitBonus = stats.HitRating * 52f / 82f / 1000f;
-            float expertiseBonus = stats.ExpertiseRating * 52f / 82f / 2.5f * 0.0025f;
-            
-            float chanceDodge = Math.Max(0f, 0.065f+.005f*(targetLevel -73) - expertiseBonus);
-            float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
-            float chanceBlock = 0;//ha!
-            float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
-            if ((targetLevel - 70f) < 3)
-            {
-                chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 70f) - hitBonus);
-            }
-
-            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-
-            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + ((stats.Agility + (1-chanceAvoided)*stats.TerrorProc*2.0f/3.0f) / 25f)) / 100f);
-
-            calculatedStats.EnemyBlockedAttacks = chanceBlock * 100;
-            calculatedStats.EnemyDodgedAttacks = chanceDodge * 100;
-            calculatedStats.EnemyParriedAttacks = chanceParry * 100;
-            calculatedStats.EnemyMissedAttacks = chanceMiss * 100;
-
-            calculatedStats.DodgedAttacks = chanceDodge * 100f;
-            calculatedStats.MissedAttacks = calculatedStats.EnemyAvoidedAttacks - calculatedStats.DodgedAttacks;
-
-
-            float critRageTPS = 5*chanceCrit*(1 / attackSpeed + 4 / 6.0f)*5;
-
-
-            float weaponDamage = (1+stats.BonusPhysicalDamageMultiplier) *(stats.WeaponDamage+(2.5f* + (768f + attackPower) / 14f));
-
-            float whiteDPS = weaponDamage / attackSpeed ;
-
-            float mangleDPS =  1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage) / 6;
-            /*            
-                        float MangleDamage=1.1f*1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage);
-                        float SwipeDamage = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor) );
-                        float LacerateDamage = 1.1*(1+stats.BonusPhysicalDamageMultiplier)*1.3f *(31+stats.AttackPower/100+stats.BonusLacerateDamage) ;
- 
-                        float MangleThreat = MangleDamage * 1.45f + 25 * chanceCrit;
-                        float SwipeThreat = SwipeDamage * 1.45f + 25 * chanceCrit;
-             */
-            float LacerateDD = (1 + stats.BonusPhysicalDamageMultiplier) * 1.3f * (31 + stats.AttackPower / 100 + stats.BonusLacerateDamage);
-            float LacerateBaseTPS = (285) * (1 - chanceAvoided)*.5f;
-            float lacerateDotDPS = (1+stats.BonusPhysicalDamageMultiplier) *(1.3f*(155 + 5*(stats.AttackPower / 100) + stats.BonusLacerateDamage))/3;
-
-            float BloodlustTPS = 1 / attackSpeed*(1-chanceAvoided) * stats.BloodlustProc / 4.0f * 5;
-
-            calculatedStats.ThreatScale = calcOpts.ThreatScale;
-   
-
-            float averageDamage = 1 - chanceAvoided - chanceCrit + critMultiplier * chanceCrit;
-
-            calculatedStats.MaxLacerateDPS =(
-                1.1f * ((LacerateDD / 2) * modArmor * averageDamage + lacerateDotDPS));
-            calculatedStats.MaxLacerate = 1.45f * (LacerateBaseTPS +  (5*chanceCrit*(3 / 6.0f))*5 +
-                calculatedStats.MaxLacerateDPS - 1.1f* 0.8f * lacerateDotDPS);
-
-
-            calculatedStats.MinLacerateDPS = (1.1f * ((LacerateDD / 15.0f) * averageDamage + lacerateDotDPS));
-
-            calculatedStats.MinLacerate = 1.45f * (2*LacerateBaseTPS/15 + (5 * chanceCrit * (1 / 15.0f)) * 5 +
-                calculatedStats.MinLacerateDPS - 1.1f * 0.8f * lacerateDotDPS);
-
-            calculatedStats.SwipeDPS = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor) + 5 * chanceCrit * 5) / 2.0f;
-            calculatedStats.SwipeThreat = (1.45f * calculatedStats.SwipeDPS);
-
-            calculatedStats.MangleDamage = (
-                1.1f * (((mangleDPS) * modArmor) * averageDamage));
-            calculatedStats.MangleThreat = 1.45f * ((5 * chanceCrit * (1 / 6.0f)) * 5 +
-                calculatedStats.MangleDamage * (1 + stats.BonusMangleBearThreat));
-
-            float glancingRate = 0.2335774f;
-            float glancingReduction = .3f;
-            // add in glancing
-            calculatedStats.WhiteDPS = 
-               1.1f * (((whiteDPS) * modArmor) * (averageDamage - glancingRate * glancingReduction));
-            
-            calculatedStats.WhiteTPS = 1.45f * (5 * chanceCrit * (1 / attackSpeed) * 5 + BloodlustTPS +
-                calculatedStats.WhiteDPS);
-
-            calculatedStats.LimitedDPS = calculatedStats.MaxLacerateDPS + calculatedStats.MangleDamage + calculatedStats.WhiteDPS;
-            calculatedStats.UnlimitedDPS = calculatedStats.LimitedDPS + (179 / attackSpeed )* modArmor* averageDamage;
-
-            float MangleDamage = 1.1f * 1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage);
-            float SwipeDamage = ((1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * (1.1f * (.077f * stats.AttackPower + 92) * averageDamage * modArmor));
-
-
-            calculatedStats.ThreatPoints    = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS +
-                1.1f * (((whiteDPS + LacerateDD / 2 + mangleDPS) * modArmor) * averageDamage + 0.2f * lacerateDotDPS));
-            calculatedStats.UnlimitedThreat = calculatedStats.ThreatScale * 1.45f * (LacerateBaseTPS + critRageTPS + BloodlustTPS + 322 / attackSpeed +
-                1.1f * (((whiteDPS + LacerateDD / 2 + 179 / attackSpeed + mangleDPS) * modArmor) * averageDamage + 0.2f * lacerateDotDPS));
-
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-		}
-#endif
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
@@ -574,7 +466,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			Stats statsItems = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-			statsItems.Armor *= (5f * (1f + 0.02f * character.DruidTalents.ThickHide));
+			float[] thickHideMultipliers = new float[] {0f, 0.04f, 0.07f, 0.1f};
+			statsItems.Armor *= (5f * (1f + thickHideMultipliers[character.DruidTalents.ThickHide]));
 
 			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
@@ -602,6 +495,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			statsTotal.AttackPower += statsTotal.Strength * 2;
 			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
 			statsTotal.Health += (statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
+			statsTotal.Armor += 2 * statsTotal.Agility;
+			statsTotal.Armor *= (1 + statsTotal.BonusArmorMultiplier);
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -1226,26 +1121,26 @@ you are being killed by burst damage, focus on Survival Points.",
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
 			float levelDifference = 0.2f * (TargetLevel - 70);
-			float targetCritReduction = 2f + levelDifference;
-			float currentCritReduction = ((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04f) +
-				(BasicStats.Resilience / (2050f / 52f));
+			float targetCritReduction = 5f + levelDifference;
+			float currentCritReduction = ((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04f) 
+				+ BasicStats.Resilience / (2050f / 52f) + BasicStats.CritChanceReduction;			
 			int defToCap = 0, resToCap = 0;
-			if (currentCritReduction < targetCritReduction)
+			if (CritReduction < targetCritReduction)
 			{
-				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04) +
-						(BasicStats.Resilience / (2050f / 52f)) < targetCritReduction)
+				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04f)
+				+ BasicStats.Resilience / (2050f / 52f) + BasicStats.CritChanceReduction < targetCritReduction)
 					defToCap++;
-				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04) +
-						((BasicStats.Resilience + resToCap) / (2050f / 52f)) < targetCritReduction)
+				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04f)
+				+ (BasicStats.Resilience + resToCap) / (2050f / 52f) + BasicStats.CritChanceReduction < targetCritReduction)
 					resToCap++;
 			}
-			else if (currentCritReduction > targetCritReduction)
+			else if (CritReduction > targetCritReduction)
 			{
-				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04) +
-						(BasicStats.Resilience / (2050f / 52f)) > targetCritReduction)
+				while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04f)
+				+ BasicStats.Resilience / (2050f / 52f) + BasicStats.CritChanceReduction > targetCritReduction)
 					defToCap--;
-				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04) +
-						((BasicStats.Resilience + resToCap) / (2050f / 52f)) > targetCritReduction)
+				while (((float)Math.Floor(BasicStats.DefenseRating / (123f / 52f)) * 0.04f)
+				+ (BasicStats.Resilience + resToCap) / (2050f / 52f) + BasicStats.CritChanceReduction > targetCritReduction)
 					resToCap--;
 				defToCap++;
 				resToCap++;
@@ -1260,10 +1155,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Armor", BasicStats.Armor.ToString());
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-			if (Race == Character.CharacterRace.NightElf)
-				dictValues.Add("Dodge Rating", (BasicStats.DodgeRating - 59).ToString());
-			else
-				dictValues.Add("Dodge Rating", (BasicStats.DodgeRating - 40).ToString());
+			dictValues.Add("Dodge Rating", BasicStats.DodgeRating.ToString());
 			dictValues.Add("Defense Rating", BasicStats.DefenseRating.ToString());
 			dictValues.Add("Resilience", BasicStats.Resilience.ToString());
 			dictValues.Add("Dodge", Dodge.ToString() + "%");
@@ -1277,7 +1169,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			else
 				dictValues.Add("Mitigation", Mitigation.ToString()
 					+ string.Format("%*Short of the armor cap by {0} armor.", armorCap - BasicStats.Armor));
-			dictValues.Add("Dodge + Miss", AvoidancePreDR.ToString() + "%");
+			dictValues.Add("Avoidance PreDR", AvoidancePreDR.ToString() + "%");
+			dictValues.Add("Avoidance PostDR", AvoidancePostDR.ToString() + "%");
 			dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
 			if (defToCap == 0 && resToCap == 0)
@@ -1305,18 +1198,13 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 
-            float critRating = BasicStats.CritRating;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
-                critRating -= 66.24f;
-            critRating -= 264.0768f; //Base 5% + 6% from talents
-
             dictValues["Strength"] = BasicStats.Strength.ToString();
             dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
             dictValues["Hit Rating"] = BasicStats.HitRating.ToString();
             dictValues["Expertise"] = BasicStats.ExpertiseRating.ToString();
             dictValues["Haste Rating"] = BasicStats.HasteRating.ToString();
             dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
-            dictValues["Crit Rating"] = critRating.ToString();
+			dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
             dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
 
 
@@ -1347,8 +1235,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			{
 				case "Health": return BasicStats.Health;
 				case "Mitigation % from Armor": return Mitigation;
-				case "Avoidance %": return AvoidancePreDR;
-				case "% Chance to be Crit": return ((2f + (0.2f * (TargetLevel - 70))) - CritReduction);
+				case "Avoidance %": return AvoidancePostDR;
+				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 70))) - CritReduction);
 				case "Nature Survival": return NatureSurvivalPoints;
 				case "Fire Survival": return FireSurvivalPoints;
 				case "Frost Survival": return FrostSurvivalPoints;

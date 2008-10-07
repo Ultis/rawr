@@ -43,7 +43,6 @@
 			this.radioButtonNone = new System.Windows.Forms.RadioButton();
 			this.radioButtonFerociousBite = new System.Windows.Forms.RadioButton();
 			this.radioButtonRip = new System.Windows.Forms.RadioButton();
-			this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
 			this.labelExposeWeakness = new System.Windows.Forms.Label();
@@ -188,7 +187,7 @@
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonShred);
 			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonMangle);
 			this.groupBoxPrimaryAttack.Enabled = false;
-			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 449);
+			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 425);
 			this.groupBoxPrimaryAttack.Name = "groupBoxPrimaryAttack";
 			this.groupBoxPrimaryAttack.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxPrimaryAttack.TabIndex = 4;
@@ -238,7 +237,7 @@
 			this.groupBoxFinisher.Controls.Add(this.radioButtonFerociousBite);
 			this.groupBoxFinisher.Controls.Add(this.radioButtonRip);
 			this.groupBoxFinisher.Enabled = false;
-			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 625);
+			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 601);
 			this.groupBoxFinisher.Name = "groupBoxFinisher";
 			this.groupBoxFinisher.Size = new System.Drawing.Size(203, 170);
 			this.groupBoxFinisher.TabIndex = 4;
@@ -294,17 +293,6 @@
 			this.radioButtonRip.TextAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.radioButtonRip.UseVisualStyleBackColor = true;
 			this.radioButtonRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// checkBoxEnforceMetagemRequirements
-			// 
-			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 403);
-			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
-			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
-			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
-			this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
-			this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
-			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// label4
 			// 
@@ -459,7 +447,7 @@
 			this.radioButtonAldor.AutoSize = true;
 			this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
 			this.radioButtonAldor.Checked = true;
-			this.radioButtonAldor.Location = new System.Drawing.Point(7, 426);
+			this.radioButtonAldor.Location = new System.Drawing.Point(7, 402);
 			this.radioButtonAldor.Name = "radioButtonAldor";
 			this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
 			this.radioButtonAldor.TabIndex = 3;
@@ -476,7 +464,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.radioButtonScryer.AutoSize = true;
 			this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonScryer.Location = new System.Drawing.Point(83, 426);
+			this.radioButtonScryer.Location = new System.Drawing.Point(83, 402);
 			this.radioButtonScryer.Name = "radioButtonScryer";
 			this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
 			this.radioButtonScryer.TabIndex = 3;
@@ -526,7 +514,6 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
-			this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
 			this.Controls.Add(this.radioButtonScryer);
 			this.Controls.Add(this.radioButtonAldor);
 			this.Controls.Add(this.groupBoxFinisher);
@@ -585,7 +572,6 @@
 		private System.Windows.Forms.RadioButton radioButtonNone;
 		private System.Windows.Forms.RadioButton radioButtonFerociousBite;
 		private System.Windows.Forms.RadioButton radioButtonRip;
-		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TrackBar trackBarExposeWeakness;
 		private System.Windows.Forms.Label labelExposeWeakness;

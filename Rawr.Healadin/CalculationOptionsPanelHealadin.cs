@@ -179,7 +179,6 @@ namespace Rawr.Healadin
 			return xml.ToString();
 		}
 
-		public bool EnforceMetagemRequirements = false;
 		public float Length = 5;
 		public float ManaAmt = 2400;
 		public float ManaTime = 2.5f;

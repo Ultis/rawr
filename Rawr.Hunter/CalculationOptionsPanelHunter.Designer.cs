@@ -28,38 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbTargetLevel = new System.Windows.Forms.ComboBox();
-            this.chkEnforceMetaGemRequirements = new System.Windows.Forms.CheckBox();
-            this.groupBoxPetOptions = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.comboPetPriority3 = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.comboPetPriority2 = new System.Windows.Forms.ComboBox();
-            this.comboPetPriority1 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboPetFamily = new System.Windows.Forms.ComboBox();
-            this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.groupBoxPetOptions.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(70, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Target Level:";
-            // 
-            // cmbTargetLevel
-            // 
-            this.cmbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbTargetLevel.FormattingEnabled = true;
-            this.cmbTargetLevel.Items.AddRange(new object[] {
+			this.label1 = new System.Windows.Forms.Label();
+			this.cmbTargetLevel = new System.Windows.Forms.ComboBox();
+			this.groupBoxPetOptions = new System.Windows.Forms.GroupBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.comboPetPriority3 = new System.Windows.Forms.ComboBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.comboPetPriority2 = new System.Windows.Forms.ComboBox();
+			this.comboPetPriority1 = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.comboPetFamily = new System.Windows.Forms.ComboBox();
+			this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
+			this.label2 = new System.Windows.Forms.Label();
+			this.groupBoxPetOptions.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
+			this.SuspendLayout();
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(3, 14);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(70, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Target Level:";
+			// 
+			// cmbTargetLevel
+			// 
+			this.cmbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cmbTargetLevel.FormattingEnabled = true;
+			this.cmbTargetLevel.Items.AddRange(new object[] {
             "70",
             "71",
             "72",
@@ -69,17 +68,6 @@
             this.cmbTargetLevel.Size = new System.Drawing.Size(121, 21);
             this.cmbTargetLevel.TabIndex = 1;
             this.cmbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.cmbTargetLevel_SelectedIndexChanged);
-            // 
-            // chkEnforceMetaGemRequirements
-            // 
-            this.chkEnforceMetaGemRequirements.AutoSize = true;
-            this.chkEnforceMetaGemRequirements.Location = new System.Drawing.Point(6, 38);
-            this.chkEnforceMetaGemRequirements.Name = "chkEnforceMetaGemRequirements";
-            this.chkEnforceMetaGemRequirements.Size = new System.Drawing.Size(178, 17);
-            this.chkEnforceMetaGemRequirements.TabIndex = 3;
-            this.chkEnforceMetaGemRequirements.Text = "Enforce Metagem Requirements";
-            this.chkEnforceMetaGemRequirements.UseVisualStyleBackColor = true;
-            this.chkEnforceMetaGemRequirements.CheckedChanged += new System.EventHandler(this.chkEnforceMetaGemRequirements_CheckedChanged);
             // 
             // groupBoxPetOptions
             // 
@@ -197,7 +185,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.trackBarTargetArmor);
             this.Controls.Add(this.groupBoxPetOptions);
-            this.Controls.Add(this.chkEnforceMetaGemRequirements);
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelHunter";
@@ -213,8 +200,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbTargetLevel;
-        private System.Windows.Forms.CheckBox chkEnforceMetaGemRequirements;
+		private System.Windows.Forms.ComboBox cmbTargetLevel;
         private System.Windows.Forms.GroupBox groupBoxPetOptions;
         private System.Windows.Forms.ComboBox comboPetPriority2;
         private System.Windows.Forms.ComboBox comboPetPriority1;

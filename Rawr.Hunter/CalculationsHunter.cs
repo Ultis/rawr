@@ -318,8 +318,6 @@ namespace Rawr.Hunter
 
             HunterRatings ratings = new HunterRatings();
 
-			character.EnforceMetagemRequirements = options.EnforceMetaGem;
-
             double hawkRAPBonus = 155.0f * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
 
             #region Remove Any Incorrect Modelling

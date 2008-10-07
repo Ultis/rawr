@@ -29,7 +29,6 @@ namespace Rawr.Warlock
 
             calculationSuspended = true;
 
-            checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
             textBoxLatency.Text = options.Latency.ToString();
             comboBoxTargetLevel.SelectedItem = options.TargetLevel.ToString();
             textBoxFightDuration.Text = options.FightDuration.ToString();
@@ -114,12 +113,6 @@ namespace Rawr.Warlock
         private void buttonTalents_Click(object sender, EventArgs e)
         {
             talents.Show();
-        }
-
-        private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-        {
-            Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-            if(!calculationSuspended) Character.OnCalculationsInvalidated();
         }
 
         private void textBoxLatency_Leave(object sender, EventArgs e)

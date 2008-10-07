@@ -30,7 +30,6 @@
 		{
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
-			this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.numericUpDownThreatValue = new System.Windows.Forms.NumericUpDown();
 			this.comboBoxThreatValue = new System.Windows.Forms.ComboBox();
@@ -40,7 +39,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(3, 29);
+			this.label1.Location = new System.Drawing.Point(4, 6);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(73, 13);
 			this.label1.TabIndex = 0;
@@ -55,27 +54,16 @@
             "71",
             "72",
             "73"});
-			this.comboBoxTargetLevel.Location = new System.Drawing.Point(82, 26);
+			this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
 			this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
 			this.comboBoxTargetLevel.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxTargetLevel.TabIndex = 1;
 			this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
-			// checkBoxEnforceMetagemRequirements
-			// 
-			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 3);
-			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
-			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
-			this.checkBoxEnforceMetagemRequirements.TabIndex = 2;
-			this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
-			this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
-			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 56);
+			this.label2.Location = new System.Drawing.Point(4, 33);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(71, 13);
 			this.label2.TabIndex = 0;
@@ -85,7 +73,7 @@
 			// 
 			this.numericUpDownThreatValue.DecimalPlaces = 3;
 			this.numericUpDownThreatValue.Enabled = false;
-			this.numericUpDownThreatValue.Location = new System.Drawing.Point(83, 81);
+			this.numericUpDownThreatValue.Location = new System.Drawing.Point(84, 58);
 			this.numericUpDownThreatValue.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -111,7 +99,7 @@
             "OT",
             "Crazy About Threat",
             "Custom Factor"});
-			this.comboBoxThreatValue.Location = new System.Drawing.Point(83, 53);
+			this.comboBoxThreatValue.Location = new System.Drawing.Point(84, 30);
 			this.comboBoxThreatValue.Name = "comboBoxThreatValue";
 			this.comboBoxThreatValue.Size = new System.Drawing.Size(121, 21);
 			this.comboBoxThreatValue.TabIndex = 1;
@@ -122,7 +110,6 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.numericUpDownThreatValue);
-			this.Controls.Add(this.checkBoxEnforceMetagemRequirements);
 			this.Controls.Add(this.comboBoxThreatValue);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label2);
@@ -139,7 +126,6 @@
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox comboBoxTargetLevel;
-		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericUpDownThreatValue;
 		private System.Windows.Forms.ComboBox comboBoxThreatValue;

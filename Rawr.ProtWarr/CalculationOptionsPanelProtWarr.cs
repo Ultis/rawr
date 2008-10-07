@@ -44,7 +44,6 @@ namespace Rawr.ProtWarr
             trackBarMitigationScale.Value = calcOpts.MitigationScale;
             trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
             checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
-			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
 			radioButtonAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
 			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 			
@@ -82,14 +81,7 @@ namespace Rawr.ProtWarr
 			}
 		}
 
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-		{
-			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-			Character.OnCalculationsInvalidated();
-		}
-
-        private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
+		private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
@@ -131,7 +123,6 @@ namespace Rawr.ProtWarr
 		public int BossAttackValue = 20000;
 		public float ThreatScale = 20;
 		public int MitigationScale = 3750;
-		public bool EnforceMetagemRequirements = false;
 		public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
 		public string ShattrathFaction = "Scryer";

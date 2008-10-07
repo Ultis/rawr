@@ -54,8 +54,6 @@ namespace Rawr.Retribution
             checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
             checkBoxExorcism.Checked = calcOpts.Exorcism;
 
-            checkBoxMeta.Checked = calcOpts.EnforceMetagemRequirements;
-
             rbAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
             rbScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 
@@ -246,13 +244,6 @@ namespace Rawr.Retribution
             graph.Show();
         }
 
-        private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void rbAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
@@ -407,7 +398,6 @@ namespace Rawr.Retribution
 		public bool Exorcism = false;
 		public int ConsecRank = 0;
 		public int Seal = 0;
-		public bool EnforceMetagemRequirements = false;
 		public string ShattrathFaction = "Aldor";
         public bool Bloodlust = false;
         public bool DrumsOfBattle = false;

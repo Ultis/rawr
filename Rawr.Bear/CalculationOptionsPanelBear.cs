@@ -30,8 +30,7 @@ namespace Rawr
 			CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
-			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
-
+			
 			switch (numericUpDownThreatValue.Value.ToString())
 			{
 				case "0":
@@ -66,7 +65,6 @@ namespace Rawr
 				CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
-				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -94,6 +92,5 @@ namespace Rawr
 
 		public int TargetLevel = 73;
 		public float ThreatScale = 10f;
-		public bool EnforceMetagemRequirements = false;
 	}
 }

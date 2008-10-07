@@ -9,7 +9,6 @@ namespace Rawr.Hunter
 	{
 		private int _TargetLevel = 73;
 		private int _TargetArmor = 7700;
-		private bool _EnforceMetaGem = true;
 		private Aspect _Aspect = Aspect.Hawk;
 		private ShotRotation _shotRotation = ShotRotation.OneToOne;
         private PetFamily _petFamily = PetFamily.Cat;
@@ -74,12 +73,6 @@ namespace Rawr.Hunter
 		{
 			get { return _TargetArmor; }
 			set { _TargetArmor = value; }
-		}
-
-		public bool EnforceMetaGem
-		{
-			get { return _EnforceMetaGem; }
-			set { _EnforceMetaGem = value; }
 		}
 
 		public Faction ScryerAldor

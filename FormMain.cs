@@ -190,6 +190,7 @@ namespace Rawr
 					textBoxRealm.Text = Character.Realm;
 					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
+					checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
 					if (comboBoxClass.Text != Character.Class.ToString())
 					{
 						comboBoxClass.Text = Character.Class.ToString();
@@ -1298,6 +1299,15 @@ namespace Rawr
 			if (!_loadingCharacter && _character != null)
 			{
 				Character.Class = (Character.CharacterClass)Enum.Parse(typeof(Character.CharacterClass), comboBoxClass.Text);
+			}
+		}
+
+		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!_loadingCharacter && _character != null)
+			{
+				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
+				Character.OnCalculationsInvalidated();
 			}
 		}
 

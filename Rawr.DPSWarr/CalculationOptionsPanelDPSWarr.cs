@@ -268,12 +268,6 @@ namespace Rawr.DPSWarr
                      
         }
 
-        private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
-        {
-			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void radioButtonAldor_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
@@ -380,7 +374,6 @@ namespace Rawr.DPSWarr
 		public int BossArmor = 7700;
 		public int FightLength = 10;
 		public int Stance = 3;
-		public bool EnforceMetagemRequirements = false;
 		public float SlamLatency = 0.3f;
 		public float FlurryUptime = 1;
 		public string ShattrathFaction = "Aldor";

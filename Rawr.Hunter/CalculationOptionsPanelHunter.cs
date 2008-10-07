@@ -60,7 +60,6 @@ namespace Rawr.Hunter
 					break;
 				}
 			}
-            chkEnforceMetaGemRequirements.Checked = options.EnforceMetaGem;
             comboPetFamily.SelectedItem = options.PetFamily;
             comboPetPriority1.SelectedItem = options.PetPriority1;
             comboPetPriority2.SelectedItem = options.PetPriority2;
@@ -71,13 +70,6 @@ namespace Rawr.Hunter
         #endregion
 
         #region Event Handlers
-
-        private void chkEnforceMetaGemRequirements_CheckedChanged(object sender, EventArgs e)
-        {
-            options.EnforceMetaGem = chkEnforceMetaGemRequirements.Checked;
-			Character.EnforceMetagemRequirements = options.EnforceMetaGem;
-			Character.OnCalculationsInvalidated();
-        }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {

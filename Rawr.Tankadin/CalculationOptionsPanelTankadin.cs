@@ -106,7 +106,6 @@ namespace Rawr.Tankadin
             return xml.ToString();
         }
 
-        public bool EnforceMetagemRequirements = false;
         public int TargetLevel = 73;
         public int PlayerLevel = 70;
         public int AverageHit = 20000;

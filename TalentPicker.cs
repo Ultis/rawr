@@ -189,7 +189,7 @@ namespace Rawr
                             case 1: currentTree = talentTree2; break;
                             default: currentTree = talentTree3; break;
                         }
-                        TalentItem item = new TalentItem(currentTree, talentData.Name, talentData.Row - 1, talentData.Column - 1, talentData.Index, talentData.Description,
+                        TalentItem item = new TalentItem(currentTree, talentData.Name, talentData.Row - 1, talentData.Column - 1, talentData.Index, LineWrapDescription(talentData.Description),
                             (int)pi.GetValue(Talents, null), talentData.MaxPoints, talentData.Prerequisite >= 0 ? _talentPickerItems[talentData.Prerequisite] : null);
                         _talentPickerItems[talentData.Index] = item;
                         currentTree.AddTalent(item);
@@ -204,6 +204,30 @@ namespace Rawr
                 talentTree3.Redraw();
                 item_CurrentRankChanged(null, null);
 			}
+		}
+
+		private string[] LineWrapDescription(string[] descriptions)
+		{
+			List<string> wrappedDescriptions = new List<string>();
+			foreach (string description in descriptions)
+			{
+				string[] lines = description.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+				List<string> wrappedLines = new List<string>();
+				foreach (string line in lines)
+				{
+					string lineRemaining = line;
+					StringBuilder sbLine = new StringBuilder();
+					while (lineRemaining.Length > 70)
+					{
+						sbLine.Append(lineRemaining.Substring(0, lineRemaining.LastIndexOf(' ', 70)) + "\r\n");
+						lineRemaining = lineRemaining.Substring(lineRemaining.LastIndexOf(' ', 70) + 1);
+					}
+					sbLine.Append(lineRemaining);
+					wrappedLines.Add(sbLine.ToString());
+				}
+				wrappedDescriptions.Add(string.Join("\r\n", wrappedLines.ToArray()));
+			}
+			return wrappedDescriptions.ToArray();
 		}
 
         private TalentItem[] _talentPickerItems = new TalentItem[100];

@@ -72,7 +72,6 @@ namespace Rawr
 			radioButtonRip.Checked = calcOpts.Finisher == "Rip";
 			radioButtonFerociousBite.Checked = calcOpts.Finisher == "Ferocious Bite";
 			radioButtonNone.Checked = calcOpts.Finisher == "None";
-			checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
 			radioButtonAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
 			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
 			
@@ -99,7 +98,6 @@ namespace Rawr
 				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
 				CalculationOptionsCat calcOpts = Character.CalculationOptions as CalculationOptionsCat;
-				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
 				calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;

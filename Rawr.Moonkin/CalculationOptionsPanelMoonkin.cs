@@ -60,8 +60,7 @@ namespace Rawr.Moonkin
 
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
-			chkMetagem.Checked = Character.EnforceMetagemRequirements;
-            txtLatency.Text = calcOpts.Latency.ToString();
+			txtLatency.Text = calcOpts.Latency.ToString();
             txtFightLength.Text = calcOpts.FightLength.ToString();
             txtShadowPriest.Text = calcOpts.ShadowPriest.ToString();
             chkInnervate.Checked = calcOpts.Innervate;
@@ -94,13 +93,6 @@ namespace Rawr.Moonkin
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.Latency = float.Parse(txtLatency.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void chkMetagem_Leave(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			Character.EnforceMetagemRequirements = chkMetagem.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -289,7 +281,6 @@ namespace Rawr.Moonkin
         }
 
 		public int TargetLevel = 73;
-		public bool EnforceMetagemRequirements = false;
 		public float Latency = 0.4f;
 		public float FightLength = 5;
 		public bool Innervate = false;
