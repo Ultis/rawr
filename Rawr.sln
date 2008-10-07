@@ -45,9 +45,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham", "Rawr.Rest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HolyPriest", "Rawr.HolyPriest\Rawr.HolyPriest.csproj", "{95E3AFED-1207-45FB-9B22-64DCFD1279B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "Rawr.DPSDK\Rawr.DPSDK.csproj", "{450A384E-26CD-4775-A021-9062B810C91B}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 18
+		SccNumberOfProjects = 19
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -101,6 +103,9 @@ Global
 		SccProjectUniqueName17 = Rawr.HolyPriest\\Rawr.HolyPriest.csproj
 		SccProjectName17 = Rawr.HolyPriest
 		SccLocalPath17 = Rawr.HolyPriest
+		SccProjectUniqueName18 = Rawr.DPSDK\\Rawr.DPSDK.csproj
+		SccProjectName18 = Rawr.DPSDK
+		SccLocalPath18 = Rawr.DPSDK
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +180,10 @@ Global
 		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450A384E-26CD-4775-A021-9062B810C91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450A384E-26CD-4775-A021-9062B810C91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450A384E-26CD-4775-A021-9062B810C91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450A384E-26CD-4775-A021-9062B810C91B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

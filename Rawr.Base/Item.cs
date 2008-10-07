@@ -479,6 +479,7 @@ namespace Rawr
 			Idol,
 			Libram,
 			Totem,
+            Sigil,
 
 			Arrow,
 			Bullet,
