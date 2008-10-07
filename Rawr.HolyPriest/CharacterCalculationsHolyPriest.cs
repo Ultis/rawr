@@ -72,13 +72,14 @@ namespace Rawr.HolyPriest
             dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
             dictValues.Add("Regen InFSR", RegenInFSR.ToString("0"));
             dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
-
-            dictValues.Add("Holy Spell Crit", string.Format("{0}%*{1} Spell Crit rating\n{2} ({2}%) points in Holy Specialization",
-                BasicStats.SpellCrit, BasicStats.CritRating.ToString(), character.PriestTalents.HolySpecialization));
-            
-            dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
-                Math.Round(BasicStats.HasteRating / 15.7, 2), BasicStats.HasteRating.ToString()));
-            dictValues.Add("Global Cooldown", Math.Max(1.0f, 1.5f / (1 + BasicStats.HasteRating / 15.7f / 100)).ToString("0.00"));
+            dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from Rating\r\n{3}% Class Base",
+                BasicStats.SpellCrit.ToString("0.00"), (BasicStats.Intellect / 80f).ToString("0.00"), (BasicStats.CritRating / 22.08f).ToString("0.00"), 1.24f));
+            dictValues.Add("Healing Crit", string.Format("{0}%*{1} Spell Crit rating\r\n{2} ({2}%) points in Holy Specialization\r\n{3} ({4}%) points in Renewed Hope",
+                (BasicStats.SpellCrit + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f).ToString("0.00"),
+                BasicStats.CritRating.ToString("0"), character.PriestTalents.HolySpecialization, character.PriestTalents.RenewedHope, character.PriestTalents.RenewedHope * 2));          
+            dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\r\n{2}% ({2}) points in Enlightenment.", 
+                (BasicStats.HasteRating / 15.7f + BasicStats.SpellHaste).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment));
+            dictValues.Add("Global Cooldown", Math.Max(1.0f, 1.5f / (1 + BasicStats.HasteRating / 15.7f / 100f + BasicStats.SpellHaste / 100f)).ToString("0.00"));
 
             dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());

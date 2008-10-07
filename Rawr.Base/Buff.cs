@@ -1415,7 +1415,7 @@ namespace Rawr
                   Category = BuffCategory.SetBonuses,
                   Stats = new Stats() { BonusGHHealingMultiplier = 0.05f },
                   SetName = "Vestments of Absolution",
-                  SetThreshold = 2
+                  SetThreshold = 4
               });
 
             // Rogue set bonuses
