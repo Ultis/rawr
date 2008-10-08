@@ -26,6 +26,8 @@ namespace Rawr.HolyPriest
 
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
 
+            ckbMergeHaste.Checked = calcOpts.MergeHaste;
+            
             cbRotation.SelectedIndex = calcOpts.Rotation;
 
             trkActivity.Value = (int)calcOpts.TimeInFSR;
@@ -37,10 +39,29 @@ namespace Rawr.HolyPriest
             trkSerendipity.Value = (int)calcOpts.Serendipity;
             lblSerendipity.Text = trkSerendipity.Value + "% Heals give Serendipity.";
 
+            trkReplenishment.Value = (int)calcOpts.Replenishment;
+            lblReplenishment.Text = trkReplenishment.Value + "% time with Replenishment buff.";
+
+            trkShadowfiend.Value = (int)calcOpts.Shadowfiend;
+            lblShadowfiend.Text = trkShadowfiend.Value + "% effectiveness of Shadowfiend.";
+
+            trkSurvivability.Value = (int)calcOpts.Survivability;
+            lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
+
             loading = false;
         }
-               
-        
+
+
+        private void ckbMergeHaste_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.MergeHaste = ckbMergeHaste.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void trkActivity_Scroll(object sender, EventArgs e)
         {
             if (!loading)
@@ -85,6 +106,41 @@ namespace Rawr.HolyPriest
             }
         }
 
+        private void trkReplenishment_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                lblReplenishment.Text = trkReplenishment.Value + "% time with Replenishment buff.";
+                calcOpts.Replenishment = trkReplenishment.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkShadowfiend_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                lblShadowfiend.Text = trkShadowfiend.Value + "% effectiveness of Shadowfiend.";
+                calcOpts.Shadowfiend = trkShadowfiend.Value;
+                Character.OnCalculationsInvalidated();
+            }
+
+        }
+
+        private void trkSurvivability_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
+                calcOpts.Survivability = trkSurvivability.Value;
+                Character.OnCalculationsInvalidated();
+            }
+
+        }
+
     }
 
     [Serializable]
@@ -100,9 +156,13 @@ namespace Rawr.HolyPriest
 			return xml.ToString();
 		}
 
+        public bool MergeHaste = false;
         public int Rotation = 0;
         public float TimeInFSR = 85f;
         public float FightLength = 5f;
         public float Serendipity = 100f;
+        public float Replenishment = 50f;
+        public float Shadowfiend = 80f;
+        public float Survivability = 5f;
 	}
 }

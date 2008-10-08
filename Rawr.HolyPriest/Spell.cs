@@ -98,7 +98,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal / ManaCost;
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost;
             }
         }
 
@@ -124,7 +124,7 @@ namespace Rawr.HolyPriest
             : base(baseSpell)
         {
             Name = name;
-            GlobalCooldown = Math.Max(1.5f * (1 + stats.HasteRating / 15.7f / 100f + stats.SpellHaste / 100f), 1.0f);
+            GlobalCooldown = Math.Max(1.5f / (1 + stats.HasteRating / 15.7f / 100f + stats.SpellHaste / 100f), 1.0f);
             if (baseSpell.CastTime == 0)
                 CastTime = GlobalCooldown;
             else
@@ -436,7 +436,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal * Targets / CastTime;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / CastTime;
             }
         }
 
@@ -444,7 +444,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal * Targets / ManaCost;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / ManaCost;
             }
         }
 
@@ -542,7 +542,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal / GlobalCooldown) * Targets;
+                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / GlobalCooldown) * Targets;
             }
         }
 
@@ -550,7 +550,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal * Targets / ManaCost;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit *  CritChance / 100f) * Targets / ManaCost;
             }
         }
 
@@ -652,7 +652,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal / GlobalCooldown) * Targets;
+                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / GlobalCooldown) * Targets;
             }
         }
 
@@ -660,7 +660,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal / ManaCost) * Targets;
+                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost) * Targets;
             }
         }
 
@@ -746,7 +746,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal * 2/CastTime;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / CastTime * 2;
             }
         }
 
@@ -754,7 +754,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal / ManaCost) * 2;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost * 2;
             }
         }
 
@@ -842,7 +842,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal * Targets;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / CastTime;
             }
         }
 
@@ -850,7 +850,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal / ManaCost) * Targets;
+                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost * Targets;
             }
         }
 
@@ -977,8 +977,8 @@ namespace Rawr.HolyPriest
             Rank = rank;
             MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)
-                //+ stats.SpellPower * SP2HP * character.PriestTalents.TwinDisciplines * 0.01f
                 + stats.SpellPower * SP2HP * character.PriestTalents.BorrowedTime * 0.08f)
+                * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);

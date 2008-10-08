@@ -40,23 +40,24 @@ namespace Rawr.HolyPriest
             set { subPoints = value; }
         }
 
-        public float HealPoints
+        public float HPSBurstPoints
         {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
         }
 
-        public float RegenPoints
+        public float HPSSustainPoints
         {
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
         }
 
-        public float HastePoints
+        public float SurvivabilityPoints
         {
             get { return subPoints[2]; }
             set { subPoints[2] = value; }
         }
+
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -70,8 +71,8 @@ namespace Rawr.HolyPriest
             dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
             //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
-            dictValues.Add("Regen InFSR", RegenInFSR.ToString("0"));
-            dictValues.Add("Regen OutFSR", RegenOutFSR.ToString("0"));
+            dictValues.Add("Regen InFSR", Math.Floor(BasicStats.Mp5 + RegenInFSR).ToString("0"));
+            dictValues.Add("Regen OutFSR", Math.Floor(BasicStats.Mp5 + RegenOutFSR).ToString("0"));
             dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from Rating\r\n{3}% Class Base",
                 BasicStats.SpellCrit.ToString("0.00"), (BasicStats.Intellect / 80f).ToString("0.00"), (BasicStats.CritRating / 22.08f).ToString("0.00"), 1.24f));
             dictValues.Add("Healing Crit", string.Format("{0}%*{1} Spell Crit rating\r\n{2} ({2}%) points in Holy Specialization\r\n{3} ({4}%) points in Renewed Hope",
