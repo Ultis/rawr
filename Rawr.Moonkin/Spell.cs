@@ -694,7 +694,7 @@ namespace Rawr.Moonkin
                 }
                 float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
                 float innervateTime = numInnervates * 20.0f;
-                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * calcs.BasicStats.Mana * 0.04f);
+                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * 2470f * 0.04f);
             }
             // Shadow priest calculations
             float sPriestMp5 = calcOpts.ShadowPriest;
@@ -829,6 +829,12 @@ namespace Rawr.Moonkin
 
                 // JoW/mana restore procs
                 effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor) * (fightLength / rotation.Duration);
+                // Casting trees?  Remove from effective mana
+                if (character.DruidTalents.ForceOfNature > 0)
+                {
+                    int numTreeCasts = ((int)fightLength / 180) + 1;
+                    effectiveMana -= numTreeCasts * 2470f * 0.12f;
+                }
 
                 // Calculate average global cooldown based on effective haste rating (includes trinkets)
                 Spell.GlobalCooldown /= 1 + effectiveSpellHaste * (1 / CalculationsMoonkin.hasteRatingConversionFactor);
@@ -841,8 +847,8 @@ namespace Rawr.Moonkin
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
                     starfire.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
                 }
-
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS;
+                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, character.DruidTalents.Brambles) : 0;
+                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS + treeDPS;
                 // Restore Starfire's cast time because the object is reused
                 if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
                 {
@@ -871,6 +877,15 @@ namespace Rawr.Moonkin
             calcs.SubPoints = new float[] { maxDPS, maxRawDPS };
             calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
             calcs.Rotations = cachedResults;
+        }
+
+        // Let there be TREES.
+        private static float DoTreeCalcs(float effectiveNatureDamage, int bramblesLevel)
+        {
+            float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
+            float attackSpeed = 1.6f;
+            float damagePerTree = (30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
+            return 3 * damagePerTree / 180.0f;
         }
 
         private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate)
