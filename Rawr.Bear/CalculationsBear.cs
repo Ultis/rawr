@@ -477,13 +477,13 @@ you are being killed by burst damage, focus on Survival Points.",
 				BonusStaminaMultiplier = (1 + 0.04f * talents.HeartOfTheWild) * (1 + 0.02f * talents.SurvivalOfTheFittest) - 1,
 				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
 				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
-				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
+				CritChanceReduction = 2f * talents.SurvivalOfTheFittest,
 				BonusAttackPowerMultiplier = 0.02f * talents.MotherBear,
 				BonusPhysicalDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
 				Expertise = 5 * talents.PrimalPrecision,
 				AttackPower = 35 * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
-				BonusCritMultiplier = 0.05f * talents.PredatoryInstincts,
+				//BonusCritMultiplier = 0.05f * talents.PredatoryInstincts, PI doesn't work in bear form as of latest beta build
 				DamageTakenMultiplier = 1f - (0.04f * talents.MotherBear),
 			};
 
@@ -1175,17 +1175,17 @@ you are being killed by burst damage, focus on Survival Points.",
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
 			if (defToCap == 0 && resToCap == 0)
 			{
-				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
+				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
 					+ "%*Exactly enough defense rating/resilience to be uncrittable by bosses.");
 			}
 			else if (defToCap + resToCap > 0)
 			{
-				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
+				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
 					+ string.Format("%*CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
 					defToCap, resToCap));
 			}
 			else
-				dictValues.Add("Chance to be Crit", ((2f + levelDifference) - CritReduction).ToString()
+				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
 					+ string.Format("%*Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
 					-defToCap, -resToCap));
 			dictValues.Add("Overall Points", OverallPoints.ToString());
