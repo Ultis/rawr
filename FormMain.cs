@@ -542,8 +542,8 @@ namespace Rawr
 		void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            //FormMassGemReplacement GemControl = new FormMassGemReplacement();
-            //GemControl.ShowDialog(this);
+            FormMassGemReplacement GemControl = new FormMassGemReplacement();
+            GemControl.ShowDialog(this);
 
         }
 		

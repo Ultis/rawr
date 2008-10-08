@@ -9,16 +9,33 @@ using System.Windows.Forms;
 namespace Rawr
 {
 
+       /*things to do: 
+        
+         
+        * Find better default image for sockets
+        * Add scroll bar when >4 gemmings are used
+        * When the OK button is pressed, all items in ItemCache.RelevantItems (I think that's the right list)
+        * should be filtered through, and checked for the gemmings listed here. If the gemming is missing, add it
+        * If the Delete non-listed gemmings box is checked, remove any instances of items that have
+        * gemmings that differ from those listed here. 
+
+       */
+        
 
 
     public partial class FormMassGemReplacement : Form, IFormItemSelectionProvider
     {
-        //used to enable selection of relevant gems
+        
         private FormItemSelection _formItemSelection;
-        private static List<Gemming> listOfGemmings = new List<Gemming>();
-        private static List<Gemming> heldoverGemmings;
+        
+        //in future developments, the two lists could be merged. I just
+        //wanted to keep the machinery for the class (listofgemmings)
+        //apart from the interface (groupboxes) as I worked on them
+        //iteratively.
 
-        Gemming temp = new Gemming();
+        private static List<Gemming> listOfGemmings = new List<Gemming>();
+        private List<GroupBox> groupboxesForGemmings = new List<GroupBox>(); 
+        
 
         public FormItemSelection FormItemSelection
         {
@@ -39,37 +56,69 @@ namespace Rawr
         {
             InitializeComponent();
 
+            //this is used when reloading the form
+            
+            foreach (Gemming gem in listOfGemmings)
+            {
+                groupboxesForGemmings.Add(createGroupBox());
+            }
+
+            //makes everything pretty....
+
             if (listOfGemmings.Count == 0)
-                listOfGemmings.Add(temp);
-          
+                this.buttonAddGemming_Click(this, null);
+            
             cycleGroups();
             adjustform();
         }
 
-
-
-
-
-
-
-
-
-        /*as of right now, the form is stubbed out, and the command to use it is 
-        //commented out in the formmain.cs. 
-
-        things to do: 
         
-         * Shift from hard-coded to dynamic adding of gemmings (use of groupboxes)
-         * Add list of groupboxes, so they can be better managed (See: cycleGroups())
-         * Find better default image for sockets
-         * Add scroll bar when >4 gemmings are used
-         * When the OK button is pressed, all items in ItemCache.RelevantItems (I think that's the right list)
-         * should be filtered through, and checked for the gemmings listed here. If the gemming is missing, add it
-         * If the Delete non-listed gemmings box is checked, remove any instances of items that have
-         * gemmings that differ from those listed here. 
+        private Button removeButton(GroupBox parentBox)
+        {
+            //creates a button in the groupboxes that is used to 
+            //remove the associated gemming
 
-        */
+            Button newButton = new Button();
+            newButton.Height = 19;
+            newButton.Width = 57;
+            newButton.Text = "Remove";
+            newButton.Tag = (int)parentBox.Tag;
+            newButton.BackColor = Color.FromKnownColor(KnownColor.LightGray);
+            newButton.Click += new System.EventHandler(this.buttonRemoveGemming_Click);
+            newButton.Location = new Point(8 + (63 * parentBox.Controls.Count) +8, 34);
 
+            return newButton; 
+        }
+
+        private Rawr.ItemButton gemButton (GroupBox parentBox, KnownColor colorReq){
+
+            //creates an ItemButton for use in groupbox gemmings
+
+            ItemButton newButton = new ItemButton();
+
+            newButton.Height = 57;
+            newButton.Width = 57;
+            newButton.Tag = (int)parentBox.Tag; 
+            newButton.BackColor = Color.FromKnownColor(colorReq);
+            newButton.Leave += new System.EventHandler(this.buttonGem_Click);
+            newButton.Location = new Point(8+ (63*parentBox.Controls.Count), 17);
+            
+            if (colorReq.Equals((KnownColor) KnownColor.Gray))
+            {
+                newButton.CharacterSlot = Character.CharacterSlot.Metas;
+                newButton.Text = "Meta";
+
+            }
+            
+            else
+            {
+                newButton.CharacterSlot = Character.CharacterSlot.Gems;
+                newButton.Text = colorReq.ToString();
+            }
+            
+            return newButton;
+
+    }
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
 
@@ -82,6 +131,9 @@ namespace Rawr
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            //code here is going to sift through items in Relevantitems
+            //and delete/regem/create new items as needed
+
             {
                 /* foreach (Item item in ItemCache.AllItems)
                  {
@@ -158,20 +210,19 @@ namespace Rawr
         //buttons used in the interface.
         private void cycleGroups()
         {
-
-            updateButtons(groupBox1);
-            updateButtons(groupBox2);
-            updateButtons(groupBox3);
-            updateButtons(groupBox4);
-
-           
+            foreach (GroupBox box in groupboxesForGemmings)
+            {
+                updateButtons(box);
+            }
         }
 
-        //sifts through the itemButtons in a particular groupbox and
-        //updates the images in them to reflect their current
-        //selectedItem
+        
         private void updateButtons(GroupBox incoming)
         {
+            //sifts through the itemButtons in a particular groupbox and
+            //updates the images in them to reflect the selectedItem 
+            //in their associated gemming
+        
             ItemButton iButton;
             int incomingTag = (int) incoming.Tag;
             if (incomingTag <= listOfGemmings.Count)     
@@ -186,24 +237,30 @@ namespace Rawr
                         {
 
                             case (KnownColor.Red):
-                                iButton.SelectedItem = listOfGemmings[incomingTag - 1].gemRed;
+                                iButton.SelectedItem = listOfGemmings[incomingTag].gemRed;
                                 break;
                             case (KnownColor.Blue):
-                                iButton.SelectedItem = listOfGemmings[incomingTag - 1].gemBlue;
+                                iButton.SelectedItem = listOfGemmings[incomingTag].gemBlue;
                                 break;
                             case (KnownColor.Yellow):
-                                iButton.SelectedItem = listOfGemmings[incomingTag - 1].gemYellow;
+                                iButton.SelectedItem = listOfGemmings[incomingTag].gemYellow;
                                 break;
                             case (KnownColor.Gray):
-                                iButton.SelectedItem = listOfGemmings[incomingTag - 1].gemMeta;
+                                iButton.SelectedItem = listOfGemmings[incomingTag].gemMeta;
                                 break;
                             default:
                                 throw new IndexOutOfRangeException("rawr.itembutton.backcolor is used for parsing buttons. make sure they're set correctly");
                                 break;
 
                         }
-                        iButton.UpdateSelectedItem();
-
+                       if (iButton.SelectedItem == null)
+                       {
+                           if (iButton.BackColor.ToKnownColor().Equals(KnownColor.Gray))
+                               iButton.Text = "Meta";
+                           else
+                               iButton.Text = iButton.BackColor.ToKnownColor().ToString();
+                       }                      
+                       
 
                     }
                 }
@@ -216,65 +273,105 @@ namespace Rawr
         }
         
         //adds another slot for gemming
+
+        private GroupBox createGroupBox()
+        {
+            GroupBox newGroupBox = new GroupBox();
+
+            newGroupBox.Parent = this;
+            newGroupBox.Location = new Point(8, (84 * groupboxesForGemmings.Count) + 43);
+            newGroupBox.Width = 337;
+            newGroupBox.Height = 80;
+            newGroupBox.Tag = (int)(groupboxesForGemmings.Count);
+            newGroupBox.Text = "Gemming #" + ((int)newGroupBox.Tag + 1).ToString();            
+            newGroupBox.Visible = true;
+
+            newGroupBox.Controls.Add(gemButton(newGroupBox, (KnownColor.Red)));
+            newGroupBox.Controls.Add(gemButton(newGroupBox, (KnownColor.Yellow)));
+            newGroupBox.Controls.Add(gemButton(newGroupBox, (KnownColor.Blue)));
+            newGroupBox.Controls.Add(gemButton(newGroupBox, (KnownColor.Gray)));
+
+            newGroupBox.Controls.Add(removeButton(newGroupBox));
+
+            return newGroupBox;
+
+        }
+
         private void buttonAddGemming_Click(object sender, EventArgs e)
         {
-            if (listOfGemmings.Count < 4)
-            {
+            //adds a slot for a new gemming, as well as the groupbox interface
 
+            if (listOfGemmings.Count < 8)
+            {
+                
+                groupboxesForGemmings.Add(createGroupBox());
                 listOfGemmings.Add(new Gemming());
+                
                 adjustform();
             }
 
             else
-                MessageBox.Show("You may have a maximum of 4 gemmings", "4 Gemmings Allowed");
+                MessageBox.Show("You may have a maximum of 8 gemmings", "8 Gemmings Allowed");
         }
 
-        //shifts form height
+        
         private void adjustform()
         {
+            //shifts form height
+
             if (listOfGemmings.Count == 0)
-                this.Height = 164 + 86;
+                this.Height = 170;
             else
-                this.Height = (164 + (86 * (listOfGemmings.Count - 1)));
+                this.Height = (170 + (86 * (listOfGemmings.Count - 1)));
         }
 
-
-        //removes the gemming associated with the groupbox the button is in
-        
         private void buttonRemoveGemming_Click(object sender, EventArgs e)
         {
-            //damn this is ugly...
+            //removes the gemming associated with the groupbox the button
+            //that was pressed, as well as the last groupbox in groupboxesForGemmings
+            //gems are cycled down to fill the appropriate slot.
+
+            //(Is there a linkedlist way of achieving this?)
+
+            //I'd like to note I hate list -> array -> list indexing...
+
             int value = int.Parse(((Control)sender).Tag.ToString());
-            int shifts = listOfGemmings.Count - value;
+            int shifts = listOfGemmings.Count - (value + 1);
 
             if (shifts != 0)
 
                 for (int i = 0; i < shifts; i++)
                 {
 
-                    listOfGemmings[value + (i - 1)].copyGemming(listOfGemmings[value + i]);
+                    listOfGemmings[value + (i)].copyGemming(listOfGemmings[value + i + 1]);
 
                 }
 
-            if (listOfGemmings.Count != 1)
+            if (listOfGemmings.Count >= 1)
+            {
                 listOfGemmings.RemoveAt(listOfGemmings.Count - 1);
-
-            if (listOfGemmings.Count == 0)
-                listOfGemmings.Add(temp);
-
+                groupboxesForGemmings[groupboxesForGemmings.Count - 1].Dispose();
+                groupboxesForGemmings.RemoveAt(groupboxesForGemmings.Count - 1);
+        }
+           
             cycleGroups();
             adjustform();
 
         }
 
-        //this needs to be renamed, it's tied to the Leave event, as most of the
-        //mouse events were already tied into Rawr.Itembox (can you have 2 things
-        //catch an event?)
-
+        
         private void buttonGem_Click(object sender, EventArgs e)
         {
+            
+            //this needs to be renamed, it's tied to the Leave event, as most of the
+            //mouse events were already tied into Rawr.Itembox and I wanted to keep
+            //this form reasonably isolated. 
+
+            //It finds the button that sent the event, tracks it back to a 
+            //groupbox via a tag, and then parses the button by it's BackColor
+
             ItemButton senderButton = (Rawr.ItemButton)sender;
-            int intRowNumber = ((int)senderButton.Tag) - 1;
+            int intRowNumber = (int)senderButton.Tag;
             KnownColor currColor = senderButton.BackColor.ToKnownColor();
 
             switch (currColor)
@@ -298,6 +395,8 @@ namespace Rawr
             }
 
         }
+
+       
     }
 
 
