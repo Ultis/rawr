@@ -14,38 +14,22 @@ namespace Rawr.Mage
 		public CalculationOptionsPanelMage()
 		{
 			InitializeComponent();
-            talents = new MageTalentsForm(this);
             comboBoxMIPMethod.Items.Add(MIPMethod.BestBound);
             comboBoxMIPMethod.Items.Add(MIPMethod.DepthFirst);
 		}
 
-        private MageTalentsForm talents;
         private bool loading = false;
 
 		protected override void LoadCalculationOptions()
 		{
-            if (Character.MageTalents == null) Character.MageTalents = new MageTalents();
+            //if (Character.MageTalents == null) Character.MageTalents = new MageTalents();
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMage(Character);
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
 
             loading = true;
             calculationOptionsMageBindingSource.DataSource = calculationOptions;
-            checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
-
-            if (talents != null) talents.LoadCalculationOptions();
 
             loading = false;
-        }
-
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
-		{
-			Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
-            if (!loading) Character.OnCalculationsInvalidated();
-        }
-
-        private void buttonTalents_Click(object sender, EventArgs e)
-        {
-            talents.Show();
         }
 
         private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)

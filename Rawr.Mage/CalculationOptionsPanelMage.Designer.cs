@@ -41,8 +41,6 @@
             this.label33 = new System.Windows.Forms.Label();
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.buttonTalents = new System.Windows.Forms.Button();
-            this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
@@ -201,6 +199,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.label90 = new System.Windows.Forms.Label();
+            this.checkBoxGlyphOfArcanePower = new System.Windows.Forms.CheckBox();
             this.label89 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfIceArmor = new System.Windows.Forms.CheckBox();
             this.label85 = new System.Windows.Forms.Label();
@@ -238,8 +238,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label90 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcanePower = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -281,8 +279,6 @@
             this.tabPage1.Controls.Add(this.label33);
             this.tabPage1.Controls.Add(this.textBoxEvocationWeapon);
             this.tabPage1.Controls.Add(this.label21);
-            this.tabPage1.Controls.Add(this.buttonTalents);
-            this.tabPage1.Controls.Add(this.checkBoxEnforceMetagemRequirements);
             this.tabPage1.Location = new System.Drawing.Point(4, 40);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
@@ -308,7 +304,7 @@
             "78",
             "79",
             "80"});
-            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(112, 134);
+            this.comboBoxPlayerLevel.Location = new System.Drawing.Point(111, 85);
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
@@ -321,7 +317,7 @@
             // label80
             // 
             this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(0, 137);
+            this.label80.Location = new System.Drawing.Point(-1, 88);
             this.label80.Name = "label80";
             this.label80.Size = new System.Drawing.Size(71, 13);
             this.label80.TabIndex = 152;
@@ -335,7 +331,7 @@
             this.comboBoxFaction.Items.AddRange(new object[] {
             "Aldor",
             "Scryers"});
-            this.comboBoxFaction.Location = new System.Drawing.Point(112, 55);
+            this.comboBoxFaction.Location = new System.Drawing.Point(111, 6);
             this.comboBoxFaction.Name = "comboBoxFaction";
             this.comboBoxFaction.Size = new System.Drawing.Size(75, 21);
             this.comboBoxFaction.TabIndex = 151;
@@ -343,7 +339,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(0, 58);
+            this.label35.Location = new System.Drawing.Point(-1, 9);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(91, 13);
             this.label35.TabIndex = 150;
@@ -352,7 +348,7 @@
             // textBoxEvocationSpirit
             // 
             this.textBoxEvocationSpirit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationSpirit", true));
-            this.textBoxEvocationSpirit.Location = new System.Drawing.Point(112, 108);
+            this.textBoxEvocationSpirit.Location = new System.Drawing.Point(111, 59);
             this.textBoxEvocationSpirit.Name = "textBoxEvocationSpirit";
             this.textBoxEvocationSpirit.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationSpirit.TabIndex = 147;
@@ -360,7 +356,7 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(0, 111);
+            this.label33.Location = new System.Drawing.Point(-1, 62);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(106, 13);
             this.label33.TabIndex = 146;
@@ -371,7 +367,7 @@
             // textBoxEvocationWeapon
             // 
             this.textBoxEvocationWeapon.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EvocationWeapon", true));
-            this.textBoxEvocationWeapon.Location = new System.Drawing.Point(112, 82);
+            this.textBoxEvocationWeapon.Location = new System.Drawing.Point(111, 33);
             this.textBoxEvocationWeapon.Name = "textBoxEvocationWeapon";
             this.textBoxEvocationWeapon.Size = new System.Drawing.Size(75, 20);
             this.textBoxEvocationWeapon.TabIndex = 121;
@@ -379,34 +375,13 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(0, 85);
+            this.label21.Location = new System.Drawing.Point(-1, 36);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(103, 13);
             this.label21.TabIndex = 120;
             this.label21.Text = "Evo. Weapons Int: *";
             this.toolTipMage.SetToolTip(this.label21, "Value of intellect on weapons you swap in for evocation (main hand, off-hand, wan" +
                     "d). Set to 0 to disable evocation swapping.");
-            // 
-            // buttonTalents
-            // 
-            this.buttonTalents.Location = new System.Drawing.Point(0, 3);
-            this.buttonTalents.Name = "buttonTalents";
-            this.buttonTalents.Size = new System.Drawing.Size(187, 23);
-            this.buttonTalents.TabIndex = 85;
-            this.buttonTalents.Text = "Talents";
-            this.buttonTalents.UseVisualStyleBackColor = true;
-            this.buttonTalents.Click += new System.EventHandler(this.buttonTalents_Click);
-            // 
-            // checkBoxEnforceMetagemRequirements
-            // 
-            this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-            this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(0, 32);
-            this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
-            this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
-            this.checkBoxEnforceMetagemRequirements.TabIndex = 82;
-            this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
-            this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
-            this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
             // 
             // tabPage2
             // 
@@ -2054,6 +2029,26 @@
             this.tabPage7.Text = "Glyphs";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // label90
+            // 
+            this.label90.AutoSize = true;
+            this.label90.Location = new System.Drawing.Point(3, 183);
+            this.label90.Name = "label90";
+            this.label90.Size = new System.Drawing.Size(119, 13);
+            this.label90.TabIndex = 189;
+            this.label90.Text = "Glyph of Arcane Power:";
+            this.toolTipMage.SetToolTip(this.label90, "Optimize between mage and molten armor. Disable to improve performance.");
+            // 
+            // checkBoxGlyphOfArcanePower
+            // 
+            this.checkBoxGlyphOfArcanePower.AutoSize = true;
+            this.checkBoxGlyphOfArcanePower.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcanePower", true));
+            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(140, 183);
+            this.checkBoxGlyphOfArcanePower.Name = "checkBoxGlyphOfArcanePower";
+            this.checkBoxGlyphOfArcanePower.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxGlyphOfArcanePower.TabIndex = 188;
+            this.checkBoxGlyphOfArcanePower.UseVisualStyleBackColor = true;
+            // 
             // label89
             // 
             this.label89.AutoSize = true;
@@ -2443,26 +2438,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label90
-            // 
-            this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(3, 183);
-            this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(119, 13);
-            this.label90.TabIndex = 189;
-            this.label90.Text = "Glyph of Arcane Power:";
-            this.toolTipMage.SetToolTip(this.label90, "Optimize between mage and molten armor. Disable to improve performance.");
-            // 
-            // checkBoxGlyphOfArcanePower
-            // 
-            this.checkBoxGlyphOfArcanePower.AutoSize = true;
-            this.checkBoxGlyphOfArcanePower.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcanePower", true));
-            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(140, 183);
-            this.checkBoxGlyphOfArcanePower.Name = "checkBoxGlyphOfArcanePower";
-            this.checkBoxGlyphOfArcanePower.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcanePower.TabIndex = 188;
-            this.checkBoxGlyphOfArcanePower.UseVisualStyleBackColor = true;
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2502,8 +2477,6 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.TextBox textBoxEvocationWeapon;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Button buttonTalents;
-        private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.ComboBox comboBoxHeroismControl;

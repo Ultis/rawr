@@ -499,7 +499,14 @@ namespace Rawr.Mage
                 }
                 if (valid && waterElementalAvailable)
                 {
-                    //valid = ValidateActivation(Cooldown.WaterElemental, 45.0, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental);
+                    if (coldsnapAvailable)
+                    {
+                        valid = ValidateWaterElementalSummon();
+                    }
+                    else
+                    {
+                        valid = ValidateActivation(Cooldown.WaterElemental, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental);
+                    }
                 }
             }
 
@@ -1570,29 +1577,6 @@ namespace Rawr.Mage
             return true;
         }
 
-        private void EnsureColdsnapConstraints()
-        {
-            if (!lp.HasColdsnapConstraints)
-            {
-                lp.AddColdsnapConstraints(segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1);
-                for (int seg = 0; seg < segments + (int)(calculationResult.IcyVeinsCooldown / segmentDuration) - 1; seg++)
-                {
-                    for (int outseg = Math.Max(0, (int)Math.Ceiling(seg + 1 - calculationResult.IcyVeinsCooldown / segmentDuration - 0.000001)); outseg <= Math.Min(seg, segments - 1); outseg++)
-                    {
-                        for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
-                        {
-                            CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(Cooldown.IcyVeins))
-                            {
-                                lp.UpdateColdsnapColumn(seg, index);
-                            }
-                        }
-                    }
-                    lp.UpdateColdsnapDuration(seg, 40.0);
-                }
-            }
-        }
-
         private bool ValidateColdsnap()
         {
             const double eps = 0.000001;
@@ -1990,9 +1974,9 @@ namespace Rawr.Mage
 
                     // branch on one of the conditions responsible for infeasibility
                     // t2 - t1 < c1
-                    RemoveColdsnapActivation(t1, e, c, d);
+                    EnforceEffectCooldown(t1, e, c, d);
                     // t4 - t3 < c2
-                    RemoveColdsnapActivation(t3, e, c, d);
+                    EnforceEffectCooldown(t3, e, c, d);
                     // t4 - t1 < cs
                     // cs is at least 384 sec
                     // notice that t3 >= t2, then t4 - t1 <= (t4 - t3) + (t2 - t1)
@@ -2014,9 +1998,9 @@ namespace Rawr.Mage
 
                     // branch on one of the conditions responsible for infeasibility
                     // t2 - t1 < c1
-                    RemoveColdsnapActivation(t1, e1, c1, d1);
+                    EnforceEffectCooldown(t1, e1, c1, d1);
                     // t4 - t3 < c2
-                    RemoveColdsnapActivation(t3, e2, c2, d2);
+                    EnforceEffectCooldown(t3, e2, c2, d2);
                     // t3 >= t2
                     // [----]             [-----]
                     //                      [------------][-------------]
@@ -2032,10 +2016,19 @@ namespace Rawr.Mage
                     // t2 = (seg3 + 1) * segmentDuration - count1[seg3]
                     // t3 = (seg3 + 1) * segmentDuration - count2[seg3]
                     // count1[seg3] - count2[seg3] <= - gcd
+                    // if e1 is WE then forcing t2 after t3 will cause WE summon to be during IV active
+                    // this is currently not supported, so make sure in this case the shift is big enough that summon comes after IV is over
                     int row = branchlp.AddConstraint(false);
                     SetCooldownElements(branchlp, row, e1, seg3, 1.0);
                     SetCooldownElements(branchlp, row, e2, seg3, -1.0);
-                    branchlp.SetConstraintRHS(row, -calculationResult.BaseState.GlobalCooldown);
+                    if (e1 == Cooldown.WaterElemental)
+                    {
+                        branchlp.SetConstraintRHS(row, -20.0);
+                    }
+                    else
+                    {
+                        branchlp.SetConstraintRHS(row, -calculationResult.BaseState.GlobalCooldown);
+                    }
                     branchlp.ForceRecalculation(true);
                     HeapPush(branchlp);
                     if (e2 == Cooldown.IcyVeins)
@@ -2057,32 +2050,60 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private void RemoveColdsnapActivation(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration)
+        private void EnforceEffectCooldown(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration)
         {
             const double eps = 0.000001;
             int seg1 = (int)((firstEffectActivation + eps) / segmentDuration);
             int seg2 = seg1 + (int)((effectCooldown + eps) / segmentDuration);
             SolverLP branchlp;
-
             // if first activation stays in seg1 then restrict the next activation
             RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1);
             // if first activation moves to seg1 - 1
-            RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1 - 1);
+            if (seg1 >= 1) RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1 - 1);
             // otherwise effect is either started at or before seg1 - 2
             // in this case the last segment with effect is (seg1 - 1) + d / segmentDuration
-            int segmin = (int)Math.Ceiling((seg1 - 1) + effectDuration / segmentDuration - eps);
-            if (segmin > seg1)
+            if (seg1 >= 2)
             {
-                branchlp = lp.Clone();
-                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict coldsnap after " + effect + " at " + seg1 + ", move first activation left");
-                DisableCooldown(branchlp, effect, segmin, (seg1 - 1) + (int)((effectCooldown + eps) / segmentDuration));
-                HeapPush(branchlp);
+                int segmin = (int)Math.Ceiling((seg1 - 1) + effectDuration / segmentDuration - eps);
+                if (segmin > seg1)
+                {
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + ", move first activation left");
+                    DisableCooldown(branchlp, effect, segmin, (seg1 - 1) + (int)((effectCooldown + eps) / segmentDuration));
+                    HeapPush(branchlp);
+                }
             }
             // or there is no effect in seg1
             branchlp = lp.Clone();
-            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict coldsnap after " + effect + " at " + seg1 + ", remove effect");
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + ", remove effect");
             DisableCooldown(branchlp, effect, seg1);
             HeapPush(branchlp);
+        }
+
+        private bool SegmentContainsEffect(int segment, Cooldown effect)
+        {
+            int hex = (int)effect;
+            foreach (int h in hexList[segment])
+            {
+                if ((hex & h) == hex)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool SegmentContainsVariable(int segment, VariableType variable)
+        {
+            const double eps = 0.000001;
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                if (calculationResult.SolutionVariable[index].Segment == segment && calculationResult.SolutionVariable[index].Type == variable)
+                {
+                    if (solution[index] > eps) return true;
+                }
+            }
+            return false;
         }
 
         private void RestrictConsecutiveActivation(Cooldown effect, double effectCooldown, double effectDuration, int firstActivationSegment)
@@ -2105,8 +2126,75 @@ namespace Rawr.Mage
             SetCooldownElements(branchlp, row, effect, firstActivationSegment, -1.0);
             SetCooldownElements(branchlp, row, effect, seg2, 1.0);
             branchlp.SetConstraintRHS(row, (seg2 - firstActivationSegment) * segmentDuration - effectCooldown);
+            // make sure it actually starts in this segment
+            // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
+            branchlp.SetConstraintRHS(row, 2 * segmentDuration);
+            branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentDuration));
+            // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
             branchlp.ForceRecalculation(true);
             HeapPush(branchlp);
+            if (effectDuration < segmentDuration - eps)
+            {
+                // the effect has some room for movement, but we have to be careful because it can't be moved
+                // to the very beginning of segment in all cases
+                // for example if the effect is IV and it happens together with WE and there is a WE summon in the same 
+                // segment and we don't have coldsnap, then we know the summon must happen before IV, so the actual start is a GCD after segment start
+                double buffer = 0.0;
+                if (effect == Cooldown.IcyVeins)
+                {
+                    if (SegmentContainsEffect(firstActivationSegment, Cooldown.IcyVeins | Cooldown.WaterElemental))
+                    {
+                        if (SegmentContainsVariable(firstActivationSegment, VariableType.SummonWaterElemental))
+                        {
+                            buffer = calculationResult.BaseState.GlobalCooldown;
+                            // it is possible to force effect to the start of segment if we eliminate summoning
+                            branchlp = lp.Clone();
+                            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", force to start of segment by eliminating summoning");
+                            // first make sure that second activation is not too close                
+                            DisableCooldown(branchlp, effect, firstActivationSegment + 1, seg2 - 1);
+                            DisableVariable(branchlp, VariableType.SummonWaterElemental, firstActivationSegment);
+                            // make sure there is enough distance between the activations
+                            // t1 = seg1 * segmentDuration
+                            // t2 = (seg2 + 1) * segmentDuration - count[seg2]
+                            // count[seg2] <= (seg2 - seg1 + 1) * segmentDuration - c
+                            row = branchlp.AddConstraint(false);
+                            SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                            branchlp.SetConstraintRHS(row, (seg2 - firstActivationSegment + 1) * segmentDuration - effectCooldown);
+                            // make sure it actually starts in this segment
+                            // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
+                            row = branchlp.AddConstraint(false);
+                            SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
+                            branchlp.SetConstraintRHS(row, 2 * segmentDuration);
+                            branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentDuration));
+                            // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
+                            branchlp.ForceRecalculation(true);
+                            HeapPush(branchlp);
+                        }
+                    }
+                }
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", version for short effects");
+                // first make sure that second activation is not too close                
+                DisableCooldown(branchlp, effect, firstActivationSegment + 1, seg2 - 1);
+                // make sure there is enough distance between the activations
+                // t1 = seg1 * segmentDuration
+                // t2 = (seg2 + 1) * segmentDuration - count[seg2]
+                // count[seg2] <= (seg2 - seg1 + 1) * segmentDuration - c
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                branchlp.SetConstraintRHS(row, (seg2 - firstActivationSegment + 1) * segmentDuration - effectCooldown - buffer);
+                // make sure it actually starts in this segment
+                // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
+                branchlp.SetConstraintRHS(row, 2 * segmentDuration);
+                branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentDuration));
+                // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
         }
 
         private void SetCooldownElements(SolverLP branchlp, int row, Cooldown cooldown, int segment, double value)
@@ -2127,9 +2215,26 @@ namespace Rawr.Mage
             }
         }
 
+        private void DisableVariable(SolverLP branchlp, VariableType variable, int segment)
+        {
+            DisableVariable(branchlp, variable, segment, segment);
+        }
+
         private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int segment)
         {
             DisableCooldown(branchlp, cooldown, segment, segment);
+        }
+
+        private void DisableVariable(SolverLP branchlp, VariableType variable, int minSegment, int maxSegment)
+        {
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                if (calculationResult.SolutionVariable[index].Type == variable)
+                {
+                    int seg = calculationResult.SolutionVariable[index].Segment;
+                    if (seg >= minSegment && seg <= maxSegment) branchlp.EraseColumn(index);
+                }
+            }
         }
 
         private void DisableCooldown(SolverLP branchlp, Cooldown cooldown, int minSegment, int maxSegment)
@@ -2148,6 +2253,50 @@ namespace Rawr.Mage
         private bool ValidateCooldown(Cooldown cooldown, double effectDuration, double cooldownDuration)
         {
             return ValidateCooldown(cooldown, effectDuration, cooldownDuration, false, effectDuration);
+        }
+
+        private bool ValidateWaterElementalSummon()
+        {
+            Cooldown cooldown = Cooldown.WaterElemental;
+            double effectDuration = calculationResult.WaterElementalDuration;
+            double cooldownDuration = calculationResult.WaterElementalCooldown;
+            VariableType activation = VariableType.SummonWaterElemental;
+
+            const double eps = 0.00001;
+            double[] segCount = new double[segments];
+            double[] segActivation = new double[segments];
+            for (int outseg = 0; outseg < segments; outseg++)
+            {
+                double s = 0.0;
+                for (int index = segmentColumn[outseg]; index < segmentColumn[outseg + 1]; index++)
+                {
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && state.GetCooldown(cooldown))
+                    {
+                        s += solution[index];
+                    }
+                }
+                segCount[outseg] = s;
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && state.GetCooldown(cooldown)) segCount[calculationResult.SolutionVariable[index].Segment] += solution[index];
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                if (calculationResult.SolutionVariable[index].Type == activation) segActivation[calculationResult.SolutionVariable[index].Segment] += solution[index];
+            }
+            int mindist = (int)Math.Ceiling(effectDuration / segmentDuration);
+            int mindist2 = (int)Math.Floor(effectDuration / segmentDuration);
+            int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
+            int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
+
+            bool valid = true;
+
+            // special summon validation with coldsnap, without coldsnap use ValidateActivation
+
+            return valid;
         }
 
         private bool ValidateActivation(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType activation)
@@ -2846,6 +2995,58 @@ namespace Rawr.Mage
                             return false;
                         }
                     }
+                }
+            }
+
+            // for irregular cooldown durations have to make a special pass verifying everything is in order
+            // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
+            // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
+
+            if (!coldsnapAvailable || (cooldown != Cooldown.WaterElemental && cooldown != Cooldown.IcyVeins))
+            {
+                double lastStart = double.NegativeInfinity;
+                double effectCooldown = 0.0;
+                bool effectActive = false;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (!effectActive && segCount[seg] > eps)
+                    {
+                        if (effectCooldown + segCount[seg] > segmentDuration + eps)
+                        {
+                            valid = false;
+                            break;
+                        }
+                        else
+                        {
+                            // start as soon as possible
+                            double activation = Math.Max(seg * segmentDuration + effectCooldown, seg * segmentDuration);
+                            if (seg + 1 < segments && segCount[seg + 1] > 0) activation = (seg + 1) * segmentDuration - segCount[seg];
+                            effectCooldown = cooldownDuration + activation - seg * segmentDuration;
+                            effectActive = true;
+                            lastStart = activation;
+                        }
+                    }
+                    if (effectActive)
+                    {
+                        if (segCount[seg] > 0.0)
+                        {
+                            if (seg * segmentDuration + segCount[seg] > lastStart + effectDuration + eps)
+                            {
+                                valid = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            effectActive = false;
+                        }
+                    }
+                    effectCooldown -= segmentDuration;
+                }
+                if (!valid)
+                {
+                    EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration);
+                    return false;
                 }
             }
 

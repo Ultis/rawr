@@ -4,20 +4,22 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    [Flags]
     public enum Cooldown
     {
-        ArcanePower,
-        IcyVeins,
-        MoltenFury,
-        Heroism,
-        DestructionPotion,
-        FlameCap,
-        Trinket1,
-        Trinket2,
-        DrumsOfBattle,
-        Combustion,
-        WaterElemental,
-        ManaGemEffect
+        ArcanePower = 0x800,
+        Combustion = 0x400,
+        DestructionPotion = 0x200,
+        DrumsOfBattle = 0x100,
+        FlameCap = 0x80,
+        Heroism = 0x40,
+        IcyVeins = 0x20,
+        MoltenFury = 0x10,
+        Trinket1 = 0x8,
+        Trinket2 = 0x4,
+        WaterElemental = 0x2,
+        ManaGemEffect = 0x1,
+        None = 0x0
     }
 
     public sealed class CastingState
@@ -164,6 +166,8 @@ namespace Rawr.Mage
         public bool DrumsOfBattle { get; set; }
         public bool Combustion { get; set; }
         public bool WaterElemental { get; set; }
+
+        public Cooldown Cooldown { get; set; }
 
         public float CombustionDuration { get; set; }
         public float SpellDamageRating { get; set; }
@@ -376,6 +380,20 @@ namespace Rawr.Mage
             DrumsOfBattle = drums;
             WaterElemental = waterElemental;
             ManaGemEffect = manaGemEffect;
+
+            Cooldown c = Cooldown.None;
+            if (arcanePower) c |= Cooldown.ArcanePower;
+            if (moltenFury) c |= Cooldown.MoltenFury;
+            if (icyVeins) c |= Cooldown.IcyVeins;
+            if (heroism) c |= Cooldown.Heroism;
+            if (destructionPotion) c |= Cooldown.DestructionPotion;
+            if (flameCap) c |= Cooldown.FlameCap;
+            if (trinket1) c |= Cooldown.Trinket1;
+            if (trinket2) c |= Cooldown.Trinket2;
+            if (combustion) c |= Cooldown.Combustion;
+            if (drums) c |= Cooldown.DrumsOfBattle;
+            if (waterElemental) c |= Cooldown.WaterElemental;
+            if (manaGemEffect) c |= Cooldown.ManaGemEffect;
 
             if (icyVeins)
             {

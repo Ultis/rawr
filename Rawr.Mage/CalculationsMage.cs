@@ -1053,6 +1053,7 @@ namespace Rawr.Mage
                         Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         int legendY = 2;
 
+                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.DrumsOfBattle, Cooldown.Combustion, Cooldown.WaterElemental };
                         string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion", "Water Elemental" };
                         Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed, Color.DarkCyan };
                         Brush[] brushSubPoints = new Brush[cooldownColors.Length];
@@ -1264,7 +1265,7 @@ namespace Rawr.Mage
                             {
                                 float duration = (float)sequence[i].Duration;
                                 if (sequence[i].IsManaPotionOrGem) duration = 0;
-                                if (on && !sequence[i].CastingState.GetCooldown((Cooldown)cooldown) && !sequence[i].IsManaPotionOrGem)
+                                if (on && !sequence[i].CastingState.GetCooldown(cooldowns[cooldown]) && !sequence[i].IsManaPotionOrGem)
                                 {
                                     on = false;
                                     if (time > timeOn)
@@ -1279,7 +1280,7 @@ namespace Rawr.Mage
                                         g.DrawRectangle(new Pen(brushSubPointFill), rect.X, rect.Y, rect.Width, rect.Height);
                                     }
                                 }
-                                else if (!on && sequence[i].CastingState.GetCooldown((Cooldown)cooldown))
+                                else if (!on && sequence[i].CastingState.GetCooldown(cooldowns[cooldown]))
                                 {
                                     on = true;
                                     timeOn = time;
