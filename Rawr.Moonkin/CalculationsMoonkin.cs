@@ -265,6 +265,9 @@ namespace Rawr.Moonkin
             statsTotal.Spirit *= 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
             // Base stats: Spirit% +(0.05 * Living Spirit)
 			statsTotal.Spirit *= 1 + 0.05f * character.DruidTalents.LivingSpirit;
+            // Base stats: Int% +(0.02 * Furor)
+            if (character.ActiveBuffsContains("Moonkin Aura"))
+                statsTotal.Intellect *= 1 + 0.02f * character.DruidTalents.Furor;
 
             // Bonus multipliers
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
@@ -321,8 +324,16 @@ namespace Rawr.Moonkin
                 statsTotal.HasteRating += 0.01f * character.DruidTalents.ImprovedMoonkinForm * hasteRatingConversionFactor;
                 statsTotal.SpellPower += (0.5f * character.DruidTalents.ImprovedMoonkinForm) * statsTotal.Spirit;
             }
+            // All spells: Crit% + (0.01 * Improved Faerie Fire)
+            if (character.ActiveBuffsContains("Improved Faerie Fire"))
+            {
+                statsTotal.CritRating += 0.01f * character.DruidTalents.ImprovedFaerieFire * critRatingConversionFactor;
+            }
             // All spells: Spell Power + (0.01 * Earth and Moon)
             statsTotal.SpellPower *= 1 + (0.01f * character.DruidTalents.EarthAndMoon);
+            // All spells: Spell Power + (0.02 * Master Shapeshifter)
+            if (character.ActiveBuffsContains("Moonkin Aura"))
+                statsTotal.SpellPower *= 1 + (0.02f * character.DruidTalents.MasterShapeshifter);
 
             return statsTotal;
         }

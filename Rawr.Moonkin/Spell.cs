@@ -723,6 +723,12 @@ namespace Rawr.Moonkin
             wrath.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
             moonfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
             starfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
+            // Moonfire, Insect Swarm: Damage +(0.01 * Genesis)
+            moonfire.SpecialDamageModifier += 0.01f * character.DruidTalents.Genesis;
+            insectSwarm.SpecialDamageModifier += 0.01f * character.DruidTalents.Genesis;
+            // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
+            moonfire.DoT.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
+            insectSwarm.DoT.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
             wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
@@ -828,7 +834,7 @@ namespace Rawr.Moonkin
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
-                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor) * (fightLength / rotation.Duration);
+                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.ActiveBuffsContains("Moonkin Aura")) * (fightLength / rotation.Duration);
                 // Casting trees?  Remove from effective mana
                 if (character.DruidTalents.ForceOfNature > 0)
                 {
@@ -888,10 +894,20 @@ namespace Rawr.Moonkin
             return 3 * damagePerTree / 180.0f;
         }
 
-        private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate)
+        private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float critRate, bool moonkinForm)
         {
             float manaFromOther = calcs.BasicStats.ManaRestorePerCast * rotation.CastCount;
-            float manaFromJoW = calcs.BasicStats.ManaRestorePerHit * (hitRate * rotation.CastCount);
+            float averageCastTime = rotation.Duration / rotation.CastCount;
+            float averageTimeBetweenProcs = averageCastTime;
+            while (averageTimeBetweenProcs < 4.0f)
+                averageTimeBetweenProcs += averageCastTime;
+            float procsPerRotation = rotation.Duration / averageTimeBetweenProcs;
+            float manaFromJoW = calcs.BasicStats.ManaRestorePerHit * procsPerRotation;
+            float manaFromMoonkinForm = 0.0f;
+            if (moonkinForm)
+            {
+                manaFromMoonkinForm = 0.02f * calcs.BasicStats.Mana * (hitRate * critRate * rotation.CastCount);
+            }
             float manaFromTrinket = 0.0f;
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
             if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
@@ -913,7 +929,7 @@ namespace Rawr.Moonkin
                 manaFromTrinket /= 120.0f;
                 manaFromTrinket *= rotation.Duration;
             }
-            return manaFromJoW + manaFromOther + manaFromTrinket;
+            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromMoonkinForm;
         }
 
         private static void DoTrinketCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float effectiveSpellCrit, ref float effectiveSpellHaste)
