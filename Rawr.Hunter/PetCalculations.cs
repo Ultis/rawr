@@ -10,12 +10,26 @@ namespace Rawr.Hunter
         Character character;
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter options;
-        
-        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options)
+        Stats statsBuffs;
+
+        double armorReduction;
+
+        double specialAttackSpeed;
+        double whiteAttackSpeed;
+
+
+        public double ferociousInspirationUptime;
+
+        public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, Stats statsBuffs)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.options = options;
+            this.statsBuffs = statsBuffs;
+            
+
+            double targetArmor = options.TargetArmor - statsBuffs.ArmorPenetration;
+            this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
             calculatePetStats();
 
@@ -74,6 +88,36 @@ namespace Rawr.Hunter
 
         }
 
+        private float getSpecialDPS()
+        {
+
+            double focus = (24.0 + 12.0 * character.HunterTalents.BestialDiscipline) / 4.0;
+            double abDmg = 0.07 * calculatedStats.PetStats.AttackPower;
+
+            double clawDmg = (118.0 + 168.0) / 2.0 + abDmg;
+
+            double petHitCrit = (1.0 + calculatedStats.PetStats.Crit) * calculatedStats.PetStats.Hit;
+
+            clawDmg *= petHitCrit;
+
+            clawDmg *= 1.0 + character.HunterTalents.UnleashedFury * 0.04;
+            clawDmg *= 1.0 + character.HunterTalents.KindredSpirits * 0.04;
+
+            double clawsPerSecond = focus / 25.0;
+            if (clawsPerSecond > 1.0 / 1.5)
+            {
+                clawsPerSecond = 1.0 / 1.5;
+            }
+
+            specialAttackSpeed = 1.0 / clawsPerSecond;
+
+            return (float)(clawDmg * clawsPerSecond);
+        }
+
+        private void getFerociousInspirationUptime()
+        {
+            ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - calculatedStats.PetStats.Crit, 10.0/whiteAttackSpeed + 10.0/specialAttackSpeed);
+        }
 
         public float getDPS()
         {
@@ -93,9 +137,20 @@ namespace Rawr.Hunter
             petDmg *= 1.0 + character.HunterTalents.UnleashedFury * 0.04;
             petDmg *= 1.0 + character.HunterTalents.KindredSpirits * 0.04;
 
-            calculatedStats.PetBaseDPS = petDmg / petAttackSpeed;
+            whiteAttackSpeed = petAttackSpeed;
 
-            return (float)calculatedStats.PetBaseDPS;
+
+
+            
+            calculatedStats.PetBaseDPS = (petDmg * this.armorReduction) / petAttackSpeed;
+            calculatedStats.PetSpecialDPS = getSpecialDPS() * this.armorReduction;
+
+            getFerociousInspirationUptime();
+            double fi = 1.0 + character.HunterTalents.FerociousInspiration * 0.01 * ferociousInspirationUptime;
+            calculatedStats.PetBaseDPS *= fi;
+            calculatedStats.PetSpecialDPS *= fi;
+
+            return (float)(calculatedStats.PetBaseDPS + calculatedStats.PetSpecialDPS);
         }
     }
 }

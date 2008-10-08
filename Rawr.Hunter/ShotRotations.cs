@@ -158,7 +158,7 @@ namespace Rawr.Hunter
         protected void ShotExplosive(RotationInfo info)
         {
             double explosiveCrit = calculatedStats.BasicStats.Crit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
-            double critHitModifier = (explosiveCrit * yellowCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
 
             double explosiveShotDmg = 0.08 * (effectiveRAPAgainstMob + hawkRAPBonus) + 238; // TODO: Level80
 

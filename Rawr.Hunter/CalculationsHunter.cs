@@ -33,6 +33,12 @@ namespace Rawr.Hunter
          * Focus Fire+
          * Aspect Mastery+
          * Serpent's Swiftness
+         * Unleased Fury
+         * Ferocity
+         * Bestial Disciplin
+         * Animal Handler
+         * Kindred Spirits
+         * Ferocious Inspiration
          * 
          ***** Marksmanship:
          * Focused Aim+
@@ -57,7 +63,7 @@ namespace Rawr.Hunter
          * Explosive Shot
          */
 
-		private CalculationOptionsPanelBase calculationOptionsPanel = null;
+        private CalculationOptionsPanelBase calculationOptionsPanel = null;
         private string[] characterDisplayCalculationLabels = null;
         private string[] customChartNames = null;
         private List<Item.ItemType> relevantItemTypes = null;
@@ -398,12 +404,19 @@ namespace Rawr.Hunter
             }
             #endregion
 
+            #region Pet
+
+            PetCalculations pet = new PetCalculations(character, calculatedStats, options, GetBuffsStats(character.ActiveBuffs));
+
+            #endregion
+
             #region Talent Modifiers
             double talentModifiers = 1.0f;
 
             talentModifiers *= 1.0f + 0.01f * character.HunterTalents.RangedWeaponSpecialization;
             talentModifiers *= 1.0f + 0.01f * character.HunterTalents.FocusedFire;
 
+            double talentDmgModifiers = 1.0 + pet.ferociousInspirationUptime * character.HunterTalents.FerociousInspiration * 0.01;
 
             #endregion
 
@@ -440,11 +453,10 @@ namespace Rawr.Hunter
                 autoshotDmg *= 1.0 - armorReduction;
 
                 calculatedStats.AutoshotDPS = autoshotDmg / (calculatedStats.BaseAttackSpeed * (1.0 - quickShotsUpTime) + (calculatedStats.BaseAttackSpeed / (1.0f + quickShotHaste)) * quickShotsUpTime);
-
+                calculatedStats.AutoshotDPS *= talentDmgModifiers;
             }
 
             #endregion
-
 
             #region Rotations
 
@@ -452,37 +464,32 @@ namespace Rawr.Hunter
 
             double bestDPS = 0.0;
 
-            calculatedStats.SteadySpamDPS = rotation.SteadyRotation().DPS;
+            calculatedStats.SteadySpamDPS = rotation.SteadyRotation().DPS * talentDmgModifiers;
             bestDPS = Math.Max(calculatedStats.SteadySpamDPS, bestDPS);
 
-            calculatedStats.Arcane3xSteadyDPS = rotation.ASSteadyRotation(3).DPS;
+            calculatedStats.Arcane3xSteadyDPS = rotation.ASSteadyRotation(3).DPS * talentDmgModifiers;
             bestDPS = Math.Max(calculatedStats.Arcane3xSteadyDPS, bestDPS);
 
-            calculatedStats.Arcane2xSteadyDPS = rotation.ASSteadyRotation(2).DPS;
+            calculatedStats.Arcane2xSteadyDPS = rotation.ASSteadyRotation(2).DPS * talentDmgModifiers;
             bestDPS = Math.Max(calculatedStats.Arcane2xSteadyDPS, bestDPS);
 
-            calculatedStats.SerpASSteadyDPS = rotation.ASSteadySerpentRotation().DPS;
+            calculatedStats.SerpASSteadyDPS = rotation.ASSteadySerpentRotation().DPS * talentDmgModifiers;
             bestDPS = Math.Max(calculatedStats.SerpASSteadyDPS, bestDPS);
 
-            calculatedStats.ExpSteadySerpDPS = rotation.ExpSteadySerpRotation().DPS;
+            calculatedStats.ExpSteadySerpDPS = rotation.ExpSteadySerpRotation().DPS * talentDmgModifiers;
             if (character.HunterTalents.ExplosiveShot > 0)
             {
                 bestDPS = Math.Max(calculatedStats.ExpSteadySerpDPS, bestDPS);
             }
 
-            calculatedStats.ChimASSteadyDPS = rotation.ChimASSteadyRotation().DPS;
+            calculatedStats.ChimASSteadyDPS = rotation.ChimASSteadyRotation().DPS * talentDmgModifiers;
             if (character.HunterTalents.ChimeraShot > 0)
             {
                 bestDPS = Math.Max(calculatedStats.ChimASSteadyDPS, bestDPS);
             }
             #endregion
 
-            #region Pet
-
-            PetCalculations pet = new PetCalculations(character, calculatedStats, options);
-
-            #endregion
-
+ 
             calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
             calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
