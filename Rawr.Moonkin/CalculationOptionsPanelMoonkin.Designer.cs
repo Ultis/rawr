@@ -35,14 +35,10 @@
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chkInnervate = new System.Windows.Forms.CheckBox();
-            this.txtShadowPriest = new System.Windows.Forms.TextBox();
-            this.lblShadowPriest = new System.Windows.Forms.Label();
             this.chkManaPots = new System.Windows.Forms.CheckBox();
             this.cmbPotType = new System.Windows.Forms.ComboBox();
             this.lblInnervateOffset = new System.Windows.Forms.Label();
             this.txtInnervateDelay = new System.Windows.Forms.TextBox();
-            this.txtManaPotDelay = new System.Windows.Forms.TextBox();
-            this.lblManPotDelay = new System.Windows.Forms.Label();
             this.lblManaPotType = new System.Windows.Forms.Label();
             this.chkInnervateWeapon = new System.Windows.Forms.CheckBox();
             this.txtInnervateWeaponInt = new System.Windows.Forms.TextBox();
@@ -113,7 +109,7 @@
             // chkInnervate
             // 
             this.chkInnervate.AutoSize = true;
-            this.chkInnervate.Location = new System.Drawing.Point(6, 111);
+            this.chkInnervate.Location = new System.Drawing.Point(6, 84);
             this.chkInnervate.Name = "chkInnervate";
             this.chkInnervate.Size = new System.Drawing.Size(135, 17);
             this.chkInnervate.TabIndex = 12;
@@ -121,27 +117,10 @@
             this.chkInnervate.UseVisualStyleBackColor = true;
             this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
             // 
-            // txtShadowPriest
-            // 
-            this.txtShadowPriest.Location = new System.Drawing.Point(108, 85);
-            this.txtShadowPriest.Name = "txtShadowPriest";
-            this.txtShadowPriest.Size = new System.Drawing.Size(93, 20);
-            this.txtShadowPriest.TabIndex = 13;
-            this.txtShadowPriest.Leave += new System.EventHandler(this.txtShadowPriest_Leave);
-            // 
-            // lblShadowPriest
-            // 
-            this.lblShadowPriest.AutoSize = true;
-            this.lblShadowPriest.Location = new System.Drawing.Point(3, 88);
-            this.lblShadowPriest.Name = "lblShadowPriest";
-            this.lblShadowPriest.Size = new System.Drawing.Size(103, 13);
-            this.lblShadowPriest.TabIndex = 14;
-            this.lblShadowPriest.Text = "Shadow Priest MP5:";
-            // 
             // chkManaPots
             // 
             this.chkManaPots.AutoSize = true;
-            this.chkManaPots.Location = new System.Drawing.Point(6, 160);
+            this.chkManaPots.Location = new System.Drawing.Point(6, 133);
             this.chkManaPots.Name = "chkManaPots";
             this.chkManaPots.Size = new System.Drawing.Size(117, 17);
             this.chkManaPots.TabIndex = 15;
@@ -155,7 +134,7 @@
             this.cmbPotType.Items.AddRange(new object[] {
             "Super Mana Potion",
             "Fel Mana Potion"});
-            this.cmbPotType.Location = new System.Drawing.Point(108, 210);
+            this.cmbPotType.Location = new System.Drawing.Point(108, 156);
             this.cmbPotType.Name = "cmbPotType";
             this.cmbPotType.Size = new System.Drawing.Size(93, 21);
             this.cmbPotType.TabIndex = 16;
@@ -164,7 +143,7 @@
             // lblInnervateOffset
             // 
             this.lblInnervateOffset.AutoSize = true;
-            this.lblInnervateOffset.Location = new System.Drawing.Point(3, 137);
+            this.lblInnervateOffset.Location = new System.Drawing.Point(3, 110);
             this.lblInnervateOffset.Name = "lblInnervateOffset";
             this.lblInnervateOffset.Size = new System.Drawing.Size(85, 13);
             this.lblInnervateOffset.TabIndex = 17;
@@ -172,33 +151,16 @@
             // 
             // txtInnervateDelay
             // 
-            this.txtInnervateDelay.Location = new System.Drawing.Point(108, 134);
+            this.txtInnervateDelay.Location = new System.Drawing.Point(108, 107);
             this.txtInnervateDelay.Name = "txtInnervateDelay";
             this.txtInnervateDelay.Size = new System.Drawing.Size(93, 20);
             this.txtInnervateDelay.TabIndex = 18;
             this.txtInnervateDelay.Leave += new System.EventHandler(this.txtInnervateDelay_Leave);
             // 
-            // txtManaPotDelay
-            // 
-            this.txtManaPotDelay.Location = new System.Drawing.Point(108, 184);
-            this.txtManaPotDelay.Name = "txtManaPotDelay";
-            this.txtManaPotDelay.Size = new System.Drawing.Size(93, 20);
-            this.txtManaPotDelay.TabIndex = 19;
-            this.txtManaPotDelay.Leave += new System.EventHandler(this.txtManaPotDelay_Leave);
-            // 
-            // lblManPotDelay
-            // 
-            this.lblManPotDelay.AutoSize = true;
-            this.lblManPotDelay.Location = new System.Drawing.Point(3, 187);
-            this.lblManPotDelay.Name = "lblManPotDelay";
-            this.lblManPotDelay.Size = new System.Drawing.Size(100, 13);
-            this.lblManPotDelay.TabIndex = 20;
-            this.lblManPotDelay.Text = "Mana Potion Delay:";
-            // 
             // lblManaPotType
             // 
             this.lblManaPotType.AutoSize = true;
-            this.lblManaPotType.Location = new System.Drawing.Point(3, 213);
+            this.lblManaPotType.Location = new System.Drawing.Point(3, 159);
             this.lblManaPotType.Name = "lblManaPotType";
             this.lblManaPotType.Size = new System.Drawing.Size(97, 13);
             this.lblManaPotType.TabIndex = 21;
@@ -207,7 +169,7 @@
             // chkInnervateWeapon
             // 
             this.chkInnervateWeapon.AutoSize = true;
-            this.chkInnervateWeapon.Location = new System.Drawing.Point(6, 239);
+            this.chkInnervateWeapon.Location = new System.Drawing.Point(6, 183);
             this.chkInnervateWeapon.Name = "chkInnervateWeapon";
             this.chkInnervateWeapon.Size = new System.Drawing.Size(140, 17);
             this.chkInnervateWeapon.TabIndex = 22;
@@ -217,7 +179,7 @@
             // 
             // txtInnervateWeaponInt
             // 
-            this.txtInnervateWeaponInt.Location = new System.Drawing.Point(108, 263);
+            this.txtInnervateWeaponInt.Location = new System.Drawing.Point(108, 206);
             this.txtInnervateWeaponInt.Name = "txtInnervateWeaponInt";
             this.txtInnervateWeaponInt.Size = new System.Drawing.Size(93, 20);
             this.txtInnervateWeaponInt.TabIndex = 23;
@@ -225,7 +187,7 @@
             // 
             // txtInnervateWeaponSpi
             // 
-            this.txtInnervateWeaponSpi.Location = new System.Drawing.Point(108, 290);
+            this.txtInnervateWeaponSpi.Location = new System.Drawing.Point(108, 232);
             this.txtInnervateWeaponSpi.Name = "txtInnervateWeaponSpi";
             this.txtInnervateWeaponSpi.Size = new System.Drawing.Size(93, 20);
             this.txtInnervateWeaponSpi.TabIndex = 24;
@@ -234,7 +196,7 @@
             // lblInnervateWeaponInt
             // 
             this.lblInnervateWeaponInt.AutoSize = true;
-            this.lblInnervateWeaponInt.Location = new System.Drawing.Point(3, 266);
+            this.lblInnervateWeaponInt.Location = new System.Drawing.Point(3, 209);
             this.lblInnervateWeaponInt.Name = "lblInnervateWeaponInt";
             this.lblInnervateWeaponInt.Size = new System.Drawing.Size(76, 13);
             this.lblInnervateWeaponInt.TabIndex = 25;
@@ -243,7 +205,7 @@
             // lblInnervateWeaponSpi
             // 
             this.lblInnervateWeaponSpi.AutoSize = true;
-            this.lblInnervateWeaponSpi.Location = new System.Drawing.Point(3, 293);
+            this.lblInnervateWeaponSpi.Location = new System.Drawing.Point(3, 235);
             this.lblInnervateWeaponSpi.Name = "lblInnervateWeaponSpi";
             this.lblInnervateWeaponSpi.Size = new System.Drawing.Size(62, 13);
             this.lblInnervateWeaponSpi.TabIndex = 26;
@@ -252,7 +214,7 @@
             // rdbAldor
             // 
             this.rdbAldor.AutoSize = true;
-            this.rdbAldor.Location = new System.Drawing.Point(39, 316);
+            this.rdbAldor.Location = new System.Drawing.Point(39, 258);
             this.rdbAldor.Name = "rdbAldor";
             this.rdbAldor.Size = new System.Drawing.Size(49, 17);
             this.rdbAldor.TabIndex = 27;
@@ -263,7 +225,7 @@
             // rdbScryer
             // 
             this.rdbScryer.AutoSize = true;
-            this.rdbScryer.Location = new System.Drawing.Point(94, 316);
+            this.rdbScryer.Location = new System.Drawing.Point(91, 258);
             this.rdbScryer.Name = "rdbScryer";
             this.rdbScryer.Size = new System.Drawing.Size(55, 17);
             this.rdbScryer.TabIndex = 28;
@@ -284,14 +246,10 @@
             this.Controls.Add(this.txtInnervateWeaponInt);
             this.Controls.Add(this.chkInnervateWeapon);
             this.Controls.Add(this.lblManaPotType);
-            this.Controls.Add(this.lblManPotDelay);
-            this.Controls.Add(this.txtManaPotDelay);
             this.Controls.Add(this.txtInnervateDelay);
             this.Controls.Add(this.lblInnervateOffset);
             this.Controls.Add(this.cmbPotType);
             this.Controls.Add(this.chkManaPots);
-            this.Controls.Add(this.lblShadowPriest);
-            this.Controls.Add(this.txtShadowPriest);
             this.Controls.Add(this.chkInnervate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtFightLength);
@@ -315,14 +273,10 @@
         private System.Windows.Forms.TextBox txtFightLength;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkInnervate;
-        private System.Windows.Forms.TextBox txtShadowPriest;
-        private System.Windows.Forms.Label lblShadowPriest;
         private System.Windows.Forms.CheckBox chkManaPots;
         private System.Windows.Forms.ComboBox cmbPotType;
         private System.Windows.Forms.Label lblInnervateOffset;
         private System.Windows.Forms.TextBox txtInnervateDelay;
-        private System.Windows.Forms.TextBox txtManaPotDelay;
-        private System.Windows.Forms.Label lblManPotDelay;
         private System.Windows.Forms.Label lblManaPotType;
         private System.Windows.Forms.CheckBox chkInnervateWeapon;
         private System.Windows.Forms.TextBox txtInnervateWeaponInt;

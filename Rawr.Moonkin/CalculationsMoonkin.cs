@@ -11,6 +11,7 @@ namespace Rawr.Moonkin
         public static float hitRatingConversionFactor = 800f * (41.0f / 26.0f);
         public static float hasteRatingConversionFactor = 1000f * (41.0f / 26.0f);
         public static float critRatingConversionFactor = 1400f * (41.0f / 26.0f);
+        public static float BaseMana = 2370.0f;
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -50,10 +51,6 @@ namespace Rawr.Moonkin
                     "Mana Regeneration:I5SR Per Second",
                     "Spell Info:Selected Rotation",
                     "Spell Info:Max DPS Rotation",
-                    "Spell Info:MF/SFx4 RDPS",
-                    "Spell Info:MF/SFx4 DPS",
-                    "Spell Info:MF/SFx4 DPM",
-                    "Spell Info:MF/SFx4 OOM",
                     "Spell Info:SF Spam RDPS",
                     "Spell Info:SF Spam DPS",
                     "Spell Info:SF Spam DPM",
@@ -62,34 +59,30 @@ namespace Rawr.Moonkin
                     "Spell Info:W Spam DPS",
                     "Spell Info:W Spam DPM",
                     "Spell Info:W Spam OOM",
-                    "Spell Info:MF/SFx3/W RDPS",
-                    "Spell Info:MF/SFx3/W DPS",
-                    "Spell Info:MF/SFx3/W DPM",
-                    "Spell Info:MF/SFx3/W OOM",
-                    "Spell Info:MF/Wx8 RDPS",
-                    "Spell Info:MF/Wx8 DPS",
-                    "Spell Info:MF/Wx8 DPM",
-                    "Spell Info:MF/Wx8 OOM",
-                    "Spell Info:IS/MF/SFx3 RDPS",
-                    "Spell Info:IS/MF/SFx3 DPS",
-                    "Spell Info:IS/MF/SFx3 DPM",
-                    "Spell Info:IS/MF/SFx3 OOM",
-                    "Spell Info:IS/MF/Wx7 RDPS",
-                    "Spell Info:IS/MF/Wx7 DPS",
-                    "Spell Info:IS/MF/Wx7 DPM",
-                    "Spell Info:IS/MF/Wx7 OOM",
-                    "Spell Info:IS/SFx3/W RDPS",
-                    "Spell Info:IS/SFx3/W DPS",
-                    "Spell Info:IS/SFx3/W DPM",
-                    "Spell Info:IS/SFx3/W OOM",
-                    "Spell Info:IS/SFx4 RDPS",
-                    "Spell Info:IS/SFx4 DPS",
-                    "Spell Info:IS/SFx4 DPM",
-                    "Spell Info:IS/SFx4 OOM",
-                    "Spell Info:IS/Wx8 RDPS",
-                    "Spell Info:IS/Wx8 DPS",
-                    "Spell Info:IS/Wx8 DPM",
-                    "Spell Info:IS/Wx8 OOM"
+                    "Spell Info:MF/SF RDPS",
+                    "Spell Info:MF/SF DPS",
+                    "Spell Info:MF/SF DPM",
+                    "Spell Info:MF/SF OOM",
+                    "Spell Info:MF/W RDPS",
+                    "Spell Info:MF/W DPS",
+                    "Spell Info:MF/W DPM",
+                    "Spell Info:MF/W OOM",
+                    "Spell Info:IS/SF RDPS",
+                    "Spell Info:IS/SF DPS",
+                    "Spell Info:IS/SF DPM",
+                    "Spell Info:IS/SF OOM",
+                    "Spell Info:IS/W RDPS",
+                    "Spell Info:IS/W DPS",
+                    "Spell Info:IS/W DPM",
+                    "Spell Info:IS/W OOM",
+                    "Spell Info:IS/MF/SF RDPS",
+                    "Spell Info:IS/MF/SF DPS",
+                    "Spell Info:IS/MF/SF DPM",
+                    "Spell Info:IS/MF/SF OOM",
+                    "Spell Info:IS/MF/W RDPS",
+                    "Spell Info:IS/MF/W DPS",
+                    "Spell Info:IS/MF/W DPM",
+                    "Spell Info:IS/MF/W OOM"
                     };
                 }
                 return characterDisplayCalculationLabels;
@@ -104,6 +97,8 @@ namespace Rawr.Moonkin
                 if (customChartNames == null)
                 {
                     customChartNames = new string[] { 
+                    "Talent DPS Comparison",
+                    "Talent MP5 Comparison",
 					"Relative Stat Values"
                     };
                 }
@@ -238,7 +233,7 @@ namespace Rawr.Moonkin
                     Intellect = 115f,
                     Spirit = 135f
                 };
-
+            
             // Get the gear/enchants/buffs stats loaded in
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
@@ -322,7 +317,7 @@ namespace Rawr.Moonkin
             {
                 statsTotal.CritRating += statsTotal.IdolCritRating;
                 statsTotal.HasteRating += 0.01f * character.DruidTalents.ImprovedMoonkinForm * hasteRatingConversionFactor;
-                statsTotal.SpellPower += (0.5f * character.DruidTalents.ImprovedMoonkinForm) * statsTotal.Spirit;
+                statsTotal.SpellDamageFromSpiritPercentage += (0.5f * character.DruidTalents.ImprovedMoonkinForm);
             }
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
             if (character.ActiveBuffsContains("Improved Faerie Fire"))
@@ -342,6 +337,57 @@ namespace Rawr.Moonkin
         {
             switch (chartName)
             {
+                case "Talent DPS Comparison":
+                    CharacterCalculationsMoonkin calcsTalentBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    List<ComparisonCalculationBase> comps = new List<ComparisonCalculationBase>();
+                    for (int i = 0; i < character.DruidTalents.Data.Length; ++i)
+                    {
+                        if (character.DruidTalents.Data[i] > 0)
+                        {
+                            int oldValue = character.DruidTalents.Data[i];
+                            character.DruidTalents.Data[i] = 0;
+                            CharacterCalculationsMoonkin calcsTalented = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                            comps.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = LookupDruidTalentName(i),
+                                OverallPoints = calcsTalentBase.OverallPoints - calcsTalented.OverallPoints,
+                                DamagePoints = calcsTalentBase.SubPoints[0] - calcsTalented.SubPoints[0],
+                                RawDamagePoints = calcsTalentBase.SubPoints[1] - calcsTalented.SubPoints[1]
+                            });
+
+                            character.DruidTalents.Data[i] = oldValue;
+                        }
+                    }
+                    return comps.ToArray();
+                case "Talent MP5 Comparison":
+                    CharacterCalculationsMoonkin calcsMP5TalentBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    List<ComparisonCalculationBase> compsMP5 = new List<ComparisonCalculationBase>();
+                    SpellRotation maxRot = calcsMP5TalentBase.MaxDPSRotation;
+                    for (int i = 0; i < character.DruidTalents.Data.Length; ++i)
+                    {
+                        if (character.DruidTalents.Data[i] > 0)
+                        {
+                            int oldValue = character.DruidTalents.Data[i];
+                            character.DruidTalents.Data[i] = 0;
+                            CharacterCalculationsMoonkin calcsTalented = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                            float mp5 = 0.0f;
+                            foreach (KeyValuePair<string, RotationData> pairs in calcsTalented.Rotations)
+                            {
+                                if (pairs.Key == maxRot.Name)
+                                    mp5 = (pairs.Value.ManaUsed - maxRot.ManaUsed) / maxRot.Duration * 5.0f;
+                            }
+                            compsMP5.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = LookupDruidTalentName(i),
+                                OverallPoints = mp5,
+                                RawDamagePoints = mp5,
+                                DamagePoints = 0
+                            });
+
+                            character.DruidTalents.Data[i] = oldValue;
+                        }
+                    }
+                    return compsMP5.ToArray();
                 case "Relative Stat Values":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsMoonkin;
@@ -384,6 +430,69 @@ namespace Rawr.Moonkin
                         }};
             }
             return new ComparisonCalculationBase[0];
+        }
+
+        private string LookupDruidTalentName(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return "Starlight Wrath";
+                case 1:
+                    return "Genesis";
+                case 2:
+                    return "Moonglow";
+                case 3:
+                    return "Nature's Majesty";
+                case 4:
+                    return "Improved Moonfire";
+                case 5:
+                    return "Brambles";
+                case 6:
+                    return "Nature's Grace";
+                case 7:
+                    return "Nature's Splendor";
+                case 9:
+                    return "Vengeance";
+                case 10:
+                    return "Celestial Focus";
+                case 11:
+                    return "Lunar Guidance";
+                case 12:
+                    return "Insect Swarm";
+                case 13:
+                    return "Improved Insect Swarm";
+                case 14:
+                    return "Dreamstate";
+                case 15:
+                    return "Moonfury";
+                case 16:
+                    return "Balance of Power";
+                case 17:
+                    return "Moonkin Form";
+                case 18:
+                    return "Improved Moonkin Form";
+                case 19:
+                    return "Improved Faerie Fire";
+                case 21:
+                    return "Wrath of Cenarius";
+                case 24:
+                    return "Force of Nature";
+                case 26:
+                    return "Earth and Moon";
+                case 59:
+                    return "Furor";
+                case 62:
+                    return "Natural Shapeshifter";
+                case 63:
+                    return "Intensity";
+                case 64:
+                    return "Omen of Clarity";
+                case 65:
+                    return "Master Shapeshifter";
+                default:
+                    return "Not implemented";
+            }
         }
 
         public override Stats GetRelevantStats(Stats stats)

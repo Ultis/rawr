@@ -26,15 +26,12 @@ namespace Rawr.Moonkin
             cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			txtLatency.Text = calcOpts.Latency.ToString();
             txtFightLength.Text = calcOpts.FightLength.ToString();
-            txtShadowPriest.Text = calcOpts.ShadowPriest.ToString();
             chkInnervate.Checked = calcOpts.Innervate;
             chkManaPots.Checked = calcOpts.ManaPots;
             cmbPotType.SelectedItem = calcOpts.ManaPotType;
             cmbPotType.Enabled = chkManaPots.Checked;
             txtInnervateDelay.Text = calcOpts.InnervateDelay.ToString();
             txtInnervateDelay.Enabled = chkInnervate.Checked;
-            txtManaPotDelay.Text = calcOpts.ManaPotDelay.ToString();
-            txtManaPotDelay.Enabled = chkManaPots.Checked;
             chkInnervateWeapon.Checked = calcOpts.InnervateWeapon;
             txtInnervateWeaponInt.Enabled = chkInnervateWeapon.Checked;
             txtInnervateWeaponInt.Text = calcOpts.InnervateWeaponInt.ToString();
@@ -73,19 +70,11 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void txtShadowPriest_Leave(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.ShadowPriest = float.Parse(txtShadowPriest.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
         private void chkManaPots_CheckedChanged(object sender, EventArgs e)
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.ManaPots = chkManaPots.Checked;
             cmbPotType.Enabled = chkManaPots.Checked;
-            txtManaPotDelay.Enabled = chkManaPots.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -100,13 +89,6 @@ namespace Rawr.Moonkin
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.InnervateDelay = float.Parse(txtInnervateDelay.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void txtManaPotDelay_Leave(object sender, EventArgs e)
-        {
-			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-			calcOpts.ManaPotDelay = float.Parse(txtManaPotDelay.Text);
             Character.OnCalculationsInvalidated();
         }
 
@@ -268,9 +250,7 @@ namespace Rawr.Moonkin
 		public float FightLength = 5;
 		public bool Innervate = false;
 		public float InnervateDelay = 1;
-		public float ShadowPriest = 0;
 		public bool ManaPots = false;
-		public float ManaPotDelay = 1.5f;
 		public string ManaPotType = "Super Mana Potion";
 		public bool InnervateWeapon = false;
 		public float InnervateWeaponInt = 0;

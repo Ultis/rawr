@@ -230,10 +230,10 @@ namespace Rawr.Moonkin
         public Starfire()
         {
             name = "SF";
-            baseDamage = (540.0f + 636.0f) / 2.0f;
+            baseDamage = (818.0f + 964.0f) / 2.0f;
             spellDamageMultiplier = 1.0f;
             baseCastTime = 3.5f;
-            manaCost = 370.0f;
+            manaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f);
             dotEffect = null;
             school = SpellSchool.Arcane;
         }
@@ -270,7 +270,7 @@ namespace Rawr.Moonkin
             baseDamage = (305.0f + 357.0f) / 2.0f;
             spellDamageMultiplier = (1.5f/3.5f) * (baseDamage / (baseDamage + 150.0f*4.0f));
             baseCastTime = Spell.GlobalCooldown;
-            manaCost = 495.0f;
+            manaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.21f);
             dotEffect = new DotEffect()
                 {
                     Duration = 12.0f,
@@ -303,10 +303,10 @@ namespace Rawr.Moonkin
         public Wrath()
         {
             name = "W";
-            baseDamage = (381.0f + 429.0f) / 2.0f;
+            baseDamage = (431.0f + 485.0f) / 2.0f;
             spellDamageMultiplier = 2.0f/3.5f;
             baseCastTime = 2.0f;
-            manaCost = 255.0f;
+            manaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f);
             dotEffect = null;
             school = SpellSchool.Nature;
         }
@@ -343,12 +343,12 @@ namespace Rawr.Moonkin
             baseDamage = 0.0f;
             spellDamageMultiplier = 0.0f;
             baseCastTime = Spell.GlobalCooldown;
-            manaCost = 175.0f;
+            manaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.08f);
             dotEffect = new DotEffect()
             {
                 Duration = 12.0f,
                 TickDuration = 2.0f,
-                DamagePerTick = 132.0f,
+                DamagePerTick = 172.0f,
                 SpellDamageMultiplier = 0.76f
             };
             school = SpellSchool.Nature;
@@ -368,6 +368,7 @@ namespace Rawr.Moonkin
         public float RawDPS = 0.0f;
         public float DPS = 0.0f;
         public float DPM = 0.0f;
+        public float ManaUsed = 0.0f;
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
     }
 
@@ -544,6 +545,7 @@ namespace Rawr.Moonkin
                 {
                     activeDots[key] -= timeSpentCasting;
                 }
+                _manaUsed += sp.ManaCost * _castCount;
                 _avgCritChance += sp.SpecialCriticalModifier * _castCount;
                 _duration += timeSpentCasting;
             }
@@ -553,6 +555,7 @@ namespace Rawr.Moonkin
         private float _castCount = 0.0f;
         private float _duration = 0.0f;
         private int _dotTicks = 0;
+        private float _manaUsed = 0.0f;
         public float AverageCritChance
         {
             get
@@ -560,6 +563,15 @@ namespace Rawr.Moonkin
                 if (_duration == 0.0f)
                     CalculateRotationalVariables();
                 return _avgCritChance;
+            }
+        }
+        public float ManaUsed
+        {
+            get
+            {
+                if (_duration == 0.0f)
+                    CalculateRotationalVariables();
+                return _manaUsed;
             }
         }
         public float Duration
@@ -627,6 +639,7 @@ namespace Rawr.Moonkin
             _castCount = 0.0f;
             _dotTicks = 0;
             _duration = 0.0f;
+            _manaUsed = 0.0f;
             _starfireCount = 0;
         }
     }
@@ -652,8 +665,7 @@ namespace Rawr.Moonkin
 
 			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Mana pot calculations
-            float manaPotDelay = calcOpts.ManaPotDelay * 60.0f;
-            int numPots = calcOpts.ManaPots && fightLength - manaPotDelay > 0 ? ((int)(fightLength - manaPotDelay) / 120 + 1) : 0;
+            int numPots = calcOpts.ManaPots ? 1 : 0;
             float manaRestoredByPots = 0.0f;
             if (numPots > 0)
             {
@@ -694,13 +706,14 @@ namespace Rawr.Moonkin
                 }
                 float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
                 float innervateTime = numInnervates * 20.0f;
-                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * 2470f * 0.04f);
+                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * CalculationsMoonkin.BaseMana * 0.04f);
             }
-            // Shadow priest calculations
-            float sPriestMp5 = calcOpts.ShadowPriest;
-            float sPriestMana = sPriestMp5 / 5 * fightLength;
+            // Replenishment calculations
+            float replenishmentPerTick = calcs.BasicStats.Mana * 0.0025f;
+            // TODO: Add replenishment uptime control to options, insert percentage here
+            float replenishmentMana = 1.0f * replenishmentPerTick * calcOpts.FightLength;
 
-            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + sPriestMana;
+            return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
         private static void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
@@ -834,12 +847,12 @@ namespace Rawr.Moonkin
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
-                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.ActiveBuffsContains("Moonkin Aura")) * (fightLength / rotation.Duration);
+                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.ActiveBuffsContains("Moonkin Aura"), character.DruidTalents.OmenOfClarity > 0) * (fightLength / rotation.Duration);
                 // Casting trees?  Remove from effective mana
                 if (character.DruidTalents.ForceOfNature > 0)
                 {
                     int numTreeCasts = ((int)fightLength / 180) + 1;
-                    effectiveMana -= numTreeCasts * 2470f * 0.12f;
+                    effectiveMana -= numTreeCasts * CalculationsMoonkin.BaseMana * 0.12f;
                 }
 
                 // Calculate average global cooldown based on effective haste rating (includes trinkets)
@@ -877,6 +890,7 @@ namespace Rawr.Moonkin
                     RawDPS = currentRawDPS,
                     DPS = currentDPS,
                     DPM = rotation.DPM,
+                    ManaUsed = rotation.ManaUsed,
                     TimeToOOM = rotation.TimeToOOM
                 };
             }
@@ -890,11 +904,12 @@ namespace Rawr.Moonkin
         {
             float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
             float attackSpeed = 1.6f;
+            // TODO: Add treant lifespan percentage here
             float damagePerTree = (30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
             return 3 * damagePerTree / 180.0f;
         }
 
-        private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float critRate, bool moonkinForm)
+        private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float critRate, bool moonkinForm, bool omenOfClarity)
         {
             float manaFromOther = calcs.BasicStats.ManaRestorePerCast * rotation.CastCount;
             float averageCastTime = rotation.Duration / rotation.CastCount;
@@ -902,11 +917,19 @@ namespace Rawr.Moonkin
             while (averageTimeBetweenProcs < 4.0f)
                 averageTimeBetweenProcs += averageCastTime;
             float procsPerRotation = rotation.Duration / averageTimeBetweenProcs;
-            float manaFromJoW = calcs.BasicStats.ManaRestorePerHit * procsPerRotation;
+            float manaFromJoW = 0.02f * calcs.BasicStats.Mana * procsPerRotation;
             float manaFromMoonkinForm = 0.0f;
             if (moonkinForm)
             {
                 manaFromMoonkinForm = 0.02f * calcs.BasicStats.Mana * (hitRate * critRate * rotation.CastCount);
+            }
+            float manaFromOOC = 0.0f;
+            if (omenOfClarity)
+            {
+                float castsDuringCooldown = 10.0f / rotation.CastCount;
+                float expectedCastsToProc = (1 / 0.06f) + castsDuringCooldown;
+                float expectedProcChance = 1 / expectedCastsToProc;
+                manaFromOOC = (rotation.ManaUsed / rotation.CastCount) * expectedProcChance;
             }
             float manaFromTrinket = 0.0f;
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
@@ -929,7 +952,7 @@ namespace Rawr.Moonkin
                 manaFromTrinket /= 120.0f;
                 manaFromTrinket *= rotation.Duration;
             }
-            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromMoonkinForm;
+            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromMoonkinForm + manaFromOOC;
         }
 
         private static void DoTrinketCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float effectiveSpellCrit, ref float effectiveSpellHaste)
@@ -1060,7 +1083,7 @@ namespace Rawr.Moonkin
             {
             new SpellRotation()
             {
-                Name = "MF/SFx4",
+                Name = "MF/SF",
                 Spells = new List<Spell>(new Spell[]
                 {
                     moonfire,
@@ -1069,7 +1092,7 @@ namespace Rawr.Moonkin
             },
             new SpellRotation()
             {
-                Name = "MF/Wx8",
+                Name = "MF/W",
                 Spells = new List<Spell>(new Spell[]
                 {
                     moonfire,
@@ -1078,7 +1101,7 @@ namespace Rawr.Moonkin
             },
             new SpellRotation()
             {
-                Name = "IS/SFx4",
+                Name = "IS/SF",
                 Spells = new List<Spell>(new Spell[]
                 {
                     insectSwarm,
@@ -1087,7 +1110,7 @@ namespace Rawr.Moonkin
             },
             new SpellRotation()
             {
-                Name = "IS/Wx8",
+                Name = "IS/W",
                 Spells = new List<Spell>(new Spell[]
                 {
                     insectSwarm,
@@ -1096,27 +1119,7 @@ namespace Rawr.Moonkin
             },
             new SpellRotation()
             {
-                Name = "MF/SFx3/W",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    moonfire,
-                    starfire,
-                    wrath
-                })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/SFx3/W",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    insectSwarm,
-                    starfire,
-                    wrath
-                })
-            },
-            new SpellRotation()
-            {
-                Name = "IS/MF/SFx3",
+                Name = "IS/MF/SF",
                 Spells = new List<Spell>(new Spell[]
                 {
                     insectSwarm,
@@ -1126,7 +1129,7 @@ namespace Rawr.Moonkin
             },
             new SpellRotation()
             {
-                Name = "IS/MF/Wx7",
+                Name = "IS/MF/W",
                 Spells = new List<Spell>(new Spell[]
                 {
                     insectSwarm,
