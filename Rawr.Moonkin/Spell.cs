@@ -710,8 +710,8 @@ namespace Rawr.Moonkin
             // Add (possibly talented) +spelldmg
             // Starfire: Damage +(0.04 * Wrath of Cenarius)
             // Wrath: Damage +(0.02 * Wrath of Cenarius)
-            wrath.SpellDamageModifier += 0.02f * calcOpts.WrathofCenarius;
-            starfire.SpellDamageModifier += 0.04f * calcOpts.WrathofCenarius;
+            wrath.SpellDamageModifier += 0.02f * character.DruidTalents.WrathOfCenarius;
+            starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
 
             // Add spell damage from idols
             starfire.DamagePerHit += stats.StarfireDmg;
@@ -720,9 +720,9 @@ namespace Rawr.Moonkin
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            wrath.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
-            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
-            starfire.SpecialDamageModifier *= 1.0f + (0.02f * calcOpts.Moonfury);
+            wrath.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
+            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
+            starfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
             wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
@@ -738,18 +738,18 @@ namespace Rawr.Moonkin
             // Insect Swarm is a binary spell
 
             // Add spell-specific crit chance
-            // Wrath, Starfire: Crit chance +(0.02 * Focused Starlight)
-            wrath.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
-            starfire.SpecialCriticalModifier += 0.02f * calcOpts.FocusedStarlight;
+            // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
+            wrath.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
+            starfire.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
             // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            moonfire.SpecialDamageModifier *= 1.0f + (0.05f * calcOpts.ImpMoonfire);
-            moonfire.SpecialCriticalModifier += 0.05f * calcOpts.ImpMoonfire;
+            moonfire.SpecialDamageModifier *= 1.0f + (0.05f * character.DruidTalents.ImprovedMoonfire);
+            moonfire.SpecialCriticalModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
 
             // Add spell-specific critical strike damage
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
-            starfire.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
-            moonfire.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
-            wrath.CriticalHitMultiplier *= 1 + 0.2f * calcOpts.Vengeance;
+            starfire.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
+            moonfire.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
+            wrath.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
             // Chaotic Skyfire Diamond
             starfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
             moonfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
@@ -757,14 +757,14 @@ namespace Rawr.Moonkin
 
             // Reduce spell-specific mana costs
             // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-            starfire.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
-            moonfire.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
-            wrath.ManaCost *= 1.0f - (0.03f * calcOpts.Moonglow);
+            starfire.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+            moonfire.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+            wrath.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
 
             // Reduce spell-specific cast times
             // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
-            wrath.CastTime -= 0.1f * calcOpts.StarlightWrath;
-            starfire.CastTime -= 0.1f * calcOpts.StarlightWrath;
+            wrath.CastTime -= 0.1f * character.DruidTalents.StarlightWrath;
+            starfire.CastTime -= 0.1f * character.DruidTalents.StarlightWrath;
 
             // Add set bonuses
             moonfire.DoT.Duration += stats.MoonfireExtension;
@@ -777,7 +777,7 @@ namespace Rawr.Moonkin
             cachedResults = new Dictionary<string, RotationData>();
             float effectiveSpellHit = calcs.BasicStats.HitRating;
 			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-			bool naturesGrace = calcOpts.NaturesGrace > 0 ? true : false;
+			bool naturesGrace = character.DruidTalents.NaturesGrace > 0 ? true : false;
             float fightLength = calcs.FightLength * 60.0f;
 
             float baseHitRate = 0.83f;
@@ -801,9 +801,9 @@ namespace Rawr.Moonkin
                     break;
             }
 
-            if (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor > 0.99f)
+            if (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor > 1.0f)
             {
-                effectiveSpellHit = CalculationsMoonkin.hitRatingConversionFactor * (0.99f - baseHitRate);
+                effectiveSpellHit = CalculationsMoonkin.hitRatingConversionFactor * (1.0f - baseHitRate);
             }
 
             RecreateSpells(character, ref calcs);

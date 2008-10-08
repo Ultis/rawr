@@ -11,17 +11,9 @@ namespace Rawr.Moonkin
 {
     public partial class CalculationOptionsPanelMoonkin : CalculationOptionsPanelBase
     {
-        private MoonkinTalentsForm talents;
         public CalculationOptionsPanelMoonkin()
         {
-            talents = new MoonkinTalentsForm(this);
             InitializeComponent();
-        }
-
-        // Display the talents form when the button is clicked
-        private void btnTalents_Click(object sender, EventArgs e)
-        {
-            talents.Show();
         }
 
         // Load the options into the form
@@ -29,34 +21,6 @@ namespace Rawr.Moonkin
         {
 			if (Character.CalculationOptions == null)
 				Character.CalculationOptions = new CalculationOptionsMoonkin(Character);
-			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-			//    calcOpts.TargetLevel = "73";
-			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-			//    character.EnforceMetagemRequirements = "No";
-			//if (!Character.CalculationOptions.ContainsKey("Latency"))
-			//    calcOpts.Latency = "0.4";
-			//if (!Character.CalculationOptions.ContainsKey("FightLength"))
-			//    calcOpts.FightLength = "5";
-			//if (!Character.CalculationOptions.ContainsKey("Innervate"))
-			//    calcOpts.Innervate = "No";
-			//if (!Character.CalculationOptions.ContainsKey("InnervateDelay"))
-			//    calcOpts.InnervateDelay = "1";
-			//if (!Character.CalculationOptions.ContainsKey("ShadowPriest"))
-			//    calcOpts.ShadowPriest = "0";
-			//if (!Character.CalculationOptions.ContainsKey("ManaPots"))
-			//    calcOpts.ManaPots = "No";
-			//if (!Character.CalculationOptions.ContainsKey("ManaPotDelay"))
-			//    calcOpts.ManaPotDelay = "1.5";
-			//if (!Character.CalculationOptions.ContainsKey("ManaPotType"))
-			//    calcOpts.ManaPotType = "Super Mana Potion";
-			//if (!Character.CalculationOptions.ContainsKey("InnervateWeapon"))
-			//    calcOpts.InnervateWeapon = "No";
-			//if (!Character.CalculationOptions.ContainsKey("InnervateWeaponInt"))
-			//    calcOpts.InnervateWeaponInt = "0";
-			//if (!Character.CalculationOptions.ContainsKey("InnervateWeaponSpi"))
-			//    calcOpts.InnervateWeaponSpi = "0";
-			//if (!Character.CalculationOptions.ContainsKey("AldorScryer"))
-			//    calcOpts.AldorScryer = "Aldor";
 
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             cmbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
@@ -78,8 +42,6 @@ namespace Rawr.Moonkin
             txtInnervateWeaponSpi.Text = calcOpts.InnervateWeaponSpi.ToString();
             rdbAldor.Checked = calcOpts.AldorScryer == "Aldor";
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
-
-            if (talents != null) talents.LoadCalculationOptions();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -210,68 +172,89 @@ namespace Rawr.Moonkin
                     //  <talentTree value="50002201050313523105100000000000000530000000000300001000030300"/>
                     //</talentTab>
                     string talentCode = docTalents.SelectSingleNode("page/characterInfo/talentTab/talentTree").Attributes["value"].Value;
-                    StarlightWrath = int.Parse(talentCode.Substring(0, 1));
-                    NaturesGrasp = int.Parse(talentCode.Substring(1, 1));
-                    ImpNaturesGrasp = int.Parse(talentCode.Substring(2, 1));
-                    ControlofNature = int.Parse(talentCode.Substring(3, 1));
-                    FocusedStarlight = int.Parse(talentCode.Substring(4, 1));
-                    ImpMoonfire = int.Parse(talentCode.Substring(5, 1));
-                    Brambles = int.Parse(talentCode.Substring(6, 1));
-                    InsectSwarm = int.Parse(talentCode.Substring(7, 1));
-                    NaturesReach = int.Parse(talentCode.Substring(8, 1));
-                    Vengeance = int.Parse(talentCode.Substring(9, 1));
-                    CelestialFocus = int.Parse(talentCode.Substring(10, 1));
-                    LunarGuidance = int.Parse(talentCode.Substring(11, 1));
-                    NaturesGrace = int.Parse(talentCode.Substring(12, 1));
-                    Moonglow = int.Parse(talentCode.Substring(13, 1));
-                    Moonfury = int.Parse(talentCode.Substring(14, 1));
-                    BalanceofPower = int.Parse(talentCode.Substring(15, 1));
-                    Dreamstate = int.Parse(talentCode.Substring(16, 1));
-                    MoonkinForm = int.Parse(talentCode.Substring(17, 1));
-                    ImprovedFF = int.Parse(talentCode.Substring(18, 1));
-                    WrathofCenarius = int.Parse(talentCode.Substring(19, 1));
-                    ForceofNature = int.Parse(talentCode.Substring(20, 1));
-                    Ferocity = int.Parse(talentCode.Substring(21, 1));
-                    FeralAggression = int.Parse(talentCode.Substring(22, 1));
-                    FeralInstinct = int.Parse(talentCode.Substring(23, 1));
-                    BrutalImpact = int.Parse(talentCode.Substring(24, 1));
-                    ThickHide = int.Parse(talentCode.Substring(25, 1));
-                    FeralSwiftness = int.Parse(talentCode.Substring(26, 1));
-                    FeralCharge = int.Parse(talentCode.Substring(27, 1));
-                    SharpenedClaws = int.Parse(talentCode.Substring(28, 1));
-                    ShreddingAttacks = int.Parse(talentCode.Substring(29, 1));
-                    PredatoryStrikes = int.Parse(talentCode.Substring(30, 1));
-                    PrimalFury = int.Parse(talentCode.Substring(31, 1));
-                    SavageFury = int.Parse(talentCode.Substring(32, 1));
-                    FeralFaerieFire = int.Parse(talentCode.Substring(33, 1));
-                    NurturingInstinct = int.Parse(talentCode.Substring(34, 1));
-                    HotW = int.Parse(talentCode.Substring(35, 1));
-                    SotF = int.Parse(talentCode.Substring(36, 1));
-                    PrimalTenacity = int.Parse(talentCode.Substring(37, 1));
-                    LotP = int.Parse(talentCode.Substring(38, 1));
-                    ImprovedLotP = int.Parse(talentCode.Substring(39, 1));
-                    PredatoryInstincts = int.Parse(talentCode.Substring(40, 1));
-                    Mangle = int.Parse(talentCode.Substring(41, 1));
-                    ImprovedMotW = int.Parse(talentCode.Substring(42, 1));
-                    Furor = int.Parse(talentCode.Substring(43, 1));
-                    Naturalist = int.Parse(talentCode.Substring(44, 1));
-                    NaturesFocus = int.Parse(talentCode.Substring(45, 1));
-                    NaturalShapeshifter = int.Parse(talentCode.Substring(46, 1));
-                    Intensity = int.Parse(talentCode.Substring(47, 1));
-                    Subtlety = int.Parse(talentCode.Substring(48, 1));
-                    OmenofClarity = int.Parse(talentCode.Substring(49, 1));
-                    TranquilSpirit = int.Parse(talentCode.Substring(50, 1));
-                    ImprovedRejuv = int.Parse(talentCode.Substring(51, 1));
-                    NaturesSwiftness = int.Parse(talentCode.Substring(52, 1));
-                    GiftofNature = int.Parse(talentCode.Substring(53, 1));
-                    ImpTranquility = int.Parse(talentCode.Substring(54, 1));
-                    EmpoweredTouch = int.Parse(talentCode.Substring(55, 1));
-                    ImprovedRegrowth = int.Parse(talentCode.Substring(56, 1));
-                    LivingSpirit = int.Parse(talentCode.Substring(57, 1));
-                    Swiftmend = int.Parse(talentCode.Substring(58, 1));
-                    NaturalPerfection = int.Parse(talentCode.Substring(59, 1));
-                    EmpoweredRejuv = int.Parse(talentCode.Substring(60, 1));
-                    TreeofLife = int.Parse(talentCode.Substring(61, 1));
+                    character.DruidTalents.StarlightWrath = int.Parse(talentCode.Substring(0, 1));
+                    character.DruidTalents.Genesis = int.Parse(talentCode.Substring(1, 1));
+                    character.DruidTalents.Moonglow = int.Parse(talentCode.Substring(2, 1));
+                    character.DruidTalents.NaturesMastery = int.Parse(talentCode.Substring(3, 1));
+                    character.DruidTalents.ImprovedMoonfire = int.Parse(talentCode.Substring(4, 1));
+                    character.DruidTalents.Brambles = int.Parse(talentCode.Substring(5, 1));
+                    character.DruidTalents.NaturesGrace = int.Parse(talentCode.Substring(6, 1));
+                    character.DruidTalents.NaturesSplendor = int.Parse(talentCode.Substring(7, 1));
+                    character.DruidTalents.NaturesReach = int.Parse(talentCode.Substring(8, 1));
+                    character.DruidTalents.Vengeance = int.Parse(talentCode.Substring(9, 1));
+                    character.DruidTalents.CelestialFocus = int.Parse(talentCode.Substring(10, 1));
+                    character.DruidTalents.LunarGuidance = int.Parse(talentCode.Substring(11, 1));
+                    character.DruidTalents.InsectSwarm = int.Parse(talentCode.Substring(12, 1));
+                    character.DruidTalents.ImprovedInsectSwarm = int.Parse(talentCode.Substring(13, 1));
+                    character.DruidTalents.Dreamstate = int.Parse(talentCode.Substring(14, 1));
+                    character.DruidTalents.Moonfury = int.Parse(talentCode.Substring(15, 1));
+                    character.DruidTalents.BalanceOfPower = int.Parse(talentCode.Substring(16, 1));
+                    character.DruidTalents.MoonkinForm = int.Parse(talentCode.Substring(17, 1));
+                    character.DruidTalents.ImprovedMoonkinForm = int.Parse(talentCode.Substring(18, 1));
+                    character.DruidTalents.ImprovedFaerieFire = int.Parse(talentCode.Substring(19, 1));
+                    character.DruidTalents.OwlkinFrenzy = int.Parse(talentCode.Substring(20, 1));
+                    character.DruidTalents.WrathOfCenarius = int.Parse(talentCode.Substring(21, 1));
+                    character.DruidTalents.Eclipse = int.Parse(talentCode.Substring(22, 1));
+                    character.DruidTalents.Typhoon = int.Parse(talentCode.Substring(23, 1));
+                    character.DruidTalents.ForceOfNature = int.Parse(talentCode.Substring(24, 1));
+                    character.DruidTalents.GaleWinds = int.Parse(talentCode.Substring(25, 1));
+                    character.DruidTalents.EarthAndMoon = int.Parse(talentCode.Substring(26, 1));
+                    character.DruidTalents.Starfall = int.Parse(talentCode.Substring(27, 1));
+                    character.DruidTalents.Ferocity = int.Parse(talentCode.Substring(28, 1));
+                    character.DruidTalents.FeralAggression = int.Parse(talentCode.Substring(29, 1));
+                    character.DruidTalents.FeralInstinct = int.Parse(talentCode.Substring(30, 1));
+                    character.DruidTalents.SavageFury = int.Parse(talentCode.Substring(31, 1));
+                    character.DruidTalents.ThickHide = int.Parse(talentCode.Substring(32, 1));
+                    character.DruidTalents.FeralSwiftness = int.Parse(talentCode.Substring(33, 1));
+                    character.DruidTalents.SurvivalInstincts = int.Parse(talentCode.Substring(34, 1));
+                    character.DruidTalents.SharpenedClaws = int.Parse(talentCode.Substring(35, 1));
+                    character.DruidTalents.ShreddingAttacks = int.Parse(talentCode.Substring(36, 1));
+                    character.DruidTalents.PredatoryStrikes = int.Parse(talentCode.Substring(37, 1));
+                    character.DruidTalents.PrimalFury = int.Parse(talentCode.Substring(38, 1));
+                    character.DruidTalents.PrimalPrecision = int.Parse(talentCode.Substring(39, 1));
+                    character.DruidTalents.BrutalImpact = int.Parse(talentCode.Substring(40, 1));
+                    character.DruidTalents.FeralCharge = int.Parse(talentCode.Substring(41, 1));
+                    character.DruidTalents.NurturingInstinct = int.Parse(talentCode.Substring(42, 1));
+                    character.DruidTalents.NaturalReaction = int.Parse(talentCode.Substring(43, 1));
+                    character.DruidTalents.HeartOfTheWild = int.Parse(talentCode.Substring(44, 1));
+                    character.DruidTalents.SurvivalOfTheFittest = int.Parse(talentCode.Substring(45, 1));
+                    character.DruidTalents.LeaderOfThePack = int.Parse(talentCode.Substring(46, 1));
+                    character.DruidTalents.ImprovedLeaderOfThePack = int.Parse(talentCode.Substring(47, 1));
+                    character.DruidTalents.PrimalTenacity = int.Parse(talentCode.Substring(48, 1));
+                    character.DruidTalents.MotherBear = int.Parse(talentCode.Substring(49, 1));
+                    character.DruidTalents.PredatoryInstincts = int.Parse(talentCode.Substring(50, 1));
+                    character.DruidTalents.InfectedWounds = int.Parse(talentCode.Substring(51, 1));
+                    character.DruidTalents.KingOfTheJungle = int.Parse(talentCode.Substring(52, 1));
+                    character.DruidTalents.Mangle = int.Parse(talentCode.Substring(53, 1));
+                    character.DruidTalents.ImprovedMangle = int.Parse(talentCode.Substring(54, 1));
+                    character.DruidTalents.RendAndTear = int.Parse(talentCode.Substring(55, 1));
+                    character.DruidTalents.Berserk = int.Parse(talentCode.Substring(56, 1));
+                    character.DruidTalents.ImprovedMarkOfTheWild = int.Parse(talentCode.Substring(57, 1));
+                    character.DruidTalents.NaturesFocus = int.Parse(talentCode.Substring(58, 1));
+                    character.DruidTalents.Furor = int.Parse(talentCode.Substring(59, 1));
+                    character.DruidTalents.Naturalist = int.Parse(talentCode.Substring(60, 1));
+                    character.DruidTalents.Subtlety = int.Parse(talentCode.Substring(61, 1));
+                    character.DruidTalents.NaturalShapeshifter = int.Parse(talentCode.Substring(62, 1));
+                    character.DruidTalents.Intensity = int.Parse(talentCode.Substring(63, 1));
+                    character.DruidTalents.OmenOfClarity = int.Parse(talentCode.Substring(64, 1));
+                    character.DruidTalents.MasterShapeshifter = int.Parse(talentCode.Substring(65, 1));
+                    character.DruidTalents.TranquilSpirit = int.Parse(talentCode.Substring(66, 1));
+                    character.DruidTalents.ImprovedRejuvenation = int.Parse(talentCode.Substring(67, 1));
+                    character.DruidTalents.NaturesSwiftness = int.Parse(talentCode.Substring(68, 1));
+                    character.DruidTalents.GiftOfNature = int.Parse(talentCode.Substring(69, 1));
+                    character.DruidTalents.ImprovedTranquility = int.Parse(talentCode.Substring(70, 1));
+                    character.DruidTalents.EmpoweredTouch = int.Parse(talentCode.Substring(71, 1));
+                    character.DruidTalents.ImprovedRegrowth = int.Parse(talentCode.Substring(72, 1));
+                    character.DruidTalents.LivingSpirit = int.Parse(talentCode.Substring(73, 1));
+                    character.DruidTalents.Swiftmend = int.Parse(talentCode.Substring(74, 1));
+                    character.DruidTalents.NaturalPerfection = int.Parse(talentCode.Substring(75, 1));
+                    character.DruidTalents.EmpoweredRejuvenation = int.Parse(talentCode.Substring(76, 1));
+                    character.DruidTalents.LivingSeed = int.Parse(talentCode.Substring(77, 1));
+                    character.DruidTalents.Replenish = int.Parse(talentCode.Substring(78, 1));
+                    character.DruidTalents.TreeOfLife = int.Parse(talentCode.Substring(79, 1));
+                    character.DruidTalents.ImprovedTreeOfLife = int.Parse(talentCode.Substring(80, 1));
+                    character.DruidTalents.GiftOfTheEarthmother = int.Parse(talentCode.Substring(81, 1));
+                    character.DruidTalents.WildGrowth = int.Parse(talentCode.Substring(82, 1));
                 }
             }
             catch (Exception ex)
@@ -281,7 +264,7 @@ namespace Rawr.Moonkin
         }
 
 		public int TargetLevel = 73;
-		public float Latency = 0.4f;
+		public float Latency = 0.2f;
 		public float FightLength = 5;
 		public bool Innervate = false;
 		public float InnervateDelay = 1;
@@ -293,68 +276,5 @@ namespace Rawr.Moonkin
 		public float InnervateWeaponInt = 0;
 		public float InnervateWeaponSpi = 0;
 		public string AldorScryer = "Aldor";
-
-		public int StarlightWrath;
-		public int ForceofNature;
-		public int WrathofCenarius;
-		public int ImprovedFF;
-		public int MoonkinForm;
-		public int Dreamstate;
-		public int BalanceofPower;
-		public int Moonfury;
-		public int Moonglow;
-		public int NaturesGrace;
-		public int LunarGuidance;
-		public int CelestialFocus;
-		public int Vengeance;
-		public int NaturesReach;
-		public int InsectSwarm;
-		public int Brambles;
-		public int ImpMoonfire;
-		public int FocusedStarlight;
-		public int ControlofNature;
-		public int ImpNaturesGrasp;
-		public int NaturesGrasp;
-		public int Ferocity;
-		public int FeralAggression;
-		public int FeralInstinct;
-		public int BrutalImpact;
-		public int ThickHide;
-		public int FeralSwiftness;
-		public int FeralCharge;
-		public int SharpenedClaws;
-		public int ShreddingAttacks;
-		public int PredatoryStrikes;
-		public int PrimalFury;
-		public int SavageFury;
-		public int FeralFaerieFire;
-		public int NurturingInstinct;
-		public int HotW;
-		public int SotF;
-		public int PrimalTenacity;
-		public int LotP;
-		public int ImprovedLotP;
-		public int Mangle;
-		public int PredatoryInstincts;
-		public int TreeofLife;
-		public int ImprovedMotW;
-		public int EmpoweredRejuv;
-		public int Furor;
-		public int NaturalPerfection;
-		public int Naturalist;
-		public int Swiftmend;
-		public int NaturesFocus;
-		public int LivingSpirit;
-		public int NaturalShapeshifter;
-		public int ImprovedRegrowth;
-		public int Intensity;
-		public int EmpoweredTouch;
-		public int Subtlety;
-		public int ImpTranquility;
-		public int OmenofClarity;
-		public int GiftofNature;
-		public int TranquilSpirit;
-		public int NaturesSwiftness;
-		public int ImprovedRejuv;
 	}
 }
