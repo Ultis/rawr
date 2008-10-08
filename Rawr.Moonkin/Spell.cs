@@ -855,7 +855,7 @@ namespace Rawr.Moonkin
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
                     starfire.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
                 }
-                float currentRawDPS = rotation.RawDPS + trinketExtraDPS;
+                float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
                 if (currentDPS > maxDPS)
                 {
                     calcs.SelectedRotation = rotation;
