@@ -418,8 +418,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Moonkin Form",
-                                OverallPoints = (pairs.Value.ManaUsed - calcsManaBase.SelectedRotation.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                DamagePoints = (pairs.Value.ManaUsed - calcsManaBase.SelectedRotation.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                OverallPoints = (pairs.Value.ManaUsed - manaGainsRot.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (pairs.Value.ManaUsed - manaGainsRot.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
                                 RawDamagePoints = 0
                             });
                         }
@@ -447,8 +447,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Judgement of Wisdom",
-                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
-                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                OverallPoints = (pairs.Value.ManaUsed - manaGainsRot.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (pairs.Value.ManaUsed - manaGainsRot.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
                                 RawDamagePoints = 0
                             });
                         }
@@ -469,8 +469,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Replenishment",
-                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
-                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                OverallPoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
                                 RawDamagePoints = 0
                             });
                         }
@@ -489,8 +489,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Innervate",
-                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
-                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                OverallPoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
                                 RawDamagePoints = 0
                             });
                         }
@@ -518,8 +518,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Mana Spring Totem",
-                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
-                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                OverallPoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = manaGainsRot.ManaGained - pairs.Value.ManaGained,
                                 RawDamagePoints = 0
                             });
                         }
@@ -703,13 +703,14 @@ namespace Rawr.Moonkin
                 ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
                 TimbalsProc = stats.TimbalsProc,
                 DruidAshtongueTrinket = stats.DruidAshtongueTrinket,
-				ThreatReductionMultiplier = stats.ThreatReductionMultiplier
+				ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.HitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier) > 0;
+			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.HitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
     }
 }

@@ -825,15 +825,23 @@ namespace Rawr.Moonkin
             {
                 effectiveSpellHit = CalculationsMoonkin.hitRatingConversionFactor * (1.0f - baseHitRate);
             }
+            float spellHitRate = baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor;
 
             RecreateSpells(character, ref calcs);
 
+            // Spell-specific mana cost reductions
+            // Moonkin Aura
             if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
             {
-                starfire.ManaCost -= (calcs.SpellCrit + starfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor);
-                moonfire.ManaCost -= (calcs.SpellCrit + moonfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor);
-                wrath.ManaCost -= (calcs.SpellCrit + wrath.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor);
+                starfire.ManaCost -= (calcs.SpellCrit + starfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
+                moonfire.ManaCost -= (calcs.SpellCrit + moonfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
+                wrath.ManaCost -= (calcs.SpellCrit + wrath.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
             }
+            // Generic mana restore per cast
+            starfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
+            moonfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
+            wrath.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
+            insectSwarm.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
 
             float maxDPS = 0.0f;
             float maxRawDPS = 0.0f;
@@ -850,12 +858,33 @@ namespace Rawr.Moonkin
                 // Trinkets
                 trinketExtraDPS = 0.0f;
                 // Do a pre-emptive call to rotation.DPS to get corrected cast times for spells
-                rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
+                rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency);
                 rotation.ResetRotationalVariables();
-                DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
+                DoTrinketCalcs(calcs, rotation, spellHitRate, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
-                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.DruidTalents.OmenOfClarity > 0) * (fightLength / rotation.Duration);
+                // Judgement of Wisdom
+                if (character.ActiveBuffsContains("Judgement of Wisdom"))
+                {
+                    starfire.ManaCost -= spellHitRate * 0.02f * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfire.CastTime) + 1);
+                    wrath.ManaCost -= spellHitRate * 0.02f * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrath.CastTime) + 1);
+                }
+                // Omen of Clarity
+                if (character.DruidTalents.OmenOfClarity > 0)
+                {
+                    // Starfire
+                    float castsDuringCooldown = 10.0f / starfire.CastTime;
+                    float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
+                    float expectedProcChance = 1 / expectedCastsToProc;
+                    starfire.ManaCost -= starfire.ManaCost * expectedProcChance;
+                    // Wrath
+                    castsDuringCooldown = 10.0f / wrath.CastTime;
+                    expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
+                    expectedProcChance = 1 / expectedCastsToProc;
+                    wrath.ManaCost -= wrath.ManaCost * expectedProcChance;
+                }
+                rotation.ResetRotationalVariables();
+                effectiveMana += DoManaRestoreCalcs(calcs, rotation, spellHitRate, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.DruidTalents.OmenOfClarity > 0) * (fightLength / rotation.Duration);
                 // Casting trees?  Remove from effective mana
                 if (character.DruidTalents.ForceOfNature > 0)
                 {
@@ -919,7 +948,7 @@ namespace Rawr.Moonkin
 
         private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float critRate, bool omenOfClarity)
         {
-            float manaFromOther = calcs.BasicStats.ManaRestorePerCast * rotation.CastCount;
+/*            float manaFromOther = calcs.BasicStats.ManaRestorePerCast * rotation.CastCount;
             float averageCastTime = rotation.Duration / rotation.CastCount;
             float averageTimeBetweenProcs = averageCastTime;
             while (averageTimeBetweenProcs < 4.0f)
@@ -929,11 +958,7 @@ namespace Rawr.Moonkin
             float manaFromOOC = 0.0f;
             if (omenOfClarity)
             {
-                float castsDuringCooldown = 10.0f / rotation.CastCount;
-                float expectedCastsToProc = (1 / 0.06f) + castsDuringCooldown;
-                float expectedProcChance = 1 / expectedCastsToProc;
-                manaFromOOC = (rotation.ManaUsed / rotation.CastCount) * expectedProcChance;
-            }
+            }*/
             float manaFromTrinket = 0.0f;
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
             if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
@@ -955,7 +980,8 @@ namespace Rawr.Moonkin
                 manaFromTrinket /= 120.0f;
                 manaFromTrinket *= rotation.Duration;
             }
-            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromOOC;
+//            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromOOC;
+            return manaFromTrinket;
         }
 
         private static void DoTrinketCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float effectiveSpellCrit, ref float effectiveSpellHaste)
