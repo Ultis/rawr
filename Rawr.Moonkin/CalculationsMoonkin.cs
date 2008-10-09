@@ -418,8 +418,8 @@ namespace Rawr.Moonkin
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Moonkin Form",
-                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
-                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                OverallPoints = (pairs.Value.ManaUsed - calcsManaBase.SelectedRotation.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                DamagePoints = (pairs.Value.ManaUsed - calcsManaBase.SelectedRotation.ManaUsed) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
                                 RawDamagePoints = 0
                             });
                         }
