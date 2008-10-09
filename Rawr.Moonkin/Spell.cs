@@ -251,8 +251,8 @@ namespace Rawr.Moonkin
             float hasteCoefficient = 1 + hasteRating;
 
             // New cast time calculations to deal with NG and clipping
-            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
-            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, Spell.GlobalCooldown);
+            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, 1.0f);
+            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, 1.0f);
             double NGChance = critChanceCoefficient * hitCoefficient;
             CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;
@@ -324,8 +324,8 @@ namespace Rawr.Moonkin
             float hasteCoefficient = 1 + hasteRating;
 
             // New cast time calculations to deal with NG and clipping
-            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, Spell.GlobalCooldown);
-            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, Spell.GlobalCooldown);
+            double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, 1.0f);
+            double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, 1.0f);
             double NGChance = critChanceCoefficient * hitCoefficient;
             CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
             CastTime += latency;

@@ -99,6 +99,7 @@ namespace Rawr.Moonkin
                     customChartNames = new string[] { 
                     "Talent DPS Comparison",
                     "Talent MP5 Comparison",
+                    "Mana Gains",
 					"Relative Stat Values"
                     };
                 }
@@ -397,6 +398,150 @@ namespace Rawr.Moonkin
                             return val.OverallPoints <= 0;
                         });
                     return compsMP5.ToArray();
+                case "Mana Gains":
+                    CharacterCalculationsMoonkin calcsManaBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    SpellRotation manaGainsRot = calcsManaBase.SelectedRotation;
+                    Character c2 = character.Clone();
+                    Character c3 = character.Clone();
+
+                    List<ComparisonCalculationMoonkin> manaGainsList = new List<ComparisonCalculationMoonkin>();
+
+                    // Moonkin form
+                    c2.DruidTalents.MoonkinForm = 0;
+                    c3.DruidTalents.MoonkinForm = 0;
+                    CharacterCalculationsMoonkin calcsManaMoonkin = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    c2.DruidTalents.MoonkinForm = 1;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaMoonkin.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Moonkin Form",
+                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    // JoW
+                    Buff jow = c2.ActiveBuffs.Find(delegate(Buff b)
+                    {
+                        return b.Name == "Judgement of Wisdom";
+                    });
+                    if (character.ActiveBuffsContains("Judgement of Wisdom"))
+                    {
+                        c2.ActiveBuffs.Remove(jow);
+                        c3.ActiveBuffs.Remove(jow);
+                    }
+                    CharacterCalculationsMoonkin calcsManaJoW = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    if (character.ActiveBuffsContains("Judgement of Wisdom"))
+                    {
+                        c2.ActiveBuffs.Add(jow);
+                    }
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaJoW.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Judgement of Wisdom",
+                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    // Replenishment
+                    CalculationOptionsMoonkin calcOpts = c2.CalculationOptions as CalculationOptionsMoonkin;
+                    CalculationOptionsMoonkin calcOpts3 = c3.CalculationOptions as CalculationOptionsMoonkin;
+                    float oldReplenishmentUptime = calcOpts.ReplenishmentUptime;
+                    calcOpts.ReplenishmentUptime = 0.0f;
+                    calcOpts3.ReplenishmentUptime = 0.0f;
+                    CharacterCalculationsMoonkin calcsManaReplenishment = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    calcOpts.ReplenishmentUptime = oldReplenishmentUptime;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaReplenishment.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Replenishment",
+                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    // Innervate
+                    bool innervate = calcOpts.Innervate;
+                    calcOpts.Innervate = false;
+                    calcOpts3.Innervate = false;
+                    CharacterCalculationsMoonkin calcsManaInnervate = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    calcOpts.Innervate = innervate;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaInnervate.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Innervate",
+                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    // Mana spring
+                    Buff manaSpring = c2.ActiveBuffs.Find(delegate(Buff b)
+                    {
+                        return b.Name == "Mana Spring Totem";
+                    });
+                    if (character.ActiveBuffsContains("Mana Spring Totem"))
+                    {
+                        c2.ActiveBuffs.Remove(manaSpring);
+                        c3.ActiveBuffs.Remove(manaSpring);
+                    }
+                    CharacterCalculationsMoonkin calcsManaManaSpring = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+                    if (character.ActiveBuffsContains("Mana Spring Totem"))
+                    {
+                        c2.ActiveBuffs.Add(manaSpring);
+                    }
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsManaManaSpring.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "Mana Spring Totem",
+                                OverallPoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                DamagePoints = calcsManaBase.SelectedRotation.ManaGained - pairs.Value.ManaGained,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    // mp5
+                    CharacterCalculationsMoonkin calcsMinimum = GetCharacterCalculations(c3) as CharacterCalculationsMoonkin;
+                    foreach (KeyValuePair<string, RotationData> pairs in calcsMinimum.Rotations)
+                    {
+                        if (pairs.Key == manaGainsRot.Name)
+                        {
+                            manaGainsList.Add(new ComparisonCalculationMoonkin()
+                            {
+                                Name = "MP5",
+                                OverallPoints = pairs.Value.ManaGained - calcsMinimum.BasicStats.Mana,
+                                DamagePoints = pairs.Value.ManaGained - calcsMinimum.BasicStats.Mana,
+                                RawDamagePoints = 0
+                            });
+                        }
+                    }
+
+                    return manaGainsList.ToArray();
                 case "Relative Stat Values":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsMoonkin;
