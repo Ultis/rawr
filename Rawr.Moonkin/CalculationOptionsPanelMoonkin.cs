@@ -256,5 +256,7 @@ namespace Rawr.Moonkin
 		public float InnervateWeaponInt = 0;
 		public float InnervateWeaponSpi = 0;
 		public string AldorScryer = "Aldor";
+        public float ReplenishmentUptime = 1.0f;
+        public float TreantLifespan = 1.0f;
 	}
 }

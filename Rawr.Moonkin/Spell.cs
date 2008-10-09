@@ -140,7 +140,7 @@ namespace Rawr.Moonkin
             }
         }
 
-        public abstract float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency);
+        public abstract float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, int naturesGrace, float latency);
         protected DotEffect dotEffect = null;
         public DotEffect DoT
         {
@@ -237,7 +237,7 @@ namespace Rawr.Moonkin
             dotEffect = null;
             school = SpellSchool.Arcane;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, int naturesGrace, float latency)
         {
             // Save the unhasted cast time
             if (unhastedCastTime == 0.0f)
@@ -246,7 +246,7 @@ namespace Rawr.Moonkin
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
-            float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
+            float naturesGraceTime = 0.5f * (naturesGrace / 3.0f);
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
@@ -280,7 +280,7 @@ namespace Rawr.Moonkin
                 };
             school = SpellSchool.Arcane;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, int naturesGrace, float latency)
         {
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             float critDamageCoefficient = baseCriticalMultiplier;
@@ -310,7 +310,7 @@ namespace Rawr.Moonkin
             dotEffect = null;
             school = SpellSchool.Nature;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, int naturesGrace, float latency)
         {
             // Save the unhasted cast time
             if (unhastedCastTime == 0.0f)
@@ -319,7 +319,7 @@ namespace Rawr.Moonkin
             float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
-            float naturesGraceTime = naturesGrace ? 0.5f : 0.0f;
+            float naturesGraceTime = 0.5f * (naturesGrace / 3.0f);
             float hitCoefficient = hitRate;
             float hasteCoefficient = 1 + hasteRating;
 
@@ -353,7 +353,7 @@ namespace Rawr.Moonkin
             };
             school = SpellSchool.Nature;
         }
-        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, bool naturesGrace, float latency)
+        public override float DPS(float spellDamage, float hitRate, float critRate, float hasteRating, int naturesGrace, float latency)
         {
             // Latency
             CastTime += latency;
@@ -369,6 +369,7 @@ namespace Rawr.Moonkin
         public float DPS = 0.0f;
         public float DPM = 0.0f;
         public float ManaUsed = 0.0f;
+        public float ManaGained = 0.0f;
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
     }
 
@@ -398,7 +399,7 @@ namespace Rawr.Moonkin
                 spells = value;
             }
         }
-        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, bool naturesGrace, float T54pcBonus, float latency)
+        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float spellHaste, float manaPool, float fightLength, int naturesGrace, float T54pcBonus, float latency)
         {
             float accumulatedDamage = 0.0f;
             float accumulatedManaUsed = 0.0f;
@@ -574,6 +575,7 @@ namespace Rawr.Moonkin
                 return _manaUsed;
             }
         }
+        public float ManaGained { get; set; }
         public float Duration
         {
             get
@@ -710,8 +712,7 @@ namespace Rawr.Moonkin
             }
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * 0.0025f;
-            // TODO: Add replenishment uptime control to options, insert percentage here
-            float replenishmentMana = 1.0f * replenishmentPerTick * calcOpts.FightLength;
+            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
@@ -796,7 +797,7 @@ namespace Rawr.Moonkin
             cachedResults = new Dictionary<string, RotationData>();
             float effectiveSpellHit = calcs.BasicStats.HitRating;
 			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-			bool naturesGrace = character.DruidTalents.NaturesGrace > 0 ? true : false;
+            int naturesGrace = character.DruidTalents.NaturesGrace;
             float fightLength = calcs.FightLength * 60.0f;
 
             float baseHitRate = 0.83f;
@@ -847,29 +848,29 @@ namespace Rawr.Moonkin
                 DoTrinketCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit, ref effectiveSpellHaste);
 
                 // JoW/mana restore procs
-                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.ActiveBuffsContains("Moonkin Aura"), character.DruidTalents.OmenOfClarity > 0) * (fightLength / rotation.Duration);
+                effectiveMana += DoManaRestoreCalcs(calcs, rotation, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0, character.DruidTalents.OmenOfClarity > 0) * (fightLength / rotation.Duration);
                 // Casting trees?  Remove from effective mana
                 if (character.DruidTalents.ForceOfNature > 0)
                 {
                     int numTreeCasts = ((int)fightLength / 180) + 1;
                     effectiveMana -= numTreeCasts * CalculationsMoonkin.BaseMana * 0.12f;
                 }
-
+                rotation.ManaGained = effectiveMana;
                 // Calculate average global cooldown based on effective haste rating (includes trinkets)
                 Spell.GlobalCooldown /= 1 + effectiveSpellHaste * (1 / CalculationsMoonkin.hasteRatingConversionFactor);
                 // Reset the cast time on Insect Swarm and Moonfire, since this is affected by haste
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
                 // Incorporate Nature's Grace with Moonfire into the rotational calculations
-                if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                if (naturesGrace > 0 && rotation.HasMoonfire && rotation.StarfireCount > 0)
                 {
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
                     starfire.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
                 }
-                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, character.DruidTalents.Brambles) : 0;
+                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS + treeDPS;
                 // Restore Starfire's cast time because the object is reused
-                if (naturesGrace && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                if (naturesGrace > 0 && rotation.HasMoonfire && rotation.StarfireCount > 0)
                 {
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
                     starfire.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
@@ -891,6 +892,7 @@ namespace Rawr.Moonkin
                     DPS = currentDPS,
                     DPM = rotation.DPM,
                     ManaUsed = rotation.ManaUsed,
+                    ManaGained = rotation.ManaGained,
                     TimeToOOM = rotation.TimeToOOM
                 };
             }
@@ -900,12 +902,11 @@ namespace Rawr.Moonkin
         }
 
         // Let there be TREES.
-        private static float DoTreeCalcs(float effectiveNatureDamage, int bramblesLevel)
+        private static float DoTreeCalcs(float effectiveNatureDamage, float treantLifespan, int bramblesLevel)
         {
             float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
             float attackSpeed = 1.6f;
-            // TODO: Add treant lifespan percentage here
-            float damagePerTree = (30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
+            float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
             return 3 * damagePerTree / 180.0f;
         }
 
@@ -917,7 +918,7 @@ namespace Rawr.Moonkin
             while (averageTimeBetweenProcs < 4.0f)
                 averageTimeBetweenProcs += averageCastTime;
             float procsPerRotation = rotation.Duration / averageTimeBetweenProcs;
-            float manaFromJoW = 0.02f * calcs.BasicStats.Mana * procsPerRotation;
+            float manaFromJoW = (calcs.BasicStats.ManaRestorePerHit > 0) ? 0.02f * calcs.BasicStats.Mana * procsPerRotation : 0;
             float manaFromMoonkinForm = 0.0f;
             if (moonkinForm)
             {

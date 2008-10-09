@@ -313,7 +313,7 @@ namespace Rawr.Moonkin
             // All spells: Haste% + (0.01 * Imp Moonkin)
             // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
             // Add the crit bonus from the idol, if present
-            if (character.ActiveBuffsContains("Moonkin Aura"))
+            if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
             {
                 statsTotal.CritRating += statsTotal.IdolCritRating;
                 statsTotal.HasteRating += 0.01f * character.DruidTalents.ImprovedMoonkinForm * hasteRatingConversionFactor;
@@ -327,7 +327,7 @@ namespace Rawr.Moonkin
             // All spells: Spell Power + (0.01 * Earth and Moon)
             statsTotal.SpellPower *= 1 + (0.01f * character.DruidTalents.EarthAndMoon);
             // All spells: Spell Power + (0.02 * Master Shapeshifter)
-            if (character.ActiveBuffsContains("Moonkin Aura"))
+            if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
                 statsTotal.SpellPower *= 1 + (0.02f * character.DruidTalents.MasterShapeshifter);
 
             return statsTotal;
@@ -362,7 +362,7 @@ namespace Rawr.Moonkin
                 case "Talent MP5 Comparison":
                     CharacterCalculationsMoonkin calcsMP5TalentBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     List<ComparisonCalculationBase> compsMP5 = new List<ComparisonCalculationBase>();
-                    SpellRotation maxRot = calcsMP5TalentBase.MaxDPSRotation;
+                    SpellRotation maxRot = calcsMP5TalentBase.SelectedRotation;
                     for (int i = 0; i < character.DruidTalents.Data.Length; ++i)
                     {
                         if (character.DruidTalents.Data[i] > 0)
@@ -371,22 +371,31 @@ namespace Rawr.Moonkin
                             character.DruidTalents.Data[i] = 0;
                             CharacterCalculationsMoonkin calcsTalented = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                             float mp5 = 0.0f;
+                            float manaGain = 0.0f;
                             foreach (KeyValuePair<string, RotationData> pairs in calcsTalented.Rotations)
                             {
                                 if (pairs.Key == maxRot.Name)
+                                {
                                     mp5 = (pairs.Value.ManaUsed - maxRot.ManaUsed) / maxRot.Duration * 5.0f;
+                                    manaGain = (maxRot.ManaGained - pairs.Value.ManaGained) / calcsMP5TalentBase.FightLength * 5.0f;
+                                }
                             }
                             compsMP5.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = LookupDruidTalentName(i),
-                                OverallPoints = mp5,
+                                OverallPoints = mp5 + manaGain,
                                 RawDamagePoints = mp5,
-                                DamagePoints = 0
+                                DamagePoints = manaGain
                             });
 
                             character.DruidTalents.Data[i] = oldValue;
                         }
                     }
+                    compsMP5.RemoveAll(
+                        delegate(ComparisonCalculationBase val)
+                        {
+                            return val.OverallPoints <= 0;
+                        });
                     return compsMP5.ToArray();
                 case "Relative Stat Values":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
