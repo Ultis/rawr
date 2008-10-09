@@ -377,7 +377,7 @@ namespace Rawr.Moonkin
                                 if (pairs.Key == maxRot.Name)
                                 {
                                     mp5 = (pairs.Value.ManaUsed - maxRot.ManaUsed) / maxRot.Duration * 5.0f;
-                                    manaGain = (maxRot.ManaGained - pairs.Value.ManaGained) / calcsMP5TalentBase.FightLength * 5.0f;
+                                    manaGain = (maxRot.ManaGained - pairs.Value.ManaGained) / (calcsMP5TalentBase.FightLength * 60.0f) * 5.0f;
                                 }
                             }
                             compsMP5.Add(new ComparisonCalculationMoonkin()

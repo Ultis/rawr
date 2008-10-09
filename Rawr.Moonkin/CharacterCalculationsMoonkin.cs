@@ -84,13 +84,13 @@ namespace Rawr.Moonkin
             retVal.Add("Stamina", baseStats.Stamina.ToString());
             retVal.Add("Intellect", baseStats.Intellect.ToString());
             retVal.Add("Spirit", baseStats.Spirit.ToString());
-            retVal.Add("Spell Hit", String.Format("{0:F}%", 100 * SpellHit));
-            retVal.Add("Spell Crit", String.Format("{0:F}%", 100 * SpellCrit));
-            retVal.Add("Spell Haste", baseStats.HasteRating.ToString());
+            retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating", 100 * SpellHit, baseStats.HitRating));
+            retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating", 100 * SpellCrit, baseStats.CritRating));
+            retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * baseStats.HasteRating / CalculationsMoonkin.hasteRatingConversionFactor, baseStats.HasteRating));
             retVal.Add("Arcane Damage", ArcaneDamage.ToString());
             retVal.Add("Nature Damage", NatureDamage.ToString());
-            retVal.Add("O5SR Per Second", String.Format("{0:F}", ManaRegen));
-            retVal.Add("I5SR Per Second", String.Format("{0:F}", ManaRegen5SR));
+            retVal.Add("O5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen, ManaRegen * 5.0f));
+            retVal.Add("I5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen5SR, ManaRegen5SR * 5.0f));
             retVal.Add("Selected Rotation", RotationName);
             retVal.Add("Max DPS Rotation", DpsRotationName);
             foreach (KeyValuePair<string, RotationData> pair in Rotations)
