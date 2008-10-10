@@ -184,7 +184,7 @@ namespace Rawr.Retribution
             stats.SpellPower += spellPower;
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
                 // Covers all % spell damage increases.  Misery, FI.
-            float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
+            float physPowerMult = 1f + stats.BonusDamageMultiplier;
                 // Covers all % physical damage increases.  Blood Frenzy, FI.
             float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
             float physCritMult = 1f + stats.BonusCritMultiplier*2f;
@@ -292,7 +292,7 @@ namespace Rawr.Retribution
                 physCrits = .0065f;
                 physCrits += stats.CritRating / 2208f;
                 physCrits += stats.Agility / 2500f;
-                physCrits += stats.Crit;
+                physCrits += stats.PhysicalCrit;
 
                 // Dodge: Base 6.5%, Minimum 0%
                 float chanceDodged = .065f;
@@ -655,7 +655,7 @@ namespace Rawr.Retribution
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                Crit = .01f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals),
+                PhysicalCrit = .01f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals),
                 Hit = 0f,
                 SpellCrit = .01f * (float)calcOpts.SanctifiedSeals,
                 BonusStrengthMultiplier = .03f * (float)calcOpts.DivineStrength
@@ -692,7 +692,7 @@ namespace Rawr.Retribution
             // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
             if (character.ActiveBuffsContains("Ferocious Inspiration"))
             {
-                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) *
+                statsBuffs.BonusDamageMultiplier = ((1f + statsBuffs.BonusDamageMultiplier) *
                     (float)Math.Pow(1.03f, calcOpts.FerociousInspiration - 1f)) - 1f;
                 statsBuffs.BonusSpellPowerMultiplier = ((1f + statsBuffs.BonusSpellPowerMultiplier) *
                     (float)Math.Pow(1.03f, calcOpts.FerociousInspiration)) - 1f;
@@ -715,7 +715,7 @@ namespace Rawr.Retribution
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor((statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.Crit = statsGearEnchantsBuffs.Crit;
+            statsTotal.PhysicalCrit = statsGearEnchantsBuffs.PhysicalCrit;
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
             statsTotal.Hit = statsGearEnchantsBuffs.Hit;
@@ -733,7 +733,7 @@ namespace Rawr.Retribution
             statsTotal.SpellPower += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+            statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier;
             statsTotal.BonusSpellPowerMultiplier = statsGearEnchantsBuffs.BonusSpellPowerMultiplier;
 
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
@@ -841,7 +841,7 @@ namespace Rawr.Retribution
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
 
                 LotPCritRating = stats.LotPCritRating,
@@ -865,7 +865,7 @@ namespace Rawr.Retribution
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
                 stats.CritRating + stats.HitRating + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
+                stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +
                 stats.DrumsOfBattle + stats.DrumsOfWar + stats.ShatteredSunMightProc + stats.ExecutionerProc + stats.MongooseProc +
                 stats.BonusCrusaderStrikeDamageMultiplier) != 0;

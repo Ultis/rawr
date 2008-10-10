@@ -159,10 +159,10 @@ namespace Rawr.Hunter
 			dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
 			dictValues.Add("Health", BasicStats.Health.ToString("F0"));
 			dictValues.Add("Hit Percentage", BasicStats.Hit.ToString("P2"));
-			dictValues.Add("Crit Percentage", BasicStats.Crit.ToString("P2"));
+			dictValues.Add("Crit Percentage", BasicStats.PhysicalCrit.ToString("P2"));
 			dictValues.Add("Pet Attack Power", PetStats.AttackPower.ToString("F0"));
 			dictValues.Add("Pet Hit Percentage", PetStats.Hit.ToString("P2"));
-			dictValues.Add("Pet Crit Percentage", PetStats.Crit.ToString("P2"));
+			dictValues.Add("Pet Crit Percentage", PetStats.PhysicalCrit.ToString("P2"));
 			dictValues.Add("Pet Base DPS", PetBaseDPS.ToString("F2"));
 			dictValues.Add("Pet Special DPS", PetSpecialDPS.ToString("F2"));
 			dictValues.Add("Pet KC DPS", PetKillCommandDPS.ToString("F2"));

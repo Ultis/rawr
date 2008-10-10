@@ -210,8 +210,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.TargetLevel = targetLevel;
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / (123f / 52f));
-			float dodgeNonDR = stats.Dodge - levelDifference;
-			float missNonDR = stats.Miss - levelDifference;
+			float dodgeNonDR = stats.Dodge * 100f - levelDifference;
+			float missNonDR = stats.Miss * 100f - levelDifference;
 			float dodgePreDR = stats.Agility / 20f + (stats.DodgeRating / (984f / 52f)) + (defSkill * 0.04f);
 			float missPreDR = (defSkill * 0.04f);
 			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
@@ -224,7 +224,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.Mitigation = 100 - ((100 - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * stats.DamageTakenMultiplier);
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
-			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction;
+			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction * 100f;
 			calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
 
 			//Out of 100 attacks, you'll take...
@@ -284,7 +284,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float glancingReduction = .3f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
-            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + ((stats.Agility + (1 - chanceAvoided) * stats.TerrorProc * 2.0f / 3.0f) / 25f)) / 100f);
+            float chanceCrit = Math.Min(0.75f, (stats.CritRating / 22.08f + ((stats.Agility + (1 - chanceAvoided) * stats.TerrorProc * 2.0f / 3.0f) / 25f)) / 100f + stats.PhysicalCrit);
 
             calculatedStats.EnemyBlockedAttacks = chanceBlock * 100;
             calculatedStats.EnemyDodgedAttacks = chanceDodge * 100;
@@ -298,17 +298,17 @@ you are being killed by burst damage, focus on Survival Points.",
             float BloodlustThreat= (1 - chanceAvoided) * stats.BloodlustProc / 4.0f * 5;
 
             float averageDamage = 1 - chanceAvoided - chanceCrit + critMultiplier * chanceCrit;
-            float weaponDamage = (1 + stats.BonusPhysicalDamageMultiplier) * (stats.WeaponDamage + (2.5f * +(768f + attackPower) / 14f));
+            float weaponDamage = (1 + stats.BonusDamageMultiplier) * (stats.WeaponDamage + (2.5f * +(768f + attackPower) / 14f));
             float mangleUptime = 1 - (chanceAvoided * chanceAvoided);
             float mangleMultipler = mangleUptime * 1.3f;
             
             float MangleDamage=1.1f*1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage)*averageDamage*modArmor;
             float MangleThreat = 1.45f *( 25 * chanceCrit+(1+stats.BonusMangleBearThreat)* MangleDamage+BloodlustThreat);
-            float SwipeDamage = 1.1f * (1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusPhysicalDamageMultiplier) * ((.077f * stats.AttackPower + 92))*averageDamage*modArmor;
+            float SwipeDamage = 1.1f * (1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusDamageMultiplier) * ((.077f * stats.AttackPower + 92))*averageDamage*modArmor;
             float SwipeThreat = 1.45f * ( 25 * chanceCrit+SwipeDamage+BloodlustThreat);
-            float LacerateDamage = 1.1f*(1+stats.BonusPhysicalDamageMultiplier)*mangleMultipler*(31+stats.AttackPower/100+stats.BonusLacerateDamage)*averageDamage*modArmor ;
+            float LacerateDamage = 1.1f*(1+stats.BonusDamageMultiplier)*mangleMultipler*(31+stats.AttackPower/100+stats.BonusLacerateDamage)*averageDamage*modArmor ;
             float LacerateThreat = 1.45f * ((285) * (1 - chanceAvoided) + 25 * chanceCrit + LacerateDamage+BloodlustThreat);
-            float LacerateDotDPS = 1.1f * (1 + stats.BonusPhysicalDamageMultiplier) * (mangleMultipler * (155 + 5 * (stats.AttackPower / 100) + stats.BonusLacerateDamage))/3 ;
+            float LacerateDotDPS = 1.1f * (1 + stats.BonusDamageMultiplier) * (mangleMultipler * (155 + 5 * (stats.AttackPower / 100) + stats.BonusLacerateDamage))/3 ;
             float LacerateDotTPS = 1.45f * (.2f * LacerateDotDPS);
 
 
@@ -398,12 +398,12 @@ you are being killed by burst damage, focus on Survival Points.",
                     Health = 3434, 
                     Agility = 75, 
                     Stamina = 82, 
-                    Dodge = 4.951f,
-					Miss = 7,
-                    NatureResistance = 10,
 					Strength = 73f, 
 					AttackPower = 120,
-					Crit = 5f,
+                    NatureResistance = 10,
+                    Dodge = 0.04951f,
+					Miss = 0.07f,
+					PhysicalCrit = 0.05f,
 					//BonusCritMultiplier = 0.1f,
 					//CritRating = 264.0768f, 
 					//BonusAttackPowerMultiplier = 0.0f,
@@ -414,13 +414,13 @@ you are being killed by burst damage, focus on Survival Points.",
 				new Stats() { 
                     Health = 3434, 
                     Agility = 65, 
-                    Stamina = 85, 
-                    Dodge = 4.951f,
-					Miss = 5,
-                    NatureResistance = 10,
+                    Stamina = 85,
 					Strength = 81, 
 					AttackPower = 190,
-					Crit = 5f,
+                    NatureResistance = 10,
+					Dodge = 0.04951f,
+					Miss = 0.05f,
+					PhysicalCrit = 0.05f,
 					//BonusCritMultiplier = 0.1f,
 					//CritRating = 264.0768f, 
 					//BonusAttackPowerMultiplier = 0.0f,
@@ -445,7 +445,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			 --* Leader of the Pack (1: 5% crit)
 			 --* Predatory Instincts (3: 15% damage buff to crits)
 			 * King of the Jungle (3: 15% damage buff during Enrage)
-			 * Mangle (1: Mangle)
+			 -* Mangle (1: Mangle)
 			 * Improved Mangle (3: -1.5sec cooldown to Mangle)
 			 * Rend and Tear (5: 20% damage buff to Maul)
 			 * Berserk (1: Berserk)
@@ -472,19 +472,21 @@ you are being killed by burst damage, focus on Survival Points.",
 			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
 			{
-				Crit = 2 * talents.SharpenedClaws + 5 * talents.LeaderOfThePack,
-				Dodge = 2 * talents.FeralSwiftness + 2 * talents.NaturalReaction,
+				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
+					0 : 0.05f * talents.LeaderOfThePack),
+				Dodge = 0.02f * talents.FeralSwiftness + 0.02f * talents.NaturalReaction,
 				BonusStaminaMultiplier = (1 + 0.04f * talents.HeartOfTheWild) * (1 + 0.02f * talents.SurvivalOfTheFittest) - 1,
 				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
 				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
-				CritChanceReduction = 2f * talents.SurvivalOfTheFittest,
+				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusAttackPowerMultiplier = 0.02f * talents.MotherBear,
-				BonusPhysicalDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
+				BonusDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
 				Expertise = 5 * talents.PrimalPrecision,
 				AttackPower = 35 * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
 				//BonusCritMultiplier = 0.05f * talents.PredatoryInstincts, PI doesn't work in bear form as of latest beta build
 				DamageTakenMultiplier = 1f - (0.04f * talents.MotherBear),
+				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle)
 			};
 
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
@@ -901,7 +903,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 BloodlustProc = stats.BloodlustProc,
                 BonusMangleBearDamage = stats.BonusMangleBearDamage,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier
+                BonusDamageMultiplier = stats.BonusDamageMultiplier
 			};
 		}
 
@@ -917,7 +919,7 @@ you are being killed by burst damage, focus on Survival Points.",
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier
-                 + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier
+                 + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                 ) != 0;
 		}
     }

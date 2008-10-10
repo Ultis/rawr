@@ -339,7 +339,7 @@ namespace Rawr.DPSDK
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
 
                 LotPCritRating = stats.LotPCritRating,
@@ -363,7 +363,7 @@ namespace Rawr.DPSDK
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
                 stats.CritRating + stats.HitRating + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
+                stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +
                 stats.DrumsOfBattle + stats.DrumsOfWar + stats.ShatteredSunMightProc + stats.ExecutionerProc + stats.MongooseProc +
                 stats.BonusCrusaderStrikeDamageMultiplier) != 0;

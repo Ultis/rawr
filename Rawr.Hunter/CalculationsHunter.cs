@@ -201,10 +201,10 @@ namespace Rawr.Hunter
 				BonusManaPotion = stats.BonusManaPotion,
 				BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
 				BonusPetCritChance = stats.BonusPetCritChance,
-				BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+				BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				LotPCritRating = stats.LotPCritRating,
-				Crit = stats.Crit,
+				PhysicalCrit = stats.PhysicalCrit,
 				CritRating = stats.CritRating,
 				DrumsOfBattle = stats.DrumsOfBattle,
 				DrumsOfWar = stats.DrumsOfWar,
@@ -237,11 +237,11 @@ namespace Rawr.Hunter
 			stats.BonusIntellectMultiplier +
 			stats.BonusManaPotion +
 			stats.BonusPetDamageMultiplier +
-			stats.BonusPhysicalDamageMultiplier +
+			stats.BonusDamageMultiplier +
 			stats.BonusStaminaMultiplier +
 			stats.BonusPetCritChance +
 			stats.LotPCritRating +
-			stats.Crit +
+			stats.PhysicalCrit +
 			stats.CritRating +
 			stats.DrumsOfBattle +
 			stats.DrumsOfWar +
@@ -424,7 +424,7 @@ namespace Rawr.Hunter
             calculatedStats.AutoshotDPS = 0;
             if (character.Ranged != null)
             {
-                double critHitModifier = (calculatedStats.BasicStats.Crit * autoshotCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+                double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * autoshotCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
 
                 double autoshotDmg = (weaponDamageAverage + ammoDamage
                     + calculatedStats.BasicStats.ScopeDamage
@@ -593,10 +593,10 @@ namespace Rawr.Hunter
                 statsTotal.CritRating += (float)Math.Floor(ratings.CRIT_RATING_PER_PERCENT);
 			}
 
-            statsTotal.Crit = (float)(ratings.BASE_CRIT_PERCENT + (statsTotal.Agility / ratings.AGILITY_PER_CRIT / 100.0f)
+            statsTotal.PhysicalCrit = (float)(ratings.BASE_CRIT_PERCENT + (statsTotal.Agility / ratings.AGILITY_PER_CRIT / 100.0f)
                                 + (statsTotal.CritRating / ratings.CRIT_RATING_PER_PERCENT / 100.0f)
                                 + ((350 - targetDefence) * 0.04 / 100.0f)
-								+ statsTalents.Crit);
+								+ statsTalents.PhysicalCrit);
 
 		
 			
@@ -635,10 +635,10 @@ namespace Rawr.Hunter
             // Marksmanship Talents
 			{
 				//Lethal Shots
-				talents.Crit += (talentTree.LethalShots * 0.01f);
+				talents.PhysicalCrit += (talentTree.LethalShots * 0.01f);
 
                 //Master Marksman
-                talents.Crit += (talentTree.MasterMarksman * 0.01f);
+                talents.PhysicalCrit += (talentTree.MasterMarksman * 0.01f);
 
 				//Combat Experience
 				int combatExperience = talentTree.CombatExperience;
@@ -649,7 +649,7 @@ namespace Rawr.Hunter
             // Survival Talents
             {
 				//Killer Instincts
-				talents.Crit += (talentTree.KillerInstinct * 0.01f);
+				talents.PhysicalCrit += (talentTree.KillerInstinct * 0.01f);
 
 				//Master Tactitian
 				// TODO: Implement properly
@@ -808,13 +808,13 @@ namespace Rawr.Hunter
 			petStats.Hit = (float)petHitChance;
 
 			//Pet Crit
-			petStats.Crit += petStats.Agility / 2560f;
+			petStats.PhysicalCrit += petStats.Agility / 2560f;
 			//if (character.AllTalents.Trees.ContainsKey(BEAST_MASTER))
 			{
-				petStats.Crit += (.02f * character.HunterTalents.Ferocity);
+				petStats.PhysicalCrit += (.02f * character.HunterTalents.Ferocity);
 			}
-			petStats.Crit -= ((options.TargetLevel * 5f - 350f) * .0004f);
-			petStats.Crit += hunterStats.BonusPetCritChance;
+			petStats.PhysicalCrit -= ((options.TargetLevel * 5f - 350f) * .0004f);
+			petStats.PhysicalCrit += hunterStats.BonusPetCritChance;
 			return petStats;
 		}
 

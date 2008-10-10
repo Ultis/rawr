@@ -304,7 +304,7 @@ namespace Rawr.DPSWarr
             float misery = 1f + stats.BonusSpellPowerMultiplier;
 
             //Blood Frenzy : TODO Take from Debuff List
-            float damageMod = 1.0f + stats.BonusPhysicalDamageMultiplier;
+            float damageMod = 1.0f + stats.BonusDamageMultiplier;
             
             float impSancAura = 1.0f;
             //Added Imp Sanc aura to the buff list, if total damage mod is greater then just
@@ -449,7 +449,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[0, 0],
                         Agility = (float)BaseWarriorRaceStats[0, 1],
                         Stamina = (float)BaseWarriorRaceStats[0, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -467,7 +467,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[1, 0],
                         Agility = (float)BaseWarriorRaceStats[1, 1],
                         Stamina = (float)BaseWarriorRaceStats[1, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -485,7 +485,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[2, 0],
                         Agility = (float)BaseWarriorRaceStats[2, 1],
                         Stamina = (float)BaseWarriorRaceStats[2, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -497,7 +497,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[3, 0],
                         Agility = (float)BaseWarriorRaceStats[3, 1],
                         Stamina = (float)BaseWarriorRaceStats[3, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 1f + 0.75f,
                     };
@@ -509,7 +509,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[4, 0],
                         Agility = (float)BaseWarriorRaceStats[4, 1],
                         Stamina = (float)BaseWarriorRaceStats[4, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -521,7 +521,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[5, 0],
                         Agility = (float)BaseWarriorRaceStats[5, 1],
                         Stamina = (float)BaseWarriorRaceStats[5, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         BonusHealthMultiplier = 0.05f,
                         Dodge = 0.75f,
@@ -534,7 +534,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[6, 0],
                         Agility = (float)BaseWarriorRaceStats[6, 1],
                         Stamina = (float)BaseWarriorRaceStats[6, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -546,7 +546,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[7, 0],
                         Agility = (float)BaseWarriorRaceStats[7, 1],
                         Stamina = (float)BaseWarriorRaceStats[7, 2],
-                        Crit = 1.18f * 22.08f,
+                        PhysicalCrit = 1.18f * 22.08f,
                         AttackPower = 190f,
                         Dodge = 0.75f,
                     };
@@ -558,7 +558,7 @@ namespace Rawr.DPSWarr
                         Strength = (float)BaseWarriorRaceStats[9, 0],
                         Agility = (float)BaseWarriorRaceStats[9, 1],
                         Stamina = (float)BaseWarriorRaceStats[9, 2],
-                        Crit = 1.18f*22.08f,
+                        PhysicalCrit = 1.18f*22.08f,
                         AttackPower = 190f,
                         Hit = 1f,
                         Dodge = 0.75f,
@@ -636,7 +636,7 @@ namespace Rawr.DPSWarr
 
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength * 2)) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.CritRating = statsRace.Crit + statsGearEnchantsBuffs.CritRating;
+            statsTotal.CritRating = statsRace.PhysicalCrit + statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += ((statsTotal.Agility/ 33.333f) * 22.08f);
             statsTotal.CritRating += statsBuffs.LotPCritRating;
             
@@ -672,7 +672,7 @@ namespace Rawr.DPSWarr
             statsTotal.Bloodlust = statsGearEnchantsBuffs.Bloodlust;
             statsTotal.DrumsOfBattle = statsGearEnchantsBuffs.DrumsOfBattle;
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
-            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+            statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier;
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
@@ -759,7 +759,7 @@ namespace Rawr.DPSWarr
                 DrumsOfBattle = stats.DrumsOfBattle,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusCrusaderStrikeDamageMultiplier = stats.BonusCrusaderStrikeDamageMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 WindfuryAPBonus = stats.WindfuryAPBonus
             };
         }

@@ -132,7 +132,6 @@ namespace Rawr
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.buffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.allBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.allLongDurationBuffsNoDWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.currentBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
 			this.talentSpecsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1086,7 +1085,6 @@ namespace Rawr
             this.toolStripSeparator6,
             this.buffsToolStripMenuItem,
             this.allBuffsToolStripMenuItem,
-            this.allLongDurationBuffsNoDWToolStripMenuItem,
             this.currentBuffsToolStripMenuItem,
             this.toolStripSeparator7,
             this.talentSpecsMenuItem,
@@ -1422,14 +1420,6 @@ namespace Rawr
 			this.allBuffsToolStripMenuItem.Tag = "Buffs.All";
 			this.allBuffsToolStripMenuItem.Text = " All Buffs";
 			this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-			// 
-			// allLongDurationBuffsNoDWToolStripMenuItem
-			// 
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Name = "allLongDurationBuffsNoDWToolStripMenuItem";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Tag = "Buffs.LongDurationNoDW";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Text = " All Long-Duration Buffs (No DW)";
-			this.allLongDurationBuffsNoDWToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// currentBuffsToolStripMenuItem
 			// 
@@ -1949,7 +1939,6 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem directUpgradesMenuItem;
 		private BuffSelector buffSelector1;
 		private System.Windows.Forms.ToolStripMenuItem allBuffsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem allLongDurationBuffsNoDWToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem currentBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
 		private System.Windows.Forms.ComboBox comboBoxEnchantFinger1;

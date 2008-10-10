@@ -243,7 +243,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.ToDodge = Math.Max(0, (.05f + levelDif * .005f) - expertise);
             cs.ToResist = Math.Min(1, .83f + stats.SpellHit);
             cs.ToLand = 1f - cs.ToMiss - cs.ToParry - cs.ToDodge;
-            cs.ToCrit = stats.Crit;
+            cs.ToCrit = stats.PhysicalCrit;
             cs.ToSpellCrit = stats.SpellCrit;
 
             float targetArmor = Math.Max(0, calcOpts.TargetArmor - stats.ArmorPenetration);
@@ -380,7 +380,7 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2 + ConvertExpertise(stats.ExpertiseRating, lvl));
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
-            stats.Crit = stats.Crit + ConvertCrit(stats.CritRating, lvl) + ConvertAgi(stats.Agility, lvl) + talentCrit;
+            stats.PhysicalCrit = stats.PhysicalCrit + ConvertCrit(stats.CritRating, lvl) + ConvertAgi(stats.Agility, lvl) + talentCrit;
             stats.SpellCrit = stats.SpellCrit + ConvertCrit(stats.CritRating, lvl) + ConvertInt(stats.Intellect, lvl) + talentCrit;
 
             stats.Defense += ConvertDefense(stats.DefenseRating, lvl);

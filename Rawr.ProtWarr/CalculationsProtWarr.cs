@@ -322,7 +322,7 @@ threat and limited threat scaled by the threat scale.",
             float chanceCrit = Math.Min(0.75f, (stats.CritRating * WarriorConversions.CritRatingToCrit +
                                                 stats.LotPCritRating * WarriorConversions.CritRatingToCrit +
                                                (stats.Agility * WarriorConversions.AgilityToCrit) +
-                                                stats.Crit - levelDifference) / 100f);
+                                                stats.PhysicalCrit - levelDifference) / 100f);
             calculatedStats.Crit = chanceCrit * 100f;
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus);
@@ -352,7 +352,7 @@ threat and limited threat scaled by the threat scale.",
 
             float averageDamage = 1 - chanceAvoided + (1 + stats.BonusCritMultiplier) * chanceCrit;
 
-            float reducedDamage = 0.9f * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor;
+            float reducedDamage = 0.9f * (1f + stats.BonusDamageMultiplier) * modArmor;
 
             float weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2f +
                                  (attackSpeed * attackPower / 14f)) + stats.WeaponDamage;
@@ -450,7 +450,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     if ((character.MainHand != null) &&
                         ((character.MainHand.Type == Item.ItemType.OneHandSword) ||
@@ -469,7 +469,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
 
                     if ((character.MainHand != null) &&
@@ -488,7 +488,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.NightElf:
@@ -501,7 +501,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f + 1f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Undead:
@@ -514,7 +514,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Tauren:
@@ -528,7 +528,7 @@ threat and limited threat scaled by the threat scale.",
                         AttackPower = 190f,
                         BonusHealthMultiplier = 0.05f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Gnome:
@@ -541,7 +541,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Troll:
@@ -554,7 +554,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Draenei:
@@ -568,7 +568,7 @@ threat and limited threat scaled by the threat scale.",
                         AttackPower = 190f,
                         Hit = 1f,
                         Dodge = 0.75f,
-                        Crit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 default:
@@ -595,12 +595,12 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTalents = new Stats()
                 {
                     Parry = tree.Deflection * 1.0f,
-                    Crit = tree.Cruelty * 1.0f,
+                    PhysicalCrit = tree.Cruelty * 1.0f,
                     Defense = tree.Anticipation * 4.0f,
                     Block = tree.ShieldSpecialization * 1.0f,
                     BonusArmorMultiplier = tree.Toughness * 0.02f,
                     BonusBlockValueMultiplier = tree.ShieldMastery * 0.1f,
-                    BonusPhysicalDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
+                    BonusDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
                     BonusStaminaMultiplier = tree.Vitality * 0.01f,
                     BonusStrengthMultiplier = tree.Vitality * 0.02f,
                     //Expertise = tree.Defiance * 2f, //TODO: Talent removed in WoW 3.0
@@ -716,7 +716,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Parry = statsRace.Parry + statsTalents.Parry;
             statsTotal.Block = statsRace.Block + statsTalents.Block;
             statsTotal.Hit = statsRace.Hit + statsTalents.Hit;
-            statsTotal.Crit = statsRace.Crit + statsTalents.Crit;
+            statsTotal.PhysicalCrit = statsRace.PhysicalCrit + statsTalents.PhysicalCrit;
             statsTotal.Expertise = statsRace.Expertise + statsTalents.Expertise;
 
             statsTotal.Block += (calcOpts.UseShieldBlock ? 75f : 0f);
@@ -727,9 +727,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BonusBlockValueMultiplier = ((1 + statsRace.BonusBlockValueMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusBlockValueMultiplier) *
                                                   (1 + statsTalents.BonusBlockValueMultiplier)) - 1;
-            statsTotal.BonusPhysicalDamageMultiplier = ((1 + statsRace.BonusPhysicalDamageMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) *
-                                                  (1 + statsTalents.BonusPhysicalDamageMultiplier)) - 1;
+            statsTotal.BonusDamageMultiplier = ((1 + statsRace.BonusDamageMultiplier) *
+                                                  (1 + statsGearEnchantsBuffs.BonusDamageMultiplier) *
+                                                  (1 + statsTalents.BonusDamageMultiplier)) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) *
                                                   (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
                                                   (1 + statsTalents.BonusStaminaMultiplier)) - 1;
@@ -1055,7 +1055,7 @@ threat and limited threat scaled by the threat scale.",
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
-                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 LotPCritRating = stats.LotPCritRating,
                 WindfuryAPBonus = stats.WindfuryAPBonus,
@@ -1087,7 +1087,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
-                    stats.ThreatIncreaseMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusBlockValueMultiplier +
+                    stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
                     stats.LotPCritRating + stats.WindfuryAPBonus +
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
                     stats.ExecutionerProc +

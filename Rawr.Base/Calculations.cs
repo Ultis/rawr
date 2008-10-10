@@ -206,9 +206,9 @@ namespace Rawr
 		{
 			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
 		}
-		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
+		public static List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, bool activeOnly)
 		{
-			return Instance.GetBuffCalculations(character, currentCalcs, buffType, activeOnly);
+			return Instance.GetBuffCalculations(character, currentCalcs, activeOnly);
 		}
 		public static CharacterCalculationsBase GetCharacterCalculations(Character character)
 		{
@@ -575,7 +575,7 @@ namespace Rawr
                         Buff b2 = activeBuffs[i];
                         foreach (string buffName in b2.ConflictingBuffs)
 						{
-							if (Array.IndexOf<string>(buff.ConflictingBuffs, buffName) >= 0)
+							if (buff.ConflictingBuffs.Contains(buffName))
 							{
 								activeBuffs.RemoveAt(i);
 								i--;
@@ -587,7 +587,7 @@ namespace Rawr
 			}
         }
 
-		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, Buff.BuffType buffType, bool activeOnly)
+		public virtual List<ComparisonCalculationBase> GetBuffCalculations(Character character, CharacterCalculationsBase currentCalcs, bool activeOnly)
 		{
 			ClearCache();
 			List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
@@ -603,7 +603,7 @@ namespace Rawr
                 }
             }
             charAutoActivated.DisableBuffAutoActivation = true;
-            foreach (Buff buff in Buff.GetBuffsByType(buffType))
+            foreach (Buff buff in Buff.RelevantBuffs)
 			{
                 if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff))
 				{
@@ -613,33 +613,25 @@ namespace Rawr
                     charEquipped.DisableBuffAutoActivation = true;
 					if (charUnequipped.ActiveBuffs.Contains(buff))
 						charUnequipped.ActiveBuffs.Remove(buff);
-					if (string.IsNullOrEmpty(buff.RequiredBuff))
-					{
-						//if (charUnequipped.ActiveBuffs.Contains("Improved " + buff.Name))
-						//	charUnequipped.ActiveBuffs.Remove("Improved " + buff.Name);
-                        charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
-					}
-					else
-						//if (charUnequipped.ActiveBuffs.Contains(buff.RequiredBuff))
-						//	charUnequipped.ActiveBuffs.Remove(buff.RequiredBuff);
-                        charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == buff.RequiredBuff);
+					//if (string.IsNullOrEmpty(buff.RequiredBuff))
+					//{
+					//    charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
+					//}
+					//else
+					//    charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == buff.RequiredBuff);
 
-					if (!charEquipped.ActiveBuffs.Contains(buff))
-						charEquipped.ActiveBuffs.Add(buff);
-                    if (string.IsNullOrEmpty(buff.RequiredBuff))
-                    {
-                        //if (charEquipped.ActiveBuffs.Contains("Improved " + buff.Name))
-                        //	charEquipped.ActiveBuffs.Remove("Improved " + buff.Name);
-                        charEquipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
-                    }
-                    else
-                    {
-                        //if (!charEquipped.ActiveBuffs.Contains(buff.RequiredBuff))
-                        //	charEquipped.ActiveBuffs.Add(buff.RequiredBuff);
-                        Buff requiredBuff = Buff.GetBuffByName(buff.RequiredBuff);
-                        if (!charEquipped.ActiveBuffs.Contains(requiredBuff))
-                        	charEquipped.ActiveBuffs.Add(requiredBuff);
-                    }
+					//if (!charEquipped.ActiveBuffs.Contains(buff))
+					//    charEquipped.ActiveBuffs.Add(buff);
+					//if (string.IsNullOrEmpty(buff.RequiredBuff))
+					//{
+					//    charEquipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);
+					//}
+					//else
+					//{
+					//    Buff requiredBuff = Buff.GetBuffByName(buff.RequiredBuff);
+					//    if (!charEquipped.ActiveBuffs.Contains(requiredBuff))
+					//        charEquipped.ActiveBuffs.Add(requiredBuff);
+					//}
 
                     RemoveConflictingBuffs(charEquipped.ActiveBuffs, buff);
                     RemoveConflictingBuffs(charUnequipped.ActiveBuffs, buff);

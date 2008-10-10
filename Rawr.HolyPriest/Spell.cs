@@ -133,7 +133,7 @@ namespace Rawr.HolyPriest
             HealingCoef = coef;
             HotDuration = hotDuration;
             GraphColor = col;
-            CritChance = stats.Crit;
+            CritChance = stats.PhysicalCrit;
         }
 
         protected Spell(Stats stats, BaseSpell baseSpell, string name, float coef, Color col)

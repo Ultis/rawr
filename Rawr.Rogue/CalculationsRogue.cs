@@ -159,7 +159,7 @@ namespace Rawr.Rogue {
 
             glanceChance = .25f;
 
-            mhCrit = ohCrit = stats.Crit + stats.CritRating * RogueConversions.CritRatingToCrit;
+            mhCrit = ohCrit = stats.PhysicalCrit + stats.CritRating * RogueConversions.CritRatingToCrit;
             if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger)
                 mhCrit += calcOpts.DaggerSpecialization;
             if (character.OffHand != null && character.OffHand.Type == Item.ItemType.Dagger)
@@ -497,7 +497,7 @@ namespace Rawr.Rogue {
 
                 AttackPower = 120f,
 
-                Crit = 3.73f,
+                PhysicalCrit = 3.73f,
 
                 DodgeRating = (float)(-0.59 * 18.92f),
             };
@@ -593,9 +593,9 @@ namespace Rawr.Rogue {
             }
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.Crit = statsRace.Crit;
-            statsTotal.Crit += (statsTotal.Agility - (statsRace.Agility * (1f + statsTotal.BonusAgilityMultiplier))) * RogueConversions.AgilityToCrit;
-            statsTotal.Crit += calcOpts.Malice * 1f;
+            statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
+            statsTotal.PhysicalCrit += (statsTotal.Agility - (statsRace.Agility * (1f + statsTotal.BonusAgilityMultiplier))) * RogueConversions.AgilityToCrit;
+            statsTotal.PhysicalCrit += calcOpts.Malice * 1f;
             //statsTotal.CritRating += statsBuffs.LotPCritRating;
 
             statsTotal.Dodge += statsTotal.Agility * RogueConversions.AgilityToDodge;

@@ -977,7 +977,7 @@ namespace Rawr
 							string buffType = tag[1];
 							bool activeOnly = buffType.EndsWith("+");
 							buffType = buffType.Replace("+", "");
-							itemComparison1.LoadBuffs(_calculatedStats, (Buff.BuffType)Enum.Parse(typeof(Buff.BuffType), buffType), activeOnly);
+							itemComparison1.LoadBuffs(_calculatedStats, activeOnly);
 							break;
 
 						case "Current Gear/Enchants/Buffs":

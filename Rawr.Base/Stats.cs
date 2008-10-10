@@ -42,7 +42,7 @@ namespace Rawr
         CHHealIncrease,
         CHManaReduction,
         CPOnFinisher,
-        Crit,
+        PhysicalCrit,
         CritRating,
         CritMeleeRating,
 		CritChanceReduction,
@@ -135,7 +135,6 @@ namespace Rawr
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor6SecOnHit_10_45,
-        SpellHaste,
         SpellHasteRating,
         SpellHit,
         SpellHitRating,
@@ -200,7 +199,8 @@ namespace Rawr
         BonusWarlockNukeMultiplier, 
         BonusNatureSpellPowerMultiplier,
 		BonusPetDamageMultiplier,
-        BonusPhysicalDamageMultiplier,
+		BonusPhysicalDamageMultiplier,
+        BonusDamageMultiplier,
         BonusRipDamageMultiplier,
         BonusShieldSlamDamage,
         BonusSpellCritMultiplier,
@@ -209,8 +209,9 @@ namespace Rawr
         BonusHealthMultiplier,
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
-        BonusSwipeDamageMultiplier,
-        BonusShadowSpellPowerMultiplier,
+		BonusSwipeDamageMultiplier,
+		BonusShadowSpellPowerMultiplier,
+		BonusHolySpellPowerMultiplier,
         FoLMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
@@ -218,7 +219,10 @@ namespace Rawr
 		BonusSteadyShotDamageMultiplier,
         BonusManaregenWhileCastingMultiplier,
         BonusPoHManaCostReductionMultiplier,
-        BonusGHHealingMultiplier
+		BonusGHHealingMultiplier,
+		PhysicalHaste,
+		SpellHaste,
+		HealingReceivedMultiplier
     }
 
     enum InverseMultiplicativeStat : int
@@ -621,8 +625,8 @@ namespace Rawr
         [DisplayName("% Spell Haste")]
         public float SpellHaste
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHaste]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHaste] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.SpellHaste] = value; }
         }
 
         // percentage mana generation while casting
@@ -637,12 +641,12 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% Crit")]
+        [DisplayName("% Physical Crit")]
         [Category("Combat Values")]
-        public float Crit
+        public float PhysicalCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.Crit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Crit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PhysicalCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -798,7 +802,24 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.HasteRating] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Physical Haste")]
+		public float PhysicalHaste
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalHaste] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("% Healing Received")]
+		public float HealingReceivedMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.HealingReceivedMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Mana per 5 sec")]
         public float Mp5
@@ -1943,7 +1964,16 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowSpellPowerMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowSpellPowerMultiplier] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Holy Damage")]
+		public float BonusHolySpellPowerMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolySpellPowerMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolySpellPowerMultiplier] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -2015,16 +2045,24 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSwipeDamageMultiplier] = value; }
-        }
+		}
 
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Physical Dmg")]
+		public float BonusPhysicalDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% Physical Dmg")]
-        public float BonusPhysicalDamageMultiplier
+        [DisplayName("% Dmg")]
+        public float BonusDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

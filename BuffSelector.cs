@@ -54,7 +54,7 @@ namespace Rawr
 		}
 
 		//i want to be free... from desolation and despair
-		Dictionary<Buff.BuffCategory, GroupBox> GroupBoxes = new Dictionary<Buff.BuffCategory, GroupBox>();
+		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
 		Dictionary<Buff, CheckBox> CheckBoxes = new Dictionary<Buff, CheckBox>();
 		private void BuildControls()
 		{
@@ -62,82 +62,107 @@ namespace Rawr
 			this.GroupBoxes.Clear();
 			this.CheckBoxes.Clear();
 			this.SuspendLayout();
-			foreach (Buff.BuffCategory category in Enum.GetValues(typeof(Buff.BuffCategory)))
+			foreach (Buff buff in Buff.RelevantBuffs)
 			{
-				GroupBox groupBox = new GroupBox();
-				groupBox.Text = Buff.GetBuffCategoryFriendlyName(category);
-				groupBox.Tag = category;
-				groupBox.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-                groupBox.MouseMove += new MouseEventHandler(BuffSelector_MouseMove);
-				groupBox.Dock = DockStyle.Top;
-				GroupBoxes.Add(category, groupBox);
-				this.Controls.Add(groupBox);
-				groupBox.BringToFront();
+				if (!GroupBoxes.ContainsKey(buff.Group))
+				{
+					GroupBox groupBox = new GroupBox();
+					groupBox.Text = buff.Group;
+					groupBox.Tag = buff.Group;
+					groupBox.Font = new Font(this.Font.FontFamily, 7f);
+					groupBox.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
+					groupBox.MouseMove += new MouseEventHandler(BuffSelector_MouseMove);
+					groupBox.Dock = DockStyle.Top;
+					GroupBoxes.Add(buff.Group, groupBox);
+					this.Controls.Add(groupBox);
+					groupBox.BringToFront();
+				}
 			}
 
-            List<Buff> buffs = Buff.GetAllRelevantBuffs();
-            List<Buff> missingBuffs = new List<Buff>();
-            foreach (Buff buff in buffs)
-            {
-                if (!string.IsNullOrEmpty(buff.RequiredBuff))
-                {
-                    Buff reqBuff = Buff.GetBuffByName(buff.RequiredBuff);
-                    if (!buffs.Contains(reqBuff)) missingBuffs.Add(reqBuff);
-                }
-            }
-            buffs.AddRange(missingBuffs);
+			List<Buff> buffs = Buff.RelevantBuffs;
+			//List<Buff> missingBuffs = new List<Buff>();
+			//foreach (Buff buff in buffs)
+			//{
+			//    if (!string.IsNullOrEmpty(buff.RequiredBuff))
+			//    {
+			//        Buff reqBuff = Buff.GetBuffByName(buff.RequiredBuff);
+			//        if (!buffs.Contains(reqBuff)) missingBuffs.Add(reqBuff);
+			//    }
+			//}
+			//buffs.AddRange(missingBuffs);
 
 			foreach (Buff buff in buffs)
 			{
                 ExtendedToolTipCheckBox checkBox = new ExtendedToolTipCheckBox();
 				checkBox.Tag = buff;
-				if (string.IsNullOrEmpty(buff.RequiredBuff)) checkBox.Text = buff.Name;
+				checkBox.Text = buff.Name;
 				checkBox.AutoSize = true;
+				checkBox.Font = this.Font;
+				checkBox.Dock = DockStyle.Top;
                 checkBox.ToolTipText = buff.Stats.ToString();
 				checkBox.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
-				GroupBoxes[buff.Category].Controls.Add(checkBox);
+				GroupBoxes[buff.Group].Controls.Add(checkBox);
+				checkBox.BringToFront();
 				CheckBoxes.Add(buff, checkBox);
+
+				foreach (Buff improvement in buff.Improvements)
+				{
+					ExtendedToolTipCheckBox checkBoxImprovement = new ExtendedToolTipCheckBox();
+					checkBoxImprovement.Tag = improvement;
+					checkBoxImprovement.Text = improvement.Name;
+					checkBoxImprovement.Padding = new Padding(8 + checkBoxImprovement.Padding.Left,
+						checkBoxImprovement.Padding.Top, checkBoxImprovement.Padding.Right, checkBoxImprovement.Padding.Bottom);
+					checkBoxImprovement.AutoSize = true;
+					checkBoxImprovement.Font = this.Font;
+					checkBoxImprovement.Dock = DockStyle.Top;
+					checkBoxImprovement.ToolTipText = improvement.Stats.ToString();
+					checkBoxImprovement.CheckedChanged += new EventHandler(checkBoxBuff_CheckedChanged);
+					GroupBoxes[buff.Group].Controls.Add(checkBoxImprovement);
+					checkBoxImprovement.BringToFront();
+					CheckBoxes.Add(improvement, checkBoxImprovement);
+				}
 			}
 
-			int groupY = 3;
+			//int groupY = 3;
 			foreach (GroupBox groupBox in GroupBoxes.Values)
 			{
-				int checkY = 19;
-				foreach (CheckBox checkBox in groupBox.Controls)
-				{
-					Buff buff = checkBox.Tag as Buff;
-					if (string.IsNullOrEmpty(buff.RequiredBuff))
-					{
-						checkBox.Location = new Point(6, checkY);
-						checkY += 23;
-					}
-				}
-				groupBox.Bounds = new Rectangle(3, groupY, this.Width, checkY);
-				groupY += checkY + 6;
-				bool hasImprovedBuffs = false;
-				foreach (CheckBox checkBox in groupBox.Controls)
-				{
-					Buff buff = checkBox.Tag as Buff;
-					if (!string.IsNullOrEmpty(buff.RequiredBuff))
-					{
-						hasImprovedBuffs = true;
-						foreach (CheckBox requiredCheckBox in groupBox.Controls)
-							if (requiredCheckBox.Text == buff.RequiredBuff)
-							{
-								checkBox.Location = new Point(this.Width - this.Width / 4 - checkBox.Width / 2, requiredCheckBox.Top + 1);
-								break;
-							}
-					}
-				}
+				groupBox.Height = groupBox.Controls[0].Bottom + 2;
+				//int checkY = 19;
+				//foreach (CheckBox checkBox in groupBox.Controls)
+				//{
+				//    Buff buff = checkBox.Tag as Buff;
+				//    if (string.IsNullOrEmpty(buff.RequiredBuff))
+				//    {
+				//        checkBox.Location = new Point(6, checkY);
+				//        checkY += 23;
+				//    }
+				//}
+				//groupBox.Bounds = new Rectangle(3, groupY, this.Width, checkY);
+				//groupY += checkY + 6;
+				//bool hasImprovedBuffs = false;
+				//foreach (CheckBox checkBox in groupBox.Controls)
+				//{
+				//    Buff buff = checkBox.Tag as Buff;
+				//    if (!string.IsNullOrEmpty(buff.RequiredBuff))
+				//    {
+				//        hasImprovedBuffs = true;
+				//        foreach (CheckBox requiredCheckBox in groupBox.Controls)
+				//            if (requiredCheckBox.Text == buff.RequiredBuff)
+				//            {
+				//                checkBox.Location = new Point(this.Width - this.Width / 4 - checkBox.Width / 2, requiredCheckBox.Top + 1);
+				//                break;
+				//            }
+				//    }
+				//}
 
-				if (hasImprovedBuffs)
-				{
-					Label labelImproved = new Label();
-					labelImproved.Text = "Improved";
-					labelImproved.AutoSize = true;
-					labelImproved.Location = new Point(this.Width - (4 * labelImproved.Width) / 5, 6);
-					groupBox.Controls.Add(labelImproved);
-				}
+				//if (hasImprovedBuffs)
+				//{
+				//    Label labelImproved = new Label();
+				//    labelImproved.Text = "Improved";
+				//    labelImproved.AutoSize = true;
+				//    labelImproved.Location = new Point(this.Width - (4 * labelImproved.Width) / 5, 6);
+				//    groupBox.Controls.Add(labelImproved);
+				//}
 			}
             ScrollHook.hookRec(this);
 			this.ResumeLayout();
@@ -239,9 +264,9 @@ namespace Rawr
 					checkBox.Enabled = false;
 					continue;
 				}
-				if (!string.IsNullOrEmpty(buff.RequiredBuff))
+				if (string.IsNullOrEmpty(buff.Group))
 				{
-					checkBox.Enabled = CheckBoxes[Buff.GetBuffByName(buff.RequiredBuff)].Checked;
+					checkBox.Enabled = CheckBoxes[GetParentBuff(buff)].Checked;
 					if (!checkBox.Enabled) continue;
 				}
 				if (!checkBox.Checked)
@@ -257,6 +282,14 @@ namespace Rawr
 				}
 			}
 
+		}
+
+		private Buff GetParentBuff(Buff childBuff)
+		{
+			foreach (Buff parentBuff in Buff.RelevantBuffs)
+				if (parentBuff.Improvements.Contains(childBuff))
+					return parentBuff;
+			return null;
 		}
 	}
 }

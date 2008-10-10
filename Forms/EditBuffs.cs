@@ -17,10 +17,10 @@ namespace Rawr.Forms
             InitializeComponent();
             _buffs = Rawr.Utilities.Clone<List<Buff>>(buffs);
 			List<string> catNames = new List<string>();
-            foreach (Buff.BuffCategory cat in Enum.GetValues(typeof(Buff.BuffCategory)))
-            {
-				catNames.Add(cat.ToString());    
-            }
+            //foreach (Buff.BuffCategory cat in Enum.GetValues(typeof(Buff.BuffCategory)))
+            //{
+			//	catNames.Add(cat.ToString());    
+            //}
 			catNames.Sort();
 			for (int i = 0; i < catNames.Count; i++)
 			{
@@ -56,9 +56,9 @@ namespace Rawr.Forms
                 Buff currentBuff = _buffs[i];
                 if (string.IsNullOrEmpty(Filter.Text) || currentBuff.Name.ToLower().Contains(Filter.Text.ToLower()))
                 {
-                    ListViewItem lvi = new ListViewItem(currentBuff.Name, listView1.Groups[currentBuff.Category.ToString()]);
-                    lvi.Tag = currentBuff;
-                    listView1.Items.Add(lvi);
+                    //ListViewItem lvi = new ListViewItem(currentBuff.Name, listView1.Groups[currentBuff.Category.ToString()]);
+                    //lvi.Tag = currentBuff;
+                    //listView1.Items.Add(lvi);
                 }
             }
 			listView1.Sort();

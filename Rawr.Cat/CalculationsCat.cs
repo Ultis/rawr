@@ -362,7 +362,7 @@ namespace Rawr
                 }
             }
             float dps = ((1.1f * (((dmgMangles + dmgShreds + dmgMelee) * (1f - modArmor / 100f) + dmgRips) / cycleTime)) 
-				* (1 + stats.BonusPhysicalDamageMultiplier)) + ssoNeckProcDPS;
+				* (1 + stats.BonusDamageMultiplier)) + ssoNeckProcDPS;
 
 			calculatedStats.DPSPoints = dps;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
@@ -431,7 +431,7 @@ namespace Rawr
 			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
 			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
 			if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
-				statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier) * 
+				statsGearEnchantsBuffs.BonusDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusDamageMultiplier) * 
 					(float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
 
 			float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
@@ -464,7 +464,7 @@ namespace Rawr
 			statsTotal.BonusMangleCatDamage = statsRace.BonusMangleCatDamage + statsGearEnchantsBuffs.BonusMangleCatDamage;
 			statsTotal.BonusRipDamageMultiplier = ((1 + statsRace.BonusRipDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusRipDamageMultiplier)) - 1;
 			statsTotal.BonusShredDamage = statsRace.BonusShredDamage + statsGearEnchantsBuffs.BonusShredDamage;
-			statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+			statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier;
 			statsTotal.BonusRipDamagePerCPPerTick = statsRace.BonusRipDamagePerCPPerTick + statsGearEnchantsBuffs.BonusRipDamagePerCPPerTick;
 			statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
@@ -671,7 +671,7 @@ namespace Rawr
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
-					BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+					BonusDamageMultiplier = stats.BonusDamageMultiplier,
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -704,7 +704,7 @@ namespace Rawr
 		{
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusMangleCatDamage + stats.BonusPhysicalDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
+				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +

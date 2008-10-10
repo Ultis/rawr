@@ -76,13 +76,13 @@ namespace Rawr.Hunter
             petStats.Hit = (float)petHitChance;
             #endregion
 
-            petStats.Crit += petStats.Agility / 2560f;
+            petStats.PhysicalCrit += petStats.Agility / 2560f;
 
-            petStats.Crit += (.02f * character.HunterTalents.Ferocity);
+            petStats.PhysicalCrit += (.02f * character.HunterTalents.Ferocity);
 
-            petStats.Crit -= ((options.TargetLevel * 5f - 350f) * .0004f);
+            petStats.PhysicalCrit -= ((options.TargetLevel * 5f - 350f) * .0004f);
 
-            petStats.Crit += calculatedStats.BasicStats.BonusPetCritChance;
+            petStats.PhysicalCrit += calculatedStats.BasicStats.BonusPetCritChance;
 
             calculatedStats.PetStats = petStats;
 
@@ -96,7 +96,7 @@ namespace Rawr.Hunter
 
             double clawDmg = (118.0 + 168.0) / 2.0 + abDmg;
 
-            double petHitCrit = (1.0 + calculatedStats.PetStats.Crit) * calculatedStats.PetStats.Hit;
+            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.Hit;
 
             clawDmg *= petHitCrit;
 
@@ -116,7 +116,7 @@ namespace Rawr.Hunter
 
         private void getFerociousInspirationUptime()
         {
-            ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - calculatedStats.PetStats.Crit, 10.0/whiteAttackSpeed + 10.0/specialAttackSpeed);
+            ferociousInspirationUptime = 1.0 - Math.Pow(1.0 - calculatedStats.PetStats.PhysicalCrit, 10.0/whiteAttackSpeed + 10.0/specialAttackSpeed);
         }
 
         public float getDPS()
@@ -130,7 +130,7 @@ namespace Rawr.Hunter
             petAttackSpeed /= 1.0 + 0.3; // TODO: Cobra Reflexes
 
             petDmg += (calculatedStats.PetStats.AttackPower / 14.0) * petBaseAttackSpeed;
-            double petHitCrit = (1.0 + calculatedStats.PetStats.Crit) * calculatedStats.PetStats.Hit;
+            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.Hit;
 
             petDmg *= petHitCrit;
 

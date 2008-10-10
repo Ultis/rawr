@@ -213,7 +213,7 @@ namespace Rawr.Healadin
             statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f));
             statsTotal.Spirit = (float)Math.Round(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (0.2f * statsTotal.Intellect));
-            statsTotal.SpellCrit = .03336f + statsTotal.Crit + statsTotal.Intellect / 8000 + statsTotal.CritRating / 2208 +
+            statsTotal.SpellCrit = .03336f + statsTotal.PhysicalCrit + statsTotal.Intellect / 8000 + statsTotal.CritRating / 2208 +
                 talents.SanctifiedSeals * .01f + talents.Conviction * .01f;
             statsTotal.SpellHaste = statsTotal.HasteRating / 1570;
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
