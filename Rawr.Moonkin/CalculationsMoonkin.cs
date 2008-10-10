@@ -369,6 +369,11 @@ namespace Rawr.Moonkin
                             character.DruidTalents.Data[i] = oldValue;
                         }
                     }
+                    comps.RemoveAll(
+                        delegate(ComparisonCalculationBase val)
+                        {
+                            return val.OverallPoints <= 0;
+                        });
                     return comps.ToArray();
                 case "Talent MP5 Comparison":
                     CharacterCalculationsMoonkin calcsMP5TalentBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
@@ -640,6 +645,8 @@ namespace Rawr.Moonkin
                     return "Improved Faerie Fire";
                 case 21:
                     return "Wrath of Cenarius";
+                case 22:
+                    return "Eclipse";
                 case 24:
                     return "Force of Nature";
                 case 26:

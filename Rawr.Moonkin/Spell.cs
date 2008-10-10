@@ -254,8 +254,8 @@ namespace Rawr.Moonkin
             double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, 1.0f);
             double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, 1.0f);
             double NGChance = critChanceCoefficient * hitCoefficient;
-            CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
-            CastTime += latency;
+            baseCastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
+            baseCastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
@@ -327,8 +327,8 @@ namespace Rawr.Moonkin
             double castTimeNoNG = Math.Max(unhastedCastTime / hasteCoefficient, 1.0f);
             double castTimeWithNG = Math.Max((unhastedCastTime - naturesGraceTime) / hasteCoefficient, 1.0f);
             double NGChance = critChanceCoefficient * hitCoefficient;
-            CastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
-            CastTime += latency;
+            baseCastTime = (float)((1 - NGChance) * castTimeNoNG + NGChance * castTimeWithNG);
+            baseCastTime += latency;
 
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / baseCastTime;
         }
@@ -523,6 +523,8 @@ namespace Rawr.Moonkin
                     {
                         if (sp.Name == "SF")
                             ++_starfireCount;
+                        else if (sp.Name == "W")
+                            ++_wrathCount;
                         timeSpentCasting += sp.CastTime;
                         ++_castCount;
                     }
@@ -620,6 +622,18 @@ namespace Rawr.Moonkin
                 return false;
             }
         }
+        public bool HasInsectSwarm
+        {
+            get
+            {
+                foreach (Spell sp in spells)
+                {
+                    if (sp.Name == "IS")
+                        return true;
+                }
+                return false;
+            }
+        }
         private int _starfireCount = 0;
         public int StarfireCount
         {
@@ -628,6 +642,16 @@ namespace Rawr.Moonkin
                 if (_duration == 0)
                     CalculateRotationalVariables();
                 return _starfireCount;
+            }
+        }
+        private int _wrathCount = 0;
+        public int WrathCount
+        {
+            get
+            {
+                if (_duration == 0)
+                    CalculateRotationalVariables();
+                return _wrathCount;
             }
         }
         // These fields get filled in only after the DPS calculations are done
@@ -855,6 +879,16 @@ namespace Rawr.Moonkin
                 float effectiveSpellHaste = calcs.BasicStats.HasteRating;
                 float effectiveMana = GetEffectiveManaPool(character, calcs);
 
+                // Improved Insect Swarm
+                if (rotation.HasInsectSwarm && rotation.WrathCount > 0)
+                {
+                    wrath.SpecialDamageModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                }
+                else if (rotation.HasMoonfire && rotation.StarfireCount > 0)
+                {
+                    starfire.SpecialCriticalModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                }
+
                 // Trinkets
                 trinketExtraDPS = 0.0f;
                 // Do a pre-emptive call to rotation.DPS to get corrected cast times for spells
@@ -896,20 +930,99 @@ namespace Rawr.Moonkin
                 insectSwarm.CastTime = Spell.GlobalCooldown;
                 moonfire.CastTime = Spell.GlobalCooldown;
                 // Incorporate Nature's Grace with Moonfire into the rotational calculations
-                if (naturesGrace > 0 && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                if (naturesGrace > 0 && rotation.HasMoonfire)
                 {
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
-                    starfire.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
+                    if (rotation.StarfireCount > 0)
+                    {
+                        starfire.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f * (naturesGrace/3)) / rotation.StarfireCount;
+                    }
+                    else if (rotation.WrathCount > 0)
+                    {
+                        wrath.CastTime -= ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
+                    }
                 }
                 float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS + treeDPS;
-                // Restore Starfire's cast time because the object is reused
-                if (naturesGrace > 0 && rotation.HasMoonfire && rotation.StarfireCount > 0)
+                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, effectiveMana, fightLength, naturesGrace, calcs.BasicStats.StarfireBonusWithDot, calcs.Latency) + trinketExtraDPS + treeDPS;
+                float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
+
+                // After the DPS calculations are done, we can make a stab at Eclipse calculations
+                // Please note that the numbers on this are going to be EXTREMELY rough
+                // Only one main nuke per rotation, thankfully
+                if (rotation.StarfireCount > 0 && character.DruidTalents.Eclipse > 0)
+                {
+                    float eclipseProcChance = effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor + starfire.SpecialCriticalModifier;
+                    eclipseProcChance *= spellHitRate;
+                    eclipseProcChance *= character.DruidTalents.Eclipse / 3.0f;
+                    eclipseProcChance *= rotation.StarfireCount / rotation.CastCount;   // Percentage of casts that are Starfire
+
+                    float expectedCastsToProc = 1 / eclipseProcChance;
+
+                    float timeToProc = expectedCastsToProc * starfire.CastTime;
+
+                    float rotationLength = 40.0f + timeToProc;
+                    float normalLength = rotationLength - 10.0f + starfire.CastTime;
+
+                    float timeInEclipse = 10.0f - starfire.CastTime;
+                    float eclipseDPS = wrath.DPS(effectiveNatureDamage, spellHitRate, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, character.DruidTalents.NaturesGrace, calcs.Latency) * 1.2f;
+
+                    float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
+                    float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
+
+                    currentDPS = totalDamageDone / rotationLength;
+                    currentRawDPS = totalMaxDamageDone / rotationLength;
+                }
+                else if (rotation.WrathCount > 0 && character.DruidTalents.Eclipse > 0)
+                {
+                    float eclipseProcChance = effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor + wrath.SpecialCriticalModifier;
+                    eclipseProcChance *= spellHitRate;
+                    eclipseProcChance *= 0.2f * character.DruidTalents.Eclipse / 3.0f;
+                    eclipseProcChance *= rotation.WrathCount / rotation.CastCount;   // Percentage of casts that are Starfire
+
+                    float expectedCastsToProc = 1 / eclipseProcChance;
+
+                    float timeToProc = expectedCastsToProc * wrath.CastTime;
+
+                    float rotationLength = 40.0f + timeToProc;
+                    float normalLength = rotationLength - 10.0f + wrath.CastTime;
+
+                    float timeInEclipse = 10.0f - wrath.CastTime;
+                    float eclipseDPS = starfire.DPS(effectiveArcaneDamage, spellHitRate, effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor + 0.3f, effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor, character.DruidTalents.NaturesGrace, calcs.Latency);
+
+                    float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
+                    float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
+
+                    currentDPS = totalDamageDone / rotationLength;
+                    currentRawDPS = totalMaxDamageDone / rotationLength;
+                }
+
+                // Restore Starfire/Wrath's cast time because the objects are reused
+                if (naturesGrace > 0 && rotation.HasMoonfire)
                 {
                     float critFromGear = effectiveSpellCrit * (1 / CalculationsMoonkin.critRatingConversionFactor);
-                    starfire.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f) / rotation.StarfireCount;
+                    if (rotation.StarfireCount > 0)
+                    {
+                        starfire.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f * (naturesGrace / 3)) / rotation.StarfireCount;
+                    }
+                    else if (rotation.WrathCount > 0)
+                    {
+                        wrath.CastTime += ((1 - (rotation.AverageCritChance + critFromGear)) * (moonfire.SpecialCriticalModifier + critFromGear) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
+                    }
                 }
-                float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
+                // Undo Improved Insect Swarm
+                if (rotation.HasInsectSwarm && rotation.WrathCount > 0)
+                {
+                    wrath.SpecialDamageModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                }
+                else if (rotation.HasMoonfire && rotation.StarfireCount > 0)
+                {
+                    starfire.SpecialCriticalModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                }
+
+                // Add in final damage multipliers
+                currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
+                currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
+
                 if (currentDPS > maxDPS)
                 {
                     calcs.SelectedRotation = rotation;
