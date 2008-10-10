@@ -241,7 +241,7 @@ namespace Rawr
 		public string GetLatestVersionString()
 		{
 			string html = DownloadText("http://www.codeplex.com/Rawr");
-			if (!html.Contains("{Current Version: ")) return string.Empty;
+			if (html == null || !html.Contains("{Current Version: ")) return string.Empty;
 			html = html.Substring(html.IndexOf("{Current Version: ") + "{Current Version: ".Length);
 			if (!html.Contains("}")) return string.Empty;
 			html = html.Substring(0, html.IndexOf("}"));
