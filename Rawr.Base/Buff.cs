@@ -842,13 +842,13 @@ namespace Rawr
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Winter's Chill",
-				Group = "Spell Critical Strike Chance",
+				Group = "Spell Critical Strike Taken",
 				Stats = { SpellCrit = 0.1f }
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Improved Scorch",
-				Group = "Spell Critical Strike Chance",
+				Group = "Spell Critical Strike Taken",
 				Stats = { SpellCrit = 0.1f }
 			});
 			#endregion
