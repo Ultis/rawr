@@ -711,8 +711,8 @@ namespace Rawr.Moonkin
                 totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * CalculationsMoonkin.BaseMana * 0.04f);
             }
             // Replenishment calculations
-            float replenishmentPerTick = calcs.BasicStats.Mana * 0.0025f;
-            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength;
+            float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
+            float replenishmentMana = calcOpts.ReplenishmentUptime * replenishmentPerTick * calcOpts.FightLength * 60;
 
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
@@ -830,8 +830,8 @@ namespace Rawr.Moonkin
             RecreateSpells(character, ref calcs);
 
             // Spell-specific mana cost reductions
-            // Moonkin Aura
-            if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
+            // Moonkin Form
+            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
             {
                 starfire.ManaCost -= (calcs.SpellCrit + starfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
                 moonfire.ManaCost -= (calcs.SpellCrit + moonfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
@@ -864,11 +864,9 @@ namespace Rawr.Moonkin
 
                 // JoW/mana restore procs
                 // Judgement of Wisdom
-                if (character.ActiveBuffsContains("Judgement of Wisdom"))
-                {
-                    starfire.ManaCost -= spellHitRate * 0.02f * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfire.CastTime) + 1);
-                    wrath.ManaCost -= spellHitRate * 0.02f * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrath.CastTime) + 1);
-                }
+                starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfire.CastTime) + 1);
+                wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrath.CastTime) + 1);
+
                 // Omen of Clarity
                 if (character.DruidTalents.OmenOfClarity > 0)
                 {

@@ -481,6 +481,12 @@ namespace Rawr
 				Group = "Spell Critical Strike Chance",
 				Stats = { SpellCrit = 0.05f }
 			});
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Moonkin Form",
+                Group = "Spell Critical Strike Chance",
+                Stats = { SpellCrit = 0.05f }
+            });
 			#endregion
 
 			#region Spell Haste

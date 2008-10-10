@@ -262,7 +262,7 @@ namespace Rawr.Moonkin
             // Base stats: Spirit% +(0.05 * Living Spirit)
 			statsTotal.Spirit *= 1 + 0.05f * character.DruidTalents.LivingSpirit;
             // Base stats: Int% +(0.02 * Furor)
-            if (character.ActiveBuffsContains("Moonkin Aura"))
+            if (character.ActiveBuffsContains("Moonkin Form"))
                 statsTotal.Intellect *= 1 + 0.02f * character.DruidTalents.Furor;
 
             // Bonus multipliers
@@ -311,14 +311,20 @@ namespace Rawr.Moonkin
             statsTotal.CritRating += 0.01f * character.DruidTalents.NaturalPerfection * critRatingConversionFactor;
             // All spells: Haste% + (0.01 * Celestial Focus)
             statsTotal.HasteRating += 0.01f * character.DruidTalents.CelestialFocus * hasteRatingConversionFactor;
-            // All spells: Haste% + (0.01 * Imp Moonkin)
+            // Add external buffs
+            statsTotal.HasteRating += statsTotal.SpellHaste * hasteRatingConversionFactor;
+            statsTotal.CritRating += statsTotal.SpellCrit * critRatingConversionFactor;
+            statsTotal.HitRating += statsTotal.SpellHit * hitRatingConversionFactor;
+
             // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
             // Add the crit bonus from the idol, if present
-            if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
+            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
             {
                 statsTotal.CritRating += statsTotal.IdolCritRating;
-                statsTotal.HasteRating += 0.01f * character.DruidTalents.ImprovedMoonkinForm * hasteRatingConversionFactor;
-                statsTotal.SpellDamageFromSpiritPercentage += (0.5f * character.DruidTalents.ImprovedMoonkinForm);
+                if (character.ActiveBuffsContains("Improved Moonkin Form"))
+                {
+                    statsTotal.SpellDamageFromSpiritPercentage += (0.5f * character.DruidTalents.ImprovedMoonkinForm);
+                }
             }
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
             if (character.ActiveBuffsContains("Improved Faerie Fire"))
@@ -328,8 +334,12 @@ namespace Rawr.Moonkin
             // All spells: Spell Power + (0.01 * Earth and Moon)
             statsTotal.SpellPower *= 1 + (0.01f * character.DruidTalents.EarthAndMoon);
             // All spells: Spell Power + (0.02 * Master Shapeshifter)
-            if (character.ActiveBuffsContains("Moonkin Aura") && character.DruidTalents.MoonkinForm > 0)
+            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
                 statsTotal.SpellPower *= 1 + (0.02f * character.DruidTalents.MasterShapeshifter);
+            // Generic spell power multiplier
+            statsTotal.SpellPower *= 1 + statsTotal.BonusSpellPowerMultiplier;
+            // Generic spell crit multiplier
+            statsTotal.CritRating *= 1 + statsTotal.BonusSpellCritMultiplier;
 
             return statsTotal;
         }
@@ -673,6 +683,7 @@ namespace Rawr.Moonkin
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 Mana = stats.Mana,
                 SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
                 SpellNatureDamageRating = stats.SpellNatureDamageRating,
@@ -704,13 +715,16 @@ namespace Rawr.Moonkin
                 TimbalsProc = stats.TimbalsProc,
                 DruidAshtongueTrinket = stats.DruidAshtongueTrinket,
 				ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond
+                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                SpellHaste = stats.SpellHaste,
+                SpellCrit = stats.SpellCrit,
+                SpellHit = stats.SpellHit
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.HitRating + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond) > 0;
+			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.BonusNatureSpellPowerMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestorePerHit + stats.ManaRestorePerCast + stats.SpellDamageFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellDamageFor10SecOnResist + stats.SpellDamageFor15SecOnCrit_20_45 + stats.SpellDamageFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier) > 0;
         }
     }
 }
