@@ -49,7 +49,7 @@ namespace Rawr.Hunter
 
 
             petStats.AttackPower = (petStats.Strength - 10f) * 2f;
-            petStats.AttackPower += (calculatedStats.RAP * .22f);
+            petStats.AttackPower += (calculatedStats.BasicStats.RangedAttackPower * .22f);
 
             #region Hit
             double petHitChance = calculatedStats.BasicStats.Hit;
@@ -92,6 +92,11 @@ namespace Rawr.Hunter
         {
 
             double focus = (24.0 + 12.0 * character.HunterTalents.BestialDiscipline) / 4.0;
+
+            double shotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed + 1.0 / 1.5;
+
+            focus += shotsPerSecond * calculatedStats.BasicStats.PhysicalCrit * character.HunterTalents.GoForTheThroat * 25.0;
+
             double abDmg = 0.07 * calculatedStats.PetStats.AttackPower;
 
             double clawDmg = (118.0 + 168.0) / 2.0 + abDmg;
@@ -137,13 +142,16 @@ namespace Rawr.Hunter
             petDmg *= 1.0 + character.HunterTalents.UnleashedFury * 0.04;
             petDmg *= 1.0 + character.HunterTalents.KindredSpirits * 0.04;
 
-            whiteAttackSpeed = petAttackSpeed;
-
-
-
-            
-            calculatedStats.PetBaseDPS = (petDmg * this.armorReduction) / petAttackSpeed;
             calculatedStats.PetSpecialDPS = getSpecialDPS() * this.armorReduction;
+
+
+            whiteAttackSpeed = petAttackSpeed;
+            whiteAttackSpeed /= 1.30;
+            double frenzyUptime = 1.0 - Math.Pow(1.0 - character.HunterTalents.Frenzy / 5.0 * calculatedStats.PetStats.PhysicalCrit, 8.0 / whiteAttackSpeed + 8.0 / specialAttackSpeed);
+            whiteAttackSpeed = whiteAttackSpeed * frenzyUptime + petAttackSpeed * (1.0 - frenzyUptime);
+
+
+            calculatedStats.PetBaseDPS = (petDmg * this.armorReduction) / whiteAttackSpeed;
 
             getFerociousInspirationUptime();
             double fi = 1.0 + character.HunterTalents.FerociousInspiration * 0.01 * ferociousInspirationUptime;

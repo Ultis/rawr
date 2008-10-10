@@ -101,27 +101,40 @@ namespace Rawr.Hunter
         public RotationInfo ExpSteadySerpRotation()
         {
             RotationInfo info = new RotationInfo();
+
+            ShotExplosive(info);
             ShotSerpentSting(info);
+            ShotSteady(info);
+            ShotSteady(info);
             ShotExplosive(info);
             ShotSteady(info);
             ShotSteady(info);
             ShotSteady(info);
-            ShotExplosive(info);
-            ShotSteady(info);
-            ShotSteady(info);
-            ShotSteady(info);
+
+            if (info.rotationTime < 12.0)
+            {
+                info.rotationTime = 12.0;
+            }
+
+
             return info;
         }
 
         public RotationInfo ChimASSteadyRotation()
         {
             RotationInfo info = new RotationInfo();
-            ShotChimera(info, 4);
+
+            //TODO: Update helptext
+            double steadyTime = 10.0 - 1.5 - 1.5; // Chim CD - 2x GCD
+            int steadyAmount = (int)Math.Ceiling(steadyTime/1.5);
+
+            ShotChimera(info, steadyAmount);
             ShotArcane(info, 0);
-            ShotSteady(info);
-            ShotSteady(info);
-            ShotSteady(info);
-            ShotSteady(info);
+
+            for (int i = 0; i < steadyAmount; i++)
+            {
+                ShotSteady(info);
+            }
 
             if (info.rotationTime < 10.0)
             {
@@ -139,15 +152,17 @@ namespace Rawr.Hunter
 
             double chimeraDmg = weaponDamageAverage * 1.25;
 
+            // Imp Steady Shot only affects Bullet Damage
+            double impSteadyChance = 1.0 - Math.Pow(1.0 - character.HunterTalents.ImprovedSteadyShot * 0.05, steadyshots);
+            chimeraDmg *= 1.0 + 0.15 * impSteadyChance;
+            chimeraDmg *= this.talentedArmorReduction;
+
+
             double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
             double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
             serpentStingDmg *= serpentTalentModifiers;
             
             chimeraDmg += serpentStingDmg * 0.4;
-
-            double impSteadyChance = 1.0 - Math.Pow(1.0 - character.HunterTalents.ImprovedSteadyShot * 0.05, steadyshots);
-            chimeraDmg *= 1.0 + 0.15 * impSteadyChance;
-
             chimeraDmg *= critHitModifier * talentModifiers;
 
             info.rotationDmg += chimeraDmg + 2.0/3.0 * serpentStingDmg * talentModifiers; // Add Serpent Sting dmg for 10 sec
@@ -178,7 +193,7 @@ namespace Rawr.Hunter
 
             steadyShotDmg *= critHitModifier * talentModifiers;
 
-            double steadyShotCastTime = 2.0 / totalStaticHaste;
+            double steadyShotCastTime = calculatedStats.SteadySpeed;
 
             info.rotationDmg += steadyShotDmg * talentedArmorReduction;
             info.rotationTime += steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5;

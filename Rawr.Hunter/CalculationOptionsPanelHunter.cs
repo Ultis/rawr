@@ -124,6 +124,7 @@ namespace Rawr.Hunter
             {
                 options.TargetArmor = trackBarTargetArmor.Value;
                 Character.OnCalculationsInvalidated();
+                lblTargetArmorValue.Text = trackBarTargetArmor.Value.ToString();
             }
         }
 

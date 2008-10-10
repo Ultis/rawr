@@ -189,9 +189,8 @@ Steady Shot
 Steady Shot";
             dictValues.Add("SerpASSteady", SerpASSteadyDPS.ToString("F2") + serpRota);
 
-            String expRota = @"*Serpent Sting
-Explosive Shot
-Steady Shot
+            String expRota = @"*Explosive Shot
+Serpent Sting
 Steady Shot
 Steady Shot
 Explosive Shot

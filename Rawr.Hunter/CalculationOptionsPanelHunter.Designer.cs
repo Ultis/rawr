@@ -40,7 +40,9 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.comboPetFamily = new System.Windows.Forms.ComboBox();
 			this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
+            this.lblTargetArmorValue = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
+
 			this.groupBoxPetOptions.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
 			this.SuspendLayout();
@@ -79,7 +81,7 @@
             this.groupBoxPetOptions.Controls.Add(this.comboPetPriority1);
             this.groupBoxPetOptions.Controls.Add(this.label4);
             this.groupBoxPetOptions.Controls.Add(this.comboPetFamily);
-            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 145);
+            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 136);
             this.groupBoxPetOptions.Name = "groupBoxPetOptions";
             this.groupBoxPetOptions.Size = new System.Drawing.Size(194, 150);
             this.groupBoxPetOptions.TabIndex = 8;
@@ -97,6 +99,7 @@
             // 
             // comboPetPriority3
             // 
+            this.comboPetPriority3.Enabled = false;
             this.comboPetPriority3.FormattingEnabled = true;
             this.comboPetPriority3.Location = new System.Drawing.Point(86, 113);
             this.comboPetPriority3.Name = "comboPetPriority3";
@@ -123,6 +126,7 @@
             // 
             // comboPetPriority2
             // 
+            this.comboPetPriority2.Enabled = false;
             this.comboPetPriority2.FormattingEnabled = true;
             this.comboPetPriority2.Location = new System.Drawing.Point(86, 85);
             this.comboPetPriority2.Name = "comboPetPriority2";
@@ -131,6 +135,7 @@
             // 
             // comboPetPriority1
             // 
+            this.comboPetPriority1.Enabled = false;
             this.comboPetPriority1.FormattingEnabled = true;
             this.comboPetPriority1.Location = new System.Drawing.Point(86, 57);
             this.comboPetPriority1.Name = "comboPetPriority1";
@@ -148,6 +153,7 @@
             // 
             // comboPetFamily
             // 
+            this.comboPetFamily.Enabled = false;
             this.comboPetFamily.FormattingEnabled = true;
             this.comboPetFamily.Location = new System.Drawing.Point(73, 20);
             this.comboPetFamily.Name = "comboPetFamily";
@@ -158,7 +164,7 @@
             // 
             this.trackBarTargetArmor.BackColor = System.Drawing.Color.White;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(79, 65);
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(79, 38);
             this.trackBarTargetArmor.Maximum = 9000;
             this.trackBarTargetArmor.Minimum = 3000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
@@ -172,16 +178,26 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 69);
+            this.label2.Location = new System.Drawing.Point(5, 42);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(71, 13);
             this.label2.TabIndex = 10;
             this.label2.Text = "Target Armor:";
             // 
+            // lblTargetArmorValue
+            // 
+            this.lblTargetArmorValue.AutoSize = true;
+            this.lblTargetArmorValue.Location = new System.Drawing.Point(24, 59);
+            this.lblTargetArmorValue.Name = "lblTargetArmorValue";
+            this.lblTargetArmorValue.Size = new System.Drawing.Size(31, 13);
+            this.lblTargetArmorValue.TabIndex = 11;
+            this.lblTargetArmorValue.Text = "7700";
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblTargetArmorValue);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.trackBarTargetArmor);
             this.Controls.Add(this.groupBoxPetOptions);
@@ -212,5 +228,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblTargetArmorValue;
     }
 }

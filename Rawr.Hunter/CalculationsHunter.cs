@@ -39,6 +39,7 @@ namespace Rawr.Hunter
          * Animal Handler
          * Kindred Spirits
          * Ferocious Inspiration
+         * Frenzy
          * 
          ***** Marksmanship:
          * Focused Aim+
@@ -53,6 +54,7 @@ namespace Rawr.Hunter
          * Improved Steady Shot+
          * Chimera Shot
          * Piercing Shots
+         * Go for the Throat
          * 
          ***** Survival:
          * Survival Instincts
@@ -61,6 +63,7 @@ namespace Rawr.Hunter
          * Killer Instinct
          * Lightning Reflexes
          * Explosive Shot
+         * Expose Weakness
          */
 
         private CalculationOptionsPanelBase calculationOptionsPanel = null;
@@ -106,7 +109,7 @@ namespace Rawr.Hunter
 				"Complex Calculated Stats:Overall DPS"
 			};
 
-			customChartNames = new string[] { };
+            customChartNames = new string[] { "Relative Stat Values" };
 
 			relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
 					{
@@ -182,8 +185,47 @@ namespace Rawr.Hunter
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {            
-            return new ComparisonCalculationBase[0];            
+        {
+            switch (chartName)
+            {
+                case "Relative Stat Values":
+                    CharacterCalculationsHunter baseCalc = GetCharacterCalculations(character) as CharacterCalculationsHunter;
+                    CharacterCalculationsHunter calcCritValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsHunter;
+                    CharacterCalculationsHunter calcAPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 2 } }) as CharacterCalculationsHunter;
+                    CharacterCalculationsHunter calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }) as CharacterCalculationsHunter;
+                    CharacterCalculationsHunter calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsHunter;
+
+                    CharacterCalculationsHunter calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsHunter;
+
+
+                    return new ComparisonCalculationBase[] {  
+						        new ComparisonCalculationHunter() { Name = "+1 Crit Rating", 
+                                    HunterDpsPoints = (calcCritValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcCritValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcCritValue.OverallPoints - baseCalc.OverallPoints),},      
+						        new ComparisonCalculationHunter() { Name = "+2 Attack Power", 
+                                    HunterDpsPoints = (calcAPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcAPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcAPValue.OverallPoints - baseCalc.OverallPoints),},       
+						        new ComparisonCalculationHunter() { Name = "+1 Hit Rating", 
+                                    HunterDpsPoints = (calcHitValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcHitValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcHitValue.OverallPoints - baseCalc.OverallPoints),},
+						        new ComparisonCalculationHunter() { Name = "+1 Haste Rating", 
+                                    HunterDpsPoints = (calcHasteValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcHasteValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcHasteValue.OverallPoints - baseCalc.OverallPoints),},
+						        new ComparisonCalculationHunter() { Name = "+1 Agility", 
+                                    HunterDpsPoints = (calcAgiValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcAgiValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcAgiValue.OverallPoints - baseCalc.OverallPoints),},
+
+                    };
+
+            }
+
+            return new ComparisonCalculationBase[0];
+
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -327,6 +369,7 @@ namespace Rawr.Hunter
             double hawkRAPBonus = 155.0f * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
 
             #region Remove Any Incorrect Modelling
+            /*
             bool hasDST = false;
             if (character.Trinket1 != null && character.Trinket1.Name == "Dragonspine Trophy")
             {
@@ -338,11 +381,12 @@ namespace Rawr.Hunter
                 calculatedStats.BasicStats.HasteRating -= character.Trinket2.Stats.HasteRating;
                 hasDST = true;
             }
+            */
             #endregion
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
-            double totalStaticHaste = ratings.QUIVER_SPEED_INCREASE * (1 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100));
+            double totalStaticHaste = (1 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100));
 
             {
                 totalStaticHaste = totalStaticHaste * (1 + .04 * character.HunterTalents.SerpentsSwiftness);
@@ -351,7 +395,7 @@ namespace Rawr.Hunter
             double normalAutoshotsPerSecond = 0.0;
             if (character.Ranged != null)
             {
-                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Speed / totalStaticHaste);
+                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Speed / (totalStaticHaste * ratings.QUIVER_SPEED_INCREASE));
                 normalAutoshotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed;
             }
 
@@ -361,7 +405,7 @@ namespace Rawr.Hunter
 
             #region OnProc Haste effects
 
-            // Model DST
+            // Model Quickshots
 
             double quickShotsUpTime = 0;
             double quickShotHaste = 1.0;
@@ -384,6 +428,13 @@ namespace Rawr.Hunter
             #region RAP Against Target
             double effectiveRAPAgainstMob = calculatedStats.BasicStats.RangedAttackPower + 1.0/3.0 * character.HunterTalents.CarefulAim * calculatedStats.BasicStats.Intellect;
             effectiveRAPAgainstMob += character.HunterTalents.HunterVsWild * 0.10 * calculatedStats.BasicStats.Stamina;
+
+            double shotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed + 1.0 / 1.5;
+            double ewUptime = 1.0 - Math.Pow(1.0 - calculatedStats.BasicStats.PhysicalCrit * character.HunterTalents.ExposeWeakness / 3.0, 7.0 / shotsPerSecond);
+
+            effectiveRAPAgainstMob += calculatedStats.BasicStats.Agility * 0.25 * ewUptime;
+            effectiveRAPAgainstMob *= calculatedStats.BasicStats.BonusAttackPowerMultiplier;
+
             #endregion
 
             #region Critical Hit Damage
@@ -401,6 +452,10 @@ namespace Rawr.Hunter
             {
                 weaponDamageAverage = (float)(character.Ranged.MinDamage + character.Ranged.MaxDamage) / 2f;
                 ammoDamage = character.Ranged.Speed * ((float)(character.Projectile.MaxDamage + character.Projectile.MinDamage) / 2f);
+                weaponDamageAverage += ammoDamage
+                    + calculatedStats.BasicStats.ScopeDamage
+                    + ((effectiveRAPAgainstMob + hawkRAPBonus) / 14 * character.Ranged.Speed);
+
             }
             #endregion
 
@@ -417,6 +472,7 @@ namespace Rawr.Hunter
             talentModifiers *= 1.0f + 0.01f * character.HunterTalents.FocusedFire;
 
             double talentDmgModifiers = 1.0 + pet.ferociousInspirationUptime * character.HunterTalents.FerociousInspiration * 0.01;
+            talentDmgModifiers *= calculatedStats.BasicStats.BonusDamageMultiplier;
 
             #endregion
 
@@ -426,9 +482,7 @@ namespace Rawr.Hunter
             {
                 double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * autoshotCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
 
-                double autoshotDmg = (weaponDamageAverage + ammoDamage
-                    + calculatedStats.BasicStats.ScopeDamage
-                    + ((effectiveRAPAgainstMob + hawkRAPBonus) / 14 * character.Ranged.Speed)) * critHitModifier;
+                double autoshotDmg = weaponDamageAverage * critHitModifier;
 
                 double wildQuiverChance = 0.0;
                 if (character.HunterTalents.WildQuiver == 1)
@@ -538,10 +592,11 @@ namespace Rawr.Hunter
 			
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
 			statsTotal.Armor = (float)Math.Round((statsGearEnchantsBuffs.Armor + statsRace.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
-			statsTotal.Miss = statsBuffs.Miss;
+            statsTotal.Miss = 0.0f;
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
-			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
+            statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
+            statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
 			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
 			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);
@@ -553,7 +608,9 @@ namespace Rawr.Hunter
 			statsTotal.ScopeDamage = statsGearEnchantsBuffs.ScopeDamage;
 			statsTotal.AshtongueTrinketProc = statsGearEnchantsBuffs.AshtongueTrinketProc;
 			statsTotal.BonusSteadyShotCrit = statsGearEnchantsBuffs.BonusSteadyShotCrit;
-			
+
+            statsTotal.BonusDamageMultiplier = 1.0f + statsGearEnchantsBuffs.BonusDamageMultiplier;
+            statsTotal.BonusAttackPowerMultiplier = 1.0f + statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
 
     		//Begin non Base Stats.
 
@@ -596,7 +653,8 @@ namespace Rawr.Hunter
             statsTotal.PhysicalCrit = (float)(ratings.BASE_CRIT_PERCENT + (statsTotal.Agility / ratings.AGILITY_PER_CRIT / 100.0f)
                                 + (statsTotal.CritRating / ratings.CRIT_RATING_PER_PERCENT / 100.0f)
                                 + ((350 - targetDefence) * 0.04 / 100.0f)
-								+ statsTalents.PhysicalCrit);
+								+ statsTalents.PhysicalCrit
+                                + statsTotal.PhysicalCrit);
 
 		
 			
@@ -818,73 +876,6 @@ namespace Rawr.Hunter
 			return petStats;
 		}
 
-		//TODO: Make attacks ranks and damage configurable
-		private double CalculatePetSpecialAttackDPS(PetSpecialAttackData petSpecialAttackData, double damageAdjustment, double armorMitigation)
-		{
-			double petAttackDamage = 0;
-            double petAttackSpellDamage = 0;
-
-			switch (petSpecialAttackData.petAttack)
-			{
-				case PetAttacks.Bite:
-					petAttackDamage = 120;
-                    petAttackSpellDamage = 0;
-					break;
-				case PetAttacks.Claw:
-					petAttackDamage = 65;
-                    petAttackSpellDamage = 0;
-					break;
-                case PetAttacks.FireBreath:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 111;
-                    break;
-                case PetAttacks.LightningBreath:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 106;
-                    break;
-                case PetAttacks.Thunderstomp:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 165;
-                    break;
-                case PetAttacks.None:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 0;
-                    break;
-                case PetAttacks.Growl:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 0;
-                    break;
-                case PetAttacks.Cower:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 0;
-                    break;
-                // Current Damage set to avg added to pet and hunter's next attacks.
-                case PetAttacks.FuriousHowl:
-                    petAttackDamage = 102;
-                    petAttackSpellDamage = 0;
-                    break;
-                // Gore has 50% chance to do double damage.  Already added in average below.
-                case PetAttacks.Gore:
-                    petAttackDamage = 73.5;
-                    petAttackSpellDamage = 0;
-                    break;
-                case PetAttacks.PoisonSpit:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 96;
-                    break;
-                // Scorpid poison is a DoT that stacks to 5... more calculations needed.
-                // Current SpeelDamage set to one application for full duration
-                case PetAttacks.ScorpidPoison:
-                    petAttackDamage = 0;
-                    petAttackSpellDamage = 55;
-                    break;
-                case PetAttacks.Screech:
-                    petAttackDamage = 47;
-                    petAttackSpellDamage = 0;
-                    break;
-            }
-			return ((petAttackDamage * damageAdjustment * (1 - armorMitigation)) + (petAttackSpellDamage * damageAdjustment)) / petSpecialAttackData.AttackRate;
-		}
 
 
         #endregion
@@ -897,31 +888,5 @@ namespace Rawr.Hunter
 			return calcOpts;
 		}
 
-		private class SimulationResults
-		{
-			public double dps;
-			public double totalShotsPerSecond;
-			public double autoShotsPerSecond;
-			public double steadyShotsPerSecond;
-
-			public SimulationResults()
-			{
-				dps = 0;
-				totalShotsPerSecond = 0;
-				autoShotsPerSecond = 0;
-				steadyShotsPerSecond = 0;
-			}
-		}
-
-		private class PetSpecialAttackData
-		{
-			public PetAttacks petAttack;
-			public double FocusUsed;
-			public double CoolDown;
-			public double FocusPerSecond;
-			public double AttackRate;
-			public double MaximumFrequency;
-			public double AttackRateFromFocus;
-		}
 	}
 }
