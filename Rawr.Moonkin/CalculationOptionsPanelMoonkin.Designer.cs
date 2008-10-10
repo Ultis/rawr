@@ -47,6 +47,14 @@
             this.lblInnervateWeaponSpi = new System.Windows.Forms.Label();
             this.rdbAldor = new System.Windows.Forms.RadioButton();
             this.rdbScryer = new System.Windows.Forms.RadioButton();
+            this.trkReplenishmentUptime = new System.Windows.Forms.TrackBar();
+            this.trkTreantLifespan = new System.Windows.Forms.TrackBar();
+            this.lblReplenishmentUptime = new System.Windows.Forms.Label();
+            this.lblTreantLifespan = new System.Windows.Forms.Label();
+            this.lblUptimeValue = new System.Windows.Forms.Label();
+            this.lblLifespanValue = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -214,7 +222,7 @@
             // rdbAldor
             // 
             this.rdbAldor.AutoSize = true;
-            this.rdbAldor.Location = new System.Drawing.Point(39, 258);
+            this.rdbAldor.Location = new System.Drawing.Point(39, 354);
             this.rdbAldor.Name = "rdbAldor";
             this.rdbAldor.Size = new System.Drawing.Size(49, 17);
             this.rdbAldor.TabIndex = 27;
@@ -225,7 +233,7 @@
             // rdbScryer
             // 
             this.rdbScryer.AutoSize = true;
-            this.rdbScryer.Location = new System.Drawing.Point(91, 258);
+            this.rdbScryer.Location = new System.Drawing.Point(108, 354);
             this.rdbScryer.Name = "rdbScryer";
             this.rdbScryer.Size = new System.Drawing.Size(55, 17);
             this.rdbScryer.TabIndex = 28;
@@ -234,10 +242,74 @@
             this.rdbScryer.UseVisualStyleBackColor = true;
             this.rdbScryer.CheckedChanged += new System.EventHandler(this.rdbScryer_CheckedChanged);
             // 
+            // trkReplenishmentUptime
+            // 
+            this.trkReplenishmentUptime.Location = new System.Drawing.Point(125, 258);
+            this.trkReplenishmentUptime.Maximum = 100;
+            this.trkReplenishmentUptime.Name = "trkReplenishmentUptime";
+            this.trkReplenishmentUptime.Size = new System.Drawing.Size(76, 42);
+            this.trkReplenishmentUptime.TabIndex = 29;
+            this.trkReplenishmentUptime.TickFrequency = 10;
+            this.trkReplenishmentUptime.Value = 100;
+            this.trkReplenishmentUptime.ValueChanged += new System.EventHandler(this.trkReplenishmentUptime_ValueChanged);
+            // 
+            // trkTreantLifespan
+            // 
+            this.trkTreantLifespan.Location = new System.Drawing.Point(125, 306);
+            this.trkTreantLifespan.Maximum = 100;
+            this.trkTreantLifespan.Name = "trkTreantLifespan";
+            this.trkTreantLifespan.Size = new System.Drawing.Size(73, 42);
+            this.trkTreantLifespan.TabIndex = 30;
+            this.trkTreantLifespan.TickFrequency = 10;
+            this.trkTreantLifespan.Value = 50;
+            this.trkTreantLifespan.ValueChanged += new System.EventHandler(this.trkTreantLifespan_ValueChanged);
+            // 
+            // lblReplenishmentUptime
+            // 
+            this.lblReplenishmentUptime.AutoSize = true;
+            this.lblReplenishmentUptime.Location = new System.Drawing.Point(3, 268);
+            this.lblReplenishmentUptime.Name = "lblReplenishmentUptime";
+            this.lblReplenishmentUptime.Size = new System.Drawing.Size(116, 13);
+            this.lblReplenishmentUptime.TabIndex = 31;
+            this.lblReplenishmentUptime.Text = "Replenishment Uptime:";
+            // 
+            // lblTreantLifespan
+            // 
+            this.lblTreantLifespan.AutoSize = true;
+            this.lblTreantLifespan.Location = new System.Drawing.Point(3, 317);
+            this.lblTreantLifespan.Name = "lblTreantLifespan";
+            this.lblTreantLifespan.Size = new System.Drawing.Size(84, 13);
+            this.lblTreantLifespan.TabIndex = 32;
+            this.lblTreantLifespan.Text = "Treant Lifespan:";
+            // 
+            // lblUptimeValue
+            // 
+            this.lblUptimeValue.AutoSize = true;
+            this.lblUptimeValue.Location = new System.Drawing.Point(127, 287);
+            this.lblUptimeValue.Name = "lblUptimeValue";
+            this.lblUptimeValue.Size = new System.Drawing.Size(25, 13);
+            this.lblUptimeValue.TabIndex = 33;
+            this.lblUptimeValue.Text = "100";
+            // 
+            // lblLifespanValue
+            // 
+            this.lblLifespanValue.AutoSize = true;
+            this.lblLifespanValue.Location = new System.Drawing.Point(127, 335);
+            this.lblLifespanValue.Name = "lblLifespanValue";
+            this.lblLifespanValue.Size = new System.Drawing.Size(19, 13);
+            this.lblLifespanValue.TabIndex = 34;
+            this.lblLifespanValue.Text = "50";
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblLifespanValue);
+            this.Controls.Add(this.lblUptimeValue);
+            this.Controls.Add(this.lblTreantLifespan);
+            this.Controls.Add(this.lblReplenishmentUptime);
+            this.Controls.Add(this.trkTreantLifespan);
+            this.Controls.Add(this.trkReplenishmentUptime);
             this.Controls.Add(this.rdbScryer);
             this.Controls.Add(this.rdbAldor);
             this.Controls.Add(this.lblInnervateWeaponSpi);
@@ -259,6 +331,8 @@
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
             this.Size = new System.Drawing.Size(204, 390);
+            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -285,6 +359,12 @@
         private System.Windows.Forms.Label lblInnervateWeaponSpi;
         private System.Windows.Forms.RadioButton rdbAldor;
         private System.Windows.Forms.RadioButton rdbScryer;
+        private System.Windows.Forms.TrackBar trkReplenishmentUptime;
+        private System.Windows.Forms.TrackBar trkTreantLifespan;
+        private System.Windows.Forms.Label lblReplenishmentUptime;
+        private System.Windows.Forms.Label lblTreantLifespan;
+        private System.Windows.Forms.Label lblUptimeValue;
+        private System.Windows.Forms.Label lblLifespanValue;
 
     }
 }

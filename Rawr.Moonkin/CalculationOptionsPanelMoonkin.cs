@@ -39,6 +39,8 @@ namespace Rawr.Moonkin
             txtInnervateWeaponSpi.Text = calcOpts.InnervateWeaponSpi.ToString();
             rdbAldor.Checked = calcOpts.AldorScryer == "Aldor";
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
+            trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
+            trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -119,6 +121,22 @@ namespace Rawr.Moonkin
         {
 			CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
 			calcOpts.AldorScryer = rdbScryer.Checked ? "Scryer" : "Aldor";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void trkReplenishmentUptime_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.ReplenishmentUptime = trkReplenishmentUptime.Value / 100.0f;
+            lblUptimeValue.Text = trkReplenishmentUptime.Value.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void trkTreantLifespan_ValueChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.TreantLifespan = trkTreantLifespan.Value / 100.0f;
+            lblLifespanValue.Text = trkTreantLifespan.Value.ToString();
             Character.OnCalculationsInvalidated();
         }
     }
