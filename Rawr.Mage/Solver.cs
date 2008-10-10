@@ -258,9 +258,6 @@ namespace Rawr.Mage
                 Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
                 Stats characterStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
-                bool savedSmartOptimization = calculationOptions.SmartOptimization;
-                bool savedABCycles = calculationOptions.ABCycles;
-
                 //if (useSMP) calculationOptions.SmartOptimization = true;
                 segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
                 segmentColumn = new int[segments + 1];
@@ -426,9 +423,6 @@ namespace Rawr.Mage
                     threat += (float)(tpsList[i] * calculationResult.Solution[i]);
                 }
                 calculationResult.Tps = threat / calculationOptions.FightDuration;
-
-                calculationOptions.SmartOptimization = savedSmartOptimization;
-                calculationOptions.ABCycles = savedABCycles;
 
                 return calculationResult;
             }
@@ -1996,51 +1990,103 @@ namespace Rawr.Mage
             }
             if (!calculationOptions.CustomSpellMixOnly)
             {
-                if (calculationOptions.SmartOptimization)
+                if (calculationOptions.MaintainScorch && calculationOptions.MaintainSnare)
                 {
-                    if (character.MageTalents.EmpoweredFireball > 0)
+                    // no cycles right now that provide scorch and snare
+                }
+                if (calculationOptions.MaintainScorch)
+                {
+                    if (calculationOptions.SmartOptimization)
                     {
-                        list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                        list.Add(SpellId.FireballScorch);
                     }
-                    else if (character.MageTalents.EmpoweredFrostbolt > 0)
+                    else
                     {
-                        list.Add(SpellId.Frostbolt);
+                        list.Add(SpellId.FireballScorch);
+                        list.Add(SpellId.FireballFireBlast);
                     }
-                    else if (character.MageTalents.SpellPower > 0)
+                }
+                else if (calculationOptions.MaintainSnare)
+                {
+                    // no cycles right now that provide snare
+                }
+                else
+                {
+                    if (calculationOptions.SmartOptimization)
                     {
-                        list.Add(SpellId.ArcaneBlastSpam);
-                        if (character.MageTalents.ImprovedFrostbolt > 0) list.Add(SpellId.Frostbolt);
-                        if (character.MageTalents.ImprovedFireball > 0) list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                        if (character.MageTalents.ArcaneStability + character.MageTalents.ArcaneEmpowerment > 0) list.Add(SpellId.ArcaneMissiles);
+                        if (character.MageTalents.EmpoweredFireball > 0)
+                        {
+                            if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                            {
+                                list.Add(SpellId.FireballHotstreak);
+                            }
+                            else
+                            {
+                                list.Add(SpellId.Fireball);
+                            }
+                        }
+                        else if (character.MageTalents.EmpoweredFrostbolt > 0)
+                        {
+                            list.Add(SpellId.Frostbolt);
+                        }
+                        else if (character.MageTalents.ArcaneBarrage > 0)
+                        {
+                            if (character.MageTalents.ImprovedFrostbolt > 0)
+                            {
+                                list.Add(SpellId.Frostbolt);
+                                list.Add(SpellId.FrBABar);
+                            }
+                            if (character.MageTalents.ImprovedFireball > 0)
+                            {
+                                list.Add(SpellId.Fireball);
+                                list.Add(SpellId.FBABar);
+                            }
+                            if (character.MageTalents.ArcaneEmpowerment > 0)
+                            {
+                                list.Add(SpellId.ABP);
+                                list.Add(SpellId.ABABar);
+                            }
+                            if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
+                            {
+                                list.Add(SpellId.FrBABar);
+                                list.Add(SpellId.FBABar);
+                                list.Add(SpellId.ABP);
+                                list.Add(SpellId.ABABar);
+                            }
+                        }
+                        else
+                        {
+                            list.Add(SpellId.ArcaneMissiles);
+                            list.Add(SpellId.Fireball);
+                            list.Add(SpellId.Frostbolt);
+                            list.Add(SpellId.ABP);
+                        }
                     }
                     else
                     {
                         list.Add(SpellId.ArcaneMissiles);
                         list.Add(SpellId.Scorch);
-                        list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
+                        if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                        {
+                            list.Add(SpellId.FireballHotstreak);
+                        }
+                        else
+                        {
+                            list.Add(SpellId.Fireball);
+                        }
+                        list.Add(SpellId.FrostfireBolt);
+                        list.Add(SpellId.FireballFireBlast);
                         list.Add(SpellId.Frostbolt);
                         list.Add(SpellId.ArcaneBlastSpam);
+                        list.Add(SpellId.ABAM);
+                        list.Add(SpellId.ABP);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
+                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                     }
-                }
-                else
-                {
-                    list.Add(SpellId.ArcaneMissiles);
-                    list.Add(SpellId.Scorch);
-                    list.Add(calculationOptions.MaintainScorch ? SpellId.FireballScorch : SpellId.Fireball);
-                    list.Add(SpellId.FireballFireBlast);
-                    list.Add(SpellId.Frostbolt);
-                    list.Add(SpellId.ArcaneBlastSpam);
-                }
-                if (calculationOptions.ABCycles)
-                {
-                    list.Add(SpellId.ABAM);
-                    //list.Add(SpellId.ABP);
-                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
-                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
-                    if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
-                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
-                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
-                    if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                 }
                 if (calculationOptions.AoeDuration > 0)
                 {

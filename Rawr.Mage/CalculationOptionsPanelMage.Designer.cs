@@ -74,7 +74,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.checkBoxMaintainScorch = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.checkBoxABCycles = new System.Windows.Forms.CheckBox();
+            this.checkBoxMaintainSnare = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.checkBoxFlameCap = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
@@ -418,7 +418,7 @@
             this.tabPage2.Controls.Add(this.label18);
             this.tabPage2.Controls.Add(this.checkBoxMaintainScorch);
             this.tabPage2.Controls.Add(this.label16);
-            this.tabPage2.Controls.Add(this.checkBoxABCycles);
+            this.tabPage2.Controls.Add(this.checkBoxMaintainSnare);
             this.tabPage2.Controls.Add(this.label15);
             this.tabPage2.Controls.Add(this.checkBoxFlameCap);
             this.tabPage2.Controls.Add(this.label14);
@@ -470,7 +470,8 @@
             this.label79.Size = new System.Drawing.Size(101, 13);
             this.label79.TabIndex = 191;
             this.label79.Text = "Snared Time (0-1): *";
-            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is snared.");
+            this.toolTipMage.SetToolTip(this.label79, "Percentage of time that the target is snared by someone else, cycles that provide" +
+                    " snare override this to 1.");
             // 
             // buttonCustomSpellMix
             // 
@@ -732,9 +733,7 @@
             this.label18.Size = new System.Drawing.Size(94, 13);
             this.label18.TabIndex = 165;
             this.label18.Text = "Maintain Scorch: *";
-            this.toolTipMage.SetToolTip(this.label18, "Enable to use Fireball-Scorch cycles. If disabled then straight Fireball spam is " +
-                    "used and Improved Scorch is determined based on buffs (i.e. scorch from another " +
-                    "mage).");
+            this.toolTipMage.SetToolTip(this.label18, "Enable to only use cycles that refresh scorch debuff.");
             // 
             // checkBoxMaintainScorch
             // 
@@ -751,21 +750,20 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(0, 129);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 13);
+            this.label16.Size = new System.Drawing.Size(88, 13);
             this.label16.TabIndex = 163;
-            this.label16.Text = "AB Cycles: *";
-            this.toolTipMage.SetToolTip(this.label16, "Enable use of AB Cycles. If performance optimizations are enabled then this is on" +
-                    "ly relevant for arcane specs.");
+            this.label16.Text = "Maintain Snare: *";
+            this.toolTipMage.SetToolTip(this.label16, "Enable to only use cycles that refresh snare debuff.");
             // 
-            // checkBoxABCycles
+            // checkBoxMaintainSnare
             // 
-            this.checkBoxABCycles.AutoSize = true;
-            this.checkBoxABCycles.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ABCycles", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxABCycles.Location = new System.Drawing.Point(112, 129);
-            this.checkBoxABCycles.Name = "checkBoxABCycles";
-            this.checkBoxABCycles.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxABCycles.TabIndex = 162;
-            this.checkBoxABCycles.UseVisualStyleBackColor = true;
+            this.checkBoxMaintainSnare.AutoSize = true;
+            this.checkBoxMaintainSnare.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "MaintainSnare", true));
+            this.checkBoxMaintainSnare.Location = new System.Drawing.Point(112, 129);
+            this.checkBoxMaintainSnare.Name = "checkBoxMaintainSnare";
+            this.checkBoxMaintainSnare.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMaintainSnare.TabIndex = 162;
+            this.checkBoxMaintainSnare.UseVisualStyleBackColor = true;
             // 
             // label15
             // 
@@ -2488,7 +2486,7 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.CheckBox checkBoxMaintainScorch;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.CheckBox checkBoxABCycles;
+        private System.Windows.Forms.CheckBox checkBoxMaintainSnare;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.CheckBox checkBoxFlameCap;
         private System.Windows.Forms.Label label14;

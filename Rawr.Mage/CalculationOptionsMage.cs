@@ -32,11 +32,10 @@ namespace Rawr.Mage
         public bool HeroismAvailable { get; set; }
         public bool DestructionPotion { get; set; }
         public bool FlameCap { get; set; }
-        public bool ABCycles { get; set; }
         public float MoltenFuryPercentage { get; set; }
         public bool MaintainScorch { get; set; }
+        public bool MaintainSnare { get; set; }
         public float InterruptFrequency { get; set; }
-        public bool JudgementOfWisdom { get; set; }
         public float EvocationWeapon { get; set; }
         public float EvocationSpirit { get; set; }
         public float AoeDuration { get; set; }
@@ -241,9 +240,7 @@ namespace Rawr.Mage
             MoltenFuryPercentage = 0.3f;
             DestructionPotion = true;
             FlameCap = true;
-            ABCycles = true;
             DpsTime = 1;
-            MaintainScorch = true;
             InterruptFrequency = 0;
             EvocationWeapon = 0;
             AoeDuration = 0;

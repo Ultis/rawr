@@ -324,9 +324,9 @@ namespace Rawr.Mage
                     baseRegen = 0.005575f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.015f * character.MageTalents.ArcanePotency + characterStats.CritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + characterStats.Crit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + characterStats.CritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
             if (destructionPotion) SpellCrit += 0.02f;
-            SpellHit = characterStats.HitRating * levelScalingFactor / 800f + characterStats.SpellHit + characterStats.Hit;
+            SpellHit = characterStats.HitRating * levelScalingFactor / 800f + characterStats.SpellHit;
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
@@ -438,7 +438,7 @@ namespace Rawr.Mage
             ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
             FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * (1 + 0.1f * character.MageTalents.Burnout) * ResilienceCritDamageReduction;
             FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * (1 + 0.1f * character.MageTalents.Burnout) * ResilienceCritDamageReduction;
             NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
             ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
 
@@ -533,6 +533,9 @@ namespace Rawr.Mage
                     break;
                 case SpellId.Fireball:
                     s = new Fireball(this, false);
+                    break;
+                case SpellId.FireballHotstreak:
+                    s = new FireballHotstreak(this);
                     break;
                 case SpellId.FrostfireBolt:
                     s = new FrostfireBolt(this, false);
@@ -740,6 +743,9 @@ namespace Rawr.Mage
                     break;
                 case SpellId.PyroblastPOM:
                     s = new Pyroblast(this, true);
+                    break;
+                case SpellId.LivingBomb:
+                    s = new LivingBomb(this);
                     break;
                 case SpellId.CustomSpellMix:
                     s = new SpellCustomMix(this);
