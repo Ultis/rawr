@@ -613,6 +613,8 @@ namespace Rawr
                     charEquipped.DisableBuffAutoActivation = true;
 					if (charUnequipped.ActiveBuffs.Contains(buff))
 						charUnequipped.ActiveBuffs.Remove(buff);
+					if (!charEquipped.ActiveBuffs.Contains(buff))
+						charEquipped.ActiveBuffs.Add(buff);
 					//if (string.IsNullOrEmpty(buff.RequiredBuff))
 					//{
 					//    charUnequipped.ActiveBuffs.RemoveAll(x => x.Name == "Improved " + buff.Name);

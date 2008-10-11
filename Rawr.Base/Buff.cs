@@ -368,7 +368,7 @@ namespace Rawr
 				Group = "Health",
 				Stats = { Health = 660 },
 				Improvements = { 
-					new Buff { Name = "Improved Imp", Stats = { Health = (float)Math.Floor(305f * 0.30f) } }
+					new Buff { Name = "Improved Imp", Stats = { Health = (float)Math.Floor(660f * 0.30f) } }
 				}
 			});
 			defaultBuffs.Add(new Buff
@@ -377,7 +377,7 @@ namespace Rawr
 				Group = "Health",
 				Stats = { Health = 1080 },
 				Improvements = { 
-					new Buff { Name = "Commanding Presence", Stats = { Health = (float)Math.Floor(305f * 0.25f) } }
+					new Buff { Name = "Commanding Presence", Stats = { Health = (float)Math.Floor(1080f * 0.25f) } }
 				}
 			});
 			#endregion
@@ -904,7 +904,7 @@ namespace Rawr
                 Name = "Dual Wielding Mob",
                 Group = "Special Mobs",
 				ConflictingBuffs = new List<string>( new string[] { "Dual Wielding Mob" }),
-                Stats = { Miss = 20 }
+                Stats = { Miss = 0.2f }
             });
 			#endregion
 

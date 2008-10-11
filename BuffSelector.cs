@@ -251,7 +251,9 @@ namespace Rawr
 				if (checkBox.Checked)
 				{
 					Buff buff = checkBox.Tag as Buff;
-					currentConflictNames.AddRange(buff.ConflictingBuffs);
+					foreach (string conflictName in buff.ConflictingBuffs)
+						if (!string.IsNullOrEmpty(conflictName) && !currentConflictNames.Contains(conflictName))
+							currentConflictNames.Add(conflictName);
 				}
 			}
 
