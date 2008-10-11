@@ -544,7 +544,8 @@ namespace Rawr
 
             FormMassGemReplacement GemControl = new FormMassGemReplacement();
             GemControl.ShowDialog(this);
-
+            if(GemControl.DialogResult.Equals(DialogResult.OK))
+                ItemCache.OnItemsChanged();
         }
 		
         private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)

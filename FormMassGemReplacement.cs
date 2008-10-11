@@ -14,8 +14,6 @@ namespace Rawr
          
         * Find better default image for sockets
         * Add scroll bar when >4 gemmings are used
-        * When the OK button is pressed, all items in ItemCache.RelevantItems (I think that's the right list)
-        * should be filtered through, and checked for the gemmings listed here. If the gemming is missing, add it
         * If the Delete non-listed gemmings box is checked, remove any instances of items that have
         * gemmings that differ from those listed here. 
 
@@ -28,8 +26,8 @@ namespace Rawr
         
         private FormItemSelection _formItemSelection;
         
-        //in future developments, the two lists could be merged. I just
-        //wanted to keep the machinery for the class (listofgemmings)
+        //in future developments, the two lists could possibly be merged. I just
+        //wanted to keep the class (gemming) the machinery for the class (listofgemmings)
         //apart from the interface (groupboxes) as I worked on them
         //iteratively.
 
@@ -131,81 +129,138 @@ namespace Rawr
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            //code here is going to sift through items in Relevantitems
-            //and delete/regem/create new items as needed
+            //get rid of duplicate gemming listings
+            //it's done here, instead of in-situ so
+            //people can create multiple gemmings at once
 
+            deleteDuplicateGemmings();
+            
+            List<Item> listGemmableItems = new List<Item>();
+
+            if (checkBoxDeleteNonlistedGemmings.Checked == false)
             {
-                /* foreach (Item item in ItemCache.AllItems)
-                 {
-                     if (item.Sockets.Color1 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
-                     {
-                         switch (item.Sockets.Color1)
-                         {
-                             case Item.ItemSlot.Red:
-                                 item.Gem1 = form.GemRed;
-                                 break;
+                foreach (Item item in ItemCache.RelevantItems)
+                {
+                    //does the item have sockets
+                    if (item.Sockets.GetColor(1) != Item.ItemSlot.None)
+                    {
+                        //assembles a list of only one instance of each gemmable item
+                        //the first item is by definition, not a copy
+                        if (listGemmableItems.Count == 0)
+                        {
+                            listGemmableItems.Add(item);
+                            foreach (Gemming set in listOfGemmings)
+                            {
+                                string gemmedId = (item.Id.ToString()) + (set.gemmingID(item));
 
-                             case Item.ItemSlot.Blue:
-                                 item.Gem1 = form.GemBlue;
-                                 break;
+                                //I think there's a bug in ItemCache.FindItembyID, hence the uglySplice
+                                //Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
+                                Item thingHolder = uglyCodeSplice(gemmedId);
+                            }
+                            continue;
+                        }
 
-                             case Item.ItemSlot.Yellow:
-                                 item.Gem1 = form.GemYellow;
-                                 break;
+                        //if it is a copy don't add it
+                        if (item.Id == (listGemmableItems[(listGemmableItems.Count) - 1]).Id){
+                        
+                            continue;
+                        }
 
-                             case Item.ItemSlot.Meta:
-                                 item.Gem1 = form.GemMeta;
-                                 break;
-                         }
-                     }
-                     if (item.Sockets.Color2 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem2Id == 0))
-                     {
-                         switch (item.Sockets.Color2)
-                         {
-                             case Item.ItemSlot.Red:
-                                 item.Gem2 = form.GemRed;
-                                 break;
+                        else
+                        {
+                            listGemmableItems.Add(item);
+                            foreach (Gemming set in listOfGemmings)
+                            {
+                                string gemmedId = (item.Id.ToString()) + (set.gemmingID(item));
+                                // Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
+                                Item thingHolder = uglyCodeSplice(gemmedId);
+                            }
+                        }
+                    }
+                }
 
-                             case Item.ItemSlot.Blue:
-                                 item.Gem2 = form.GemBlue;
-                                 break;
-
-                             case Item.ItemSlot.Yellow:
-                                 item.Gem2 = form.GemYellow;
-                                 break;
-
-                             case Item.ItemSlot.Meta:
-                                 item.Gem2 = form.GemMeta;
-                                 break;
-                         }
-                     }
-                     if (item.Sockets.Color3 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem3Id == 0))
-                     {
-                         switch (item.Sockets.Color3)
-                         {
-                             case Item.ItemSlot.Red:
-                                 item.Gem3 = form.GemRed;
-                                 break;
-
-                             case Item.ItemSlot.Blue:
-                                 item.Gem3 = form.GemBlue;
-                                 break;
-
-                             case Item.ItemSlot.Yellow:
-                                 item.Gem3 = form.GemYellow;
-                                 break;
-
-                             case Item.ItemSlot.Meta:
-                                 item.Gem3 = form.GemMeta;
-                                 break;
-                         }
-                  }   
-                 }*/
+               
             }
-            //form.Dispose();
+            else
+            {
+                /*foreach (Item item in ItemCache.RelevantItems)
+                {
+                    
+                    //check to make sure that it's not abbreviating the lists of items
+                    //and that it can work if you're not keeping ANY of the gemmings
+                    //previously on file (wipe em all out, but save one. ...then kill it)
 
+                        if (((listGemmableItems.Count!=0)&&(item.Id != (listGemmableItems[(listGemmableItems.Count) - 1]).Id))||
+                            ((item.GemmedId == ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)&&
+                            (item.Sockets.GetColor(1) != Item.ItemSlot.None)))
+                        {
+                           //delete all socketed items, except if it's at the end of relevantitems (in which case, leave one)
+                           foreach(Item exItem in listGemmableItems)
+                                ItemCache.DeleteItem(exItem);
+
+                            ItemCache.OnItemsChanged();
+                            
+                            //replace them with ones bearing the gemming patterns we want
+                            foreach (Gemming set in listOfGemmings)
+                            {
+                                string gemmedId = listGemmableItems[0].Id.ToString() + (set.gemmingID(item));
+
+                                //I think there's a bug in ItemCache.FindItembyID, hence the uglySplice
+                                //Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
+                                Item thingHolder = uglyCodeSplice(gemmedId);
+                            }
+
+                            //delete the remaining item
+                            if (item.GemmedId == ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)
+                                ItemCache.DeleteItem(item);
+
+                            //reset the list for the next batch
+                            listGemmableItems = new List<Item>();
+                            
+                        }
+                            
+                            //does the item have sockets
+                        else if (item.Sockets.GetColor(1) != Item.ItemSlot.None) {
+                   
+                            listGemmableItems.Add(item);
+
+                    }
+                }
+
+                */
+
+
+            }
 
         }
+
+        private Item uglyCodeSplice(string gemmedId){
+
+            Item[] retIrrelevant;
+				if (ItemCache.Items.TryGetValue(gemmedId, out retIrrelevant))
+					return retIrrelevant[0];
+				
+				string[] ids = gemmedId.Split('.');
+				int id = int.Parse(ids[0]);
+				int id1 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[1]) : 0;
+				int id2 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[2]) : 0;
+				int id3 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[3]) : 0;
+				string keyStartsWith = id.ToString() + ".";
+				foreach (string key in ItemCache.Items.Keys)
+                    if (key.StartsWith(keyStartsWith))
+                    {
+                        Item item = ItemCache.Items[key][0];
+                        Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+                            item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
+                            item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+                        ItemCache.AddItem(copy, false, true);
+                        return copy;
+        
+                    }
+                return null;
+        }
+
+        
         //this is going to be used with a list of groupboxes that generate the
         //buttons used in the interface.
         private void cycleGroups()
@@ -314,7 +369,36 @@ namespace Rawr
                 MessageBox.Show("You may have a maximum of 8 gemmings", "8 Gemmings Allowed");
         }
 
-        
+        private void deleteDuplicateGemmings()
+        {
+            Stack<Gemming> gemstack = new Stack<Gemming>();
+            List<int> hash = new List<int>();
+            foreach (Gemming gem in listOfGemmings)
+            {
+                if (!hash.Contains(gem.GetHashCode()))
+                {
+                    gemstack.Push(gem);
+                    hash.Add(gem.GetHashCode());
+                }
+
+                else
+                {
+                    groupboxesForGemmings[groupboxesForGemmings.Count - 1].Dispose();
+                    groupboxesForGemmings.RemoveAt(groupboxesForGemmings.Count - 1);
+                }
+
+            }
+
+            listOfGemmings.Clear();
+            listOfGemmings = new List<Gemming>();
+
+            foreach(Gemming popGem in gemstack){
+                listOfGemmings.Add(popGem);
+            }
+            
+            cycleGroups();
+        }
+
         private void adjustform()
         {
             //shifts form height
@@ -330,8 +414,6 @@ namespace Rawr
             //removes the gemming associated with the groupbox the button
             //that was pressed, as well as the last groupbox in groupboxesForGemmings
             //gems are cycled down to fill the appropriate slot.
-
-            //(Is there a linkedlist way of achieving this?)
 
             //I'd like to note I hate list -> array -> list indexing...
 
@@ -417,6 +499,23 @@ namespace Rawr
 
         }
 
+        public override int GetHashCode()
+        {
+            int a = 0, b = 0, c = 0, d = 0;
+
+            if (gemRed != null)
+                a = gemRed.Id;
+            if (gemYellow != null)
+                b = 2* gemRed.Id;
+            if (gemBlue != null)
+                c = 3* gemRed.Id;
+            if (gemMeta != null)
+                d = 4* gemRed.Id;
+
+
+            return (a + b + c + d);
+        }
+
         public Gemming(Item Red, Item Yellow, Item Blue, Item Meta)
         {
             _gemRed = Red;
@@ -425,13 +524,122 @@ namespace Rawr
             _gemMeta = Meta;
         }
 
-
         public void copyGemming(Gemming sourceGemming)
         {
             this._gemRed = sourceGemming.gemRed;
             this._gemYellow = sourceGemming.gemYellow;
             this._gemBlue = sourceGemming.gemBlue;
             this._gemMeta = sourceGemming.gemMeta;
+        }
+
+        public string gemmingID(Item item)
+        {
+            string gem1ID = "";
+            string gem2ID = "";
+            string gem3ID = "";
+
+            if (item.Sockets.Color1 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color1)
+                {
+                    case Item.ItemSlot.Red:
+                        if (this.gemRed == null)
+                            gem1ID = "0";
+                        else
+                        gem1ID = this.gemRed.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Blue:
+                        if (this.gemBlue == null)
+                            gem1ID = "0";
+                        else 
+                            gem1ID = this.gemBlue.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (this.gemYellow == null)
+                            gem1ID = "0";
+                        else
+                            gem1ID = this.gemYellow.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (this.gemMeta == null)
+                            gem1ID = "0";
+                        else
+                        gem1ID = this.gemMeta.Id.ToString();
+                        break;
+                }
+            }
+            if (item.Sockets.Color2 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color2)
+                {
+                    case Item.ItemSlot.Red:
+                        if (this.gemRed == null)
+                            gem2ID = "0";
+                        else
+                        gem2ID = this.gemRed.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Blue:
+                        if (this.gemBlue == null)
+                            gem2ID = "0";
+                        else
+                        gem2ID = this.gemBlue.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (this.gemYellow == null)
+                            gem2ID = "0";
+                        else
+                        gem2ID = this.gemYellow.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (this.gemMeta == null)
+                            gem2ID = "0";
+                        else
+                        gem2ID = this.gemMeta.Id.ToString();
+                        break;
+                }
+            }
+            if (item.Sockets.Color3 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color3)
+                {
+                    case Item.ItemSlot.Red:
+                        if (this.gemRed == null)
+                            gem3ID = "0";
+                        else
+                        gem3ID = this.gemRed.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Blue:
+                        if (this.gemBlue == null)
+                            gem3ID = "0";
+                        else
+                        gem3ID = this.gemBlue.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (this.gemYellow == null)
+                            gem3ID = "0";
+                        else
+                        gem3ID = this.gemYellow.Id.ToString();
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (this.gemMeta == null)
+                            gem3ID = "0";
+                        else
+                        gem3ID = this.gemMeta.Id.ToString();
+                        break;
+                }
+            }
+
+            return "." + gem1ID + "." + gem2ID + "." + gem3ID;
+
         }
 
         public Item gemRed

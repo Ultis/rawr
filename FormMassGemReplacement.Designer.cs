@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxDeleteNonlistedGemmings = new System.Windows.Forms.CheckBox();
             this.OkButton = new System.Windows.Forms.Button();
             this.buttonAddGemming = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
@@ -45,15 +45,15 @@
             this.label1.Text = "Click on the Gem Slot to Change the gem associated with that particular slot";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
-            // checkBox1
+            // checkBoxDeleteNonlistedGemmings
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(382, 7);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(105, 30);
-            this.checkBox1.TabIndex = 9;
-            this.checkBox1.Text = "Delete non-listed\r\nGemmings";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBoxDeleteNonlistedGemmings.AutoSize = true;
+            this.checkBoxDeleteNonlistedGemmings.Location = new System.Drawing.Point(382, 7);
+            this.checkBoxDeleteNonlistedGemmings.Name = "checkBoxDeleteNonlistedGemmings";
+            this.checkBoxDeleteNonlistedGemmings.Size = new System.Drawing.Size(105, 30);
+            this.checkBoxDeleteNonlistedGemmings.TabIndex = 9;
+            this.checkBoxDeleteNonlistedGemmings.Text = "Delete non-listed\r\nGemmings";
+            this.checkBoxDeleteNonlistedGemmings.UseVisualStyleBackColor = true;
             // 
             // OkButton
             // 
@@ -95,7 +95,7 @@
             this.Controls.Add(this.button7);
             this.Controls.Add(this.buttonAddGemming);
             this.Controls.Add(this.OkButton);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.checkBoxDeleteNonlistedGemmings);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.Name = "FormMassGemReplacement";
@@ -109,7 +109,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBoxDeleteNonlistedGemmings;
         private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.Button buttonAddGemming;
         private System.Windows.Forms.Button button7;
