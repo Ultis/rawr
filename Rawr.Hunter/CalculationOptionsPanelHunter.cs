@@ -37,6 +37,15 @@ namespace Rawr.Hunter
             {
                 comboPetPriority3.Items.Add(e);
             }
+            foreach (Enum e in Enum.GetValues(typeof(Shots)))
+            {
+                comboShotPrio1.Items.Add(e);
+                comboShotPrio2.Items.Add(e);
+                comboShotPrio3.Items.Add(e);
+                //comboShotPrio4.Items.Add(e);
+            }
+            comboShotPrio4.Items.Add(Shots.SteadyShot);
+            comboShotPrio4.SelectedIndex = 0;
         }
 
         #endregion
@@ -64,6 +73,10 @@ namespace Rawr.Hunter
             comboPetPriority1.SelectedItem = options.PetPriority1;
             comboPetPriority2.SelectedItem = options.PetPriority2;
             comboPetPriority3.SelectedItem = options.PetPriority3;
+            comboShotPrio1.SelectedItem = options.ShotPriority1;
+            comboShotPrio2.SelectedItem = options.ShotPriority2;
+            comboShotPrio3.SelectedItem = options.ShotPriority3;
+            comboShotPrio4.SelectedItem = options.ShotPriority4;
             loadingOptions = false;
         }
 
@@ -127,6 +140,46 @@ namespace Rawr.Hunter
                 lblTargetArmorValue.Text = trackBarTargetArmor.Value.ToString();
             }
         }
+
+        private void comboShotPrio1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboShotPrio1.SelectedItem != null)
+            {
+                options.ShotPriority1 = (Shots)comboShotPrio1.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboShotPrio2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboShotPrio2.SelectedItem != null)
+            {
+                options.ShotPriority2 = (Shots)comboShotPrio2.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboShotPrio3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions && comboShotPrio3.SelectedItem != null)
+            {
+                options.ShotPriority3 = (Shots)comboShotPrio3.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboShotPrio4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /*
+            if (!loadingOptions && comboShotPrio4.SelectedItem != null)
+            {
+                options.ShotPriority4 = (Shots)comboShotPrio4.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
+            */
+        }
+
+
 
     }
 }

@@ -104,6 +104,7 @@ namespace Rawr.Hunter
                 "Intermediate Stats:SerpASSteady",
                 "Intermediate Stats:ExpSteadySerp*Only with Explosive Shot Talent",
                 "Intermediate Stats:ChimASSteady*Only with Chimera Shot Talent and Serpent Sting up",
+                "Intermediate Stats:Custom Rotation",
 				"Complex Calculated Stats:Hunter Total DPS",
 				"Complex Calculated Stats:Pet DPS",
 				"Complex Calculated Stats:Overall DPS"
@@ -282,7 +283,6 @@ namespace Rawr.Hunter
 			stats.BonusDamageMultiplier +
 			stats.BonusStaminaMultiplier +
 			stats.BonusPetCritChance +
-			stats.LotPCritRating +
 			stats.PhysicalCrit +
 			stats.CritRating +
 			stats.DrumsOfBattle +
@@ -293,14 +293,14 @@ namespace Rawr.Hunter
 			stats.Hit +
 			stats.HitRating +
 			stats.Intellect +
-			stats.Miss +
 			stats.Mp5 + 
 			stats.ScopeDamage +
 			stats.ShatteredSunAcumenProc +
 			stats.ShatteredSunMightProc +
 			stats.AshtongueTrinketProc +
 			stats.BonusSteadyShotCrit +
-			stats.BonusSteadyShotDamageMultiplier) > 0;
+			stats.BonusSteadyShotDamageMultiplier +
+            stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
        
         public override List<Item.ItemType> RelevantItemTypes
@@ -541,6 +541,9 @@ namespace Rawr.Hunter
             {
                 bestDPS = Math.Max(calculatedStats.ChimASSteadyDPS, bestDPS);
             }
+
+            calculatedStats.CustomDPS = rotation.createCustomRotation().DPS * talentDmgModifiers;
+
             #endregion
 
  

@@ -17,6 +17,18 @@ namespace Rawr.Hunter
 		ThreeToTwo
 	}
 
+    public enum Shots
+    {
+        None,
+        ExplosiveShot,
+        ChimeraShot_Serpent,
+        SerpentSting,
+        SteadyShot,
+        AimedShot,
+        MultiShot,
+        ArcaneShot,
+    }
+
     public enum PetFamily
     {
         Bat,

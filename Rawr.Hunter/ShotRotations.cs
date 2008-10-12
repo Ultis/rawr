@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Rawr.Hunter
 {
@@ -12,6 +14,14 @@ namespace Rawr.Hunter
         {
             get { return rotationDmg / rotationTime; }
         }
+    }
+
+    public class RotationShot
+    {
+        public double cooldown = 0.0;
+        public double casttime = 1.5;
+        public double nextcast = 0.0;
+        public Shots type;
     }
 
 
@@ -226,6 +236,210 @@ namespace Rawr.Hunter
 
             info.rotationDmg += serpentStingDmg;
             info.rotationTime += 1.5;
+        }
+
+        protected void ShotMulti(RotationInfo info)
+        {
+            // TODO: Level80
+            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+
+            double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
+            shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
+
+            info.rotationDmg += shotDmg * armorReduction;
+            info.rotationTime += 1.5;
+        }
+
+        protected void ShotAimed(RotationInfo info)
+        {
+            // TODO: Level80
+            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+
+            double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
+            shotDmg *= talentModifiers;
+
+            info.rotationDmg += shotDmg * talentedArmorReduction;
+            info.rotationTime += 1.5;
+
+        }
+
+
+
+        public RotationInfo createCustomRotation()
+        {
+            List<RotationShot> shots = new List<RotationShot>();
+            List<double> timings = new List<double>();
+
+            if (options.ShotPriority1 != Shots.None)
+            {
+                shots.Add(createRotationShot(options.ShotPriority1));
+            }
+            if (options.ShotPriority2 != Shots.None)
+            {
+                shots.Add(createRotationShot(options.ShotPriority2));
+            }
+            if (options.ShotPriority3 != Shots.None)
+            {
+                shots.Add(createRotationShot(options.ShotPriority3));
+            }
+            /*
+            if (options.ShotPriority4 != Shots.None)
+            {
+                shots.Add(createRotationShot(options.ShotPriority4));
+            }
+            */
+            shots.Add(createRotationShot(Shots.SteadyShot));
+
+            double currentTime = 0.0;
+            List<Shots> rotation = new List<Shots>();
+
+            int cycleLength;
+            for (cycleLength = 1; cycleLength < 20; cycleLength++)
+            {
+                #region Step
+                foreach (RotationShot s in shots)
+                {
+                    if (s.nextcast <= currentTime)
+                    {
+                        timings.Add(currentTime);
+                        s.nextcast = currentTime + s.cooldown;
+                        currentTime += s.casttime;
+                        rotation.Add(s.type);
+                        break;
+                    }
+                }
+
+                foreach (RotationShot s in shots)
+                {
+                    if (s.nextcast <= currentTime)
+                    {
+                        timings.Add(currentTime);
+                        s.nextcast = currentTime + s.cooldown;
+                        currentTime += s.casttime;
+                        rotation.Add(s.type);
+                        break;
+                    }
+                }
+                #endregion
+
+                if (rotation[0] == rotation[cycleLength])
+                {
+                    bool cycle = true;
+                    for (int i = 0; i < cycleLength; i++)
+                    {
+                        if (rotation[i] != rotation[cycleLength + i])
+                        {
+                            cycle = false;
+                            break;
+                        }
+                    }
+                    if (cycle)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            double cycleTime = timings[cycleLength];
+
+            rotation.RemoveRange(cycleLength, rotation.Count - cycleLength);
+            timings.RemoveRange(cycleLength, rotation.Count - cycleLength);
+
+            RotationInfo info = new RotationInfo();
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append("*");
+
+            for(int i = 0; i < cycleLength; i++)
+            {
+                builder.Append(timings[i].ToString("F1"));
+                builder.Append(" ");
+                builder.AppendLine(rotation[i].ToString());
+                switch (rotation[i])
+                {
+                    case Shots.SteadyShot:
+                        ShotSteady(info);
+                        break;
+
+                    case Shots.SerpentSting:
+                        ShotSerpentSting(info);
+                        break;
+
+                    case Shots.MultiShot:
+                        ShotMulti(info);
+                        break;
+
+                    case Shots.ExplosiveShot:
+                        ShotExplosive(info);
+                        break;
+
+                    case Shots.ChimeraShot_Serpent:
+                        ShotChimera(info, 0); // TODO: Improved Steady Shot
+                        break;
+
+                    case Shots.ArcaneShot:
+                        ShotArcane(info, 0); // TODO: Improved Steady Shot
+                        break;
+
+                    case Shots.AimedShot:
+                        ShotAimed(info);
+                        break;
+                }
+            }
+
+            calculatedStats.CustomRotation = builder.ToString();
+            return info;
+        }
+
+
+        protected RotationShot createRotationShot(Shots type)
+        {
+            RotationShot shot = new RotationShot();
+            switch (type)
+            {
+                case Shots.SteadyShot:
+                    shot.casttime = calculatedStats.SteadySpeed < 1.5 ? 1.5 : calculatedStats.SteadySpeed;
+                    shot.cooldown = 0.0;
+                    shot.type = Shots.SteadyShot;
+                    break;
+
+                case Shots.SerpentSting:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 12.0;
+                    shot.type = Shots.SerpentSting;
+                    break;
+
+                case Shots.MultiShot:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 10.0;
+                    shot.type = Shots.MultiShot;
+                    break;
+
+                case Shots.ExplosiveShot:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 6.0;
+                    shot.type = Shots.ExplosiveShot;
+                    break;
+
+                case Shots.ChimeraShot_Serpent:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 10.0;
+                    shot.type = Shots.ChimeraShot_Serpent;
+                    break;
+
+                case Shots.ArcaneShot:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 6.0;
+                    shot.type = Shots.ArcaneShot;
+                    break;
+
+                case Shots.AimedShot:
+                    shot.casttime = 1.5;
+                    shot.cooldown = 10.0;
+                    shot.type = Shots.AimedShot;
+                    break;
+            }
+            return shot;
         }
     }
 

@@ -25,6 +25,8 @@ namespace Rawr.Hunter
         private double _serpASSteadyDPS;
         private double _expSteadySerpDPS;
         private double _chimASSteadyDPS;
+        private double _customDPS;
+        private String _customRotation; 
 
 		public float BaseAttackSpeed
 		{
@@ -78,6 +80,18 @@ namespace Rawr.Hunter
         {
             get { return _chimASSteadyDPS; }
             set { _chimASSteadyDPS = value; }
+        }
+
+        public double CustomDPS
+        {
+            get { return _customDPS; }
+            set { _customDPS = value; }
+        }
+
+        public String CustomRotation
+        {
+            get { return _customRotation; }
+            set { _customRotation = value; }
         }
 
 		public override float OverallPoints
@@ -177,6 +191,7 @@ namespace Rawr.Hunter
             dictValues.Add("Steady Spam", SteadySpamDPS.ToString("F2"));
             dictValues.Add("AS 3xSteady", Arcane3xSteadyDPS.ToString("F2"));
             dictValues.Add("AS 2xSteady", Arcane2xSteadyDPS.ToString("F2"));
+            dictValues.Add("Custom Rotation", CustomDPS.ToString("F2") + CustomRotation);
 
             String serpRota = @"*Serpent Sting
 Arcane Shot

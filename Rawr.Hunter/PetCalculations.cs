@@ -76,6 +76,7 @@ namespace Rawr.Hunter
             petStats.Hit = (float)petHitChance;
             #endregion
 
+            petStats.PhysicalCrit = 0.0320f;
             petStats.PhysicalCrit += petStats.Agility / 2560f;
 
             petStats.PhysicalCrit += (.02f * character.HunterTalents.Ferocity);
