@@ -1998,12 +1998,20 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        list.Add(SpellId.FireballScorch);
+                        list.Add(SpellId.FBSc);
                     }
                     else
                     {
-                        list.Add(SpellId.FireballScorch);
-                        list.Add(SpellId.FireballFireBlast);
+                        if (character.MageTalents.HotStreak > 0)
+                        {
+                            list.Add(SpellId.FBScPyro);
+                        }
+                        else
+                        {
+                            list.Add(SpellId.FBSc);
+                        }
+                        list.Add(SpellId.FFBScPyro);
+                        list.Add(SpellId.FBFBlast);
                     }
                 }
                 else if (calculationOptions.MaintainSnare)
@@ -2018,12 +2026,13 @@ namespace Rawr.Mage
                         {
                             if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
                             {
-                                list.Add(SpellId.FireballHotstreak);
+                                list.Add(SpellId.FBPyro);
                             }
                             else
                             {
                                 list.Add(SpellId.Fireball);
                             }
+                            if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         }
                         else if (character.MageTalents.EmpoweredFrostbolt > 0)
                         {
@@ -2068,14 +2077,15 @@ namespace Rawr.Mage
                         list.Add(SpellId.Scorch);
                         if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
                         {
-                            list.Add(SpellId.FireballHotstreak);
+                            list.Add(SpellId.FBPyro);
                         }
                         else
                         {
                             list.Add(SpellId.Fireball);
                         }
                         list.Add(SpellId.FrostfireBolt);
-                        list.Add(SpellId.FireballFireBlast);
+                        list.Add(SpellId.FBFBlast);
+                        if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         list.Add(SpellId.Frostbolt);
                         list.Add(SpellId.ArcaneBlastSpam);
                         list.Add(SpellId.ABAM);

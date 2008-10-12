@@ -324,7 +324,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlastSpam, SpellId.ABAM, SpellId.FireballScorch, SpellId.FireballFireBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.ABABar, SpellId.FBABar, SpellId.FrBABar, SpellId.FFBABar, SpellId.ABarAM, SpellId.ABP, SpellId.LivingBomb, SpellId.FireballHotstreak };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.ArcaneBlastSpam, SpellId.ABAM, SpellId.FBSc, SpellId.FBFBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.ABABar, SpellId.FBABar, SpellId.FrBABar, SpellId.FFBABar, SpellId.ABarAM, SpellId.ABP, SpellId.LivingBomb, SpellId.FBPyro, SpellId.FFBPyro, SpellId.FBScPyro, SpellId.FFBScPyro, SpellId.FBLBPyro };
             Spell AB = BaseState.GetSpell(SpellId.ArcaneBlastSpam);
             BaseSpell bs;
             foreach (SpellId spell in spellList)
@@ -365,7 +365,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             double we = 0;
-            bool segmentedOutput = true;
+            bool segmentedOutput = false;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {

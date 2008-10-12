@@ -436,9 +436,9 @@ namespace Rawr.Mage
             ResilienceCritRateReduction = 0;
 
             ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * (1 + 0.1f * character.MageTalents.Burnout) * ResilienceCritDamageReduction;
+            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
             FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * (1 + 0.08f * character.MageTalents.Ignite) * (1 + 0.1f * character.MageTalents.Burnout) * ResilienceCritDamageReduction;
+            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
             NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
             ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
 
@@ -534,8 +534,20 @@ namespace Rawr.Mage
                 case SpellId.Fireball:
                     s = new Fireball(this, false);
                     break;
-                case SpellId.FireballHotstreak:
-                    s = new FireballHotstreak(this);
+                case SpellId.FBPyro:
+                    s = new FBPyro(this);
+                    break;
+                case SpellId.FBLBPyro:
+                    s = new FBLBPyro(this);
+                    break;
+                case SpellId.FBScPyro:
+                    s = new FBScPyro(this);
+                    break;
+                case SpellId.FFBPyro:
+                    s = new FFBPyro(this);
+                    break;
+                case SpellId.FFBScPyro:
+                    s = new FFBScPyro(this);
                     break;
                 case SpellId.FrostfireBolt:
                     s = new FrostfireBolt(this, false);
@@ -684,11 +696,11 @@ namespace Rawr.Mage
                 case SpellId.AB3Sc:
                     s = new AB3Sc(this);
                     break;
-                case SpellId.FireballScorch:
-                    s = new FireballScorch(this);
+                case SpellId.FBSc:
+                    s = new FBSc(this);
                     break;
-                case SpellId.FireballFireBlast:
-                    s = new FireballFireBlast(this);
+                case SpellId.FBFBlast:
+                    s = new FBFBlast(this);
                     break;
                 case SpellId.ABAM3ScCCAM:
                     s = new ABAM3ScCCAM(this);
