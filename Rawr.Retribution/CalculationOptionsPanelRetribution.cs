@@ -310,7 +310,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (chkBloodLust.Checked) { calcOpts.Bloodlust = true; }
-            else { calcOpts.Bloodlust = true; }
+            else { calcOpts.Bloodlust = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -318,7 +318,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbWindfuryEffect.Checked) { calcOpts.Windfury = true; }
-            else { calcOpts.Windfury = true; }
+            else { calcOpts.Windfury = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -326,7 +326,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (chkHoW.Checked) { calcOpts.HammerOfWrath = true; }
-            else { calcOpts.HammerOfWrath = true; }
+            else { calcOpts.HammerOfWrath = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -334,7 +334,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbSoCGlyph.Checked) { calcOpts.GlyphOfSoC = true; }
-            else { calcOpts.GlyphOfSoC = true; }
+            else { calcOpts.GlyphOfSoC = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -342,7 +342,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbAWGlyph.Checked) { calcOpts.GlyphOfAW = true; }
-            else { calcOpts.GlyphOfAW = true; }
+            else { calcOpts.GlyphOfAW = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -350,7 +350,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbConsecGlyph.Checked) { calcOpts.GlyphOfConsec = true; }
-            else { calcOpts.GlyphOfConsec = true; }
+            else { calcOpts.GlyphOfConsec = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -358,7 +358,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbCSGlyph.Checked) { calcOpts.GlyphOfCS = true; }
-            else { calcOpts.GlyphOfCS = true; }
+            else { calcOpts.GlyphOfCS = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -366,7 +366,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbJudgeGlyph.Checked) { calcOpts.GlyphOfJudge = true; }
-            else { calcOpts.GlyphOfJudge = true; }
+            else { calcOpts.GlyphOfJudge = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -374,7 +374,7 @@ namespace Rawr.Retribution
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             if (cbSenseGlyph.Checked) { calcOpts.GlyphOfSenseUD = true; }
-            else { calcOpts.GlyphOfSenseUD = true; }
+            else { calcOpts.GlyphOfSenseUD = false; }
             Character.OnCalculationsInvalidated();
         }
     }

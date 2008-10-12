@@ -218,6 +218,7 @@ namespace Rawr.Retribution
             dictValues.Add("Judgement", JudgementDPS.ToString("N2"));
             dictValues.Add("Consecration", ConsecrationDPS.ToString("N2"));
             dictValues.Add("Exorcism", ExorcismDPS.ToString("N2"));
+            dictValues.Add("Divine Storm", DivineStormDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             return dictValues;

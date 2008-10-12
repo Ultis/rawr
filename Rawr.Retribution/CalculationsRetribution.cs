@@ -79,6 +79,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Exorcism",
+                        "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Total DPS"
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
@@ -243,7 +244,8 @@ namespace Rawr.Retribution
                     //if (bloodlustUptime > fightDuration) bloodlustUptime = 1f;
                     //else bloodlustUptime /= fightDuration;
 
-                    float numLust = fightDuration % 300f;  // bloodlust changed in 3.0, can only have one every 5 minutes.
+                    float numLust = fightDuration / 300f;  // bloodlust changed in 3.0, can only have one every 5 minutes.
+                    numLust = (float)Math.Floor((decimal)numLust);
                     float fullLustDur = (numLust - 1) * 300f + 40f;
                     if (fightDuration < fullLustDur) // if the last lust doesn't go its full duration
                     {
@@ -269,20 +271,6 @@ namespace Rawr.Retribution
 
                 // Convert armor to mitigation
                 mitigation = 1f - (targetArmor / (targetArmor + 10557.5f));
-
-                // Executioner enchant.  ASSUMPTION: Executioner has a 40% uptime.
-                if (stats.ExecutionerProc > 0)
-                {
-                    float exeArmor = targetArmor, exeMitigation = 1.0f, exeUptime = 0.4f, exeArmorPen = 840f;
-
-                    // Find mitigation while Executioner is up
-                    exeArmor = targetArmor - exeArmorPen;
-                    if (exeArmor < 0) exeArmor = 0f;
-                    exeMitigation = 1f - (exeArmor / (exeArmor + 10557.5f));
-
-                    // Weighted average of mitigation with and without Executioner, based on Executioner uptime
-                    mitigation = (exeMitigation * exeUptime) + (mitigation * (1 - exeUptime));
-                }
             }
             #endregion
 
@@ -360,7 +348,9 @@ namespace Rawr.Retribution
                 whiteAvgDam = whiteHit * physDamMult;
 
                 // Average white damage per swing
-                whiteAvgDam *= (1f + physCrits * physCritMult - totalMiss - chanceToGlance * glancingAmount) * mitigation;
+                whiteAvgDam *= (1f + physCrits*physCritMult);
+                whiteAvgDam -= totalMiss + (chanceToGlance * glancingAmount);
+                whiteAvgDam *= mitigation;
 
                 // Total white DPS.  Scryer SSO neck added as "white"
                 dpsWhite = whiteAvgDam / hastedSpeed;
@@ -376,7 +366,8 @@ namespace Rawr.Retribution
 
                 // Find real PPM.  Procs 7 times per minute before misses
                 socActualPPM = socPPM * (1f - totalMiss);
-                socProcChanceCoeff = socPPM / hastedSpeed;
+                socActualPPM = socActualPPM * ( baseSpeed / hastedSpeed );
+                socProcChanceCoeff = socActualPPM / 60f * hastedSpeed;
                 
                 if (calcOpts.GlyphOfSoC)
                 {
@@ -425,8 +416,8 @@ namespace Rawr.Retribution
                     // Total Crusader Strike DPS
                     dpsCrusader = crusAvgDam/crusCD;
 
-                    dpsSoC += socAvgDmg * (60f / crusCD) * socProcChanceCoeff;
-                    dpsSoB += sobAvgDmg * (60f / crusCD);
+                    dpsSoC += ( socAvgDmg / crusCD ) * socProcChanceCoeff;
+                    dpsSoB += sobAvgDmg / crusCD;
                 }
             }
             #endregion
@@ -445,8 +436,8 @@ namespace Rawr.Retribution
 
                     dpsDivineStorm = dsAvgDam/dsCD;
 
-                    dpsSoC += socAvgDmg * (60f / dsCD) * socProcChanceCoeff;
-                    dpsSoB += sobAvgDmg * (60f / dsCD);
+                    dpsSoC += ( socAvgDmg / dsCD ) * socProcChanceCoeff;
+                    dpsSoB += sobAvgDmg / dsCD;
                 }
             }
             #endregion
@@ -485,8 +476,8 @@ namespace Rawr.Retribution
 
                 dpsJudgement = judgeAvgDam / judgeCD;
 
-                dpsSoC += socAvgDmg * (60f / judgeCD) * socProcChanceCoeff;
-                dpsSoB += sobAvgDmg * (60f / judgeCD);
+                dpsSoC += (socAvgDmg / judgeCD) * socProcChanceCoeff;
+                dpsSoB += sobAvgDmg / judgeCD;
             }
             #endregion
 
