@@ -547,7 +547,7 @@ namespace Rawr
 			}
 		}
 
-		private string DownloadText(string URI)
+		public string DownloadText(string URI)
 		{
 			WebClient webClient = CreateWebClient();
 			string value = null;

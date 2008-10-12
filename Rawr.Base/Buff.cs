@@ -192,14 +192,24 @@ namespace Rawr
         {
             get
             {
-                if (_allBuffsByName == null)
-                {
-                    _allBuffsByName = new Dictionary<string, Buff>();
-                    foreach (Buff buff in AllBuffs)
-                    {
-                        if (!_allBuffsByName.ContainsKey(buff.Name)) _allBuffsByName.Add(buff.Name, buff);
-                    }
-                }
+				if (_allBuffsByName == null)
+				{
+					_allBuffsByName = new Dictionary<string, Buff>();
+					foreach (Buff buff in AllBuffs)
+					{
+						if (!_allBuffsByName.ContainsKey(buff.Name))
+						{
+							_allBuffsByName.Add(buff.Name, buff);
+							foreach (Buff improvement in buff.Improvements)
+							{
+								if (!_allBuffsByName.ContainsKey(improvement.Name))
+								{
+									_allBuffsByName.Add(improvement.Name, improvement);
+								}
+							}
+						}
+					}
+				}
                 return _allBuffsByName;
             }
         }
@@ -245,7 +255,7 @@ namespace Rawr
 				Group = "Armor",
 				Stats = { Armor = 861f },
 				Improvements = { 
-					new Buff { Name = "Improved Devotion Aura", Stats = { Armor = (float)Math.Floor(861f * 0.5f) } }
+					new Buff { Name = "Improved Devotion Aura (Armor)", Stats = { Armor = (float)Math.Floor(861f * 0.5f) } }
 				}
 			});
 			#endregion
@@ -272,7 +282,7 @@ namespace Rawr
 				Group = "Attack Power",
 				Stats = { AttackPower = 305 },
 				Improvements = { 
-					new Buff { Name = "Commanding Presence", Stats = { AttackPower = (float)Math.Floor(305f * 0.25f) } }
+					new Buff { Name = "Commanding Presence (Attack Power)", Stats = { AttackPower = (float)Math.Floor(305f * 0.25f) } }
 				}
 			});
 			defaultBuffs.Add(new Buff
@@ -321,13 +331,13 @@ namespace Rawr
 			{
 				Name = "Blessing of Sanctuary",
 				Group = "Damage Reduction (%)",
-				Stats = { DamageTakenMultiplier = 0.97f }
+				Stats = { DamageTakenMultiplier = -0.03f }
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Grace",
 				Group = "Damage Reduction (%)",
-				Stats = { DamageTakenMultiplier = 0.97f }
+				Stats = { DamageTakenMultiplier = -0.03f }
 			});
 			#endregion
 
@@ -349,15 +359,15 @@ namespace Rawr
 			#region Healing Received (%)
 			defaultBuffs.Add(new Buff
 			{
-				Name = "Blessing of Sanctuary",
+				Name = "Improved Devotion Aura (Healing Received %)",
 				Group = "Damage Reduction (%)",
-				Stats = { HealingReceivedMultiplier = 0.97f }
+				Stats = { HealingReceivedMultiplier = 0.06f }
 			});
 			defaultBuffs.Add(new Buff
 			{
-				Name = "Grace",
+				Name = "Tree of Life Aura",
 				Group = "Damage Reduction (%)",
-				Stats = { HealingReceivedMultiplier = 0.97f }
+				Stats = { HealingReceivedMultiplier = 0.06f }
 			});
 			#endregion
 
@@ -377,7 +387,7 @@ namespace Rawr
 				Group = "Health",
 				Stats = { Health = 1080 },
 				Improvements = { 
-					new Buff { Name = "Commanding Presence", Stats = { Health = (float)Math.Floor(1080f * 0.25f) } }
+					new Buff { Name = "Commanding Presence (Health)", Stats = { Health = (float)Math.Floor(1080f * 0.25f) } }
 				}
 			});
 			#endregion
@@ -1677,127 +1687,148 @@ namespace Rawr
             {
                 Name = "Bloodlust",
                 Group = "Temporary Buffs",
-                Stats = { Bloodlust = 0.3f }
+				Stats = { Bloodlust = 0.3f },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Drums of Battle",
                 Group = "Temporary Buffs",
-                Stats = { DrumsOfBattle = 80 }
+				Stats = { DrumsOfBattle = 80 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Drums of War",
                 Group = "Temporary Buffs",
-                Stats = { DrumsOfWar = 60 }
+				Stats = { DrumsOfWar = 60 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Badge of Tenacity",
                 Group = "Temporary Buffs",
-                Stats = { Agility = 150 }
+				Stats = { Agility = 150 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Commendation of Kael'thas",
                 Group = "Temporary Buffs",
-                Stats = { DodgeRating = 152 }
+				Stats = { DodgeRating = 152 },
+				ConflictingBuffs = new List<string>(new string[] { })
 			});
 			defaultBuffs.Add(new Buff()
 			{
 				Name = "Shattered Sun Pendant of Resolve Proc (Aldor)",
 				Group = "Temporary Buffs",
-				Stats = { DodgeRating = 100 }
+				Stats = { DodgeRating = 100 },
+				ConflictingBuffs = new List<string>(new string[] { })
 			});
 			defaultBuffs.Add(new Buff()
 			{
 				Name = "Shattered Sun Pendant of Resolve Proc (Scryer)",
 				Group = "Temporary Buffs",
-				Stats = { ExpertiseRating = 100 }
+				Stats = { ExpertiseRating = 100 },
+				ConflictingBuffs = new List<string>(new string[] { })
 			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Figurine - Empyrean Tortoise",
                 Group = "Temporary Buffs",
-                Stats = { DodgeRating = 165 }
+				Stats = { DodgeRating = 165 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Moroes' Lucky Pocket Watch",
                 Group = "Temporary Buffs",
-                Stats = { DodgeRating = 300 }
+				Stats = { DodgeRating = 300 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Idol of Terror",
                 Group = "Temporary Buffs",
-                Stats = { Agility = 65 }
+				Stats = { Agility = 65 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
 			defaultBuffs.Add(new Buff()
 			{
 				Name = "Stomp",
 				Group = "Temporary Buffs",
-				Stats = { BonusArmorMultiplier = -0.5f }
+				Stats = { BonusArmorMultiplier = -0.5f },
+				ConflictingBuffs = new List<string>(new string[] { })
 			});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Lay On Hands",
                 Group = "Temporary Buffs",
-                Stats = { BonusArmorMultiplier = 0.3f }
+				Stats = { BonusArmorMultiplier = 0.3f },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Nightmare Seed",
                 Group = "Temporary Buffs",
-                Stats = { Health = 2000 }
+				Stats = { Health = 2000 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Heroic 1750 Health Trinket",
                 Group = "Temporary Buffs",
-                Stats = { Health = 1750 }
+				Stats = { Health = 1750 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Season 3 Resilience Relic",
                 Group = "Temporary Buffs",
-                Stats = { Resilience = 31 }
+				Stats = { Resilience = 31 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Moonglade Rejuvination",
                 Group = "Temporary Buffs",
-                Stats = { DodgeRating = 35 }
+				Stats = { DodgeRating = 35 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Living Root of the Wildheart",
                 Group = "Temporary Buffs",
-                Stats = { Armor = 4070 }
+				Stats = { Armor = 4070 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Argussian Compass",
                 Group = "Temporary Buffs",
-                Stats = { Health = 1150 }
+				Stats = { Health = 1150 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Dawnstone Crab",
                 Group = "Temporary Buffs",
-                Stats = { DodgeRating = 125 }
+				Stats = { DodgeRating = 125 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Adamantite Figurine",
                 Group = "Temporary Buffs",
-                Stats = { Armor = 1280 }
+				Stats = { Armor = 1280 },
+				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Brooch of the Immortal King",
                 Group = "Temporary Buffs",
-                Stats = { Health = 1250 }
+				Stats = { Health = 1250 },
+				ConflictingBuffs = new List<string>(new string[] {  })
             });
             defaultBuffs.Add(new Buff()
             {

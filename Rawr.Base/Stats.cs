@@ -14,8 +14,9 @@ namespace Rawr
         AldorRegaliaInterruptProtection,
         ArcaneBlastBonus,
         ArcaneResistance,
-        Armor,
-        ArmorPenetration,
+		Armor,
+		ArmorPenetration,
+		ArmorPenetrationRating,
 		AshtongueTrinketProc,
         AttackPower,
         AverageAgility,
@@ -222,13 +223,13 @@ namespace Rawr
 		BonusGHHealingMultiplier,
 		PhysicalHaste,
 		SpellHaste,
-		HealingReceivedMultiplier
+		HealingReceivedMultiplier,
+		DamageTakenMultiplier
     }
 
     enum InverseMultiplicativeStat : int
     {
-        ThreatReductionMultiplier,
-		DamageTakenMultiplier
+        ThreatReductionMultiplier
     }
 
     enum NonStackingStat : int
@@ -414,7 +415,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetration]; }
             set { _rawAdditiveData[(int)AdditiveStat.ArmorPenetration] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Base Stats")]
+		[DisplayName("Penetration Rating")]
+		public float ArmorPenetrationRating
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating]; }
+			set { _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
@@ -2148,8 +2158,8 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		public float DamageTakenMultiplier
 		{
-			get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenMultiplier]; }
-			set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.DamageTakenMultiplier] = value; }
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.DamageTakenMultiplier] = value; }
 		}
 		#endregion
 
@@ -2480,8 +2490,9 @@ namespace Rawr
 			CritRating = Math.Max(CritRating, SpellCritRating);
 			HasteRating = Math.Max(HasteRating, SpellHasteRating);
 			SpellPower = Math.Max(SpellPower, Math.Max(SpellDamageRating, (float)Math.Floor(Healing / 1.88f)));
-			
-			SpellHitRating = SpellCritRating = SpellHasteRating = SpellDamageRating = Healing = 0;
+			ArmorPenetrationRating = Math.Max(ArmorPenetrationRating, (float)Math.Floor(ArmorPenetration / 7f));
+
+			SpellHitRating = SpellCritRating = SpellHasteRating = SpellDamageRating = Healing = ArmorPenetration = 0;
 		}
 
         #region Multiplicative Handling

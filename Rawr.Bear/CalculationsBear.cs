@@ -33,14 +33,14 @@ namespace Rawr
 					"Basic Stats:Armor",
 					"Basic Stats:Agility",
 					"Basic Stats:Stamina",
-					"Basic Stats:Strength",
-					"Basic Stats:Attack Power",
-					"Basic Stats:Hit Rating",
-					"Basic Stats:Expertise",
-					"Basic Stats:Haste Rating",
-					"Basic Stats:Armor Penetration",
-					"Basic Stats:Crit Rating",
-					"Basic Stats:Weapon Damage",
+					//"Basic Stats:Strength",
+					//"Basic Stats:Attack Power",
+					//"Basic Stats:Hit Rating",
+					//"Basic Stats:Expertise",
+					//"Basic Stats:Haste Rating",
+					//"Basic Stats:Armor Penetration",
+					//"Basic Stats:Crit Rating",
+					//"Basic Stats:Weapon Damage",
 					"Basic Stats:Dodge Rating",
 					"Basic Stats:Defense Rating",
 					"Basic Stats:Resilience",
@@ -49,19 +49,19 @@ namespace Rawr
 					"Basic Stats:Frost Resist",
 					"Basic Stats:Shadow Resist",
 					"Basic Stats:Arcane Resist",
-                    "Complex Stats:Limited Threat",
-                    "Complex Stats:Unlimited Threat*Limited threat with Maul threat added in.",
-                    "Complex Stats:1-3-0*1 Mangle, 3 Lacerate rotation.",
-                    "Complex Stats:1-0-3*1 Mangle, 3 Swipe rotation.",
-                    "Complex Stats:1-1-2*1 Mangle, 1 Lacerate, 2 Swipe rotation.",
-                    "Complex Stats:2-1-5*2 Mangle, 1 Lacerate, 5 Swipe rotation.",
-                    "Complex Stats:Lacerate Max TPS*3 lacerates every 6 second Mangle cooldown.  Assumes a 5 stack.",
-                    "Complex Stats:Lacerate Min TPS*Minimal Lacerates to maintain a 5 stack",
-                    "Complex Stats:Swipe Threat*Swipe threat on a single target",
-                    "Complex Stats:Mangle Threat",
-                    "Complex Stats:Maul TPS",
-                    "Complex Stats:White TPS",
-                    "Complex Stats:Missed Attacks",
+					//"Complex Stats:Limited Threat",
+					//"Complex Stats:Unlimited Threat*Limited threat with Maul threat added in.",
+					//"Complex Stats:1-3-0*1 Mangle, 3 Lacerate rotation.",
+					//"Complex Stats:1-0-3*1 Mangle, 3 Swipe rotation.",
+					//"Complex Stats:1-1-2*1 Mangle, 1 Lacerate, 2 Swipe rotation.",
+					//"Complex Stats:2-1-5*2 Mangle, 1 Lacerate, 5 Swipe rotation.",
+					//"Complex Stats:Lacerate Max TPS*3 lacerates every 6 second Mangle cooldown.  Assumes a 5 stack.",
+					//"Complex Stats:Lacerate Min TPS*Minimal Lacerates to maintain a 5 stack",
+					//"Complex Stats:Swipe Threat*Swipe threat on a single target",
+					//"Complex Stats:Mangle Threat",
+					//"Complex Stats:Maul TPS",
+					//"Complex Stats:White TPS",
+					//"Complex Stats:Missed Attacks",
 					"Complex Stats:Dodge",
 					"Complex Stats:Miss",
 					"Complex Stats:Mitigation",
@@ -221,7 +221,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
 			calculatedStats.Miss = missTotal;
 			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
-			calculatedStats.Mitigation = 100 - ((100 - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * stats.DamageTakenMultiplier);
+			calculatedStats.Mitigation = 100 - ((100 - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * (1f + stats.DamageTakenMultiplier));
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
 			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction * 100f;
@@ -239,7 +239,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
 			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-			calculatedStats.MitigationPoints = (7000f * (1f / (calculatedStats.DamageTaken / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			calculatedStats.MitigationPoints = (1000000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
@@ -249,7 +249,9 @@ you are being killed by burst damage, focus on Survival Points.",
             calculatedStats.ShadowSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ShadowResistance) / cappedResist) * .75)));
             calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance) / cappedResist) * .75)));
 
-            CalculateThreat(stats, targetLevel, calculatedStats, calcOpts);
+			//TODO:
+            //CalculateThreat(stats, targetLevel, calculatedStats, calcOpts);
+			calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints;
 
 
             return calculatedStats;
@@ -409,7 +411,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					//BonusAttackPowerMultiplier = 0.0f,
 					//BonusAgilityMultiplier = 0.03f,
 					//BonusStrengthMultiplier = 0.03f,
-					//BonusStaminaMultiplier = 0.03f
+					BonusStaminaMultiplier = 0.25f
                 } :
 				new Stats() { 
                     Health = 3434, 
@@ -426,7 +428,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					//BonusAttackPowerMultiplier = 0.0f,
 					//BonusAgilityMultiplier = 0.03f,
 					//BonusStrengthMultiplier = 0.03f,
-					//BonusStaminaMultiplier = 0.03f
+					BonusStaminaMultiplier = 0.25f
                 };
 
 			
@@ -485,7 +487,7 @@ you are being killed by burst damage, focus on Survival Points.",
 				AttackPower = 35 * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
 				//BonusCritMultiplier = 0.05f * talents.PredatoryInstincts, PI doesn't work in bear form as of latest beta build
-				DamageTakenMultiplier = 1f - (0.04f * talents.MotherBear),
+				DamageTakenMultiplier = -0.04f * talents.MotherBear,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle)
 			};
 
@@ -687,7 +689,7 @@ you are being killed by burst damage, focus on Survival Points.",
 					//Differential Calculations for Def
 					calcAtAdd = calcBaseValue;
 					float defToAdd = 0f;
-					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 2)
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 20)
 					{
 						defToAdd += 0.01f;
 						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsBear;
@@ -695,7 +697,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
 					calcAtSubtract = calcBaseValue;
 					float defToSubtract = 0f;
-					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -2)
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -20)
 					{
 						defToSubtract -= 0.01f;
 						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsBear;
@@ -903,7 +905,9 @@ you are being killed by burst damage, focus on Survival Points.",
                 BloodlustProc = stats.BloodlustProc,
                 BonusMangleBearDamage = stats.BonusMangleBearDamage,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+				DamageTakenMultiplier = stats.DamageTakenMultiplier,
+				ArmorPenetrationRating = stats.ArmorPenetrationRating
 			};
 		}
 
@@ -920,7 +924,7 @@ you are being killed by burst damage, focus on Survival Points.",
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier
                  + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
-                ) != 0;
+                 + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;
 		}
     }
 
@@ -1200,33 +1204,35 @@ you are being killed by burst damage, focus on Survival Points.",
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString(); 
 
-            dictValues["Strength"] = BasicStats.Strength.ToString();
-            dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
-            dictValues["Hit Rating"] = BasicStats.HitRating.ToString();
-            dictValues["Expertise"] = BasicStats.ExpertiseRating.ToString();
-            dictValues["Haste Rating"] = BasicStats.HasteRating.ToString();
-            dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
-			dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
-            dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
+
+			//TODO:
+			//dictValues["Strength"] = BasicStats.Strength.ToString();
+			//dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
+			//dictValues["Hit Rating"] = BasicStats.HitRating.ToString();
+			//dictValues["Expertise"] = BasicStats.ExpertiseRating.ToString();
+			//dictValues["Haste Rating"] = BasicStats.HasteRating.ToString();
+			//dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
+			//dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
+			//dictValues["Weapon Damage"] = BasicStats.WeaponDamage.ToString();
 
 
-            dictValues["Limited Threat"] = String.Format("{0}*{1} DPS", (ThreatPoints / ThreatScale).ToString(), LimitedDPS);//;
-            dictValues["Unlimited Threat"] = String.Format("{0}*{1} DPS", (UnlimitedThreat / ThreatScale).ToString(), UnlimitedDPS);//;
+			//dictValues["Limited Threat"] = String.Format("{0}*{1} DPS", (ThreatPoints / ThreatScale).ToString(), LimitedDPS);//;
+			//dictValues["Unlimited Threat"] = String.Format("{0}*{1} DPS", (UnlimitedThreat / ThreatScale).ToString(), UnlimitedDPS);//;
 
-            dictValues["1-3-0"] = String.Format("{0}*{1} DPS", MLS1_3_0TPS, MLS1_3_0DPS);
-            dictValues["2-1-5"] = String.Format("{0}*{1} DPS", MLS2_1_5TPS, MLS2_1_5DPS);
-            dictValues["1-0-3"] = String.Format("{0}*{1} DPS", MLS1_0_3TPS, MLS1_0_3DPS);
-            dictValues["1-1-2"] = String.Format("{0}*{1} DPS", MLS1_1_2TPS, MLS1_1_2DPS);
+			//dictValues["1-3-0"] = String.Format("{0}*{1} DPS", MLS1_3_0TPS, MLS1_3_0DPS);
+			//dictValues["2-1-5"] = String.Format("{0}*{1} DPS", MLS2_1_5TPS, MLS2_1_5DPS);
+			//dictValues["1-0-3"] = String.Format("{0}*{1} DPS", MLS1_0_3TPS, MLS1_0_3DPS);
+			//dictValues["1-1-2"] = String.Format("{0}*{1} DPS", MLS1_1_2TPS, MLS1_1_2DPS);
 
-            dictValues["Lacerate Max TPS"] = String.Format("{0}*{1} DPS", MaxLacerate, MaxLacerateDPS);
-            dictValues["Lacerate Min TPS"] = String.Format("{0}*{1} DPS", MinLacerate, MinLacerateDPS);//
-            dictValues["Swipe Threat"] = String.Format("{0}*{1} Damage", SwipeThreat, SwipeDamage);
-            dictValues["Mangle Threat"] = String.Format("{0}*{1} Damage", MangleThreat, MangleDamage);
-            dictValues["Maul TPS"] = String.Format("{0}*{1} DPS", MaulTPS, MaulDPS);
-            dictValues["White TPS"] = String.Format("{0}*{1} DPS", WhiteTPS, WhiteDPS);//WhiteTPS.ToString();
+			//dictValues["Lacerate Max TPS"] = String.Format("{0}*{1} DPS", MaxLacerate, MaxLacerateDPS);
+			//dictValues["Lacerate Min TPS"] = String.Format("{0}*{1} DPS", MinLacerate, MinLacerateDPS);//
+			//dictValues["Swipe Threat"] = String.Format("{0}*{1} Damage", SwipeThreat, SwipeDamage);
+			//dictValues["Mangle Threat"] = String.Format("{0}*{1} Damage", MangleThreat, MangleDamage);
+			//dictValues["Maul TPS"] = String.Format("{0}*{1} DPS", MaulTPS, MaulDPS);
+			//dictValues["White TPS"] = String.Format("{0}*{1} DPS", WhiteTPS, WhiteDPS);//WhiteTPS.ToString();
 
 
-            dictValues["Missed Attacks"] = String.Format("{0}%*Missed={1}% Dodged={2}% Parried={3}% Blocked={4}% (Block not modeled).", EnemyAvoidedAttacks, EnemyMissedAttacks, EnemyDodgedAttacks, EnemyParriedAttacks, EnemyBlockedAttacks);
+			//dictValues["Missed Attacks"] = String.Format("{0}%*Missed={1}% Dodged={2}% Parried={3}% Blocked={4}% (Block not modeled).", EnemyAvoidedAttacks, EnemyMissedAttacks, EnemyDodgedAttacks, EnemyParriedAttacks, EnemyBlockedAttacks);
            
 			return dictValues;
 		}

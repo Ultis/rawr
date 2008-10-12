@@ -603,7 +603,15 @@ namespace Rawr
                 }
             }
             charAutoActivated.DisableBuffAutoActivation = true;
-            foreach (Buff buff in Buff.RelevantBuffs)
+
+			List<Buff> relevantBuffs = new List<Buff>();
+			foreach (Buff buff in Buff.RelevantBuffs)
+			{
+				relevantBuffs.Add(buff);
+				relevantBuffs.AddRange(buff.Improvements);
+			}
+
+			foreach (Buff buff in relevantBuffs)
 			{
                 if (!activeOnly || charAutoActivated.ActiveBuffs.Contains(buff))
 				{

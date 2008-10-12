@@ -325,6 +325,7 @@ namespace Rawr
 			foreach (Item item in listItems)
 			{
 				item.Stats.ConvertStatsToWotLKEquivalents();
+				//if (item.Type == Item.ItemType.Leather) UpdateArmorFromWowhead(item);
 				AddItem(item, true, false);
 			}
 
@@ -336,5 +337,14 @@ namespace Rawr
 		{
 			_relevantItems = null;
 		}
+
+		//private void UpdateArmorFromWowhead(Item item)
+		//{
+		//    WebRequestWrapper wrw = new WebRequestWrapper();
+		//    string wowheadXml = wrw.DownloadText(string.Format("http://wotlk.wowhead.com/?item={0}&xml", item.Id));
+		//    wowheadXml = wowheadXml.Substring(0, wowheadXml.LastIndexOf(" Armor<"));
+		//    wowheadXml = wowheadXml.Substring(wowheadXml.LastIndexOf('>')+1);
+		//    item.Stats.Armor = int.Parse(wowheadXml);
+		//}
 	}
 }
