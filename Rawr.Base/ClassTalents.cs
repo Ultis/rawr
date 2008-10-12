@@ -1051,7 +1051,7 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec. After 12 s
 ",})]
 		public int LivingBomb { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(58, "Frost Warding", 2, 2, 1, 1, -1, new string[] {
+		[TalentData(58, "Frost Warding", 2, 2, 2, 2, -1, new string[] {
 @"Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 25%. In addition, gives your Frost Ward and Fire Ward a 15% chance to negate the warded damage spell and restore mana equal to the damage caused.",
 @"Increases the armor and resistances given by your Frost Armor and Ice Armor spells by 50%. In addition, gives your Frost Ward and Fire Ward a 30% chance to negate the warded damage spell and restore mana equal to the damage caused.",})]
 		public int FrostWarding { get { return _data[58]; } set { _data[58] = value; } }
@@ -1070,15 +1070,13 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec. After 12 s
 @"Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block and Icy Veins spells by 20%.",})]
 		public int IceFloes { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Ice Shards", 5, 2, 1, 2, -1, new string[] {
-@"Increases the critical strike damage bonus of your Frost spells by 20%.",
-@"Increases the critical strike damage bonus of your Frost spells by 40%.",
-@"Increases the critical strike damage bonus of your Frost spells by 60%.",
-@"Increases the critical strike damage bonus of your Frost spells by 80%.",
+		[TalentData(61, "Ice Shards", 3, 2, 1, 2, -1, new string[] {
+@"Increases the critical strike damage bonus of your Frost spells by 33%.",
+@"Increases the critical strike damage bonus of your Frost spells by 66%.",
 @"Increases the critical strike damage bonus of your Frost spells by 100%.",})]
 		public int IceShards { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Frostbite", 3, 2, 2, 2, -1, new string[] {
+		[TalentData(62, "Frostbite", 3, 2, 1, 1, -1, new string[] {
 @"Gives your Chill effects a 5% chance to freeze the target for 5 sec.",
 @"Gives your Chill effects a 10% chance to freeze the target for 5 sec.",
 @"Gives your Chill effects a 15% chance to freeze the target for 5 sec.",})]
@@ -1125,11 +1123,9 @@ Hastens your spellcasting, increasing spell casting speed by 20% and gives you 1
 @"Reduces the mana cost of all spells by 10% and reduces the threat caused by your Frost spells by 10%.",})]
 		public int FrostChanneling { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(70, "Shatter", 5, 2, 3, 4, -1, new string[] {
-@"Increases the critical strike chance of all your spells against frozen targets by 10%.",
-@"Increases the critical strike chance of all your spells against frozen targets by 20%.",
-@"Increases the critical strike chance of all your spells against frozen targets by 30%.",
-@"Increases the critical strike chance of all your spells against frozen targets by 40%.",
+		[TalentData(70, "Shatter", 3, 2, 3, 4, -1, new string[] {
+@"Increases the critical strike chance of all your spells against frozen targets by 17%.",
+@"Increases the critical strike chance of all your spells against frozen targets by 34%.",
 @"Increases the critical strike chance of all your spells against frozen targets by 50%.",})]
 		public int Shatter { get { return _data[70]; } set { _data[70] = value; } }
 

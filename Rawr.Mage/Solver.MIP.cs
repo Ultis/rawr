@@ -3107,7 +3107,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (character.MageTalents.SpellPower > 0)
@@ -3367,7 +3367,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (character.MageTalents.SpellPower > 0)

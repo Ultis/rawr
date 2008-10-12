@@ -432,12 +432,12 @@ namespace Rawr.Mage
         {
             double ampMelee = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 - 0.01 * character.MageTalents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation) * (1 - calculationResult.BaseState.Dodge);
             double ampPhysical = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 - 0.01 * character.MageTalents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation);
-            double ampArcane = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * Math.Max(1 - characterStats.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampArcane = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
             double ampFire = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
             double ampFrost = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampNature = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * Math.Max(1 - characterStats.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampShadow = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampHoly = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire);
+            double ampNature = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampShadow = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampHoly = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore);
 
             double melee = ampMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
             double physical = ampPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
@@ -1275,7 +1275,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.Frostbolt);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             else if (character.MageTalents.SpellPower > 0)
@@ -2036,7 +2036,14 @@ namespace Rawr.Mage
                         }
                         else if (character.MageTalents.EmpoweredFrostbolt > 0)
                         {
-                            list.Add(SpellId.Frostbolt);
+                            if (character.MageTalents.BrainFreeze > 0)
+                            {
+                                list.Add(SpellId.FrBFB);
+                            }
+                            else
+                            {
+                                list.Add(SpellId.FrostboltFOF);
+                            }
                         }
                         else if (character.MageTalents.ArcaneBarrage > 0)
                         {
@@ -2067,7 +2074,8 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.ArcaneMissiles);
                             list.Add(SpellId.Fireball);
-                            list.Add(SpellId.Frostbolt);
+                            list.Add(SpellId.FrostboltFOF);
+                            list.Add(SpellId.FrostfireBoltFOF);
                             list.Add(SpellId.ABP);
                         }
                     }
@@ -2083,10 +2091,11 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.Fireball);
                         }
-                        list.Add(SpellId.FrostfireBolt);
+                        list.Add(SpellId.FrostfireBoltFOF);
                         list.Add(SpellId.FBFBlast);
                         if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
-                        list.Add(SpellId.Frostbolt);
+                        list.Add(SpellId.FrostboltFOF);
+                        if (character.MageTalents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
                         list.Add(SpellId.ArcaneBlastSpam);
                         list.Add(SpellId.ABAM);
                         list.Add(SpellId.ABP);

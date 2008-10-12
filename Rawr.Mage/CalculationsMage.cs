@@ -81,6 +81,7 @@ namespace Rawr.Mage
                     "Spell Info:FFBPyro*Pyroblast on Hot Streak",
                     "Spell Info:FFBScPyro*Maintain Scorch and Pyroblast on Hot Streak",
                     "Spell Info:Frostbolt",
+                    "Spell Info:FrBFB*Fireball on Brain Freeze",
                     "Spell Info:ABP*Pause to let debuff drop",
                     "Spell Info:ABAM",
                     "Spell Info:ABarAM",
@@ -371,12 +372,14 @@ namespace Rawr.Mage
 
             if (!character.DisableBuffAutoActivation)
             {
+                Buff improvedScorch = Buff.GetBuffByName("Improved Scorch");
+                Buff wintersChill = Buff.GetBuffByName("Winter's Chill");
+
                 if (calculationOptions.MaintainScorch)
                 {
                     if (character.MageTalents.ImprovedScorch > 0)
                     {
-                        Buff improvedScorch = Buff.GetBuffByName("Improved Scorch");
-                        if (!character.ActiveBuffs.Contains(improvedScorch))
+                        if (!character.ActiveBuffs.Contains(improvedScorch) && !character.ActiveBuffs.Contains(wintersChill))
                         {
                             activeBuffs.Add(improvedScorch);
                             autoActivatedBuffs.Add(improvedScorch);
@@ -385,8 +388,7 @@ namespace Rawr.Mage
                 }
                 if (character.MageTalents.WintersChill > 0)
                 {
-                    Buff wintersChill = Buff.GetBuffByName("Winter's Chill");
-                    if (!character.ActiveBuffs.Contains(wintersChill))
+                    if (!character.ActiveBuffs.Contains(wintersChill) && !character.ActiveBuffs.Contains(improvedScorch))
                     {
                         activeBuffs.Add(wintersChill);
                         autoActivatedBuffs.Add(wintersChill);
@@ -677,8 +679,8 @@ namespace Rawr.Mage
             // TODO do similar for Mage Armor and Arcane Shielding
             if (statsTotal.MageIceArmor > 0)
             {
-                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.15f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.15f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
+                statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + 0.25f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40) * (1 + 0.25f * frostWarding) * (1 + (calculationOptions.GlyphOfIceArmor ? 0.2f : 0.0f)));
             }
             if (statsTotal.MageMageArmor > 0)
             {
@@ -1420,7 +1422,6 @@ namespace Rawr.Mage
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
                 Hit = stats.Hit,
-                PhysicalCrit = stats.PhysicalCrit,
                 SpellHaste = stats.SpellHaste
             };
         }

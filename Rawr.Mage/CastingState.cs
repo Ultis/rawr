@@ -528,11 +528,17 @@ namespace Rawr.Mage
                 case SpellId.Frostbolt:
                     s = new Frostbolt(this);
                     break;
+                case SpellId.FrostboltFOF:
+                    s = new Frostbolt(this, false, false, false, true);
+                    break;
                 case SpellId.FrostboltNoCC:
-                    s = new Frostbolt(this, true, false, false);
+                    s = new Frostbolt(this, true, false, false, false);
                     break;
                 case SpellId.Fireball:
-                    s = new Fireball(this, false);
+                    s = new Fireball(this, false, false);
+                    break;
+                case SpellId.FireballBF:
+                    s = new Fireball(this, false, true);
                     break;
                 case SpellId.FBPyro:
                     s = new FBPyro(this);
@@ -550,7 +556,10 @@ namespace Rawr.Mage
                     s = new FFBScPyro(this);
                     break;
                 case SpellId.FrostfireBolt:
-                    s = new FrostfireBolt(this, false);
+                    s = new FrostfireBolt(this, false, false);
+                    break;
+                case SpellId.FrostfireBoltFOF:
+                    s = new FrostfireBolt(this, false, true);
                     break;
                 case SpellId.Pyroblast:
                     s = new Pyroblast(this, false);
@@ -748,10 +757,13 @@ namespace Rawr.Mage
                     s = new ArcaneBlast(this, 0, 0, false, false, true);
                     break;
                 case SpellId.FireballPOM:
-                    s = new Fireball(this, true);
+                    s = new Fireball(this, true, false);
+                    break;
+                case SpellId.FrBFB:
+                    s = new FrBFB(this);
                     break;
                 case SpellId.FrostboltPOM:
-                    s = new Frostbolt(this, false, false, true);
+                    s = new Frostbolt(this, false, false, true, false);
                     break;
                 case SpellId.PyroblastPOM:
                     s = new Pyroblast(this, true);

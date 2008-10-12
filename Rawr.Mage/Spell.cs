@@ -31,8 +31,9 @@ namespace Rawr.Mage
         ArcaneMissilesNoProc,
         //ArcaneMissilesFTF,
         //ArcaneMissilesFTT,
-        [Description("Frostbolt")]
         Frostbolt,
+        [Description("Frostbolt")]
+        FrostboltFOF,
         [Description("POM+Frostbolt")]
         FrostboltPOM,
         FrostboltNoCC,
@@ -40,8 +41,10 @@ namespace Rawr.Mage
         Fireball,
         [Description("POM+Fireball")]
         FireballPOM,
-        [Description("Frostfire Bolt")]
+        FireballBF,
         FrostfireBolt,
+        [Description("Frostfire Bolt")]
+        FrostfireBoltFOF,
         [Description("Pyroblast")]
         Pyroblast,
         [Description("POM+Pyroblast")]
@@ -101,6 +104,7 @@ namespace Rawr.Mage
         ABFrB3FrBSc,
         ABFB3FBSc,
         AB3Sc,
+        FrBFB,
         FBSc,
         FBFBlast,
         FBPyro,
@@ -645,8 +649,12 @@ namespace Rawr.Mage
                 OO5SR = 1;
             }
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestorePerHit * HitProcs / CastTime + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCast_5_15 / (15f + CastTime / CastProcs / 0.05f);
-            ThreatPerSecond += (castingState.BaseStats.ManaRestorePerHit * HitProcs / CastTime + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + castingState.BaseStats.ThreatIncreaseMultiplier) * (1 - castingState.BaseStats.ThreatReductionMultiplier);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestorePerHit * castingState.BaseStats.Mana / (4.0f + CastTime / HitProcs) + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCast_5_15 / (15f + CastTime / CastProcs / 0.05f);
+            if (castingState.WaterElemental)
+            {
+                ManaRegenPerSecond += 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
+            }
+            ThreatPerSecond += (castingState.BaseStats.ManaRestorePerHit * castingState.BaseStats.Mana / (4.0f + CastTime / HitProcs) + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + castingState.BaseStats.ThreatIncreaseMultiplier) * (1 - castingState.BaseStats.ThreatReductionMultiplier);
 
             if (castingState.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
@@ -966,9 +974,12 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public Frostbolt(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom)
+        private bool averageFingersOfFrost;
+
+        public Frostbolt(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom, bool averageFingersOfFrost)
             : base("Frostbolt", false, true, false, false, 30, 3, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
+            this.averageFingersOfFrost = averageFingersOfFrost;
             if (pom)
             {
                 this.Instant = true;
@@ -1001,7 +1012,12 @@ namespace Rawr.Mage
             CritRate += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFrostbolt;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
+            if (averageFingersOfFrost)
+            {
+                float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+                CritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+            }
             CalculateDerivedStats(castingState);
         }
     }
@@ -1028,9 +1044,15 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public Fireball(CastingState castingState, bool pom)
+        public Fireball(CastingState castingState, bool pom, bool brainFreeze)
             : base("Fireball", false, false, false, false, 35, 3.5f, 0, MagicSchool.Fire, GetMaxRankSpellData(castingState.CalculationOptions))
         {
+            if (brainFreeze)
+            {
+                this.Instant = true;
+                this.BaseCastTime = 0.0f;
+                this.BaseCost = 0;
+            }
             if (pom)
             {
                 this.Instant = true;
@@ -1075,19 +1097,27 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public FrostfireBolt(CastingState castingState, bool pom)
+        private bool averageFingersOfFrost;
+
+        public FrostfireBolt(CastingState castingState, bool pom, bool averageFingersOfFrost)
             : base("Frostfire Bolt", false, false, false, false, 40, 3.0f, 0, MagicSchool.FrostFire, GetMaxRankSpellData(castingState.CalculationOptions))
         {
+            this.averageFingersOfFrost = averageFingersOfFrost;
             if (pom)
             {
                 this.Instant = true;
                 this.BaseCastTime = 0.0f;
             }
             Calculate(castingState);
-            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime);
+            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.CalculationOptions.SlowedTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFireball;
             SpammedDot = true;
             DotDuration = 9;
+            if (averageFingersOfFrost)
+            {
+                float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+                CritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+            }
             CalculateDerivedStats(castingState);
         }
     }
@@ -1197,6 +1227,7 @@ namespace Rawr.Mage
             : base("Cone of Cold", false, true, true, true, 0, 0, 10, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             base.Calculate(castingState);
+            Cooldown *= (1 - 0.07f * castingState.MageTalents.IceFloes + (castingState.MageTalents.IceFloes == 3 ? 0.01f : 0.00f));
             AoeDamageCap = 6500;
             int ImprovedConeOfCold = castingState.MageTalents.ImprovedConeOfCold;
             SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0)) * (1 + 0.02f * castingState.MageTalents.SpellImpact);
@@ -1587,6 +1618,10 @@ namespace Rawr.Mage
             : base("Blizzard", true, false, false, true, 0, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             base.Calculate(castingState);
+            if (castingState.MageTalents.ImprovedBlizzard > 0 && castingState.MageTalents.Frostbite > 0)
+            {
+                CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+            }
             AoeDamageCap = 28950;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
@@ -1690,7 +1725,7 @@ namespace Rawr.Mage
 
             float OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestorePerHit * HitProcs / CastTime + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime;
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestorePerHit * castingState.BaseStats.Mana / (4.0f + CastTime / HitProcs) + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime;
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {
@@ -2979,6 +3014,46 @@ namespace Rawr.Mage
         }
     }
 
+    class FrBFB : Spell
+    {
+        BaseSpell FrB;
+        SpellCycle chain2;
+        float K;
+
+        public FrBFB(CastingState castingState)
+        {
+            Name = "FrBFB";
+
+            FrB = (BaseSpell)castingState.GetSpell(SpellId.FrostboltFOF);
+            Spell FB = castingState.GetSpell(SpellId.FireballBF);
+            sequence = "Frostbolt";
+
+            // FrB      1 - brainFreeze
+            // FrB-FB   brainFreeze
+
+            chain2 = new SpellCycle(2);
+            chain2.AddSpell(FrB, castingState);
+            chain2.AddSpell(FB, castingState);
+            chain2.Calculate(castingState);
+
+            K = 0.05f * castingState.MageTalents.BrainFreeze;
+
+            CastTime = (1 - K) * FrB.CastTime + K * chain2.CastTime;
+            CostPerSecond = ((1 - K) * FrB.CastTime * FrB.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+            DamagePerSecond = ((1 - K) * FrB.CastTime * FrB.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+            ThreatPerSecond = ((1 - K) * FrB.CastTime * FrB.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = ((1 - K) * FrB.CastTime * FrB.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            // needed for Combustion calculations
+            CastProcs = (1 - K) * FrB.CastProcs + K * chain2.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            FrB.AddSpellContribution(dict, (1 - K) * FrB.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+        }
+    }
+
     class FBLBPyro : Spell
     {
         BaseSpell FB;
@@ -3066,7 +3141,7 @@ namespace Rawr.Mage
         {
             Name = "FFBPyro";
 
-            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
+            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
             sequence = "Frostfire Bolt";
 
@@ -3256,7 +3331,7 @@ namespace Rawr.Mage
             Name = "FFBScPyro";
             ProvidesScorch = true;
 
-            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
+            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
             Pyro = (BaseSpell)castingState.GetSpell(SpellId.PyroblastPOM);
             sequence = "Frostfire Bolt";

@@ -668,9 +668,9 @@
             this.comboBoxHeroismControl.FormattingEnabled = true;
             this.comboBoxHeroismControl.Items.AddRange(new object[] {
             "Optimal",
-            "Before 20%",
+            "Before 35%",
             "No Cooldowns",
-            "After 20%"});
+            "After 35%"});
             this.comboBoxHeroismControl.Location = new System.Drawing.Point(112, 169);
             this.comboBoxHeroismControl.Name = "comboBoxHeroismControl";
             this.comboBoxHeroismControl.Size = new System.Drawing.Size(75, 21);
