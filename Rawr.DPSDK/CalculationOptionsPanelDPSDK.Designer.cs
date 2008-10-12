@@ -46,7 +46,6 @@
             this.rbDrumsBattle = new System.Windows.Forms.RadioButton();
             this.rbDrumsWar = new System.Windows.Forms.RadioButton();
             this.rbDrumsNone = new System.Windows.Forms.RadioButton();
-            this.cbWindfuryEffect = new System.Windows.Forms.CheckBox();
             this.gbMajorGlyph = new System.Windows.Forms.GroupBox();
             this.gbMinorGlyph = new System.Windows.Forms.GroupBox();
             this.gbRotation = new System.Windows.Forms.GroupBox();
@@ -54,6 +53,10 @@
             this.rbBlood = new System.Windows.Forms.RadioButton();
             this.rbUnholy = new System.Windows.Forms.RadioButton();
             this.btnRotation = new System.Windows.Forms.Button();
+            this.cbWindfuryEffect = new System.Windows.Forms.CheckBox();
+            this.cbUREffect = new System.Windows.Forms.CheckBox();
+            this.cbMagicVuln = new System.Windows.Forms.CheckBox();
+            this.cbCryptFever = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
             this.gbFightInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
@@ -176,7 +179,7 @@
             // 
             this.checkBoxMeta.AutoSize = true;
             this.checkBoxMeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBoxMeta.Location = new System.Drawing.Point(14, 136);
+            this.checkBoxMeta.Location = new System.Drawing.Point(13, 136);
             this.checkBoxMeta.Name = "checkBoxMeta";
             this.checkBoxMeta.Size = new System.Drawing.Size(180, 19);
             this.checkBoxMeta.TabIndex = 6;
@@ -189,7 +192,7 @@
             this.lblFerociousInspirationNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFerociousInspirationNum.AutoSize = true;
-            this.lblFerociousInspirationNum.Location = new System.Drawing.Point(67, 301);
+            this.lblFerociousInspirationNum.Location = new System.Drawing.Point(67, 276);
             this.lblFerociousInspirationNum.Name = "lblFerociousInspirationNum";
             this.lblFerociousInspirationNum.Size = new System.Drawing.Size(13, 13);
             this.lblFerociousInspirationNum.TabIndex = 18;
@@ -200,7 +203,7 @@
             this.tbFerociousInspiration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbFerociousInspiration.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbFerociousInspiration.Location = new System.Drawing.Point(70, 269);
+            this.tbFerociousInspiration.Location = new System.Drawing.Point(70, 244);
             this.tbFerociousInspiration.Maximum = 4;
             this.tbFerociousInspiration.Minimum = 1;
             this.tbFerociousInspiration.Name = "tbFerociousInspiration";
@@ -212,7 +215,7 @@
             // lblFerociousInspiration
             // 
             this.lblFerociousInspiration.AutoSize = true;
-            this.lblFerociousInspiration.Location = new System.Drawing.Point(10, 266);
+            this.lblFerociousInspiration.Location = new System.Drawing.Point(10, 241);
             this.lblFerociousInspiration.Name = "lblFerociousInspiration";
             this.lblFerociousInspiration.Size = new System.Drawing.Size(55, 39);
             this.lblFerociousInspiration.TabIndex = 9;
@@ -237,7 +240,7 @@
             this.gbDrums.Controls.Add(this.rbDrumsWar);
             this.gbDrums.Controls.Add(this.rbDrumsNone);
             this.gbDrums.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbDrums.Location = new System.Drawing.Point(13, 211);
+            this.gbDrums.Location = new System.Drawing.Point(13, 186);
             this.gbDrums.Name = "gbDrums";
             this.gbDrums.Size = new System.Drawing.Size(185, 52);
             this.gbDrums.TabIndex = 31;
@@ -283,22 +286,10 @@
             this.rbDrumsNone.UseVisualStyleBackColor = true;
             this.rbDrumsNone.CheckedChanged += new System.EventHandler(this.rbDrumsNone_CheckedChanged);
             // 
-            // cbWindfuryEffect
-            // 
-            this.cbWindfuryEffect.AutoSize = true;
-            this.cbWindfuryEffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbWindfuryEffect.Location = new System.Drawing.Point(13, 186);
-            this.cbWindfuryEffect.Name = "cbWindfuryEffect";
-            this.cbWindfuryEffect.Size = new System.Drawing.Size(154, 19);
-            this.cbWindfuryEffect.TabIndex = 32;
-            this.cbWindfuryEffect.Text = "Windfury/Horn of Winter";
-            this.cbWindfuryEffect.UseVisualStyleBackColor = true;
-            this.cbWindfuryEffect.CheckedChanged += new System.EventHandler(this.cbWindfuryEffect_CheckedChanged);
-            // 
             // gbMajorGlyph
             // 
             this.gbMajorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbMajorGlyph.Location = new System.Drawing.Point(13, 320);
+            this.gbMajorGlyph.Location = new System.Drawing.Point(13, 295);
             this.gbMajorGlyph.Name = "gbMajorGlyph";
             this.gbMajorGlyph.Size = new System.Drawing.Size(185, 148);
             this.gbMajorGlyph.TabIndex = 33;
@@ -308,7 +299,7 @@
             // gbMinorGlyph
             // 
             this.gbMinorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbMinorGlyph.Location = new System.Drawing.Point(13, 474);
+            this.gbMinorGlyph.Location = new System.Drawing.Point(13, 449);
             this.gbMinorGlyph.Name = "gbMinorGlyph";
             this.gbMinorGlyph.Size = new System.Drawing.Size(185, 46);
             this.gbMinorGlyph.TabIndex = 34;
@@ -321,7 +312,7 @@
             this.gbRotation.Controls.Add(this.rbBlood);
             this.gbRotation.Controls.Add(this.rbUnholy);
             this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbRotation.Location = new System.Drawing.Point(13, 526);
+            this.gbRotation.Location = new System.Drawing.Point(13, 501);
             this.gbRotation.Name = "gbRotation";
             this.gbRotation.Size = new System.Drawing.Size(185, 74);
             this.gbRotation.TabIndex = 35;
@@ -370,23 +361,74 @@
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRotation.Location = new System.Drawing.Point(39, 606);
+            this.btnRotation.Location = new System.Drawing.Point(39, 581);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
             this.btnRotation.TabIndex = 36;
             this.btnRotation.Text = "Rotation Details";
             this.btnRotation.UseVisualStyleBackColor = true;
             // 
+            // cbWindfuryEffect
+            // 
+            this.cbWindfuryEffect.AutoSize = true;
+            this.cbWindfuryEffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbWindfuryEffect.Location = new System.Drawing.Point(13, 610);
+            this.cbWindfuryEffect.Name = "cbWindfuryEffect";
+            this.cbWindfuryEffect.Size = new System.Drawing.Size(160, 19);
+            this.cbWindfuryEffect.TabIndex = 37;
+            this.cbWindfuryEffect.Text = "Windfury / Imp Icy Talons";
+            this.cbWindfuryEffect.UseVisualStyleBackColor = true;
+            this.cbWindfuryEffect.CheckedChanged += new System.EventHandler(this.cbWindfuryEffect_CheckedChanged);
+            // 
+            // cbUREffect
+            // 
+            this.cbUREffect.AutoSize = true;
+            this.cbUREffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbUREffect.Location = new System.Drawing.Point(13, 635);
+            this.cbUREffect.Name = "cbUREffect";
+            this.cbUREffect.Size = new System.Drawing.Size(119, 19);
+            this.cbUREffect.TabIndex = 38;
+            this.cbUREffect.Text = "UR / Abom Might";
+            this.cbUREffect.UseVisualStyleBackColor = true;
+            this.cbUREffect.CheckedChanged += new System.EventHandler(this.cbUREffect_CheckedChanged);
+            // 
+            // cbMagicVuln
+            // 
+            this.cbMagicVuln.AutoSize = true;
+            this.cbMagicVuln.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbMagicVuln.Location = new System.Drawing.Point(13, 660);
+            this.cbMagicVuln.Name = "cbMagicVuln";
+            this.cbMagicVuln.Size = new System.Drawing.Size(129, 19);
+            this.cbMagicVuln.TabIndex = 39;
+            this.cbMagicVuln.Text = "Ebon Plague / CoE";
+            this.cbMagicVuln.UseVisualStyleBackColor = true;
+            this.cbMagicVuln.CheckedChanged += new System.EventHandler(this.cbMagicVuln_CheckedChanged);
+            // 
+            // cbCryptFever
+            // 
+            this.cbCryptFever.AutoSize = true;
+            this.cbCryptFever.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCryptFever.Location = new System.Drawing.Point(13, 685);
+            this.cbCryptFever.Name = "cbCryptFever";
+            this.cbCryptFever.Size = new System.Drawing.Size(86, 19);
+            this.cbCryptFever.TabIndex = 40;
+            this.cbCryptFever.Text = "Crypt Fever";
+            this.cbCryptFever.UseVisualStyleBackColor = true;
+            this.cbCryptFever.CheckedChanged += new System.EventHandler(this.cbCryptFever_CheckedChanged);
+            // 
             // CalculationOptionsPanelDPSDK
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.cbCryptFever);
+            this.Controls.Add(this.cbMagicVuln);
+            this.Controls.Add(this.cbUREffect);
+            this.Controls.Add(this.cbWindfuryEffect);
             this.Controls.Add(this.btnRotation);
             this.Controls.Add(this.gbRotation);
             this.Controls.Add(this.gbMinorGlyph);
             this.Controls.Add(this.gbMajorGlyph);
-            this.Controls.Add(this.cbWindfuryEffect);
             this.Controls.Add(this.gbDrums);
             this.Controls.Add(this.chkBloodLust);
             this.Controls.Add(this.lblFerociousInspirationNum);
@@ -431,7 +473,6 @@
         private System.Windows.Forms.RadioButton rbDrumsBattle;
         private System.Windows.Forms.RadioButton rbDrumsWar;
         private System.Windows.Forms.RadioButton rbDrumsNone;
-        private System.Windows.Forms.CheckBox cbWindfuryEffect;
         private System.Windows.Forms.GroupBox gbMajorGlyph;
         private System.Windows.Forms.GroupBox gbMinorGlyph;
         private System.Windows.Forms.GroupBox gbRotation;
@@ -439,5 +480,9 @@
         private System.Windows.Forms.RadioButton rbBlood;
         private System.Windows.Forms.RadioButton rbUnholy;
         private System.Windows.Forms.Button btnRotation;
+        private System.Windows.Forms.CheckBox cbWindfuryEffect;
+        private System.Windows.Forms.CheckBox cbUREffect;
+        private System.Windows.Forms.CheckBox cbMagicVuln;
+        private System.Windows.Forms.CheckBox cbCryptFever;
     }
 }

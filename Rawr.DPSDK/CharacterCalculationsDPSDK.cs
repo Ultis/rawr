@@ -132,11 +132,18 @@ namespace Rawr.DPSDK
             set { _avoidedAttacks = value; }
         }
 
-        private float _dodgedAttacks;
-        public float DodgedAttacks
+        private float _dodgedMHAttacks;
+        public float DodgedMHAttacks
         {
-            get { return _dodgedAttacks; }
-            set { _dodgedAttacks = value; }
+            get { return _dodgedMHAttacks; }
+            set { _dodgedMHAttacks = value; }
+        }
+
+        private float _dodgedOHAttacks;
+        public float DodgedOHAttacks
+        {
+            get { return _dodgedOHAttacks; }
+            set { _dodgedOHAttacks = value; }
         }
 
         private float _missedAttacks;
@@ -208,7 +215,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Weapon Damage", WeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed", AttackSpeed.ToString("N2"));
             dictValues.Add("Crit Chance", string.Format("{0:P}", CritChance));
-            dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedMHAttacks + DodgedOHAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, effectiveArmor));
 
             dictValues.Add("White", WhiteDPS.ToString("N2"));

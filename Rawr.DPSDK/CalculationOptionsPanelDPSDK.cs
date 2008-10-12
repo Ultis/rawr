@@ -40,11 +40,11 @@ namespace Rawr.DPSDK
             rbDrumsBattle.Checked = calcOpts.DrumsOfBattle;
             rbDrumsNone.Checked = !calcOpts.DrumsOfBattle && !calcOpts.DrumsOfWar;
 
-            if (calcOpts.rotation == CalculationOptionsDPSDK.Rotation.Unholy)
+            if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
             {
                 rbUnholy.Checked = true;
             }
-            else if (calcOpts.rotation == CalculationOptionsDPSDK.Rotation.Frost)
+            else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
             {
                 rbFrost.Checked = true;
             }
@@ -271,6 +271,46 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
+        private void rbUnholy_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (rbUnholy.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Unholy); }
+            Character.OnCalculationsInvalidated();
+
+            cbMagicVuln.Checked = true;
+            cbCryptFever.Checked = true;
+            cbWindfuryEffect.Enabled = true;
+            cbUREffect.Enabled = true;
+            cbMagicVuln.Enabled = false;
+            cbCryptFever.Enabled = false;
+        }
+
+        private void rbFrost_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (rbFrost.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Frost); }
+            Character.OnCalculationsInvalidated();
+
+            cbWindfuryEffect.Checked = true;
+            cbWindfuryEffect.Enabled = false;
+            cbUREffect.Enabled = true;
+            cbMagicVuln.Enabled = true;
+            cbCryptFever.Enabled = true;
+        }
+
+        private void rbBlood_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (rbBlood.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Blood); }
+            Character.OnCalculationsInvalidated();
+
+            cbUREffect.Checked = true;
+            cbWindfuryEffect.Enabled = true;
+            cbUREffect.Enabled = false;
+            cbMagicVuln.Enabled = true;
+            cbCryptFever.Enabled = true;
+        }
+
         private void cbWindfuryEffect_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
@@ -279,24 +319,27 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-        private void rbUnholy_CheckedChanged(object sender, EventArgs e)
+        private void cbUREffect_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbUnholy.Checked) { calcOpts.rotation = CalculationOptionsDPSDK.Rotation.Unholy; }
+            if (cbUREffect.Checked) { calcOpts.UnleashedRage = true; }
+            else { calcOpts.UnleashedRage = true; }
             Character.OnCalculationsInvalidated();
         }
 
-        private void rbFrost_CheckedChanged(object sender, EventArgs e)
+        private void cbMagicVuln_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbFrost.Checked) { calcOpts.rotation = CalculationOptionsDPSDK.Rotation.Frost; }
+            if (cbMagicVuln.Checked) { calcOpts.MagicVuln = true; }
+            else { calcOpts.MagicVuln = true; }
             Character.OnCalculationsInvalidated();
         }
 
-        private void rbBlood_CheckedChanged(object sender, EventArgs e)
+        private void cbCryptFever_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbBlood.Checked) { calcOpts.rotation = CalculationOptionsDPSDK.Rotation.Blood; }
+            if (cbCryptFever.Checked) { calcOpts.CryptFever = true; }
+            else { calcOpts.CryptFever = true; }
             Character.OnCalculationsInvalidated();
         }
     }
@@ -314,12 +357,7 @@ namespace Rawr.DPSDK
 			return xml.ToString();
 		}
 
-        public enum Rotation
-        {
-            Unholy, Frost, Blood
-        }
-
-		public int TargetLevel = 73;
+        public int TargetLevel = 73;
 		public int BossArmor = 7700;
 		public int FightLength = 10;
 		public bool EnforceMetagemRequirements = false;
@@ -328,7 +366,11 @@ namespace Rawr.DPSDK
         public bool DrumsOfWar = false;
         public int FerociousInspiration = 2;
         public bool Windfury = false;
+	    public bool UnleashedRage = false;
+	    public bool MagicVuln = false;
+	    public bool CryptFever = false;
         public bool HammerOfWrath = false;
+	    public bool BloodPresence = true;  //This isn't changeable... ATM no other presence comes close in DPS
 
 	    public DeathKnightTalents talents = null;
 	    public Rotation rotation;
