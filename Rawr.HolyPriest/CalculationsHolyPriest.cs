@@ -47,6 +47,7 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Health",
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
+                    "Basic Stats:Resilience",
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
                     "Basic Stats:Spell Power",
@@ -118,8 +119,10 @@ namespace Rawr.HolyPriest
             }
         }
 
-        private float SimulateSimple(Spell heal)
+        private float Calc_GreaterHeal_Burst(Stats stats, Char character)
         {
+
+        
             return 0;
         }
 
@@ -136,12 +139,10 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            // Trinkets that give average stat increases go here:
-
             calculatedStats.BasicStats.Stamina = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (1 + character.PriestTalents.Enlightenment * 0.01f));
             calculatedStats.BasicStats.Health = (float)Math.Floor(calculatedStats.BasicStats.Stamina * 10f + statsRace.Health);
             calculatedStats.BasicStats.Spirit = (float)Math.Floor(calculatedStats.BasicStats.Spirit * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f) * (1 + character.PriestTalents.Enlightenment * 0.01f));
-            calculatedStats.BasicStats.Intellect = (float)Math.Floor(calculatedStats.BasicStats.Intellect * (1 + character.PriestTalents.MentalStrength * 0.03f));
+            calculatedStats.BasicStats.Intellect = (float)Math.Floor(calculatedStats.BasicStats.Intellect * (1 + character.PriestTalents.MentalStrength * 0.03f) * (1 + calculatedStats.BasicStats.BonusIntellectMultiplier));
             calculatedStats.BasicStats.Mana = (float)Math.Floor((calculatedStats.BasicStats.Intellect - 20f) * 15f + 20f + statsRace.Mana);
             calculatedStats.BasicStats.SpellCrit = (calculatedStats.BasicStats.Intellect / 80f) +
                 (calculatedStats.BasicStats.CritRating / 22.08f) + 1.24f;
@@ -155,6 +156,27 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
+
+            int Rotation = calculationOptions.Rotation;
+            if (Rotation == 0) // OOOH MAGIC TANK ROTATION!!!
+            {
+                if (character.PriestTalents.Penance > 0)
+                    Rotation = 7; // Disc-MT
+                else
+                    Rotation = 5; // Holy-MT
+            }
+            else if (Rotation == 1) // Raid rotation
+            {
+                if (character.PriestTalents.Penance > 0)
+                    Rotation = 8; // Disc-Raid (PW:S/Penance/Flash)
+                else if (character.PriestTalents.CircleOfHealing > 0)
+                    Rotation = 6; // Holy-Raid (CoH/FH)
+                else
+                    Rotation = 3; // Fallback to Flash Heal raid.
+
+            }
+
+            List<Spell> sr = new List<Spell>();
             Stats simstats = new Stats() + calculatedStats.BasicStats;
 
             if (simstats.SpiritFor20SecOnUse2Min > 0)
@@ -167,9 +189,7 @@ namespace Rawr.HolyPriest
                 simstats.Spirit += 130f * 20f / 120f * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f) * (1 + character.PriestTalents.Enlightenment * 0.01f); ;
                 simstats.SpellCombatManaRegeneration += 0.15f * 15f / 60f;
             }
-            // We put in our averaged values (use/procs) here.
-            float simregen = (float)Math.Floor(0.001f + 0.0093271 * simstats.Spirit * Math.Sqrt(simstats.Intellect));
-            
+           
             // MP5 from Replenishment
             simstats.Mp5 += calculatedStats.BasicStats.Mana * 0.0025f * calculationOptions.Replenishment / 100f * 5;
 
@@ -178,190 +198,200 @@ namespace Rawr.HolyPriest
             simstats.Mp5 += (simstats.Mana * 0.4f * calculationOptions.Shadowfiend / 100f)
                 / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f) * 5f;
 
-            // Mana as MP5 based on fight length.
+            float manapotion = ((calculationOptions.ManaPotion) ? (1800f + 3000f) / 2f : 0) * (1f + simstats.BonusManaPotion);
+
+            // We put in our averaged values (use/procs) here.
+            float simregen = (float)Math.Floor(0.001f + 0.0093271 * simstats.Spirit * Math.Sqrt(simstats.Intellect));
+
+            // Calculate regen in FSR/oFSR and add on mana + mana potion as MP5 based on fight length.
             float periodicRegenInFSR = (simregen * simstats.SpellCombatManaRegeneration
+                + (simstats.Mana + manapotion) / calculationOptions.FightLength / 60f
                 + simstats.Mp5 / 5); // MP1
 
             float periodicRegenOutFSR = (simregen
+                + (simstats.Mana + manapotion) / calculationOptions.FightLength / 60f
                 + simstats.Mp5 / 5); // MP1
-
-
-
-            int Rotation = calculationOptions.Rotation;
-            if (Rotation == 0) // OOOH MAGIC ROTATION!!!
-            {
-                if (character.PriestTalents.Penance > 0)
-                    Rotation = 6; // Disc-MT
-                else
-                    Rotation = 4; // Holy-MT
-                Rotation = 1; // Not yet implemented any of those :P
-            }
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestorePerCast_5_15 * 0.05f;
-            float mana = simstats.Mana; // Add on mana potion here.
-            float fightingtime = calculationOptions.FightLength * 60f;
-            float healedamount, fightlength, timeslice, lastcast, hccounter;
             float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
                 * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 1f) / 100f;
+            float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
             float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 10f;
-            int ihchasted, manause;
+            float solchance = (character.PriestTalents.HolySpecialization * 1f + simstats.SpellCrit) / 100f * character.PriestTalents.SurgeOfLight * 0.25f;
+            float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
+            float manareg = calculationOptions.FSRRatio / 100f * periodicRegenInFSR + (1 - calculationOptions.FSRRatio / 100) * periodicRegenOutFSR;
+            float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
+            float raptureconst = 0.01035f * simstats.Mana / statsRace.Mana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
+            float healmultiplier = 1 + character.PriestTalents.Grace * 0.03f;
 
+            // Add on Renewed Hope crit for Maintank Rotation.
+            if (Rotation == 7)
+                simstats.SpellCrit += character.PriestTalents.RenewedHope * 2f;
+
+            //Spell spell;
+            GreaterHeal gh = GreaterHeal.GetAllCommonRanks(simstats, character)[0] as GreaterHeal;
+            FlashHeal fh = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
+            CircleOfHealing coh = CircleOfHealing.GetAllCommonRanks(simstats, character, 5)[0] as CircleOfHealing;
+            Penance penance = Penance.GetAllCommonRanks(simstats, character)[0] as Penance;
+            PowerWordShield pws = PowerWordShield.GetAllCommonRanks(simstats, character)[0] as PowerWordShield;
+            PrayerOfMending prom_1 = PrayerOfMending.GetAllCommonRanks(simstats, character, 1)[0] as PrayerOfMending;
+            PrayerOfMending prom_2 = PrayerOfMending.GetAllCommonRanks(simstats, character, 2)[0] as PrayerOfMending;
+            PrayerOfMending prom_3 = PrayerOfMending.GetAllCommonRanks(simstats, character, 3)[0] as PrayerOfMending;
+            Renew renew = Renew.GetAllCommonRanks(simstats, character)[0] as Renew;
+
+            // Surge of Light Flash Heal (cannot crit, is free)
+            FlashHeal fh_sol = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
+            fh_sol.SurgeOfLight();
+            
+            // Improved Holy Concentration Haste
+            simstats.SpellHaste += ihchaste;
+            GreaterHeal gh_hc = GreaterHeal.GetAllCommonRanks(simstats, character)[0] as GreaterHeal; 
+            FlashHeal fh_hc = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
+            FlashHeal fh_hc_sol = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
+            fh_hc_sol.SurgeOfLight();
+            simstats.SpellHaste -= ihchaste;
+
+            // Borrowed Time Haste
+            simstats.SpellHaste += character.PriestTalents.BorrowedTime * 5f;
+            GreaterHeal gh_bt = GreaterHeal.GetAllCommonRanks(simstats, character)[0] as GreaterHeal;
+            FlashHeal fh_bt = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
+            Penance penance_bt = Penance.GetAllCommonRanks(simstats, character)[0] as Penance;
+            simstats.SpellHaste -= character.PriestTalents.BorrowedTime * 5f;
 
             switch (Rotation)
             {
-                case 1: // Greater Heal Spam
-                    //int x = SimulateSimple(GreaterHeal);
-                    Spell gh = GreaterHeal.GetAllCommonRanks(simstats, character)[0];
-                    simstats.SpellHaste += ihchaste;
-                    Spell gh_hc = GreaterHeal.GetAllCommonRanks(simstats, character)[0];
-                    calculatedStats.HPSBurstPoints = gh.HpS * (1f - hcchance) + gh_hc.HpS * hcchance;
-                    healedamount = fightlength = timeslice = hccounter = 0;
-                    ihchasted = manause = 0;
-                    lastcast = 5f;
-                    while (true) // Keep on fighting to the end!
-                    {
-                        timeslice = 0.1f; // Default, 0.1 second passes.
-                        if (mana > gh.ManaCost)
-                        { // Cast Greater Heal
-                            if (ihchasted > 0)
-                            {
-                                ihchasted--;
-                                timeslice = gh_hc.CastTime;
-                                manause = gh_hc.ManaCost;
-                                healedamount += gh_hc.HpS * timeslice;
-                            }
-                            else
-                            {
-                                timeslice = gh.CastTime;
-                                manause = gh_hc.ManaCost;
-                                healedamount += gh.HpS * timeslice;
-                            }
-                            if (hccounter < 1f)
-                            {
-                                mana -= manause;
-                                mana += manause * calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-                                lastcast = 0;
-                            }
-                            else
-                            {
-                                hccounter -= 1f;
-                                if (ihchaste > 0)
-                                    ihchasted = 2;
-                            }
-                            mana += metaSpellCostReduction;
-                            hccounter += hcchance;
-                            if (fightlength >= fightingtime)
-                                break;
-                        }
-                        else
-                            lastcast += timeslice;
-                        if (lastcast > 5f)
-                        {
-                            float timeFSR = lastcast - timeslice;
-                            if (timeFSR < 5f)
-                            { // Just entered FSR, partial time spent OFSR
-                                mana += periodicRegenInFSR * (5f - timeFSR)
-                                    + periodicRegenOutFSR * (lastcast - 5f);                                
-                            }
-                            else // Full time FSR regen
-                                mana += periodicRegenOutFSR * timeslice;
-                        }
-                        else
-                            mana += periodicRegenInFSR * timeslice;
-                        fightlength += timeslice;
-                    }
-                    calculatedStats.HPSSustainPoints = healedamount / fightlength;
+                case 2:     // Greater Heal Spam
+                    sr.Add(gh);
                     break;
-                case 2: // Flash Heal Spam
-                    Spell fh = FlashHeal.GetAllCommonRanks(simstats, character)[0];
-                    calculatedStats.HPSBurstPoints = fh.HpS * ihchaste;
-                    healedamount = fightlength = timeslice = hccounter = 0;
-                    lastcast = 5f;
-                    while (true) // Keep on fighting to the end!
-                    {
-                        timeslice = 0.1f; // Default, 0.1 second passes.
-                        if (mana > fh.ManaCost)
-                        { // Cast Greater Heal
-                            timeslice = fh.CastTime;
-                            healedamount += fh.HpS * timeslice;
-                            if (hccounter < 1f)
-                            {
-                                mana -= fh.ManaCost;
-                                mana += fh.ManaCost * calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
-                            }
-                            else
-                                hccounter -= 1f;
-                            mana += metaSpellCostReduction;
-                            hccounter += hcchance;
-                            lastcast = 0;
-                            if (fightlength >= fightingtime)
-                                break;
-                        }
-                        else
-                            lastcast += timeslice;
-                        if (lastcast > 5f)
-                        {
-                            float timeFSR = lastcast - timeslice;
-                            if (timeFSR < 5f)
-                            { // Just entered FSR, partial time spent OFSR
-                                mana += periodicRegenInFSR * (5f - timeFSR)
-                                    + periodicRegenOutFSR * (lastcast - 5f);
-                            }
-                            else // Full time FSR regen
-                                mana += periodicRegenOutFSR * timeslice;
-                        }
-                        else
-                            mana += periodicRegenInFSR * timeslice;
-                        fightlength += timeslice;
-                    }
-                    calculatedStats.HPSSustainPoints = healedamount / fightlength;
+                case 3:     // Flash Heal Spam
+                    sr.Add(fh);
                     break;
-                case 3: // Circle of Healing Spam
-                    Spell coh = CircleOfHealing.GetAllCommonRanks(simstats, character, 5)[0];
-                    calculatedStats.HPSBurstPoints = coh.HpS;
-                    healedamount = fightlength = timeslice = 0;
-                    lastcast = 5f;
-                    while (true) // Keep on fighting to the end!
-                    {
-                        timeslice = 0.1f; // Default, 0.1 second passes.
-                        if (mana > coh.ManaCost)
-                        { // Cast Greater Heal
-                            timeslice = coh.CastTime;
-                            healedamount += coh.HpS * timeslice;
-                            mana -= coh.ManaCost;
-                            mana += metaSpellCostReduction;
-                            lastcast = coh.GlobalCooldown;
-                            if (fightlength >= fightingtime)
-                                break;
-                        }
-                        else
-                            lastcast += timeslice;
-                        if (lastcast > 5f)
-                        {
-                            float timeFSR = lastcast - timeslice;
-                            if (timeFSR < 5f)
-                            { // Just entered FSR, partial time spent OFSR
-                                mana += periodicRegenInFSR * (5f - timeFSR)
-                                    + periodicRegenOutFSR * (lastcast - 5f);
-                            }
-                            else // Full time FSR regen
-                                mana += periodicRegenOutFSR * timeslice;
-                        }
-                        else
-                            mana += periodicRegenInFSR * timeslice;
-                        fightlength += timeslice;
-                    }
-                    calculatedStats.HPSSustainPoints = healedamount / fightlength;
-                    break; 
-                default:          
-                    calculatedStats.HPSBurstPoints = calculatedStats.BasicStats.SpellPower * 1.88f
+                case 4:     // Circle of Healing Spam
+                    sr.Add(coh);
+                    break;
+                case 5:     // Holy MT Healing, renew + prom + ghx5 repeat
+                    sr.Add(renew);      // 1.5s 1.5  -13.5 -??.?
+                    sr.Add(prom_1);     // 1.5s 3.0  -12.0 -8.5
+                    sr.Add(gh);         // 2.5s 5.5  -9.5  -6
+                    sr.Add(gh);         // 2.5s 8.0  -7.0  -3.5
+                    sr.Add(gh);         // 2.5s 10.5 -4.5  -1.0
+                    sr.Add(gh);         // 2.5s 13.0 -2    -??
+                    sr.Add(gh);         // 2.5s 15.5 -??   -??   Although, adjusted for haste and improved holy conc, this gets better and better.
+                    break;
+                case 6:     // Holy Raid Healing, prom, cohx2, fh, cohx2, fh
+                    sr.Add(prom_3);     // 1.5s 1.5 -8.5
+                    sr.Add(coh);        // 1.5s 3.0 -7.0
+                    sr.Add(coh);        // 1.5s 4.5 -5.5
+                    sr.Add(fh);         // 1.5s 6.0 -4.0
+                    sr.Add(coh);        // 1.5s 7.5 -2.5
+                    sr.Add(coh);        // 1.5s 9.0 -1.0
+                    sr.Add(fh);         // 1.5s 10.5 - ?
+                    // Repeat
+                    break;
+                case 7:     // Disc MT Healing, pws, penance, prom, gh, penance
+                    sr.Add(pws);        // 1.5s 1.5  -15.0 -2.5 -??   -??
+                    sr.Add(penance_bt); // 1.5s 3.0  -13.5 -1.0 -??   -6.5
+                    sr.Add(prom_1);     // 1.5s 4.5  -12.0 -??  -8.5  -5.0
+                    sr.Add(gh);         // 3.0s 7.5  -9.0  -??  -5.5  -2.0
+                    sr.Add(gh);         // 3.0s 10.5 -6.0  -??  -2.5  -??
+                    sr.Add(penance);    // 2.0s 12.5 -4.0  -??  -0.5  -6.0
+                    sr.Add(gh);         // 3.0s 11.0 -5.5  -??  -0.5  -3.0
+                    sr.Add(prom_1);     // 1.5s 12.5 -4.0  -??  -8.5  -1.5
+                    sr.Add(fh);         // 1.5s 14.0 -2.5  -??  -7.0  -??
+                    sr.Add(penance);    // 2.0s 16.0 -0.5  -??  -5.0  -6.0
+                    sr.Add(gh);         // 3.0s 19.0 -??   -??  -3.5  -3.0
+                    // repeat
+                    break;
+                case 8:     // Disc Raid Healing, pws, penance, prom, pw:s, fh, fh
+                    sr.Add(pws);        // 1.5  1.5  -2.5  -??   -??
+                    sr.Add(penance_bt); // 1.5  3.0  -1.0  -8.0  -??
+                    sr.Add(prom_3);     // 1.5  4.5  -??   -6.5  -8.5
+                    sr.Add(pws);        // 1.5  6.0  -2.5  -5.0  -7.0
+                    sr.Add(fh_bt);      // 1.5  7.5  -1.0  -3.5  -5.5
+                    sr.Add(fh);         // 1.5  9.0  -??   -2.0  -4.0
+                    // repeat
+                    break;
+                default:
+                    break;
+            }
+
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0;
+            for (int x = 0; x < sr.Count; x++)
+            {
+                float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
+                if (sr[x] == gh || sr[x] == gh_bt)
+                {   // Greater Heal (A Borrowed Time GHeal cannot also be improved Holy conc hasted, so this works)
+                    clen = sr[x].CastTime * (1f - ihcastshasted) + gh_hc.CastTime * ihcastshasted;
+                    rheal = sr[x].AvgTotHeal * healmultiplier;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
+                    mcost = sr[x].ManaCost;
+                    mcost -= mcost * hcchance;
+                    mcost -= mcost * serendipityconst;
+                }
+                else if (sr[x] == fh || sr[x] == fh_bt)
+                {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
+                    clen = sr[x].CastTime * (1f - hcchance) + fh_hc.CastTime * hcchance;
+                    rheal = sr[x].AvgTotHeal * healmultiplier;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
+                    mcost = sr[x].ManaCost;
+                    mcost -= mcost * hcchance;
+                    mcost -= mcost * solctr;
+                    solctr = 0;
+                    mcost -= mcost * serendipityconst;
+                }
+                else if (sr[x] == penance || sr[x] == penance_bt)
+                {
+                    clen = sr[x].CastTime;
+                    rheal = sr[x].AvgTotHeal * healmultiplier;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    mcost = sr[x].ManaCost;
+                }
+                else if (sr[x] == coh)
+                {   // Circle of Healing
+                    clen = coh.GlobalCooldown;
+                    heal = coh.AvgTotHeal * healmultiplier;
+                    solctr = 1f - (1f - solctr) * (1f - sol5chance);
+                    mcost = coh.ManaCost;
+                }
+                else if (sr[x] == renew)
+                {   // Renew
+                    clen = renew.GlobalCooldown;
+                    heal = renew.AvgTotHeal * healmultiplier;
+                    mcost = renew.ManaCost;
+                }
+                else if (sr[x] == pws)
+                {
+                    clen = pws.GlobalCooldown;
+                    absorb = pws.AvgTotHeal;
+                    mcost = pws.ManaCost;
+                }
+                else if (sr[x] == prom_1 || sr[x] == prom_2 || sr[x] == prom_3)
+                {
+                    clen = sr[x].GlobalCooldown;
+                    heal = sr[x].AvgTotHeal * healmultiplier;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    mcost = sr[x].ManaCost;
+                }
+                cyclelen += clen;
+                healamount += heal + rheal + absorb;
+                manacost += mcost;
+                manacost -= (rheal + absorb) * raptureconst;
+                manacost -= metaSpellCostReduction;
+            }
+
+            calculatedStats.HPSBurstPoints = healamount / cyclelen;
+            calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * manareg * cyclelen / manacost;
+            /*     
+                   calculatedStats.HPSBurstPoints = calculatedStats.BasicStats.SpellPower * 1.88f
                         + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min * 15f / 120f)
                         + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse90Sec * 15f / 90f)
                         + (calculatedStats.BasicStats.HealingDoneFor20SecOnUse2Min * 20f / 120f)
                         + (calculatedStats.BasicStats.SpiritFor20SecOnUse2Min * character.PriestTalents.SpiritualGuidance * 0.05f * 20f / 120f);
 
-                    /*calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
+                    calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
                        calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
                         + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
                         + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
@@ -373,11 +403,11 @@ namespace Rawr.HolyPriest
                         + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f
                         + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
                         + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
-                    */
+                    
                     calculatedStats.HPSSustainPoints = 0;
                     break;
             }
-
+            */
             // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
@@ -490,7 +520,7 @@ namespace Rawr.HolyPriest
             switch (chartName)
             {
                 case "Spell AoE HpS":
-                    _currentChartName = "Spell HpS";
+                    _currentChartName = "Spell AoE HpS";
                     p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     spellList = new List<Spell>[] {
                                                 Renew.GetAllCommonRanks(p.BasicStats, character),
@@ -523,7 +553,7 @@ namespace Rawr.HolyPriest
 
                     return comparisonList.ToArray();
                 case "Spell AoE HpM":
-                    _currentChartName = "Spell HpM";
+                    _currentChartName = "Spell AoE HpM";
                     p = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
                     spellList = new List<Spell>[] {
                                                 Renew.GetAllCommonRanks(p.BasicStats, character),
@@ -631,6 +661,8 @@ namespace Rawr.HolyPriest
                     CharacterCalculationsHolyPriest calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 50 } }) as CharacterCalculationsHolyPriest;
                     CharacterCalculationsHolyPriest calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 50 } }) as CharacterCalculationsHolyPriest;
                     CharacterCalculationsHolyPriest calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 50 } }) as CharacterCalculationsHolyPriest;
+                    CharacterCalculationsHolyPriest calcsSta = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 50 } }) as CharacterCalculationsHolyPriest;
+                    CharacterCalculationsHolyPriest calcsRes = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 50 } }) as CharacterCalculationsHolyPriest;
 
                     return new ComparisonCalculationBase[] {
                         new ComparisonCalculationHolyPriest() { Name = "1 Intellect",
@@ -668,6 +700,18 @@ namespace Rawr.HolyPriest
                             HealPoints = (calcsCrit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
                             RegenPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
                             HastePoints = (calcsCrit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationHolyPriest() { Name = "1 Stamina",
+                            OverallPoints = (calcsSta.OverallPoints - calcsBase.OverallPoints) / 50,
+                            HealPoints = (calcsSta.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            RegenPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            HastePoints = (calcsSta.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationHolyPriest() { Name = "1 Resilience",
+                            OverallPoints = (calcsRes.OverallPoints - calcsBase.OverallPoints) / 50,
+                            HealPoints = (calcsRes.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            RegenPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            HastePoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         }};
                 default:
                     _currentChartName = null;
@@ -688,6 +732,8 @@ namespace Rawr.HolyPriest
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
+                Resilience = stats.Resilience,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 MementoProc = stats.MementoProc,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
@@ -710,7 +756,7 @@ namespace Rawr.HolyPriest
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Resilience + stats.Mp5 + stats.SpellPower + stats.CritRating
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
                 + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration

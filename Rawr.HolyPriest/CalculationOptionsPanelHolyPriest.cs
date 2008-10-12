@@ -26,18 +26,21 @@ namespace Rawr.HolyPriest
 
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
 
-            ckbMergeHaste.Checked = calcOpts.MergeHaste;
+            ckbManaPotion.Checked = calcOpts.ManaPotion;
             
             cbRotation.SelectedIndex = calcOpts.Rotation;
 
-            trkActivity.Value = (int)calcOpts.TimeInFSR;
-            lblActivity.Text = trkActivity.Value + "% of Fight spent in FSR.";
+            trkActivity.Value = (int)calcOpts.FSRRatio;
+            lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
 
             trkFightLength.Value = (int)calcOpts.FightLength;
             lblFightLength.Text = trkFightLength.Value + " minute Fight.";
 
             trkSerendipity.Value = (int)calcOpts.Serendipity;
             lblSerendipity.Text = trkSerendipity.Value + "% Heals give Serendipity.";
+
+            trkRapture.Value = (int)calcOpts.Rapture;
+            lblRapture.Text = trkRapture.Value + "% of max Rapture returns.";
 
             trkReplenishment.Value = (int)calcOpts.Replenishment;
             lblReplenishment.Text = trkReplenishment.Value + "% time with Replenishment buff.";
@@ -52,12 +55,12 @@ namespace Rawr.HolyPriest
         }
 
 
-        private void ckbMergeHaste_CheckedChanged(object sender, EventArgs e)
+        private void ckbManaPotion_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.MergeHaste = ckbMergeHaste.Checked;
+                calcOpts.ManaPotion = ckbManaPotion.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -67,8 +70,8 @@ namespace Rawr.HolyPriest
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                lblActivity.Text = trkActivity.Value + "% of Fight spent in FSR.";
-                calcOpts.TimeInFSR = trkActivity.Value;
+                lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
+                calcOpts.FSRRatio = trkActivity.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -138,7 +141,17 @@ namespace Rawr.HolyPriest
                 calcOpts.Survivability = trkSurvivability.Value;
                 Character.OnCalculationsInvalidated();
             }
+        }
 
+        private void trkRapture_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                lblRapture.Text = trkRapture.Value + "% of max Rapture returns.";
+                calcOpts.Rapture = trkRapture.Value;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
     }
@@ -156,13 +169,14 @@ namespace Rawr.HolyPriest
 			return xml.ToString();
 		}
 
-        public bool MergeHaste = false;
+        public bool ManaPotion = true;
         public int Rotation = 0;
-        public float TimeInFSR = 85f;
+        public float FSRRatio = 85f;
         public float FightLength = 5f;
         public float Serendipity = 100f;
         public float Replenishment = 50f;
         public float Shadowfiend = 80f;
         public float Survivability = 5f;
+        public float Rapture = 100f;
 	}
 }

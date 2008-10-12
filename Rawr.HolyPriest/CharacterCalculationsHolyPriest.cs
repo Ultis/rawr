@@ -65,6 +65,7 @@ namespace Rawr.HolyPriest
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.", BasicStats.Resilience.ToString(), (BasicStats.Resilience / 39.42f).ToString("0.00"), (BasicStats.Resilience / 39.42f * 2f).ToString("0.00")));
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));

@@ -70,6 +70,11 @@ namespace Rawr.HolyPriest
 
         #region Properties
 
+        public bool IsInstant
+        {
+            get { return CastTime == 0; }
+        }
+
         public bool IsHot
         {
             get { return HotDuration > 0; }
@@ -83,14 +88,22 @@ namespace Rawr.HolyPriest
             }
         }
 
+        public virtual float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f);
+            }
+        }
+
         public virtual float HpS
         {
             get
             {
                 if (IsHot)
-                    return AvgHeal/HotDuration;
+                    return AvgHeal / HotDuration;
 
-                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) / CastTime;
+                return AvgTotHeal / CastTime;
             }
         }
 
@@ -98,7 +111,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -211,6 +224,7 @@ namespace Rawr.HolyPriest
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);
             ManaCost = (int)Math.Floor(ManaCostBase
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
+            CastTime = 0;
         }
 
         public override string ToString()
@@ -269,14 +283,12 @@ namespace Rawr.HolyPriest
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.04f + HealingCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.04f + HealingCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             CastTime = Math.Max(1.0f, baseSpellTable[Rank - 1].CastTime / (1 + stats.HasteRating / 15.7f / 100f + stats.SpellHaste / 100f));
@@ -285,6 +297,14 @@ namespace Rawr.HolyPriest
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);
             ManaCost = ManaCostBase;
         }
+
+        public void SurgeOfLight()
+        {
+            CritChance = 0;
+            ManaCost = 0;
+            CastTime = 0;
+       }
+
     }
 
     public class Heal : Spell
@@ -327,12 +347,10 @@ namespace Rawr.HolyPriest
             MinHeal = (baseSpellTable[Rank - 1].MinHeal + 
                 stats.SpellPower * SP2HP * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);
@@ -389,7 +407,6 @@ namespace Rawr.HolyPriest
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.08f + HealingCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
                 * (1 + stats.BonusGHHealingMultiplier);
 
@@ -397,7 +414,6 @@ namespace Rawr.HolyPriest
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) 
                 * (character.PriestTalents.EmpoweredHealing * 0.08f + HealingCoef))
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f) 
                 * (1 + stats.BonusGHHealingMultiplier);
 
@@ -432,11 +448,19 @@ namespace Rawr.HolyPriest
                                                Color.DarkOrange
                                            };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets;
+            }
+        }
+        
         public override float HpS
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / CastTime;
+                return AvgTotHeal / CastTime;
             }
         }
 
@@ -444,7 +468,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / ManaCost;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -538,11 +562,19 @@ namespace Rawr.HolyPriest
                                                Color.Goldenrod
                                            };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets;
+            }
+        }        
+        
         public override float HpS
         {
             get
             {
-                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / GlobalCooldown) * Targets;
+                return AvgTotHeal / GlobalCooldown;
             }
         }
 
@@ -550,7 +582,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit *  CritChance / 100f) * Targets / ManaCost;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -605,6 +637,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
             
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
+            CastTime = 0;
         }
 
         public override string ToString()
@@ -648,11 +681,19 @@ namespace Rawr.HolyPriest
                                                Color.Brown
                                            };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f);
+            }
+        }
+        
         public override float HpS
         {
             get
             {
-                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / GlobalCooldown) * Targets;
+                return AvgTotHeal / GlobalCooldown;
             }
         }
 
@@ -660,7 +701,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return ((AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost) * Targets;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -714,6 +755,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
             
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
+            CastTime = 0;
         }
 
         public override string ToString()
@@ -742,11 +784,19 @@ namespace Rawr.HolyPriest
             new BaseSpell(1,    1042,   1338,   27,    1.5f,   0)
             };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) * 2;
+            }
+        }
+
         public override float HpS
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / CastTime * 2;
+                return AvgTotHeal / CastTime;
             }
         }
 
@@ -754,7 +804,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost * 2;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -838,11 +888,19 @@ namespace Rawr.HolyPriest
                                                Color.DeepSkyBlue
                                            };
 
+        public override float AvgTotHeal
+        {
+            get
+            {
+                return (AvgHeal * (1 - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets;
+            }
+        }
+
         public override float HpS
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) * Targets / CastTime;
+                return AvgTotHeal / GlobalCooldown;
             }
         }
 
@@ -850,7 +908,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (AvgHeal * (1f - CritChance / 100f) + AvgCrit * CritChance / 100f) / ManaCost * Targets;
+                return AvgTotHeal / ManaCost;
             }
         }
 
@@ -904,6 +962,7 @@ namespace Rawr.HolyPriest
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 1.0f;
+            CastTime = 0;
             Cooldown = 10.0f;
         }
 
@@ -944,7 +1003,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return AvgHeal/GlobalCooldown;
+                return AvgHeal / GlobalCooldown;
             }
         }
 
@@ -1052,6 +1111,7 @@ namespace Rawr.HolyPriest
             ManaCostBase =(int)Math.Floor(ManaCostBase / 100f * BaseMana[character.Level]);
             ManaCost = ManaCostBase;
 
+            CastTime = 0;
             Cooldown = 3.0f * 60.0f;
         }
 
@@ -1103,14 +1163,12 @@ namespace Rawr.HolyPriest
             Rank = rank;
             MinHeal = (baseSpellTable[Rank - 1].MinHeal +
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) * HealingCoef)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             MaxHeal = (baseSpellTable[Rank - 1].MaxHeal +
                 stats.SpellPower * SP2HP * (1 - baseSpellTable[Rank - 1].RankCoef) * HealingCoef)
-                * (1 + character.PriestTalents.Grace * 0.03f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);

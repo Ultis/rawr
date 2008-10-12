@@ -40,18 +40,21 @@
             this.trkSerendipity = new System.Windows.Forms.TrackBar();
             this.trkReplenishment = new System.Windows.Forms.TrackBar();
             this.trkShadowfiend = new System.Windows.Forms.TrackBar();
-            this.ckbMergeHaste = new System.Windows.Forms.CheckBox();
+            this.ckbManaPotion = new System.Windows.Forms.CheckBox();
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.lblSerendipity = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblSurvivability = new System.Windows.Forms.Label();
+            this.trkRapture = new System.Windows.Forms.TrackBar();
+            this.lblRapture = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).BeginInit();
             this.SuspendLayout();
             // 
             // trkActivity
@@ -59,13 +62,11 @@
             this.trkActivity.BackColor = System.Drawing.SystemColors.Control;
             this.trkActivity.Location = new System.Drawing.Point(10, 93);
             this.trkActivity.Maximum = 100;
-            this.trkActivity.Minimum = 1;
             this.trkActivity.Name = "trkActivity";
-            this.trkActivity.Size = new System.Drawing.Size(189, 42);
+            this.trkActivity.Size = new System.Drawing.Size(235, 42);
             this.trkActivity.TabIndex = 23;
             this.trkActivity.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkActivity, resources.GetString("trkActivity.ToolTip"));
-            this.trkActivity.Value = 90;
             this.trkActivity.Scroll += new System.EventHandler(this.trkActivity_Scroll);
             // 
             // lblActivity
@@ -82,17 +83,19 @@
             this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRotation.FormattingEnabled = true;
             this.cbRotation.Items.AddRange(new object[] {
-            "Auto (Rawr picks from Talents)",
+            "Auto Tank (Rawr picks from Talents)",
+            "Auto Raid (Rawr picks from Talents)",
             "Greater Heal Spam (GH)",
             "Flash Heal Spam (FH)",
             "Circle of Healing Spam (CoH)",
-            "Holy-MT (Renew/ProM/GH)",
-            "Holy-Raid (CoHx1/FHx1)",
-            "Disc-MT (Penance/PW:S/ProM/GH)",
+            "Holy-Tank (Renew/ProM/GH)",
+            "Holy-Raid (ProM/CoH/FH)",
+            "Disc-Tank (Penance/PW:S/ProM/GH)",
             "Disc-Raid (PW:S/Penance/Flash)"});
             this.cbRotation.Location = new System.Drawing.Point(10, 39);
+            this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";
-            this.cbRotation.Size = new System.Drawing.Size(189, 21);
+            this.cbRotation.Size = new System.Drawing.Size(235, 21);
             this.cbRotation.TabIndex = 26;
             this.toolTip1.SetToolTip(this.cbRotation, "Pick the spells to cast when comparing gear.");
             this.cbRotation.SelectedIndexChanged += new System.EventHandler(this.cbRotation_SelectedIndexChanged);
@@ -121,7 +124,7 @@
             this.trkFightLength.Maximum = 20;
             this.trkFightLength.Minimum = 1;
             this.trkFightLength.Name = "trkFightLength";
-            this.trkFightLength.Size = new System.Drawing.Size(189, 42);
+            this.trkFightLength.Size = new System.Drawing.Size(235, 42);
             this.trkFightLength.TabIndex = 29;
             this.toolTip1.SetToolTip(this.trkFightLength, "Changing this bar tells Rawr how long the fight is estimated to last. This has im" +
                     "pact on things like how good intellect and spirit and mp5 are compared to eachot" +
@@ -134,8 +137,7 @@
             this.trkSerendipity.Location = new System.Drawing.Point(10, 214);
             this.trkSerendipity.Maximum = 100;
             this.trkSerendipity.Name = "trkSerendipity";
-            this.trkSerendipity.Size = new System.Drawing.Size(186, 42);
-            this.trkSerendipity.SmallChange = 5;
+            this.trkSerendipity.Size = new System.Drawing.Size(235, 42);
             this.trkSerendipity.TabIndex = 30;
             this.trkSerendipity.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkSerendipity, "Tell Rawr how many % of your Greater Heals and Flash Heals overheal the target, g" +
@@ -144,10 +146,10 @@
             // 
             // trkReplenishment
             // 
-            this.trkReplenishment.Location = new System.Drawing.Point(10, 282);
+            this.trkReplenishment.Location = new System.Drawing.Point(10, 338);
             this.trkReplenishment.Maximum = 100;
             this.trkReplenishment.Name = "trkReplenishment";
-            this.trkReplenishment.Size = new System.Drawing.Size(189, 42);
+            this.trkReplenishment.Size = new System.Drawing.Size(235, 42);
             this.trkReplenishment.TabIndex = 33;
             this.trkReplenishment.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkReplenishment, "This tells Rawr how much of the time you are expected to have Replenishment.");
@@ -155,10 +157,10 @@
             // 
             // trkShadowfiend
             // 
-            this.trkShadowfiend.Location = new System.Drawing.Point(10, 345);
+            this.trkShadowfiend.Location = new System.Drawing.Point(10, 401);
             this.trkShadowfiend.Maximum = 100;
             this.trkShadowfiend.Name = "trkShadowfiend";
-            this.trkShadowfiend.Size = new System.Drawing.Size(189, 42);
+            this.trkShadowfiend.Size = new System.Drawing.Size(235, 42);
             this.trkShadowfiend.TabIndex = 35;
             this.trkShadowfiend.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkShadowfiend, "Tells Rawr how effective your Shadowfiend is expected to be. Against a boss, your" +
@@ -166,25 +168,24 @@
                     "5.5% miss. Keep that in mind.");
             this.trkShadowfiend.Scroll += new System.EventHandler(this.trkShadowfiend_Scroll);
             // 
-            // ckbMergeHaste
+            // ckbManaPotion
             // 
-            this.ckbMergeHaste.AutoSize = true;
-            this.ckbMergeHaste.Location = new System.Drawing.Point(10, 3);
-            this.ckbMergeHaste.Name = "ckbMergeHaste";
-            this.ckbMergeHaste.Size = new System.Drawing.Size(184, 17);
-            this.ckbMergeHaste.TabIndex = 36;
-            this.ckbMergeHaste.Text = "Merge Healing and Haste values.";
-            this.toolTip1.SetToolTip(this.ckbMergeHaste, "Merging Haste with Healing will allow you to compare items for pure HPS without c" +
-                    "onsideration for Mana Efficiency.");
-            this.ckbMergeHaste.UseVisualStyleBackColor = true;
-            this.ckbMergeHaste.CheckedChanged += new System.EventHandler(this.ckbMergeHaste_CheckedChanged);
+            this.ckbManaPotion.AutoSize = true;
+            this.ckbManaPotion.Location = new System.Drawing.Point(10, 3);
+            this.ckbManaPotion.Name = "ckbManaPotion";
+            this.ckbManaPotion.Size = new System.Drawing.Size(142, 17);
+            this.ckbManaPotion.TabIndex = 36;
+            this.ckbManaPotion.Text = "Use Super Mana Potion!";
+            this.toolTip1.SetToolTip(this.ckbManaPotion, "Tell Rawr to use a Super Mana Potion  (1800-3000 Mana)");
+            this.ckbManaPotion.UseVisualStyleBackColor = true;
+            this.ckbManaPotion.CheckedChanged += new System.EventHandler(this.ckbManaPotion_CheckedChanged);
             // 
             // trkSurvivability
             // 
-            this.trkSurvivability.Location = new System.Drawing.Point(10, 406);
+            this.trkSurvivability.Location = new System.Drawing.Point(10, 462);
             this.trkSurvivability.Maximum = 100;
             this.trkSurvivability.Name = "trkSurvivability";
-            this.trkSurvivability.Size = new System.Drawing.Size(184, 42);
+            this.trkSurvivability.Size = new System.Drawing.Size(235, 42);
             this.trkSurvivability.TabIndex = 38;
             this.trkSurvivability.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkSurvivability, "Change this slider to tell Rawr how much you value your Health.");
@@ -202,7 +203,7 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(7, 266);
+            this.lblReplenishment.Location = new System.Drawing.Point(7, 322);
             this.lblReplenishment.Name = "lblReplenishment";
             this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
             this.lblReplenishment.TabIndex = 32;
@@ -211,7 +212,7 @@
             // lblShadowfiend
             // 
             this.lblShadowfiend.AutoSize = true;
-            this.lblShadowfiend.Location = new System.Drawing.Point(7, 327);
+            this.lblShadowfiend.Location = new System.Drawing.Point(7, 383);
             this.lblShadowfiend.Name = "lblShadowfiend";
             this.lblShadowfiend.Size = new System.Drawing.Size(80, 13);
             this.lblShadowfiend.TabIndex = 34;
@@ -220,19 +221,40 @@
             // lblSurvivability
             // 
             this.lblSurvivability.AutoSize = true;
-            this.lblSurvivability.Location = new System.Drawing.Point(7, 390);
+            this.lblSurvivability.Location = new System.Drawing.Point(7, 446);
             this.lblSurvivability.Name = "lblSurvivability";
             this.lblSurvivability.Size = new System.Drawing.Size(63, 13);
             this.lblSurvivability.TabIndex = 37;
             this.lblSurvivability.Text = "Survivability";
             // 
+            // trkRapture
+            // 
+            this.trkRapture.Location = new System.Drawing.Point(10, 277);
+            this.trkRapture.Maximum = 100;
+            this.trkRapture.Name = "trkRapture";
+            this.trkRapture.Size = new System.Drawing.Size(235, 42);
+            this.trkRapture.TabIndex = 39;
+            this.trkRapture.TickFrequency = 5;
+            this.trkRapture.Scroll += new System.EventHandler(this.trkRapture_Scroll);
+            // 
+            // lblRapture
+            // 
+            this.lblRapture.AutoSize = true;
+            this.lblRapture.Location = new System.Drawing.Point(7, 259);
+            this.lblRapture.Name = "lblRapture";
+            this.lblRapture.Size = new System.Drawing.Size(56, 13);
+            this.lblRapture.TabIndex = 40;
+            this.lblRapture.Text = "% Rapture";
+            // 
             // CalculationOptionsPanelHolyPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblRapture);
+            this.Controls.Add(this.trkRapture);
             this.Controls.Add(this.trkSurvivability);
             this.Controls.Add(this.lblSurvivability);
-            this.Controls.Add(this.ckbMergeHaste);
+            this.Controls.Add(this.ckbManaPotion);
             this.Controls.Add(this.trkShadowfiend);
             this.Controls.Add(this.lblShadowfiend);
             this.Controls.Add(this.trkReplenishment);
@@ -246,13 +268,14 @@
             this.Controls.Add(this.lblActivity);
             this.Controls.Add(this.trkActivity);
             this.Name = "CalculationOptionsPanelHolyPriest";
-            this.Size = new System.Drawing.Size(212, 472);
+            this.Size = new System.Drawing.Size(258, 520);
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,8 +296,10 @@
         private System.Windows.Forms.TrackBar trkReplenishment;
         private System.Windows.Forms.Label lblShadowfiend;
         private System.Windows.Forms.TrackBar trkShadowfiend;
-        private System.Windows.Forms.CheckBox ckbMergeHaste;
+        private System.Windows.Forms.CheckBox ckbManaPotion;
         private System.Windows.Forms.Label lblSurvivability;
         private System.Windows.Forms.TrackBar trkSurvivability;
+        private System.Windows.Forms.TrackBar trkRapture;
+        private System.Windows.Forms.Label lblRapture;
     }
 }

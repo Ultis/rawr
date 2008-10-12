@@ -121,6 +121,6 @@
     <value>17, 17</value>
   </metadata>
   <data name="trkActivity.ToolTip" xml:space="preserve">
-    <value>Whenever you use mana, you enter what is called FSR. FSR (Five Second Rule) prevents you from regenerating mana at full capacity for 5 seconds. By modifying this slider, you tell Rawr how much of the time you spend inside the FSR.</value>
+    <value>Time of fight spent in FSR. FSR is the "Five Second Rule". Whenever you cast a spell that eats mana, you regenerate no mana from spirit until 5 seconds has passed. This slider lets you tell Rawr how much time in a fight you spend inside the FSR.</value>
   </data>
 </root>
