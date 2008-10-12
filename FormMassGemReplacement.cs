@@ -183,7 +183,7 @@ namespace Rawr
             }
             else
             {
-                /*foreach (Item item in ItemCache.RelevantItems)
+                foreach (Item item in ItemCache.RelevantItems)
                 {
                     
                     //check to make sure that it's not abbreviating the lists of items
@@ -194,28 +194,33 @@ namespace Rawr
                             ((item.GemmedId == ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)&&
                             (item.Sockets.GetColor(1) != Item.ItemSlot.None)))
                         {
-                           //delete all socketed items, except if it's at the end of relevantitems (in which case, leave one)
-                           foreach(Item exItem in listGemmableItems)
-                                ItemCache.DeleteItem(exItem);
 
-                            ItemCache.OnItemsChanged();
+                            if (item.GemmedId == ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)
+                                listGemmableItems.Add(item);
                             
-                            //replace them with ones bearing the gemming patterns we want
+                            //delete all socketed items, except if it's at the end of relevantitems (in which case, leave one)
+                            foreach(Item exItem in listGemmableItems)
+                                
+                                ItemCache.DeleteItem(exItem); 
+
+                            
+                            //add items that have the gemming patterns we want
+                          
                             foreach (Gemming set in listOfGemmings)
                             {
-                                string gemmedId = listGemmableItems[0].Id.ToString() + (set.gemmingID(item));
-
-                                //I think there's a bug in ItemCache.FindItembyID, hence the uglySplice
-                                //Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
-                                Item thingHolder = uglyCodeSplice(gemmedId);
+                                
+                                
+                                ItemCache.AddItem(set.gemIt(listGemmableItems[0]),true,false);
                             }
 
+                            
+                            
                             //delete the remaining item
-                            if (item.GemmedId == ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)
-                                ItemCache.DeleteItem(item);
-
-                            //reset the list for the next batch
-                            listGemmableItems = new List<Item>();
+                            if (item.GemmedId != ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)
+                            
+                                //reset the list for the next batch
+                                listGemmableItems = new List<Item>();
+                            
                             
                         }
                             
@@ -227,9 +232,9 @@ namespace Rawr
                     }
                 }
 
-                */
 
 
+              //  ItemCache.OnItemsChanged();
             }
 
         }
@@ -242,9 +247,9 @@ namespace Rawr
 				
 				string[] ids = gemmedId.Split('.');
 				int id = int.Parse(ids[0]);
-				int id1 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[1]) : 0;
-				int id2 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[2]) : 0;
-				int id3 = ids.Length == 4 || (ids.Length==5) ? int.Parse(ids[3]) : 0;
+				int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
+				int id2 = ids.Length == 4 ? int.Parse(ids[2]) : 0;
+				int id3 = ids.Length == 4 ? int.Parse(ids[3]) : 0;
 				string keyStartsWith = id.ToString() + ".";
 				foreach (string key in ItemCache.Items.Keys)
                     if (key.StartsWith(keyStartsWith))
@@ -371,13 +376,13 @@ namespace Rawr
 
         private void deleteDuplicateGemmings()
         {
-            Stack<Gemming> gemstack = new Stack<Gemming>();
+            List<Gemming> gemList = new List<Gemming>();
             List<int> hash = new List<int>();
             foreach (Gemming gem in listOfGemmings)
             {
                 if (!hash.Contains(gem.GetHashCode()))
                 {
-                    gemstack.Push(gem);
+                    gemList.Add(gem);
                     hash.Add(gem.GetHashCode());
                 }
 
@@ -392,7 +397,7 @@ namespace Rawr
             listOfGemmings.Clear();
             listOfGemmings = new List<Gemming>();
 
-            foreach(Gemming popGem in gemstack){
+            foreach(Gemming popGem in gemList){
                 listOfGemmings.Add(popGem);
             }
             
@@ -506,11 +511,11 @@ namespace Rawr
             if (gemRed != null)
                 a = gemRed.Id;
             if (gemYellow != null)
-                b = 2* gemRed.Id;
+                b = 2* gemYellow.Id;
             if (gemBlue != null)
-                c = 3* gemRed.Id;
+                c = 3* gemBlue.Id;
             if (gemMeta != null)
-                d = 4* gemRed.Id;
+                d = 4* gemMeta.Id;
 
 
             return (a + b + c + d);
@@ -524,6 +529,111 @@ namespace Rawr
             _gemMeta = Meta;
         }
 
+        public Item gemIt(Item item)
+        {
+            
+            if (item.Sockets.Color1 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color1)
+                {
+                    case Item.ItemSlot.Red:
+                        if (gemRed == null)
+                            item.Gem1 = null;
+                        else
+                            item.Gem1 = gemRed;
+                        break;
+
+                    case Item.ItemSlot.Blue:
+                        if (gemBlue == null)
+                            item.Gem1 = null;
+                        else
+                            item.Gem1 = gemBlue;
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (gemYellow == null)
+                            item.Gem1 = null;
+                        else
+                            item.Gem1 = gemYellow;
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (gemMeta == null)
+                            item.Gem1 = null;
+                        else
+                            item.Gem1 = gemMeta;
+                        break;
+                }
+            }
+            if (item.Sockets.Color2 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color2)
+                {
+                    case Item.ItemSlot.Red:
+                        if (gemRed == null)
+                            item.Gem2 = null;
+                        else
+                            item.Gem2 = gemRed;
+                        break;
+
+                    case Item.ItemSlot.Blue:
+                        if (gemBlue == null)
+                            item.Gem2 = null;
+                        else
+                            item.Gem2 = gemBlue;
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (gemYellow == null)
+                            item.Gem2 = null;
+                        else
+                            item.Gem2 = gemYellow;
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (gemMeta == null)
+                            item.Gem2 = null;
+                        else
+                            item.Gem2 = gemMeta;
+                        break;
+                }
+            }
+            if (item.Sockets.Color3 != Item.ItemSlot.None)
+            {
+                switch (item.Sockets.Color3)
+                {
+                    case Item.ItemSlot.Red:
+                        if (gemRed == null)
+                            item.Gem3 = null;
+                        else
+                            item.Gem3 = gemRed;
+                        break;
+                    case Item.ItemSlot.Blue:
+                        if (gemBlue == null)
+                            item.Gem3 = null;
+                        else
+                            item.Gem3 = gemBlue;
+                        break;
+
+                    case Item.ItemSlot.Yellow:
+                        if (gemYellow == null)
+                            item.Gem3 = null;
+                        else
+                            item.Gem3 = gemYellow;
+                        break;
+
+                    case Item.ItemSlot.Meta:
+                        if (gemMeta == null)
+                            item.Gem3 = null;
+                        else
+                            item.Gem3 = gemMeta;
+                        break;
+                }
+            }
+            Item copy = item.Clone();
+            return copy;
+        }
+
         public void copyGemming(Gemming sourceGemming)
         {
             this._gemRed = sourceGemming.gemRed;
@@ -534,9 +644,9 @@ namespace Rawr
 
         public string gemmingID(Item item)
         {
-            string gem1ID = "";
-            string gem2ID = "";
-            string gem3ID = "";
+            string gem1ID = "0";
+            string gem2ID = "0";
+            string gem3ID = "0";
 
             if (item.Sockets.Color1 != Item.ItemSlot.None)
             {
