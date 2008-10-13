@@ -822,6 +822,7 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
 		[DisplayName("% Healing Received")]
 		public float HealingReceivedMultiplier
 		{
