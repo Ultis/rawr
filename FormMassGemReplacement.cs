@@ -155,7 +155,7 @@ namespace Rawr
 
                                 //I think there's a bug in ItemCache.FindItembyID, hence the uglySplice
                                 //Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
-                                Item thingHolder = uglyCodeSplice(gemmedId);
+                                Item thingHolder = ItemCache.FindItemById(gemmedId,true, true);
                             }
                             continue;
                         }
@@ -172,8 +172,7 @@ namespace Rawr
                             foreach (Gemming set in listOfGemmings)
                             {
                                 string gemmedId = (item.Id.ToString()) + (set.gemmingID(item));
-                                // Item holdThis = ItemCache.FindItemById(gemmedId, true, false);
-                                Item thingHolder = uglyCodeSplice(gemmedId);
+                                Item thingHolder = ItemCache.FindItemById(gemmedId, true, true);
                             }
                         }
                     }
@@ -239,31 +238,7 @@ namespace Rawr
 
         }
 
-        private Item uglyCodeSplice(string gemmedId){
-
-            Item[] retIrrelevant;
-				if (ItemCache.Items.TryGetValue(gemmedId, out retIrrelevant))
-					return retIrrelevant[0];
-				
-				string[] ids = gemmedId.Split('.');
-				int id = int.Parse(ids[0]);
-				int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
-				int id2 = ids.Length == 4 ? int.Parse(ids[2]) : 0;
-				int id3 = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-				string keyStartsWith = id.ToString() + ".";
-				foreach (string key in ItemCache.Items.Keys)
-                    if (key.StartsWith(keyStartsWith))
-                    {
-                        Item item = ItemCache.Items[key][0];
-                        Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-                            item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
-                            item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-                        ItemCache.AddItem(copy, false, true);
-                        return copy;
-        
-                    }
-                return null;
-        }
+       
 
         
         //this is going to be used with a list of groupboxes that generate the
@@ -361,7 +336,7 @@ namespace Rawr
         {
             //adds a slot for a new gemming, as well as the groupbox interface
 
-            if (listOfGemmings.Count < 8)
+           if (listOfGemmings.Count < 10)
             {
                 
                 groupboxesForGemmings.Add(createGroupBox());
@@ -371,7 +346,7 @@ namespace Rawr
             }
 
             else
-                MessageBox.Show("You may have a maximum of 8 gemmings", "8 Gemmings Allowed");
+                MessageBox.Show("You may have a maximum of 10 gemmings", "10 Gemmings Allowed");
         }
 
         private void deleteDuplicateGemmings()
@@ -531,37 +506,38 @@ namespace Rawr
 
         public Item gemIt(Item item)
         {
-            
+           int[] gemID= {0,0,0};
+
             if (item.Sockets.Color1 != Item.ItemSlot.None)
             {
                 switch (item.Sockets.Color1)
                 {
                     case Item.ItemSlot.Red:
                         if (gemRed == null)
-                            item.Gem1 = null;
+                            gemID[0] = 0;
                         else
-                            item.Gem1 = gemRed;
+                            gemID[0] = gemRed.Id;
                         break;
 
                     case Item.ItemSlot.Blue:
                         if (gemBlue == null)
-                            item.Gem1 = null;
+                            gemID[0] = 0;
                         else
-                            item.Gem1 = gemBlue;
+                            gemID[0] = gemBlue.Id;
                         break;
 
                     case Item.ItemSlot.Yellow:
                         if (gemYellow == null)
-                            item.Gem1 = null;
+                            gemID[0] = 0;
                         else
-                            item.Gem1 = gemYellow;
+                            gemID[0] = gemYellow.Id;
                         break;
 
                     case Item.ItemSlot.Meta:
                         if (gemMeta == null)
-                            item.Gem1 = null;
+                            gemID[0] = 0;
                         else
-                            item.Gem1 = gemMeta;
+                            gemID[0] = gemMeta.Id;
                         break;
                 }
             }
@@ -571,30 +547,30 @@ namespace Rawr
                 {
                     case Item.ItemSlot.Red:
                         if (gemRed == null)
-                            item.Gem2 = null;
+                            gemID[1] = 0;
                         else
-                            item.Gem2 = gemRed;
+                            gemID[1] = gemRed.Id;
                         break;
 
                     case Item.ItemSlot.Blue:
                         if (gemBlue == null)
-                            item.Gem2 = null;
+                            gemID[1] = 0;
                         else
-                            item.Gem2 = gemBlue;
+                            gemID[1] = gemBlue.Id;
                         break;
 
                     case Item.ItemSlot.Yellow:
                         if (gemYellow == null)
-                            item.Gem2 = null;
+                            gemID[1] = 0;
                         else
-                            item.Gem2 = gemYellow;
+                            gemID[1] = gemYellow.Id;
                         break;
 
                     case Item.ItemSlot.Meta:
                         if (gemMeta == null)
-                            item.Gem2 = null;
+                            gemID[1] = 0;
                         else
-                            item.Gem2 = gemMeta;
+                            gemID[1] = gemMeta.Id;
                         break;
                 }
             }
@@ -604,33 +580,35 @@ namespace Rawr
                 {
                     case Item.ItemSlot.Red:
                         if (gemRed == null)
-                            item.Gem3 = null;
+                            gemID[2] = 0;
                         else
-                            item.Gem3 = gemRed;
+                            gemID[2] = gemRed.Id;
                         break;
                     case Item.ItemSlot.Blue:
                         if (gemBlue == null)
-                            item.Gem3 = null;
+                            gemID[2] = 0;
                         else
-                            item.Gem3 = gemBlue;
+                            gemID[2] = gemBlue.Id;
                         break;
 
                     case Item.ItemSlot.Yellow:
                         if (gemYellow == null)
-                            item.Gem3 = null;
+                            gemID[2] = 0;
                         else
-                            item.Gem3 = gemYellow;
+                            gemID[2] = gemYellow.Id;
                         break;
 
                     case Item.ItemSlot.Meta:
                         if (gemMeta == null)
-                            item.Gem3 = null;
+                            gemID[2] = 0;
                         else
-                            item.Gem3 = gemMeta;
+                            gemID[2] = gemMeta.Id;
                         break;
                 }
             }
-            Item copy = item.Clone();
+            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+							item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), gemID[0], gemID[1], gemID[2], item.MinDamage,
+							item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
             return copy;
         }
 
