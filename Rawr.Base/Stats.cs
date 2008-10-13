@@ -2481,6 +2481,7 @@ namespace Rawr
             Stats clone = (Stats) this.MemberwiseClone();
             clone._rawAdditiveData = (float[]) clone._rawAdditiveData.Clone();
             clone._rawMultiplicativeData = (float[]) clone._rawMultiplicativeData.Clone();
+			clone._rawInverseMultiplicativeData = (float[])clone._rawInverseMultiplicativeData.Clone();
             clone._rawNoStackData = (float[]) clone._rawNoStackData.Clone();
             return clone;
         }
