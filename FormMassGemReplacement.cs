@@ -30,7 +30,7 @@ namespace Rawr
         //wanted to keep the class (gemming) the machinery for the class (listofgemmings)
         //apart from the interface (groupboxes) as I worked on them
         //iteratively.
-
+        private List<Gemming> holdoverGemmings = new List<Gemming>();
         private static List<Gemming> listOfGemmings = new List<Gemming>();
         private List<GroupBox> groupboxesForGemmings = new List<GroupBox>(); 
         
@@ -59,13 +59,16 @@ namespace Rawr
             foreach (Gemming gem in listOfGemmings)
             {
                 groupboxesForGemmings.Add(createGroupBox());
+                //if (gem!=null)
+                holdoverGemmings.Add(gem);
             }
 
             //makes everything pretty....
 
             if (listOfGemmings.Count == 0)
                 this.buttonAddGemming_Click(this, null);
-            
+ 
+
             cycleGroups();
             adjustform();
         }
@@ -304,7 +307,11 @@ namespace Rawr
         
         private void CancelButton_Click(object sender, EventArgs e)
         {
-                    
+            listOfGemmings = new List<Gemming>();
+            foreach (Gemming gemming in holdoverGemmings)
+            {
+                listOfGemmings.Add(gemming);
+            }
         }
         
         //adds another slot for gemming
