@@ -481,13 +481,7 @@ namespace Rawr
 			#region Spell Critical Strike Chance
 			defaultBuffs.Add(new Buff
 			{
-				Name = "Leader of the Pack",
-				Group = "Spell Critical Strike Chance",
-				Stats = { SpellCrit = 0.05f }
-			});
-			defaultBuffs.Add(new Buff
-			{
-				Name = "Rampage",
+				Name = "Elemental Oath",
 				Group = "Spell Critical Strike Chance",
 				Stats = { SpellCrit = 0.05f }
 			});
