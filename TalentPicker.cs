@@ -211,7 +211,7 @@ namespace Rawr
 			List<string> wrappedDescriptions = new List<string>();
 			foreach (string description in descriptions)
 			{
-				string[] lines = description.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+				string[] lines = description.Replace("\t","").Split(new string[] { "\r\n" }, StringSplitOptions.None);
 				List<string> wrappedLines = new List<string>();
 				foreach (string line in lines)
 				{
