@@ -898,7 +898,7 @@ namespace Rawr
 			{
 				Name = "Misery",
 				Group = "Spell Hit Chance Taken",
-				Stats = { SpellCrit = 0.03f }
+				Stats = { SpellHit = 0.03f }
 			});
 			#endregion
 
