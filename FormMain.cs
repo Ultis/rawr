@@ -15,6 +15,41 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
+		private const int INTRO_VERSION = 3;
+		private const string INTRO_TEXT =
+" Welcome to Rawr 2.0.0. This brand new version of Rawr is designed for use with WoW 3.0, " +
+"for characters up to level 70. You'll find many new features at the core level of Rawr, " +
+"and many in some of the models. Some important things to note: \r\n" +
+"   •We're not done. Many of the models haven't been updated yet for WoW 3.0\r\n" +
+"   •We're going to be updating Rawr quite often for a while. To help you stay " +
+"updated with the latest changes, Rawr will now check for new available updates, " +
+"notify you if there's a newer version, and offer to open Rawr's website for you.\r\n" +
+"\r\nHere's a quick rundown of the status of each model:\r\n" +
+"   •Rawr.Base: Still need to implement buffs for Glyphs, and fix bugs with many of the new features.\r\n" +
+"   •Rawr.Bear: Threat calculations not done. Otherwise, mostly complete.\r\n" +
+"   •Rawr.Cat: Not updated for 3.0.\r\n" +
+"   •Rawr.DPSWarr: Not updated for 3.0.\r\n" +
+"   •Rawr.Healadin: Mostly complete.\r\n" +
+"   •Rawr.HolyPriest: Mostly complete.\r\n" +
+"   •Rawr.Hunter: Partially updated for 3.0.\r\n" +
+"   •Rawr.Mage: Mostly complete.\r\n" +
+"   •Rawr.Moonkin: Partially updated for 3.0.\r\n" +
+"   •Rawr.ProtWarr: Partially updated for 3.0.\r\n" +
+"   •Rawr.RestoSham: Not updated for 3.0.\r\n" +
+"   •Rawr.Retribution: Mostly complete.\r\n" +
+"   •Rawr.Rogue: Not updated for 3.0.\r\n" +
+"   •Rawr.Tankadin: Mostly complete.\r\n" +
+"   •Rawr.Tree: Not updated for 3.0.\r\n" +
+"   •Rawr.Warlock: Not updated for 3.0.\r\n" +
+"\r\n As you can see, we still have alot of work ahead of us, but we're actively working on it. " +
+"If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, " +
+"especially with the models which we haven't begun updating for 3.0, please contact me at " +
+"cnervig@hotmail.com. Thanks, and look forward to frequent updates!";
+
+		
+
+
+
         private string _storedCharacterPath;
         private bool _storedUnsavedChanged;
         private Character _storedCharacter;
@@ -121,7 +156,7 @@ namespace Rawr
 					if (currentVersion != latestVersion)
 					{
 						_checkForUpdatesEnabled = false;
-						DialogResult result = MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Would you like to open goto the Rawr site to download the new version?",
+						DialogResult result = MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Would you like to go to the Rawr site to download the new version?",
 							latestVersion), "New Version Released!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 						if (result == DialogResult.Yes)
 						{
@@ -499,6 +534,12 @@ namespace Rawr
 			_splash.Close();
 			_splash.Dispose();
             SetTitle();
+
+			if (Properties.Recent.Default.SeenIntroVersion < INTRO_VERSION)
+			{
+				Properties.Recent.Default.SeenIntroVersion = INTRO_VERSION;
+				MessageBox.Show(INTRO_TEXT);
+			}
 		}
 
 		private void FormMain_Load(object sender, EventArgs e)
