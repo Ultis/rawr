@@ -252,24 +252,23 @@ namespace Rawr.Moonkin
             statsTotal.Agility = (float)Math.Floor((Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier)) + statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier)) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
-            // Base stats: Intellect% +(0.04 * Heart of the Wild)
-            statsTotal.Intellect *= 1 + 0.04f * character.DruidTalents.HeartOfTheWild;
-            // Base stats: Stam%, Int%, Spi%, Agi% +(0.01 * Survival of the Fittest)
-            statsTotal.Intellect *= 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.Stamina *= 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.Agility *= 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.Spirit *= 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            // Base stats: Spirit% +(0.05 * Living Spirit)
-			statsTotal.Spirit *= 1 + 0.05f * character.DruidTalents.LivingSpirit;
-            // Base stats: Int% +(0.02 * Furor)
-            if (character.ActiveBuffsContains("Moonkin Form"))
-                statsTotal.Intellect *= 1 + 0.02f * character.DruidTalents.Furor;
-
             // Bonus multipliers
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
+            statsTotal.BonusAgilityMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
+            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
             statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
+            statsTotal.BonusIntellectMultiplier += 0.04f * character.DruidTalents.HeartOfTheWild;
+            statsTotal.BonusIntellectMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
+            if (character.ActiveBuffsContains("Moonkin Form"))
+                statsTotal.BonusIntellectMultiplier += 0.02f * character.DruidTalents.Furor;
             statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
+            statsTotal.BonusSpiritMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
+            statsTotal.BonusSpiritMultiplier += 0.05f * character.DruidTalents.LivingSpirit;
+
+            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
+            statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
+            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
+            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
 
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
@@ -327,7 +326,7 @@ namespace Rawr.Moonkin
                 }
             }
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
-            if (character.ActiveBuffsContains("Improved Faerie Fire"))
+            if (character.ActiveBuffsContains("Faerie Fire"))
             {
                 statsTotal.CritRating += 0.01f * character.DruidTalents.ImprovedFaerieFire * critRatingConversionFactor;
             }
