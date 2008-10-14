@@ -6,8 +6,9 @@ namespace Rawr.ProtWarr
 {
 	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", Character.CharacterClass.Warrior)]
 	public class CalculationsProtWarr : CalculationsBase
-	{
-		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+    {
+        #region Variables and Properties
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
 			get
@@ -193,16 +194,16 @@ threat and limited threat scaled by the threat scale.",
 			System.IO.StringReader reader = new System.IO.StringReader(xml);
 			CalculationOptionsProtWarr calcOpts = serializer.Deserialize(reader) as CalculationOptionsProtWarr;
 			return calcOpts;
-		}
+        }
+        #endregion
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            //_cachedCharacter = character;
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             int targetLevel = calcOpts.TargetLevel;
 
             Stats stats = GetCharacterStats(character, additionalItem);
-            float levelDifference = (targetLevel - 70f) * 0.2f;
+            float levelDifference = (targetLevel - character.Level) * 0.2f;
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
 
             #region Tanking Calculations
