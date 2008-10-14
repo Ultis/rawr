@@ -4384,7 +4384,7 @@ Increases chance to block by 30% for 10 sec and deals 61 Holy damage for each at
 @"Increases your block value by 30% and damaging melee and ranged attacks against you have a 10% chance to increase your chance to block by 30%.  Lasts 10 sec or 5 blocks.",})]
 		public int Redoubt { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Combat Expertise", 5, 1, 3, 8, -1, new string[] {
+		[TalentData(44, "Combat Expertise", 3, 1, 3, 8, -1, new string[] {
 @"Increases your expertise by 2, total Stamina and chance to critically hit by 2%.",
 @"Increases your expertise by 4, total Stamina and chance to critically hit by 4%.",
 @"Increases your expertise by 6, total Stamina and chance to critically hit by 6%.",})]
