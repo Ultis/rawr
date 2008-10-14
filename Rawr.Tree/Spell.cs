@@ -136,11 +136,12 @@ namespace Rawr.Tree
             _character = character;
 
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
+            DruidTalents talents = character.DruidTalents;
 
             PeriodicTicks = BasePeriodicTicks;
 
-            HoTMultiplier += 0.04f * calcOpts.EmpoweredRejuvenation;
-            HealMultiplier += 0.02f * calcOpts.GiftOfNature;
+            HoTMultiplier  += 0.04f * talents.EmpoweredRejuvenation;
+            HealMultiplier += 0.02f * talents.GiftOfNature;
 
             if (ToLAura)
             {
@@ -151,7 +152,7 @@ namespace Rawr.Tree
             // since you won't have any trouble refreshing HoTs when the buff runs out
             Healing += stats.AverageHeal * calcOpts.AverageHealingScaling;
 
-            if (BasePeriodicTicks > 0 && calcOpts.TreeOfLife == 1)
+            if (BasePeriodicTicks > 0 && talents.TreeOfLife == 1)
             {
                 Cost = Convert.ToInt32(Cost * 0.8f);
             }
@@ -280,8 +281,9 @@ namespace Rawr.Tree
         private void ParseTalentsRejuvenation(Character character, Stats stats)
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            HealMultiplier += 0.05f * calcOpts.ImprovedRejuvenation;
-            Cost = (int)(Cost * (1f - 0.03f * calcOpts.Moonglow));
+            DruidTalents talents = character.DruidTalents;
+            HealMultiplier += 0.05f * talents.ImprovedRejuvenation;
+            Cost = (int)(Cost * (1f - 0.03f * talents.Moonglow));
         }
     }
 
@@ -316,8 +318,9 @@ namespace Rawr.Tree
         private void ParseTalentsRegrowth(Character character, Stats stats)
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            CritPercent += 10 * calcOpts.ImprovedRegrowth;
-            Cost = (int)(Cost * (1f - 0.03f * calcOpts.Moonglow));
+            DruidTalents talents = character.DruidTalents;
+            CritPercent += 10 * talents.ImprovedRegrowth;
+            Cost = (int)(Cost * (1f - 0.03f * talents.Moonglow));
         }
     }
 
@@ -358,10 +361,11 @@ namespace Rawr.Tree
         private void ParseTalentsHT(Character character, Stats stats)
         {
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
-            BaseCastTime -= 0.1f * calcOpts.Naturalist;
-            Cost = (int)(Cost * (1f - 0.02f * calcOpts.TranquilSpirit) * (1f - 0.03f * calcOpts.Moonglow));
+            DruidTalents talents = character.DruidTalents; 
+            BaseCastTime -= 0.1f * talents.Naturalist;
+            Cost = (int)(Cost * (1f - 0.02f * talents.TranquilSpirit) * (1f - 0.03f * talents.Moonglow));
             // TODO: See if the T6 4-piece bonus applies here or if it needs to be modeled in a different way
-            DirectHealingBonusMultiplier += 0.1f * calcOpts.EmpoweredTouch + stats.BonusHealingTouchMultiplier;
+            DirectHealingBonusMultiplier += 0.1f * talents.EmpoweredTouch + stats.BonusHealingTouchMultiplier;
         }
     }
 }

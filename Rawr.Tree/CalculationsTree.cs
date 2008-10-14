@@ -118,18 +118,19 @@ namespace Rawr.Tree
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
+            DruidTalents talents = character.DruidTalents;
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
             CharacterCalculationsTree calculatedStats = new CharacterCalculationsTree();
 
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
             calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.CritRating / 22.08) + 1.85 + calcOpts.NaturalPerfection, 2);
+                (calculatedStats.BasicStats.CritRating / 22.08) + 1.85 + talents.NaturalPerfection, 2);
 
-            calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * calcOpts.Intensity;
+            calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * talents.Intensity;
 
             calculatedStats.BasicStats.TreeOfLifeAura += (calculatedStats.BasicStats.Spirit / 4f);
-            calculatedStats.BasicStats.TreeOfLifeAura *= calcOpts.TreeOfLife;
+            calculatedStats.BasicStats.TreeOfLifeAura *= talents.TreeOfLife;
 
             if (calculatedStats.BasicStats.ShatteredSunRestoProc > 0 && calcOpts.ShattrathFaction == "Aldor")
             {
@@ -196,7 +197,7 @@ namespace Rawr.Tree
             calculatedStats.AddMp5Points(calcOpts.Spriest, "Shadow Priest");
             calculatedStats.AddMp5Points((calcOpts.ManaPotAmt * (1 + calculatedStats.BasicStats.BonusManaPotion)) / (calcOpts.ManaPotDelay * 12), "Potion");
 
-            calculatedStats.solver = new Solver(calcOpts, calculatedStats); // getBestSpellRotation(calcOpts, calculatedStats);
+            calculatedStats.solver = new Solver(talents, calcOpts, calculatedStats); // getBestSpellRotation(calcOpts, calculatedStats);
 
             if (calculatedStats.solver.bestRotation != null)
             {
@@ -224,6 +225,7 @@ namespace Rawr.Tree
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            DruidTalents talents = character.DruidTalents;
             CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
 
             Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
@@ -235,11 +237,11 @@ namespace Rawr.Tree
                     Agility = 75f,
                     Intellect = 120f,
                     Spirit = 133f,
-                    BonusAgilityMultiplier = 0.01f * calcOpts.SotF,
-                    BonusIntellectMultiplier = 0.01f * calcOpts.SotF,
-                    BonusSpiritMultiplier = 0.01f * calcOpts.SotF,
-                    BonusStaminaMultiplier = 0.01f * calcOpts.SotF,
-                    BonusStrengthMultiplier = 0.01f * calcOpts.SotF,
+                    BonusAgilityMultiplier   = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusIntellectMultiplier = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusSpiritMultiplier    = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusStaminaMultiplier   = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusStrengthMultiplier  = 0.01f * talents.SurvivalOfTheFittest,
                 } :
                 new Stats()
                 {
@@ -250,11 +252,11 @@ namespace Rawr.Tree
                     Intellect = 115f,
                     Spirit = 135f,
                     BonusHealthMultiplier = 0.05f,
-                    BonusAgilityMultiplier = 0.01f * calcOpts.SotF,
-                    BonusIntellectMultiplier = 0.01f * calcOpts.SotF,
-                    BonusSpiritMultiplier = 0.01f * calcOpts.SotF,
-                    BonusStaminaMultiplier = 0.01f * calcOpts.SotF,
-                    BonusStrengthMultiplier = 0.01f * calcOpts.SotF,
+                    BonusAgilityMultiplier   = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusIntellectMultiplier = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusSpiritMultiplier    = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusStaminaMultiplier   = 0.01f * talents.SurvivalOfTheFittest,
+                    BonusStrengthMultiplier  = 0.01f * talents.SurvivalOfTheFittest,
                 };
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -266,17 +268,17 @@ namespace Rawr.Tree
             statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + calcOpts.HotW * 0.04f));
+            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + talents.HeartOfTheWild * 0.04f));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + calcOpts.LivingSpirit * 0.05f));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + talents.LivingSpirit * 0.05f));
 
-            float lunarGuidance = (calcOpts.LunarGuidance == 3 ? 0.25f : calcOpts.LunarGuidance * 0.08f);
+            float lunarGuidance = (talents.LunarGuidance == 3 ? 0.25f : talents.LunarGuidance * 0.08f);
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.Intellect * lunarGuidance);
-			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * lunarGuidance) + (calcOpts.NurturingInstinct * 0.5f * statsTotal.Agility)) / 1.88f;
+			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower * 1.88f + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * lunarGuidance) + (talents.NurturingInstinct * 0.5f * statsTotal.Agility)) / 1.88f;
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
 
             statsTotal.Health = (float)Math.Round(((statsTotal.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
-            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (calcOpts.Dreamstate > 0 ? calcOpts.Dreamstate * 0.03f + 0.01f : 0f)); 
+            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (talents.Dreamstate > 0 ? talents.Dreamstate * 0.03f + 0.01f : 0f)); 
             return statsTotal;
         }
 

@@ -6,6 +6,7 @@ namespace Rawr.Tree
 {
     public class Solver
     {
+        private DruidTalents talents;
         private CalculationOptionsTree calcOpts;
         private CharacterCalculationsTree calculatedStats;
         private List<SpellRotation> baseSpellCycles;
@@ -56,8 +57,9 @@ namespace Rawr.Tree
             private set;
         }
        
-        public Solver(CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
+        public Solver(DruidTalents talents, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats)
         {
+            this.talents = talents;
             this.calcOpts = calcOpts;
             this.calculatedStats = calculatedStats;
             baseSpellCycles = CalculateBaseCycles();
@@ -240,6 +242,7 @@ namespace Rawr.Tree
 
         private List<SpellRotation> CalculateBaseCycles()
         {
+
             Spell[][] spellList = new Spell[calcOpts.availableSpells.GetLength(0)][];
 
             for (int i = 0; i < calcOpts.availableSpells.GetLength(0); i++)
@@ -248,7 +251,7 @@ namespace Rawr.Tree
                 for (int j = 0; j < calcOpts.availableSpells[i].GetLength(0); j++)
                 {
                     spellList[i][j] = calculatedStats.Spells.Find(delegate(Spell s) { return s.Name.Equals(calcOpts.availableSpells[i][j]); });
-                    if (calcOpts.TreeOfLife > 0 && spellList[i][j] is HealingTouch)
+                    if (talents.TreeOfLife > 0 && spellList[i][j] is HealingTouch)
                         spellList[i][j] = calculatedStats.Spells.Find(delegate(Spell s) { return s.Name.Equals("Nothing"); });
                 }
             }
