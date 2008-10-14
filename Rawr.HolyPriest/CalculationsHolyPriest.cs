@@ -765,10 +765,10 @@ namespace Rawr.HolyPriest
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
                 HealingDoneFor15SecOnUse2Min = stats.HealingDoneFor15SecOnUse2Min,
-                HealingDoneFor20SecOnUse2Min = stats.HealingDoneFor20SecOnUse2Min,
-                HealingDoneFor15SecOnUse90Sec = stats.HealingDoneFor15SecOnUse90Sec,
+                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
-                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
+                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
                 ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
@@ -785,9 +785,9 @@ namespace Rawr.HolyPriest
                 + stats.SpellHaste + stats.SpellCrit + stats.HealingReceivedMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
                 + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration
-                + stats.HealingDoneFor15SecOnUse2Min + stats.HealingDoneFor20SecOnUse2Min
-                + stats.HealingDoneFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min
-                + stats.SpellHasteFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min
+                + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
+                + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min
+                + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min
                 + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
                 + stats.BangleProc) > 0;

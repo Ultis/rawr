@@ -525,8 +525,8 @@ namespace Rawr.Warlock
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 - 0.01f * options.DemonicEmbrace));
 
             //spell damage
-            statsTotal.SpellPower += statsTotal.SpellDamageFor20SecOnUse2Min / 6;
-            statsTotal.SpellPower += statsTotal.SpellDamageFor15SecOnUse90Sec * 15 / 90;
+            statsTotal.SpellPower += statsTotal.SpellPowerFor20SecOnUse2Min / 6;
+            statsTotal.SpellPower += statsTotal.SpellPowerFor15SecOnUse90Sec * 15 / 90;
             statsTotal.SpellPower += statsTotal.SpellDamageFor15SecOnUse2Min * 15 / 120;
             statsTotal.SpellPower += 100 + options.DemonicAegis * 10; //assume Fel Armor
 
@@ -535,7 +535,7 @@ namespace Rawr.Warlock
 
             //spell haste rating
             statsTotal.HasteRating += statsTotal.DrumsOfBattle * 30 / 120;
-            statsTotal.HasteRating += statsTotal.SpellHasteFor20SecOnUse2Min / 6;
+            statsTotal.HasteRating += statsTotal.HasteRatingFor20SecOnUse2Min / 6;
 
             //mp5
             statsTotal.Mp5 += 100; //Assume Super Mana Potions (TODO: Add some kind of potion selector)
@@ -818,8 +818,8 @@ namespace Rawr.Warlock
                 BonusWarlockNukeMultiplier = stats.BonusWarlockNukeMultiplier, 
                 LightningCapacitorProc = stats.LightningCapacitorProc,
                 TimbalsProc = stats.TimbalsProc, 
-                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
-                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
+                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaRestorePerCast = stats.ManaRestorePerCast,
                 ManaRestorePerHit = stats.ManaRestorePerHit,
@@ -828,7 +828,7 @@ namespace Rawr.Warlock
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 SpellDamageFor10SecOnResist = stats.SpellDamageFor10SecOnResist,
                 SpellDamageFor15SecOnCrit_20_45 = stats.SpellDamageFor15SecOnCrit_20_45,
-                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
+                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min, 
                 SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
                 SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
@@ -864,15 +864,15 @@ namespace Rawr.Warlock
                 + stats.Mana
                 + stats.Health
                 + stats.LightningCapacitorProc
-                + stats.SpellDamageFor20SecOnUse2Min
-                + stats.SpellHasteFor20SecOnUse2Min
+                + stats.SpellPowerFor20SecOnUse2Min
+                + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min
                 + stats.ManaRestorePerHit
                 + stats.SpellDamageFor10SecOnHit_10_45
                 + stats.SpellDamageFromSpiritPercentage
                 + stats.SpellDamageFor10SecOnResist
                 + stats.SpellDamageFor15SecOnCrit_20_45
-                + stats.SpellDamageFor15SecOnUse90Sec
+                + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellHasteFor6SecOnCast_15_45
                 + stats.SpellDamageFor10SecOnHit_5
                 + stats.SpellHasteFor6SecOnHit_10_45

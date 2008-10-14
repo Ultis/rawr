@@ -138,8 +138,8 @@ namespace Rawr.Tree
             }
 
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min / 8;
-            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor15SecOnUse90Sec / 6;
-            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.HealingDoneFor20SecOnUse2Min / 6;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor15SecOnUse90Sec / 6;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor20SecOnUse2Min / 6;
 
 
             float baseRegenConstant = 0.00932715221261f;
@@ -368,8 +368,8 @@ namespace Rawr.Tree
                 ManacostReduceWithin15OnUse1Min = stats.ManacostReduceWithin15OnUse1Min,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 HealingDoneFor15SecOnUse2Min = stats.HealingDoneFor15SecOnUse2Min,
-                HealingDoneFor15SecOnUse90Sec = stats.HealingDoneFor15SecOnUse90Sec,
-                HealingDoneFor20SecOnUse2Min = stats.HealingDoneFor20SecOnUse2Min,
+                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
+                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
             };
         }
 

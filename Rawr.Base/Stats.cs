@@ -122,17 +122,17 @@ namespace Rawr
         SpellDamageFor10SecOnResist,
         SpellDamageFor15SecOnCrit_20_45,
         SpellDamageFor15SecOnManaGem,
-        SpellDamageFor15SecOnUse90Sec,
+        SpellPowerFor15SecOnUse90Sec,
         SpellDamageFor15SecOnUse2Min,
-        SpellDamageFor20SecOnUse2Min,
+        SpellPowerFor20SecOnUse2Min,
         SpellDamageFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
-        SpellHasteFor20SecOnUse2Min,
-        SpellHasteFor20SecOnUse5Min,
+        HasteRatingFor20SecOnUse2Min,
+        HasteRatingFor20SecOnUse5Min,
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor6SecOnHit_10_45,
@@ -169,9 +169,7 @@ namespace Rawr
         RejuvenationHealBonus,
         LifebloomTickHealBonus,
         HealingTouchFinalHealBonus,
-        HealingDoneFor15SecOnUse90Sec,
         HealingDoneFor15SecOnUse2Min,
-        HealingDoneFor20SecOnUse2Min,
         ManaregenFor8SecOnUse5Min,
         SpiritFor20SecOnUse2Min,
         ManaregenOver20SecOnUse3Min,
@@ -1117,10 +1115,10 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage (20 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor20SecOnUse2Min
+        public float SpellPowerFor20SecOnUse2Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor20SecOnUse2Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1133,30 +1131,30 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (15 sec/1.5 min)")]
+        [DisplayName("Spell Power (15 sec/1.5 min)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnUse90Sec
+        public float SpellPowerFor15SecOnUse90Sec
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse90Sec]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse90Sec] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse90Sec]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse90Sec] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (20 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor20SecOnUse2Min
+        public float HasteRatingFor20SecOnUse2Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse2Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse2Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (20 sec/5 min)")]
         [Category("Equipment Procs")]
-        public float SpellHasteFor20SecOnUse5Min
+        public float HasteRatingFor20SecOnUse5Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse5Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor20SecOnUse5Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HasteRatingFor20SecOnUse5Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1715,16 +1713,6 @@ namespace Rawr
 			set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
 		}
 
-        /* Healing done trinkets */
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healing for 15sec (90 sec cd)")]
-        [Category("Equipment Procs")]
-        public float HealingDoneFor15SecOnUse90Sec
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse90Sec]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse90Sec] = value; }
-        }
-
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Healing for 15sec (2 min cd)")]
         [Category("Equipment Procs")]
@@ -1732,15 +1720,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healing for 20sec (2 min cd)")]
-        [Category("Equipment Procs")]
-        public float HealingDoneFor20SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor20SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor20SecOnUse2Min] = value; }
         }
 
         /* Regen trinkets */

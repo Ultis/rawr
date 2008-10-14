@@ -1213,20 +1213,20 @@ namespace Rawr.Moonkin
                 effectiveSpellHaste += calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6.0f / (45.0f + timeBetweenProcs);
             }
             // Haste trinkets
-            if (calcs.BasicStats.SpellHasteFor20SecOnUse2Min > 0)
+            if (calcs.BasicStats.HasteRatingFor20SecOnUse2Min > 0)
             {
-                effectiveSpellHaste += calcs.BasicStats.SpellHasteFor20SecOnUse2Min * 20.0f / 120.0f;
+                effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f;
             }
             // Spell damage trinkets
-            if (calcs.BasicStats.SpellDamageFor15SecOnUse90Sec > 0)
+            if (calcs.BasicStats.SpellPowerFor15SecOnUse90Sec > 0)
             {
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor15SecOnUse90Sec * 15.0f / 90.0f;
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor15SecOnUse90Sec * 15.0f / 90.0f;
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
             }
-            if (calcs.BasicStats.SpellDamageFor20SecOnUse2Min > 0)
+            if (calcs.BasicStats.SpellPowerFor20SecOnUse2Min > 0)
             {
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor20SecOnUse2Min * 20.0f / 120.0f;
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor20SecOnUse2Min * 20.0f / 120.0f;
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
             }
         }
 

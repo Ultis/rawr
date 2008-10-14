@@ -334,9 +334,9 @@ namespace Rawr
 						}
                         // Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
                         // some pre-tbc have passive spell damage as on use
-                        else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to "))
+                        else if (spellDesc.StartsWith("Increases spell power by "))
                         {
-                            spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to ".Length);
+                            spellDesc = spellDesc.Substring("Increases spell power by ".Length);
                             string[] tokens = spellDesc.Split(' ','.');
                             int damageIncrease = int.Parse(tokens[0]);
                             if (tokens.Length > 2)
@@ -345,8 +345,10 @@ namespace Rawr
                                 switch (duration)
                                 {
                                     case 20:
-                                        stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
-                                        stats.HealingDoneFor20SecOnUse2Min += damageIncrease;
+                                        stats.SpellPowerFor20SecOnUse2Min += damageIncrease;
+                                        break;
+                                    case 15:
+                                        stats.SpellPowerFor15SecOnUse90Sec += damageIncrease;
                                         break;
                                 }
                             }
@@ -381,48 +383,19 @@ namespace Rawr
                                 stats.ManacostReduceWithin15OnUse1Min += (float) int.Parse(m.Groups["mana"].Value);
                             }
                         }
-                        else if (spellDesc.StartsWith("Increases healing done by spells "))
-                        {
-                            Regex r = new Regex("Increases healing done by spells(?: and effects)? by up to (?<heal>\\d*) and damage done by spells by up to (?<dmg>\\d*) for (?<uptime>\\d*) sec.");
-                            Match m = r.Match(spellDesc);
-                            if (m.Success)
-                            {
-                                int damageIncrease = int.Parse(m.Groups["dmg"].Value);
-                                int healingIncrease = int.Parse(m.Groups["heal"].Value);
-                                int duration = int.Parse(m.Groups["uptime"].Value);
-                                switch (duration)
-                                {
-                                    case 20:
-                                        stats.SpellDamageFor20SecOnUse2Min += damageIncrease;
-                                        stats.HealingDoneFor20SecOnUse2Min += healingIncrease;
-                                        break;
-                                }
-                            }
-                        }
                         else if (spellDesc.StartsWith("Gain 250 mana each sec. for "))
                         {
                             stats.ManaregenFor8SecOnUse5Min += 250;
                         }
-                        else if (spellDesc.StartsWith("Increases spell damage by up to 150 and healing by up to 280 for 15 sec."))
-                        {
-                            stats.SpellDamageFor15SecOnUse90Sec += 150;
-                            stats.HealingDoneFor15SecOnUse90Sec += 280;
-                        }
-                        else if (spellDesc.StartsWith("Increases spell damage done by up to 120 and healing done by up to 220 for 15 sec."))
-                        {
-                            // Vengeance of the Illidari
-                            stats.SpellDamageFor15SecOnUse90Sec += 120;
-                            stats.HealingDoneFor15SecOnUse90Sec += 220;
-                        }
-                        else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains up to 320 spell damage and healing."))
+                        else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec. While standing in this circle, the caster gains 320 spell power."))
                         {
                             // Shifting Naaru Sliver
-                            stats.SpellDamageFor15SecOnUse90Sec += 320;
-                            stats.HealingDoneFor15SecOnUse90Sec += 320;
+                            stats.SpellPowerFor15SecOnUse90Sec += 320;
                         }
-                        else if (spellDesc.StartsWith("Tap into the power of the skull, increasing spell haste rating by 175 for 20 sec."))
+                        else if (spellDesc.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec."))
                         {
-                            stats.SpellHasteFor20SecOnUse2Min += 175;
+                            // The Skull of Gul'dan
+                            stats.HasteRatingFor20SecOnUse2Min += 175;
                         }
                         else if (spellDesc.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
                         {
@@ -438,9 +411,9 @@ namespace Rawr
                             // stats.Mp5 += 5f * 900f / 300f;
                         }
                         // Mind Quickening Gem
-                        else if (spellDesc.StartsWith("Quickens the mind, increasing the Mage's spell haste rating by 330 for 20 sec."))
+                        else if (spellDesc.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec."))
                         {
-                            stats.SpellHasteFor20SecOnUse5Min += 330;
+                            stats.HasteRatingFor20SecOnUse5Min += 330;
                         }
                         else if (spellDesc.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
                         {
