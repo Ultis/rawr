@@ -1030,6 +1030,9 @@ namespace Rawr.Moonkin
                 {
                     starfire.SpecialCriticalModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                 }
+                // Undo Judgement of Wisdom
+                starfire.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfire.CastTime) + 1);
+                wrath.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrath.CastTime) + 1);
 
                 // All damage multiplier
                 currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
