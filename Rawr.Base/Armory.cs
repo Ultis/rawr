@@ -622,12 +622,11 @@ namespace Rawr
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.TerrorProc += int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Increases damage and healing done by magical spells and effects by up to"))
+                        else if (spellDesc.StartsWith("Increases spell power by"))
                         {
-                            spellDesc = spellDesc.Substring("Increases damage and healing done by magical spells and effects by up to".Length);
+                            spellDesc = spellDesc.Substring("Increases spell power by".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.SpellPower += int.Parse(spellDesc);
-                            //stats.SpellPower * 1.88f += int.Parse(spellDesc);
                         }
                         // Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
                         else if (spellDesc.StartsWith("Increases healing done by up to "))
@@ -668,15 +667,15 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.SpellNatureDamageRating += int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Improves spell haste rating by"))
+                        else if (spellDesc.StartsWith("Improves haste rating by"))
                         {
-                            spellDesc = spellDesc.Substring("Improves spell haste rating by".Length);
+                            spellDesc = spellDesc.Substring("Improves haste rating by".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.HasteRating += int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Improves spell critical strike rating by"))
+                        else if (spellDesc.StartsWith("Improves critical strike rating by"))
                         {
-                            spellDesc = spellDesc.Substring("Improves spell critical strike rating by".Length);
+                            spellDesc = spellDesc.Substring("Improves critical strike rating by".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.CritRating += int.Parse(spellDesc);
                         }
@@ -686,9 +685,9 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.SpellPenetration += int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Increases your spell hit rating by "))
+                        else if (spellDesc.StartsWith("Increases hit rating by "))
                         {
-                            spellDesc = spellDesc.Substring("Increases your spell hit rating by ".Length);
+                            spellDesc = spellDesc.Substring("Increases hit rating by ".Length);
                             spellDesc = spellDesc.Replace(".", "").Replace(" ", "");
                             stats.HitRating += int.Parse(spellDesc);
                         }
@@ -1047,6 +1046,9 @@ namespace Rawr
                                     if (sockets.Stats.SpellPower == 0)
                                         sockets.Stats.SpellPower = socketBonusValue;
                                     //sockets.Stats.Healing = socketBonusValue;
+                                    break;
+                                case "Spell Power":
+                                    sockets.Stats.SpellPower = socketBonusValue;
                                     break;
                                 case "Crit Rating":
 								case "Crit Strike Rating":
