@@ -1030,6 +1030,20 @@ namespace Rawr.Moonkin
                 {
                     starfire.SpecialCriticalModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                 }
+                // Undo Omen of Clarity
+                if (character.DruidTalents.OmenOfClarity > 0)
+                {
+                    // Starfire
+                    float castsDuringCooldown = 10.0f / starfire.CastTime;
+                    float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
+                    float expectedProcChance = 1 / expectedCastsToProc;
+                    starfire.ManaCost += starfire.ManaCost * expectedProcChance;
+                    // Wrath
+                    castsDuringCooldown = 10.0f / wrath.CastTime;
+                    expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
+                    expectedProcChance = 1 / expectedCastsToProc;
+                    wrath.ManaCost += wrath.ManaCost * expectedProcChance;
+                }
                 // Undo Judgement of Wisdom
                 starfire.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfire.CastTime) + 1);
                 wrath.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrath.CastTime) + 1);
