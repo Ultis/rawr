@@ -330,15 +330,20 @@ namespace Rawr.Moonkin
             {
                 statsTotal.CritRating += 0.01f * character.DruidTalents.ImprovedFaerieFire * critRatingConversionFactor;
             }
+
+            // Put in this check so that the multiplicative spell power multipliers work correctly
+            if (statsTotal.BonusSpellPowerMultiplier == 0.0f)
+                statsTotal.BonusSpellPowerMultiplier = 1.0f;
+
             // All spells: Damage + (0.01 * Earth and Moon)
-            statsTotal.BonusDamageMultiplier += 0.01f * character.DruidTalents.EarthAndMoon;
+            statsTotal.BonusSpellPowerMultiplier *= 1.0f + (0.01f * character.DruidTalents.EarthAndMoon);
             // All spells: Damage + (0.02 * Master Shapeshifter)
             if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
-                statsTotal.BonusDamageMultiplier += 0.02f * character.DruidTalents.MasterShapeshifter;
-            // Generic spell power multiplier
-            statsTotal.SpellPower *= 1 + statsTotal.BonusSpellPowerMultiplier;
-            // Generic spell crit multiplier
-            statsTotal.CritRating *= 1 + statsTotal.BonusSpellCritMultiplier;
+                statsTotal.BonusSpellPowerMultiplier *= 1.0f + (0.02f * character.DruidTalents.MasterShapeshifter);
+
+            // Make sure we revert the value to a proper percentage after multiplicative calculations are done
+            if (statsTotal.BonusSpellPowerMultiplier > 1.0f)
+                statsTotal.BonusSpellPowerMultiplier -= 1.0f;
 
             return statsTotal;
         }

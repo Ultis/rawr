@@ -204,6 +204,18 @@ namespace Rawr.Moonkin
                 spellDamageMultiplier = value;
             }
         }
+        private float specialDamageMultiplier = 1.0f;
+        public float SpecialDamageMultiplier
+        {
+            get
+            {
+                return specialDamageMultiplier;
+            }
+            set
+            {
+                spellDamageMultiplier = value;
+            }
+        }
         public float NumberOfTicks
         {
             get
@@ -291,7 +303,7 @@ namespace Rawr.Moonkin
             // Latency
             CastTime += latency;
             // Calculate DoT component
-            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
+            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier* dotEffect.SpecialDamageMultiplier) / dotEffect.Duration;
             // Moonfire DPS is calculated over the duration of the DoT
             return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / dotEffect.Duration + dotEffectDPS;
         }
@@ -358,7 +370,7 @@ namespace Rawr.Moonkin
             // Latency
             CastTime += latency;
             // Insect Swarm is a pure DoT, therefore the calculations are relatively uncomplicated
-            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier) / dotEffect.Duration;
+            float dotEffectDPS = (dotEffect.NumberOfTicks * (dotEffect.DamagePerTick + dotEffect.SpellDamageMultiplierPerTick * spellDamage) * specialDamageModifier * dotEffect.SpecialDamageMultiplier) / dotEffect.Duration;
             return dotEffectDPS;
         }
     }
@@ -758,15 +770,15 @@ namespace Rawr.Moonkin
 
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            wrath.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
-            moonfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
-            starfire.SpecialDamageModifier *= 1.0f + (0.02f * character.DruidTalents.Moonfury);
-            // Moonfire, Insect Swarm: Damage +(0.01 * Genesis)
-            moonfire.SpecialDamageModifier += 0.01f * character.DruidTalents.Genesis;
-            insectSwarm.SpecialDamageModifier += 0.01f * character.DruidTalents.Genesis;
+            wrath.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
+            moonfire.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
+            starfire.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
             // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
             moonfire.DoT.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
             insectSwarm.DoT.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
+            // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
+            moonfire.SpecialDamageModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
+            moonfire.SpecialCriticalModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
             wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
@@ -774,6 +786,9 @@ namespace Rawr.Moonkin
             // Starfire, Moonfire: Arcane damage multipliers
             starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
             moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            // Moonfire, Insect Swarm: Damage +(0.01 * Genesis)
+            moonfire.DoT.SpecialDamageMultiplier += 0.01f * character.DruidTalents.Genesis;
+            insectSwarm.DoT.SpecialDamageMultiplier += 0.01f * character.DruidTalents.Genesis;
 
             // Level-based partial resistances
             wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
@@ -785,9 +800,6 @@ namespace Rawr.Moonkin
             // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
             wrath.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
             starfire.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
-            // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            moonfire.SpecialDamageModifier *= 1.0f + (0.05f * character.DruidTalents.ImprovedMoonfire);
-            moonfire.SpecialCriticalModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
 
             // Add spell-specific critical strike damage
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
@@ -1019,7 +1031,7 @@ namespace Rawr.Moonkin
                     starfire.SpecialCriticalModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                 }
 
-                // Add in final damage multipliers
+                // All damage multiplier
                 currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
                 currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
 

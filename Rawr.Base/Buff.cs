@@ -873,10 +873,11 @@ namespace Rawr
 				Group = "Spell Damage Taken",
 				Stats = { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f,
 					BonusArcaneSpellPowerMultiplier = 0.1f, BonusShadowSpellPowerMultiplier = 0.1f,
-					BonusHolySpellPowerMultiplier = 0.1f},
+					BonusHolySpellPowerMultiplier = 0.1f, BonusNatureSpellPowerMultiplier = 0.1f},
 				Improvements = { new Buff { Name = "Malediction", Stats = { BonusFireSpellPowerMultiplier = 1.13f / 1.1f - 1, 
 					BonusFrostSpellPowerMultiplier = 1.13f / 1.1f - 1, BonusArcaneSpellPowerMultiplier = 1.13f / 1.1f - 1, 
-					BonusShadowSpellPowerMultiplier = 1.13f / 1.1f - 1, BonusHolySpellPowerMultiplier = 1.13f / 1.1f - 1 } } }
+					BonusShadowSpellPowerMultiplier = 1.13f / 1.1f - 1, BonusHolySpellPowerMultiplier = 1.13f / 1.1f - 1,
+                    BonusNatureSpellPowerMultiplier = 1.13f / 1.1f - 1 } } }
 			});
 			defaultBuffs.Add(new Buff
 			{
@@ -884,7 +885,7 @@ namespace Rawr
 				Group = "Spell Damage Taken",
 				Stats = { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f,
 					BonusArcaneSpellPowerMultiplier = 0.13f, BonusShadowSpellPowerMultiplier = 0.13f,
-					BonusHolySpellPowerMultiplier = 0.13f},
+					BonusNatureSpellPowerMultiplier = 0.13f},
 			});
 			defaultBuffs.Add(new Buff
 			{
@@ -892,7 +893,7 @@ namespace Rawr
 				Group = "Spell Damage Taken",
 				Stats = { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f,
 					BonusArcaneSpellPowerMultiplier = 0.13f, BonusShadowSpellPowerMultiplier = 0.13f,
-					BonusHolySpellPowerMultiplier = 0.13f},
+					BonusHolySpellPowerMultiplier = 0.13f, BonusNatureSpellPowerMultiplier = 0.13f},
 			});
 			#endregion
 
