@@ -920,7 +920,7 @@ namespace Rawr.Moonkin
                 // Casting trees?  Remove from effective mana
                 if (character.DruidTalents.ForceOfNature > 0)
                 {
-                    int numTreeCasts = ((int)fightLength / 180) + 1;
+                    int numTreeCasts = ((int)fightLength / 120) + 1;
                     effectiveMana -= numTreeCasts * CalculationsMoonkin.BaseMana * 0.12f;
                 }
                 rotation.ManaGained = effectiveMana;
@@ -1054,22 +1054,11 @@ namespace Rawr.Moonkin
             float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
             float attackSpeed = 1.6f;
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
-            return 3 * damagePerTree / 180.0f;
+            return 3 * damagePerTree / 120.0f;
         }
 
         private static float DoManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float critRate, bool omenOfClarity)
         {
-/*            float manaFromOther = calcs.BasicStats.ManaRestorePerCast * rotation.CastCount;
-            float averageCastTime = rotation.Duration / rotation.CastCount;
-            float averageTimeBetweenProcs = averageCastTime;
-            while (averageTimeBetweenProcs < 4.0f)
-                averageTimeBetweenProcs += averageCastTime;
-            float procsPerRotation = rotation.Duration / averageTimeBetweenProcs;
-            float manaFromJoW = (calcs.BasicStats.ManaRestorePerHit > 0) ? 0.02f * calcs.BasicStats.Mana * procsPerRotation : 0;
-            float manaFromOOC = 0.0f;
-            if (omenOfClarity)
-            {
-            }*/
             float manaFromTrinket = 0.0f;
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
             if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
@@ -1091,7 +1080,6 @@ namespace Rawr.Moonkin
                 manaFromTrinket /= 120.0f;
                 manaFromTrinket *= rotation.Duration;
             }
-//            return manaFromJoW + manaFromOther + manaFromTrinket + manaFromOOC;
             return manaFromTrinket;
         }
 
