@@ -198,11 +198,11 @@ namespace Rawr.HolyPriest
         public int Rotation = 0;
         public float FSRRatio = 85f;
         public float FightLength = 5f;
-        public float Serendipity = 100f;
+        public float Serendipity = 75f;
         public float Replenishment = 50f;
         public float Shadowfiend = 80f;
         public float Survivability = 5f;
-        public float Rapture = 100f;
+        public float Rapture = 75f;
         public bool UseTrinkets = true;
         public bool ProcTrinkets = true;
 	}

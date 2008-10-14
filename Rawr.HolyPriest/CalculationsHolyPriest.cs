@@ -172,35 +172,38 @@ namespace Rawr.HolyPriest
                     UseProcs.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f;
                 }
                 if (simstats.BangleProc > 0)
-                {   // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd. Also a 15% mana reg proc for 15s on 60s cd.
+                {   // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd.
                     UseProcs.Spirit += 130f * 20f / 120f;
                 }
-                if (simstats.HealingDoneFor15SecOnUse2Min > 0)
-                    UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse2Min * 15f / 120f;
-                if (simstats.HealingDoneFor15SecOnUse90Sec > 0)
-                    UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse90Sec * 15f / 90f;
-                if (simstats.HealingDoneFor20SecOnUse2Min > 0)
-                    UseProcs.SpellPower += simstats.HealingDoneFor20SecOnUse2Min * 20f / 120f;
+
+                if (simstats.SpellDamageFor15SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellDamageFor15SecOnUse2Min * 15f / 120f;
+//                if (simstats.HealingDoneFor15SecOnUse2Min > 0)
+                    //UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse2Min * 15f / 120f / 1.88f;
+                if (simstats.SpellDamageFor15SecOnUse90Sec > 0)
+                    UseProcs.SpellPower += simstats.SpellDamageFor15SecOnUse90Sec * 15f / 90f;
+//                if (simstats.HealingDoneFor15SecOnUse90Sec > 0)
+                    //UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse90Sec * 15f / 90f / 1.88f;
+                if (simstats.SpellDamageFor20SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellDamageFor20SecOnUse2Min * 20f / 120f;
+//                if (simstats.HealingDoneFor20SecOnUse2Min > 0)
+                    //UseProcs.SpellPower += simstats.HealingDoneFor20SecOnUse2Min * 20f / 120f / 1.88f;
 
             }
             if (calculationOptions.ProcTrinkets)
             {
                 if (simstats.BangleProc > 0)
                     // Bangle of Endless Blessings. Calculate this as 1 PPM.
-                    UseProcs.SpellCombatManaRegeneration += 0.15f * 15f / 60f * (calculationOptions.FSRRatio / 100f);
+                    UseProcs.SpellCombatManaRegeneration += 0.15f * 15f / 60f;
                 if (simstats.FullManaRegenFor15SecOnSpellcast > 0)
                     // Blue Dragon. 2% chance to proc on cast, no known internal cooldown. calculate as 0.5 PPM (100/2*2.5)
-                    UseProcs.SpellCombatManaRegeneration += 1f * 15f / 125f * (calculationOptions.FSRRatio / 100f);
+                    UseProcs.SpellCombatManaRegeneration += (1f - simstats.SpellCombatManaRegeneration) * 15f / 125f;
 
             }
 
             /*     
-                    calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
-                       calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
                         + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
                         + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
-                        + (calculatedStats.BasicStats.BonusManaPotion * 2400f * 5f / 120f)
-                        + procSpiritRegen + procSpiritRegen2
                         + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
                         + (calculatedStats.BasicStats.ManaregenOver20SecOnUse3Min * 5f / 180f)
                         + (calculatedStats.BasicStats.ManaregenOver20SecOnUse5Min * 5f / 300f)
@@ -210,7 +213,7 @@ namespace Rawr.HolyPriest
            */
 
 
-            UseProcs.Spirit *= (1 + simstats.BonusSpiritMultiplier);
+            UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
             UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
 
             simstats += UseProcs;
@@ -350,7 +353,7 @@ namespace Rawr.HolyPriest
                 {   // Greater Heal (A Borrowed Time GHeal cannot also be improved Holy conc hasted, so this works)
                     clen = sr[x].CastTime * (1f - ihcastshasted) + gh_hc.CastTime * ihcastshasted;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * hcchance;
@@ -360,7 +363,7 @@ namespace Rawr.HolyPriest
                 {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
                     clen = sr[x].CastTime * (1f - hcchance) + fh_hc.CastTime * hcchance;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     solctr = 1f - (1f - solctr) * (1f - solchance * (1f - hcchance));
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * hcchance;
@@ -372,7 +375,7 @@ namespace Rawr.HolyPriest
                 {
                     clen = sr[x].CastTime;
                     rheal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
                 }
                 else if (sr[x] == coh)
@@ -398,7 +401,7 @@ namespace Rawr.HolyPriest
                 {
                     clen = sr[x].GlobalCooldown;
                     heal = sr[x].AvgTotHeal * healmultiplier;
-                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance / 100f * character.PriestTalents.DivineAegis * 0.1f;
+                    absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
                 }
                 cyclelen += clen;
