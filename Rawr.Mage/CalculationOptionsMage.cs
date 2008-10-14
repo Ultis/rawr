@@ -28,7 +28,6 @@ namespace Rawr.Mage
         public float ShadowResist { get; set; }
         public float FightDuration { get; set; }
         public float TpsLimit { get; set; }
-        public float ShadowPriest { get; set; }
         public bool HeroismAvailable { get; set; }
         public bool DestructionPotion { get; set; }
         public bool FlameCap { get; set; }
@@ -235,7 +234,6 @@ namespace Rawr.Mage
             NatureResist = 0;
             ShadowResist = 0;
             FightDuration = 300;
-            ShadowPriest = 175;
             HeroismAvailable = true;
             MoltenFuryPercentage = 0.3f;
             DestructionPotion = true;

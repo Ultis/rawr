@@ -698,7 +698,7 @@ namespace Rawr.Mage
 
             statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
 
-            statsTotal.Mp5 += calculationOptions.ShadowPriest;
+            //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
             statsTotal.SpellDamageFromIntellectPercentage += 0.03f * character.MageTalents.MindMastery;
 

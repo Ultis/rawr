@@ -111,14 +111,12 @@
             this.textBoxInterruptFrequency = new System.Windows.Forms.TextBox();
             this.textBoxDpsTime = new System.Windows.Forms.TextBox();
             this.textBoxMoltenFuryPercentage = new System.Windows.Forms.TextBox();
-            this.textBoxShadowPriest = new System.Windows.Forms.TextBox();
             this.textBoxFightDuration = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -874,14 +872,12 @@
             this.tabPage3.Controls.Add(this.textBoxInterruptFrequency);
             this.tabPage3.Controls.Add(this.textBoxDpsTime);
             this.tabPage3.Controls.Add(this.textBoxMoltenFuryPercentage);
-            this.tabPage3.Controls.Add(this.textBoxShadowPriest);
             this.tabPage3.Controls.Add(this.textBoxFightDuration);
             this.tabPage3.Controls.Add(this.label30);
             this.tabPage3.Controls.Add(this.label26);
             this.tabPage3.Controls.Add(this.label19);
             this.tabPage3.Controls.Add(this.label17);
             this.tabPage3.Controls.Add(this.label12);
-            this.tabPage3.Controls.Add(this.label11);
             this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.comboBoxTargetLevel);
             this.tabPage3.Controls.Add(this.label1);
@@ -896,7 +892,7 @@
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(0, 473);
+            this.label46.Location = new System.Drawing.Point(0, 447);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(84, 13);
             this.label46.TabIndex = 181;
@@ -908,7 +904,7 @@
             // 
             this.checkBoxFarmingMode.AutoSize = true;
             this.checkBoxFarmingMode.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FarmingMode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 473);
+            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 447);
             this.checkBoxFarmingMode.Name = "checkBoxFarmingMode";
             this.checkBoxFarmingMode.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFarmingMode.TabIndex = 180;
@@ -917,7 +913,7 @@
             // textBoxTargetDamage
             // 
             this.textBoxTargetDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetDamage", true));
-            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 447);
+            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 421);
             this.textBoxTargetDamage.Name = "textBoxTargetDamage";
             this.textBoxTargetDamage.Size = new System.Drawing.Size(75, 20);
             this.textBoxTargetDamage.TabIndex = 179;
@@ -925,7 +921,7 @@
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(0, 450);
+            this.label45.Location = new System.Drawing.Point(0, 424);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(91, 13);
             this.label45.TabIndex = 178;
@@ -937,7 +933,7 @@
             // textBoxDrinkingTime
             // 
             this.textBoxDrinkingTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DrinkingTime", true));
-            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 421);
+            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 395);
             this.textBoxDrinkingTime.Name = "textBoxDrinkingTime";
             this.textBoxDrinkingTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxDrinkingTime.TabIndex = 177;
@@ -945,7 +941,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(0, 424);
+            this.label44.Location = new System.Drawing.Point(0, 398);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(82, 13);
             this.label44.TabIndex = 176;
@@ -955,7 +951,7 @@
             // textBoxShadowResist
             // 
             this.textBoxShadowResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowResist", true));
-            this.textBoxShadowResist.Location = new System.Drawing.Point(112, 395);
+            this.textBoxShadowResist.Location = new System.Drawing.Point(112, 369);
             this.textBoxShadowResist.Name = "textBoxShadowResist";
             this.textBoxShadowResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxShadowResist.TabIndex = 173;
@@ -963,7 +959,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(0, 398);
+            this.label20.Location = new System.Drawing.Point(0, 372);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(105, 13);
             this.label20.TabIndex = 172;
@@ -972,7 +968,7 @@
             // textBoxNatureResist
             // 
             this.textBoxNatureResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "NatureResist", true));
-            this.textBoxNatureResist.Location = new System.Drawing.Point(112, 369);
+            this.textBoxNatureResist.Location = new System.Drawing.Point(112, 343);
             this.textBoxNatureResist.Name = "textBoxNatureResist";
             this.textBoxNatureResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxNatureResist.TabIndex = 171;
@@ -980,7 +976,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(0, 372);
+            this.label9.Location = new System.Drawing.Point(0, 346);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 170;
@@ -989,7 +985,7 @@
             // textBoxFrostResist
             // 
             this.textBoxFrostResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FrostResist", true));
-            this.textBoxFrostResist.Location = new System.Drawing.Point(112, 343);
+            this.textBoxFrostResist.Location = new System.Drawing.Point(112, 317);
             this.textBoxFrostResist.Name = "textBoxFrostResist";
             this.textBoxFrostResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFrostResist.TabIndex = 169;
@@ -997,7 +993,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(0, 346);
+            this.label8.Location = new System.Drawing.Point(0, 320);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 168;
@@ -1006,7 +1002,7 @@
             // textBoxFireResist
             // 
             this.textBoxFireResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FireResist", true));
-            this.textBoxFireResist.Location = new System.Drawing.Point(112, 317);
+            this.textBoxFireResist.Location = new System.Drawing.Point(112, 291);
             this.textBoxFireResist.Name = "textBoxFireResist";
             this.textBoxFireResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxFireResist.TabIndex = 167;
@@ -1014,7 +1010,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(0, 320);
+            this.label7.Location = new System.Drawing.Point(0, 294);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(83, 13);
             this.label7.TabIndex = 166;
@@ -1023,7 +1019,7 @@
             // textBoxArcaneResist
             // 
             this.textBoxArcaneResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ArcaneResist", true));
-            this.textBoxArcaneResist.Location = new System.Drawing.Point(112, 291);
+            this.textBoxArcaneResist.Location = new System.Drawing.Point(112, 265);
             this.textBoxArcaneResist.Name = "textBoxArcaneResist";
             this.textBoxArcaneResist.Size = new System.Drawing.Size(75, 20);
             this.textBoxArcaneResist.TabIndex = 165;
@@ -1031,7 +1027,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(0, 294);
+            this.label6.Location = new System.Drawing.Point(0, 268);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(100, 13);
             this.label6.TabIndex = 164;
@@ -1040,7 +1036,7 @@
             // textBoxAoeDuration
             // 
             this.textBoxAoeDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AoeDuration", true));
-            this.textBoxAoeDuration.Location = new System.Drawing.Point(112, 265);
+            this.textBoxAoeDuration.Location = new System.Drawing.Point(112, 239);
             this.textBoxAoeDuration.Name = "textBoxAoeDuration";
             this.textBoxAoeDuration.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeDuration.TabIndex = 163;
@@ -1048,7 +1044,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(0, 268);
+            this.label22.Location = new System.Drawing.Point(0, 242);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(103, 13);
             this.label22.TabIndex = 162;
@@ -1059,7 +1055,7 @@
             // textBoxAoeTargets
             // 
             this.textBoxAoeTargets.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AoeTargets", true));
-            this.textBoxAoeTargets.Location = new System.Drawing.Point(112, 239);
+            this.textBoxAoeTargets.Location = new System.Drawing.Point(112, 213);
             this.textBoxAoeTargets.Name = "textBoxAoeTargets";
             this.textBoxAoeTargets.Size = new System.Drawing.Size(75, 20);
             this.textBoxAoeTargets.TabIndex = 161;
@@ -1067,7 +1063,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(0, 242);
+            this.label5.Location = new System.Drawing.Point(0, 216);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(75, 13);
             this.label5.TabIndex = 160;
@@ -1084,7 +1080,7 @@
             "71",
             "72",
             "73"});
-            this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(112, 212);
+            this.comboBoxAoeTargetLevel.Location = new System.Drawing.Point(112, 186);
             this.comboBoxAoeTargetLevel.Name = "comboBoxAoeTargetLevel";
             this.comboBoxAoeTargetLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxAoeTargetLevel.TabIndex = 159;
@@ -1092,7 +1088,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 215);
+            this.label2.Location = new System.Drawing.Point(0, 189);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(99, 13);
             this.label2.TabIndex = 158;
@@ -1138,14 +1134,6 @@
             this.textBoxMoltenFuryPercentage.Name = "textBoxMoltenFuryPercentage";
             this.textBoxMoltenFuryPercentage.Size = new System.Drawing.Size(75, 20);
             this.textBoxMoltenFuryPercentage.TabIndex = 149;
-            // 
-            // textBoxShadowPriest
-            // 
-            this.textBoxShadowPriest.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ShadowPriest", true));
-            this.textBoxShadowPriest.Location = new System.Drawing.Point(112, 186);
-            this.textBoxShadowPriest.Name = "textBoxShadowPriest";
-            this.textBoxShadowPriest.Size = new System.Drawing.Size(75, 20);
-            this.textBoxShadowPriest.TabIndex = 147;
             // 
             // textBoxFightDuration
             // 
@@ -1211,16 +1199,6 @@
             this.toolTipMage.SetToolTip(this.label12, "Percentage of time spent in molen fury range (i.e. < 20% boss health). Default va" +
                     "lue of 0.15 indicates that 15% of time is spent in molten fury range due to raid" +
                     " dps stacking in execute range.");
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(0, 189);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(92, 13);
-            this.label11.TabIndex = 146;
-            this.label11.Text = "Sh. Priest (Mp5): *";
-            this.toolTipMage.SetToolTip(this.label11, "Mp5 gained from Vampiric Touch.");
             // 
             // label10
             // 
@@ -2500,14 +2478,12 @@
         private System.Windows.Forms.TextBox textBoxInterruptFrequency;
         private System.Windows.Forms.TextBox textBoxDpsTime;
         private System.Windows.Forms.TextBox textBoxMoltenFuryPercentage;
-        private System.Windows.Forms.TextBox textBoxShadowPriest;
         private System.Windows.Forms.TextBox textBoxFightDuration;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.ComboBox comboBoxTargetLevel;
         private System.Windows.Forms.Label label1;

@@ -1062,7 +1062,7 @@ namespace Rawr.Mage
             if (castingState.CalculationOptions.GlyphOfFireball)
             {
                 BasePeriodicDamage = 0.0f;
-                DirectDamageModifier *= 1.05f;
+                CritRate += 0.05f;
             }
             SpammedDot = true;
             DotDuration = 8;
