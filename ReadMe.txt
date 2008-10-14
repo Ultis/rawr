@@ -1,8 +1,35 @@
-Rawr Beta 16.1
+Rawr v2.0.0
 ------------
- Welcome to Rawr b16.1. This beta contains one new model, Rawr.Rogue! Let us know how it works. Additionally, this is expected to be our last version of Rawr aimed at WoW 2.x; all future Rawr development will focus on WoW 3.0, and WotLK. If you have any suggestions/requests for features/fixes in the new version of Rawr, now is the time to let us know! Post on our development site, http://codeplex.com/Rawr/.
+ Welcome to Rawr 2.0.0. This brand new version of Rawr is designed for use with WoW 3.0, 
+for characters up to level 70. You'll find many new features at the core level of Rawr, 
+and many in some of the models. Some important things to note: 
+   •We're not done. Many of the models haven't been updated yet for WoW 3.0
+   •We're going to be updating Rawr quite often for a while. To help you stay 
+updated with the latest changes, Rawr will now check for new available updates, 
+notify you if there's a newer version, and offer to open Rawr's website for you.
 
-Anyway, as usual, thanks very much for testing Rawr. If you can make it crash, great. If it doesn't crash, but does something that looks wrong, great. If some calculations look wrong to you, that's cool too. Anything like that that goes wrong, or anything else that you find weird, or anything that you think would be more useful or easy to use if done differently, *let me know*! Please forgive me for writing so much in the readme, but please: *>*>*>at least read the FAQ below, and the Instructions section at the bottom<*<*<*.
+Here's a quick rundown of the status of each model:
+   •Rawr.Base: Still need to implement buffs for Glyphs, and fix bugs with many of the new features.
+   •Rawr.Bear: Threat calculations not done. Otherwise, mostly complete.
+   •Rawr.Cat: Not updated for 3.0.
+   •Rawr.DPSWarr: Not updated for 3.0.
+   •Rawr.Healadin: Mostly complete.
+   •Rawr.HolyPriest: Mostly complete.
+   •Rawr.Hunter: Partially updated for 3.0.
+   •Rawr.Mage: Mostly complete.
+   •Rawr.Moonkin: Partially updated for 3.0.
+   •Rawr.ProtWarr: Partially updated for 3.0.
+   •Rawr.RestoSham: Not updated for 3.0.
+   •Rawr.Retribution: Mostly complete.
+   •Rawr.Rogue: Not updated for 3.0.
+   •Rawr.Tankadin: Mostly complete.
+   •Rawr.Tree: Not updated for 3.0.
+   •Rawr.Warlock: Not updated for 3.0.
+
+ As you can see, we still have alot of work ahead of us, but we're actively working on it.
+If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out,
+especially with the models which we haven't begun updating for 3.0, please contact me at
+cnervig@hotmail.com. Thanks, and look forward to frequent updates!
 
 FAQ
 ---
@@ -12,17 +39,15 @@ FAQ
  Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
  A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
 
- Q: The Bear calculations don't match my character screen. Are they wrong?
- A: Most likely, no. First, the calculations in Rawr are for combat against raid boss mobs, which changes the chances to be missed, to dodge, to be crushed, and to be crit, so you'll see values off by 0.6% from what the character sheet says. Additionall, WoW sometimes rounds stats oddly, when many buffs are involved. I've gone to great lengths to make Rawr as accurate as possible, but it'll still calculate Stamina and Agility off by 1 in about 5 to 10% of cases. That in turn may make your health, dodge, and armor off by a tiny amount as well. Anyway, that's rare, and even when it does happen, the difference is *extremely* negligable, so don't worry about it. If you do find a situation where other calculations are off, or any of those are off significantly, please let me know. I want to ensure Rawr is as accurate as possible.
-
  Q: There's an item missing! Can you please add [Some Item]?
- A: No, I designed Rawr so that I wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
+ A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
  
- Q: Can you make it, or does Rawr work for [insert class/spec here]?
- A: What you see in Rawr is what's currently developed to release quality. A few more models are in development. If you're a C# developer and would like to begin or help with another model, let me know!
-
 Version History
 ---------------
+
+v2.0.0
+ - First release version targeting WoW 3.0
+
 Beta 16.1:
  - The beginnings of user-controlled item filtering is in. Let me stress that this is just the beginning. Currently it's hidden away in a menu item (Tools>Refine Relevant Items...), and only supports the most basic filtering by item type (Leather vs Mail, Maces vs Swords, etc.). In the future, we expect to expand upon this greatly, by allowing all kinds of filters (such as by source, by item level, etc), and will be making the UI to control this more intuitive. Please post on our development site, let us know what sort of filters you'd like to be able to create
  - More improvements to the performance and accuracy of the Optimizer
@@ -442,26 +467,13 @@ Known Issues:
  - The clipboard doesn't work under Mono. In the mean time, when running on Mono, Copy Character Stats to Clipboard will save the stats as 'stats.txt' in the folder with Rawr.
  - More issues, I'm sure.
 
-Files
------
-Attached to this e-mail, you will find a .zip containing the following:
-
-ReadMe.txt - This ReadMe
-Rawr.exe - The Rawr application
-Source - This folder contains the Visual Studio 2005 C# project for Rawr. This is all of the source code, so that you can build it yourself, and peruse the source code if you are concerned about it containing anything malicious (it doesn't).
-ItemCache.xml - This is the file that Rawr saves its item database to. I've included my current one, which contains a fair number of items for each slot.
-Images - This folder containts the images of all of the items that Rawr has in its item database. Whenever Rawr needs an item/gem's icon, it'll look here first. If you don't have the correct icon, it'll download it from the Armory. 
-
-After running Rawr, you'll also see:
-
-Rawr.log - This file contains a log of what you downloaded from the armory, and why. If you have any bugs, I may ask for you to send me this log; it'll help me in solving the bug.
-BuffCache.xml - This is the file that Rawr saves its buff database to. This should be complete as of the time of writing (2.3.3). If new enchants come out, you can edit the xml and relaunch Rawr.
-EnchantCache.xml - Same as BuffCache, but for enchants.
+Source Code
+-----------
+Rawr's source code is freely available at its website, http://www.codeplex.com/Rawr/ .
 
 Overview of Rawr
 ----------------
-Rawr is a little windows app, designed to help you design sets of gear for your Bear & Cat. You can play with different items, enchants, and buffs, and see how they affect your tanking stats & dps stats. Based on your current stats, it will also display a graph of the value of known items for a selected slot, displaying a mitigation rating, a survival rating, and an overall rating for Bear, and a dps rating for Cat. The Bear ratings, along with most of the other Bear calculations in the app, were originally based on the fine spreadsheet created by HugeHoss. Most of the Cat calculations are based on Toskk's Cat Calculator and other hard work by Toskk. Huge thanks to Hoss & Toskk for the help with this project. They calculations for both Cat & Bear have grown, since then, and are now as accurate as possible.
-
+Rawr is a windows app, designed to help you create sets of gear for your WoW character. You can play with different items, enchants, and buffs, and see how they affect your stats and ratings. Based on your current stats, it will also display a graph of the value of known items for a selected slot, including multiple ratings relevant to your class/spec.
 
 How Rawr Handles Items
 ----------------------
@@ -474,9 +486,9 @@ When loading a character from the armory, or starting a new blank character, all
 
 Instructions
 ------------
-There's no installer for Rawr (at least, not yet). Just unzip the zip anywhere you like, and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is included for you to review and/or build yourself)
+There's no installer for Rawr (at least, not yet). Just unzip the zip anywhere you like, and run Rawr.exe. (If you have any concern about Rawr doing anything malicious, the full source code is available at http://www.codeplex.com/Rawr/ for you to review and/or to build yourself)
 
-Once you've got it running, you should see a basic character-screen-esque layout of items. All slots will start out blank, so you can either start filling in items, or open an armory profile. You'll probably want to open your own armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If any items aren't gemmed (mouse over them all and see if any show a socket, a solid square of color, with no gem in it) right click on it, hit edit, and fill in some gems, or goto Tool->Item Editor, then click Fill Sockets, choose some gems you like, and hit OK, OK.
+Once you've got it running, you should see a basic character-screen-like layout of items. All slots will start out blank, so you can either start filling in items, or open an armory profile. You'll probably want to open your own armory profile, so you can get some familiar items. Goto File->Load from Armory..., and type in your character name and server (exactly, and choose a region if necessary), and hit OK. After a few sec, it should load your profile. You can mouse over an item to see the stats for it, and click on an item to get a dropdown of all of the other items available for that slot. It'll be missing your buffs, so fill those out on the main screen. If you'd like to edit the gems in an item, right click on it, hit edit, and change the gems.
 
 Now that you have your current character fairly well defined, use the item comparison are on the right side of the main window. You can choose a slot and a sort method at the top. The ratings calculated in this graph will update as you make changes to your gear/enchants/buffs, to always be as accurate as possible.
 

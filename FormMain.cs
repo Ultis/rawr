@@ -15,7 +15,7 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 3;
+		private const int INTRO_VERSION = 4;
 		private const string INTRO_TEXT =
 " Welcome to Rawr 2.0.0. This brand new version of Rawr is designed for use with WoW 3.0, " +
 "for characters up to level 70. You'll find many new features at the core level of Rawr, " +
@@ -64,7 +64,7 @@ namespace Rawr
 		private Character _character = null;
 		private List<ToolStripMenuItem> _customChartMenuItems = new List<ToolStripMenuItem>();
 		private Status _statusForm;
-		private string _formatWindowTitle = "Rawr (Beta {0})";
+		private string _formatWindowTitle = "Rawr v{0}";
 		private System.Threading.Timer _timerCheckForUpdates;
         private FormMassGemReplacement _gemControl;
 
@@ -110,7 +110,7 @@ namespace Rawr
 			Application.DoEvents();
 
 			Version version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version;
-			_formatWindowTitle = string.Format(_formatWindowTitle, version.Minor.ToString() + "." + version.Build.ToString());
+			_formatWindowTitle = string.Format(_formatWindowTitle, version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString());
 
 			LoadModel(ConfigModel);
 			InitializeComponent();
