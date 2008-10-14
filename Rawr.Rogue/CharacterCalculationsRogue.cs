@@ -91,7 +91,7 @@ namespace Rawr.Rogue {
             dictValues.Add("Strength", BasicStats.Strength.ToString());
             dictValues.Add("Agility", BasicStats.Agility.ToString());
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
-            dictValues.Add("Hit", Math.Round(BasicStats.HitRating * RogueConversions.HitRatingToHit + BasicStats.Hit, 2).ToString() + string.Format("%*Hit Rating {0}", BasicStats.HitRating));
+            dictValues.Add("Hit", Math.Round(BasicStats.HitRating * RogueConversions.HitRatingToHit + BasicStats.PhysicalHit, 2).ToString() + string.Format("%*Hit Rating {0}", BasicStats.HitRating));
             dictValues.Add("Expertise", (Math.Round(BasicStats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise + BasicStats.Expertise)).ToString() + string.Format("%*Expertise Rating {0}", BasicStats.ExpertiseRating));
             dictValues.Add("Haste", Math.Round(BasicStats.HasteRating * RogueConversions.HasteRatingToHaste, 2).ToString() + string.Format("%*Haste Rating {0}", BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());

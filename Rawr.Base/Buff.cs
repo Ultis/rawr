@@ -703,12 +703,21 @@ namespace Rawr
             });
 			#endregion
 
-			#endregion
+            #region Racial Buffs
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Heroic Presence",
+                Group = "Racial Buffs",
+                Stats = { SpellHit = 0.01f, PhysicalHit = 0.01f }
+            });
+            #endregion
 
-			#region Debuffs
+            #endregion
 
-			#region Armor (Major)
-			defaultBuffs.Add(new Buff
+            #region Debuffs
+
+            #region Armor (Major)
+            defaultBuffs.Add(new Buff
 			{
 				Name = "Acid Spit",
 				Group = "Armor (Major)",

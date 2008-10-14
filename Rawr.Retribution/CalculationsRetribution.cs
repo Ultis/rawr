@@ -292,7 +292,7 @@ namespace Rawr.Retribution
                 // Miss: Base 9%, Minimum 0%
                 float chanceMiss = .09f;
                 chanceMiss -= stats.HitRating / 1576f;
-                chanceMiss -= stats.Hit;
+                chanceMiss -= stats.PhysicalHit;
                 if (chanceMiss < 0f) chanceMiss = 0f;
                 calcs.MissedAttacks = chanceMiss;
 
@@ -304,7 +304,7 @@ namespace Rawr.Retribution
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
                 spellResist -= stats.HitRating / 1262f;
-                spellResist -= stats.Hit;
+                spellResist -= stats.PhysicalHit;
                 if (spellResist < .01f) spellResist = .01f;
 
                 // Total physical misses
@@ -601,7 +601,7 @@ namespace Rawr.Retribution
                     break;
                 case Character.CharacterRace.Draenei: // Relevant racials: +1% hit
                     statsRace = new Stats()
-                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, Hit = .01f };
+                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f };
                     break;
                 case Character.CharacterRace.Human: // Relevant racials: +10% spirit, +5 expertise when wielding mace or sword
                     statsRace = new Stats()
@@ -649,7 +649,7 @@ namespace Rawr.Retribution
             Stats statsTalents = new Stats()
             {
                 PhysicalCrit = .01f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals),
-                Hit = 0f,
+                PhysicalHit = 0f,
                 SpellCrit = .01f * (float)calcOpts.SanctifiedSeals,
                 BonusStrengthMultiplier = .03f * (float)calcOpts.DivineStrength
             };
@@ -711,7 +711,7 @@ namespace Rawr.Retribution
             statsTotal.PhysicalCrit = statsGearEnchantsBuffs.PhysicalCrit;
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
-            statsTotal.Hit = statsGearEnchantsBuffs.Hit;
+            statsTotal.PhysicalHit = statsGearEnchantsBuffs.PhysicalHit;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;

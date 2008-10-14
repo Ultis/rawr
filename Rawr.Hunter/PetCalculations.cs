@@ -52,7 +52,7 @@ namespace Rawr.Hunter
             petStats.AttackPower += (calculatedStats.BasicStats.RangedAttackPower * .22f);
 
             #region Hit
-            double petHitChance = calculatedStats.BasicStats.Hit;
+            double petHitChance = calculatedStats.BasicStats.PhysicalHit;
             petHitChance += (.02 * character.HunterTalents.AnimalHandler);
 
             /*
@@ -73,7 +73,7 @@ namespace Rawr.Hunter
             {
                 petHitChance = 1.0;
             }
-            petStats.Hit = (float)petHitChance;
+            petStats.PhysicalHit = (float)petHitChance;
             #endregion
 
             petStats.PhysicalCrit = 0.0320f;
@@ -102,7 +102,7 @@ namespace Rawr.Hunter
 
             double clawDmg = (118.0 + 168.0) / 2.0 + abDmg;
 
-            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.Hit;
+            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.PhysicalHit;
 
             clawDmg *= petHitCrit;
 
@@ -136,7 +136,7 @@ namespace Rawr.Hunter
             petAttackSpeed /= 1.0 + 0.3; // TODO: Cobra Reflexes
 
             petDmg += (calculatedStats.PetStats.AttackPower / 14.0) * petBaseAttackSpeed;
-            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.Hit;
+            double petHitCrit = (1.0 + calculatedStats.PetStats.PhysicalCrit) * calculatedStats.PetStats.PhysicalHit;
 
             petDmg *= petHitCrit;
 

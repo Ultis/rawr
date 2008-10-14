@@ -238,7 +238,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float damageMulti = 1f + talents.OneHandedWeaponSpecialization * .02f;
             float expertise = .0025f * stats.Expertise;
 
-            cs.ToMiss = Math.Max(0,(levelDif < 3 ? .05f + levelDif*.005f : .07f + (levelDif-2)*.02f) - stats.Hit);
+            cs.ToMiss = Math.Max(0,(levelDif < 3 ? .05f + levelDif*.005f : .07f + (levelDif-2)*.02f) - stats.PhysicalHit);
             cs.ToParry = Math.Max(0, ((levelDif < 3 ? 1f : 2f) * (.05f + levelDif * .005f)) - expertise);
             cs.ToDodge = Math.Max(0, (.05f + levelDif * .005f) - expertise);
             cs.ToResist = Math.Min(1, .83f + stats.SpellHit);
@@ -345,7 +345,7 @@ you are being killed by burst damage, focus on Survival Points.",
                     statsRace = new Stats() { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, Hit = .01f, SpellHit = .01f };
+                    statsRace = new Stats() { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f, SpellHit = .01f };
                     break;
                 case Character.CharacterRace.Human:
                     statsRace = new Stats() { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
@@ -375,7 +375,7 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
             stats.Armor = (float)Math.Round((stats.Armor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
-            stats.Hit = ConvertHit(stats.HitRating, lvl);
+            stats.PhysicalHit = ConvertHit(stats.HitRating, lvl);
             stats.SpellHit = ConvertSpellHit(stats.HitRating, lvl) + stats.SpellHit; 
             stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2 + ConvertExpertise(stats.ExpertiseRating, lvl));
 

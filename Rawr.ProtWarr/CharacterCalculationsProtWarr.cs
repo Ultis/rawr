@@ -356,7 +356,7 @@ Reduces the effect of mana-drains and the damage of critical strikes by {1}%.",
             #region Offensive Stats
             dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
             dictValues["Hit"] = (BasicStats.HitRating * WarriorConversions.HitRatingToHit +
-                BasicStats.Hit).ToString() +
+                BasicStats.PhysicalHit).ToString() +
                 string.Format("%*Hit Rating {0}", BasicStats.HitRating);
             dictValues["Expertise"] = (Math.Round(BasicStats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
                 BasicStats.Expertise)).ToString() +

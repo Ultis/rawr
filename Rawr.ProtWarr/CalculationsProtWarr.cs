@@ -315,7 +315,7 @@ threat and limited threat scaled by the threat scale.",
             if (attackSpeed < 1f)
                 attackSpeed = 1.0f;
 
-            float hitBonus = (stats.HitRating * WarriorConversions.HitRatingToHit + stats.Hit) / 100f;
+            float hitBonus = (stats.HitRating * WarriorConversions.HitRatingToHit + stats.PhysicalHit) / 100f;
             float expertiseBonus = (stats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
                                     stats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction / 100f;
 
@@ -567,7 +567,7 @@ threat and limited threat scaled by the threat scale.",
                         Stamina = (float)BaseWarriorRaceStats[9, 2],
 
                         AttackPower = 190f,
-                        Hit = 1f,
+                        PhysicalHit = 1f,
                         Dodge = 0.75f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
@@ -716,7 +716,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Dodge = statsRace.Dodge + statsTalents.Dodge;
             statsTotal.Parry = statsRace.Parry + statsTalents.Parry;
             statsTotal.Block = statsRace.Block + statsTalents.Block;
-            statsTotal.Hit = statsRace.Hit + statsTalents.Hit;
+            statsTotal.PhysicalHit = statsRace.PhysicalHit + statsTalents.PhysicalHit;
             statsTotal.PhysicalCrit = statsRace.PhysicalCrit + statsTalents.PhysicalCrit;
             statsTotal.Expertise = statsRace.Expertise + statsTalents.Expertise;
 

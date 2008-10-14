@@ -131,7 +131,7 @@ namespace Rawr.Rogue {
             whiteDPS = finisherDPS = wfDPS = ssDPS = poisonDPS = cpgDPS = 0f;
 
             missChance = 28f;
-            missChance -= calcOpts.Precision + stats.Hit + stats.HitRating * RogueConversions.HitRatingToHit;
+            missChance -= calcOpts.Precision + stats.PhysicalHit + stats.HitRating * RogueConversions.HitRatingToHit;
             if (missChance < 0f) missChance = 0f;
 
             mhExpertise = ohExpertise = calcOpts.WeaponExpertise * 5f + stats.Expertise + stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
@@ -571,7 +571,7 @@ namespace Rawr.Rogue {
             //statsTotal.AttackPower = statsRace.AttackPower + ((statsTotal.Agility - agiBase) + (statsTotal.Strength - strBase) + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier);
             //statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + ((statsTotal.Strength - strBase) * 1) + ((statsTotal.Agility - agiBase) * 1)) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.Hit = calcOpts.Precision;
+            statsTotal.PhysicalHit = calcOpts.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
             statsTotal.Expertise += calcOpts.WeaponExpertise * 5.0f;

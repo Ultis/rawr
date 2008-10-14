@@ -253,7 +253,7 @@ namespace Rawr.Hunter
 				DrumsOfWar = stats.DrumsOfWar,
 				ExposeWeakness = stats.ExposeWeakness,
 				HasteRating = stats.HasteRating,
-				Hit = stats.Hit,
+				PhysicalHit = stats.PhysicalHit,
 				HitRating = stats.HitRating,
 				Intellect = stats.Intellect,
 				Mana = stats.Mana,
@@ -290,7 +290,7 @@ namespace Rawr.Hunter
 			stats.ExposeWeakness +
 			stats.HasteRating +
 			stats.Health +
-			stats.Hit +
+			stats.PhysicalHit +
 			stats.HitRating +
 			stats.Intellect +
 			stats.Mp5 + 
@@ -414,8 +414,8 @@ namespace Rawr.Hunter
                 quickShotHaste = .03 * character.HunterTalents.ImprovedAspectOfTheHawk;
                 double quickAutoShotsPerSecond = (1.0f + quickShotHaste) / calculatedStats.BaseAttackSpeed;
                 //Quick Shot Uptime From Cheeky's DPS Spreadsheet with special notation - "By Norwest"
-                double shotsInProc = (Math.Floor((12f - calculatedStats.BaseAttackSpeed) * normalAutoshotsPerSecond) + 1) * calculatedStats.BasicStats.Hit;
-                double shotsInReProc = Math.Floor(12f * quickAutoShotsPerSecond) * calculatedStats.BasicStats.Hit;
+                double shotsInProc = (Math.Floor((12f - calculatedStats.BaseAttackSpeed) * normalAutoshotsPerSecond) + 1) * calculatedStats.BasicStats.PhysicalHit;
+                double shotsInReProc = Math.Floor(12f * quickAutoShotsPerSecond) * calculatedStats.BasicStats.PhysicalHit;
                 double reprocChanceInitial = 1 - Math.Pow(.9, shotsInProc);
                 double reprocChanceSub = 1 - Math.Pow(.9, shotsInReProc);
                 double AvgShotBeforeFirstReProc = ((1 - Math.Pow(0.9, (shotsInProc + 1))) / Math.Pow(.1, 2) - (shotsInProc + 1) * Math.Pow(0.9, shotsInProc) / .1) / reprocChanceInitial * 0.1;
@@ -480,7 +480,7 @@ namespace Rawr.Hunter
             calculatedStats.AutoshotDPS = 0;
             if (character.Ranged != null)
             {
-                double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * autoshotCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+                double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * autoshotCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
                 double autoshotDmg = weaponDamageAverage * critHitModifier;
 
@@ -628,22 +628,22 @@ namespace Rawr.Hunter
 				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 			}
 
-            statsTotal.Hit = (float)(ratings.BASE_HIT_PERCENT + (statsTotal.HitRating / (ratings.HIT_RATING_PER_PERCENT * 100.0f)) 
+            statsTotal.PhysicalHit = (float)(ratings.BASE_HIT_PERCENT + (statsTotal.HitRating / (ratings.HIT_RATING_PER_PERCENT * 100.0f)) 
 								- (statsTotal.Miss / 100.0f) 
 								+ (character.Race == Character.CharacterRace.Draenei ? .01 : 0)
-								+ statsTalents.Hit);
+								+ statsTalents.PhysicalHit);
 
             // TODO: Change for level 80
 			//=IF((B54-B53) - 10 > 0,  ((B54-B53) -10) * -0.004 - 0.02, (B54-B53) * -0.001)
 			if (targetDefence > 360)
 			{
-				statsTotal.Hit = statsTotal.Hit - (targetDefence - 360) * .004f - .02f;
+				statsTotal.PhysicalHit = statsTotal.PhysicalHit - (targetDefence - 360) * .004f - .02f;
 			} else {
-				statsTotal.Hit -= ((targetDefence - 350) * .001f);
+				statsTotal.PhysicalHit -= ((targetDefence - 350) * .001f);
 			}
-            if (statsTotal.Hit > 1.0f)
+            if (statsTotal.PhysicalHit > 1.0f)
 			{
-                statsTotal.Hit = 1.0f;
+                statsTotal.PhysicalHit = 1.0f;
 			}
 
 			if (character.Ranged != null &&
@@ -716,7 +716,7 @@ namespace Rawr.Hunter
 				// TODO: Implement properly
 
 				//surefooted
-				talents.Hit += (talentTree.FocusedAim * 0.01f);
+				talents.PhysicalHit += (talentTree.FocusedAim * 0.01f);
 
 				//Lighting Reflexes
 				talents.BonusAgilityMultiplier = ((1.0f + talents.BonusAgilityMultiplier) * (1.0f + .03f * talentTree.LightningReflexes)) - 1.0f;
@@ -866,7 +866,7 @@ namespace Rawr.Hunter
 			{
 				petHitChance -= ((options.TargetLevel * 5 - 350) * .001);
 			}
-			petStats.Hit = (float)petHitChance;
+			petStats.PhysicalHit = (float)petHitChance;
 
 			//Pet Crit
 			petStats.PhysicalCrit += petStats.Agility / 2560f;

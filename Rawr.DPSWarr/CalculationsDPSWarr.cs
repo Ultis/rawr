@@ -560,7 +560,7 @@ namespace Rawr.DPSWarr
                         Stamina = (float)BaseWarriorRaceStats[9, 2],
                         PhysicalCrit = 1.18f*22.08f,
                         AttackPower = 190f,
-                        Hit = 1f,
+                        PhysicalHit = 1f,
                         Dodge = 0.75f,
                     };
                     break;

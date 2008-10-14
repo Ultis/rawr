@@ -66,7 +66,7 @@ namespace Rawr
         HasteRating,
         Healing,
         Health,
-        Hit,
+        PhysicalHit,
         HitRating,
         HLCost,
         HLHeal,
@@ -690,10 +690,10 @@ namespace Rawr
         [Percentage]
         [DisplayName("% Hit")]
         [Category("Combat Values")]
-        public float Hit
+        public float PhysicalHit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.Hit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Hit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.PhysicalHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PhysicalHit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

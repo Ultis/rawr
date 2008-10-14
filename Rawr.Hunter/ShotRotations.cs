@@ -158,7 +158,7 @@ namespace Rawr.Hunter
         protected void ShotChimera(RotationInfo info, int steadyshots)
         {
             double chimCritDmgModifier = yellowCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
-            double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * chimCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * chimCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
             double chimeraDmg = weaponDamageAverage * 1.25;
 
@@ -183,7 +183,7 @@ namespace Rawr.Hunter
         protected void ShotExplosive(RotationInfo info)
         {
             double explosiveCrit = calculatedStats.BasicStats.PhysicalCrit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
-            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
             double explosiveShotDmg = 0.08 * (effectiveRAPAgainstMob + hawkRAPBonus) + 238; // TODO: Level80
 
@@ -198,7 +198,7 @@ namespace Rawr.Hunter
         protected void ShotSteady(RotationInfo info)
         {
             double steadyCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
-            double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
             double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 108; // TODO: Level80
 
             steadyShotDmg *= critHitModifier * talentModifiers;
@@ -213,7 +213,7 @@ namespace Rawr.Hunter
         {
             double arcaneShotCrit = calculatedStats.BasicStats.PhysicalCrit + 0.02 * character.HunterTalents.SurvivalInstincts;
 
-            double critHitModifier = (arcaneShotCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = (arcaneShotCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
             double arcaneShotDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.15 + 273; // TODO: Level80
 
             double asTalentModifiers = 1.0 + character.HunterTalents.ImprovedArcaneShot * 0.05;
@@ -232,7 +232,7 @@ namespace Rawr.Hunter
 
             double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
 
-            serpentStingDmg *= calculatedStats.BasicStats.Hit * talentModifiers * serpentTalentModifiers;
+            serpentStingDmg *= calculatedStats.BasicStats.PhysicalHit * talentModifiers * serpentTalentModifiers;
 
             info.rotationDmg += serpentStingDmg;
             info.rotationTime += 1.5;
@@ -241,7 +241,7 @@ namespace Rawr.Hunter
         protected void ShotMulti(RotationInfo info)
         {
             // TODO: Level80
-            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
             double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
             shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
@@ -253,7 +253,7 @@ namespace Rawr.Hunter
         protected void ShotAimed(RotationInfo info)
         {
             // TODO: Level80
-            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.Hit;
+            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
             double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
             shotDmg *= talentModifiers;
