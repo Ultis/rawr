@@ -181,8 +181,6 @@ namespace Rawr.Retribution
             float crusade = 1f + 0.02f*(float) calcOpts.Crusade;
             float vengeance = 1f + 0.03f*(float) calcOpts.Vengeance;
             float retriAura = 1f + 0.1f*(float) calcOpts.SanctifiedRetribution;
-            float spellPower = stats.AttackPower*((float) calcOpts.SheathOfLight*.1f) + stats.SpellPower;
-            stats.SpellPower += spellPower;
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
                 // Covers all % spell damage increases.  Misery, FI.
             float physPowerMult = 1f + stats.BonusDamageMultiplier;
@@ -264,6 +262,8 @@ namespace Rawr.Retribution
             #region Mitigation
             {
                 float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
+                float ratingReduction = stats.ArmorPenetrationRating / 740f;
+                targetArmor *= 1f - ratingReduction;
 
                 // Effective armor after ArP
                 targetArmor -= totalArP;
@@ -435,6 +435,7 @@ namespace Rawr.Retribution
                     dsAvgDam = dsHit*(1f + physCrits * spellCritMult * dsCritMult - totalMiss);
 
                     dpsDivineStorm = dsAvgDam/dsCD;
+                    dpsDivineStorm += dpsDivineStorm*physCrits*dsCritMult;
 
                     dpsSoC += ( socAvgDmg / dsCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / dsCD;
@@ -466,8 +467,9 @@ namespace Rawr.Retribution
                 {
                     sealHit = sobDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellPower;
                 }
-
+      
                 judgeAvgDam = sealHit * holyDamMult;
+                judgeAvgDam += .5f * (judgeCrit * judgeAvgDam * judgeCritMult);
 
                 if (calcOpts.GlyphOfJudge)
                 {
@@ -716,12 +718,14 @@ namespace Rawr.Retribution
             statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 3.94);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
+            statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
             statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.SpellPower = statsGearEnchantsBuffs.SpellPower;
             statsTotal.SpellPower += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
+            statsTotal.SpellPower += statsTotal.AttackPower * (calcOpts.SheathOfLight * .1f);
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier;
