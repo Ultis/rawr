@@ -1994,42 +1994,39 @@ namespace Rawr.Mage
                 {
                     // no cycles right now that provide scorch and snare
                 }
-                if (calculationOptions.MaintainScorch)
+                if (calculationOptions.MaintainScorch && character.MageTalents.ImprovedScorch > 0)
                 {
-                    if (character.MageTalents.ImprovedScorch > 0)
+                    if (calculationOptions.SmartOptimization)
                     {
-                        if (calculationOptions.SmartOptimization)
+                        if (character.MageTalents.LivingBomb > 0)
                         {
-                            if (character.MageTalents.LivingBomb > 0)
-                            {
-                                list.Add(SpellId.FBScLBPyro);
-                            }
-                            else if (character.MageTalents.HotStreak > 0)
-                            {
-                                list.Add(SpellId.FBScPyro);
-                            }
-                            else
-                            {
-                                list.Add(SpellId.FBSc);
-                            }
+                            list.Add(SpellId.FBScLBPyro);
+                        }
+                        else if (character.MageTalents.HotStreak > 0)
+                        {
+                            list.Add(SpellId.FBScPyro);
                         }
                         else
                         {
-                            if (character.MageTalents.LivingBomb > 0)
-                            {
-                                list.Add(SpellId.FBScLBPyro);
-                            }
-                            else if (character.MageTalents.HotStreak > 0)
-                            {
-                                list.Add(SpellId.FBScPyro);
-                            }
-                            else
-                            {
-                                list.Add(SpellId.FBSc);
-                            }
-                            if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FFBScPyro);
-                            list.Add(SpellId.FBFBlast);
+                            list.Add(SpellId.FBSc);
                         }
+                    }
+                    else
+                    {
+                        if (character.MageTalents.LivingBomb > 0)
+                        {
+                            list.Add(SpellId.FBScLBPyro);
+                        }
+                        else if (character.MageTalents.HotStreak > 0)
+                        {
+                            list.Add(SpellId.FBScPyro);
+                        }
+                        else
+                        {
+                            list.Add(SpellId.FBSc);
+                        }
+                        if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FFBScPyro);
+                        list.Add(SpellId.FBFBlast);
                     }
                 }
                 else if (calculationOptions.MaintainSnare)
