@@ -325,6 +325,7 @@ namespace Rawr
 			foreach (Item item in listItems)
 			{
 				item.Stats.ConvertStatsToWotLKEquivalents();
+                item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
 				//if (item.Type == Item.ItemType.Leather) UpdateArmorFromWowhead(item);
 				AddItem(item, true, false);
 			}

@@ -2180,14 +2180,37 @@ namespace Rawr
                 GemInformation mutation2;
                 int tries = 0;
                 // randomly select mutation point
+                bool promising;
                 do
                 {
+                    promising = true;
                     int mutationIndex1 = rand.Next(locationList.Count);
                     int mutationIndex2 = rand.Next(locationList.Count);
                     mutation1 = locationList[mutationIndex1];
                     mutation2 = locationList[mutationIndex2];
+                    if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
+                    if (mutation1.Socket == mutation2.Socket) promising = false;
+                    if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) && Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) promising = false;
+                    if (!Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket) || !Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) promising = false;
                     tries++;
-                } while (tries < 10 && mutation1.Gem == mutation2.Gem);
+                } while (tries < 100 && !promising);
+                if (!promising)
+                {
+                    tries = 0;
+                    do
+                    {
+                        promising = true;
+                        int mutationIndex1 = rand.Next(locationList.Count);
+                        int mutationIndex2 = rand.Next(locationList.Count);
+                        mutation1 = locationList[mutationIndex1];
+                        mutation2 = locationList[mutationIndex2];
+                        if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
+                        if (mutation1.Socket == mutation2.Socket) promising = false;
+                        if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) && Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) promising = false;
+                        if (!Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket) && !Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket) && (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket) || Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket))) promising = false;
+                        tries++;
+                    } while (tries < 100 && !promising);
+                }
 
                 // mutate
                 Item item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
