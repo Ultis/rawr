@@ -51,6 +51,9 @@ namespace Rawr.HolyPriest
             trkSurvivability.Value = (int)calcOpts.Survivability;
             lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
 
+            cbUseTrinkets.Checked = calcOpts.UseTrinkets;
+            cbProcTrinkets.Checked = calcOpts.ProcTrinkets;
+
             loading = false;
         }
 
@@ -154,6 +157,28 @@ namespace Rawr.HolyPriest
             }
         }
 
+        private void cbUseTrinkets_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.UseTrinkets = cbUseTrinkets.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cbProcTrinkets_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.ProcTrinkets = cbProcTrinkets.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+
+
     }
 
     [Serializable]
@@ -178,5 +203,7 @@ namespace Rawr.HolyPriest
         public float Shadowfiend = 80f;
         public float Survivability = 5f;
         public float Rapture = 100f;
+        public bool UseTrinkets = true;
+        public bool ProcTrinkets = true;
 	}
 }

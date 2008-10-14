@@ -48,6 +48,8 @@
             this.lblSurvivability = new System.Windows.Forms.Label();
             this.trkRapture = new System.Windows.Forms.TrackBar();
             this.lblRapture = new System.Windows.Forms.Label();
+            this.cbUseTrinkets = new System.Windows.Forms.CheckBox();
+            this.cbProcTrinkets = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).BeginInit();
@@ -246,10 +248,34 @@
             this.lblRapture.TabIndex = 40;
             this.lblRapture.Text = "% Rapture";
             // 
+            // cbUseTrinkets
+            // 
+            this.cbUseTrinkets.AutoSize = true;
+            this.cbUseTrinkets.Location = new System.Drawing.Point(10, 496);
+            this.cbUseTrinkets.Name = "cbUseTrinkets";
+            this.cbUseTrinkets.Size = new System.Drawing.Size(140, 17);
+            this.cbUseTrinkets.TabIndex = 41;
+            this.cbUseTrinkets.Text = "Model Trinkets with Use";
+            this.cbUseTrinkets.UseVisualStyleBackColor = true;
+            this.cbUseTrinkets.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
+            // 
+            // cbProcTrinkets
+            // 
+            this.cbProcTrinkets.AutoSize = true;
+            this.cbProcTrinkets.Location = new System.Drawing.Point(10, 519);
+            this.cbProcTrinkets.Name = "cbProcTrinkets";
+            this.cbProcTrinkets.Size = new System.Drawing.Size(148, 17);
+            this.cbProcTrinkets.TabIndex = 42;
+            this.cbProcTrinkets.Text = "Model Trinkets with Procs";
+            this.cbProcTrinkets.UseVisualStyleBackColor = true;
+            this.cbProcTrinkets.CheckedChanged += new System.EventHandler(this.cbProcTrinkets_CheckedChanged);
+            // 
             // CalculationOptionsPanelHolyPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbProcTrinkets);
+            this.Controls.Add(this.cbUseTrinkets);
             this.Controls.Add(this.lblRapture);
             this.Controls.Add(this.trkRapture);
             this.Controls.Add(this.trkSurvivability);
@@ -268,7 +294,7 @@
             this.Controls.Add(this.lblActivity);
             this.Controls.Add(this.trkActivity);
             this.Name = "CalculationOptionsPanelHolyPriest";
-            this.Size = new System.Drawing.Size(258, 520);
+            this.Size = new System.Drawing.Size(258, 568);
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).EndInit();
@@ -301,5 +327,7 @@
         private System.Windows.Forms.TrackBar trkSurvivability;
         private System.Windows.Forms.TrackBar trkRapture;
         private System.Windows.Forms.Label lblRapture;
+        private System.Windows.Forms.CheckBox cbUseTrinkets;
+        private System.Windows.Forms.CheckBox cbProcTrinkets;
     }
 }

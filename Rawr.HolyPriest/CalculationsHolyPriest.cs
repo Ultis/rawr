@@ -57,7 +57,6 @@ namespace Rawr.HolyPriest
                     "Basic Stats:Spell Crit",
 					"Basic Stats:Healing Crit",
 					"Basic Stats:Spell Haste",
-                    "Basic Stats:Global Cooldown",
                     "Spells:Greater Heal",
                     "Spells:Flash Heal",
 				    "Spells:Binding Heal",
@@ -139,23 +138,9 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            calculatedStats.BasicStats.Stamina = (float)Math.Floor(calculatedStats.BasicStats.Stamina * (1 + character.PriestTalents.Enlightenment * 0.01f));
-            calculatedStats.BasicStats.Health = (float)Math.Floor(calculatedStats.BasicStats.Stamina * 10f + statsRace.Health);
-            calculatedStats.BasicStats.Spirit = (float)Math.Floor(calculatedStats.BasicStats.Spirit * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f) * (1 + character.PriestTalents.Enlightenment * 0.01f));
-            calculatedStats.BasicStats.Intellect = (float)Math.Floor(calculatedStats.BasicStats.Intellect * (1 + character.PriestTalents.MentalStrength * 0.03f) * (1 + calculatedStats.BasicStats.BonusIntellectMultiplier));
-            calculatedStats.BasicStats.Mana = (float)Math.Floor((calculatedStats.BasicStats.Intellect - 20f) * 15f + 20f + statsRace.Mana);
-            calculatedStats.BasicStats.SpellCrit = (calculatedStats.BasicStats.Intellect / 80f) +
-                (calculatedStats.BasicStats.CritRating / 22.08f) + 1.24f;
-            calculatedStats.BasicStats.SpellHaste += character.PriestTalents.Enlightenment * 1f;
-            calculatedStats.BasicStats.SpellPower += calculatedStats.BasicStats.Spirit * character.PriestTalents.SpiritualGuidance * 0.05f;
-          
-            calculatedStats.BasicStats.SpellCombatManaRegeneration += character.PriestTalents.Meditation * 0.1f;
-
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * (0.001f + 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect)));
-
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
-
 
             int Rotation = calculationOptions.Rotation;
             if (Rotation == 0) // OOOH MAGIC TANK ROTATION!!!
@@ -176,20 +161,60 @@ namespace Rawr.HolyPriest
 
             }
 
-            List<Spell> sr = new List<Spell>();
-            Stats simstats = new Stats() + calculatedStats.BasicStats;
+            Stats simstats = calculatedStats.BasicStats.Clone();
 
-            if (simstats.SpiritFor20SecOnUse2Min > 0)
-            {   // Trinkets with Use: Increases Spirit with. (Like Earring of Soulful Meditation)
-                simstats.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f) * (1 + character.PriestTalents.Enlightenment * 0.01f);
+            Stats UseProcs = new Stats();
+
+            if (calculationOptions.UseTrinkets)
+            {
+                if (simstats.SpiritFor20SecOnUse2Min > 0)
+                {   // Trinkets with Use: Increases Spirit with. (Like Earring of Soulful Meditation)
+                    UseProcs.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f;
+                }
+                if (simstats.BangleProc > 0)
+                {   // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd. Also a 15% mana reg proc for 15s on 60s cd.
+                    UseProcs.Spirit += 130f * 20f / 120f;
+                }
+                if (simstats.HealingDoneFor15SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse2Min * 15f / 120f;
+                if (simstats.HealingDoneFor15SecOnUse90Sec > 0)
+                    UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse90Sec * 15f / 90f;
+                if (simstats.HealingDoneFor20SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.HealingDoneFor20SecOnUse2Min * 20f / 120f;
+
+            }
+            if (calculationOptions.ProcTrinkets)
+            {
+                if (simstats.BangleProc > 0)
+                    // Bangle of Endless Blessings. Calculate this as 1 PPM.
+                    UseProcs.SpellCombatManaRegeneration += 0.15f * 15f / 60f * (calculationOptions.FSRRatio / 100f);
+                if (simstats.FullManaRegenFor15SecOnSpellcast > 0)
+                    // Blue Dragon. 2% chance to proc on cast, no known internal cooldown. calculate as 0.5 PPM (100/2*2.5)
+                    UseProcs.SpellCombatManaRegeneration += 1f * 15f / 125f * (calculationOptions.FSRRatio / 100f);
+
             }
 
-            if (simstats.BangleProc > 0)
-            {   // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd. Also a 15% mana reg proc for 15s on 60s cd.
-                simstats.Spirit += 130f * 20f / 120f * (1 + character.PriestTalents.SpiritOfRedemption * 0.05f) * (1 + character.PriestTalents.Enlightenment * 0.01f); ;
-                simstats.SpellCombatManaRegeneration += 0.15f * 15f / 60f;
-            }
-           
+            /*     
+                    calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
+                       calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
+                        + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
+                        + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
+                        + (calculatedStats.BasicStats.BonusManaPotion * 2400f * 5f / 120f)
+                        + procSpiritRegen + procSpiritRegen2
+                        + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
+                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse3Min * 5f / 180f)
+                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse5Min * 5f / 300f)
+                        + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f
+                        + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
+                        + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
+           */
+
+
+            UseProcs.Spirit *= (1 + simstats.BonusSpiritMultiplier);
+            UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
+
+            simstats += UseProcs;
+
             // MP5 from Replenishment
             simstats.Mp5 += calculatedStats.BasicStats.Mana * 0.0025f * calculationOptions.Replenishment / 100f * 5;
 
@@ -215,19 +240,19 @@ namespace Rawr.HolyPriest
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestorePerCast_5_15 * 0.05f;
             float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
-                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 1f) / 100f;
+                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
             float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
-            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 10f;
-            float solchance = (character.PriestTalents.HolySpecialization * 1f + simstats.SpellCrit) / 100f * character.PriestTalents.SurgeOfLight * 0.25f;
+            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f;
+            float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
             float sol5chance = 1f - (float)Math.Pow(1f - solchance, 5);
             float manareg = calculationOptions.FSRRatio / 100f * periodicRegenInFSR + (1 - calculationOptions.FSRRatio / 100) * periodicRegenOutFSR;
             float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
             float raptureconst = 0.01035f * simstats.Mana / statsRace.Mana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
-            float healmultiplier = 1 + character.PriestTalents.Grace * 0.03f;
+            float healmultiplier = (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
 
             // Add on Renewed Hope crit for Maintank Rotation.
             if (Rotation == 7)
-                simstats.SpellCrit += character.PriestTalents.RenewedHope * 2f;
+                simstats.SpellCrit += character.PriestTalents.RenewedHope * 0.02f;
 
             //Spell spell;
             GreaterHeal gh = GreaterHeal.GetAllCommonRanks(simstats, character)[0] as GreaterHeal;
@@ -253,12 +278,13 @@ namespace Rawr.HolyPriest
             simstats.SpellHaste -= ihchaste;
 
             // Borrowed Time Haste
-            simstats.SpellHaste += character.PriestTalents.BorrowedTime * 5f;
+            simstats.SpellHaste += character.PriestTalents.BorrowedTime * 0.05f;
             GreaterHeal gh_bt = GreaterHeal.GetAllCommonRanks(simstats, character)[0] as GreaterHeal;
             FlashHeal fh_bt = FlashHeal.GetAllCommonRanks(simstats, character)[0] as FlashHeal;
             Penance penance_bt = Penance.GetAllCommonRanks(simstats, character)[0] as Penance;
-            simstats.SpellHaste -= character.PriestTalents.BorrowedTime * 5f;
+            simstats.SpellHaste -= character.PriestTalents.BorrowedTime * 0.05f;
 
+            List<Spell> sr = new List<Spell>();
             switch (Rotation)
             {
                 case 2:     // Greater Heal Spam
@@ -381,33 +407,13 @@ namespace Rawr.HolyPriest
                 manacost -= (rheal + absorb) * raptureconst;
                 manacost -= metaSpellCostReduction;
             }
-
+            // Burst is simply heal amount given infinite mana
             calculatedStats.HPSBurstPoints = healamount / cyclelen;
-            calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * manareg * cyclelen / manacost;
-            /*     
-                   calculatedStats.HPSBurstPoints = calculatedStats.BasicStats.SpellPower * 1.88f
-                        + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse2Min * 15f / 120f)
-                        + (calculatedStats.BasicStats.HealingDoneFor15SecOnUse90Sec * 15f / 90f)
-                        + (calculatedStats.BasicStats.HealingDoneFor20SecOnUse2Min * 20f / 120f)
-                        + (calculatedStats.BasicStats.SpiritFor20SecOnUse2Min * character.PriestTalents.SpiritualGuidance * 0.05f * 20f / 120f);
-
-                    calculatedStats.RegenPoints = (calculatedStats.RegenInFSR * calculationOptions.TimeInFSR * 0.01f +
-                       calculatedStats.RegenOutFSR * (100 - calculationOptions.TimeInFSR) * 0.01f)
-                        + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
-                        + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
-                        + (calculatedStats.BasicStats.BonusManaPotion * 2400f * 5f / 120f)
-                        + procSpiritRegen + procSpiritRegen2
-                        + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
-                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse3Min * 5f / 180f)
-                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse5Min * 5f / 300f)
-                        + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f
-                        + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
-                        + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
-                    
-                    calculatedStats.HPSSustainPoints = 0;
-                    break;
-            }
-            */
+            // Sustained is limited by how much mana you regenerate over the time it would take to cast the spells, divided by the cost.
+            if (manareg * cyclelen > manacost) // Regenerating more mana than we can use. Dont make user believe this is an upgrade.
+                calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints;
+            else
+                calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * manareg * cyclelen / manacost;
             // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
@@ -498,15 +504,27 @@ namespace Rawr.HolyPriest
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
+            Stats statsTalents = new Stats()
+            {
+                BonusStaminaMultiplier = character.PriestTalents.Enlightenment * 0.01f,
+                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.01f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
+                BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
+                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f,
+                SpellHaste = character.PriestTalents.Enlightenment * 0.01f,
+                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
+            };
+
+            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
 			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
-            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
-
+            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.SpellCrit += (statsTotal.Intellect / 80f / 100f) + (statsTotal.CritRating / 22.07692337F / 100f) + 0.0124f;
+            statsTotal.SpellHaste += (statsTotal.HasteRating / 15.76923275f / 100f);
+                 
             return statsTotal;
         }
 
@@ -734,6 +752,9 @@ namespace Rawr.HolyPriest
                 Spirit = stats.Spirit,
                 Resilience = stats.Resilience,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                SpellHaste = stats.SpellHaste,
+                SpellCrit = stats.SpellCrit,
+                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 MementoProc = stats.MementoProc,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
@@ -758,6 +779,7 @@ namespace Rawr.HolyPriest
         {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Resilience + stats.Mp5 + stats.SpellPower + stats.CritRating
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
+                + stats.SpellHaste + stats.SpellCrit + stats.HealingReceivedMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
                 + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration
                 + stats.HealingDoneFor15SecOnUse2Min + stats.HealingDoneFor20SecOnUse2Min
