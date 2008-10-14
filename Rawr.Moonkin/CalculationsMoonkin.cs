@@ -323,7 +323,7 @@ namespace Rawr.Moonkin
                 statsTotal.CritRating += statsTotal.IdolCritRating;
                 if (character.ActiveBuffsContains("Improved Moonkin Form"))
                 {
-                    statsTotal.SpellDamageFromSpiritPercentage += (0.5f * character.DruidTalents.ImprovedMoonkinForm);
+                    statsTotal.SpellDamageFromSpiritPercentage += (0.05f * character.DruidTalents.ImprovedMoonkinForm);
                 }
             }
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
@@ -331,11 +331,11 @@ namespace Rawr.Moonkin
             {
                 statsTotal.CritRating += 0.01f * character.DruidTalents.ImprovedFaerieFire * critRatingConversionFactor;
             }
-            // All spells: Spell Power + (0.01 * Earth and Moon)
-            statsTotal.SpellPower *= 1 + (0.01f * character.DruidTalents.EarthAndMoon);
-            // All spells: Spell Power + (0.02 * Master Shapeshifter)
+            // All spells: Damage + (0.01 * Earth and Moon)
+            statsTotal.BonusDamageMultiplier += 0.01f * character.DruidTalents.EarthAndMoon;
+            // All spells: Damage + (0.02 * Master Shapeshifter)
             if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
-                statsTotal.SpellPower *= 1 + (0.02f * character.DruidTalents.MasterShapeshifter);
+                statsTotal.BonusDamageMultiplier += 0.02f * character.DruidTalents.MasterShapeshifter;
             // Generic spell power multiplier
             statsTotal.SpellPower *= 1 + statsTotal.BonusSpellPowerMultiplier;
             // Generic spell crit multiplier
