@@ -87,6 +87,7 @@ namespace Rawr.Mage
                     "Spell Info:ABAM",
                     "Spell Info:ABarAM",
                     "Spell Info:ABABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
+                    "Spell Info:AB2ABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:ABMBAM*Arcane Missiles on Missile Barrage",
                     "Spell Info:FBABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:FrBABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",

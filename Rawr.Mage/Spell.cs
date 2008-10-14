@@ -88,6 +88,7 @@ namespace Rawr.Mage
         ABAM,
         ABMBAM,
         ABABar,
+        AB2ABar,
         FBABar,
         FrBABar,
         FFBABar,
@@ -1933,6 +1934,7 @@ namespace Rawr.Mage
                 chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                if (ABar.CastTime + MBAM.CastTime < 3.0) chain2.AddPause(3.0f - ABar.CastTime - MBAM.CastTime);
                 chain2.Calculate(castingState);
 
                 CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
@@ -1978,6 +1980,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to AB-ABar
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(AB, castingState);
+                if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -2002,12 +2005,14 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(AB, castingState);
+                if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 //ABar-MBAM
                 chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain1;
@@ -2044,6 +2049,105 @@ namespace Rawr.Mage
         }
     }
 
+    class AB2ABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float K;
+
+        public AB2ABar(CastingState castingState)
+        {
+            Name = "AB2ABar";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            if (MB == 0.0)
+            {
+                // if we don't have barrage then this degenerates to AB-ABar
+                chain1 = new SpellCycle(2);
+                chain1.AddSpell(AB0, castingState);
+                chain1.AddSpell(AB1, castingState);
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                chain1.AddSpell(ABar, castingState);
+                chain1.Calculate(castingState);
+
+                commonChain = chain1;
+
+                CastTime = chain1.CastTime;
+                CostPerSecond = chain1.CostPerSecond;
+                DamagePerSecond = chain1.DamagePerSecond;
+                ThreatPerSecond = chain1.ThreatPerSecond;
+                ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+            }
+            else
+            {
+                // A: MBAM-AB-ABar  (1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB) => A
+                // B: AB-AB-ABar    (1-MB)*(1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB)*(1-MB) => A
+
+                // A + B = 1
+                // A = (1 - (1-MB)*(1-MB)) * A + (1 - (1-MB)*(1-MB)*(1-MB)) * B
+                // B = (1-MB)*(1-MB) * A + (1-MB)*(1-MB)*(1-MB) * B
+
+                // B * (1 + (1-MB)*(1-MB) - (1-MB)*(1-MB)*(1-MB)) = (1-MB)*(1-MB)
+                // B = (1-MB)*(1-MB) / [1 + (1-MB)*(1-MB)*MB]
+
+                //AB-ABar 0.8 * 0.8
+                chain1 = new SpellCycle(3);
+                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AB0, castingState);
+                chain1.AddSpell(AB1, castingState);
+                if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                chain1.Calculate(castingState);
+
+                //ABar-MBAM
+                chain2 = new SpellCycle(3);
+                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM, castingState);
+                chain2.AddSpell(AB0, castingState);
+                if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                chain2.Calculate(castingState);
+
+                commonChain = chain1;
+
+                K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
+
+                CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
+                CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            }
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            if (chain2 == null)
+            {
+                chain1.AddSpellContribution(dict, duration);
+            }
+            else
+            {
+                chain1.AddSpellContribution(dict, (1 - K) * chain1.CastTime / CastTime * duration);
+                chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+            }
+        }
+    }
+
     class FBABar : Spell
     {
         SpellCycle chain1;
@@ -2065,6 +2169,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FB-ABar
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(FB, castingState);
+                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -2081,11 +2186,13 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FB, castingState);
+                if (FB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
@@ -2143,6 +2250,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FrB-ABar
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(FrB, castingState);
+                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -2159,11 +2267,13 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FrB, castingState);
+                if (FrB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FrB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new SpellCycle(2);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;
@@ -2221,6 +2331,7 @@ namespace Rawr.Mage
                 // if we don't have barrage then this degenerates to FB-ABar
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(FFB, castingState);
+                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FFB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar, castingState);
                 chain1.Calculate(castingState);
 
@@ -2237,11 +2348,13 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(FFB, castingState);
+                if (FFB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - FFB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
 
                 chain2 = new SpellCycle(4);
                 chain2.AddSpell(ABar, castingState);
                 chain2.AddSpell(MBAM, castingState);
+                if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
                 commonChain = chain2;

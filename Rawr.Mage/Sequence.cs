@@ -551,6 +551,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             tjj -= sequence[jj].Duration;
                             maxPush = Math.Min(maxPush, sequence[jj].MaxTime - tjj);
                         }
+                        if (jj < 0) jj = 0; // TODO investigate
                         if (jT >= sequence[jj].Duration)
                         {
                             jT -= sequence[jj].Duration;
