@@ -180,12 +180,12 @@ namespace Rawr.HolyPriest
                     UseProcs.SpellPower += simstats.SpellDamageFor15SecOnUse2Min * 15f / 120f;
 //                if (simstats.HealingDoneFor15SecOnUse2Min > 0)
                     //UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse2Min * 15f / 120f / 1.88f;
-                if (simstats.SpellDamageFor15SecOnUse90Sec > 0)
-                    UseProcs.SpellPower += simstats.SpellDamageFor15SecOnUse90Sec * 15f / 90f;
+                if (simstats.SpellPowerFor15SecOnUse90Sec > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
 //                if (simstats.HealingDoneFor15SecOnUse90Sec > 0)
                     //UseProcs.SpellPower += simstats.HealingDoneFor15SecOnUse90Sec * 15f / 90f / 1.88f;
-                if (simstats.SpellDamageFor20SecOnUse2Min > 0)
-                    UseProcs.SpellPower += simstats.SpellDamageFor20SecOnUse2Min * 20f / 120f;
+                if (simstats.SpellPowerFor20SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
 //                if (simstats.HealingDoneFor20SecOnUse2Min > 0)
                     //UseProcs.SpellPower += simstats.HealingDoneFor20SecOnUse2Min * 20f / 120f / 1.88f;
 
