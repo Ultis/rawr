@@ -1996,22 +1996,40 @@ namespace Rawr.Mage
                 }
                 if (calculationOptions.MaintainScorch)
                 {
-                    if (calculationOptions.SmartOptimization)
+                    if (character.MageTalents.ImprovedScorch > 0)
                     {
-                        list.Add(SpellId.FBSc);
-                    }
-                    else
-                    {
-                        if (character.MageTalents.HotStreak > 0)
+                        if (calculationOptions.SmartOptimization)
                         {
-                            list.Add(SpellId.FBScPyro);
+                            if (character.MageTalents.LivingBomb > 0)
+                            {
+                                list.Add(SpellId.FBScLBPyro);
+                            }
+                            else if (character.MageTalents.HotStreak > 0)
+                            {
+                                list.Add(SpellId.FBScPyro);
+                            }
+                            else
+                            {
+                                list.Add(SpellId.FBSc);
+                            }
                         }
                         else
                         {
-                            list.Add(SpellId.FBSc);
+                            if (character.MageTalents.LivingBomb > 0)
+                            {
+                                list.Add(SpellId.FBScLBPyro);
+                            }
+                            else if (character.MageTalents.HotStreak > 0)
+                            {
+                                list.Add(SpellId.FBScPyro);
+                            }
+                            else
+                            {
+                                list.Add(SpellId.FBSc);
+                            }
+                            if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FFBScPyro);
+                            list.Add(SpellId.FBFBlast);
                         }
-                        list.Add(SpellId.FFBScPyro);
-                        list.Add(SpellId.FBFBlast);
                     }
                 }
                 else if (calculationOptions.MaintainSnare)
@@ -2075,7 +2093,7 @@ namespace Rawr.Mage
                             list.Add(SpellId.ArcaneMissiles);
                             list.Add(SpellId.Fireball);
                             list.Add(SpellId.FrostboltFOF);
-                            list.Add(SpellId.FrostfireBoltFOF);
+                            if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
                             list.Add(SpellId.ABP);
                         }
                     }
@@ -2091,7 +2109,7 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.Fireball);
                         }
-                        list.Add(SpellId.FrostfireBoltFOF);
+                        if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
                         list.Add(SpellId.FBFBlast);
                         if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         list.Add(SpellId.FrostboltFOF);
@@ -2104,7 +2122,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
+                        if (calculationOptions.PlayerLevel >= 75 && character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

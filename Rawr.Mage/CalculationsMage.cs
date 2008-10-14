@@ -75,6 +75,7 @@ namespace Rawr.Mage
                     "Spell Info:FBLBPyro*Pyroblast on Hot Streak, maintain Living Bomb dot",
                     "Spell Info:FBSc*Must enable Maintain Scorch and have points in Improved Scorch talent to enable",
                     "Spell Info:FBScPyro*Maintain Scorch and Pyroblast on Hot Streak",
+                    "Spell Info:FBScLBPyro*Maintain Scorch, maintain Living Bomb dot and Pyroblast on Hot Streak",
                     "Spell Info:FBFBlast",
                     "Spell Info:Living Bomb",
                     "Spell Info:Frostfire Bolt",
