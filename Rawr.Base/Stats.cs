@@ -1045,6 +1045,7 @@ namespace Rawr
         }
 
         [Percentage]
+        [DisplayName("% Arcane Blast Bonus")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ArcaneBlastBonus
         {
