@@ -342,7 +342,7 @@ namespace Rawr.Moonkin
                 statsTotal.BonusSpellPowerMultiplier *= 1.0f + (0.02f * character.DruidTalents.MasterShapeshifter);
 
             // Make sure we revert the value to a proper percentage after multiplicative calculations are done
-            if (statsTotal.BonusSpellPowerMultiplier > 1.0f)
+            if (statsTotal.BonusSpellPowerMultiplier >= 1.0f)
                 statsTotal.BonusSpellPowerMultiplier -= 1.0f;
 
             return statsTotal;
