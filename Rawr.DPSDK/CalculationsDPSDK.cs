@@ -212,6 +212,7 @@ namespace Rawr.DPSDK
             DeathKnightTalents talents = calcOpts.talents;
             bool DW = character.MainHand != null && character.OffHand != null;
             float missedSpecial = 0f;
+            float hitBonus = .01f * (float)talents.NervesOfColdSteel;
             float dpsWhiteBeforeArmor = 0f;
             float combinedSwingTime = 0f;
             float fightDuration = calcOpts.FightLength*60;
@@ -344,13 +345,13 @@ namespace Rawr.DPSDK
                 if (character.OffHand == null)  chanceMiss = .09f;
                 else                            chanceMiss = .28f;
                 chanceMiss -= stats.HitRating / 3279f;
-                chanceMiss -= stats.Hit;
+                chanceMiss -= hitBonus;
                 if (chanceMiss < 0f) chanceMiss = 0f;
                 calcs.MissedAttacks = chanceMiss;
 
                 chanceMiss = .09f;
                 chanceMiss -= stats.HitRating / 3279f;
-                chanceMiss -= stats.Hit;
+                chanceMiss -= hitBonus;
                 if (chanceMiss < 0f) chanceMiss = 0f;
                 missedSpecial = chanceMiss;
                 calcs.MissedAttacks = chanceMiss;
@@ -365,7 +366,7 @@ namespace Rawr.DPSDK
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
                 spellResist -= stats.HitRating / 2623f;
-                spellResist -= stats.Hit;
+                spellResist -= hitBonus;
                 if (spellResist < 0f) spellResist = 0f;
 
                 // Total physical misses
@@ -790,7 +791,6 @@ namespace Rawr.DPSDK
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                Hit = .01f * (float)talents.NervesOfColdSteel,
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath),
                 BonusArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath),
@@ -868,7 +868,6 @@ namespace Rawr.DPSDK
 
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
-            statsTotal.Hit = statsGearEnchantsBuffs.Hit;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
