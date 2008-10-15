@@ -1044,6 +1044,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.DrumsOfBattle] = value; }
         }
 
+        [Percentage]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ArcaneBlastBonus
         {

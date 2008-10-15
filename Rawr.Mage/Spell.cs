@@ -1341,8 +1341,8 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
-            CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus * 0.25f;
-            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus * 0.25f + 0.15f * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact); // TODO verify how spell impact stacks
+            CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
+            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.15f * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact); // TODO verify how spell impact stacks
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             CalculateDerivedStats(castingState);

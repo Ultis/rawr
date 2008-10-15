@@ -1315,7 +1315,7 @@ namespace Rawr
             {
                 Name = "Tirisfal Regalia 2 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { ArcaneBlastBonus = .2f },
+                Stats = { ArcaneBlastBonus = .05f },
                 SetName = "Tirisfal Regalia",
                 SetThreshold = 2
             });

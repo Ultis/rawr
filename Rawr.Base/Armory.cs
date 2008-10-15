@@ -1230,6 +1230,9 @@ namespace Rawr
                                     case "Healing":
                                         stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
                                         break;
+                                    case "Spell Power":
+                                        stats.SpellPower = gemBonusValue;
+                                        break;
                                     case "Spell Crit":
                                     case "Spell Crit Rating":
                                     case "Spell Critical":
