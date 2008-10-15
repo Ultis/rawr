@@ -15,15 +15,16 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 4;
+		private const int INTRO_VERSION = 5;
 		private const string INTRO_TEXT =
-" Welcome to Rawr 2.0.0. This brand new version of Rawr is designed for use with WoW 3.0, " +
+" Welcome to Rawr 2.0.1. This brand new version of Rawr is designed for use with WoW 3.0, " +
 "for characters up to level 70. You'll find many new features at the core level of Rawr, " +
 "and many in some of the models. Some important things to note: \r\n" +
 "   •We're not done. Many of the models haven't been updated yet for WoW 3.0\r\n" +
 "   •We're going to be updating Rawr quite often for a while. To help you stay " +
 "updated with the latest changes, Rawr will now check for new available updates, " +
 "notify you if there's a newer version, and offer to open Rawr's website for you.\r\n" +
+"\r\nChanges in v2.0.1: Wide variety of bugfixes to several models, new armory item parsing, optimization.\r\n" +
 "\r\nHere's a quick rundown of the status of each model:\r\n" +
 "   •Rawr.Base: Still need to implement buffs for Glyphs, and fix bugs with many of the new features.\r\n" +
 "   •Rawr.Bear: Threat calculations not done. Otherwise, mostly complete.\r\n" +

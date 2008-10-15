@@ -1,12 +1,14 @@
-Rawr v2.0.0
+Rawr v2.0.1
 ------------
- Welcome to Rawr 2.0.0. This brand new version of Rawr is designed for use with WoW 3.0, 
+ Welcome to Rawr 2.0.1. This brand new version of Rawr is designed for use with WoW 3.0, 
 for characters up to level 70. You'll find many new features at the core level of Rawr, 
 and many in some of the models. Some important things to note: 
    •We're not done. Many of the models haven't been updated yet for WoW 3.0
    •We're going to be updating Rawr quite often for a while. To help you stay 
 updated with the latest changes, Rawr will now check for new available updates, 
 notify you if there's a newer version, and offer to open Rawr's website for you.
+
+Changes in v2.0.1: Wide variety of bugfixes to several models, new armory item parsing, optimization.
 
 Here's a quick rundown of the status of each model:
    •Rawr.Base: Still need to implement buffs for Glyphs, and fix bugs with many of the new features.

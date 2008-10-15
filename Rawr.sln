@@ -182,7 +182,6 @@ Global
 		{95E3AFED-1207-45FB-9B22-64DCFD1279B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{450A384E-26CD-4775-A021-9062B810C91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{450A384E-26CD-4775-A021-9062B810C91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{450A384E-26CD-4775-A021-9062B810C91B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
