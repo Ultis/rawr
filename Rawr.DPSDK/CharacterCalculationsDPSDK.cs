@@ -34,27 +34,6 @@ namespace Rawr.DPSDK
             set { _whiteDPS = value; }
         }
 
-        private float _sealOfBloodDPS;
-        public float SealOfBloodDPS
-        {
-            get { return _sealOfBloodDPS; }
-            set { _sealOfBloodDPS = value; }
-        }
-
-        private float _sealOfCommandDPS;
-        public float SealOfCommandDPS
-        {
-            get { return _sealOfCommandDPS; }
-            set { _sealOfCommandDPS = value; }
-        }
-
-        private float _sealDPS;
-        public float SealDPS
-        {
-            get { return _sealDPS; }
-            set { _sealDPS = value; }
-        }
-
         private float _windfuryDPS;
         public float WindfuryDPS
         {
@@ -62,39 +41,116 @@ namespace Rawr.DPSDK
             set { _windfuryDPS = value; }
         }
 
-        private float _crusaderDPS;
-        public float CrusaderDPS
+        private float _NecrosisDPS;
+        public float NecrosisDPS
         {
-            get { return _crusaderDPS; }
-            set { _crusaderDPS = value; }
+            get { return _NecrosisDPS; }
+            set { _NecrosisDPS = value; }
         }
 
-        private float _divineStormDPS;
-        public float DivineStormDPS
+        private float _BCBDPS;
+        public float BCBDPS
         {
-            get { return _divineStormDPS; }
-            set { _divineStormDPS = value; }
+            get { return _BCBDPS; }
+            set { _BCBDPS = value; }
         }
 
-        private float judgementDPS;
-        public float JudgementDPS
+        private float _DeathCoilDPS;
+        public float DeathCoilDPS
         {
-            get { return judgementDPS; }
-            set { judgementDPS = value; }
+            get { return _DeathCoilDPS; }
+            set { _DeathCoilDPS = value; }
         }
 
-        private float _consecrationDPS;
-        public float ConsecrationDPS
+        private float _IcyTouchDPS;
+        public float IcyTouchDPS
         {
-            get { return _consecrationDPS; }
-            set { _consecrationDPS = value; }
+            get { return _IcyTouchDPS; }
+            set { _IcyTouchDPS = value; }
         }
 
-        private float _exorcismDPS;
-        public float ExorcismDPS
+        private float _PlagueStrikeDPS;
+        public float PlagueStrikeDPS
         {
-            get { return _exorcismDPS; }
-            set { _exorcismDPS= value; }
+            get { return _PlagueStrikeDPS; }
+            set { _PlagueStrikeDPS = value; }
+        }
+
+        private float _FrostFeverDPS;
+        public float FrostFeverDPS
+        {
+            get { return _FrostFeverDPS; }
+            set { _FrostFeverDPS = value; }
+        }
+
+        private float _BloodPlagueDPS;
+        public float BloodPlagueDPS
+        {
+            get { return _BloodPlagueDPS; }
+            set { _BloodPlagueDPS = value; }
+        }
+
+        private float _ScourgeStrikeDPS;
+        public float ScourgeStrikeDPS
+        {
+            get { return _ScourgeStrikeDPS; }
+            set { _ScourgeStrikeDPS = value; }
+        }
+
+        private float _UnholyBlightDPS;
+        public float UnholyBlightDPS
+        {
+            get { return _UnholyBlightDPS; }
+            set { _UnholyBlightDPS = value; }
+        }
+
+        private float _FrostStrikeDPS;
+        public float FrostStrikeDPS
+        {
+            get { return _FrostStrikeDPS; }
+            set { _FrostStrikeDPS = value; }
+        }
+
+        private float _HowlingBlastDPS;
+        public float HowlingBlastDPS
+        {
+            get { return _HowlingBlastDPS; }
+            set { _HowlingBlastDPS = value; }
+        }
+
+        private float _ObliterateDPS;
+        public float ObliterateDPS
+        {
+            get { return _ObliterateDPS; }
+            set { _ObliterateDPS = value; }
+        }
+
+        private float _BloodStrikeDPS;
+        public float BloodStrikeDPS
+        {
+            get { return _BloodStrikeDPS; }
+            set { _BloodStrikeDPS = value; }
+        }
+
+        private float _HeartStrikeDPS;
+        public float HeartStrikeDPS
+        {
+            get { return _HeartStrikeDPS; }
+            set { _HeartStrikeDPS = value; }
+        }
+
+        private float _GargoyleDPS;
+        public float GargoyleDPS
+        {
+            get { return _GargoyleDPS; }
+            set { _GargoyleDPS = value; }
+        }
+
+        private float _DRWDPS;
+        public float DRWDPS
+        {
+            get { return _DRWDPS; }
+            set { _DRWDPS = value; }
         }
 
         private int _targetLevel;
@@ -104,18 +160,32 @@ namespace Rawr.DPSDK
             set { _targetLevel = value; }
         }
 
-        private float _weaponDamage;
-        public float WeaponDamage
+        private float _MHweaponDamage;
+        public float MHWeaponDamage
         {
-            get { return _weaponDamage; }
-            set { _weaponDamage = value; }
+            get { return _MHweaponDamage; }
+            set { _MHweaponDamage = value; }
         }
 
-        private float _attackSpeed;
-        public float AttackSpeed
+        private float _OHWeaponDamage;
+        public float OHWeaponDamage
         {
-            get { return _attackSpeed; }
-            set { _attackSpeed = value; }
+            get { return _OHWeaponDamage; }
+            set { _OHWeaponDamage = value; }
+        }
+
+        private float _MHattackSpeed;
+        public float MHAttackSpeed
+        {
+            get { return _MHattackSpeed; }
+            set { _MHattackSpeed = value; }
+        }
+
+        private float _OHattackSpeed;
+        public float OHAttackSpeed
+        {
+            get { return _OHattackSpeed; }
+            set { _OHattackSpeed = value; }
         }
 
         private float _critChance;
@@ -123,6 +193,13 @@ namespace Rawr.DPSDK
         {
             get { return _critChance; }
             set { _critChance = value; }
+        }
+
+        private float _SpellCritChance;
+        public float SpellCritChance
+        {
+            get { return _SpellCritChance; }
+            set { _SpellCritChance = value; }
         }
 
         private float _avoidedAttacks;
@@ -158,6 +235,20 @@ namespace Rawr.DPSDK
         {
             get { return _enemyMitigation; }
             set { _enemyMitigation = value; }
+        }
+
+        private float _MHExpertise;
+        public float MHExpertise
+        {
+            get { return _MHExpertise; }
+            set { _MHExpertise = value; }
+        }
+
+        private float _OHExpertise;
+        public float OHExpertise
+        {
+            get { return _OHExpertise; }
+            set { _OHExpertise = value; }
         }
 
         private Stats _basicStats;
@@ -204,27 +295,38 @@ namespace Rawr.DPSDK
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health", BasicStats.Health.ToString("N0"));
             dictValues.Add("Strength", BasicStats.Strength.ToString("N0"));
-            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, (BasicStats.Agility / 2500f)));
+            dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, ( BasicStats.Agility / 6250f )));
             dictValues.Add("Attack Power", attackPower.ToString("N0"));
-            dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, (critRating / 2208)));
-            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} miss chance", hitRating, (hitRating / 1576)));
-            dictValues.Add("Expertise", string.Format("{0:0}*Negates {1:P} dodge chance", BasicStats.Expertise, (BasicStats.Expertise / 400)));
-            dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, (BasicStats.HasteRating / 1576)));
+            dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, ( critRating / 4591f )));
+            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} miss chance", hitRating, ( hitRating / 3279f )));
+            dictValues.Add("Expertise", string.Format("{0:0} // {1:1}*Negates {2:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
+            dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
             dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
 
-            dictValues.Add("Weapon Damage", WeaponDamage.ToString("N2"));
-            dictValues.Add("Attack Speed", AttackSpeed.ToString("N2"));
+            dictValues.Add("Weapon Damage", MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
+            dictValues.Add("Attack Speed", MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
             dictValues.Add("Crit Chance", string.Format("{0:P}", CritChance));
             dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedMHAttacks + DodgedOHAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, effectiveArmor));
 
+            dictValues.Add("BCB", BCBDPS.ToString("N2"));
+            dictValues.Add("BloodPlague", BloodPlagueDPS.ToString("N2"));
+            dictValues.Add("BloodStrike", BloodStrikeDPS.ToString("N2"));
+            dictValues.Add("DeathCoil", DeathCoilDPS.ToString("N2"));
+            dictValues.Add("DRW", DRWDPS.ToString("N2"));
+            dictValues.Add("FrostFever", FrostFeverDPS.ToString("N2"));
+            dictValues.Add("FrostStrike", FrostStrikeDPS.ToString("N2"));
+            dictValues.Add("Gargoyle", GargoyleDPS.ToString("N2"));
+            dictValues.Add("HeartStrike", HeartStrikeDPS.ToString("N2"));
+            dictValues.Add("HowlingBlast ", HowlingBlastDPS.ToString("N2"));
+            dictValues.Add("IcyTouch", IcyTouchDPS.ToString("N2"));
+            dictValues.Add("Necrosis", NecrosisDPS.ToString("N2"));
+            dictValues.Add("Obliterate", ObliterateDPS.ToString("N2"));
+            dictValues.Add("PlagueStrike", PlagueStrikeDPS.ToString("N2"));
+            dictValues.Add("ScourgeStrike", ScourgeStrikeDPS.ToString("N2"));
+            dictValues.Add("UnholyBlight ", UnholyBlightDPS.ToString("N2"));
             dictValues.Add("White", WhiteDPS.ToString("N2"));
-            dictValues.Add("Seal", SealDPS.ToString("N2"));
             dictValues.Add("Windfury", WindfuryDPS.ToString("N2"));
-            dictValues.Add("Crusader Strike", CrusaderDPS.ToString("N2"));
-            dictValues.Add("Judgement", JudgementDPS.ToString("N2"));
-            dictValues.Add("Consecration", ConsecrationDPS.ToString("N2"));
-            dictValues.Add("Exorcism", ExorcismDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             return dictValues;

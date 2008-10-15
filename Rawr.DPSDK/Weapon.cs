@@ -22,7 +22,8 @@ namespace Rawr.DPSDK
 
             #region Attack Speed
             {
-                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 1576f));
+                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 3278f));
+                hastedSpeed /= 1f + .05f * (float)calcOpts.talents.ImprovedIcyTalons;
 
                 if (calcOpts.Bloodlust)
                 {
@@ -50,7 +51,7 @@ namespace Rawr.DPSDK
             #region Dodge
             {
                 chanceDodged = .065f;
-                chanceDodged -= effectiveExpertise * .0025f;
+                chanceDodged -= effectiveExpertise / 400;
                 if (chanceDodged < 0f) chanceDodged = 0f;
             }
             #endregion
