@@ -168,7 +168,7 @@ namespace Rawr.Hunter
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString("F0"));
 			dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
 			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0"));
-			dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
+			dictValues.Add("Armor Penetration", BasicStats.ArmorPenetrationRating.ToString());
 			dictValues.Add("MP5", BasicStats.Mp5.ToString("F0"));
 			dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
 			dictValues.Add("Health", BasicStats.Health.ToString("F0"));

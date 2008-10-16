@@ -197,6 +197,7 @@ namespace Rawr.Hunter
                     CharacterCalculationsHunter calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsHunter;
 
                     CharacterCalculationsHunter calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsHunter;
+                    CharacterCalculationsHunter calcArPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 1 } }) as CharacterCalculationsHunter;
 
 
                     return new ComparisonCalculationBase[] {  
@@ -220,6 +221,10 @@ namespace Rawr.Hunter
                                     HunterDpsPoints = (calcAgiValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcAgiValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcAgiValue.OverallPoints - baseCalc.OverallPoints),},
+						        new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
+                                    HunterDpsPoints = (calcArPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcArPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcArPValue.OverallPoints - baseCalc.OverallPoints),},
 
                     };
 
@@ -233,6 +238,7 @@ namespace Rawr.Hunter
         {
 			return new Stats()
 			{
+                ArmorPenetrationRating = stats.ArmorPenetrationRating,
 				Agility = stats.Agility, 
 				ArmorPenetration = stats.ArmorPenetration,
 				AttackPower = stats.AttackPower,
@@ -272,6 +278,7 @@ namespace Rawr.Hunter
         {
 			return (stats.Agility +
 			stats.ArmorPenetration +
+            stats.ArmorPenetrationRating +
 			stats.AttackPower +
 			stats.BonusAgilityMultiplier +
 			stats.BonusArmorMultiplier +
@@ -389,13 +396,13 @@ namespace Rawr.Hunter
             double totalStaticHaste = (1 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100));
 
             {
-                totalStaticHaste = totalStaticHaste * (1 + .04 * character.HunterTalents.SerpentsSwiftness);
+                totalStaticHaste = totalStaticHaste * (1 + .04 * character.HunterTalents.SerpentsSwiftness) * ratings.QUIVER_SPEED_INCREASE;
             }
 
             double normalAutoshotsPerSecond = 0.0;
             if (character.Ranged != null)
             {
-                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Speed / (totalStaticHaste * ratings.QUIVER_SPEED_INCREASE));
+                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Speed / (totalStaticHaste));
                 normalAutoshotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed;
             }
 
@@ -501,7 +508,7 @@ namespace Rawr.Hunter
 
                 autoshotDmg *= talentModifiers;
 
-                double targetArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
+                double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0)); // TODO: Level80
                 double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
                 autoshotDmg *= 1.0 - armorReduction;
@@ -597,6 +604,7 @@ namespace Rawr.Hunter
 			statsTotal.Armor = (float)Math.Round((statsGearEnchantsBuffs.Armor + statsRace.Armor + (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
             statsTotal.Miss = 0.0f;
 			statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;

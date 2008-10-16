@@ -55,10 +55,11 @@ namespace Rawr.Hunter
             this.weaponDamageAverage = weaponDamageAverage;
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
-            double targetArmor = options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration;
+            double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0));
             this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
-            targetArmor = options.TargetArmor * (1.0 - character.HunterTalents.PiercingShots * 0.02) - calculatedStats.BasicStats.ArmorPenetration;
+            targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0) - character.HunterTalents.PiercingShots * 0.02); // TODO: Level80
+            
             this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
 
@@ -353,7 +354,7 @@ namespace Rawr.Hunter
             for(int i = 0; i < cycleLength; i++)
             {
                 builder.Append(timings[i].ToString("F1"));
-                builder.Append(" ");
+                builder.Append("s ");
                 builder.AppendLine(rotation[i].ToString());
                 switch (rotation[i])
                 {
