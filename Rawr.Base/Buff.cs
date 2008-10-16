@@ -1640,7 +1640,7 @@ namespace Rawr
               {
                   Name = "Avatar Raiment 2 Piece Bonus",
                   Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                  Stats = { RenewDurationIncrease = 3f },
+                  Stats = { ManaGainOnGreaterHealOverheal = 100f },
                   SetName = "Avatar Raiment",
                   SetThreshold = 2
               });
@@ -1649,7 +1649,7 @@ namespace Rawr
               {
                   Name = "Avatar Raiment 4 Piece Bonus",
                   Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                  Stats = { ManaGainOnGreaterHealOverheal = 100f },
+                  Stats = { RenewDurationIncrease = 3f },
                   SetName = "Avatar Raiment",
                   SetThreshold = 4                 
               });
