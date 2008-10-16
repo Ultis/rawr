@@ -1636,6 +1636,24 @@ namespace Rawr
 				  SetThreshold = 4
 			  });
 
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Avatar Raiment 2 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+                  Stats = { RenewDurationIncrease = 3f },
+                  SetName = "Avatar Raiment",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Avatar Raiment 4 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+                  Stats = { ManaGainOnGreaterHealOverheal = 100f },
+                  SetName = "Avatar Raiment",
+                  SetThreshold = 4                 
+              });
+
 			// Rogue set bonuses
 			  defaultBuffs.Add(new Buff() {
 				  Name = "Netherblade 2 Piece Bonus",

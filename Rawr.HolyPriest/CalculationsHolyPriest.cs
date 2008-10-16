@@ -365,6 +365,7 @@ namespace Rawr.HolyPriest
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * hcchance;
                     mcost -= mcost * serendipityconst;
+                    mcost -= simstats.ManaGainOnGreaterHealOverheal * (1f - calculationOptions.Serendipity / 100f);
                     castctr++;
                 }
                 else if (sr[x] == fh || sr[x] == fh_bt)

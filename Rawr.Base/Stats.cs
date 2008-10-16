@@ -177,7 +177,10 @@ namespace Rawr
         ManacostReduceWithin15OnHealingCast,
         BangleProc,
         FullManaRegenFor15SecOnSpellcast,
-		SpellPower
+		SpellPower,
+        RenewDurationIncrease,
+        ManaGainOnGreaterHealOverheal
+
     }
 
     enum MultiplicativeStat : int
@@ -2120,6 +2123,24 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusGHHealingMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusGHHealingMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName(" Increased duration of Renew")]
+        public float RenewDurationIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RenewDurationIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RenewDurationIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName(" mana gained on Greater Heal Overheals")]
+        public float ManaGainOnGreaterHealOverheal
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal] = value; }
         }
 
         #endregion

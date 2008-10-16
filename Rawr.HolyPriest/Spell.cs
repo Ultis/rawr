@@ -224,6 +224,11 @@ namespace Rawr.HolyPriest
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);
             ManaCost = (int)Math.Floor(ManaCostBase
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
+            if (stats.RenewDurationIncrease > 0)
+            {
+                MinHeal = MaxHeal = MinHeal * (HotDuration + stats.RenewDurationIncrease) / HotDuration;
+                HotDuration += stats.RenewDurationIncrease;
+            }
             CastTime = 0;
         }
 
