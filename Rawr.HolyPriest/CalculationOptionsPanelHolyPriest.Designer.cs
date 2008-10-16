@@ -42,20 +42,22 @@
             this.trkShadowfiend = new System.Windows.Forms.TrackBar();
             this.ckbManaPotion = new System.Windows.Forms.CheckBox();
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
+            this.trkTestOfFaith = new System.Windows.Forms.TrackBar();
+            this.cbModelProcs = new System.Windows.Forms.CheckBox();
             this.lblSerendipity = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblSurvivability = new System.Windows.Forms.Label();
             this.trkRapture = new System.Windows.Forms.TrackBar();
             this.lblRapture = new System.Windows.Forms.Label();
-            this.cbUseTrinkets = new System.Windows.Forms.CheckBox();
-            this.cbProcTrinkets = new System.Windows.Forms.CheckBox();
+            this.lblTestOfFaith = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTestOfFaith)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).BeginInit();
             this.SuspendLayout();
             // 
@@ -93,6 +95,7 @@
             "Holy-Tank (Renew/ProM/GH)",
             "Holy-Raid (ProM/CoH/FH)",
             "Disc-Tank (Penance/PW:S/ProM/GH)",
+            "Disc-Tank (Penance/PW:S/ProM/FH)",
             "Disc-Raid (PW:S/Penance/Flash)"});
             this.cbRotation.Location = new System.Drawing.Point(10, 39);
             this.cbRotation.MaxDropDownItems = 10;
@@ -184,7 +187,7 @@
             // 
             // trkSurvivability
             // 
-            this.trkSurvivability.Location = new System.Drawing.Point(10, 462);
+            this.trkSurvivability.Location = new System.Drawing.Point(10, 525);
             this.trkSurvivability.Maximum = 100;
             this.trkSurvivability.Name = "trkSurvivability";
             this.trkSurvivability.Size = new System.Drawing.Size(235, 42);
@@ -192,6 +195,30 @@
             this.trkSurvivability.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkSurvivability, "Change this slider to tell Rawr how much you value your Health.");
             this.trkSurvivability.Scroll += new System.EventHandler(this.trkSurvivability_Scroll);
+            // 
+            // trkTestOfFaith
+            // 
+            this.trkTestOfFaith.Location = new System.Drawing.Point(10, 463);
+            this.trkTestOfFaith.Maximum = 100;
+            this.trkTestOfFaith.Name = "trkTestOfFaith";
+            this.trkTestOfFaith.Size = new System.Drawing.Size(235, 42);
+            this.trkTestOfFaith.TabIndex = 44;
+            this.trkTestOfFaith.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkTestOfFaith, "Set this slider to the amount of Heals landing on players with less than 50% heal" +
+                    "th.");
+            this.trkTestOfFaith.Scroll += new System.EventHandler(this.trkTestOfFaith_Scroll);
+            // 
+            // cbModelProcs
+            // 
+            this.cbModelProcs.AutoSize = true;
+            this.cbModelProcs.Location = new System.Drawing.Point(10, 565);
+            this.cbModelProcs.Name = "cbModelProcs";
+            this.cbModelProcs.Size = new System.Drawing.Size(177, 17);
+            this.cbModelProcs.TabIndex = 41;
+            this.cbModelProcs.Text = "Model items with Procs and Use";
+            this.toolTip1.SetToolTip(this.cbModelProcs, "Checking this will make Rawr model Trinkets and other items with Use and Procs");
+            this.cbModelProcs.UseVisualStyleBackColor = true;
+            this.cbModelProcs.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
             // 
             // lblSerendipity
             // 
@@ -223,7 +250,7 @@
             // lblSurvivability
             // 
             this.lblSurvivability.AutoSize = true;
-            this.lblSurvivability.Location = new System.Drawing.Point(7, 446);
+            this.lblSurvivability.Location = new System.Drawing.Point(7, 509);
             this.lblSurvivability.Name = "lblSurvivability";
             this.lblSurvivability.Size = new System.Drawing.Size(63, 13);
             this.lblSurvivability.TabIndex = 37;
@@ -248,34 +275,23 @@
             this.lblRapture.TabIndex = 40;
             this.lblRapture.Text = "% Rapture";
             // 
-            // cbUseTrinkets
+            // lblTestOfFaith
             // 
-            this.cbUseTrinkets.AutoSize = true;
-            this.cbUseTrinkets.Location = new System.Drawing.Point(10, 496);
-            this.cbUseTrinkets.Name = "cbUseTrinkets";
-            this.cbUseTrinkets.Size = new System.Drawing.Size(140, 17);
-            this.cbUseTrinkets.TabIndex = 41;
-            this.cbUseTrinkets.Text = "Model Trinkets with Use";
-            this.cbUseTrinkets.UseVisualStyleBackColor = true;
-            this.cbUseTrinkets.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
-            // 
-            // cbProcTrinkets
-            // 
-            this.cbProcTrinkets.AutoSize = true;
-            this.cbProcTrinkets.Location = new System.Drawing.Point(10, 519);
-            this.cbProcTrinkets.Name = "cbProcTrinkets";
-            this.cbProcTrinkets.Size = new System.Drawing.Size(148, 17);
-            this.cbProcTrinkets.TabIndex = 42;
-            this.cbProcTrinkets.Text = "Model Trinkets with Procs";
-            this.cbProcTrinkets.UseVisualStyleBackColor = true;
-            this.cbProcTrinkets.CheckedChanged += new System.EventHandler(this.cbProcTrinkets_CheckedChanged);
+            this.lblTestOfFaith.AutoSize = true;
+            this.lblTestOfFaith.Location = new System.Drawing.Point(7, 446);
+            this.lblTestOfFaith.Name = "lblTestOfFaith";
+            this.lblTestOfFaith.Size = new System.Drawing.Size(139, 13);
+            this.lblTestOfFaith.TabIndex = 43;
+            this.lblTestOfFaith.Text = "% of Heals use Test of Faith";
             // 
             // CalculationOptionsPanelHolyPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.cbProcTrinkets);
-            this.Controls.Add(this.cbUseTrinkets);
+            this.AutoScroll = true;
+            this.Controls.Add(this.trkTestOfFaith);
+            this.Controls.Add(this.lblTestOfFaith);
+            this.Controls.Add(this.cbModelProcs);
             this.Controls.Add(this.lblRapture);
             this.Controls.Add(this.trkRapture);
             this.Controls.Add(this.trkSurvivability);
@@ -294,13 +310,14 @@
             this.Controls.Add(this.lblActivity);
             this.Controls.Add(this.trkActivity);
             this.Name = "CalculationOptionsPanelHolyPriest";
-            this.Size = new System.Drawing.Size(258, 568);
+            this.Size = new System.Drawing.Size(258, 652);
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTestOfFaith)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -327,7 +344,8 @@
         private System.Windows.Forms.TrackBar trkSurvivability;
         private System.Windows.Forms.TrackBar trkRapture;
         private System.Windows.Forms.Label lblRapture;
-        private System.Windows.Forms.CheckBox cbUseTrinkets;
-        private System.Windows.Forms.CheckBox cbProcTrinkets;
+        private System.Windows.Forms.CheckBox cbModelProcs;
+        private System.Windows.Forms.Label lblTestOfFaith;
+        private System.Windows.Forms.TrackBar trkTestOfFaith;
     }
 }

@@ -48,11 +48,13 @@ namespace Rawr.HolyPriest
             trkShadowfiend.Value = (int)calcOpts.Shadowfiend;
             lblShadowfiend.Text = trkShadowfiend.Value + "% effectiveness of Shadowfiend.";
 
+            trkTestOfFaith.Value = (int)calcOpts.TestOfFaith;
+            lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith.";
+
             trkSurvivability.Value = (int)calcOpts.Survivability;
             lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
 
-            cbUseTrinkets.Checked = calcOpts.UseTrinkets;
-            cbProcTrinkets.Checked = calcOpts.ProcTrinkets;
+            cbModelProcs.Checked = calcOpts.ModelProcs;
 
             loading = false;
         }
@@ -162,17 +164,18 @@ namespace Rawr.HolyPriest
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.UseTrinkets = cbUseTrinkets.Checked;
+                calcOpts.ModelProcs = cbModelProcs.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void cbProcTrinkets_CheckedChanged(object sender, EventArgs e)
+        private void trkTestOfFaith_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.ProcTrinkets = cbProcTrinkets.Checked;
+                lblTestOfFaith.Text = trkTestOfFaith.Value + "% of heals use Test of Faith.";
+                calcOpts.TestOfFaith = trkTestOfFaith.Value;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -203,7 +206,7 @@ namespace Rawr.HolyPriest
         public float Shadowfiend = 80f;
         public float Survivability = 5f;
         public float Rapture = 75f;
-        public bool UseTrinkets = true;
-        public bool ProcTrinkets = true;
+        public float TestOfFaith = 25f;
+        public bool ModelProcs = true;
 	}
 }
