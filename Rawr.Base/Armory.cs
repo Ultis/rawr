@@ -317,12 +317,12 @@ namespace Rawr
 							if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
 							stats.HasteRating += ((float)int.Parse(spellDesc)) / 12f;
 						}
-						else if (spellDesc.StartsWith("Your attacks ignore "))
+						else if (spellDesc.StartsWith("Increases armor penetration rating by "))
 						{
-							spellDesc = spellDesc.Substring("Your attacks ignore ".Length);
+							spellDesc = spellDesc.Substring("Increases armor penetration rating by ".Length);
 							if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
 							if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-							stats.ArmorPenetration += ((float)int.Parse(spellDesc)) / 6f;
+							stats.ArmorPenetrationRating += ((float)int.Parse(spellDesc));
 						}
 						else if (spellDesc.StartsWith("Increases agility by "))
 						{ //Special case: So that we don't increase bear stats by the average value, translate the agi to crit and ap
@@ -387,7 +387,7 @@ namespace Rawr
                         {
                             stats.ManaregenFor8SecOnUse5Min += 250;
                         }
-                        else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec. While standing in this circle, the caster gains 320 spell power."))
+                        else if (spellDesc.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power."))
                         {
                             // Shifting Naaru Sliver
                             stats.SpellPowerFor15SecOnUse90Sec += 320;
@@ -521,12 +521,12 @@ namespace Rawr
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.HasteRating += ((float)int.Parse(spellDesc)) / 4f;
                         }
-                        else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance allow you to ignore "))
+                        else if (spellDesc.StartsWith("Your melee and ranged attacks have a chance to increase your armor penetration rating by "))
                         {
-                            spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance allow you to ignore ".Length);
+							spellDesc = spellDesc.Substring("Your melee and ranged attacks have a chance to increase your armor penetration rating by ".Length);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-                            stats.ArmorPenetration += ((float)int.Parse(spellDesc)) / 3f;
+                            stats.ArmorPenetrationRating += ((float)int.Parse(spellDesc)) / 3f;
                         }
                         else if (spellDesc.StartsWith("Increases attack power by "))
                         {
@@ -584,12 +584,12 @@ namespace Rawr
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
                             stats.HitRating += int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Your attacks ignore "))
+						else if (spellDesc.StartsWith("Increases armor penetration rating by "))
                         {
-                            spellDesc = spellDesc.Substring("Your attacks ignore ".Length);
+							spellDesc = spellDesc.Substring("Increases armor penetration rating by ".Length);
                             if (spellDesc.Contains(".")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf("."));
                             if (spellDesc.Contains(" ")) spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" "));
-                            stats.ArmorPenetration += int.Parse(spellDesc);
+                            stats.ArmorPenetrationRating += int.Parse(spellDesc);
                         }
                         else if (spellDesc.StartsWith("Increases the damage dealt by Shred by "))
                         {
@@ -861,9 +861,9 @@ namespace Rawr
                             spellDesc = spellDesc.Replace(".", "");
                             stats.HealingTouchFinalHealBonus += (float)int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Your spell casts have a chance to allow 15% of your mana regeneration to continue while casting for "))
-                        {
-                            spellDesc = spellDesc.Substring("Your spell casts have a chance to allow 15% of your mana regeneration to continue while casting for ".Length);
+                        else if (spellDesc.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
+                        { //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
+                            spellDesc = spellDesc.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
                             spellDesc = spellDesc.Replace(" sec.", "");
                             stats.BangleProc += (float) int.Parse(spellDesc);
                         }
@@ -1021,8 +1021,8 @@ namespace Rawr
 								case "Expertise Rating":
 									sockets.Stats.ExpertiseRating = socketBonusValue;
 									break;
-								case "Armor Penetration":
-									sockets.Stats.ArmorPenetration = socketBonusValue;
+								case "Armor Penetration Rating":
+									sockets.Stats.ArmorPenetrationRating = socketBonusValue;
 									break;
 								case "Strength":
 									sockets.Stats.Strength = socketBonusValue;
@@ -1191,8 +1191,8 @@ namespace Rawr
                                     case "Expertise Rating":
                                         stats.ExpertiseRating = gemBonusValue;
                                         break;
-                                    case "Armor Penetration":
-                                        stats.ArmorPenetration = gemBonusValue;
+                                    case "Armor Penetration Rating":
+                                        stats.ArmorPenetrationRating = gemBonusValue;
                                         break;
                                     case "Strength":
                                         stats.Strength = gemBonusValue;

@@ -469,7 +469,7 @@ you are being killed by burst damage, focus on Survival Points.",
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			float[] thickHideMultipliers = new float[] {0f, 0.04f, 0.07f, 0.1f};
-			statsItems.Armor *= (5f * (1f + thickHideMultipliers[character.DruidTalents.ThickHide]));
+			statsItems.Armor *= (4.7f * (1f + thickHideMultipliers[character.DruidTalents.ThickHide]));
 
 			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
