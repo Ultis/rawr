@@ -146,7 +146,8 @@
             this.trkSerendipity.TabIndex = 30;
             this.trkSerendipity.TickFrequency = 5;
             this.toolTip1.SetToolTip(this.trkSerendipity, "Tell Rawr how many % of your Greater Heals and Flash Heals overheal the target, g" +
-                    "iving you mana returns via Serendipity.");
+                    "iving you mana returns via Serendipity. Also controls how effective T5 2 Part bo" +
+                    "nus is.");
             this.trkSerendipity.Scroll += new System.EventHandler(this.trkSerendipity_Scroll);
             // 
             // trkReplenishment
