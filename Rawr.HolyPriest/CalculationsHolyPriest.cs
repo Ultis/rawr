@@ -563,7 +563,7 @@ namespace Rawr.HolyPriest
                 BonusStaminaMultiplier = character.PriestTalents.Enlightenment * 0.01f,
                 BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.01f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
                 BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
-                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f,
+                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
                 SpellHaste = character.PriestTalents.Enlightenment * 0.01f,
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
             };

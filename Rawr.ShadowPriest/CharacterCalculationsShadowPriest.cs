@@ -7,19 +7,19 @@ namespace Rawr.ShadowPriest
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
         private Stats basicStats;
-        private TalentTree talents;
-        public CalculationOptionsShadowPriest CalculationOptions { get; set; }
+        private Character character;
 
         public float SpiritRegen { get; set; }
         public float RegenInFSR { get; set; }
         public float RegenOutFSR { get; set; }
-        
-        public TalentTree Talents
-        {
-            get { return talents; }
-            set { talents = value; }
-        }
+        public Character.CharacterRace Race { get; set; }
 
+        public Character Character
+        {
+            get { return character; }
+            set { character = value; }
+        }
+        
         public Stats BasicStats
         {
             get { return basicStats; }
@@ -67,12 +67,13 @@ namespace Rawr.ShadowPriest
                 Math.Floor(BasicStats.SpellDamageRating)));
             dictValues.Add("Regen", String.Format("{0}*InFSR: {0}\r\nOutFSR: {1}" , RegenInFSR.ToString("0"), RegenOutFSR.ToString("0")));
 
-            dictValues.Add("Spell Crit", string.Format("{0}%*{1} Spell Crit rating ({3}%)\r\n{2} ({4}%) points in Shadow Power",
-                BasicStats.SpellCrit + talents.GetTalent("Shadow Power").PointsInvested * 3, 
-                BasicStats.SpellCritRating.ToString(),
-                talents.GetTalent("Shadow Power").PointsInvested, BasicStats.SpellCrit, talents.GetTalent("Shadow Power").PointsInvested * 3));
+            dictValues.Add("Spell Crit", string.Format("{0}%*{1} Spell Crit rating\r\n{2}% on Mind Blast, Mind Flay and Mind Sear.\r\n{3}% on Smite, Holy Fire and Penance.",
+                (BasicStats.SpellCrit * 100f).ToString("0.00"),
+                BasicStats.SpellCritRating.ToString("0"),
+                (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 2f).ToString("0.00"),
+                (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));
 
-            int i = (int)Math.Round(CalculationsShadowPriest.GetSpellHitCap(talents) - BasicStats.SpellHitRating);
+            int i = (int)Math.Round(CalculationsShadowPriest.GetSpellHitCap(character) - BasicStats.SpellHitRating);
             dictValues.Add("Spell Hit", string.Format("{0}*{1}",
                 BasicStats.SpellHitRating,
                 (i > 0)? i + " requires to reach hit cap": i == 0? "Exactly hit cap": (-i) + " over hit cap"));
@@ -80,33 +81,33 @@ namespace Rawr.ShadowPriest
             
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Spell Haste rating\n", 
                 Math.Round(BasicStats.SpellHasteRating / 15.7, 2), BasicStats.SpellHasteRating.ToString()));
-            dictValues.Add("Global Cooldown", Spell.GetGlobalCooldown(BasicStats).ToString("0.00"));
+            dictValues.Add("Global Cooldown", Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00"));
 
-            dictValues.Add("Shadow Word Pain", new ShadowWordPain(BasicStats, talents).ToString());
-            dictValues.Add("Shadow Word Death", new ShadowWordDeath(BasicStats, talents).ToString());
-            dictValues.Add("Mind Blast", new MindBlast(BasicStats, talents).ToString());
-            dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, talents).ToString());
+            dictValues.Add("Shadow Word Pain", new ShadowWordPain(BasicStats, character).ToString());
+            dictValues.Add("Shadow Word Death", new ShadowWordDeath(BasicStats, character).ToString());
+            dictValues.Add("Mind Blast", new MindBlast(BasicStats, character).ToString());
+            dictValues.Add("Power Word Shield", new PowerWordShield(BasicStats, character).ToString());
 
-            if (talents.GetTalent("Vampiric Embrace").PointsInvested > 0)
-                dictValues.Add("Vampiric Embrace", new VampiricEmbrace(BasicStats, talents).ToString());
+            if (character.PriestTalents.VampiricEmbrace > 0)
+                dictValues.Add("Vampiric Embrace", new VampiricEmbrace(BasicStats, character).ToString());
             else
                 dictValues.Add("Vampiric Embrace", "- *No required talents");
 
-            if (talents.GetTalent("Vampiric Touch").PointsInvested > 0)
-                dictValues.Add("Vampiric Touch", new VampiricTouch(BasicStats, talents).ToString());
+            if (character.PriestTalents.VampiricTouch > 0)
+                dictValues.Add("Vampiric Touch", new VampiricTouch(BasicStats, character).ToString());
             else
                 dictValues.Add("Vampiric Touch", "- *No required talents");
 
-            if (talents.GetTalent("Mind Flay").PointsInvested > 0)
-                dictValues.Add("Mind Flay", new MindFlay(BasicStats, talents).ToString());
+            if (character.PriestTalents.MindFlay > 0)
+                dictValues.Add("Mind Flay", new MindFlay(BasicStats, character).ToString());
             else
                 dictValues.Add("Mind Flay", "- *No required talents");
 
-            Solver solver = new Solver(BasicStats, talents, CalculationOptions);
-            solver.Calculate();
+//            Solver solver = new Solver(BasicStats, talents, CalculationOptions);
+//            solver.Calculate();
 
-            dictValues.Add("Damage done", solver.OverallDamage.ToString());
-            dictValues.Add("Dps", solver.OverallDps.ToString());
+//            dictValues.Add("Damage done", solver.OverallDamage.ToString());
+//            dictValues.Add("Dps", solver.OverallDps.ToString());
 
             return dictValues;
         }

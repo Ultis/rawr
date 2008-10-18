@@ -5,7 +5,7 @@ using Rawr;
 
 namespace Rawr.ShadowPriest
 {
-    [System.ComponentModel.DisplayName("ShadowPriest|Spell_Shadow_ShadowForm")]
+    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_ShadowForm", Character.CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase 
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
@@ -43,13 +43,16 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Spell Hit",
 					"Basic Stats:Spell Haste",
                     "Basic Stats:Global Cooldown",
-                    "Spells:Vampiric Touch",
-                    "Spells:Shadow Word Pain",
-				    "Spells:Shadow Word Death",
-                    "Spells:Mind Blast",
-                    "Spells:Mind Flay",
-                    "Spells:Vampiric Embrace",
-                    "Spells:Power Word Shield",
+                    "Shadow:Vampiric Touch",
+                    "Shadow:Shadow Word Pain",
+				    "Shadow:Shadow Word Death",
+                    "Shadow:Mind Blast",
+                    "Shadow:Mind Flay",
+                    "Shadow:Vampiric Embrace",
+                    "Holy:Power Word Shield",
+                    "Holy:Smite",
+                    "Holy:Holy Fire",
+                    "Holy:Penance",
                     "Simulation:Damage done",
                     "Simulation:Dps"
 				};
@@ -112,43 +115,29 @@ namespace Rawr.ShadowPriest
             Stats statsRace = GetRaceStats(character);
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
             CalculationOptionsShadowPriest calculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
-            
+
+            calculatedStats.Race = character.Race;
             calculatedStats.BasicStats = stats;
-            calculatedStats.Talents = character.Talents;
-            calculatedStats.CalculationOptions = calculationOptions;
+            calculatedStats.Character = character;
 
-            calculatedStats.BasicStats.Spirit = statsRace.Spirit + (calculatedStats.BasicStats.Spirit - statsRace.Spirit) * (1 + character.Talents.GetTalent("Spirit of Redemption").PointsInvested * 0.05f);
+            calculatedStats.SpiritRegen = (float)Math.Floor(5 * (0.001f + 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect)));
+            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
+            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5 * 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect));
-            calculatedStats.RegenInFSR = (float)Math.Floor((calculatedStats.BasicStats.Mp5 + character.Talents.GetTalent("Meditation").PointsInvested * 0.1f * calculatedStats.SpiritRegen * (1 + calculatedStats.BasicStats.SpellCombatManaRegeneration)));
-            calculatedStats.RegenOutFSR = calculatedStats.BasicStats.Mp5 + calculatedStats.SpiritRegen;
-           
-            calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) +
-                (calculatedStats.BasicStats.SpellCritRating / 22.08) + 1.85, 2);
 
-            calculatedStats.BasicStats.SpellDamageRating += calculatedStats.BasicStats.Spirit * character.Talents.GetTalent("Spiritual Guidance").PointsInvested * 0.05f;
-
-            Solver solver = new Solver(stats, character.Talents, calculationOptions);
+            Solver solver = new Solver(stats, character, calculationOptions);
             solver.Calculate();
 
             calculatedStats.DpsPoints = solver.OverallDps;
-            //int hitcap = GetSpellHitCap(character.Talents);
-            //calculatedStats.DpsPoints = calculatedStats.BasicStats.SpellDamageRating + calculatedStats.BasicStats.SpellShadowDamageRating
-            //    + (calculatedStats.BasicStats.SpellHasteRating)
-            //    + (calculatedStats.BasicStats.SpellCritRating / 5.57f)
-            //    + (calculatedStats.BasicStats.Spirit * 0.11f)
-            //    + (calculatedStats.BasicStats.Intellect * 0.055f)
-            //    - (calculatedStats.BasicStats.SpellHitRating < hitcap ? (hitcap - calculatedStats.BasicStats.SpellHitRating) * 1.364f: 0);
-
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Stamina / 10;
             calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
 
             return calculatedStats;
         }
 
-        public static int GetSpellHitCap(TalentTree talents)
+        public static int GetSpellHitCap(Character character)
         {
-            return (int)Math.Round(202 - talents.GetTalent("Shadow Focus").PointsInvested * 12.6f * 2);
+            return (int)Math.Round(202 - (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f );
         }
 
         public Stats GetRaceStats(Character character)
@@ -158,42 +147,39 @@ namespace Rawr.ShadowPriest
                 case Character.CharacterRace.NightElf:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 57f,
-                        Agility = 50f,
-                        Intellect = 147f,
+                        Intellect = 145f,
                         Spirit = 151f
                     };
                 case Character.CharacterRace.Dwarf:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 61f,
-                        Agility = 41f,
                         Intellect = 144f,
                         Spirit = 150f
                     };
                 case Character.CharacterRace.Draenei:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 57f,
-                        Agility = 42f,
                         Intellect = 146f,
-                        Spirit = 160f
+                        Spirit = 153f
                     };
                 case Character.CharacterRace.Human:
                     return new Stats()
                     {
-                        Health = 3434f,
-                        Mana = 2470f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 58f,
-                        Agility = 45f,
                         Intellect = 145f,
-                        Spirit = 174f
+                        Spirit = 152f,
+                        BonusSpiritMultiplier = 0.03f
                     };
                 case Character.CharacterRace.BloodElf:
                     return new Stats()
@@ -201,9 +187,8 @@ namespace Rawr.ShadowPriest
                         Health = 3211f,
                         Mana = 2620f,
                         Stamina = 56f,
-                        Agility = 47f,
                         Intellect = 149f,
-                        Spirit = 157f
+                        Spirit = 150f
                     };
                 case Character.CharacterRace.Troll:
                     return new Stats()
@@ -211,18 +196,16 @@ namespace Rawr.ShadowPriest
                         Health = 3211f,
                         Mana = 2620f,
                         Stamina = 59f,
-                        Agility = 59f,
                         Intellect = 141f,
-                        Spirit = 159f
+                        Spirit = 152f
                     };
                 case Character.CharacterRace.Undead:
                     return new Stats()
                     {
-                        Health = 3181,
-                        Mana = 2530f,
+                        Health = 3211f,
+                        Mana = 2620f,
                         Stamina = 59f,
-                        Agility = 43f,
-                        Intellect = 145f,
+                        Intellect = 143f,
                         Spirit = 156f,
                     };
             }
@@ -236,14 +219,26 @@ namespace Rawr.ShadowPriest
             Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
+            Stats statsTalents = new Stats()
+            {
+                BonusStaminaMultiplier = character.PriestTalents.Enlightenment * 0.01f,
+                BonusSpiritMultiplier = (1 + character.PriestTalents.Enlightenment * 0.01f) * (1f + character.PriestTalents.SpiritOfRedemption * 0.05f) - 1f,
+                BonusIntellectMultiplier = character.PriestTalents.MentalStrength * 0.03f,
+                SpellDamageFromSpiritPercentage = character.PriestTalents.SpiritualGuidance * 0.05f + character.PriestTalents.TwistedFaith * 0.02f,
+                SpellHaste = character.PriestTalents.Enlightenment * 0.01f,
+                SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
+            };
 
-            statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.Healing = (float)Math.Round(statsTotal.Healing + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
-            statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f);
-            statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
+            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+
+            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
+            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.SpellCrit += (statsTotal.Intellect / 80f / 100f) + (statsTotal.CritRating / 22.07692337F / 100f) + 0.0124f;
+            statsTotal.SpellHaste += (statsTotal.HasteRating / 15.76923275f / 100f);
 
             return statsTotal;
         }
@@ -266,10 +261,10 @@ namespace Rawr.ShadowPriest
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min,
-                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
-                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
-                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
-                SpellHasteFor20SecOnUse5Min = stats.SpellHasteFor20SecOnUse5Min
+//                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
+//                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
+//                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
+//                SpellHasteFor20SecOnUse5Min = stats.SpellHasteFor20SecOnUse5Min
             };
         }
 
@@ -278,9 +273,10 @@ namespace Rawr.ShadowPriest
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellDamageRating + stats.SpellShadowDamageRating+ stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier
-                + stats.SpellDamageFor15SecOnUse2Min + stats.SpellDamageFor15SecOnUse90Sec
-                + stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
-                + stats.SpellHasteFor20SecOnUse5Min) > 0;
+                + stats.SpellDamageFor15SecOnUse2Min) > 0;
+                //+ stats.SpellDamageFor15SecOnUse90Sec
+                //+ stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
+                //+ stats.SpellHasteFor20SecOnUse5Min) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

@@ -47,7 +47,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.FightDuration = (float)cmbLength.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -61,7 +61,7 @@ namespace Rawr.ShadowPriest
                     calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -71,7 +71,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.ManaTime = (float)cmbManaTime.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -85,7 +85,7 @@ namespace Rawr.ShadowPriest
                     calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
                 }
                 catch { }
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
                 
@@ -95,7 +95,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.Spriest = (float)cmbSpriest.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }              
 
@@ -122,7 +122,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.DrumsCount = (int)cmbDrums.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -132,7 +132,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.Lag = (float)cmbLag.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -142,7 +142,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.WaitTime = (float)cmbWaitTime.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -152,7 +152,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.ISBUptime = (float)cmbISB.Value;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -162,7 +162,7 @@ namespace Rawr.ShadowPriest
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.UseYourDrum = cbDrums.Checked;
-                Character.OnItemsChanged();
+                Character.OnCalculationsInvalidated();
             }
         }        
     }

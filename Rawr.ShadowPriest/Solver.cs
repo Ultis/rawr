@@ -13,40 +13,40 @@ namespace Rawr.ShadowPriest
 
         protected CalculationOptionsShadowPriest CalculationOptions { get; set; }
         protected Stats PlayerStats { get; set; }
-        protected TalentTree PlayerTalentTree { get; set; }
+        protected Character character { get; set; }
 
         protected float HitChance { get; set; }
         protected float ShadowHitChance { get; set; }
         protected float ShadowCritChance { get; set; }
         protected List<Trinket> Trinkets { get; set; }
         
-        public Solver(Stats playerStats, TalentTree playerTalentTree, CalculationOptionsShadowPriest calculationOptions) 
+        public Solver(Stats playerStats, Character _char, CalculationOptionsShadowPriest calculationOptions) 
         {
             PlayerStats = playerStats;
-            PlayerTalentTree = playerTalentTree;
+            character = _char;
             CalculationOptions = calculationOptions;
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
             foreach(string spellname in calculationOptions.SpellPriority)
-                SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, playerTalentTree));
+                SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, character));
 
             HitChance = PlayerStats.SpellHitRating / 12.6f;
-            ShadowHitChance = 83.0f + (PlayerStats.SpellHitRating + playerTalentTree.GetTalent("Shadow Focus").PointsInvested * 12.6f * 2.0f) / 12.6f;
+            ShadowHitChance = 83.0f + (PlayerStats.SpellHitRating + (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f * 2.0f) / 12.6f;
             if (ShadowHitChance > 99.0f)
                 ShadowHitChance = 99.0f;
 
             Trinkets = new List<Trinket>();
-            ShadowCritChance = PlayerStats.SpellCrit + playerTalentTree.GetTalent("Shadow Power").PointsInvested * 3;
+            ShadowCritChance = PlayerStats.SpellCrit;
             Sequence = new Dictionary<float, Spell>();
             if (playerStats.SpellDamageFor15SecOnUse2Min > 0.0f)
                 Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse2Min, UpTime = 15.0f });
-            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
-            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor20SecOnUse2Min, UpTime = 20.0f });
-            if (playerStats.SpellHasteFor20SecOnUse2Min > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 120.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse2Min, UpTime = 20.0f });
-            if (playerStats.SpellHasteFor20SecOnUse5Min > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 300.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse5Min, UpTime = 20.0f });
+//            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
+//                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
+//            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
+//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor20SecOnUse2Min, UpTime = 20.0f });
+//            if (playerStats.SpellHasteFor20SecOnUse2Min > 0.0f)
+//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse2Min, UpTime = 20.0f });
+//            if (playerStats.SpellHasteFor20SecOnUse5Min > 0.0f)
+//                Trinkets.Add(new Trinket() { Cooldown = 300.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse5Min, UpTime = 20.0f });
         }
 
         private Spell GetCastSpell(float timer)
@@ -120,7 +120,7 @@ namespace Rawr.ShadowPriest
                     continue;
                 }
 
-                Spell seqspell = SpellFactory.CreateSpell(spell.Name, currentStats, PlayerTalentTree);
+                Spell seqspell = SpellFactory.CreateSpell(spell.Name, currentStats, character);
                 if (spell.CritCoef > 1.0f)
                     critableCount++;
                 if (spell.MagicSchool != MagicSchool.Shadow)
