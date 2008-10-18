@@ -6,7 +6,7 @@ using System.Text;
 namespace Rawr.DPSDK
 {
     //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", Character.CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
-    [Rawr.Calculations.RawrModelInfo("DPS", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_empowerruneblade", Character.CharacterClass.DeathKnight)]
 	class CalculationsDPSDK : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
@@ -91,6 +91,8 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Blood Strike",
                         "DPS Breakdown:Heart Strike",
                         "DPS Breakdown:DRW*Dancing Rune Weapon",
+                        "DPS Breakdown:Gargoyle",
+                        "DPS Breakdown:Total DPS",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -214,7 +216,7 @@ namespace Rawr.DPSDK
             float missedSpecial = 0f;
             float hitBonus = .01f * (float)talents.NervesOfColdSteel;
             float dpsWhiteBeforeArmor = 0f;
-            float combinedSwingTime = 0f;
+            float combinedSwingTime = 2f;
             float fightDuration = calcOpts.FightLength*60;
             float mitigation, physCrits, spellCrits, spellResist, totalMHMiss, totalOHMiss;
 
@@ -400,7 +402,7 @@ namespace Rawr.DPSDK
                 float MHDPS = 0f, OHDPS = 0f;
                 #region Main Hand
                 {
-                    float dpsMHBeforeArmor = MH.DPS * totalMHMiss;
+                    float dpsMHBeforeArmor = MH.DPS * (1f - totalMHMiss);
                     dpsWhiteBeforeArmor += dpsMHBeforeArmor;
                     MHDPS = dpsMHBeforeArmor * mitigation;
                 }
@@ -408,7 +410,7 @@ namespace Rawr.DPSDK
 
                 #region Off Hand
                 {
-                    float dpsOHBeforeArmor = OH.DPS * totalOHMiss;
+                    float dpsOHBeforeArmor = OH.DPS * (1f - totalOHMiss);
                     dpsWhiteBeforeArmor += dpsOHBeforeArmor;
                     OHDPS = dpsOHBeforeArmor * mitigation;
                 }
@@ -656,7 +658,7 @@ namespace Rawr.DPSDK
                 dpsPlagueStrike *= BloodyVengeanceMult;
                 dpsWhite *= BloodyVengeanceMult;
 
-                float HysteriaCoeff = .2f * .25f * .95f; // current uptime is 25%, but since you use a blood rune a small amount of DPS is lost
+                float HysteriaCoeff = .3f / 6f; // current uptime is 16.666...%
                 float HysteriaMult = 1f + (HysteriaCoeff * (float)talents.Hysteria); 
                 dpsBCB *= HysteriaMult;
                 dpsBloodStrike *= HysteriaMult;
@@ -677,12 +679,30 @@ namespace Rawr.DPSDK
                 dpsIcyTouch *= MercilessCombatMult;
                 dpsFrostStrike *= MercilessCombatMult;
 
-            }
-            #endregion
+                float CryptFeverMult = 1f + (.1f * (float)talents.CryptFever);
+                dpsFrostFever *= CryptFeverMult;
+                dpsBloodPlague *= CryptFeverMult;
+                dpsUnholyBlight *= CryptFeverMult;
 
-            #region Dancing Rune Weapon
-            {
-                float DRWUptime = 1f / 9f;
+                float DesicrationMult = 1f + (.05f * .15f * (float)talents.Desecration);  //uptime at 5/5 is about 75%
+                dpsBCB *= DesicrationMult;
+                dpsBloodPlague *= DesicrationMult;
+                dpsBloodStrike *= DesicrationMult;
+                dpsDeathCoil *= DesicrationMult;
+                dpsDancingRuneWeapon *= DesicrationMult;
+                dpsFrostFever *= DesicrationMult;
+                dpsFrostStrike *= DesicrationMult;
+                dpsGargoyle *= DesicrationMult;
+                dpsHeartStrike *= DesicrationMult;
+                dpsHowlingBlast *= DesicrationMult;
+                dpsIcyTouch *= DesicrationMult;
+                dpsNecrosis *= DesicrationMult;
+                dpsObliterate *= DesicrationMult;
+                dpsPlagueStrike *= DesicrationMult;
+                dpsScourgeStrike *= DesicrationMult;
+                dpsUnholyBlight *= DesicrationMult;
+                dpsWhite *= DesicrationMult;
+                dpsWindfury *= DesicrationMult;
             }
             #endregion
 
@@ -710,6 +730,15 @@ namespace Rawr.DPSDK
             calcs.DPSPoints = dpsBCB + dpsBloodPlague + dpsBloodStrike + dpsDeathCoil + dpsDancingRuneWeapon + dpsFrostFever + dpsFrostStrike + dpsGargoyle + 
                               dpsHeartStrike + dpsHowlingBlast + dpsIcyTouch + dpsNecrosis + dpsObliterate + dpsPlagueStrike + dpsScourgeStrike + dpsUnholyBlight +
                               dpsWhite + dpsWindfury;
+
+            #region Dancing Rune Weapon
+            {
+                float DRWUptime = 1f / 9f;
+                dpsDancingRuneWeapon = calcs.DPSPoints * DRWUptime;
+                calcs.DPSPoints += dpsDancingRuneWeapon;
+                calcs.DRWDPS = dpsDancingRuneWeapon;
+            }
+            #endregion
 
             return calcs;
         }

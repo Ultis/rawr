@@ -37,7 +37,7 @@ namespace Rawr.DPSDK
 
         public Rotation()
         {
-            
+            setRotation(Type.Unholy);
         }
 
         public void setRotation(Type t)

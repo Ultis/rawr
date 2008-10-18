@@ -40,17 +40,25 @@ namespace Rawr.DPSDK
             rbDrumsBattle.Checked = calcOpts.DrumsOfBattle;
             rbDrumsNone.Checked = !calcOpts.DrumsOfBattle && !calcOpts.DrumsOfWar;
 
-            if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
+            if (calcOpts.rotation != null)
             {
-                rbUnholy.Checked = true;
-            }
-            else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
-            {
-                rbFrost.Checked = true;
+                if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
+                {
+                    rbUnholy.Checked = true;
+                }
+                else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
+                {
+                    rbFrost.Checked = true;
+                }
+                else
+                {
+                    rbBlood.Checked = true;
+                }
             }
             else
             {
-                rbBlood.Checked = true;
+                calcOpts.rotation = new Rotation();
+                rbUnholy.Checked = true;
             }
 
             chkBloodLust.Checked = calcOpts.Bloodlust;

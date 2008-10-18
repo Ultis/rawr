@@ -11,6 +11,9 @@ namespace Rawr.DPSDK
 
         public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, float expertise)
         {
+            if (i == null || stats == null || calcOpts == null)
+                return;
+
             effectiveExpertise = expertise;
             float fightDuration = calcOpts.FightLength * 60;
 
