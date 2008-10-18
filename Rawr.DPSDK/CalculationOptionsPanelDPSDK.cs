@@ -85,8 +85,8 @@ namespace Rawr.DPSDK
 
         private void btnGraph_Click(object sender, EventArgs e)
         {
-            CalculationsDPSDK retCalc = new CalculationsDPSDK();
-            CharacterCalculationsDPSDK baseCalc = retCalc.GetCharacterCalculations(Character) as CharacterCalculationsDPSDK;
+            CalculationsDPSDK DKCalc = new CalculationsDPSDK();
+            CharacterCalculationsDPSDK baseCalc = DKCalc.GetCharacterCalculations(Character) as CharacterCalculationsDPSDK;
             Bitmap _prerenderedGraph = global::Rawr.DPSDK.Properties.Resources.GraphBase;
             Graphics g = Graphics.FromImage(_prerenderedGraph);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -123,7 +123,7 @@ namespace Rawr.DPSDK
                 {
                     newStats = newStats + statsList[index];
 
-                    CharacterCalculationsDPSDK currentCalc = retCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsDPSDK;
+                    CharacterCalculationsDPSDK currentCalc = DKCalc.GetCharacterCalculations(Character, new Item() { Stats = newStats }) as CharacterCalculationsDPSDK;
                     float overallPoints = currentCalc.DPSPoints - baseCalc.DPSPoints;
 
                     if ((graphHeight - overallPoints) > 16)

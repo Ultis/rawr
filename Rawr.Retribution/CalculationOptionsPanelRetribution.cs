@@ -377,6 +377,14 @@ namespace Rawr.Retribution
             else { calcOpts.GlyphOfSenseUD = false; }
             Character.OnCalculationsInvalidated();
         }
+
+        private void chkHitAura_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            if (chkHitAura.Checked) { calcOpts.HeroicPresence = true; }
+            else { calcOpts.HeroicPresence = false; }
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 	[Serializable]
@@ -404,6 +412,7 @@ namespace Rawr.Retribution
         public bool DrumsOfWar = false;
         public int FerociousInspiration = 2;
         public bool Windfury = false;
+        public bool HeroicPresence = false;
         public bool HammerOfWrath = false;
 
 		public int TwoHandedSpec = 0;

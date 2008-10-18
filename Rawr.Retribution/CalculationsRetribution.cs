@@ -436,6 +436,7 @@ namespace Rawr.Retribution
 
                     dpsDivineStorm = dsAvgDam/dsCD;
                     dpsDivineStorm += dpsDivineStorm*physCrits*dsCritMult;
+                    dpsDivineStorm *= mitigation;
 
                     dpsSoC += ( socAvgDmg / dsCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / dsCD;
@@ -601,18 +602,21 @@ namespace Rawr.Retribution
                     break;
                 case Character.CharacterRace.Draenei: // Relevant racials: +1% hit
                     statsRace = new Stats()
-                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f };
+                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f, SpellHit = .01f };
                     break;
                 case Character.CharacterRace.Human: // Relevant racials: +10% spirit, +5 expertise when wielding mace or sword
                     statsRace = new Stats()
                     { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
                     //Expertise for Humans
                     if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
-                        statsRace.Expertise = 5f;
+                        statsRace.Expertise = 3f;
                     break;
                 case Character.CharacterRace.Dwarf:
                     statsRace = new Stats()
                     { Strength = 128f, Agility = 73f, Stamina = 120f, Intellect = 83f, Spirit = 89f, };
+                    if (character.MainHand != null && ( character.MainHand.Type == Item.ItemType.TwoHandMace) )
+                        statsRace.Expertise = 5f;
+                    break;
                     break;
                 default:
                     statsRace = new Stats();
@@ -721,11 +725,18 @@ namespace Rawr.Retribution
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
             statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
+            statsTotal.SpellHit = statsGearEnchantsBuffs.SpellHit;
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.SpellPower = statsGearEnchantsBuffs.SpellPower;
             statsTotal.SpellPower += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
             statsTotal.SpellPower += statsTotal.AttackPower * (calcOpts.SheathOfLight * .1f);
+
+            if (calcOpts.HeroicPresence && character.Race != Character.CharacterRace.Draenei)
+            {
+                statsTotal.PhysicalHit += .01f;
+                statsTotal.SpellHit += .01f;
+            }
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
             statsTotal.BonusDamageMultiplier = statsGearEnchantsBuffs.BonusDamageMultiplier;

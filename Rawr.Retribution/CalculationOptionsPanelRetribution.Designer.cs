@@ -64,6 +64,7 @@
             this.cbSoCGlyph = new System.Windows.Forms.CheckBox();
             this.gbMinorGlyph = new System.Windows.Forms.GroupBox();
             this.cbSenseGlyph = new System.Windows.Forms.CheckBox();
+            this.chkHitAura = new System.Windows.Forms.CheckBox();
             this.gbSealChoice.SuspendLayout();
             this.gbSkillUsage.SuspendLayout();
             ( (System.ComponentModel.ISupportInitialize)( this.tbFightLength ) ).BeginInit();
@@ -312,7 +313,7 @@
             this.gbFaction.Controls.Add(this.rbAldor);
             this.gbFaction.Controls.Add(this.rbScryer);
             this.gbFaction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
-            this.gbFaction.Location = new System.Drawing.Point(8, 355);
+            this.gbFaction.Location = new System.Drawing.Point(8, 330);
             this.gbFaction.Name = "gbFaction";
             this.gbFaction.Size = new System.Drawing.Size(185, 52);
             this.gbFaction.TabIndex = 28;
@@ -515,11 +516,24 @@
             this.cbSenseGlyph.UseVisualStyleBackColor = true;
             this.cbSenseGlyph.CheckedChanged += new System.EventHandler(this.cbSenseGlyph_CheckedChanged);
             // 
+            // chkHitAura
+            // 
+            this.chkHitAura.AutoSize = true;
+            this.chkHitAura.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.chkHitAura.Location = new System.Drawing.Point(13, 388);
+            this.chkHitAura.Name = "chkHitAura";
+            this.chkHitAura.Size = new System.Drawing.Size(117, 19);
+            this.chkHitAura.TabIndex = 35;
+            this.chkHitAura.Text = "Heroic Presence";
+            this.chkHitAura.UseVisualStyleBackColor = true;
+            this.chkHitAura.CheckedChanged += new System.EventHandler(this.chkHitAura_CheckedChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.chkHitAura);
             this.Controls.Add(this.gbMinorGlyph);
             this.Controls.Add(this.gbMajorGlyph);
             this.Controls.Add(this.cbWindfuryEffect);
@@ -595,5 +609,6 @@
         private System.Windows.Forms.CheckBox cbJudgeGlyph;
         private System.Windows.Forms.GroupBox gbMinorGlyph;
         private System.Windows.Forms.CheckBox cbSenseGlyph;
+        private System.Windows.Forms.CheckBox chkHitAura;
     }
 }
