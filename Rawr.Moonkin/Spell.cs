@@ -1190,12 +1190,12 @@ namespace Rawr.Moonkin
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
             // Spell damage for 10 seconds on resist
-            if (calcs.BasicStats.SpellDamageFor10SecOnResist > 0)
+            if (calcs.BasicStats.SpellPowerFor10SecOnResist > 0)
             {
                 float procsPerRotation = (1 - hitRate) * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnResist * 10.0f / timeBetweenProcs;
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnResist * 10.0f / timeBetweenProcs;
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnResist * 10.0f / timeBetweenProcs;
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnResist * 10.0f / timeBetweenProcs;
             }
             // 5% chance of spell damage on hit, no cooldown.
             if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
@@ -1206,15 +1206,15 @@ namespace Rawr.Moonkin
                 effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5  * 10.0f / timeBetweenProcs;
             }
             // 10% chance of spell damage on hit, 45 second cooldown.
-            if (calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 > 0)
+            if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
             {
                 float procsPerRotation = 0.1f * hitRate * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
             }
             // 20% chance of spell damage on crit, 45 second cooldown.
-            if (calcs.BasicStats.SpellDamageFor10SecOnCrit_20_45 > 0)
+            if (calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 > 0)
             {
                 float procsPerRotation = 0.2f * hitRate * (effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor) * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;

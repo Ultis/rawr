@@ -116,16 +116,16 @@ namespace Rawr
         SpellCombatManaRegeneration,
         SpellCrit,
         SpellCritRating,
-        SpellDamageFor10SecOnCrit_20_45,
-        SpellDamageFor10SecOnHit_10_45,
+        SpellPowerFor10SecOnCrit_20_45,
+        SpellPowerFor10SecOnHit_10_45,
         SpellDamageFor10SecOnHit_5,
-        SpellDamageFor10SecOnResist,
-        SpellDamageFor15SecOnCrit_20_45,
-        SpellDamageFor15SecOnManaGem,
+        SpellPowerFor10SecOnResist,
+        SpellPowerFor15SecOnCrit_20_45,
+        SpellPowerFor15SecOnManaGem,
         SpellPowerFor15SecOnUse90Sec,
-        SpellDamageFor15SecOnUse2Min,
+        SpellPowerFor15SecOnUse2Min,
         SpellPowerFor20SecOnUse2Min,
-        SpellDamageFor6SecOnCrit,
+        SpellPowerFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
         SpellDamageRating,
@@ -523,8 +523,8 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.SpellCritRating] = value; }
         }
 
+        [Obsolete]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Spell Combat Ratings")]
         [DisplayName("Spell Damage")]
 		public float SpellDamageRating
         {
@@ -1071,11 +1071,11 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage Increase for 6 sec on Crit")]
-        public float SpellDamageFor6SecOnCrit
+        [DisplayName("Spell Power Increase for 6 sec on Crit")]
+        public float SpellPowerFor6SecOnCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor6SecOnCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor6SecOnCrit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor6SecOnCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor6SecOnCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1108,17 +1108,17 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec/Resist)")]
+        [DisplayName("Spell Power (10 sec/Resist)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnResist
+        public float SpellPowerFor10SecOnResist
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnResist]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnResist] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnResist]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnResist] = value; }
         }
 
         // trinket effect, does not sum up over gear, 2 trinkets with this effect is not equivalent to 1 trinket with double effect
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (20 sec/2 min)")]
+        [DisplayName("Spell Power (20 sec/2 min)")]
         [Category("Equipment Procs")]
         public float SpellPowerFor20SecOnUse2Min
         {
@@ -1126,13 +1126,14 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min] = value; }
         }
 
+        // not used by any item
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (15 sec/2 min)")]
+        [DisplayName("Spell Power (15 sec/2 min)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnUse2Min
+        public float SpellPowerFor15SecOnUse2Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnUse2Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse2Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnUse2Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1192,42 +1193,42 @@ namespace Rawr
 
  
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (15 sec/Gem)")]
+        [DisplayName("Spell Power (15 sec/Gem)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnManaGem
+        public float SpellPowerFor15SecOnManaGem
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnManaGem]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnManaGem] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnManaGem]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnManaGem] = value; }
         }
 
         // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec)")]
+        [DisplayName("Spell Power (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnHit_10_45
+        public float SpellPowerFor10SecOnHit_10_45
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnHit_10_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnHit_10_45] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45] = value; }
         }
 
         // 20% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (15 sec)")]
+        [DisplayName("Spell Power (15 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor15SecOnCrit_20_45
+        public float SpellPowerFor15SecOnCrit_20_45
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnCrit_20_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor15SecOnCrit_20_45] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45] = value; }
         }
 
         // 20% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec)")]
+        [DisplayName("Spell Power (10 sec)")]
         [Category("Equipment Procs")]
-        public float SpellDamageFor10SecOnCrit_20_45
+        public float SpellPowerFor10SecOnCrit_20_45
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnCrit_20_45]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFor10SecOnCrit_20_45] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCrit_20_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCrit_20_45] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -237,18 +237,18 @@ namespace Rawr.Mage
             if (trinket1)
             {
                 Stats t = character.Trinket1.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellDamageFor15SecOnUse2Min;
+                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
-                if (t.SpellDamageFor15SecOnManaGem > 0.0) ManaGemActivation = true;
+                if (t.SpellPowerFor15SecOnManaGem > 0.0) ManaGemActivation = true;
             }
             if (trinket2)
             {
                 Stats t = character.Trinket2.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellDamageFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellDamageFor15SecOnUse2Min;
+                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
-                if (t.SpellDamageFor15SecOnManaGem > 0.0) ManaGemActivation = true;
+                if (t.SpellPowerFor15SecOnManaGem > 0.0) ManaGemActivation = true;
             }
             if (drums)
             {

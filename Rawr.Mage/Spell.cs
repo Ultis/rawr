@@ -574,11 +574,11 @@ namespace Rawr.Mage
             DotDamage = (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier;
 
             if (castingState.BaseStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
-            if (castingState.BaseStats.SpellDamageFor6SecOnCrit > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
-            if (castingState.BaseStats.SpellDamageFor10SecOnHit_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
-            if (castingState.BaseStats.SpellDamageFor10SecOnResist > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
-            if (castingState.BaseStats.SpellDamageFor15SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
-            if (castingState.BaseStats.SpellDamageFor10SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (castingState.BaseStats.SpellPowerFor6SecOnCrit > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
+            if (castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            if (castingState.BaseStats.SpellPowerFor10SecOnResist > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
+            if (castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
             if (castingState.BaseStats.ShatteredSunAcumenProc > 0 && castingState.CalculationOptions.Aldor) RawSpellDamage += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
 
             if (!ForceMiss)

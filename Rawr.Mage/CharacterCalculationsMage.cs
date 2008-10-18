@@ -188,11 +188,11 @@ namespace Rawr.Mage
             List<SequenceGroup> list1 = sequence.GroupTrinket1();
             List<SequenceGroup> list2 = sequence.GroupTrinket2();
             List<SequenceGroup> list = null;
-            if (Character.Trinket1 != null && Character.Trinket1.Stats.SpellDamageFor15SecOnManaGem > 0)
+            if (Character.Trinket1 != null && Character.Trinket1.Stats.SpellPowerFor15SecOnManaGem > 0)
             {
                 list = list1;
             }
-            if (Character.Trinket2 != null && Character.Trinket2.Stats.SpellDamageFor15SecOnManaGem > 0)
+            if (Character.Trinket2 != null && Character.Trinket2.Stats.SpellPowerFor15SecOnManaGem > 0)
             {
                 list = list2;
             }

@@ -370,7 +370,7 @@ namespace Rawr.Warlock
             totalStats.HasteRating += totalStats.SpellHasteFor6SecOnHit_10_45 * 6 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             //Band of the Eternal Sage
-            totalStats.SpellPower += totalStats.SpellDamageFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
+            totalStats.SpellPower += totalStats.SpellPowerFor10SecOnHit_10_45 * 10 / (45 + 9 / calculations.SpellRotation.SpellsPerSecond);
 
             calculations.HastePercent = totalStats.HasteRating / 15.77f;
             calculations.GlobalCooldown = 1.5f / (1 + 0.01f * calculations.HastePercent);
@@ -527,7 +527,7 @@ namespace Rawr.Warlock
             //spell damage
             statsTotal.SpellPower += statsTotal.SpellPowerFor20SecOnUse2Min / 6;
             statsTotal.SpellPower += statsTotal.SpellPowerFor15SecOnUse90Sec * 15 / 90;
-            statsTotal.SpellPower += statsTotal.SpellDamageFor15SecOnUse2Min * 15 / 120;
+            statsTotal.SpellPower += statsTotal.SpellPowerFor15SecOnUse2Min * 15 / 120;
             statsTotal.SpellPower += 100 + options.DemonicAegis * 10; //assume Fel Armor
 
             //spell crit rating
@@ -823,17 +823,17 @@ namespace Rawr.Warlock
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaRestorePerCast = stats.ManaRestorePerCast,
                 ManaRestorePerHit = stats.ManaRestorePerHit,
-                SpellDamageFor10SecOnHit_10_45 = stats.SpellDamageFor10SecOnHit_10_45,
+                SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
                 SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
-                SpellDamageFor10SecOnResist = stats.SpellDamageFor10SecOnResist,
-                SpellDamageFor15SecOnCrit_20_45 = stats.SpellDamageFor15SecOnCrit_20_45,
+                SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
+                SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min, 
+                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min, 
                 SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
                 SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
                 SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
-                SpellDamageFor10SecOnCrit_20_45 = stats.SpellDamageFor10SecOnCrit_20_45,
+                SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
@@ -868,16 +868,16 @@ namespace Rawr.Warlock
                 + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min
                 + stats.ManaRestorePerHit
-                + stats.SpellDamageFor10SecOnHit_10_45
+                + stats.SpellPowerFor10SecOnHit_10_45
                 + stats.SpellDamageFromSpiritPercentage
-                + stats.SpellDamageFor10SecOnResist
-                + stats.SpellDamageFor15SecOnCrit_20_45
+                + stats.SpellPowerFor10SecOnResist
+                + stats.SpellPowerFor15SecOnCrit_20_45
                 + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellHasteFor6SecOnCast_15_45
                 + stats.SpellDamageFor10SecOnHit_5
                 + stats.SpellHasteFor6SecOnHit_10_45
-                + stats.SpellDamageFor10SecOnCrit_20_45
-                + stats.SpellDamageFor15SecOnUse2Min
+                + stats.SpellPowerFor10SecOnCrit_20_45
+                + stats.SpellPowerFor15SecOnUse2Min
                 + stats.TimbalsProc
                 + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier

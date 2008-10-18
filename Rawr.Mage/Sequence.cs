@@ -1992,7 +1992,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double potTime = RemoveIndex(VariableType.ManaPotion);
             double gemTime = RemoveIndex(VariableType.ManaGem);
             double evoTime = RemoveIndex(VariableType.Evocation);
-            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellDamageFor15SecOnManaGem > 0);
+            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellPowerFor15SecOnManaGem > 0);
             double gemValue = SequenceItem.Calculations.ManaGemValue;
             double gemMaxValue = SequenceItem.Calculations.MaxManaGemValue;
             double potValue = SequenceItem.Calculations.ManaPotionValue;

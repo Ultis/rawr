@@ -1323,7 +1323,7 @@ namespace Rawr
             {
                 Name = "Tirisfal Regalia 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { SpellDamageFor6SecOnCrit = 70f },
+                Stats = { SpellPowerFor6SecOnCrit = 70f },
                 SetName = "Tirisfal Regalia",
                 SetThreshold = 4
             });

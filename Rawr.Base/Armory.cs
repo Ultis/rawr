@@ -448,7 +448,7 @@ namespace Rawr
                         { //Special handling for Shard of Contempt due to higher uptime
                             stats.AttackPower += 90f;
                         }
-                        else if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell damage for the next 10 sec., stacking up to 10 times."))
+                        else if (spellDesc.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
                         {
                             stats.AttackPower += 120; //Crusade = 120ap
                             stats.SpellPower += 80;
@@ -704,14 +704,16 @@ namespace Rawr
                         {
                             stats.LightningCapacitorProc = 1;
                         }
-                        else if (spellDesc.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell damage for 15 sec."))
+                        else if (spellDesc.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
                         {
+                            // Serpent-Coil Braid
                             stats.BonusManaGem += 0.25f;
-                            stats.SpellDamageFor15SecOnManaGem += 225;
+                            stats.SpellPowerFor15SecOnManaGem += 225;
                         }
-                        else if (spellDesc.StartsWith("Grants 170 increased spell damage for 10 sec when one of your spells is resisted."))
+                        else if (spellDesc.StartsWith("Grants 170 increased spell power for 10 sec when one of your spells is resisted."))
                         {
-                            stats.SpellDamageFor10SecOnResist += 170;
+                            // Eye of Magtheridon
+                            stats.SpellPowerFor10SecOnResist += 170;
                         }
                         else if (spellDesc.StartsWith("Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec."))
                         {
@@ -721,9 +723,10 @@ namespace Rawr
                         {
                             stats.SpellHasteFor6SecOnHit_10_45 += 320;
                         }
-                        else if (spellDesc.StartsWith("Chance on spell critical hit to increase your spell damage and healing by 225 for 10 secs."))
+                        else if (spellDesc.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 secs."))
                         {
-                            stats.SpellDamageFor10SecOnCrit_20_45 += 225;
+                            // Shiffar's Nexus-Horn
+                            stats.SpellPowerFor10SecOnCrit_20_45 += 225;
                         }
                         else if (spellDesc.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
                         {
@@ -732,10 +735,10 @@ namespace Rawr
                             stats.BonusManaPotion += int.Parse(spellDesc) / 100f;
                             // TODO health potion effect
                         }
-                        //Your spell critical strikes have a chance to increase your spell damage and healing by 190 for 15 sec.
-                        else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell damage and healing by "))
+                        //Your spell critical strikes have a chance to increase your spell power by 190 for 15 sec.
+                        else if (spellDesc.StartsWith("Your spell critical strikes have a chance to increase your spell power by "))
                         {
-                            spellDesc = spellDesc.Substring("Your spell critical strikes have a chance to increase your spell damage and healing by ".Length);
+                            spellDesc = spellDesc.Substring("Your spell critical strikes have a chance to increase your spell power by ".Length);
                             float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
                             spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
                             int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
@@ -745,7 +748,7 @@ namespace Rawr
                                 case 15:
                                     if (name == "Sextant of Unstable Currents")
                                     {
-                                        stats.SpellDamageFor15SecOnCrit_20_45 += value;
+                                        stats.SpellPowerFor15SecOnCrit_20_45 += value;
                                     }
                                     break;
                             }
@@ -773,15 +776,15 @@ namespace Rawr
                                 case 10:
                                     if (name == "Robe of the Elder Scribes")
                                     {
-                                        stats.SpellDamageFor10SecOnHit_10_45 += value;
+                                        stats.SpellPowerFor10SecOnHit_10_45 += value;
                                     }
                                     break;
                             }
                         }
-                        else if (spellDesc.StartsWith("Your offensive spells have a chance on hit to increase your spell damage by "))
+                        else if (spellDesc.StartsWith("Your offensive spells have a chance on hit to increase your spell power by "))
                         {
-                            // Your offensive spells have a chance on hit to increase your spell damage by 95 for 10 secs.
-                            spellDesc = spellDesc.Substring("Your offensive spells have a chance on hit to increase your spell damage by ".Length);
+                            // Your offensive spells have a chance on hit to increase your spell power by 95 for 10 secs.
+                            spellDesc = spellDesc.Substring("Your offensive spells have a chance on hit to increase your spell power by ".Length);
                             float value = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" for")));
                             spellDesc = spellDesc.Substring(spellDesc.IndexOf(" for") + " for ".Length);
                             int duration = int.Parse(spellDesc.Substring(0, spellDesc.IndexOf(" ")));
@@ -792,7 +795,7 @@ namespace Rawr
                                     if (name == "Band of the Eternal Sage")
                                     {
                                         // Fixed in 2.4 to be 10 sec instead of 15
-                                        stats.SpellDamageFor10SecOnHit_10_45 += value;
+                                        stats.SpellPowerFor10SecOnHit_10_45 += value;
                                     }
                                     break;
                             }

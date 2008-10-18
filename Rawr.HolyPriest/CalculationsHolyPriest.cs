@@ -179,8 +179,8 @@ namespace Rawr.HolyPriest
 //                if (simstats.BangleProc > 0)
                     // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd.
                     //UseProcs.Spirit += 130f * 20f / 120f;              
-                if (simstats.SpellDamageFor15SecOnUse2Min > 0)
-                    UseProcs.SpellPower += simstats.SpellDamageFor15SecOnUse2Min * 15f / 120f;
+                if (simstats.SpellPowerFor15SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse2Min * 15f / 120f;
                 if (simstats.SpellPowerFor15SecOnUse90Sec > 0)
                     UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
                 if (simstats.SpellPowerFor20SecOnUse2Min > 0)
