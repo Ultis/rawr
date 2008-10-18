@@ -250,7 +250,7 @@ namespace Rawr.ShadowPriest
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Mp5 = stats.Mp5,
-                SpellDamageRating = stats.SpellDamageRating,
+                SpellPower = stats.SpellPower,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
                 SpellHitRating = stats.SpellHitRating,
                 SpellCritRating = stats.SpellCritRating,
@@ -260,7 +260,7 @@ namespace Rawr.ShadowPriest
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                SpellDamageFor15SecOnUse2Min = stats.SpellDamageFor15SecOnUse2Min,
+                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
 //                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
 //                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
 //                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
@@ -270,10 +270,10 @@ namespace Rawr.ShadowPriest
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellDamageRating + stats.SpellShadowDamageRating+ stats.SpellCritRating
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.SpellShadowDamageRating+ stats.SpellCritRating
                 + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier
-                + stats.SpellDamageFor15SecOnUse2Min) > 0;
+                + stats.SpellPowerFor15SecOnUse2Min) > 0;
                 //+ stats.SpellDamageFor15SecOnUse90Sec
                 //+ stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
                 //+ stats.SpellHasteFor20SecOnUse5Min) > 0;

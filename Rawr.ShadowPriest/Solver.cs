@@ -37,8 +37,8 @@ namespace Rawr.ShadowPriest
             Trinkets = new List<Trinket>();
             ShadowCritChance = PlayerStats.SpellCrit;
             Sequence = new Dictionary<float, Spell>();
-            if (playerStats.SpellDamageFor15SecOnUse2Min > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse2Min, UpTime = 15.0f });
+            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
+                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellPowerFor15SecOnUse2Min, UpTime = 15.0f });
 //            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
 //                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
 //            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
