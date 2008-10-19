@@ -131,9 +131,10 @@ namespace Rawr
             else
             {
                 string pathToIcon = null;
+                WebRequestWrapper wrapper = null;
                 try
                 {
-                    WebRequestWrapper wrapper = new WebRequestWrapper();
+                    wrapper = new WebRequestWrapper();
                     if (!String.IsNullOrEmpty(iconName))
                     {
 
@@ -148,6 +149,13 @@ namespace Rawr
                 }
                 catch (Exception)
                 {
+                    try
+                    {
+                        pathToIcon = wrapper.DownloadTempImage();
+                    }
+                    catch (Exception)
+                    {
+                    }
                     //Log.Write(ex.Message);
                     //Log.Write(ex.StackTrace);
                     //log.Error("Exception trying to retrieve an icon from the armory", ex);

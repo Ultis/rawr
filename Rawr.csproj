@@ -114,6 +114,12 @@
     <Compile Include="FormChooseCharacter.designer.cs">
       <DependentUpon>FormChooseCharacter.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormItemFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemFilter.Designer.cs">
+      <DependentUpon>FormItemFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMassGemReplacement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -291,6 +297,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormItemEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormItemFilter.resx">
+      <DependentUpon>FormItemFilter.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormItemSelection.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormItemSelection.cs</DependentUpon>
@@ -427,6 +437,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="RawrIcon.ico" />
+    <None Include="ItemFilterRegexList.datasource" />
     <None Include="ReadMe.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

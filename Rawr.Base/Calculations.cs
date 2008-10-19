@@ -106,6 +106,9 @@ namespace Rawr
             if (!ModelCache.TryGetValue(type, out model))
             {
                 model = (CalculationsBase)Activator.CreateInstance(type);
+                // extract name
+                RawrModelInfoAttribute[] modelInfos = type.GetCustomAttributes(typeof(RawrModelInfoAttribute), false) as RawrModelInfoAttribute[];
+                model.Name = modelInfos[0].Name;
                 ModelCache[type] = model;
             }
             return model;
@@ -290,6 +293,9 @@ namespace Rawr
 	/// </summary>
 	public abstract class CalculationsBase
 	{
+        // name of the model, when loaded in model cache it's assigned the value of its corresponding key
+        public string Name;
+
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
 		protected Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
 		protected Character _cachedCharacter = null;

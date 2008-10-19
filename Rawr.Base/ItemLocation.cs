@@ -124,12 +124,13 @@ namespace Rawr
     [Serializable]
     public class VendorItem : ItemLocation
     {
-        
-        public string Token{get;set;}
-        public int Count{get;set;}
-        public int Cost{get;set;}
 
-        
+        public string Token { get; set; }
+        public int Count { get; set; }
+        public int Cost { get; set; }
+        public string VendorName { get; set; }
+        public string VendorArea { get; set; }
+     
         [XmlIgnore]
         public string CostString
         {
@@ -170,7 +171,14 @@ namespace Rawr
         {
             get
             {
-                return string.Format("Purchasable with {0} [{1}]{2}{3}", Count, Token, Cost>0?" and":"", CostString);
+                if (!string.IsNullOrEmpty(Token))
+                {
+                    return string.Format("Purchasable with {0} [{1}]{2}{3}", Count, Token, Cost > 0 ? " and" : "", CostString);
+                }
+                else
+                {
+                    return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
+                }
             }
         }
 
@@ -238,10 +246,19 @@ namespace Rawr
 					Count = count;
 					Token = Boss;
 				}
-				else
-				{
-					return new ItemLocation("Vendor");
-				}
+                else
+                {
+                    XmlNodeList list = doc.SelectNodes("/page/itemInfo/item/vendors/creature");
+                    if (list.Count > 0)
+                    {
+                        VendorName = list[0].Attributes["name"].Value;
+                        VendorArea = list[0].Attributes["area"].Value;
+                    }
+                    else
+                    {
+                        return new ItemLocation("Vendor");
+                    }
+                }
 			}
 
             return this;

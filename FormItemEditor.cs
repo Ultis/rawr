@@ -160,8 +160,21 @@ namespace Rawr
 		}
 
 		private Character.CharacterSlot[] _equippedSlots;
+
 		private Character _character;
-		public FormItemEditor(Character character)
+        public Character Character
+        {
+            get
+            {
+                return _character;
+            }
+            set
+            {
+                _character = value;
+            }
+        }
+
+        public FormItemEditor(Character character)
 		{
 			InitializeComponent();
 			_character = character;
@@ -189,6 +202,11 @@ namespace Rawr
 		{
 			this.textBoxName.Focus(); //Force data changes to be applied through databinding...
 			this.textBoxIcon.Focus(); //databinding doesn't seem to set the new value until focus has left the control
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
+            }
 		}
 
 		private bool _changingItemCache = false;

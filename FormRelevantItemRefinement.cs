@@ -66,92 +66,29 @@ namespace Rawr
         public void updateBoxes()
         {
             if (_relevantItemTypes == null)
-            {
-              
+            {              
                 _relevantItemTypes = Calculations.Instance.RelevantItemTypes;
-
-                _RelevantItemTypes = Calculations.Instance.RelevantItemTypes;
-
-                // for each type that is listed as useful for the model
-                // check and enable the checkboxes listing them.
-                foreach (Item.ItemType item in _RelevantItemTypes)
-                {
-
-                    foreach (CheckBox box in checkBoxes)
-                    {
-                        
-                            if (item == (Item.ItemType)box.Tag)
-                            {
-                                box.Checked = true;
-                                box.Enabled = true;
-                            }
-                        
-                    }
-                   /* if (item == Item.ItemType.Cloth)
-                    {
-                        checkBoxClothArmor.Enabled = true;
-                        checkBoxClothArmor.Checked = true;
-                    }
-                   
-                    */
-                }
             }
-            else
+            _RelevantItemTypes = ItemFilter.GetRelevantItemTypesList(Calculations.Instance);
+            foreach (CheckBox box in checkBoxes)
             {
-                // if you're not refreshing things, check those currently
-                // used in listing the relevant items. Enable those listed
-                // as relevant for the model.
-
-                foreach (CheckBox box in checkBoxes)
-                {
-                                        
-                    foreach (Item.ItemType enableItem in _relevantItemTypes)
-                    {
-                        if (enableItem == (Item.ItemType)box.Tag)
-                            box.Enabled = true;
-                    }
-                    foreach (Item.ItemType checkItem in _RelevantItemTypes)
-                    {
-                        if (checkItem == (Item.ItemType)box.Tag)
-                            box.Checked = true;
-                    }
-                }
+                box.Enabled = _relevantItemTypes.Contains((Item.ItemType)box.Tag);
+                box.Checked = _RelevantItemTypes.Contains((Item.ItemType)box.Tag);
             }
-
-        }
-
-
-        //pulls the array of items in, and adds the additional
-        //restrictions requested by the user
-        public Item[] Refine(Item[] incomingArray)
-        {
-
-            List<Item> refinedArray = new List<Item>();
-
-            foreach (Item item in incomingArray)
-            {
-                if (_RelevantItemTypes.Contains(item.Type))
-                    refinedArray.Add(item);
-            }
-            return refinedArray.ToArray();
         }
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _RelevantItemTypes = new List<Item.ItemType>();
+            _RelevantItemTypes.Clear();
 
-            foreach (Item.ItemType item in _relevantItemTypes)
+            foreach (CheckBox box in checkBoxes)
             {
-                foreach (CheckBox box in checkBoxes)
+                if (box.Checked && box.Enabled)
                 {
-                    if (box.Checked == true)
-                    {
-                        if (item == (Item.ItemType) box.Tag)
-                            _RelevantItemTypes.Add(item);
-                    }
+                    _RelevantItemTypes.Add((Item.ItemType)box.Tag);
                 }
-              
             }
+            ItemCache.OnItemsChanged();
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -170,13 +107,10 @@ namespace Rawr
 
         private void disableCheckBox()
         {
-
             foreach (CheckBox box in checkBoxes)
             {
                 box.Enabled = false;
             }
-
-
         }
     }
 }

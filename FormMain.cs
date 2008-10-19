@@ -83,6 +83,17 @@ namespace Rawr
             }
         }
 
+        private FormItemFilter _formItemFilter;
+        public FormItemFilter FormItemFilter
+        {
+            get
+            {
+                if (_formItemFilter == null || _formItemFilter.IsDisposed)
+                    _formItemFilter = new FormItemFilter();
+                return _formItemFilter;
+            }
+        }
+
         public FormMassGemReplacement GemControl
         {
             get
@@ -146,6 +157,9 @@ namespace Rawr
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+
+            ItemCache.Load(); // make sure item filters are loaded before creating drop down
+            UpdateItemFilterDropDown();
 		}
 
 		private bool _checkForUpdatesEnabled = true;
@@ -570,18 +584,12 @@ namespace Rawr
 		}
 
         void refineEquipmentParametersToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
+        {            
             ItemRefinement.updateBoxes();
-            ItemRefinement.ShowDialog(this);
-
-            //the items listed in the cache are resifted so that they
-            //meet the user's more stringent requirements. 
-
-            Item[] items = ItemRefinement.Refine(ItemCache.RelevantItems);
-            itemComparison1.Items = items;
-            LoadComparisonData();
-
+            if (ItemRefinement.ShowDialog(this) == DialogResult.OK)
+            {
+                ItemFilter.Save("Data\\ItemFilter.xml");
+            }
         }
 
 		void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1356,6 +1364,53 @@ namespace Rawr
 				Character.OnCalculationsInvalidated();
 			}
 		}
+
+        private void filterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
+            menuItem.Checked = !menuItem.Checked;
+            if (menuItem == toolStripMenuItemFilterOther)
+            {
+                ItemFilter.OtherRegexEnabled = menuItem.Checked;
+            }
+            else
+            {
+                ((ItemFilterRegex)menuItem.Tag).Enabled = menuItem.Checked;
+            }
+            ItemCache.OnItemsChanged();
+            this.Cursor = Cursors.Default;
+        }
+
+        private void UpdateItemFilterDropDown()
+        {
+            toolStripDropDownButtonFilter.DropDownItems.Clear();
+            foreach (ItemFilterRegex regex in ItemFilter.RegexList)
+            {
+                ToolStripMenuItem toolStripMenuItemFilter = new ToolStripMenuItem(regex.Name);
+                toolStripMenuItemFilter.Tag = regex;
+                toolStripMenuItemFilter.Checked = regex.Enabled;
+                toolStripMenuItemFilter.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+                toolStripDropDownButtonFilter.DropDownItems.Add(toolStripMenuItemFilter);
+            }
+            toolStripMenuItemFilterOther.Checked = ItemFilter.OtherRegexEnabled;
+            toolStripDropDownButtonFilter.DropDownItems.Add(toolStripMenuItemFilterOther);
+        }
+
+        private void toolStripMenuItemItemFilterEditor_Click(object sender, EventArgs e)
+        {
+            FormItemFilter.bindingSourceItemFilter.DataSource = ItemFilter.RegexList;
+            if (FormItemFilter.ShowDialog(this) == DialogResult.OK)
+            {
+                ItemFilter.Save("Data\\ItemFilter.xml");
+                UpdateItemFilterDropDown();
+                ItemCache.OnItemsChanged();
+            }
+            else
+            {
+                ItemFilter.Load("Data\\ItemFilter.xml");
+            }
+        }
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{

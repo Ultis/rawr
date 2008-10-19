@@ -240,8 +240,7 @@ namespace Rawr
 			{
 				if (_relevantItems == null)
 				{
-					_relevantItems = new List<Item>(AllItems).FindAll(new Predicate<Item>(
-						delegate(Item item) { return Calculations.IsItemRelevant(item); })).ToArray();
+					_relevantItems = GetRelevantItemsInternal(Calculations.Instance);
 				}
 				return _relevantItems;
 			}
@@ -255,9 +254,15 @@ namespace Rawr
             }
             else
             {
-                return new List<Item>(AllItems).FindAll(new Predicate<Item>(
-                    delegate(Item item) { return model.IsItemRelevant(item); })).ToArray();
+                return GetRelevantItemsInternal(model);
             }
+        }
+
+        private Item[] GetRelevantItemsInternal(CalculationsBase model)
+        {
+            List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
+                delegate(Item item) { return model.IsItemRelevant(item) && ItemFilter.IsItemRelevant(model, item); }));
+            return itemList.ToArray();
         }
 
 		public event EventHandler ItemsChanged;
@@ -272,7 +277,7 @@ namespace Rawr
 		public void Save()
 		{
 #if !AGGREGATE_ITEMS
-            using (StreamWriter writer = new StreamWriter(ItemCache.SavedFilePath,false, Encoding.UTF8))
+            using (StreamWriter writer = new StreamWriter(ItemCache.SavedFilePath, false, Encoding.UTF8))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(List<Item>));
                 serializer.Serialize(writer, new List<Item>(AllItems));
@@ -280,6 +285,7 @@ namespace Rawr
             }
 
             LocationFactory.Save("Data\\ItemSource.xml");
+            ItemFilter.Save("Data\\ItemFilter.xml");
 #else
             //this is handy for debugging
             foreach (Item item in AllItems)
@@ -331,13 +337,15 @@ namespace Rawr
 			}
 
             LocationFactory.Load("Data\\ItemSource.xml");
+            ItemFilter.Load("Data\\ItemFilter.xml");
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			_relevantItems = null;
-		}
+            _relevantItemsDictionary = null;
+        }
 
 		//private void UpdateArmorFromWowhead(Item item)
 		//{
