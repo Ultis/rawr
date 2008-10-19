@@ -836,6 +836,7 @@ namespace Rawr.Retribution
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
+                PhysicalCrit = stats.PhysicalCrit,
 
                 //CritRating = stats.CritRating,
                 //HitRating = stats.HitRating,

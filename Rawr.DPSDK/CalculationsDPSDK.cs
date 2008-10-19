@@ -6,7 +6,7 @@ using System.Text;
 namespace Rawr.DPSDK
 {
     //[Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", Character.CharacterClass.Paladin)]  wont work until wotlk goes live on wowhead
-    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_empowerruneblade", Character.CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
 	class CalculationsDPSDK : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
@@ -1023,6 +1023,7 @@ namespace Rawr.DPSDK
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
+                PhysicalCrit = stats.PhysicalCrit,
 
                 //CritRating = stats.CritRating,
                 //HitRating = stats.HitRating,
