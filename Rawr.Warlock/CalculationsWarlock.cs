@@ -504,8 +504,8 @@ namespace Rawr.Warlock
             
 
             statsTotal.BonusSpellPowerMultiplier += 1;
-            statsTotal.BonusShadowSpellPowerMultiplier += 1;
-            statsTotal.BonusFireSpellPowerMultiplier += 1;
+            statsTotal.BonusShadowDamageMultiplier += 1;
+            statsTotal.BonusFireDamageMultiplier += 1;
 
             //strength
             statsTotal.Strength = (float)Math.Floor((Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier)) + statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier)) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
@@ -576,16 +576,16 @@ namespace Rawr.Warlock
                 switch (options.Pet)
                 {
                     case Pet.Imp:
-                        statsTotal.BonusFireSpellPowerMultiplier *= 1 + 0.15f;
+                        statsTotal.BonusFireDamageMultiplier *= 1 + 0.15f;
                         break;
                     case Pet.Succubus:
-                        statsTotal.BonusShadowSpellPowerMultiplier *= 1 + 0.15f;
+                        statsTotal.BonusShadowDamageMultiplier *= 1 + 0.15f;
                         break;
                     case Pet.Felhunter:
                         statsTotal.Mp5 += statsTotal.Mana * 0.0375f;
                         break;
                     case Pet.Felguard:
-                        statsTotal.BonusShadowSpellPowerMultiplier *= 1 + 0.1f;
+                        statsTotal.BonusShadowDamageMultiplier *= 1 + 0.1f;
                         statsTotal.Mp5 += statsTotal.Mana * 0.025f;
                         break;
                     case Pet.Voidwalker:
@@ -595,10 +595,10 @@ namespace Rawr.Warlock
             }
 
             //Emberstorm
-            statsTotal.BonusFireSpellPowerMultiplier *= 1 + 0.02f * options.Emberstorm;
+            statsTotal.BonusFireDamageMultiplier *= 1 + 0.02f * options.Emberstorm;
 
             //Shadow Mastery
-            statsTotal.BonusShadowSpellPowerMultiplier *= 1 + 0.02f * options.ShadowMastery;
+            statsTotal.BonusShadowDamageMultiplier *= 1 + 0.02f * options.ShadowMastery;
 
             //Soul Link
             statsTotal.BonusSpellPowerMultiplier *= 1 + options.SoulLink * 0.05f;
@@ -811,10 +811,10 @@ namespace Rawr.Warlock
                 Armor = stats.Armor,
                 Hp5 = stats.Hp5,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
-                BonusShadowSpellPowerMultiplier = stats.BonusAgilityMultiplier, 
-                BonusArcaneSpellPowerMultiplier = stats.BonusArcaneSpellPowerMultiplier,
-                BonusFireSpellPowerMultiplier = stats.BonusFireSpellPowerMultiplier,
-                BonusFrostSpellPowerMultiplier = stats.BonusFrostSpellPowerMultiplier,
+                BonusShadowDamageMultiplier = stats.BonusAgilityMultiplier, 
+                BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusWarlockNukeMultiplier = stats.BonusWarlockNukeMultiplier, 
                 LightningCapacitorProc = stats.LightningCapacitorProc,
                 TimbalsProc = stats.TimbalsProc, 
@@ -856,8 +856,8 @@ namespace Rawr.Warlock
                 + stats.BonusIntellectMultiplier
                 + stats.BonusSpellCritMultiplier
                 + stats.BonusSpellPowerMultiplier
-                + stats.BonusFireSpellPowerMultiplier
-                + stats.BonusShadowSpellPowerMultiplier
+                + stats.BonusFireDamageMultiplier
+                + stats.BonusShadowDamageMultiplier
                 + stats.BonusWarlockNukeMultiplier
                 + stats.BonusSpiritMultiplier
                 + stats.SpellPenetration

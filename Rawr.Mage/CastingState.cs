@@ -425,12 +425,12 @@ namespace Rawr.Mage
             FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
             NatureSpellModifier = ArcaneSpellModifier;
             ShadowSpellModifier = ArcaneSpellModifier;
-            FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds) * Math.Max(1 + characterStats.BonusFireSpellPowerMultiplier, 1 + characterStats.BonusFrostSpellPowerMultiplier);
-            ArcaneSpellModifier *= (1 + characterStats.BonusArcaneSpellPowerMultiplier);
-            FireSpellModifier *= (1 + characterStats.BonusFireSpellPowerMultiplier);
-            FrostSpellModifier *= (1 + characterStats.BonusFrostSpellPowerMultiplier);
-            NatureSpellModifier *= (1 + characterStats.BonusNatureSpellPowerMultiplier);
-            ShadowSpellModifier *= (1 + characterStats.BonusShadowSpellPowerMultiplier);
+            FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds) * Math.Max(1 + characterStats.BonusFireDamageMultiplier, 1 + characterStats.BonusFrostDamageMultiplier);
+            ArcaneSpellModifier *= (1 + characterStats.BonusArcaneDamageMultiplier);
+            FireSpellModifier *= (1 + characterStats.BonusFireDamageMultiplier);
+            FrostSpellModifier *= (1 + characterStats.BonusFrostDamageMultiplier);
+            NatureSpellModifier *= (1 + characterStats.BonusNatureDamageMultiplier);
+            ShadowSpellModifier *= (1 + characterStats.BonusShadowDamageMultiplier);
 
             ResilienceCritDamageReduction = 1;
             ResilienceCritRateReduction = 0;

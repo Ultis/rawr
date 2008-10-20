@@ -357,7 +357,7 @@ namespace Rawr
                     case "Scryer":
                         //Need to factor in partial resists.
                         ssoNeckProcDPS = 350f * (1 + stats.BonusSpellPowerMultiplier) *
-                            (1 + stats.BonusArcaneSpellPowerMultiplier) * physicalCritModifier / 50f;
+                            (1 + stats.BonusArcaneDamageMultiplier) * physicalCritModifier / 50f;
                         break;
                 }
             }
@@ -447,7 +447,7 @@ namespace Rawr
 			statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
-            statsTotal.BonusArcaneSpellPowerMultiplier = ((1 + statsRace.BonusArcaneSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusArcaneSpellPowerMultiplier)) - 1;
+            statsTotal.BonusArcaneDamageMultiplier = ((1 + statsRace.BonusArcaneDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusArcaneDamageMultiplier)) - 1;
 			statsTotal.Agility = (agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier)));
 			statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
 			statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));
@@ -676,7 +676,7 @@ namespace Rawr
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                    BonusArcaneSpellPowerMultiplier = stats.BonusArcaneSpellPowerMultiplier,
+                    BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
 					ExposeWeakness = stats.ExposeWeakness,
@@ -709,7 +709,7 @@ namespace Rawr
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-				stats.BonusSpellPowerMultiplier + stats.BonusArcaneSpellPowerMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
+				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff +

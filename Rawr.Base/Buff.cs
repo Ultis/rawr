@@ -871,29 +871,29 @@ namespace Rawr
 			{
 				Name = "Curse of the Elements",
 				Group = "Spell Damage Taken",
-				Stats = { BonusFireSpellPowerMultiplier = 0.1f, BonusFrostSpellPowerMultiplier = 0.1f,
-					BonusArcaneSpellPowerMultiplier = 0.1f, BonusShadowSpellPowerMultiplier = 0.1f,
-					BonusHolySpellPowerMultiplier = 0.1f, BonusNatureSpellPowerMultiplier = 0.1f},
-				Improvements = { new Buff { Name = "Malediction", Stats = { BonusFireSpellPowerMultiplier = 1.13f / 1.1f - 1, 
-					BonusFrostSpellPowerMultiplier = 1.13f / 1.1f - 1, BonusArcaneSpellPowerMultiplier = 1.13f / 1.1f - 1, 
-					BonusShadowSpellPowerMultiplier = 1.13f / 1.1f - 1, BonusHolySpellPowerMultiplier = 1.13f / 1.1f - 1,
-                    BonusNatureSpellPowerMultiplier = 1.13f / 1.1f - 1 } } }
+				Stats = { BonusFireDamageMultiplier = 0.1f, BonusFrostDamageMultiplier = 0.1f,
+					BonusArcaneDamageMultiplier = 0.1f, BonusShadowDamageMultiplier = 0.1f,
+					BonusHolyDamageMultiplier = 0.1f, BonusNatureDamageMultiplier = 0.1f},
+				Improvements = { new Buff { Name = "Malediction", Stats = { BonusFireDamageMultiplier = 1.13f / 1.1f - 1, 
+					BonusFrostDamageMultiplier = 1.13f / 1.1f - 1, BonusArcaneDamageMultiplier = 1.13f / 1.1f - 1, 
+					BonusShadowDamageMultiplier = 1.13f / 1.1f - 1, BonusHolyDamageMultiplier = 1.13f / 1.1f - 1,
+                    BonusNatureDamageMultiplier = 1.13f / 1.1f - 1 } } }
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Earth and Moon",
 				Group = "Spell Damage Taken",
-				Stats = { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f,
-					BonusArcaneSpellPowerMultiplier = 0.13f, BonusShadowSpellPowerMultiplier = 0.13f,
-					BonusNatureSpellPowerMultiplier = 0.13f},
+				Stats = { BonusFireDamageMultiplier = 0.13f, BonusFrostDamageMultiplier = 0.13f,
+					BonusArcaneDamageMultiplier = 0.13f, BonusShadowDamageMultiplier = 0.13f,
+					BonusNatureDamageMultiplier = 0.13f},
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Ebon Plaguebringer",
 				Group = "Spell Damage Taken",
-				Stats = { BonusFireSpellPowerMultiplier = 0.13f, BonusFrostSpellPowerMultiplier = 0.13f,
-					BonusArcaneSpellPowerMultiplier = 0.13f, BonusShadowSpellPowerMultiplier = 0.13f,
-					BonusHolySpellPowerMultiplier = 0.13f, BonusNatureSpellPowerMultiplier = 0.13f},
+				Stats = { BonusFireDamageMultiplier = 0.13f, BonusFrostDamageMultiplier = 0.13f,
+					BonusArcaneDamageMultiplier = 0.13f, BonusShadowDamageMultiplier = 0.13f,
+					BonusHolyDamageMultiplier = 0.13f, BonusNatureDamageMultiplier = 0.13f},
 			});
 			#endregion
 

@@ -732,12 +732,12 @@ namespace Rawr.Moonkin
             SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier += 0.01f * character.DruidTalents.Genesis;
 
             // Wrath, Insect Swarm: Nature spell damage multipliers
-            SpellRotation.Wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            SpellRotation.Wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
             // Starfire, Moonfire: Arcane damage multipliers
-            SpellRotation.Starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.Moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            SpellRotation.Starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            SpellRotation.Moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
+            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
 
             // Level-based partial resistances
             SpellRotation.Wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
@@ -1172,7 +1172,7 @@ namespace Rawr.Moonkin
             // The Lightning Capacitor
             if (calcs.BasicStats.LightningCapacitorProc > 0)
             {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureSpellPowerMultiplier);
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
                 float baseDamage = (694 + 806) / 2.0f;
                 float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                 float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
@@ -1183,7 +1183,7 @@ namespace Rawr.Moonkin
             // Timbal's Focusing Crystal (10% proc on a DoT tick, 15s internal cooldown)
             if (calcs.BasicStats.TimbalsProc > 0 && rotation.TotalDotTicks > 0)
             {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
                 float baseDamage = (285 + 475) / 2.0f;
                 float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                 float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
@@ -1229,7 +1229,7 @@ namespace Rawr.Moonkin
             {
                 if (calcs.Scryer)
                 {
-                    float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneSpellPowerMultiplier);
+                    float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
                     float baseDamage = (333 + 367) / 2.0f;
                     float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
                     trinketExtraDPS += averageDamage / 45.0f;

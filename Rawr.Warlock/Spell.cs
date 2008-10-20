@@ -115,11 +115,11 @@ namespace Rawr.Warlock
             {
                 case MagicSchool.Shadow:
                     plusDamage = calculations.ShadowDamage;
-                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusShadowSpellPowerMultiplier * (1 + 0.2f * calculations.IsbUptime);
+                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusShadowDamageMultiplier * (1 + 0.2f * calculations.IsbUptime);
                     break;
                 case MagicSchool.Fire:
                     plusDamage = calculations.FireDamage;
-                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusFireSpellPowerMultiplier;
+                    BonusMultiplier *= calculations.BasicStats.BonusSpellPowerMultiplier * calculations.BasicStats.BonusFireDamageMultiplier;
                     break;
             }
 

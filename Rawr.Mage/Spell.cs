@@ -782,19 +782,19 @@ namespace Rawr.Mage
             switch (school)
             {
                 case MagicSchool.Arcane:
-                    SpellModifier *= (1 + castingState.BaseStats.BonusArcaneSpellPowerMultiplier);
+                    SpellModifier *= (1 + castingState.BaseStats.BonusArcaneDamageMultiplier);
                     break;
                 case MagicSchool.Fire:
-                    SpellModifier *= (1 + castingState.BaseStats.BonusFireSpellPowerMultiplier);
+                    SpellModifier *= (1 + castingState.BaseStats.BonusFireDamageMultiplier);
                     break;
                 case MagicSchool.Frost:
-                    SpellModifier *= (1 + castingState.BaseStats.BonusFrostSpellPowerMultiplier);
+                    SpellModifier *= (1 + castingState.BaseStats.BonusFrostDamageMultiplier);
                     break;
                 case MagicSchool.Nature:
-                    SpellModifier *= (1 + castingState.BaseStats.BonusNatureSpellPowerMultiplier);
+                    SpellModifier *= (1 + castingState.BaseStats.BonusNatureDamageMultiplier);
                     break;
                 case MagicSchool.Shadow:
-                    SpellModifier *= (1 + castingState.BaseStats.BonusShadowSpellPowerMultiplier);
+                    SpellModifier *= (1 + castingState.BaseStats.BonusShadowDamageMultiplier);
                     break;
             }
             CalculateDerivedStats(castingState);

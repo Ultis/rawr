@@ -187,19 +187,19 @@ namespace Rawr
     {
         BonusMangleBearThreat,
         BonusAgilityMultiplier,
-        BonusArcaneSpellPowerMultiplier,
+        BonusArcaneDamageMultiplier,
         BonusArmorMultiplier,
         BonusBleedDamageMultiplier,
         BonusBlockValueMultiplier,
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
         BonusCrusaderStrikeDamageMultiplier,
-        BonusFireSpellPowerMultiplier,
-        BonusFrostSpellPowerMultiplier,
+        BonusFireDamageMultiplier,
+        BonusFrostDamageMultiplier,
         BonusIntellectMultiplier,
         BonusMageNukeMultiplier,
         BonusWarlockNukeMultiplier, 
-        BonusNatureSpellPowerMultiplier,
+        BonusNatureDamageMultiplier,
 		BonusPetDamageMultiplier,
 		BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
@@ -212,8 +212,8 @@ namespace Rawr
         BonusStaminaMultiplier,
         BonusStrengthMultiplier,
 		BonusSwipeDamageMultiplier,
-		BonusShadowSpellPowerMultiplier,
-		BonusHolySpellPowerMultiplier,
+		BonusShadowDamageMultiplier,
+		BonusHolyDamageMultiplier,
         FoLMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
@@ -1947,55 +1947,55 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Fire Damage")]
-        public float BonusFireSpellPowerMultiplier
+        public float BonusFireDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFireSpellPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFireSpellPowerMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFireDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFireDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Shadow Damage")]
-        public float BonusShadowSpellPowerMultiplier
+        public float BonusShadowDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowSpellPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowSpellPowerMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShadowDamageMultiplier] = value; }
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Percentage]
 		[DisplayName("% Holy Damage")]
-		public float BonusHolySpellPowerMultiplier
+		public float BonusHolyDamageMultiplier
 		{
-			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolySpellPowerMultiplier]; }
-			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolySpellPowerMultiplier] = value; }
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolyDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusHolyDamageMultiplier] = value; }
 		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Arcane Damage")]
-        public float BonusArcaneSpellPowerMultiplier
+        public float BonusArcaneDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusArcaneSpellPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusArcaneSpellPowerMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusArcaneDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusArcaneDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Nature Damage")]
-        public float BonusNatureSpellPowerMultiplier
+        public float BonusNatureDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusNatureSpellPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusNatureSpellPowerMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusNatureDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusNatureDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Frost Damage")]
-        public float BonusFrostSpellPowerMultiplier
+        public float BonusFrostDamageMultiplier
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostSpellPowerMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostSpellPowerMultiplier] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
