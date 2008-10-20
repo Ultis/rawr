@@ -153,6 +153,13 @@ namespace Rawr.DPSDK
             set { _DRWDPS = value; }
         }
 
+        private float _WanderingPlagueDPS;
+        public float WanderingPlagueDPS
+        {
+            get { return _WanderingPlagueDPS; }
+            set { _WanderingPlagueDPS = value; }
+        }
+
         private int _targetLevel;
         public int TargetLevel
         {
@@ -299,7 +306,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Attack Power", attackPower.ToString("N0"));
             dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, ( critRating / 4591f )));
             dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} miss chance", hitRating, ( hitRating / 3279f )));
-            dictValues.Add("Expertise", string.Format("{0:0} // {1:1}*Negates {2:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
+            dictValues.Add("Expertise", string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
             dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
             dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
 
@@ -325,6 +332,7 @@ namespace Rawr.DPSDK
             dictValues.Add("Plague Strike", PlagueStrikeDPS.ToString("N2"));
             dictValues.Add("Scourge Strike", ScourgeStrikeDPS.ToString("N2"));
             dictValues.Add("Unholy Blight", UnholyBlightDPS.ToString("N2"));
+            dictValues.Add("Wandering Plague", WindfuryDPS.ToString("N2"));
             dictValues.Add("White", WhiteDPS.ToString("N2"));
             dictValues.Add("Windfury", WindfuryDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));

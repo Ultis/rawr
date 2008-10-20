@@ -323,7 +323,7 @@ namespace Rawr.DPSDK
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             if (cbWindfuryEffect.Checked) { calcOpts.Windfury = true; }
-            else { calcOpts.Windfury = true; }
+            else { calcOpts.Windfury = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -331,7 +331,7 @@ namespace Rawr.DPSDK
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             if (cbUREffect.Checked) { calcOpts.UnleashedRage = true; }
-            else { calcOpts.UnleashedRage = true; }
+            else { calcOpts.UnleashedRage = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -339,7 +339,7 @@ namespace Rawr.DPSDK
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             if (cbMagicVuln.Checked) { calcOpts.MagicVuln = true; }
-            else { calcOpts.MagicVuln = true; }
+            else { calcOpts.MagicVuln = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -347,7 +347,7 @@ namespace Rawr.DPSDK
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             if (cbCryptFever.Checked) { calcOpts.CryptFever = true; }
-            else { calcOpts.CryptFever = true; }
+            else { calcOpts.CryptFever = false; }
             Character.OnCalculationsInvalidated();
         }
     }

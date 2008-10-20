@@ -47,7 +47,7 @@ namespace Rawr.DPSDK
             {
                 case Type.Blood:
                     numDisease = 2f;
-                    diseaseUptime = 0.8f;
+                    diseaseUptime = 1f;
                     DeathCoil = 2f;
                     IcyTouch = 2f;
                     PlagueStrike = 2f;
@@ -63,7 +63,7 @@ namespace Rawr.DPSDK
                     break;
                 case Type.Frost:
                     numDisease = 2f;
-                    diseaseUptime = 0.8f;
+                    diseaseUptime = 1f;
                     DeathCoil = 2f;
                     IcyTouch = 2f;
                     PlagueStrike = 2f;
@@ -79,7 +79,7 @@ namespace Rawr.DPSDK
                     break;
                 case Type.Unholy:
                     numDisease = 3f;
-                    diseaseUptime = 0.9375f;
+                    diseaseUptime = 1f;
                     DeathCoil = 1f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
