@@ -503,7 +503,7 @@ namespace Rawr.DPSDK
             #region Frost Fever
             {
                 float FFCD = 3f / calcOpts.rotation.diseaseUptime;
-                float FFDmg = FrostFeverAPMult * stats.AttackPower + 36;
+                float FFDmg = FrostFeverAPMult * stats.AttackPower + 25.6f;
                 dpsFrostFever = FFDmg / FFCD;
                 dpsFrostFever *= 1f + spellCrits;
 
@@ -514,7 +514,7 @@ namespace Rawr.DPSDK
             #region Blood Plague
             {
                 float BPCD = 3f / calcOpts.rotation.diseaseUptime;
-                float BPDmg = BloodPlagueAPMult * stats.AttackPower + 44.5;
+                float BPDmg = BloodPlagueAPMult * stats.AttackPower + 31.1f;
                 dpsBloodPlague = BPDmg / BPCD;
                 dpsBloodPlague *= 1f + spellCrits;
 
