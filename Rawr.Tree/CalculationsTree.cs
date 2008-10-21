@@ -182,11 +182,11 @@ namespace Rawr.Tree
             int healthAbove = health - healthBelow;
 
             
-            calculatedStats.HpSPoints = calcOpts.spellRotationPlaceholder == "Healing Touch" ? (new HealingTouch2(calculatedStats)).HPS : (new Regrowth2(calculatedStats)).HPS;
+            calculatedStats.HpSPoints = calcOpts.spellRotationPlaceholder == "Healing Touch" ? (new HealingTouch(calculatedStats)).HPS : (new Regrowth(calculatedStats)).HPS;
             calculatedStats.AddMp5Points(calculatedStats.ManaRegInFSR, "Regen");
             calculatedStats.SurvivalPoints =
-                ((calcOpts.SurvScaleBelowLife > 0) ? healthBelow / calcOpts.SurvScaleBelowLife : 0) +
-                ((calcOpts.SurvScaleAboveLife > 0) ? healthAbove / calcOpts.SurvScaleAboveLife : 0);
+                ((calcOpts.SurvScaleBelowTarget > 0) ? healthBelow / 10F * (calcOpts.SurvScaleBelowTarget/100F) : 0) +
+                (healthAbove/100F);
 
             calculatedStats.OverallPoints = calculatedStats.HpSPoints + calculatedStats.Mp5Points + calculatedStats.SurvivalPoints;
 

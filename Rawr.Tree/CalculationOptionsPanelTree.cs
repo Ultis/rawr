@@ -29,16 +29,29 @@ namespace Rawr.Tree
             cbLevel.SelectedIndex = calcOpts.level == 70 ? 0 : 1;
             cbSchattrathFaction.SelectedIndex = calcOpts.ShattrathFaction == "Aldor" ? 1 : calcOpts.ShattrathFaction == "None" ? 0 : 2;
             cbSpellRotation.SelectedIndex = calcOpts.spellRotationPlaceholder == "Healing Touch" ? 0 : 1;
-            tbSurvHAbove.Text = calcOpts.SurvScaleAboveLife.ToString();
-            tbSurvHBelow.Text = calcOpts.SurvScaleBelowLife.ToString();
+            tbSurvScale.Text = calcOpts.SurvScaleBelowTarget.ToString();
             tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
-            tbAverageHealingUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
+            tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
+            tbMP5Scale.Text = calcOpts.mP5Scale.ToString();
+            tbFightDuration.Text = calcOpts.fightDuration.ToString();
+            tbWildGrowthTargets.Text = calcOpts.wildGrowthTargets.ToString();
+            tbWildGrowthAverageTicks.Text = calcOpts.wildGrowthTicks.ToString();
+            tbReplenishmentActive.Text = calcOpts.averageReplenishActiveTime.ToString();
             chbLivingSeed.Checked = calcOpts.useLivingSeedAsCritMultiplicator;
             chbReplenishment.Checked = calcOpts.haveReplenishSupport;
 
+            chbGlyphHT.Checked = calcOpts.glyphOfHealingTouch;
+            chbGlyphRegrowth.Checked = calcOpts.glyphOfRegrowth;
+            chbGlyphRejuvenation.Checked = calcOpts.glyphOfRejuvenation;
+            chbGlyphSwiftmend.Checked = calcOpts.glyphOfSwiftmend;
+            chbGlyphLifebloom.Checked = calcOpts.glyphOfLifebloom;
+            chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
+
+
             loading = false;
 
-            Character.OnCalculationsInvalidated();
+            //Enable/Disable Glyph Checkboxes
+            chbSomeGlyph_CheckedChanged(null, null);
         }
 
         private void cbLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -59,52 +72,21 @@ namespace Rawr.Tree
             }
         }
 
-        private void tbSurvHBelow_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                float tmp;
-                float.TryParse(tbSurvHBelow.Text, out tmp);
-
-                if (tmp > 0)
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleBelowLife = tmp;
-
-                if (tbSurvHBelow.Text == "0")
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleBelowLife = 0f;
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void tbSurvTargetH_TextChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
-                float tmp;
-                float.TryParse(tbSurvTargetH.Text, out tmp);
-
-                if (tmp > 0)
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvTargetLife = tmp;
-
-                if (tbSurvTargetH.Text == "0")
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvTargetLife = 0f;
-
+                ((CalculationOptionsTree)Character.CalculationOptions).SurvTargetLife = parseFloat(tbSurvTargetH.Text);
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void tbSurvHAbove_TextChanged(object sender, EventArgs e)
+        private void tbSurvScale_TextChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
-                float tmp;
-                float.TryParse(tbSurvHAbove.Text, out tmp);
-
-                if (tmp > 0)
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleAboveLife = tmp;
-
-                if (tbSurvHAbove.Text == "0")
-                    ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleAboveLife = 0f;
+                ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleBelowTarget = parseFloat(tbSurvScale.Text);
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -112,16 +94,40 @@ namespace Rawr.Tree
         {
             if (!loading)
                 ((CalculationOptionsTree)Character.CalculationOptions).haveReplenishSupport = chbReplenishment.Checked;
+            Character.OnCalculationsInvalidated();
         }
 
-        private void tbAverageHealingUsage_TextChanged(object sender, EventArgs e)
+        private void tbReplenishmentActive_TextChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
-                float tmp;
-                float.TryParse(tbAverageHealingUsage.Text, out tmp);
+                float tmp = parseFloat(tbReplenishmentActive.Text);
+                if (tmp > 100)
+                {
+                    tmp = 100;
+                    tbReplenishmentActive.Text = "100";
+                }
+
+                ((CalculationOptionsTree)Character.CalculationOptions).averageReplenishActiveTime = tmp;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void tbAverageProcUsage_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                float tmp = parseFloat(tbAverageProcUsage.Text);
+                
+                if (tmp > 100)
+                {
+                    tmp = 100;
+                    tbAverageProcUsage.Text = "100";
+                }
 
                 ((CalculationOptionsTree)Character.CalculationOptions).averageSpellpowerUsage = tmp;
+                
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -133,32 +139,148 @@ namespace Rawr.Tree
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void tbMP5Scale_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                ((CalculationOptionsTree)Character.CalculationOptions).mP5Scale = parseFloat(tbMP5Scale.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void tbFightDuration_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                TimeSpan tmp;
+                TimeSpan.TryParse(tbFightDuration.Text, out tmp);
+
+                if (tmp.TotalMinutes > 0)
+                {
+                    ((CalculationOptionsTree)Character.CalculationOptions).fightDuration = tmp;
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+
+        private void tbWildGrowthTargets_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                int tmp = (int)parseFloat(tbWildGrowthTargets.Text);
+                if (tmp > 5)
+                {
+                    tmp = 5;
+                    tbWildGrowthTargets.Text = "5";
+                }
+
+                ((CalculationOptionsTree)Character.CalculationOptions).wildGrowthTargets = tmp;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void tbWildGrowthAverageTicks_TextChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                int tmp = (int)parseFloat(tbWildGrowthAverageTicks.Text);
+                if (tmp > 7)
+                {
+                    tmp = 7;
+                    tbWildGrowthAverageTicks.Text = "7";
+                }
+                ((CalculationOptionsTree)Character.CalculationOptions).wildGrowthTicks = tmp;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbSomeGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
+                calcOpts.glyphOfInnervate = chbGlyphInnervate.Checked;
+                calcOpts.glyphOfHealingTouch = chbGlyphHT.Checked;
+                calcOpts.glyphOfLifebloom = chbGlyphLifebloom.Checked;
+                calcOpts.glyphOfRegrowth = chbGlyphRegrowth.Checked;
+                calcOpts.glyphOfRejuvenation = chbGlyphRejuvenation.Checked;
+                calcOpts.glyphOfSwiftmend = chbGlyphSwiftmend.Checked;
+
+                //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
+                int maxGlyphs = calcOpts.level == 70 ? 2 : 3;
+                if ((chbGlyphSwiftmend.Checked ? 1 : 0) + (chbGlyphRejuvenation.Checked ? 1 : 0) + (chbGlyphRegrowth.Checked ? 1 : 0) + (chbGlyphLifebloom.Checked ? 1 : 0) + (chbGlyphInnervate.Checked ? 1 : 0) + (chbGlyphHT.Checked ? 1 : 0) >= maxGlyphs)
+                {
+                    chbGlyphHT.Enabled = chbGlyphHT.Checked;
+                    chbGlyphInnervate.Enabled = chbGlyphInnervate.Checked;
+                    chbGlyphRegrowth.Enabled = chbGlyphRegrowth.Checked;
+                    chbGlyphRejuvenation.Enabled = chbGlyphRejuvenation.Checked;
+                    chbGlyphSwiftmend.Enabled = chbGlyphSwiftmend.Checked;
+                    chbGlyphLifebloom.Enabled = chbGlyphLifebloom.Checked;
+                }
+                else
+                {
+                    chbGlyphHT.Enabled = true;
+                    chbGlyphInnervate.Enabled = true;
+                    chbGlyphRegrowth.Enabled = true;
+                    chbGlyphRejuvenation.Enabled = true;
+                    chbGlyphSwiftmend.Enabled = true;
+                    chbGlyphLifebloom.Enabled = true;
+                }
+
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private float parseFloat(string s)
+        {
+            float tmp;
+            float.TryParse(s, out tmp);
+
+            if (tmp > 0)
+                return tmp;
+            
+            return 0;
+        }
+
+
+
     }
 
     [Serializable]
+
     public class CalculationOptionsTree : ICalculationOptionBase
     {
-        //Dummy implementation of future options
-
         public int level = 70;
         public string ShattrathFaction = "Aldor";
         public bool useLivingSeedAsCritMultiplicator = true;
 
-        //Target Life 8500
-        //Points Per Stamina < 8500 = 10
-        //Points Per Stamina > 8500 = 1
         public float SurvTargetLife = 8500f;
-        public float SurvScaleBelowLife = 10f;
-        public float SurvScaleAboveLife = 100f;
+        public float SurvScaleBelowTarget = 100f;
+
+        public float mP5Scale = 150f; //150% more Value if you don't get the whole fightduration
 
         //Add Average Spellpower to Calculation = 0.0f (% used)
         public float averageSpellpowerUsage = 0.0f;
 
-        //'Shadowpriest'-Support
+        public TimeSpan fightDuration = new TimeSpan(0, 5, 0); //5 Minutes
+
         public bool haveReplenishSupport = true;
+        public float averageReplenishActiveTime = 0.8f;
 
         //Spellrotations
         public string spellRotationPlaceholder = "Healing Touch";
+
+        public int wildGrowthTargets = 4; //0-5 Targets
+        public int wildGrowthTicks = 4; //0-7 Ticks
+
+        public bool glyphOfHealingTouch = false;
+        public bool glyphOfRegrowth = false;
+        public bool glyphOfRejuvenation = false;
+
+        public bool glyphOfLifebloom = false;
+        public bool glyphOfInnervate = false;
+        public bool glyphOfSwiftmend = false;
 
         public string GetXml()
         {

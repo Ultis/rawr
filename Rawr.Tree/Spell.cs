@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Tree
 {
-    public abstract class Spell2
+    public abstract class Spell
     {
         protected float minHeal = 0f;
         public float MinHeal
@@ -13,6 +13,8 @@ namespace Rawr.Tree
         public float MaxHeal
         { get { return maxHeal + healingBonus * coefDH; } }
         public float castTime = 0f;
+        public float CastTime
+        { get { return castTime > gcd ? castTime : gcd; } }
         public float gcd = 1.5f;
         public float manaCost = 0f;
         public float coefDH = 0f; //coef for DirectHeal
@@ -55,7 +57,7 @@ namespace Rawr.Tree
         { get { return periodicTick + healingBonus * coefHoT; } }
 
         public float HPS
-        { get { return AverageHealingwithCrit / castTime; } }
+        { get { return AverageHealingwithCrit / CastTime; } }
 
         public float HPSHoT
         { get { return (PeriodicTick) / periodicTickTime; } }
@@ -67,9 +69,9 @@ namespace Rawr.Tree
         { get { return periodicTicks * periodicTickTime; } }
     }
 
-    public class HealingTouch2 : Spell2
+    public class HealingTouch : Spell
     {
-        public HealingTouch2(CharacterCalculationsTree calcs)
+        public HealingTouch(CharacterCalculationsTree calcs)
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -77,7 +79,7 @@ namespace Rawr.Tree
             castTime = 3f;
             coefDH = castTime / 3.5f;
             manaCost = 0.33f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race, calcOpts.level);
-            healingBonus = calculatedStats.SpellPower * 1.88f;
+            healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage/100f;
             critPercent = calculatedStats.SpellCrit;
 
             #region minHeal, maxHeal
@@ -94,6 +96,15 @@ namespace Rawr.Tree
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+
+            if (calcOpts.glyphOfHealingTouch)
+            {
+                castTime -= 1.5f;
+                manaCost *= 1 - 0.25f;
+                minHeal *= 1 - 0.5f;
+                maxHeal *= 1 - 0.5f;
+                coefDH *= 1 - 0.5f;
+            }
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -129,9 +140,28 @@ namespace Rawr.Tree
         }
     }
 
-    public class Regrowth2 : Spell2
+    public class Regrowth : Spell
     {
-        public Regrowth2(CharacterCalculationsTree calcs)
+        public Regrowth(CharacterCalculationsTree calcs)
+        {
+            InitializeRegrowth(calcs);
+        }
+
+        public Regrowth(CharacterCalculationsTree calcs, bool withRegrowthActive) 
+        {
+            InitializeRegrowth(calcs);
+
+            if (withRegrowthActive && ((CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions).glyphOfRegrowth)
+            {
+                minHeal *= 1.2f;
+                maxHeal *= 1.2f;
+                periodicTick *= 1.2f;
+                coefDH *= 1.2f;
+                coefHoT *= 1.2f;
+            }
+        }
+
+        private void InitializeRegrowth(CharacterCalculationsTree calcs)
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -140,7 +170,7 @@ namespace Rawr.Tree
             coefDH = 0.3f; //0.289f; It seems the DH coef got Buffed a bit
             coefHoT = 0.7f / 7f;
             manaCost = 0.29f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race, calcOpts.level);
-            healingBonus = calculatedStats.SpellPower * 1.88f;
+            healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 
             periodicTicks = 7;
@@ -209,9 +239,9 @@ namespace Rawr.Tree
         }
     }
 
-    public class Rejuvenation2 : Spell2
+    public class Rejuvenation : Spell
     {
-        public Rejuvenation2(CharacterCalculationsTree calcs)
+        public Rejuvenation(CharacterCalculationsTree calcs)
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -219,7 +249,7 @@ namespace Rawr.Tree
             castTime = 0f;
             coefHoT = 0.8f / 4f;
             manaCost = 0.18f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race, calcOpts.level);
-            healingBonus = calculatedStats.SpellPower * 1.88f;
+            healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
 
             periodicTicks = 4;
 
@@ -264,9 +294,9 @@ namespace Rawr.Tree
         }
     }
 
-    public class Lifebloom2 : Spell2
+    public class Lifebloom : Spell
     {
-        public Lifebloom2(CharacterCalculationsTree calcs)
+        public Lifebloom(CharacterCalculationsTree calcs)
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -276,7 +306,7 @@ namespace Rawr.Tree
             coefDH = 0.3434f; //0.342 doesn't seem accurate too
             coefHoT = 0.0562f; //0.44f / 7f; have to test it even more ... 0.44f/7f isn't true anymore .. its afaik lower
             manaCost = 0.14f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race, calcOpts.level);
-            healingBonus = calculatedStats.SpellPower * 1.88f;
+            healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 
             periodicTicks = 7;
@@ -297,6 +327,9 @@ namespace Rawr.Tree
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+
+            if (calcOpts.glyphOfLifebloom)
+                periodicTicks += 1;
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -342,9 +375,9 @@ namespace Rawr.Tree
         }
     }
 
-    public class LifebloomStack2 : Lifebloom2
+    public class LifebloomStack : Lifebloom
     {
-        public LifebloomStack2(CharacterCalculationsTree calcs) : base(calcs)
+        public LifebloomStack(CharacterCalculationsTree calcs) : base(calcs)
         {
             periodicTick *= 3;
             periodicTicks -= 1; //keep a stack alive ;D
@@ -355,9 +388,9 @@ namespace Rawr.Tree
         }
     }
 
-    public class WildGrowth2 : Spell2
+    public class WildGrowth : Spell
     {
-        public WildGrowth2(CharacterCalculationsTree calcs)
+        public WildGrowth(CharacterCalculationsTree calcs)
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
@@ -366,7 +399,7 @@ namespace Rawr.Tree
             coefHoT = 0.966f; // http://elitistjerks.com/924687-post508.html
             periodicTickTime = 1f;
             manaCost = 0.23f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race, calcOpts.level);
-            healingBonus = calculatedStats.SpellPower * 1.88f;
+            healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
 
             periodicTicks = 7;
 
