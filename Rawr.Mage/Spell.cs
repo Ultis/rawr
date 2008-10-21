@@ -731,12 +731,9 @@ namespace Rawr.Mage
             // 45 sec, 3 min cooldown + cold snap
             // 2.5 sec Waterbolt, affected by heroism, totems, 0.4x frost damage from character
             // TODO recheck all buffs that apply
-            float spellHit = 0;
             float spellCrit = 0.05f;
             if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath"))) spellCrit += 0.03f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Inspiring Presence"))) spellHit += 0.01f;
-            if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Misery"))) spellHit += 0.03f;
-            float hitRate = Math.Min(1.00f, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + spellHit);
+            float hitRate = castingState.FrostHitRate;
             if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Winter's Chill")) || character.MageTalents.WintersChill > 0 || character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Scorch")) || character.MageTalents.ImprovedScorch > 0) spellCrit += 0.1f;
             float multiplier = hitRate;
             float haste = 1.0f;
