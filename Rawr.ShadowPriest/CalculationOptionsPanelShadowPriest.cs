@@ -23,24 +23,27 @@ namespace Rawr.ShadowPriest
                 Character.CalculationOptions = new CalculationOptionsShadowPriest();
 
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-            cmbLength.Value = (decimal)calcOpts.FightDuration;
+            cbTargetLevel.SelectedIndex = calcOpts.TargetLevel;
+            
+            trkFightLength.Value = (int)calcOpts.FightLength;
+            lblFightLength.Text = trkFightLength.Value + " minute fight.";
+
+            trkShadowfiend.Value = (int)calcOpts.Shadowfiend;
+            lblShadowfiend.Text = trkShadowfiend.Value + "% effect from Shadowfiend.";
+
+            trkReplenishment.Value = (int)calcOpts.Replenishment;
+            lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
+
+
+            //cmbLength.Value = (decimal)calcOpts.FightDuration;
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
-            cmbSpriest.Value = (decimal)calcOpts.Spriest;
+            if (calcOpts.SpellPriority == null)
+                calcOpts.SpellPriority = new List<string>(Spell.SpellList);
             lsSpellPriopity.Items.Clear();
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
             
             loading = false;
-        }
-
-        private void cmbLength_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.FightDuration = (float)cmbLength.Value;
-                Character.OnCalculationsInvalidated();
-            }
         }
 
         private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
@@ -81,16 +84,6 @@ namespace Rawr.ShadowPriest
             }
         }
                 
-        private void cmbSpriest_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.Spriest = (float)cmbSpriest.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }              
-
         private void bChangePriority_Click(object sender, EventArgs e)
         {
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
@@ -98,73 +91,56 @@ namespace Rawr.ShadowPriest
             priority.Show();
         }
 
-        private void cmbDrums_ValueChanged(object sender, EventArgs e)
+        private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbDrums.Value == 0)
-            {
-                cbDrums.Checked = false;
-                cbDrums.Enabled = false;
-            }
-            else
-            {
-                cbDrums.Enabled = true;
-            }
-
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.DrumsCount = (int)cmbDrums.Value;
+                calcOpts.TargetLevel = cbTargetLevel.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void cmbLag_ValueChanged(object sender, EventArgs e)
+        private void trkFightLength_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.Lag = (float)cmbLag.Value;
-                Character.OnCalculationsInvalidated();
+                calcOpts.FightLength = trkFightLength.Value;
+                lblFightLength.Text = trkFightLength.Value + " minute fight.";
             }
         }
 
-        private void cmbWaitTime_ValueChanged(object sender, EventArgs e)
+        private void trkShadowfiend_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.WaitTime = (float)cmbWaitTime.Value;
-                Character.OnCalculationsInvalidated();
+                calcOpts.Shadowfiend = trkShadowfiend.Value;
+                lblShadowfiend.Text = trkShadowfiend.Value + "% effect from Shadowfiend.";
             }
         }
 
-        private void cmbISB_ValueChanged(object sender, EventArgs e)
+        private void trkReplenishment_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.ISBUptime = (float)cmbISB.Value;
-                Character.OnCalculationsInvalidated();
+                calcOpts.Replenishment = trkReplenishment.Value;
+                lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
             }
         }
-
-        private void cbDrums_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.UseYourDrum = cbDrums.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }        
     }
     [Serializable]
 	public class CalculationOptionsShadowPriest : ICalculationOptionBase
 	{
-        public float FightDuration { get; set; }
+        public int TargetLevel { get; set; }
+        public float FightLength { get; set; }
+        public float Shadowfiend { get; set; }
+        public float Replenishment { get; set; }
+
         public List<string> SpellPriority { get; set; }
-        
-        public bool EnforceMetagemRequirements { get; set; }
+
         public float ManaAmt { get; set; }
         public float ManaTime { get; set; }
         public float Spriest { get; set; }
@@ -176,8 +152,12 @@ namespace Rawr.ShadowPriest
 
         public CalculationOptionsShadowPriest()
         {
-            SpellPriority = new List<string>(Spell.SpellList);
-            FightDuration = 600;
+            TargetLevel = 3;
+            FightLength = 6f;
+            Shadowfiend = 80f;
+            Replenishment = 100f;
+
+            SpellPriority = null;
             ManaAmt = 2400;
             ManaTime = 60;
             Lag = 100;

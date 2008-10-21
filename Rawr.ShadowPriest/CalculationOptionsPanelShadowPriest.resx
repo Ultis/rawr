@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="trkShadowfiend.ToolTip" xml:space="preserve">
+    <value>If Shadowfiend hits on all hits, it will regenerate 40% of your maximum mana. Against a Boss mob, the Shadowfiend will miss 9% of the swings, and 6.5% of the swings are dodged. This gives it a 15.5% chance to not hit.</value>
+  </data>
 </root>

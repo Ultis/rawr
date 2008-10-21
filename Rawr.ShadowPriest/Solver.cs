@@ -29,7 +29,10 @@ namespace Rawr.ShadowPriest
             foreach(string spellname in CalculationOptions.SpellPriority)
                 SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, character));
 
-            HitChance = PlayerStats.HitRating / 12.6f;
+            HitChance = PlayerStats.SpellHit;
+            if (!character.HasActiveConflictingBuff("Misery"))
+                HitChance = character.PriestTalents.Misery * 0.01f;
+
             ShadowHitChance = (float)Math.Min(100f, 83.0f + (PlayerStats.SpellHitRating + (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f * 2.0f) / 12.6f);
 
             Trinkets = new List<Trinket>();
@@ -87,7 +90,7 @@ namespace Rawr.ShadowPriest
             int castCount = 0, critableCount = 0, ssCount = 0;
             float timer = 0.0f, drumsTimer = 0.0f, drumsUpTimer = 0.0f;
             
-            while (timer < CalculationOptions.FightDuration)
+            while (timer < CalculationOptions.FightLength * 60f)
             {
                 timer += CalculationOptions.Lag/1000.0f;
                 timer += CalculationOptions.WaitTime/1000.0f;
@@ -166,7 +169,7 @@ namespace Rawr.ShadowPriest
 
                 OverallDamage += spell.SpellStatistics.DamageDone;
             }
-            OverallDps = OverallDamage / CalculationOptions.FightDuration;
+            OverallDps = OverallDamage / (CalculationOptions.FightLength * 60f);
         }
 
         protected class Trinket

@@ -28,96 +28,53 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmbLength = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelShadowPriest));
+            this.lblFightLength = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmbSpriest = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cmbManaTime = new System.Windows.Forms.NumericUpDown();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.gbSpellPriority = new System.Windows.Forms.GroupBox();
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriopity = new System.Windows.Forms.ListBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.cmbLag = new System.Windows.Forms.NumericUpDown();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.cmbWaitTime = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.cbDrums = new System.Windows.Forms.CheckBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cmbDrums = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cmbISB = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cmbPreset = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
+            this.cbTargetLevel = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.trkFightLength = new System.Windows.Forms.TrackBar();
+            this.lblShadowfiend = new System.Windows.Forms.Label();
+            this.trkShadowfiend = new System.Windows.Forms.TrackBar();
+            this.lblReplenishment = new System.Windows.Forms.Label();
+            this.trkReplenishment = new System.Windows.Forms.TrackBar();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).BeginInit();
             this.gbSpellPriority.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLag)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbWaitTime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDrums)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbISB)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             this.SuspendLayout();
             // 
-            // cmbLength
+            // lblFightLength
             // 
-            this.cmbLength.DecimalPlaces = 1;
-            this.cmbLength.Increment = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            this.cmbLength.Location = new System.Drawing.Point(96, 41);
-            this.cmbLength.Maximum = new decimal(new int[] {
-            3600,
-            0,
-            0,
-            0});
-            this.cmbLength.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbLength.Name = "cmbLength";
-            this.cmbLength.Size = new System.Drawing.Size(82, 19);
-            this.cmbLength.TabIndex = 20;
-            this.cmbLength.Value = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
-            this.cmbLength.ValueChanged += new System.EventHandler(this.cmbLength_ValueChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 48);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 12);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "Fight Length:";
+            this.lblFightLength.AutoSize = true;
+            this.lblFightLength.Location = new System.Drawing.Point(9, 36);
+            this.lblFightLength.Name = "lblFightLength";
+            this.lblFightLength.Size = new System.Drawing.Size(66, 13);
+            this.lblFightLength.TabIndex = 21;
+            this.lblFightLength.Text = "Fight Length";
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.cmbSpriest);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaTime);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 203);
+            this.groupBox2.Location = new System.Drawing.Point(12, 263);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(212, 102);
+            this.groupBox2.Size = new System.Drawing.Size(270, 68);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana Buffs";
@@ -125,63 +82,27 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(160, 37);
+            this.label6.Location = new System.Drawing.Point(160, 40);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(42, 12);
+            this.label6.Size = new System.Drawing.Size(45, 13);
             this.label6.TabIndex = 10;
             this.label6.Text = "% Mana";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(73, 37);
+            this.label2.Location = new System.Drawing.Point(73, 40);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 12);
+            this.label2.Size = new System.Drawing.Size(33, 13);
             this.label2.TabIndex = 9;
             this.label2.Text = "when";
-            // 
-            // cmbSpriest
-            // 
-            this.cmbSpriest.Increment = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.cmbSpriest.Location = new System.Drawing.Point(5, 71);
-            this.cmbSpriest.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.cmbSpriest.Name = "cmbSpriest";
-            this.cmbSpriest.Size = new System.Drawing.Size(76, 19);
-            this.cmbSpriest.TabIndex = 6;
-            this.cmbSpriest.ValueChanged += new System.EventHandler(this.cmbSpriest_ValueChanged);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(87, 73);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(26, 12);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "mp5";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 56);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 12);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Shadow Priest:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 19);
+            this.label4.Location = new System.Drawing.Point(6, 21);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 12);
+            this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 2;
             this.label4.Text = "Mana Potions:";
             // 
@@ -193,14 +114,14 @@
             0,
             0,
             0});
-            this.cmbManaTime.Location = new System.Drawing.Point(108, 35);
+            this.cmbManaTime.Location = new System.Drawing.Point(108, 38);
             this.cmbManaTime.Maximum = new decimal(new int[] {
             90,
             0,
             0,
             0});
             this.cmbManaTime.Name = "cmbManaTime";
-            this.cmbManaTime.Size = new System.Drawing.Size(50, 19);
+            this.cmbManaTime.Size = new System.Drawing.Size(50, 20);
             this.cmbManaTime.TabIndex = 1;
             this.cmbManaTime.Value = new decimal(new int[] {
             60,
@@ -217,40 +138,31 @@
             "1800",
             "2200",
             "2400"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(6, 34);
+            this.cmbManaAmt.Location = new System.Drawing.Point(6, 37);
             this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(61, 20);
+            this.cmbManaAmt.Size = new System.Drawing.Size(61, 21);
             this.cmbManaAmt.TabIndex = 0;
             this.cmbManaAmt.Text = "0";
             this.cmbManaAmt.ValueMember = "2400";
             this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             this.cmbManaAmt.TextUpdate += new System.EventHandler(this.cmbManaAmt_TextUpdate);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(184, 48);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(25, 12);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "sec.";
-            // 
             // gbSpellPriority
             // 
             this.gbSpellPriority.Controls.Add(this.bChangePriority);
             this.gbSpellPriority.Controls.Add(this.lsSpellPriopity);
-            this.gbSpellPriority.Location = new System.Drawing.Point(3, 311);
+            this.gbSpellPriority.Location = new System.Drawing.Point(12, 337);
             this.gbSpellPriority.Name = "gbSpellPriority";
-            this.gbSpellPriority.Size = new System.Drawing.Size(212, 172);
+            this.gbSpellPriority.Size = new System.Drawing.Size(270, 186);
             this.gbSpellPriority.TabIndex = 29;
             this.gbSpellPriority.TabStop = false;
             this.gbSpellPriority.Text = "Spell Priority";
             // 
             // bChangePriority
             // 
-            this.bChangePriority.Location = new System.Drawing.Point(5, 139);
+            this.bChangePriority.Location = new System.Drawing.Point(5, 151);
             this.bChangePriority.Name = "bChangePriority";
-            this.bChangePriority.Size = new System.Drawing.Size(75, 21);
+            this.bChangePriority.Size = new System.Drawing.Size(75, 23);
             this.bChangePriority.TabIndex = 11;
             this.bChangePriority.Text = "Change";
             this.bChangePriority.UseVisualStyleBackColor = true;
@@ -259,217 +171,110 @@
             // lsSpellPriopity
             // 
             this.lsSpellPriopity.FormattingEnabled = true;
-            this.lsSpellPriopity.ItemHeight = 12;
-            this.lsSpellPriopity.Location = new System.Drawing.Point(5, 18);
+            this.lsSpellPriopity.Location = new System.Drawing.Point(5, 20);
             this.lsSpellPriopity.Name = "lsSpellPriopity";
-            this.lsSpellPriopity.Size = new System.Drawing.Size(200, 112);
+            this.lsSpellPriopity.Size = new System.Drawing.Size(259, 121);
             this.lsSpellPriopity.TabIndex = 10;
             // 
-            // label8
+            // cbTargetLevel
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(9, 72);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(25, 12);
-            this.label8.TabIndex = 30;
-            this.label8.Text = "Lag:";
+            this.cbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbTargetLevel.FormattingEnabled = true;
+            this.cbTargetLevel.Items.AddRange(new object[] {
+            "+0",
+            "+1",
+            "+2",
+            "+3 (Boss)"});
+            this.cbTargetLevel.Location = new System.Drawing.Point(131, 14);
+            this.cbTargetLevel.Name = "cbTargetLevel";
+            this.cbTargetLevel.Size = new System.Drawing.Size(151, 21);
+            this.cbTargetLevel.TabIndex = 42;
+            this.cbTargetLevel.SelectedIndexChanged += new System.EventHandler(this.cbTargetLevel_SelectedIndexChanged);
             // 
-            // cmbLag
+            // label15
             // 
-            this.cmbLag.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.cmbLag.Location = new System.Drawing.Point(96, 65);
-            this.cmbLag.Maximum = new decimal(new int[] {
-            3600,
-            0,
-            0,
-            0});
-            this.cmbLag.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbLag.Name = "cmbLag";
-            this.cmbLag.Size = new System.Drawing.Size(82, 19);
-            this.cmbLag.TabIndex = 31;
-            this.cmbLag.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.cmbLag.ValueChanged += new System.EventHandler(this.cmbLag_ValueChanged);
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(9, 14);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(99, 13);
+            this.label15.TabIndex = 43;
+            this.label15.Text = "Relative Mob Level";
             // 
-            // label9
+            // trkFightLength
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(184, 72);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(34, 12);
-            this.label9.TabIndex = 32;
-            this.label9.Text = "msec.";
+            this.trkFightLength.Location = new System.Drawing.Point(12, 52);
+            this.trkFightLength.Maximum = 20;
+            this.trkFightLength.Minimum = 1;
+            this.trkFightLength.Name = "trkFightLength";
+            this.trkFightLength.Size = new System.Drawing.Size(270, 42);
+            this.trkFightLength.TabIndex = 44;
+            this.toolTip1.SetToolTip(this.trkFightLength, "Estimated duration of the fight. Important for sustainability calculations.");
+            this.trkFightLength.Value = 1;
+            this.trkFightLength.Scroll += new System.EventHandler(this.trkFightLength_Scroll);
             // 
-            // label10
+            // lblShadowfiend
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(9, 96);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(58, 12);
-            this.label10.TabIndex = 33;
-            this.label10.Text = "Wait Time:";
+            this.lblShadowfiend.AutoSize = true;
+            this.lblShadowfiend.Location = new System.Drawing.Point(9, 85);
+            this.lblShadowfiend.Name = "lblShadowfiend";
+            this.lblShadowfiend.Size = new System.Drawing.Size(80, 13);
+            this.lblShadowfiend.TabIndex = 45;
+            this.lblShadowfiend.Text = "% Shadowfiend";
             // 
-            // cmbWaitTime
+            // trkShadowfiend
             // 
-            this.cmbWaitTime.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.cmbWaitTime.Location = new System.Drawing.Point(96, 89);
-            this.cmbWaitTime.Maximum = new decimal(new int[] {
-            3600,
-            0,
-            0,
-            0});
-            this.cmbWaitTime.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.cmbWaitTime.Name = "cmbWaitTime";
-            this.cmbWaitTime.Size = new System.Drawing.Size(82, 19);
-            this.cmbWaitTime.TabIndex = 34;
-            this.cmbWaitTime.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.cmbWaitTime.ValueChanged += new System.EventHandler(this.cmbWaitTime_ValueChanged);
+            this.trkShadowfiend.Location = new System.Drawing.Point(12, 101);
+            this.trkShadowfiend.Maximum = 100;
+            this.trkShadowfiend.Name = "trkShadowfiend";
+            this.trkShadowfiend.Size = new System.Drawing.Size(270, 42);
+            this.trkShadowfiend.TabIndex = 46;
+            this.trkShadowfiend.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkShadowfiend, resources.GetString("trkShadowfiend.ToolTip"));
+            this.trkShadowfiend.Scroll += new System.EventHandler(this.trkShadowfiend_Scroll);
             // 
-            // label11
+            // lblReplenishment
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(184, 96);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(34, 12);
-            this.label11.TabIndex = 35;
-            this.label11.Text = "msec.";
+            this.lblReplenishment.AutoSize = true;
+            this.lblReplenishment.Location = new System.Drawing.Point(9, 134);
+            this.lblReplenishment.Name = "lblReplenishment";
+            this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
+            this.lblReplenishment.TabIndex = 47;
+            this.lblReplenishment.Text = "% Replenishment";
             // 
-            // cbDrums
+            // trkReplenishment
             // 
-            this.cbDrums.Enabled = false;
-            this.cbDrums.Location = new System.Drawing.Point(8, 166);
-            this.cbDrums.Name = "cbDrums";
-            this.cbDrums.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.cbDrums.Size = new System.Drawing.Size(170, 22);
-            this.cbDrums.TabIndex = 36;
-            this.cbDrums.Text = "Use Your Drum";
-            this.cbDrums.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.cbDrums.UseVisualStyleBackColor = true;
-            this.cbDrums.CheckedChanged += new System.EventHandler(this.cbDrums_CheckedChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 149);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 12);
-            this.label12.TabIndex = 37;
-            this.label12.Text = "Party Drums:";
-            // 
-            // cmbDrums
-            // 
-            this.cmbDrums.Location = new System.Drawing.Point(96, 142);
-            this.cmbDrums.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.cmbDrums.Name = "cmbDrums";
-            this.cmbDrums.Size = new System.Drawing.Size(82, 19);
-            this.cmbDrums.TabIndex = 38;
-            this.cmbDrums.ValueChanged += new System.EventHandler(this.cmbDrums_ValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(9, 120);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(65, 12);
-            this.label13.TabIndex = 39;
-            this.label13.Text = "ISB Uptime:";
-            // 
-            // cmbISB
-            // 
-            this.cmbISB.Increment = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.cmbISB.Location = new System.Drawing.Point(96, 113);
-            this.cmbISB.Name = "cmbISB";
-            this.cmbISB.Size = new System.Drawing.Size(82, 19);
-            this.cmbISB.TabIndex = 40;
-            this.cmbISB.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            this.cmbISB.ValueChanged += new System.EventHandler(this.cmbISB_ValueChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(184, 120);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(11, 12);
-            this.label14.TabIndex = 41;
-            this.label14.Text = "%";
-            // 
-            // cmbPreset
-            // 
-            this.cmbPreset.FormattingEnabled = true;
-            this.cmbPreset.Location = new System.Drawing.Point(9, 13);
-            this.cmbPreset.Name = "cmbPreset";
-            this.cmbPreset.Size = new System.Drawing.Size(206, 20);
-            this.cmbPreset.TabIndex = 42;
+            this.trkReplenishment.Location = new System.Drawing.Point(12, 150);
+            this.trkReplenishment.Maximum = 100;
+            this.trkReplenishment.Name = "trkReplenishment";
+            this.trkReplenishment.Size = new System.Drawing.Size(270, 42);
+            this.trkReplenishment.TabIndex = 48;
+            this.trkReplenishment.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkReplenishment, "How much uptime do you expect on Replenishment?");
+            this.trkReplenishment.Scroll += new System.EventHandler(this.trkReplenishment_Scroll);
             // 
             // CalculationOptionsPanelShadowPriest
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.cmbPreset);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.cmbISB);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.cmbDrums);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.cbDrums);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.cmbWaitTime);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.cmbLag);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this.trkReplenishment);
+            this.Controls.Add(this.lblReplenishment);
+            this.Controls.Add(this.trkShadowfiend);
+            this.Controls.Add(this.lblShadowfiend);
+            this.Controls.Add(this.trkFightLength);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.cbTargetLevel);
             this.Controls.Add(this.gbSpellPriority);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.cmbLength);
+            this.Controls.Add(this.lblFightLength);
             this.Name = "CalculationOptionsPanelShadowPriest";
-            this.Size = new System.Drawing.Size(226, 558);
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
+            this.Size = new System.Drawing.Size(300, 605);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbSpriest)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbManaTime)).EndInit();
             this.gbSpellPriority.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cmbLag)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbWaitTime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbDrums)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cmbISB)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -477,33 +282,23 @@
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown cmbLength;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblFightLength;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.NumericUpDown cmbManaTime;
         private System.Windows.Forms.ComboBox cmbManaAmt;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown cmbSpriest;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox gbSpellPriority;
         private System.Windows.Forms.ListBox lsSpellPriopity;
         private System.Windows.Forms.Button bChangePriority;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.NumericUpDown cmbLag;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.NumericUpDown cmbWaitTime;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.CheckBox cbDrums;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.NumericUpDown cmbDrums;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.NumericUpDown cmbISB;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox cmbPreset;
+        private System.Windows.Forms.ComboBox cbTargetLevel;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TrackBar trkFightLength;
+        private System.Windows.Forms.Label lblShadowfiend;
+        private System.Windows.Forms.TrackBar trkShadowfiend;
+        private System.Windows.Forms.Label lblReplenishment;
+        private System.Windows.Forms.TrackBar trkReplenishment;
     }
 }
