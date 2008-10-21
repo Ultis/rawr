@@ -254,10 +254,10 @@ namespace Rawr.Hunter
         protected void ShotAimed(RotationInfo info)
         {
             // TODO: Level80
-            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
+            double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
             double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
-            shotDmg *= talentModifiers;
+            shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
             info.rotationDmg += shotDmg * talentedArmorReduction;
             info.rotationTime += 1.5;

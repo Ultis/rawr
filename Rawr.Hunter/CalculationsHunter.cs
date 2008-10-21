@@ -198,7 +198,7 @@ namespace Rawr.Hunter
 
                     CharacterCalculationsHunter calcAgiValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 1 } }) as CharacterCalculationsHunter;
                     CharacterCalculationsHunter calcArPValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 1 } }) as CharacterCalculationsHunter;
-
+                    CharacterCalculationsHunter calcIntValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsHunter;
 
                     return new ComparisonCalculationBase[] {  
 						        new ComparisonCalculationHunter() { Name = "+1 Crit Rating", 
@@ -221,7 +221,12 @@ namespace Rawr.Hunter
                                     HunterDpsPoints = (calcAgiValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcAgiValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcAgiValue.OverallPoints - baseCalc.OverallPoints),},
-						        new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
+						        new ComparisonCalculationHunter() { Name = "+1 Intellect", 
+                                    HunterDpsPoints = (calcIntValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
+                                    PetDpsPoints = (calcIntValue.PetDpsPoints - baseCalc.PetDpsPoints), 
+                                    OverallPoints = (calcIntValue.OverallPoints - baseCalc.OverallPoints),},
+
+                                new ComparisonCalculationHunter() { Name = "+1 ArP Rating", 
                                     HunterDpsPoints = (calcArPValue.HunterDpsPoints - baseCalc.HunterDpsPoints),
                                     PetDpsPoints = (calcArPValue.PetDpsPoints - baseCalc.PetDpsPoints), 
                                     OverallPoints = (calcArPValue.OverallPoints - baseCalc.OverallPoints),},
@@ -296,6 +301,7 @@ namespace Rawr.Hunter
 			stats.DrumsOfWar +
 			stats.ExposeWeakness +
 			stats.HasteRating +
+            stats.PhysicalHaste +
 			stats.Health +
 			stats.PhysicalHit +
 			stats.HitRating +
@@ -373,7 +379,7 @@ namespace Rawr.Hunter
 
             HunterRatings ratings = new HunterRatings();
 
-            double hawkRAPBonus = 155.0f * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
+            double hawkRAPBonus = 155.0 * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
 
             #region Remove Any Incorrect Modelling
             /*
@@ -393,10 +399,11 @@ namespace Rawr.Hunter
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
-            double totalStaticHaste = (1 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100));
+            double totalStaticHaste = (1.0 + (calculatedStats.BasicStats.HasteRating / ratings.HASTE_RATING_PER_PERCENT / 100.0));
 
             {
-                totalStaticHaste = totalStaticHaste * (1 + .04 * character.HunterTalents.SerpentsSwiftness) * ratings.QUIVER_SPEED_INCREASE;
+                totalStaticHaste *= (1.0 + .04 * character.HunterTalents.SerpentsSwiftness) * ratings.QUIVER_SPEED_INCREASE;
+                totalStaticHaste *= (1.0 + calculatedStats.BasicStats.PhysicalHaste);
             }
 
             double normalAutoshotsPerSecond = 0.0;
@@ -610,6 +617,8 @@ namespace Rawr.Hunter
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
 			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
+
 			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
