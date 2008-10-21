@@ -30,7 +30,7 @@ namespace Rawr.ShadowPriest
                 SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, character));
 
             HitChance = PlayerStats.SpellHit;
-            if (!character.HasActiveConflictingBuff("Spell Hit Chance Taken"))
+            if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                 HitChance = character.PriestTalents.Misery * 0.01f;
 
             ShadowHitChance = (float)Math.Min(100f, 83.0f + (PlayerStats.SpellHitRating + (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f * 2.0f) / 12.6f);

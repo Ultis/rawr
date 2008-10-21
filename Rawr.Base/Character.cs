@@ -290,12 +290,9 @@ namespace Rawr //O O . .
             return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
         }
 
-        public bool HasActiveConflictingBuff(string conflictingBuff)
+        public bool ActiveBuffsConflictingBuffContains(string conflictingBuff)
         {
-            foreach (Buff buff in ActiveBuffs)
-                if (buff.ConflictingBuffs.Contains(conflictingBuff))
-                    return true;
-            return false;
+			return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
         }
 
 
