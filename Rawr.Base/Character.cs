@@ -449,6 +449,78 @@ namespace Rawr //O O . .
             }
 		}
 
+        public bool isEquipped(Item itemToBeChecked)
+        {
+            CharacterSlot Loc = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
+            
+            if (Loc == CharacterSlot.Finger1)
+            {
+                CharacterSlot tempLoc;
+                bool ring; 
+                bool A;
+                bool B;
+
+               tempLoc = CharacterSlot.Finger2;
+                
+               
+                
+                A=(isEquipped(itemToBeChecked,Loc));
+                B=(isEquipped(itemToBeChecked,tempLoc));
+                 
+                ring = (A || B);
+                return ring;
+            }
+            
+            else
+
+                return (isEquipped(itemToBeChecked, Loc));
+           
+
+        }
+        public bool isEquipped(Item itemToBeChecked, CharacterSlot slot)
+        {
+            string ID = itemToBeChecked.GemmedId;
+
+            if ( this[slot].GemmedId == ID)
+                    return true;
+            
+            return false;
+        }
+
+        public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)
+        {
+            
+            //note: When converting ItemSlot.Finger and ItemSlot.Trinket, this will ALWAYS
+            //place them in Slot 1 of the 2 possibilities. 
+            
+            switch (slot)
+            {
+                case Item.ItemSlot.Projectile: return Character.CharacterSlot.Projectile;
+                case Item.ItemSlot.Head: return Character.CharacterSlot.Head;
+                case Item.ItemSlot.Neck: return Character.CharacterSlot.Neck;
+                case Item.ItemSlot.Shoulders: return Character.CharacterSlot.Shoulders;
+                case Item.ItemSlot.Chest: return Character.CharacterSlot.Chest;
+                case Item.ItemSlot.Waist: return Character.CharacterSlot.Waist;
+                case Item.ItemSlot.Legs: return Character.CharacterSlot.Legs;
+                case Item.ItemSlot.Feet: return Character.CharacterSlot.Feet;
+                case Item.ItemSlot.Wrist: return Character.CharacterSlot.Wrist;
+                case Item.ItemSlot.Hands: return Character.CharacterSlot.Hands;
+                case Item.ItemSlot.Finger: return Character.CharacterSlot.Finger1;
+            //    case Item.ItemSlot.Finger: return Character.CharacterSlot.Finger2;
+                case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
+            //    case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
+                case Item.ItemSlot.Back: return Character.CharacterSlot.Back;
+                case Item.ItemSlot.MainHand: return Character.CharacterSlot.MainHand;
+                case Item.ItemSlot.OffHand: return Character.CharacterSlot.OffHand;
+                case Item.ItemSlot.Ranged: return Character.CharacterSlot.Ranged;
+                case Item.ItemSlot.ProjectileBag: return Character.CharacterSlot.ProjectileBag;
+                case Item.ItemSlot.Tabard: return Character.CharacterSlot.Tabard;
+                case Item.ItemSlot.Shirt: return Character.CharacterSlot.Shirt;
+                case Item.ItemSlot.Prismatic: return Character.CharacterSlot.Gems;
+                case Item.ItemSlot.Meta: return Character.CharacterSlot.Metas;
+                default: return Character.CharacterSlot.None;
+            }
+        }
         public ItemAvailability GetItemAvailability(Item item)
         {
             string id = item.Id.ToString();

@@ -16,7 +16,7 @@ namespace Rawr
         
      */
 
-
+    
 
     public partial class FormMassGemReplacement : Form, IFormItemSelectionProvider
     {
@@ -30,7 +30,7 @@ namespace Rawr
         private List<Gemming> holdoverGemmings = new List<Gemming>();
         private static List<Gemming> listOfGemmings = new List<Gemming>();
         private List<GroupBox> groupboxesForGemmings = new List<GroupBox>();
-
+        private Character currCharacter = FormMain.Instance.Character;
 
         public FormItemSelection FormItemSelection
         {
@@ -184,7 +184,7 @@ namespace Rawr
                 }
             }
             else{
-            
+
                 foreach (Item item in ItemCache.RelevantItems){
                 
                     //if the list of gemmable items has things in it, and the item just brought in has a different ID than
@@ -211,8 +211,19 @@ namespace Rawr
                         }
 
                         //delete all socketed items
-                        foreach (Item exItem in listGemmableItems)
-                            ItemCache.DeleteItem(exItem);
+                        foreach (Item exItem in listGemmableItems){
+
+                            if (currCharacter.GetItemAvailability(exItem) != Character.ItemAvailability.NotAvailabe)
+                            
+                                continue;
+                            
+                            else if (currCharacter.isEquipped(exItem))
+                                continue;
+
+                            else
+                                ItemCache.DeleteItem(exItem);
+                    }
+
 
                         //add items that have the gemming patterns we want
                         //using the first item we added to the list (which matches all the rest)
