@@ -367,8 +367,7 @@ namespace Rawr.DPSDK
                 missedSpecial = chanceMiss;
                 calcs.MissedAttacks = chanceMiss;
 
-                // Spell Crit: Base 3.26%  **TODO: include intellect
-                spellCrits = .0326f;
+                spellCrits = 0f;
                 spellCrits += stats.CritRating/4591;
                 spellCrits += stats.SpellCrit;
                 spellCrits += .01f * (float)( talents.DarkConviction + talents.EbonPlaguebringer );
@@ -376,7 +375,7 @@ namespace Rawr.DPSDK
 
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
-                spellResist -= stats.HitRating / 2623f;
+                spellResist -= stats.HitRating / 3279f;
                 spellResist -= hitBonus;
                 if (spellResist < 0f) spellResist = 0f;
 
