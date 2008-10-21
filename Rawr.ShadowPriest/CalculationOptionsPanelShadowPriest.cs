@@ -28,14 +28,6 @@ namespace Rawr.ShadowPriest
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             cmbSpriest.Value = (decimal)calcOpts.Spriest;
             lsSpellPriopity.Items.Clear();
-            if (Character.Race != Character.CharacterRace.NightElf)
-                calcOpts.SpellPriority.Remove("Starshards");
-            else if (!calcOpts.SpellPriority.Contains("Starshards"))
-                calcOpts.SpellPriority.Add("Starshards");
-            if (Character.Race != Character.CharacterRace.Undead)
-                calcOpts.SpellPriority.Remove("Devouring Plague");
-            else if (!calcOpts.SpellPriority.Contains("Devouring Plague"))
-                calcOpts.SpellPriority.Add("Devouring Plague");
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
             
             loading = false;

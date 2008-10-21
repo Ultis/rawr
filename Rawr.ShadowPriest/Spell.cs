@@ -52,7 +52,7 @@ namespace Rawr.ShadowPriest
 
     public class Spell
     {
-        public static readonly List<string> SpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Shadow Word: Pain", "Devouring Plague", "Starshards", "Mind Blast", "Shadow Word: Death", "Mind Flay" };
+        public static readonly List<string> SpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Shadow Word: Pain", "Devouring Plague", "Mind Blast", "Shadow Word: Death", "Mind Flay" };
 
         public string Name { get; protected set; }
 
@@ -74,9 +74,11 @@ namespace Rawr.ShadowPriest
 
         public SpellStatistics SpellStatistics { get; protected set; }
 
+        public static Dictionary<int, int> BaseMana = new Dictionary<int, int>();
+
         #region Properties
 
-        public float AvgDamage
+        public float AvgHit
         {
             get
             {
@@ -84,11 +86,23 @@ namespace Rawr.ShadowPriest
             }
         }
 
+        public float AvgDamage
+        {
+            get
+            {
+                return AvgHit * (1f - CritChance) + AvgCrit * CritChance;
+            }
+        }
+
         public virtual float DpS
         {
             get
             {
-                return AvgDamage / CastTime;
+                if (DebuffDuration > 0)
+                    return AvgDamage / DebuffDuration;
+                if (CastTime > 0)
+                    return AvgDamage / CastTime;
+                return AvgDamage / GlobalCooldown;
             }
         }
 
@@ -104,7 +118,7 @@ namespace Rawr.ShadowPriest
         {
             get
             {
-                return (MinDamage * CritCoef + MaxCrit) / 2;
+                return (MinCrit + MaxCrit) / 2;
             }
         }
 
@@ -113,6 +127,14 @@ namespace Rawr.ShadowPriest
             get
             {
                 return MaxDamage * CritCoef;
+            }
+        }
+
+        public float MinCrit
+        {
+            get
+            {
+                return MinDamage * CritCoef;
             }
         }
 
@@ -137,6 +159,19 @@ namespace Rawr.ShadowPriest
             Cooldown = cooldown;
             SpellStatistics = new SpellStatistics();
             MagicSchool = magicSchool;
+
+            BaseMana[70] = 2620;
+            BaseMana[71] = 0;
+            BaseMana[72] = 0;
+            BaseMana[73] = 0;
+            BaseMana[74] = 0;
+            BaseMana[75] = 0;
+            BaseMana[76] = 0;
+            BaseMana[77] = 0;
+            BaseMana[78] = 0;
+            BaseMana[79] = 0;
+            BaseMana[80] = 3863;
+
         }
 
         public Spell(Stats stats, string name, float minDamage, float maxDamage, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col):
@@ -146,14 +181,23 @@ namespace Rawr.ShadowPriest
        
         public override string ToString()
         {
-            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nMin: {3}\r\nMax: {4}\r\nAvg Crit: {5}\r\nMax Crit: {6}\r\nCast: {7}\r\nCost: {8}",
+            if (DebuffDuration > 0f)
+                return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick: {3}-{4}\r\nDuration: {5}s\r\nCost: {6}",
+                          AvgDamage.ToString("0"),
+                          DpS.ToString("0.00"),
+                          DpM.ToString("0.00"),
+                          Math.Floor(AvgDamage / DebuffDuration * 3).ToString("0"),
+                          Math.Ceiling(AvgDamage / DebuffDuration * 3).ToString("0"),
+                          DebuffDuration.ToString("0"),
+                          ManaCost.ToString("0"));
+
+            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nHit: {3}-{4}, Avg {5}\r\nCrit: {6}-{7}, Avg {8}\r\nCrit Chance: {9}%\r\nCast: {10}\r\nCost: {11}",
                 AvgDamage.ToString("0"),
                 DpS.ToString("0.00"),
                 DpM.ToString("0.00"),
-                MinDamage.ToString("0"),
-                MaxDamage.ToString("0"),
-                AvgCrit.ToString("0"),
-                MaxCrit.ToString("0"),
+                MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
+                MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
+                (CritChance * 100f).ToString("0.00"),
                 CastTime.ToString("0.00"),
                 ManaCost.ToString("0"));
         }
@@ -161,16 +205,8 @@ namespace Rawr.ShadowPriest
 
     public class ShadowWordPain : Spell
     {
-        public override float DpS
-        {
-            get
-            {
-                return AvgDamage / DebuffDuration;
-            }
-        }
-
         public ShadowWordPain(Stats stats, Character character)
-            : base(stats, "Shadow Word: Pain", 1236, 1236, 575, 0, 0, 15, 1.1f, 30, 0f, Color.Red)
+            : base(stats, "Shadow Word: Pain", 1116, 1116, 22, 0, 0, 18f, 18f / 15f / 1.1f, 30, 0f, Color.Red)
         {
             Calculate(stats, character);
         }
@@ -179,50 +215,27 @@ namespace Rawr.ShadowPriest
         {
             //DebuffDuration = DebuffDuration + talents.GetTalent("Improved Shadow Word: Pain").PointsInvested*3;
 
-            MinDamage = (MinDamage +
-                (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
-                //                * (1 + stats.SpellCrit)
+            MinDamage = MaxDamage = (MinDamage +
+                (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.ImprovedShadowWordPain * 0.03f)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + (character.PriestTalents.Shadowform > 0 ? stats.SpellCrit : 0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
             
-            MaxDamage = (MaxDamage +
-                (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
-                //                * (1 + stats.SpellCrit)
-                * (1 + character.PriestTalents.ImprovedShadowWordPain * 0.03f)
-                * (1 + character.PriestTalents.Darkness * 0.02f)
-                * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
-                * (1 + character.PriestTalents.Shadowform * 0.15f);
-
-            ManaCost = (int)Math.Round(ManaCost * (1 - character.PriestTalents.MentalAgility * 0.02f));
-
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
+                * (1 - character.PriestTalents.MentalAgility * 0.02f));
+            
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
-        }
-
-        public override string ToString()
-        {
-            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick: {3}\r\nCost: {4}",
-                          AvgDamage.ToString("0"),
-                          DpS.ToString("0.00"),
-                          DpM.ToString("0.00"),
-                          (AvgDamage/DebuffDuration*3).ToString("0"),
-                          ManaCost.ToString("0"));
         }
     }
 
     public class VampiricTouch : Spell
     {
-        public override float DpS
-        {
-            get
-            {
-                return AvgDamage / DebuffDuration;
-            }
-        }
-
         public VampiricTouch(Stats stats, Character character)
-            : base(stats, "Vampiric Touch", 650, 650, 425, 1.5f, 0, 15f, 1f, 30, 0f, Color.Blue)
+            : base(stats, "Vampiric Touch", 715, 715, 16, 1.5f, 0, 15f, 15f / 15f * 1.9f, 30, 0f, Color.Blue)
         {
             Calculate(stats, character);
         }
@@ -233,56 +246,50 @@ namespace Rawr.ShadowPriest
             {
                 MinDamage = MaxDamage = 0;
                 return;
-            }            
-            
-            MinDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
-                //                * (1 + stats.SpellCrit)
-                * (1 + character.PriestTalents.Darkness * 0.02f) 
-                * (1 + character.PriestTalents.Shadowform * 0.15f);
+            }
 
-            MaxDamage = (MaxDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
-                //                * (1 + stats.SpellCrit)
+            MinDamage = MaxDamage = (MinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + (character.PriestTalents.Shadowform > 0 ? stats.SpellCrit : 0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
-            Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
-        }
 
-        public override string ToString()
-        {
-            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick: {3}\r\nCost: {4}",
-                          AvgDamage.ToString("0"),
-                          DpS.ToString("0.00"),
-                          DpM.ToString("0.00"),
-                          (AvgDamage / DebuffDuration * 3).ToString("0"),
-                          ManaCost.ToString("0"));
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f));
+
+            Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
         }
     }
 
     public class MindBlast : Spell
     {
         public MindBlast(Stats stats, Character character)
-            : base(stats, "Mind Blast", 711, 752, 450, 1.5f, 1.5f, 0, 0.4286f, 30, 8f, Color.Gold)
+            : base(stats, "Mind Blast", 711, 752, 17, 1.5f, 1.5f, 0, 1.5f / 3.5f, 30, 8f, Color.Gold)
         {
             Calculate(stats, character);
         }
         
         protected void Calculate(Stats stats, Character character)
         {
-            MinDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating)
-                * (DamageCoef + character.PriestTalents.Misery * 0.05f))
+            DamageCoef *= (1f + character.PriestTalents.Misery * 0.05f);
+
+            MinDamage = (MinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
-            
-            MaxDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating) 
-                * (DamageCoef + character.PriestTalents.Misery * 0.05f))
+
+            MaxDamage = (MaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
             
             CastTime = (float)Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
             Cooldown -= character.PriestTalents.ImprovedMindBlast * 0.5f;
             CritCoef += character.PriestTalents.ShadowPower * 0.1f;
             CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.02f;
-            ManaCost = (int)Math.Floor(ManaCost
+            
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1f - character.PriestTalents.FocusedMind * 0.05f));
 
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
@@ -291,36 +298,32 @@ namespace Rawr.ShadowPriest
 
     public class ShadowWordDeath : Spell
     {
-        public override float DpS
-        {
-            get
-            {
-                return AvgDamage / GlobalCooldown;
-            }
-        }
-
         public ShadowWordDeath(Stats stats, Character character)
-            : base(stats, "Shadow Word: Death", 572, 664, 309, 0, 1.5f, 0, 0.4286f, 30, 12f, Color.Gold)
+            : base(stats, "Shadow Word: Death", 572, 664, 12, 0, 1.5f, 0, 1.5f / 3.5f, 30, 12f, Color.Gold)
         {
             Calculate(stats, character);
         }
 
         protected void Calculate(Stats stats, Character character)
         {
-            MinDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
+            MinDamage = (MinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            MaxDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
+            MaxDamage = (MaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
+                * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
-
-            ManaCost = (int)Math.Round(ManaCost
-                * (1 - character.PriestTalents.MentalAgility * 0.02f)
-                * (1 - character.PriestTalents.FocusedMind * 0.05f));
 
             CritChance = stats.SpellCrit;
             CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
+                * (1f - character.PriestTalents.MentalAgility * 0.02f));
+
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
         }
     }
@@ -328,7 +331,7 @@ namespace Rawr.ShadowPriest
     public class MindFlay : Spell
     {
         public MindFlay(Stats stats, Character character)
-            : base(stats, "Mind Flay", 528, 528, 230, 3f, 0, 0, 0.57f, 20, 0f, Color.LightBlue)
+            : base(stats, "Mind Flay", 450, 450, 9, 3f, 1.5f, 0, 3f / 3.5f, 20, 0f, Color.LightBlue)
         {
             Calculate(stats, character);
         }
@@ -341,18 +344,18 @@ namespace Rawr.ShadowPriest
                 return;
             }
 
-            MinDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating)
-                * (DamageCoef + character.PriestTalents.Misery * 0.05f))
+            DamageCoef *= 0.9f; // Coefficient penalty for snare effect.
+            DamageCoef *= (1f + character.PriestTalents.Misery * 0.05f);
+
+            MinDamage = MaxDamage = (MinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
+                * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            MaxDamage = (MinDamage + (stats.SpellDamageRating + stats.SpellShadowDamageRating)
-                * (DamageCoef + character.PriestTalents.Misery * 0.05f))
-                * (1 + character.PriestTalents.Darkness * 0.02f)
-                * (1 + character.PriestTalents.Shadowform * 0.15f);
-
-            ManaCost = (int)Math.Round(ManaCost
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
                 * (1 - character.PriestTalents.MentalAgility * 0.02f)
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1 - character.PriestTalents.FocusedMind * 0.05f));
 
             CritChance = stats.SpellCrit + character.PriestTalents.MindMelt * 0.02f;
@@ -363,12 +366,14 @@ namespace Rawr.ShadowPriest
 
         public override string ToString()
         {
-            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick: {3}\r\nCast: {4}\r\nCost: {5}",
+            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick Hit: {3}-{4}\r\nTick Crit: {5}-{6}\r\nCrit Chance: {7}%\r\nCast: {8}\r\nCost: {9}",
                           AvgDamage.ToString("0"),
                           DpS.ToString("0.00"),
                           DpM.ToString("0.00"),
-                          (AvgDamage / CastTime * 3).ToString("0"),
-                           CastTime.ToString("0.00"),
+                          Math.Floor(AvgHit / CastTime).ToString("0"), Math.Ceiling(AvgHit / CastTime).ToString("0"),
+                          Math.Floor(AvgCrit / CastTime).ToString("0"), Math.Ceiling(AvgCrit / CastTime).ToString("0"),
+                          (CritChance * 100f).ToString("0.00"),
+                          CastTime.ToString("0.00"),
                           ManaCost.ToString("0"));
         }
     }
@@ -376,19 +381,19 @@ namespace Rawr.ShadowPriest
     public class PowerWordShield : Spell
     {
         public PowerWordShield(Stats stats, Character character)
-            : base(stats, "Power Word: Shield", 1295, 1295, 600, 0, 0, 0, 1.5f / 3.5f, 30, 4f, Color.Brown)
+            : base(stats, "Power Word: Shield", 1295, 1295, 23, 0, 0, 0, 1.5f / 3.5f, 30, 4f, Color.Brown)
         {
             Calculate(stats, character);
         }
 
         protected void Calculate(Stats stats, Character character)
         {
-            MinDamage = MaxDamage = (MinDamage + stats.SpellDamageRating
+            MinDamage = MaxDamage = (MinDamage + stats.SpellPower
                 * (DamageCoef + character.PriestTalents.BorrowedTime * 0.04f))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
-            ManaCost = (int)Math.Round(ManaCost
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
         }
 
@@ -405,7 +410,7 @@ namespace Rawr.ShadowPriest
         public float HealthConvertionCoef { get; protected set; }
 
         public VampiricEmbrace(Stats stats, Character character)
-            : base(stats, "Vampiric Embrace", 0, 0, (int)Math.Round(stats.Mana * 0.02), 0, 0, 60, 0, 30, 10f, Color.Green)
+            : base(stats, "Vampiric Embrace", 0, 0, 2, 0, 0, 60f, 0, 30, 10f, Color.Green)
         {
             HealthConvertionCoef = 0.15f;
             Calculate(stats, character);
@@ -419,9 +424,10 @@ namespace Rawr.ShadowPriest
                 return;
             }
 
-            HealthConvertionCoef += character.PriestTalents.ImprovedVampiricEmbrace * 0.05f;
+            HealthConvertionCoef *= (1 + character.PriestTalents.ImprovedVampiricEmbrace / 3f);
 
-            ManaCost = (int)Math.Round(ManaCost
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
         }
 
@@ -435,16 +441,8 @@ namespace Rawr.ShadowPriest
 
     public class DevouringPlague : Spell
     {
-        public override float DpS
-        {
-            get
-            {
-                return AvgDamage / DebuffDuration;
-            }
-        }
-
         public DevouringPlague(Stats stats, Character character)
-            : base(stats, "Devouring Plague", 1216, 1216, 1145, 0, 0, 24, 1.1f, 30, 180f, Color.Purple)
+            : base(stats, "Devouring Plague", 1088, 1088, 25, 0, 0, 24, 24f / 15f * 0.925f, 30, 24, Color.Purple)
         {
             Calculate(stats, character);
         }
@@ -452,25 +450,18 @@ namespace Rawr.ShadowPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinDamage = MaxDamage = (MinDamage +
-                (stats.SpellDamageRating + stats.SpellShadowDamageRating) * DamageCoef)
-                //* (1 + stats.SpellCrit)
+                (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + (character.PriestTalents.Shadowform > 0 ? stats.SpellCrit : 0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            ManaCost = (int)Math.Round(ManaCost * (1 - character.PriestTalents.MentalAgility * 0.02f));
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                * (1 - character.PriestTalents.ShadowFocus * 0.02f)
+                * (1 - character.PriestTalents.MentalAgility * 0.02f));
 
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
-        }
-
-        public override string ToString()
-        {
-            return String.Format("{0} *DpS: {1}\r\nDpM: {2}\r\nTick: {3}\r\nCost: {4}",
-                          AvgDamage.ToString("0"),
-                          DpS.ToString("0.00"),
-                          DpM.ToString("0.00"),
-                          (AvgDamage / DebuffDuration * 3).ToString("0"),
-                          ManaCost.ToString("0"));
         }
     }
 }

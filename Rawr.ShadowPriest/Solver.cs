@@ -20,25 +20,22 @@ namespace Rawr.ShadowPriest
         protected float ShadowCritChance { get; set; }
         protected List<Trinket> Trinkets { get; set; }
         
-        public Solver(Stats playerStats, Character _char, CalculationOptionsShadowPriest calculationOptions) 
+        public Solver(Stats playerStats, Character _char) 
         {
             PlayerStats = playerStats;
             character = _char;
-            CalculationOptions = calculationOptions;
+            CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
-            foreach(string spellname in calculationOptions.SpellPriority)
+            foreach(string spellname in CalculationOptions.SpellPriority)
                 SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, character));
 
-            HitChance = PlayerStats.SpellHitRating / 12.6f;
-            ShadowHitChance = 83.0f + (PlayerStats.SpellHitRating + (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f * 2.0f) / 12.6f;
-            if (ShadowHitChance > 99.0f)
-                ShadowHitChance = 99.0f;
+            HitChance = PlayerStats.HitRating / 12.6f;
+            ShadowHitChance = (float)Math.Min(100f, 83.0f + (PlayerStats.SpellHitRating + (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f * 2.0f) / 12.6f);
 
             Trinkets = new List<Trinket>();
-            ShadowCritChance = PlayerStats.SpellCrit;
             Sequence = new Dictionary<float, Spell>();
-            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
-                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellPowerFor15SecOnUse2Min, UpTime = 15.0f });
+//            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
+//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellPowerFor15SecOnUse2Min, UpTime = 15.0f });
 //            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
 //                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
 //            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
@@ -74,8 +71,8 @@ namespace Rawr.ShadowPriest
             foreach (Trinket trinket in Trinkets)
                 if (trinket.UpTimeTimer > timer)
                 {
-                    stats.SpellHasteRating += trinket.HasteBonus;
-                    stats.SpellDamageRating += trinket.DamageBonus;
+                    stats.HasteRating += trinket.HasteBonus;
+                    stats.SpellPower += trinket.DamageBonus;
                 }
         }
                
@@ -110,7 +107,7 @@ namespace Rawr.ShadowPriest
                 
                 currentStats = PlayerStats.Clone();
                 if (CalculationOptions.DrumsCount > 0 && drumsUpTimer > timer)
-                    currentStats.SpellHasteRating += 80.0f;
+                    currentStats.HasteRating += 80.0f;
                 GetTrinketBuff(timer, currentStats);
 
                 Spell spell = GetCastSpell(timer);

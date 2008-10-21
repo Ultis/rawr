@@ -5,7 +5,7 @@ using Rawr;
 
 namespace Rawr.ShadowPriest
 {
-    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_ShadowForm", Character.CharacterClass.Priest)]
+    [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", Character.CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase 
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
@@ -37,19 +37,19 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
-					"Basic Stats:Shadow Damage",
+					"Basic Stats:Spell Power",
 					"Basic Stats:Regen",
 					"Basic Stats:Spell Crit",
 					"Basic Stats:Spell Hit",
 					"Basic Stats:Spell Haste",
-                    "Basic Stats:Global Cooldown",
                     "Shadow:Vampiric Touch",
-                    "Shadow:Shadow Word Pain",
-				    "Shadow:Shadow Word Death",
+                    "Shadow:SW Pain",
+                    "Shadow:Devouring Plague",
+				    "Shadow:SW Death",
                     "Shadow:Mind Blast",
                     "Shadow:Mind Flay",
                     "Shadow:Vampiric Embrace",
-                    "Holy:Power Word Shield",
+                    "Holy:PW Shield",
                     "Holy:Smite",
                     "Holy:Holy Fire",
                     "Holy:Penance",
@@ -125,7 +125,7 @@ namespace Rawr.ShadowPriest
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
 
-            Solver solver = new Solver(stats, character, calculationOptions);
+            Solver solver = new Solver(stats, character);
             solver.Calculate();
 
             calculatedStats.DpsPoints = solver.OverallDps;
@@ -137,7 +137,7 @@ namespace Rawr.ShadowPriest
 
         public static int GetSpellHitCap(Character character)
         {
-            return (int)Math.Round(202 - (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f );
+            return (int)Math.Round((int)Math.Ceiling(17f * 12.6f) - (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f );
         }
 
         public Stats GetRaceStats(Character character)
@@ -239,6 +239,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += (statsTotal.Intellect / 80f / 100f) + (statsTotal.CritRating / 22.07692337F / 100f) + 0.0124f;
             statsTotal.SpellHaste += (statsTotal.HasteRating / 15.76923275f / 100f);
+            statsTotal.SpellHit += (statsTotal.HitRating / 12.61538506f / 100f);
 
             return statsTotal;
         }
@@ -248,19 +249,31 @@ namespace Rawr.ShadowPriest
             return new Stats()
             {
                 Stamina = stats.Stamina,
+                Health = stats.Health,
+                Resilience = stats.Resilience,
                 Intellect = stats.Intellect,
+                Mana = stats.Mana,
+                Spirit = stats.Spirit,
                 Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
-                SpellHitRating = stats.SpellHitRating,
                 SpellCritRating = stats.SpellCritRating,
+                CritRating = stats.CritRating,
+                SpellCrit = stats.SpellCrit,
+                SpellHitRating = stats.SpellHitRating,
+                HitRating = stats.HitRating,
+                SpellHit = stats.SpellHit,
                 SpellHasteRating = stats.SpellHasteRating,
-                Health = stats.Health,
-                Mana = stats.Mana,
-                Spirit = stats.Spirit,
+                SpellHaste = stats.SpellHaste,
+                HasteRating = stats.HasteRating,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
+                BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier
+//                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
 //                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
 //                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
 //                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
@@ -270,10 +283,34 @@ namespace Rawr.ShadowPriest
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.SpellShadowDamageRating+ stats.SpellCritRating
-                + stats.SpellHasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.SpellHitRating + stats.ThreatReductionMultiplier
-                + stats.SpellPowerFor15SecOnUse2Min) > 0;
+            return (
+                  stats.Stamina
+                + stats.Health
+                + stats.Resilience
+                + stats.Intellect
+                + stats.Mana
+                + stats.Spirit
+                + stats.Mp5
+                + stats.SpellPower
+                + stats.SpellShadowDamageRating
+                + stats.SpellCritRating
+                + stats.CritRating
+                + stats.SpellCrit
+                + stats.SpellHitRating
+                + stats.HitRating
+                + stats.SpellHit
+                + stats.SpellHasteRating
+                + stats.SpellHaste
+                + stats.HasteRating
+                + stats.BonusSpiritMultiplier
+                + stats.SpellDamageFromSpiritPercentage
+                + stats.BonusIntellectMultiplier
+                + stats.BonusManaPotion
+                + stats.ThreatReductionMultiplier
+                + stats.BonusShadowDamageMultiplier
+                + stats.BonusHolyDamageMultiplier
+                ) > 0;
+                //+ stats.SpellPowerFor15SecOnUse2Min;
                 //+ stats.SpellDamageFor15SecOnUse90Sec
                 //+ stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
                 //+ stats.SpellHasteFor20SecOnUse5Min) > 0;
