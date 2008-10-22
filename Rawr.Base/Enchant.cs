@@ -341,8 +341,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.TwoHand, new Stats() { AttackPower = 70 }));
             defaultEnchants.Add(new Enchant(1593, "Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 24 }));
             defaultEnchants.Add(new Enchant(1594, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
-            defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
-            defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
+			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
+			defaultEnchants.Add(new Enchant(2668, "Potency", Item.ItemSlot.OneHand, new Stats() { Strength = 20 }));
+			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
             defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
 
