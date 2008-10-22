@@ -12,7 +12,7 @@ namespace Rawr
             {
                 String input = textItemId.Text;
 
-                Regex wowhead = new Regex(@"http://www.wowhead.com/?item=([-+]?\d+)");
+                Regex wowhead = new Regex(@"http://www.wowhead.com/\?item=([-+]?\d+)");
                 Match m = wowhead.Match(input);
 
                 if (m.Success)
@@ -48,7 +48,7 @@ namespace Rawr
         private void FormEnterId_Load(object sender, EventArgs e)
         {
             textItemId.Focus();
-            textItemId.Text = "0";
+            textItemId.Text = "";
         }
     }
 }
