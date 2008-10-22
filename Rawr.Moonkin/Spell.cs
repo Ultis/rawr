@@ -678,7 +678,7 @@ namespace Rawr.Moonkin
                 // Add in calculations for an innervate weapon
                 if (calcOpts.InnervateWeapon)
                 {
-                    float baseRegenConstant = 0.00932715221261f;
+                    float baseRegenConstant = CalculationsMoonkin.ManaRegenConstant;
                     // Calculate the intellect from a weapon swap
                     float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Stats.Intellect)
                         + calcOpts.InnervateWeaponInt;
@@ -1106,7 +1106,7 @@ namespace Rawr.Moonkin
             float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
             float attackSpeed = 1.6f;
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
-            return 3 * damagePerTree / 120.0f;
+            return 3 * damagePerTree / 180.0f;
         }
 
         private static float DoTrinketManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation)
@@ -1261,6 +1261,27 @@ namespace Rawr.Moonkin
         private static void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             SpellRotation.RecreateSpells();
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            // Level 80 base spell damages
+            if (calcOpts.PlayerLevel == 80)
+            {
+                SpellRotation.Starfire.DamagePerHit = (1028.0f + 1212.0f) / 2.0f;
+                SpellRotation.Wrath.DamagePerHit = (553.0f + 623.0f) / 2.0f;
+                SpellRotation.Moonfire.DamagePerHit = (406.0f + 476.0f) / 2.0f;
+                SpellRotation.Moonfire.DoT.DamagePerTick = 800.0f / 4.0f;
+                SpellRotation.InsectSwarm.DoT.DamagePerTick = 1290.0f / 6.0f;
+            }
+            // Moonfire glyph
+            if (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire")
+            {
+                SpellRotation.Moonfire.SpecialDamageModifier -= 0.9f;
+                SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.75f;
+            }
+            // Insect swarm glyph
+            if (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm")
+            {
+                SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier += 0.3f;
+            }
             SpellRotations = new List<SpellRotation>(new SpellRotation[]
             {
             new SpellRotation()

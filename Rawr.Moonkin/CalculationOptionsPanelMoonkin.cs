@@ -41,6 +41,9 @@ namespace Rawr.Moonkin
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
+            cmbPlayerLevel.SelectedItem = calcOpts.PlayerLevel.ToString();
+            cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
+            cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -137,6 +140,27 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.TreantLifespan = trkTreantLifespan.Value / 100.0f;
             lblLifespanValue.Text = trkTreantLifespan.Value.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbGlyph1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.glyph1 = cmbGlyph1.SelectedItem.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbGlyph2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.glyph2 = cmbGlyph2.SelectedItem.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbPlayerLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.PlayerLevel = int.Parse(cmbPlayerLevel.SelectedItem.ToString());
             Character.OnCalculationsInvalidated();
         }
     }
@@ -263,6 +287,7 @@ namespace Rawr.Moonkin
             #endregion
         }
 
+        public int PlayerLevel = 70;
 		public int TargetLevel = 73;
 		public float Latency = 0.2f;
 		public float FightLength = 5;
@@ -276,5 +301,7 @@ namespace Rawr.Moonkin
 		public string AldorScryer = "Aldor";
         public float ReplenishmentUptime = 1.0f;
         public float TreantLifespan = 1.0f;
+        public string glyph1 = "Moonfire";
+        public string glyph2 = "Insect Swarm";
 	}
 }

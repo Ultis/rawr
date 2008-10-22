@@ -11,7 +11,9 @@ namespace Rawr.Moonkin
         public static float hitRatingConversionFactor = 800f * (41.0f / 26.0f);
         public static float hasteRatingConversionFactor = 1000f * (41.0f / 26.0f);
         public static float critRatingConversionFactor = 1400f * (41.0f / 26.0f);
+        public static float intPerCritPercent = 80.0f;
         public static float BaseMana = 2370.0f;
+        public static float ManaRegenConstant = 0.00932715221261f;
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -166,6 +168,7 @@ namespace Rawr.Moonkin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             Stats stats = GetCharacterStats(character, additionalItem);
             calcs.BasicStats = stats;
 
@@ -175,7 +178,6 @@ namespace Rawr.Moonkin
             calcs.SpellCrit = stats.CritRating * critRatingMultiplier;
             calcs.SpellHit = stats.HitRating * hitRatingMultiplier;
 
-			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // All spells: Damage +((0.08/0.16/0.25) * Int)
             switch (character.DruidTalents.LunarGuidance)
             {
@@ -201,8 +203,7 @@ namespace Rawr.Moonkin
             calcs.Scryer = calcOpts.AldorScryer == "Scryer";
 
             // 2.4 spirit regen
-            float baseRegenConstant = 0.00932715221261f;
-            float spiritRegen = 0.001f + baseRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
+            float spiritRegen = 0.001f + ManaRegenConstant * (float)Math.Sqrt(calcs.BasicStats.Intellect) * calcs.BasicStats.Spirit;
             calcs.ManaRegen = spiritRegen + stats.Mp5 / 5f;
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
 
@@ -214,26 +215,70 @@ namespace Rawr.Moonkin
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Start off with a slightly modified form of druid base character stats calculations
-            Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
-                new Stats()
-                {
-                    Health = 3434f,
-                    Mana = 2470f,
-                    Stamina = 82f,
-                    Agility = 75f,
-                    Intellect = 120f,
-                    Spirit = 133f
-                } :
-                new Stats()
-                {
-                    Health = 3434f,
-                    Mana = 2470f,
-                    Stamina = 85f,
-                    Agility = 64.5f,
-                    Intellect = 115f,
-                    Spirit = 135f
-                };
+            Stats statsRace = null;
+            if (calcOpts.PlayerLevel == 70)
+            {
+                CalculationsMoonkin.hitRatingConversionFactor = 800f * (41.0f / 26.0f);
+                CalculationsMoonkin.hasteRatingConversionFactor = 1000f * (41.0f / 26.0f);
+                CalculationsMoonkin.critRatingConversionFactor = 1400f * (41.0f / 26.0f);
+                CalculationsMoonkin.intPerCritPercent = 80.0f;
+                CalculationsMoonkin.BaseMana = 2370.0f;
+                CalculationsMoonkin.ManaRegenConstant = 0.00932715221261f;
+                statsRace = character.Race == Character.CharacterRace.NightElf ?
+                    new Stats()
+                    {
+                        Health = 3434f,
+                        Mana = 2470f,
+                        Stamina = 82f,
+                        Agility = 75f,
+                        Intellect = 120f,
+                        Spirit = 133f
+                    } :
+                    new Stats()
+                    {
+                        Health = 3434f,
+                        Mana = 2470f,
+                        Stamina = 85f,
+                        Agility = 64.5f,
+                        Intellect = 115f,
+                        Spirit = 135f
+                    };
+            }
+            else if (calcOpts.PlayerLevel == 80)
+            {
+                float conversionFormula = (82 / 52.0f) * (131 / 63.0f);
+                CalculationsMoonkin.hitRatingConversionFactor = 100 * (8.0f * conversionFormula);
+                CalculationsMoonkin.critRatingConversionFactor = 100 * (14.0f * conversionFormula);
+                CalculationsMoonkin.hasteRatingConversionFactor = 100 * (10 * conversionFormula);
+                CalculationsMoonkin.intPerCritPercent = 166.0f + (2 / 3.0f);
+                CalculationsMoonkin.BaseMana = 3496.0f;
+                CalculationsMoonkin.ManaRegenConstant = 0.005575f;
+                statsRace = character.Race == Character.CharacterRace.NightElf ?
+                    new Stats()
+                    {
+                        Health = 4703f,
+                        Mana = 3496f,
+                        Stamina = 97f,
+                        Agility = 87f,
+                        Intellect = 143f,
+                        Spirit = 157f
+                    } :
+                    new Stats()
+                    {
+                        Health = 4703f,
+                        Mana = 3496f,
+                        Stamina = 100f,
+                        Agility = 77f,
+                        Intellect = 138f,
+                        Spirit = 161f
+                    };
+            }
+            else
+            {
+                throw new NotImplementedException("Rawr.Moonkin not implemented between 70 and 80");
+            }
             
             // Get the gear/enchants/buffs stats loaded in
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -242,7 +287,6 @@ namespace Rawr.Moonkin
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace;
 
@@ -305,7 +349,7 @@ namespace Rawr.Moonkin
             // Add druid base crit
             statsTotal.CritRating += (0.0185f * critRatingConversionFactor);
             // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
-            statsTotal.CritRating += (statsTotal.Intellect / 8000.0f) * critRatingConversionFactor;
+            statsTotal.CritRating += (statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent)) * critRatingConversionFactor;
             // All spells: Crit% + (0.01 * Natural Perfection)
             statsTotal.CritRating += 0.01f * character.DruidTalents.NaturalPerfection * critRatingConversionFactor;
             // All spells: Haste% + (0.01 * Celestial Focus)
