@@ -820,7 +820,7 @@ namespace Rawr
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
             Dictionary<int, Item> relevantItemMap = new Dictionary<int, Item>();
-            foreach (Item relevantItem in mainItemCache.GetRelevantItems(model))
+            foreach (Item relevantItem in mainItemCache.GetUnfilteredRelevantItems(model))
             {
                 relevantItemMap[relevantItem.Id] = relevantItem;
             }

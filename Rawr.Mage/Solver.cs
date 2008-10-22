@@ -1155,7 +1155,9 @@ namespace Rawr.Mage
                                 bool skip = false;
                                 foreach (Spell s2 in placed)
                                 {
-                                    if (Math.Abs(s2.DamagePerSecond - s.DamagePerSecond) < 0.00001 && Math.Abs(s2.ManaPerSecond - s.ManaPerSecond) < 0.00001)
+                                    // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
+                                    // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
+                                    if (!s.AreaEffect && s2.DamagePerSecond >= s.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= s.ManaPerSecond + 0.00001)
                                     {
                                         skip = true;
                                         break;
@@ -2016,6 +2018,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.LivingBomb > 0)
                         {
                             list.Add(SpellId.FBScLBPyro);
+                            list.Add(SpellId.ScLBPyro);
                         }
                         else if (character.MageTalents.HotStreak > 0)
                         {
@@ -2066,16 +2069,19 @@ namespace Rawr.Mage
                             {
                                 list.Add(SpellId.Frostbolt);
                                 list.Add(SpellId.FrBABar);
+                                list.Add(SpellId.FrB2ABar);
                             }
                             if (character.MageTalents.ImprovedFireball > 0)
                             {
                                 list.Add(SpellId.Fireball);
                                 list.Add(SpellId.FBABar);
+                                list.Add(SpellId.FB2ABar);
                             }
                             if (character.MageTalents.ArcaneEmpowerment > 0)
                             {
                                 list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
+                                list.Add(SpellId.AB2ABar);
                             }
                             if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
                             {
@@ -2083,6 +2089,9 @@ namespace Rawr.Mage
                                 list.Add(SpellId.FBABar);
                                 list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
+                                list.Add(SpellId.AB2ABar);
+                                list.Add(SpellId.FB2ABar);
+                                list.Add(SpellId.FrB2ABar);
                             }
                         }
                         else
@@ -2098,6 +2107,7 @@ namespace Rawr.Mage
                     {
                         list.Add(SpellId.ArcaneMissiles);
                         list.Add(SpellId.Scorch);
+                        if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.ScLBPyro);
                         if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
                         {
                             list.Add(SpellId.FBPyro);
@@ -2119,7 +2129,9 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
                         if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FB2ABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
+                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
                         if (calculationOptions.PlayerLevel >= 75 && character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                     }
                 }

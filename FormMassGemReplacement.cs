@@ -217,7 +217,7 @@ namespace Rawr
                             
                                 continue;
                             
-                            else if (currCharacter.isEquipped(exItem))
+                            else if (currCharacter.IsEquipped(exItem))
                                 continue;
 
                             else

@@ -768,6 +768,15 @@ namespace Rawr.Mage
                 case SpellId.FBScLBPyro:
                     s = new FBScLBPyro(this);
                     break;
+                case SpellId.FB2ABar:
+                    s = new FB2ABar(this);
+                    break;
+                case SpellId.FrB2ABar:
+                    s = new FrB2ABar(this);
+                    break;
+                case SpellId.ScLBPyro:
+                    s = new ScLBPyro(this);
+                    break;
                 case SpellId.FrostboltPOM:
                     s = new Frostbolt(this, false, false, true, false);
                     break;

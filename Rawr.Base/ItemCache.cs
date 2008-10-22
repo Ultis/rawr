@@ -246,6 +246,13 @@ namespace Rawr
 			}
 		}
 
+        public Item[] GetUnfilteredRelevantItems(CalculationsBase model)
+        {
+            List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
+                delegate(Item item) { return model.IsItemRelevant(item); }));
+            return itemList.ToArray();
+        }
+
         public Item[] GetRelevantItems(CalculationsBase model)
         {
             if (model == Calculations.Instance)

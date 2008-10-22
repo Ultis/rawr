@@ -455,7 +455,15 @@ namespace Rawr //O O . .
             }
 		}
 
-        public bool isEquipped(Item itemToBeChecked)
+        public Item[] GetAvailableItems()
+        {
+            foreach (string gemmedid in _availableItems)
+            {
+            }
+            return null;
+        }    
+
+        public bool IsEquipped(Item itemToBeChecked)
         {
             CharacterSlot Loc = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
             
@@ -470,8 +478,8 @@ namespace Rawr //O O . .
                 
                
                 
-                A=(isEquipped(itemToBeChecked,Loc));
-                B=(isEquipped(itemToBeChecked,tempLoc));
+                A=(IsEquipped(itemToBeChecked,Loc));
+                B=(IsEquipped(itemToBeChecked,tempLoc));
                  
                 ring = (A || B);
                 return ring;
@@ -479,11 +487,11 @@ namespace Rawr //O O . .
             
             else
 
-                return (isEquipped(itemToBeChecked, Loc));
+                return (IsEquipped(itemToBeChecked, Loc));
            
 
         }
-        public bool isEquipped(Item itemToBeChecked, CharacterSlot slot)
+        public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
         {
             string ID = itemToBeChecked.GemmedId;
 
