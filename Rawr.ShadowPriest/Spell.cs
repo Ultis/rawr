@@ -46,13 +46,13 @@ namespace Rawr.ShadowPriest
         public int MissCount { get; set; }
         public int HitCount { get; set; }
         public float CooldownReset { get; set; }
-
         public float DamageDone { get; set; }
+        public float ManaUsed { get; set; }
     }
 
     public class Spell
     {
-        public static readonly List<string> SpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Shadow Word: Pain", "Devouring Plague", "Mind Blast", "Shadow Word: Death", "Mind Flay" };
+        public static readonly List<string> SpellList = new List<string>() { "Vampiric Embrace", "Vampiric Touch", "Mind Blast", "Devouring Plague", "Shadow Word: Pain", "Shadow Word: Death", "Mind Flay" };
 
         public string Name { get; protected set; }
 
@@ -257,6 +257,8 @@ namespace Rawr.ShadowPriest
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
                 * (1 - character.PriestTalents.ShadowFocus * 0.02f));
 
+            CastTime = (float)Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
+
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.ShadowReach * 0.1f));
         }
     }
@@ -282,7 +284,7 @@ namespace Rawr.ShadowPriest
                 * (1 + character.PriestTalents.Darkness * 0.02f)
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
-            
+
             CastTime = (float)Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
             Cooldown -= character.PriestTalents.ImprovedMindBlast * 0.5f;
             CritCoef += character.PriestTalents.ShadowPower * 0.1f;

@@ -18,8 +18,9 @@ namespace Rawr.ShadowPriest
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
-                    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+                    _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
                 }
                 return _subPointNameColors;
             }
@@ -39,9 +40,9 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Spirit",
 					"Basic Stats:Spell Power",
 					"Basic Stats:Regen",
-					"Basic Stats:Spell Crit",
-					"Basic Stats:Spell Hit",
-					"Basic Stats:Spell Haste",
+					"Basic Stats:Crit",
+					"Basic Stats:Hit",
+					"Basic Stats:Haste",
                     "Shadow:Vampiric Touch",
                     "Shadow:SW Pain",
                     "Shadow:Devouring Plague",
@@ -54,7 +55,8 @@ namespace Rawr.ShadowPriest
                     "Holy:Holy Fire",
                     "Holy:Penance",
                     "Simulation:Damage done",
-                    "Simulation:Dps"
+                    "Simulation:DPS",
+                    "Simulation:SustainDPS"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -78,7 +80,7 @@ namespace Rawr.ShadowPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] {};
+                    _customChartNames = new string[] { "Stat Values" };
                 return _customChartNames;
             }
         }
@@ -106,7 +108,81 @@ namespace Rawr.ShadowPriest
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            throw new NotImplementedException();
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+
+            switch (chartName)
+            {
+                case "Stat Values":
+                    CharacterCalculationsShadowPriest calcsBase = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsSpirit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsMP5 = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Mp5 = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsHit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsSta = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 50 } }) as CharacterCalculationsShadowPriest;
+                    CharacterCalculationsShadowPriest calcsRes = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 50 } }) as CharacterCalculationsShadowPriest;
+
+                    return new ComparisonCalculationBase[] {
+                        new ComparisonCalculationShadowPriest() { Name = "1 Intellect",
+                            OverallPoints = (calcsIntellect.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsIntellect.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsIntellect.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Spirit",
+                            OverallPoints = (calcsSpirit.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsSpirit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsSpirit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 MP5",
+                            OverallPoints = (calcsMP5.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsMP5.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsMP5.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsMP5.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Spell Power",
+                            OverallPoints = (calcsSpellPower.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsSpellPower.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Haste",
+                            OverallPoints = (calcsHaste.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsHaste.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsHaste.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Crit",
+                            OverallPoints = (calcsCrit.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsCrit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsCrit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Hit",
+                            OverallPoints = (calcsHit.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsHit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsHit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsHit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Stamina",
+                            OverallPoints = (calcsSta.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsSta.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsSta.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        },
+                        new ComparisonCalculationShadowPriest() { Name = "1 Resilience",
+                            OverallPoints = (calcsRes.OverallPoints - calcsBase.OverallPoints) / 50,
+                            DpsPoints = (calcsRes.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
+                            SustainPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
+                            SurvivalPoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
+                        }};
+                default:
+                    _customChartNames = null;
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
@@ -121,23 +197,22 @@ namespace Rawr.ShadowPriest
             calculatedStats.Character = character;
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * (0.001f + 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect)));
-            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
-            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
+            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + stats.Mp5;
+            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + stats.Mp5;
 
+            SolverShadow solver = new SolverShadow(stats, character);
+            solver.Calculate(calculatedStats);
 
-            Solver solver = new Solver(stats, character);
-            solver.Calculate();
-
-            calculatedStats.DpsPoints = solver.OverallDps;
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Stamina / 10;
-            calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SurvivalPoints;
+            calculatedStats.DpsPoints = solver.DPS;
+            calculatedStats.SustainPoints = solver.SustainDPS;
+            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
+            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
+            // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
+            // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * 5f / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
+            calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SustainPoints + calculatedStats.SurvivalPoints;
 
             return calculatedStats;
-        }
-
-        public static int GetSpellHitCap(Character character)
-        {
-            return (int)Math.Round((int)Math.Ceiling(17f * 12.6f) - (character.PriestTalents.ShadowFocus + character.PriestTalents.Misery) * 12.6f );
         }
 
         public Stats GetRaceStats(Character character)
@@ -243,7 +318,7 @@ namespace Rawr.ShadowPriest
 
             return statsTotal;
         }
-       
+
         public override Stats GetRelevantStats(Stats stats)
         {
             return new Stats()
@@ -272,7 +347,8 @@ namespace Rawr.ShadowPriest
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
-                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15
 //                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
 //                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
 //                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
@@ -309,6 +385,7 @@ namespace Rawr.ShadowPriest
                 + stats.ThreatReductionMultiplier
                 + stats.BonusShadowDamageMultiplier
                 + stats.BonusHolyDamageMultiplier
+                + stats.ManaRestorePerCast_5_15
                 ) > 0;
                 //+ stats.SpellPowerFor15SecOnUse2Min;
                 //+ stats.SpellDamageFor15SecOnUse90Sec

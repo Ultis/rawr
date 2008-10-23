@@ -108,6 +108,7 @@ namespace Rawr.ShadowPriest
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.FightLength = trkFightLength.Value;
                 lblFightLength.Text = trkFightLength.Value + " minute fight.";
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -118,6 +119,7 @@ namespace Rawr.ShadowPriest
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.Shadowfiend = trkShadowfiend.Value;
                 lblShadowfiend.Text = trkShadowfiend.Value + "% effect from Shadowfiend.";
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -128,6 +130,7 @@ namespace Rawr.ShadowPriest
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
                 calcOpts.Replenishment = trkReplenishment.Value;
                 lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
+                Character.OnCalculationsInvalidated();
             }
         }
     }
@@ -140,6 +143,9 @@ namespace Rawr.ShadowPriest
         public float Replenishment { get; set; }
 
         public List<string> SpellPriority { get; set; }
+
+        private static readonly List<int> targetHit = new List<int>() {100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39};
+        public int TargetHit { get { return targetHit[TargetLevel]; } }
 
         public float ManaAmt { get; set; }
         public float ManaTime { get; set; }
