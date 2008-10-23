@@ -51,9 +51,12 @@
             this.comboShotPrio3 = new System.Windows.Forms.ComboBox();
             this.comboShotPrio2 = new System.Windows.Forms.ComboBox();
             this.comboShotPrio1 = new System.Windows.Forms.ComboBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.numericUpDownLatency = new System.Windows.Forms.NumericUpDown();
             this.groupBoxPetOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxShotRotation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLatency)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -90,7 +93,7 @@
             this.groupBoxPetOptions.Controls.Add(this.comboPetPriority1);
             this.groupBoxPetOptions.Controls.Add(this.label4);
             this.groupBoxPetOptions.Controls.Add(this.comboPetFamily);
-            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 260);
+            this.groupBoxPetOptions.Location = new System.Drawing.Point(3, 303);
             this.groupBoxPetOptions.Name = "groupBoxPetOptions";
             this.groupBoxPetOptions.Size = new System.Drawing.Size(253, 150);
             this.groupBoxPetOptions.TabIndex = 8;
@@ -212,7 +215,7 @@
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio3);
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio2);
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio1);
-            this.groupBoxShotRotation.Location = new System.Drawing.Point(6, 100);
+            this.groupBoxShotRotation.Location = new System.Drawing.Point(6, 131);
             this.groupBoxShotRotation.Name = "groupBoxShotRotation";
             this.groupBoxShotRotation.Size = new System.Drawing.Size(253, 143);
             this.groupBoxShotRotation.TabIndex = 12;
@@ -296,10 +299,44 @@
             this.comboShotPrio1.TabIndex = 0;
             this.comboShotPrio1.SelectedIndexChanged += new System.EventHandler(this.comboShotPrio1_SelectedIndexChanged);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 91);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(70, 13);
+            this.label11.TabIndex = 13;
+            this.label11.Text = "Latency (ms):";
+            // 
+            // numericUpDownLatency
+            // 
+            this.numericUpDownLatency.Increment = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.Location = new System.Drawing.Point(122, 89);
+            this.numericUpDownLatency.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.Name = "numericUpDownLatency";
+            this.numericUpDownLatency.Size = new System.Drawing.Size(131, 20);
+            this.numericUpDownLatency.TabIndex = 14;
+            this.numericUpDownLatency.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numericUpDownLatency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.numericUpDownLatency);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.groupBoxShotRotation);
             this.Controls.Add(this.lblTargetArmorValue);
             this.Controls.Add(this.label2);
@@ -308,12 +345,13 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelHunter";
-            this.Size = new System.Drawing.Size(266, 413);
+            this.Size = new System.Drawing.Size(266, 456);
             this.groupBoxPetOptions.ResumeLayout(false);
             this.groupBoxPetOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxShotRotation.ResumeLayout(false);
             this.groupBoxShotRotation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLatency)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,5 +382,7 @@
         private System.Windows.Forms.ComboBox comboShotPrio4;
         private System.Windows.Forms.ComboBox comboShotPrio3;
         private System.Windows.Forms.ComboBox comboShotPrio2;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numericUpDownLatency;
     }
 }

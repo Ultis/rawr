@@ -166,7 +166,7 @@ namespace Rawr.Hunter
             // Imp Steady Shot only affects Bullet Damage
             double impSteadyChance = 1.0 - Math.Pow(1.0 - character.HunterTalents.ImprovedSteadyShot * 0.05, steadyshots);
             chimeraDmg *= 1.0 + 0.15 * impSteadyChance;
-            chimeraDmg *= this.talentedArmorReduction;
+            //chimeraDmg *= this.talentedArmorReduction; // Both dmg components seem to be nature damage
 
 
             double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
@@ -177,7 +177,7 @@ namespace Rawr.Hunter
             chimeraDmg *= critHitModifier * talentModifiers;
 
             info.rotationDmg += chimeraDmg + 2.0/3.0 * serpentStingDmg * talentModifiers; // Add Serpent Sting dmg for 10 sec
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
 
         }
 
@@ -192,7 +192,7 @@ namespace Rawr.Hunter
 
 
             info.rotationDmg += explosiveShotDmg * 3.0;
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
 
         }
 
@@ -207,7 +207,7 @@ namespace Rawr.Hunter
             double steadyShotCastTime = calculatedStats.SteadySpeed;
 
             info.rotationDmg += steadyShotDmg * talentedArmorReduction;
-            info.rotationTime += steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5;
+            info.rotationTime += (steadyShotCastTime > 1.5 ? steadyShotCastTime : 1.5) + options.Latency;
         }
 
         protected void ShotArcane(RotationInfo info, int steadyshots)
@@ -224,7 +224,7 @@ namespace Rawr.Hunter
 
             arcaneShotDmg *= critHitModifier * talentModifiers * asTalentModifiers;
             info.rotationDmg += arcaneShotDmg;
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotSerpentSting(RotationInfo info)
@@ -236,7 +236,7 @@ namespace Rawr.Hunter
             serpentStingDmg *= calculatedStats.BasicStats.PhysicalHit * talentModifiers * serpentTalentModifiers;
 
             info.rotationDmg += serpentStingDmg;
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotMulti(RotationInfo info)
@@ -248,7 +248,7 @@ namespace Rawr.Hunter
             shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
             info.rotationDmg += shotDmg * armorReduction;
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
         }
 
         protected void ShotAimed(RotationInfo info)
@@ -260,7 +260,7 @@ namespace Rawr.Hunter
             shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
             info.rotationDmg += shotDmg * talentedArmorReduction;
-            info.rotationTime += 1.5;
+            info.rotationTime += 1.5 + options.Latency;
 
         }
 
@@ -399,43 +399,43 @@ namespace Rawr.Hunter
             switch (type)
             {
                 case Shots.SteadyShot:
-                    shot.casttime = calculatedStats.SteadySpeed < 1.5 ? 1.5 : calculatedStats.SteadySpeed;
+                    shot.casttime = (calculatedStats.SteadySpeed < 1.5 ? 1.5 : calculatedStats.SteadySpeed) + options.Latency;
                     shot.cooldown = 0.0;
                     shot.type = Shots.SteadyShot;
                     break;
 
                 case Shots.SerpentSting:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 12.0;
                     shot.type = Shots.SerpentSting;
                     break;
 
                 case Shots.MultiShot:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 10.0;
                     shot.type = Shots.MultiShot;
                     break;
 
                 case Shots.ExplosiveShot:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 6.0;
                     shot.type = Shots.ExplosiveShot;
                     break;
 
                 case Shots.ChimeraShot_Serpent:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 10.0;
                     shot.type = Shots.ChimeraShot_Serpent;
                     break;
 
                 case Shots.ArcaneShot:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 6.0;
                     shot.type = Shots.ArcaneShot;
                     break;
 
                 case Shots.AimedShot:
-                    shot.casttime = 1.5;
+                    shot.casttime = 1.5 + options.Latency;
                     shot.cooldown = 10.0;
                     shot.type = Shots.AimedShot;
                     break;

@@ -179,6 +179,15 @@ namespace Rawr.Hunter
             */
         }
 
+        private void numericUpDownLatency_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.Latency = (float)numericUpDownLatency.Value/1000.0f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
 
 
     }
