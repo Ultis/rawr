@@ -12,11 +12,13 @@ namespace Rawr.ShadowPriest
     {
         public List<string> SpellPriority { get; protected set; }
         private ListBox MirrowList { get; set; }
+        private Character character;
 
-        public SpellPriorityForm(List<string> spells, ListBox mirrowList)
+        public SpellPriorityForm(List<string> spells, ListBox mirrowList, Character _character)
         {
             SpellPriority = spells;
             MirrowList = mirrowList;
+            character = _character;
 
             InitializeComponent();
             foreach (string spell in Spell.ShadowSpellList)
@@ -85,6 +87,8 @@ namespace Rawr.ShadowPriest
                 SpellPriority.Add(o.ToString());
                 MirrowList.Items.Add(o);
             }
+            character.OnCalculationsInvalidated();
+            Hide();
         }        
     }
 }

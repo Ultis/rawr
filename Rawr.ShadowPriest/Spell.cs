@@ -89,7 +89,7 @@ namespace Rawr.ShadowPriest
             }
         }
 
-        public float AvgDamage
+        public virtual float AvgDamage
         {
             get
             {
@@ -524,7 +524,7 @@ namespace Rawr.ShadowPriest
     public class Smite : Spell
     {
         public Smite(Stats stats, Character character)
-            : base(stats, "Smite", 545, 611, 15, 2.5f, 1.5f, 0, 2.5f / 3.5f, 30, 0f, Color.Yellow)
+            : base(stats, "Smite", 549, 616, 15, 2.5f, 1.5f, 0, 2.5f / 3.5f, 30, 0f, Color.Yellow)
         {
             Calculate(stats, character);
         }
@@ -547,6 +547,79 @@ namespace Rawr.ShadowPriest
                 );
 
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
+        }
+    }
+
+    public class HolyFire : Spell
+    {
+        public float DotDamage { get; protected set; }
+
+        public override float AvgDamage
+        {
+            get
+            {
+                return AvgHit * (1f - CritChance) + AvgCrit * CritChance + DotDamage;
+            }
+        }
+
+        public override float DpCT
+        {
+            get
+            {
+                return AvgDamage / CastTime;
+            }
+        }
+
+        public override float DpS
+        {
+            get
+            {
+                return AvgDamage / CastTime;
+            }
+        }
+
+        public HolyFire(Stats stats, Character character)
+            : base(stats, "Holy Fire", 719, 910, 11, 2.0f, 1.5f, 7f, 0.5f, 30, 10f, Color.Yellow)
+        {
+            Calculate(stats, character);
+        }
+
+        protected void Calculate(Stats stats, Character character)
+        {
+            MinDamage = (MinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
+                * (1 + character.PriestTalents.SearingLight * 0.05f);
+
+            MaxDamage = (MaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
+                * (1 + character.PriestTalents.SearingLight * 0.05f);
+
+            DotDamage = (147 + stats.SpellPower * 0.1666667f)
+                * (1 + character.PriestTalents.SearingLight * 0.05f);
+
+            CastTime = (float)Math.Max(1.0f, (CastTime - character.PriestTalents.DivineFury * 0.1f) / (1 + stats.SpellHaste));
+
+            CritCoef = CritCoef * (1f + stats.BonusSpellCritMultiplier);
+
+            CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
+
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana[70]
+                );
+
+            Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} *DpS: {1}\r\nDpCT: {2}\r\nDpM: {3}\r\nHit: {4}-{5}, Avg {6}\r\nCrit: {7}-{8}, Avg {9}\r\nTick: {10}-{11}\r\nCrit Chance: {12}%\r\nCast: {13}\r\nCost: {14}",
+                AvgDamage.ToString("0"),
+                DpS.ToString("0.00"),
+                DpCT.ToString("0.00"),
+                DpM.ToString("0.00"),
+                MinDamage.ToString("0"), MaxDamage.ToString("0"), AvgHit.ToString("0"),
+                MinCrit.ToString("0"), MaxCrit.ToString("0"), AvgCrit.ToString("0"),
+                Math.Floor(DotDamage / 7f).ToString("0"), Math.Ceiling(DotDamage / 7f).ToString("0"),
+                (CritChance * 100f).ToString("0.00"),
+                CastTime.ToString("0.00"),
+                ManaCost.ToString("0"));
         }
     }
 }

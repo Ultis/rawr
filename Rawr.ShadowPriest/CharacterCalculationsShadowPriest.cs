@@ -151,6 +151,7 @@ namespace Rawr.ShadowPriest
                 dictValues.Add("Mind Flay", "- *No required talents");
 
             dictValues.Add("Smite", new Smite(BasicStats, character).ToString());
+            dictValues.Add("Holy Fire", new HolyFire(BasicStats, character).ToString());
 
             return dictValues;
         }

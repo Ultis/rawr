@@ -87,7 +87,7 @@ namespace Rawr.ShadowPriest
         private void bChangePriority_Click(object sender, EventArgs e)
         {
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity);
+            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity, Character);
             priority.Show();
         }
 
