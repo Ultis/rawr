@@ -174,9 +174,11 @@ namespace Rawr.Moonkin
 
             float hitRatingMultiplier = 1.0f / CalculationsMoonkin.hitRatingConversionFactor;
             float critRatingMultiplier = 1.0f / CalculationsMoonkin.critRatingConversionFactor;
+            float hasteRatingMultiplier = 1.0f / CalculationsMoonkin.hasteRatingConversionFactor;
 
-            calcs.SpellCrit = stats.CritRating * critRatingMultiplier;
-            calcs.SpellHit = stats.HitRating * hitRatingMultiplier;
+            calcs.SpellCrit = stats.CritRating * critRatingMultiplier + stats.SpellCrit;
+            calcs.SpellHit = stats.HitRating * hitRatingMultiplier + stats.SpellHit;
+            calcs.SpellHaste = stats.HasteRating * hasteRatingMultiplier + stats.SpellHaste;
 
             // All spells: Damage +((0.08/0.16/0.25) * Int)
             switch (character.DruidTalents.LunarGuidance)
@@ -342,22 +344,18 @@ namespace Rawr.Moonkin
 
             // Hit rating
             // All spells: Hit% +(0.02 * Balance of Power)
-            statsTotal.HitRating += 0.02f * character.DruidTalents.BalanceOfPower * hitRatingConversionFactor;
+            statsTotal.SpellHit += 0.02f * character.DruidTalents.BalanceOfPower;
 
             // Crit rating
             // Application order: Stats, Talents, Gear
             // Add druid base crit
-            statsTotal.CritRating += (0.0185f * critRatingConversionFactor);
+            statsTotal.SpellCrit += 0.0185f;
             // Add intellect-based crit rating to crit (all classes except warlock: 1/80)
-            statsTotal.CritRating += (statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent)) * critRatingConversionFactor;
+            statsTotal.SpellCrit += statsTotal.Intellect / (100 * CalculationsMoonkin.intPerCritPercent);
             // All spells: Crit% + (0.01 * Natural Perfection)
-            statsTotal.CritRating += 0.01f * character.DruidTalents.NaturalPerfection * critRatingConversionFactor;
+            statsTotal.SpellCrit += 0.01f * character.DruidTalents.NaturalPerfection;
             // All spells: Haste% + (0.01 * Celestial Focus)
-            statsTotal.HasteRating += 0.01f * character.DruidTalents.CelestialFocus * hasteRatingConversionFactor;
-            // Add external buffs
-            statsTotal.HasteRating += statsTotal.SpellHaste * hasteRatingConversionFactor;
-            statsTotal.CritRating += statsTotal.SpellCrit * critRatingConversionFactor;
-            statsTotal.HitRating += statsTotal.SpellHit * hitRatingConversionFactor;
+            statsTotal.SpellHaste += 0.01f * character.DruidTalents.CelestialFocus;
 
             // All spells: Spell Power + (0.5 * Imp Moonkin) * Spirit
             // Add the crit bonus from the idol, if present
@@ -372,7 +370,7 @@ namespace Rawr.Moonkin
             // All spells: Crit% + (0.01 * Improved Faerie Fire)
             if (character.ActiveBuffsContains("Faerie Fire"))
             {
-                statsTotal.CritRating += 0.01f * character.DruidTalents.ImprovedFaerieFire * critRatingConversionFactor;
+                statsTotal.SpellCrit += 0.01f * character.DruidTalents.ImprovedFaerieFire;
             }
 
             // Put in this check so that the multiplicative spell power multipliers work correctly

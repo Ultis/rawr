@@ -788,11 +788,11 @@ namespace Rawr.Moonkin
             cachedResults = new Dictionary<string, RotationData>();
 
             // Spell ratings once the trinket calculator is done with them
-            float effectiveSpellHit = calcs.BasicStats.HitRating;
+            float effectiveSpellHit = calcs.SpellHit * CalculationsMoonkin.hitRatingConversionFactor;
             float effectiveArcaneDamage = calcs.ArcaneDamage;
             float effectiveNatureDamage = calcs.NatureDamage;
-            float effectiveSpellCrit = calcs.BasicStats.CritRating;
-            float effectiveSpellHaste = calcs.BasicStats.HasteRating;
+            float effectiveSpellCrit = calcs.SpellCrit * CalculationsMoonkin.critRatingConversionFactor;
+            float effectiveSpellHaste = calcs.SpellHaste * CalculationsMoonkin.hasteRatingConversionFactor;
             // Mana pool without Pendant of the Violet Eye
             float effectiveMana = GetEffectiveManaPool(character, calcs);
 

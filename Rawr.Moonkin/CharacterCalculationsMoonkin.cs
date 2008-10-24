@@ -36,6 +36,7 @@ namespace Rawr.Moonkin
 
         public float SpellHit { get; set; }
         public float SpellCrit { get; set; }
+        public float SpellHaste { get; set; }
         public float ArcaneDamage { get; set; }
         public float NatureDamage { get; set; }
         public float ManaRegen { get; set; }
@@ -86,7 +87,7 @@ namespace Rawr.Moonkin
             retVal.Add("Spirit", baseStats.Spirit.ToString());
             retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating", 100 * SpellHit, baseStats.HitRating));
             retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating", 100 * SpellCrit, baseStats.CritRating));
-            retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * baseStats.HasteRating / CalculationsMoonkin.hasteRatingConversionFactor, baseStats.HasteRating));
+            retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * SpellHaste, baseStats.HasteRating));
             retVal.Add("Arcane Damage", ArcaneDamage.ToString());
             retVal.Add("Nature Damage", NatureDamage.ToString());
             retVal.Add("O5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen, ManaRegen * 5.0f));
