@@ -454,7 +454,7 @@
             // 
             // textBoxSlowedTime
             // 
-            this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SlowedTime", true));
+            this.textBoxSlowedTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "SnaredTime", true));
             this.textBoxSlowedTime.Location = new System.Drawing.Point(112, 388);
             this.textBoxSlowedTime.Name = "textBoxSlowedTime";
             this.textBoxSlowedTime.Size = new System.Drawing.Size(75, 20);

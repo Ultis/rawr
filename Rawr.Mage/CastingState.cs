@@ -99,6 +99,8 @@ namespace Rawr.Mage
 
         public int IncrementalSetIndex { get; set; }
 
+        public float SnaredTime { get; set; }
+
         public int GetHex()
         {
             unchecked
@@ -218,16 +220,41 @@ namespace Rawr.Mage
             return duration;
         }
 
+        private CastingState maintainSnareState;
+        public CastingState MaintainSnareState
+        {
+            get
+            {
+                if (maintainSnareState == null)
+                {
+                    if (SnaredTime == 1.0f)
+                    {
+                        maintainSnareState = this;
+                    }
+                    else
+                    {
+                        maintainSnareState = (CastingState)MemberwiseClone();
+                        Array.Clear(maintainSnareState.Spells, 0, SpellIdCount);
+                        maintainSnareState.SnaredTime = 1.0f;
+                    }
+                }
+                return maintainSnareState;
+            }
+        }
+
         public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, int incrementalSetIndex)
         {
             MageTalents = calculations.Character.MageTalents;
-            BaseStats = calculations.BaseStats;
+            BaseStats = calculations.BaseStats; // == characterStats
             CalculationOptions = calculations.CalculationOptions;
             this.calculations = calculations;
             IncrementalSetIndex = incrementalSetIndex;
 
             float levelScalingFactor;
             levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
+
+            SnaredTime = CalculationOptions.SnaredTime;
+            if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
             SpellDamageRating = characterStats.SpellPower;
             SpellHasteRating = characterStats.HasteRating;
@@ -776,6 +803,18 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ScLBPyro:
                     s = new ScLBPyro(this);
+                    break;
+                case SpellId.Slow:
+                    s = new Slow(this);
+                    break;
+                case SpellId.ABABarSlow:
+                    s = new ABABarSlow(this);
+                    break;
+                case SpellId.FBABarSlow:
+                    s = new FBABarSlow(this);
+                    break;
+                case SpellId.FrBABarSlow:
+                    s = new FrBABarSlow(this);
                     break;
                 case SpellId.FrostboltPOM:
                     s = new Frostbolt(this, false, false, true, false);

@@ -43,7 +43,7 @@ namespace Rawr.Mage
         public bool DrumsOfBattle { get; set; }
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
-        public float SlowedTime { get; set; }
+        public float SnaredTime { get; set; }
 
         [XmlIgnore]
         public int[] IncrementalSetStateIndexes;

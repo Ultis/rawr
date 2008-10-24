@@ -1992,7 +1992,7 @@ namespace Rawr.Mage
             }
             if (!calculationOptions.CustomSpellMixOnly)
             {
-                if (calculationOptions.MaintainScorch && calculationOptions.MaintainSnare)
+                if (calculationOptions.MaintainScorch && calculationOptions.MaintainSnare && character.MageTalents.ImprovedScorch > 0 && character.MageTalents.Slow > 0)
                 {
                     // no cycles right now that provide scorch and snare
                 }
@@ -2032,9 +2032,38 @@ namespace Rawr.Mage
                         list.Add(SpellId.FBFBlast);
                     }
                 }
-                else if (calculationOptions.MaintainSnare)
+                else if (calculationOptions.MaintainSnare && character.MageTalents.Slow > 0)
                 {
-                    // no cycles right now that provide snare
+                    if (calculationOptions.SmartOptimization)
+                    {
+                        if (character.MageTalents.ArcaneBarrage > 0)
+                        {
+                            if (character.MageTalents.ImprovedFrostbolt > 0)
+                            {
+                                list.Add(SpellId.FrBABarSlow);
+                            }
+                            if (character.MageTalents.ImprovedFireball > 0)
+                            {
+                                list.Add(SpellId.FBABarSlow);
+                            }
+                            if (character.MageTalents.ArcaneEmpowerment > 0)
+                            {
+                                list.Add(SpellId.ABABarSlow);
+                            }
+                            if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
+                            {
+                                list.Add(SpellId.FrBABarSlow);
+                                list.Add(SpellId.FBABarSlow);
+                                list.Add(SpellId.ABABarSlow);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        list.Add(SpellId.FrBABarSlow);
+                        list.Add(SpellId.FBABarSlow);
+                        list.Add(SpellId.ABABarSlow);
+                    }
                 }
                 else
                 {
