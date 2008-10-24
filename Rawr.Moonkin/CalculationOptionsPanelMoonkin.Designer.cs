@@ -311,6 +311,7 @@
             this.cmbGlyph1.FormattingEnabled = true;
             this.cmbGlyph1.Items.AddRange(new object[] {
             "None",
+            "Starfire",
             "Moonfire",
             "Insect Swarm"});
             this.cmbGlyph1.Location = new System.Drawing.Point(108, 404);
@@ -324,6 +325,7 @@
             this.cmbGlyph2.FormattingEnabled = true;
             this.cmbGlyph2.Items.AddRange(new object[] {
             "None",
+            "Starfire",
             "Moonfire",
             "Insect Swarm"});
             this.cmbGlyph2.Location = new System.Drawing.Point(108, 431);

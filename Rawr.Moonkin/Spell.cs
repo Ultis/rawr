@@ -538,6 +538,11 @@ namespace Rawr.Moonkin
                     CalculateRotationalVariables();
                 return _manaUsed;
             }
+            set
+            {
+                // Add an accessor for this property for the calculation of the Starfire glyph
+                _manaUsed = value;
+            }
         }
         public float ManaGained { get; set; }
         public float Duration
@@ -969,6 +974,70 @@ namespace Rawr.Moonkin
                 float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
                 float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
+
+                // Handle the Starfire glyph
+                if (calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire")
+                {
+                    if (rotation.HasMoonfire && rotation.StarfireCount > 0)
+                    {
+                        // Spread the damage of the initial Moonfire DD hit over the length of the fight
+                        // Since there is 1 MF per rotation, number of rotations during fight = number of MF's cast
+                        float numberRotations = fightLength / rotation.Duration;
+                        Spell newMoonfire = new Spell()
+                        {
+                            Name = "MF",
+                            School = SpellSchool.Arcane,
+                            // With no need to re-cast Moonfire, this "special" version has effectively zero cast time
+                            // Please note that this does NOT take into account the chance of dropping MF during Eclipse
+                            CastTime = 0.0f,
+                            CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
+                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit / numberRotations,
+                            ManaCost = SpellRotation.Moonfire.ManaCost / numberRotations,
+                            SpecialCriticalModifier = SpellRotation.Moonfire.SpecialCriticalModifier,
+                            SpecialDamageModifier = SpellRotation.Moonfire.SpecialDamageModifier,
+                            SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
+                            DoT = new DotEffect()
+                            {
+                                Duration = SpellRotation.Moonfire.DoT.Duration,
+                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
+                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
+                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
+                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
+                            }
+                        };
+                        SpellRotation newRotation = null;
+                        if (rotation.HasInsectSwarm)
+                        {
+                            newRotation = new SpellRotation()
+                            {
+                                Spells = new List<Spell>()
+                                {
+                                    SpellRotation.InsectSwarm,
+                                    newMoonfire,
+                                    SpellRotation.Starfire
+                                }
+                            };
+                        }
+                        else
+                        {
+                            newRotation = new SpellRotation()
+                            {
+                                Spells = new List<Spell>()
+                                {
+                                    newMoonfire,
+                                    SpellRotation.Starfire
+                                }
+                            };
+                        }
+                        newRotation.CalculateRotationalVariables();
+                        currentDPS = newRotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
+                        currentRawDPS = newRotation.RawDPS + trinketExtraDPS + treeDPS;
+                        rotation.ManaUsed = newRotation.ManaUsed;
+                        rotation.TimeToOOM = newRotation.TimeToOOM;
+                        rotation.RawDPS = newRotation.RawDPS;
+                        rotation.DPM = newRotation.DPM;
+                    }
+                }
 
                 // After the DPS calculations are done, we can make a stab at Eclipse calculations
                 // Please note that the numbers on this are going to be EXTREMELY rough
