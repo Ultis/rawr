@@ -39,7 +39,7 @@ namespace Rawr.ShadowPriest
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
             cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             if (calcOpts.SpellPriority == null)
-                calcOpts.SpellPriority = new List<string>(Spell.SpellList);
+                calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
             lsSpellPriopity.Items.Clear();
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
             

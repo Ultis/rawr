@@ -121,6 +121,14 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), (BasicStats.HasteRating / 15.77).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - (BasicStats.HasteRating / 15.77f)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
+
+            SolverBase solver = new SolverShadow(BasicStats, character);
+            solver.Calculate(this);
+
+            dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
+            dictValues.Add("DPS", string.Format("{0}*Damage Pr Second", solver.DPS.ToString("0")));
+            dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
+            
             dictValues.Add("SW Pain", new ShadowWordPain(BasicStats, character).ToString());
             dictValues.Add("Devouring Plague", new DevouringPlague(BasicStats, character).ToString());
             dictValues.Add("SW Death", new ShadowWordDeath(BasicStats, character).ToString());
@@ -142,12 +150,7 @@ namespace Rawr.ShadowPriest
             else
                 dictValues.Add("Mind Flay", "- *No required talents");
 
-            SolverShadow solver = new SolverShadow(BasicStats, character);
-            solver.Calculate(this);
-
-            dictValues.Add("Damage done", solver.OverallDamage.ToString("0"));
-            dictValues.Add("DPS", string.Format("{0}*Damage Pr Second", solver.DPS.ToString("0")));
-            dictValues.Add("SustainDPS", string.Format("{0}*Mana restrained DPS", solver.SustainDPS.ToString("0")));
+            dictValues.Add("Smite", new Smite(BasicStats, character).ToString());
 
             return dictValues;
         }

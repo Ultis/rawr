@@ -19,6 +19,9 @@ namespace Rawr.ShadowPriest
         public float HitChance { get; set; }
         public List<Trinket> Trinkets { get; set; }
 
+        public string Name { get; protected set; }
+        public string Rotation { get; protected set; }
+
         public class Trinket
         {
             public float DamageBonus { get; set; }
@@ -31,12 +34,30 @@ namespace Rawr.ShadowPriest
 
         public SolverBase(Stats playerStats, Character _char) 
         {
-            PlayerStats = playerStats;
+            Name = "Base";
+            Rotation = "None";
+
+            Stats Twinkets = new Stats();
+            if (playerStats.SpellPowerFor15SecOnUse90Sec > 0.0f)
+                Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
+            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
+                Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse2Min * 15f / 120f;
+            if (playerStats.SpellPowerFor20SecOnUse2Min > 0.0f)
+                Twinkets.SpellPower += playerStats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
+            if (playerStats.HasteRatingFor20SecOnUse2Min > 0.0f)
+                Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
+            if (playerStats.HasteRatingFor20SecOnUse5Min > 0.0f)
+                Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
+            // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
+            Twinkets.SpellHaste += Twinkets.HasteRating / 15.76923275f / 100f;
+
+
+            PlayerStats = playerStats + Twinkets;
             character = _char;
             CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
             foreach(string spellname in CalculationOptions.SpellPriority)
-                SpellPriority.Add(SpellFactory.CreateSpell(spellname, playerStats, character));
+                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
@@ -47,16 +68,6 @@ namespace Rawr.ShadowPriest
 
             Trinkets = new List<Trinket>();
             Sequence = new Dictionary<float, Spell>();
-//            if (playerStats.SpellPowerFor15SecOnUse2Min > 0.0f)
-//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellPowerFor15SecOnUse2Min, UpTime = 15.0f });
-//            if (playerStats.SpellDamageFor15SecOnUse90Sec > 0.0f)
-//                Trinkets.Add(new Trinket() { Cooldown = 90.0f, DamageBonus = playerStats.SpellDamageFor15SecOnUse90Sec, UpTime = 15.0f });
-//            if (playerStats.SpellDamageFor20SecOnUse2Min > 0.0f)
-//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, DamageBonus = playerStats.SpellDamageFor20SecOnUse2Min, UpTime = 20.0f });
-//            if (playerStats.SpellHasteFor20SecOnUse2Min > 0.0f)
-//                Trinkets.Add(new Trinket() { Cooldown = 120.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse2Min, UpTime = 20.0f });
-//            if (playerStats.SpellHasteFor20SecOnUse5Min > 0.0f)
-//                Trinkets.Add(new Trinket() { Cooldown = 300.0f, HasteBonus = playerStats.SpellHasteFor20SecOnUse5Min, UpTime = 20.0f });
         }
 
         public virtual void Calculate(CharacterCalculationsShadowPriest calculatedStats)
@@ -69,6 +80,8 @@ namespace Rawr.ShadowPriest
         {
             foreach (Spell spell in SpellPriority)
             {
+                if ((spell.DebuffDuration > 0) && (spell.CastTime > 0) && (spell.SpellStatistics.CooldownReset < (spell.CastTime + timer)))
+                    return spell;   // Special case for dots that have cast time (Holy Fire / Vampiric Touch)
                 if (spell.SpellStatistics.CooldownReset <= timer)
                     return spell;
             }
@@ -120,6 +133,10 @@ namespace Rawr.ShadowPriest
         public SolverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
+            Name = "Full Shadow";
+            Rotation = "Priority Based:";
+            foreach (Spell spell in SpellPriority)
+                Rotation += "\r\n" + spell.Name;
             ShadowHitChance = (float)Math.Min(100f, HitChance + character.PriestTalents.ShadowFocus * 1f);
             SWP = GetSpellByName("Shadow Word: Pain");
             MF = GetSpellByName("Mind Flay");
@@ -231,6 +248,16 @@ namespace Rawr.ShadowPriest
             }
 
             DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) : 0);
+            if (simStats.TimbalsProc > 0.0f)
+            {
+                int dots = (MF != null)?3:0;
+                foreach (Spell spell in SpellPriority)
+                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                Spell Timbal = new Timbal(simStats, character);
+
+                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * ShadowHitChance / 100f;
+            }
+            
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
 
             float MPS = OverallMana / timer;

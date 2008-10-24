@@ -179,6 +179,7 @@ namespace Rawr
         FullManaRegenFor15SecOnSpellcast,
 		SpellPower,
         RenewDurationIncrease,
+        SWPDurationIncrease,
         ManaGainOnGreaterHealOverheal
 
     }
@@ -222,6 +223,7 @@ namespace Rawr
         BonusManaregenWhileCastingMultiplier,
         BonusPoHManaCostReductionMultiplier,
 		BonusGHHealingMultiplier,
+        BonusMindBlastMultiplier,
 		PhysicalHaste,
 		SpellHaste,
 		HealingReceivedMultiplier,
@@ -2110,6 +2112,24 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
+        [DisplayName(" Increased duration of Shadow Word: Pain")]
+        public float SWPDurationIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SWPDurationIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SWPDurationIncrease] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased damage from Mind Blast")]
+        public float BonusMindBlastMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMindBlastMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMindBlastMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
         [DisplayName("% reduce the mana cost of PoH")]
         public float BonusPoHManaCostReductionMultiplier
         {
@@ -2119,7 +2139,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% increases the healing from Greater Heal")]
+        [DisplayName("% increased healing from Greater Heal")]
         public float BonusGHHealingMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusGHHealingMultiplier]; }

@@ -1638,6 +1638,24 @@ namespace Rawr
 
               defaultBuffs.Add(new Buff()
               {
+                  Name = "Absolution Regalia 2 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+                  Stats = { SWPDurationIncrease = 3f },
+                  SetName = "Absolution Regalia",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Absolution Regalia 4 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+                  Stats = { BonusMindBlastMultiplier = 0.1f },
+                  SetName = "Absolution Regalia",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
                   Name = "Avatar Raiment 2 Piece Bonus",
                   Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                   Stats = { ManaGainOnGreaterHealOverheal = 100f },

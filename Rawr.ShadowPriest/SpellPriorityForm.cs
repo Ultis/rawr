@@ -19,7 +19,7 @@ namespace Rawr.ShadowPriest
             MirrowList = mirrowList;
 
             InitializeComponent();
-            foreach (string spell in Spell.SpellList)
+            foreach (string spell in Spell.ShadowSpellList)
             {
                 if (spells.Contains(spell))
                     lsSpellPriority.Items.Add(spell);

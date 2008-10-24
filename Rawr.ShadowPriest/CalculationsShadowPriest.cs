@@ -43,6 +43,9 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Crit",
 					"Basic Stats:Hit",
 					"Basic Stats:Haste",
+                    "Simulation:Rotation",
+                    "Simulation:DPS",
+                    "Simulation:SustainDPS",
                     "Shadow:Vampiric Touch",
                     "Shadow:SW Pain",
                     "Shadow:Devouring Plague",
@@ -53,10 +56,7 @@ namespace Rawr.ShadowPriest
                     "Holy:PW Shield",
                     "Holy:Smite",
                     "Holy:Holy Fire",
-                    "Holy:Penance",
-                    "Simulation:Damage done",
-                    "Simulation:DPS",
-                    "Simulation:SustainDPS"
+                    "Holy:Penance"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -348,12 +348,14 @@ namespace Rawr.ShadowPriest
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
-                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15
-//                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
-//                SpellDamageFor15SecOnUse90Sec = stats.SpellDamageFor15SecOnUse90Sec,
-//                SpellDamageFor20SecOnUse2Min = stats.SpellDamageFor20SecOnUse2Min,
-//                SpellHasteFor20SecOnUse2Min = stats.SpellHasteFor20SecOnUse2Min,
-//                SpellHasteFor20SecOnUse5Min = stats.SpellHasteFor20SecOnUse5Min
+                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
+                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
+                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
+                HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
+                TimbalsProc = stats.TimbalsProc,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier
             };
         }
 
@@ -386,11 +388,14 @@ namespace Rawr.ShadowPriest
                 + stats.BonusShadowDamageMultiplier
                 + stats.BonusHolyDamageMultiplier
                 + stats.ManaRestorePerCast_5_15
+                + stats.SpellPowerFor15SecOnUse90Sec
+                + stats.SpellPowerFor15SecOnUse2Min
+                + stats.SpellPowerFor20SecOnUse2Min
+                + stats.HasteRatingFor20SecOnUse2Min
+                + stats.HasteRatingFor20SecOnUse5Min
+                + stats.TimbalsProc
+                + stats.BonusSpellCritMultiplier
                 ) > 0;
-                //+ stats.SpellPowerFor15SecOnUse2Min;
-                //+ stats.SpellDamageFor15SecOnUse90Sec
-                //+ stats.SpellDamageFor20SecOnUse2Min + stats.SpellHasteFor20SecOnUse2Min
-                //+ stats.SpellHasteFor20SecOnUse5Min) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
