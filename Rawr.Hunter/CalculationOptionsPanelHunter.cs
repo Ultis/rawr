@@ -77,6 +77,10 @@ namespace Rawr.Hunter
             comboShotPrio2.SelectedItem = options.ShotPriority2;
             comboShotPrio3.SelectedItem = options.ShotPriority3;
             comboShotPrio4.SelectedItem = options.ShotPriority4;
+            numericUpDownLatency.Value = (decimal)(options.Latency * 1000.0);
+            checkBoxUseCustomShotRotation.Checked = options.UseCustomShotRotation;
+            trackBarTargetArmor.Value = options.TargetArmor;
+            lblTargetArmorValue.Text = options.TargetArmor.ToString();
             loadingOptions = false;
         }
 
@@ -184,6 +188,15 @@ namespace Rawr.Hunter
             if (!loadingOptions)
             {
                 options.Latency = (float)numericUpDownLatency.Value/1000.0f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxUseCustomShotRotation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loadingOptions)
+            {
+                options.UseCustomShotRotation = checkBoxUseCustomShotRotation.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }

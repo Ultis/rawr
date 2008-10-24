@@ -25,6 +25,8 @@ namespace Rawr.Hunter
 		private float _latency = .2f;
 		private PetAttacks[] _PetAttacks;
 
+        private bool _useCustomShotRotation = false;
+
 		public CalculationOptionsHunter()
 		{
             _PetAttacks = new PetAttacks[3];
@@ -32,6 +34,12 @@ namespace Rawr.Hunter
 			_PetAttacks[1] = _petPriority2;
             _PetAttacks[2] = _petPriority3;
 		}
+
+        public bool UseCustomShotRotation
+        {
+            get { return _useCustomShotRotation; }
+            set { _useCustomShotRotation = value; }
+        }
 
 		public ShotRotation ShotRotation
 		{

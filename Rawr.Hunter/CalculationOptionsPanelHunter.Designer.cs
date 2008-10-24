@@ -53,6 +53,7 @@
             this.comboShotPrio1 = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.numericUpDownLatency = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxUseCustomShotRotation = new System.Windows.Forms.CheckBox();
             this.groupBoxPetOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxShotRotation.SuspendLayout();
@@ -93,7 +94,7 @@
             this.groupBoxPetOptions.Controls.Add(this.comboPetPriority1);
             this.groupBoxPetOptions.Controls.Add(this.label4);
             this.groupBoxPetOptions.Controls.Add(this.comboPetFamily);
-            this.groupBoxPetOptions.Location = new System.Drawing.Point(3, 303);
+            this.groupBoxPetOptions.Location = new System.Drawing.Point(6, 303);
             this.groupBoxPetOptions.Name = "groupBoxPetOptions";
             this.groupBoxPetOptions.Size = new System.Drawing.Size(253, 150);
             this.groupBoxPetOptions.TabIndex = 8;
@@ -215,7 +216,7 @@
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio3);
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio2);
             this.groupBoxShotRotation.Controls.Add(this.comboShotPrio1);
-            this.groupBoxShotRotation.Location = new System.Drawing.Point(6, 131);
+            this.groupBoxShotRotation.Location = new System.Drawing.Point(6, 141);
             this.groupBoxShotRotation.Name = "groupBoxShotRotation";
             this.groupBoxShotRotation.Size = new System.Drawing.Size(253, 143);
             this.groupBoxShotRotation.TabIndex = 12;
@@ -331,10 +332,22 @@
             0});
             this.numericUpDownLatency.ValueChanged += new System.EventHandler(this.numericUpDownLatency_ValueChanged);
             // 
+            // checkBoxUseCustomShotRotation
+            // 
+            this.checkBoxUseCustomShotRotation.AutoSize = true;
+            this.checkBoxUseCustomShotRotation.Location = new System.Drawing.Point(15, 118);
+            this.checkBoxUseCustomShotRotation.Name = "checkBoxUseCustomShotRotation";
+            this.checkBoxUseCustomShotRotation.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxUseCustomShotRotation.TabIndex = 15;
+            this.checkBoxUseCustomShotRotation.Text = "Use custom shot rotation for optimization";
+            this.checkBoxUseCustomShotRotation.UseVisualStyleBackColor = true;
+            this.checkBoxUseCustomShotRotation.CheckedChanged += new System.EventHandler(this.checkBoxUseCustomShotRotation_CheckedChanged);
+            // 
             // CalculationOptionsPanelHunter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.checkBoxUseCustomShotRotation);
             this.Controls.Add(this.numericUpDownLatency);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.groupBoxShotRotation);
@@ -384,5 +397,6 @@
         private System.Windows.Forms.ComboBox comboShotPrio2;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown numericUpDownLatency;
+        private System.Windows.Forms.CheckBox checkBoxUseCustomShotRotation;
     }
 }

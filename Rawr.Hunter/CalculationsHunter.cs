@@ -560,8 +560,16 @@ namespace Rawr.Hunter
 
             #endregion
 
+            if (options.UseCustomShotRotation)
+            {
+                calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + calculatedStats.CustomDPS);
+            }
+            else
+            {
+                calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
+            }
  
-            calculatedStats.HunterDpsPoints = (float)(calculatedStats.AutoshotDPS + bestDPS);
+            
             calculatedStats.PetDpsPoints = pet.getDPS();
             calculatedStats.OverallPoints = calculatedStats.HunterDpsPoints + calculatedStats.PetDpsPoints;
 
