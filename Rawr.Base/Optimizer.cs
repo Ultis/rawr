@@ -376,7 +376,14 @@ namespace Rawr
             try
             {
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
-				optimizedCharacterValue = GetCalculationsValue(model.GetCharacterCalculations(optimizedCharacter));
+                if (optimizedCharacter != null)
+                {
+                    optimizedCharacterValue = GetCalculationsValue(model.GetCharacterCalculations(optimizedCharacter));
+                }
+                else
+                {
+                    if (error == null) error = new NullReferenceException();
+                }
 				currentCharacterValue =	GetCalculationsValue(model.GetCharacterCalculations(character));
             }
             catch (Exception ex)
@@ -525,6 +532,37 @@ namespace Rawr
         private int itemProgressPercentage = 0;
         private string currentItem = "";
 
+        private void MarkEquippedItemsAsValid(Character character)
+        {
+            for (int i = 0; i < 19; i++)
+            {
+                Item item = character[(Character.CharacterSlot)i];
+                if (item != null)
+                {
+                    Enchant itemEnchant = character.GetEnchantBySlot((Character.CharacterSlot)i);
+                    Dictionary<int, bool> dict;
+                    List<Enchant> list;
+                    if (!itemEnchantValid.TryGetValue(item.GemmedId, out dict))
+                    {
+                        dict = new Dictionary<int, bool>();
+                        itemEnchantValid[item.GemmedId] = dict;
+                    }
+                    item.EnchantValid = dict;
+                    if (!itemEnchantValidList.TryGetValue(item.GemmedId, out list))
+                    {
+                        list = new List<Enchant>();
+                        itemEnchantValidList[item.GemmedId] = list;
+                    }
+                    item.EnchantValidList = list;
+                    if (itemEnchant != null)
+                    {
+                        dict[itemEnchant.Id] = true;
+                        if (!list.Contains(itemEnchant)) list.Add(itemEnchant);
+                    }
+                }
+            }
+        }
+
         private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
@@ -543,33 +581,7 @@ namespace Rawr
                 ItemCache.Instance = optimizerItemCache;
 
                 // make equipped gear/enchant valid
-                for (int i = 0; i < 19; i++)
-                {
-                    Item item = _character[(Character.CharacterSlot)i];
-                    if (item != null)
-                    {
-                        Enchant itemEnchant = _character.GetEnchantBySlot((Character.CharacterSlot)i);
-                        Dictionary<int, bool> dict;
-                        List<Enchant> list;
-                        if (!itemEnchantValid.TryGetValue(item.GemmedId, out dict))
-                        {
-                            dict = new Dictionary<int, bool>();
-                            itemEnchantValid[item.GemmedId] = dict;
-                        }
-                        item.EnchantValid = dict;
-                        if (!itemEnchantValidList.TryGetValue(item.GemmedId, out list))
-                        {
-                            list = new List<Enchant>();
-                            itemEnchantValidList[item.GemmedId] = list;
-                        }
-                        item.EnchantValidList = list;
-                        if (itemEnchant != null)
-                        {
-                            dict[itemEnchant.Id] = true;
-                            if (!list.Contains(itemEnchant)) list.Add(itemEnchant);
-                        }
-                    }
-                }                    
+                MarkEquippedItemsAsValid(_character);
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
@@ -805,7 +817,13 @@ namespace Rawr
                     return Array.IndexOf<Enchant>(lockedEnchants, enchant) >= 0;
                 }
             }
-            (item.EnchantValid ?? itemEnchantValid[item.GemmedId]).TryGetValue(enchant.Id, out valid);
+            Dictionary<int, bool> validEnchants = item.EnchantValid;
+            if (validEnchants == null)
+            {
+                itemEnchantValid.TryGetValue(item.GemmedId, out validEnchants);
+            }
+            if (validEnchants == null) return false;
+            validEnchants.TryGetValue(enchant.Id, out valid);
             return valid;
         }
 
@@ -1474,13 +1492,17 @@ namespace Rawr
 
 			if (_thoroughness > 1)
 			{
-			for (int i = 0; i < popSize; i++)
-			{
-				population[i] = BuildRandomCharacter();
-			}
+			    for (int i = 0; i < popSize; i++)
+			    {
+				    population[i] = BuildRandomCharacter();
+			    }
 			}
 			else
 			{
+                // if we just start from current character and look for direct upgrades
+                // then we have to deal with items that are currently equipped, but are not
+                // currently available
+                MarkEquippedItemsAsValid(_character);
 				bestCharacter = _character;
                 best = GetCalculationsValue(model.GetCharacterCalculations(_character));
 			}
