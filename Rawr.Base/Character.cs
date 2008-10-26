@@ -509,29 +509,29 @@ namespace Rawr //O O . .
             
             switch (slot)
             {
-                case Item.ItemSlot.Projectile: return Character.CharacterSlot.Projectile;
-                case Item.ItemSlot.Head: return Character.CharacterSlot.Head;
-                case Item.ItemSlot.Neck: return Character.CharacterSlot.Neck;
-                case Item.ItemSlot.Shoulders: return Character.CharacterSlot.Shoulders;
-                case Item.ItemSlot.Chest: return Character.CharacterSlot.Chest;
-                case Item.ItemSlot.Waist: return Character.CharacterSlot.Waist;
-                case Item.ItemSlot.Legs: return Character.CharacterSlot.Legs;
-                case Item.ItemSlot.Feet: return Character.CharacterSlot.Feet;
-                case Item.ItemSlot.Wrist: return Character.CharacterSlot.Wrist;
-                case Item.ItemSlot.Hands: return Character.CharacterSlot.Hands;
-                case Item.ItemSlot.Finger: return Character.CharacterSlot.Finger1;
+                case Rawr.Item.ItemSlot.Projectile: return Character.CharacterSlot.Projectile;
+                case Rawr.Item.ItemSlot.Head: return Character.CharacterSlot.Head;
+                case Rawr.Item.ItemSlot.Neck: return Character.CharacterSlot.Neck;
+                case Rawr.Item.ItemSlot.Shoulders: return Character.CharacterSlot.Shoulders;
+                case Rawr.Item.ItemSlot.Chest: return Character.CharacterSlot.Chest;
+                case Rawr.Item.ItemSlot.Waist: return Character.CharacterSlot.Waist;
+                case Rawr.Item.ItemSlot.Legs: return Character.CharacterSlot.Legs;
+                case Rawr.Item.ItemSlot.Feet: return Character.CharacterSlot.Feet;
+                case Rawr.Item.ItemSlot.Wrist: return Character.CharacterSlot.Wrist;
+                case Rawr.Item.ItemSlot.Hands: return Character.CharacterSlot.Hands;
+                case Rawr.Item.ItemSlot.Finger: return Character.CharacterSlot.Finger1;
             //    case Item.ItemSlot.Finger: return Character.CharacterSlot.Finger2;
-                case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
+                case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
             //    case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
-                case Item.ItemSlot.Back: return Character.CharacterSlot.Back;
-                case Item.ItemSlot.MainHand: return Character.CharacterSlot.MainHand;
-                case Item.ItemSlot.OffHand: return Character.CharacterSlot.OffHand;
-                case Item.ItemSlot.Ranged: return Character.CharacterSlot.Ranged;
-                case Item.ItemSlot.ProjectileBag: return Character.CharacterSlot.ProjectileBag;
-                case Item.ItemSlot.Tabard: return Character.CharacterSlot.Tabard;
-                case Item.ItemSlot.Shirt: return Character.CharacterSlot.Shirt;
-                case Item.ItemSlot.Prismatic: return Character.CharacterSlot.Gems;
-                case Item.ItemSlot.Meta: return Character.CharacterSlot.Metas;
+                case Rawr.Item.ItemSlot.Back: return Character.CharacterSlot.Back;
+                case Rawr.Item.ItemSlot.MainHand: return Character.CharacterSlot.MainHand;
+                case Rawr.Item.ItemSlot.OffHand: return Character.CharacterSlot.OffHand;
+                case Rawr.Item.ItemSlot.Ranged: return Character.CharacterSlot.Ranged;
+                case Rawr.Item.ItemSlot.ProjectileBag: return Character.CharacterSlot.ProjectileBag;
+                case Rawr.Item.ItemSlot.Tabard: return Character.CharacterSlot.Tabard;
+                case Rawr.Item.ItemSlot.Shirt: return Character.CharacterSlot.Shirt;
+                case Rawr.Item.ItemSlot.Prismatic: return Character.CharacterSlot.Gems;
+                case Rawr.Item.ItemSlot.Meta: return Character.CharacterSlot.Metas;
                 default: return Character.CharacterSlot.None;
             }
         }
@@ -694,31 +694,31 @@ namespace Rawr //O O . .
 		{
 			switch (slot)
 			{
-				case Item.ItemSlot.Head:
+				case Rawr.Item.ItemSlot.Head:
 					return HeadEnchant;
-				case Item.ItemSlot.Shoulders:
+				case Rawr.Item.ItemSlot.Shoulders:
 					return ShouldersEnchant;
-				case Item.ItemSlot.Back:
+				case Rawr.Item.ItemSlot.Back:
 					return BackEnchant;
-				case Item.ItemSlot.Chest:
+				case Rawr.Item.ItemSlot.Chest:
 					return ChestEnchant;
-				case Item.ItemSlot.Wrist:
+				case Rawr.Item.ItemSlot.Wrist:
 					return WristEnchant;
-				case Item.ItemSlot.Hands:
+				case Rawr.Item.ItemSlot.Hands:
 					return HandsEnchant;
-				case Item.ItemSlot.Legs:
+				case Rawr.Item.ItemSlot.Legs:
 					return LegsEnchant;
-				case Item.ItemSlot.Feet:
+				case Rawr.Item.ItemSlot.Feet:
 					return FeetEnchant;
-				case Item.ItemSlot.Finger:
+				case Rawr.Item.ItemSlot.Finger:
 					return Finger1Enchant;
-				case Item.ItemSlot.MainHand:
-				case Item.ItemSlot.OneHand:
-				case Item.ItemSlot.TwoHand:
+				case Rawr.Item.ItemSlot.MainHand:
+				case Rawr.Item.ItemSlot.OneHand:
+				case Rawr.Item.ItemSlot.TwoHand:
 					return MainHandEnchant;
-				case Item.ItemSlot.OffHand:
+				case Rawr.Item.ItemSlot.OffHand:
 					return OffHandEnchant;
-				case Item.ItemSlot.Ranged:
+				case Rawr.Item.ItemSlot.Ranged:
 					return RangedEnchant;
 				default:
 					return null;
@@ -733,7 +733,7 @@ namespace Rawr //O O . .
             Enchant e = _itemEnchantCached[i];
             if (e == null)
             {
-				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Item.GetItemSlotByCharacterSlot(slot));
+				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Rawr.Item.GetItemSlotByCharacterSlot(slot));
             }
             return e;
         }
@@ -765,20 +765,20 @@ namespace Rawr //O O . .
         {
             switch (slot)
             {
-                case Item.ItemSlot.Head:
-                case Item.ItemSlot.Shoulders:
-                case Item.ItemSlot.Back:
-                case Item.ItemSlot.Chest:
-                case Item.ItemSlot.Wrist:
-                case Item.ItemSlot.Hands:
-                case Item.ItemSlot.Legs:
-                case Item.ItemSlot.Feet:
-                case Item.ItemSlot.Finger:
-                case Item.ItemSlot.TwoHand:
-                case Item.ItemSlot.MainHand:
-                case Item.ItemSlot.OneHand:
-                case Item.ItemSlot.OffHand:
-                case Item.ItemSlot.Ranged:
+                case Rawr.Item.ItemSlot.Head:
+                case Rawr.Item.ItemSlot.Shoulders:
+                case Rawr.Item.ItemSlot.Back:
+                case Rawr.Item.ItemSlot.Chest:
+                case Rawr.Item.ItemSlot.Wrist:
+                case Rawr.Item.ItemSlot.Hands:
+                case Rawr.Item.ItemSlot.Legs:
+                case Rawr.Item.ItemSlot.Feet:
+                case Rawr.Item.ItemSlot.Finger:
+                case Rawr.Item.ItemSlot.TwoHand:
+                case Rawr.Item.ItemSlot.MainHand:
+                case Rawr.Item.ItemSlot.OneHand:
+                case Rawr.Item.ItemSlot.OffHand:
+                case Rawr.Item.ItemSlot.Ranged:
                     return true;
                 default:
                     return false;
@@ -789,42 +789,42 @@ namespace Rawr //O O . .
 		{
 			switch (slot)
 			{
-				case Item.ItemSlot.Head:
+				case Rawr.Item.ItemSlot.Head:
 					HeadEnchant = enchant;
 					break;
-				case Item.ItemSlot.Shoulders:
+				case Rawr.Item.ItemSlot.Shoulders:
 					ShouldersEnchant = enchant;
 					break;
-				case Item.ItemSlot.Back:
+				case Rawr.Item.ItemSlot.Back:
 					BackEnchant = enchant;
 					break;
-				case Item.ItemSlot.Chest:
+				case Rawr.Item.ItemSlot.Chest:
 					ChestEnchant = enchant;
 					break;
-				case Item.ItemSlot.Wrist:
+				case Rawr.Item.ItemSlot.Wrist:
 					WristEnchant = enchant;
 					break;
-				case Item.ItemSlot.Hands:
+				case Rawr.Item.ItemSlot.Hands:
 					HandsEnchant = enchant;
 					break;
-				case Item.ItemSlot.Legs:
+				case Rawr.Item.ItemSlot.Legs:
 					LegsEnchant = enchant;
 					break;
-				case Item.ItemSlot.Feet:
+				case Rawr.Item.ItemSlot.Feet:
 					FeetEnchant = enchant;
 					break;
-				case Item.ItemSlot.Finger:
+				case Rawr.Item.ItemSlot.Finger:
 					Finger1Enchant = enchant;
 					break;
-				case Item.ItemSlot.MainHand:
-				case Item.ItemSlot.OneHand:
-				case Item.ItemSlot.TwoHand:
+				case Rawr.Item.ItemSlot.MainHand:
+				case Rawr.Item.ItemSlot.OneHand:
+				case Rawr.Item.ItemSlot.TwoHand:
 					MainHandEnchant = enchant;
 					break;
-				case Item.ItemSlot.OffHand:
+				case Rawr.Item.ItemSlot.OffHand:
 					OffHandEnchant = enchant;
 					break;
-				case Item.ItemSlot.Ranged:
+				case Rawr.Item.ItemSlot.Ranged:
 					RangedEnchant = enchant;
 					break;
 			}
@@ -939,26 +939,26 @@ namespace Rawr //O O . .
         {
             if (!gemCountValid)
             {
-                redGemCount = GetGemColorCount(Item.ItemSlot.Red);
-                yellowGemCount = GetGemColorCount(Item.ItemSlot.Yellow);
-                blueGemCount = GetGemColorCount(Item.ItemSlot.Blue);
+                redGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Red);
+                yellowGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Yellow);
+                blueGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Blue);
                 gemCountValid = true;
             }
         }
 
-        private int GetItemGemColorCount(Item item, Item.ItemSlot slotColor)
+        private int GetItemGemColorCount(Rawr.Item item, Rawr.Item.ItemSlot slotColor)
         {
             int count = 0;
             if (item != null)
             {
-                if (item.Gem1 != null && Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
-                if (item.Gem2 != null && Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
-                if (item.Gem3 != null && Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
+                if (item.Gem1 != null && Rawr.Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
+                if (item.Gem2 != null && Rawr.Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
+                if (item.Gem3 != null && Rawr.Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
             }
             return count;
         }
 
-        public int GetGemColorCount(Item.ItemSlot slotColor)
+        public int GetGemColorCount(Rawr.Item.ItemSlot slotColor)
         {
             int count = 0;
             /*foreach (CharacterSlot slot in CharacterSlots)
@@ -1088,7 +1088,7 @@ namespace Rawr //O O . .
                 Item item;
                 if ((item = _itemCached[i]) == null)
                 {
-                    item = _itemCached[i] = Item.LoadFromId(_item[i], "Equipped Item");
+                    item = _itemCached[i] = Rawr.Item.LoadFromId(_item[i], "Equipped Item");
                     if (item != null && _trackEquippedItemChanges) item.IdsChanged += new EventHandler(_itemCached_IdsChanged);
                 }
                 return item;
