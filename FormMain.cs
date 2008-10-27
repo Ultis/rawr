@@ -15,9 +15,9 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 6;
+		private const int INTRO_VERSION = 7;
 		private const string INTRO_TEXT =
-" Welcome to Rawr 2.0.2. This brand new version of Rawr is designed for use with WoW 3.0, " +
+" Welcome to Rawr 2.0.3. This brand new version of Rawr is designed for use with WoW 3.0, " +
 "for characters up to level 70. You'll find many new features at the core level of Rawr, " +
 "and many in some of the models. Some important things to note: \r\n" +
 "   •We're not done. Many of the models haven't been updated yet for WoW 3.0\r\n" +
@@ -25,6 +25,10 @@ namespace Rawr
 "updated with the latest changes, Rawr will now check for new available updates, " +
 "notify you if there's a newer version, and offer to open Rawr's website for you.\r\n" +
 "\r\nRecent Changes:\r\n" +
+"  v2.0.3: Many fixes and additions to Hunter, added ShadowPriest model, implemented item " + 
+"filtering (!), significant changes and fixes to the Tree model, many fixes and rotation " +
+"updates for Mage, fixes for the Mass Gem Replacement feature, many updates and additional " +
+"features for Moonkin.\r\n" +
 "  v2.0.2: Fixes for Moonkin calculation, Human Spirit bonus in HolyPriest, armor values in Bear,\r\n" +  
 "and properly loading stats on items with armor penetration rating, and a number of trinkets.\r\n" +
 "  v2.0.1: Wide variety of bugfixes to several models, new armory item parsing, optimization.\r\n" +
@@ -35,15 +39,16 @@ namespace Rawr
 "   •Rawr.DPSWarr: Not updated for 3.0.\r\n" +
 "   •Rawr.Healadin: Mostly complete.\r\n" +
 "   •Rawr.HolyPriest: Mostly complete.\r\n" +
-"   •Rawr.Hunter: Partially updated for 3.0.\r\n" +
+"   •Rawr.Hunter: Mostly complete.\r\n" +
 "   •Rawr.Mage: Mostly complete.\r\n" +
-"   •Rawr.Moonkin: Partially updated for 3.0.\r\n" +
+"   •Rawr.Moonkin: Mostly complete.\r\n" +
 "   •Rawr.ProtWarr: Partially updated for 3.0.\r\n" +
 "   •Rawr.RestoSham: Not updated for 3.0.\r\n" +
 "   •Rawr.Retribution: Mostly complete.\r\n" +
 "   •Rawr.Rogue: Not updated for 3.0.\r\n" +
+"   •Rawr.ShadowPriest: Mostly complete.\r\n" +
 "   •Rawr.Tankadin: Mostly complete.\r\n" +
-"   •Rawr.Tree: Not updated for 3.0.\r\n" +
+"   •Rawr.Tree: Partially updated for 3.0.\r\n" +
 "   •Rawr.Warlock: Not updated for 3.0.\r\n" +
 "\r\n As you can see, we still have alot of work ahead of us, but we're actively working on it. " +
 "If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, " +

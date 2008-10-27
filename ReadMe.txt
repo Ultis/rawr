@@ -1,6 +1,6 @@
-Rawr v2.0.2
+Rawr v2.0.3
 ------------
- Welcome to Rawr 2.0.2. This brand new version of Rawr is designed for use with WoW 3.0, 
+ Welcome to Rawr 2.0.3. This brand new version of Rawr is designed for use with WoW 3.0, 
 for characters up to level 70. You'll find many new features at the core level of Rawr, 
 and many in some of the models. Some important things to note: 
    •We're not done. Many of the models haven't been updated yet for WoW 3.0
@@ -9,6 +9,7 @@ updated with the latest changes, Rawr will now check for new available updates,
 notify you if there's a newer version, and offer to open Rawr's website for you.
 
 Recent Changes:
+v2.0.3: Many fixes and additions to Hunter, added ShadowPriest model, implemented item filtering (!), significant changes and fixes to the Tree model, many fixes and rotation updates for Mage, fixes for the Mass Gem Replacement feature, many updates and additional features for Moonkin.
 v2.0.2: Fixes for Moonkin calculation, Human Spirit bonus in HolyPriest, armor values in Bear, and properly loading stats on items with armor penetration rating, and a number of trinkets.
 v2.0.1: Wide variety of bugfixes to several models, new armory item parsing, optimization.
 
@@ -19,15 +20,16 @@ Here's a quick rundown of the status of each model:
    •Rawr.DPSWarr: Not updated for 3.0.
    •Rawr.Healadin: Mostly complete.
    •Rawr.HolyPriest: Mostly complete.
-   •Rawr.Hunter: Partially updated for 3.0.
+   •Rawr.Hunter: Mostly complete.
    •Rawr.Mage: Mostly complete.
-   •Rawr.Moonkin: Partially updated for 3.0.
+   •Rawr.Moonkin: Mostly complete.
    •Rawr.ProtWarr: Partially updated for 3.0.
    •Rawr.RestoSham: Not updated for 3.0.
    •Rawr.Retribution: Mostly complete.
    •Rawr.Rogue: Not updated for 3.0.
+   •Rawr.ShadowPriest: Mostly complete.
    •Rawr.Tankadin: Mostly complete.
-   •Rawr.Tree: Not updated for 3.0.
+   •Rawr.Tree: Partially updated for 3.0.
    •Rawr.Warlock: Not updated for 3.0.
 
  As you can see, we still have alot of work ahead of us, but we're actively working on it.
