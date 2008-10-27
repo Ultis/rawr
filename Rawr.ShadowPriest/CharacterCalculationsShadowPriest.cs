@@ -14,6 +14,8 @@ namespace Rawr.ShadowPriest
         public float RegenOutFSR { get; set; }
         public Character.CharacterRace Race { get; set; }
 
+        public bool bHoly { get; set; }
+
         public Character Character
         {
             get { return character; }
@@ -121,8 +123,11 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), (BasicStats.HasteRating / 15.77).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - (BasicStats.HasteRating / 15.77f)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
-
-            SolverBase solver = new SolverShadow(BasicStats, character);
+            SolverBase solver = null;
+            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
+                solver = new SolverShadow(BasicStats, character);
+            else
+                solver = new SolverHoly(BasicStats, character);
             solver.Calculate(this);
 
             dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
@@ -152,6 +157,10 @@ namespace Rawr.ShadowPriest
 
             dictValues.Add("Smite", new Smite(BasicStats, character).ToString());
             dictValues.Add("Holy Fire", new HolyFire(BasicStats, character).ToString());
+            if (character.PriestTalents.Penance > 0)
+                dictValues.Add("Penance", new Penance(BasicStats, character).ToString());
+            else
+                dictValues.Add("Penance", "- *No required talents");
 
             return dictValues;
         }

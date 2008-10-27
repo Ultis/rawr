@@ -23,6 +23,7 @@ namespace Rawr.ShadowPriest
                 Character.CalculationOptions = new CalculationOptionsShadowPriest();
 
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+            
             cbTargetLevel.SelectedIndex = calcOpts.TargetLevel;
             
             trkFightLength.Value = (int)calcOpts.FightLength;
@@ -34,10 +35,9 @@ namespace Rawr.ShadowPriest
             trkReplenishment.Value = (int)calcOpts.Replenishment;
             lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
 
+            
+            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
-            //cmbLength.Value = (decimal)calcOpts.FightDuration;
-            cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
-            cmbManaTime.Value = (decimal)calcOpts.ManaTime;
             if (calcOpts.SpellPriority == null)
                 calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
             lsSpellPriopity.Items.Clear();
@@ -51,39 +51,11 @@ namespace Rawr.ShadowPriest
             if (!loading)
             {
                 CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
+                calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
         }
-
-        private void cmbManaTime_ValueChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                calcOpts.ManaTime = (float)cmbManaTime.Value;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void cmbManaAmt_TextUpdate(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-                try
-                {
-                    calcOpts.ManaAmt = float.Parse(cmbManaAmt.Text);
-                }
-                catch { }
-                Character.OnCalculationsInvalidated();
-            }
-        }
-                
+               
         private void bChangePriority_Click(object sender, EventArgs e)
         {
             CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
@@ -147,14 +119,12 @@ namespace Rawr.ShadowPriest
         private static readonly List<int> targetHit = new List<int>() {100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39};
         public int TargetHit { get { return targetHit[TargetLevel]; } }
 
-        public float ManaAmt { get; set; }
-        public float ManaTime { get; set; }
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2400, 4300 };
+        public int ManaPot { get; set; }
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public float Spriest { get; set; }
         public float Lag { get; set; }
         public float WaitTime { get; set; }
-        public float ISBUptime { get; set; }
-        public int DrumsCount { get; set; }
-        public bool UseYourDrum { get; set; }
 
         public CalculationOptionsShadowPriest()
         {
@@ -164,13 +134,9 @@ namespace Rawr.ShadowPriest
             Replenishment = 100f;
 
             SpellPriority = null;
-            ManaAmt = 2400;
-            ManaTime = 60;
+            ManaPot = 2;
             Lag = 100;
             WaitTime = 50;
-            ISBUptime = 30;
-            DrumsCount = 0;
-            UseYourDrum = false;
         }
 
         public string GetXml()

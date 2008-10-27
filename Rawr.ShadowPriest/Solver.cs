@@ -32,6 +32,38 @@ namespace Rawr.ShadowPriest
             public float UpTimeTimer { get; set; }
         }
 
+        public class SpellComparerDpCT: IComparer<Spell>
+        {
+            public int Compare(Spell a, Spell b)
+            {
+                if (a == null)
+                {
+                    if (b == null)
+                        return 0;
+                    return -1;
+                }
+                else if (b == null)
+                    return 1;
+                return (int)Math.Round(b.DpCT - a.DpCT);
+            }
+        }
+
+        public class SpellComparerDpM : IComparer<Spell>
+        {
+            public int Compare(Spell a, Spell b)
+            {
+                if (a == null)
+                {
+                    if (b == null)
+                        return 0;
+                    return -1;
+                }
+                else if (b == null)
+                    return 1;
+                return (int)Math.Round((b.DpM - a.DpM) * 100f);
+            }
+        }
+
         public SolverBase(Stats playerStats, Character _char) 
         {
             Name = "Base";
@@ -55,9 +87,6 @@ namespace Rawr.ShadowPriest
             PlayerStats = playerStats + Twinkets;
             character = _char;
             CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
-            SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
-            foreach(string spellname in CalculationOptions.SpellPriority)
-                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
             if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
@@ -133,10 +162,15 @@ namespace Rawr.ShadowPriest
         public SolverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
-            Name = "Full Shadow";
+            SpellPriority = new List<Spell>(Spell.ShadowSpellList.Count);
+            foreach (string spellname in Spell.ShadowSpellList)
+                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
+
+            Name = "Shadowform w/Mind Flay";
             Rotation = "Priority Based:";
             foreach (Spell spell in SpellPriority)
-                Rotation += "\r\n" + spell.Name;
+                Rotation += "\r\n- " + spell.Name;
+            Rotation += "\r\n\r\nMana Buffs:";
             ShadowHitChance = (float)Math.Min(100f, HitChance + character.PriestTalents.ShadowFocus * 1f);
             SWP = GetSpellByName("Shadow Word: Pain");
             MF = GetSpellByName("Mind Flay");
@@ -216,8 +250,8 @@ namespace Rawr.ShadowPriest
                 {
                     case "Vampiric Touch":
                     case "Mind Flay":
-                        // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1/2 Mind Flay)
-                        Damage -= MF.AvgDamage / 2 * (1f - ShadowHitChance / 100f);
+                        // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1 GCD worth of MF)
+                        Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);
                         // Also invokes a mana penalty by needing to cast it again.
                         Cost *= (2f - ShadowHitChance / 100f);
                         break;
@@ -257,19 +291,207 @@ namespace Rawr.ShadowPriest
 
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * ShadowHitChance / 100f;
             }
-            
-            DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
 
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
             float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
             regen += simStats.Mana / (CalculationOptions.FightLength * 60f);
-            regen += simStats.Mana * 0.4f * (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
             regen += simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+
+            if (MPS > regen && CalculationOptions.ManaAmt > 0)
+            {   // Not enough mana, use Mana Potion
+                regen += CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                Rotation += "\r\n- Used Mana Potion";
+            }
+
+            if (MPS > regen)
+            {   // Not enough mana, use Shadowfiend
+                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
+                regen += simStats.Mana * 0.4f * sf_rat;
+                DPS -= MF.DpS * sf_rat;
+                Rotation += "\r\n- Used Shadowfiend";
+            }
+
+            if (MPS > regen && character.PriestTalents.Dispersion > 0)
+            {   // Not enough mana, so eat a Dispersion, remove DPS worth of 6 seconds of mindflay.
+                float disp_rat = 6f / (60f * 3f);
+                regen += simStats.Mana * 0.06f * disp_rat;
+                DPS -= MF.DpS * disp_rat;
+                Rotation += "\r\n- Used Dispersion";
+            }
+
+            DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
             SustainDPS = (MPS < regen) ? DPS : (DPS * regen / MPS);
 
         }
     }
+   
+    public class SolverHoly : SolverBase
+    {   // Models Full Rotation
+        protected Spell SWP { get; set; }
+        protected Spell SWD { get; set; }
+        protected Spell MB { get; set; }
+        protected Spell DP { get; set; }
+        protected Spell SM { get; set; }
+        protected Spell PE { get; set; }
+
+        public SolverHoly(Stats BasicStats, Character character)
+            : base(BasicStats, character)
+        {
+
+            SpellPriority = new List<Spell>(Spell.HolySpellList.Count);
+            SpellComparerDpCT _scDpCT = new SpellComparerDpCT();
+            SpellComparerDpM _scDpM = new SpellComparerDpM();
+            foreach (string spellname in Spell.HolySpellList)
+                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
+
+            SWP = GetSpellByName("Shadow Word: Pain");
+            SWD = GetSpellByName("Shadow Word: Death");
+            MB = GetSpellByName("Mind Blast");
+            DP = GetSpellByName("Devouring Plague");
+            SM = GetSpellByName("Smite");
+            PE = GetSpellByName("Penance");
+
+            // Sort spells and remove any spell with worse mana efficiency than smite.
+            SpellPriority.Sort(_scDpM);
+            int i = SpellPriority.IndexOf(SM) + 1;
+            SpellPriority.RemoveRange(i, SpellPriority.Count - i);
+
+            // Sort spells, and remove any spell with worse damage pr cast time than smite.
+            SpellPriority.Sort(_scDpCT);
+            i = SpellPriority.IndexOf(SM) + 1; 
+            SpellPriority.RemoveRange(i, SpellPriority.Count - i);
+
+            if (character.PriestTalents.Penance > 0)
+                Name = "Holy Smite w/Penance";
+            else
+                Name = "Holy Smite";
+            Rotation = "Priority Based:";
+            foreach (Spell spell in SpellPriority)
+                Rotation += "\r\n- " + spell.Name;
+            Rotation += "\r\n\r\nMana Buffs:";
+        }
+
+        public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
+        {
+            if (SpellPriority.Count == 0)
+                return;
+
+            Stats simStats = PlayerStats.Clone();
+            float timer = 0;
+            int sequence = SpellPriority.Count - 1;
+            List<Spell> CastList = new List<Spell>();
+
+            while (timer < (CalculationOptions.FightLength * 60f))
+            {
+                Spell spell = GetCastSpell(timer);
+                if (spell == null)
+                {
+                    timer += 0.1f;
+                    continue;
+                }
+
+                CastList.Add(spell);
+
+                if (spell.DebuffDuration > 0f || spell.Cooldown > 0f)
+                    spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown);
+
+                timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+
+                if (spell == SpellPriority[sequence])
+                    sequence++;
+                else
+                    sequence = 0;
+                if (SpellPriority[sequence] == SM)
+                {   // Spell sequence just reset, lets take advantage of that.
+                    int i = SpellPriority.IndexOf(SM);
+                    CastList.RemoveRange(CastList.Count - i, i);
+                    break;
+                }
+            }
+
+
+            timer = 0;
+            foreach (Spell spell in CastList)
+            {
+                timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+                float Damage = spell.AvgDamage;
+                float Cost = spell.ManaCost - simStats.ManaRestorePerCast_5_15 * 0.05f;
+                switch (spell.Name)
+                {
+                    case "Smite":
+                    case "Shadow Word: Pain":
+                        // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of GCD of Smite DPS)
+                        Damage -= SM.DpS * SM.GlobalCooldown * (1f - HitChance / 100f);
+                        // Also invokes a mana penalty by needing to cast it again.
+                        Cost *= (2f - HitChance / 100f);
+                        break;
+                    case "Holy Fire":
+                    case "Mind Blast":
+                    case "Devouring Plague":
+                    case "Shadow Word: Death":
+                    case "Penance":
+                        // Spells that have cooldowns, a resist means full loss of damage.
+                        Damage *= HitChance / 100f;
+                        break;
+                    default:
+                        break;
+                }
+                Damage *= (1f + simStats.BonusShadowDamageMultiplier); // If there is shadow bonus damage there is holy bonus damage.
+                spell.SpellStatistics.DamageDone += Damage;
+                spell.SpellStatistics.ManaUsed += Cost;
+                OverallDamage += Damage;
+                OverallMana += Cost;
+            }
+
+            DPS = OverallDamage / timer;
+            if (simStats.TimbalsProc > 0.0f)
+            {
+                int dots = (PE != null) ? 3 : 0;
+                foreach (Spell spell in SpellPriority)
+                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                Spell Timbal = new Timbal(simStats, character);
+
+                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * HitChance / 100f;
+            }
+
+
+            float MPS = OverallMana / timer;
+            float TimeInFSR = 1f;
+            float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
+            regen += simStats.Mana / (CalculationOptions.FightLength * 60f);
+            regen += simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+
+            if (MPS > regen && CalculationOptions.ManaAmt > 0)
+            {   // Not enough mana, use Mana Potion
+                regen += CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                Rotation += "\r\n- Used Mana Potion";
+            }
+
+            if (MPS > regen)
+            {   // Not enough mana, use Shadowfiend
+                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
+                regen += simStats.Mana * 0.4f * sf_rat;
+                DPS -= SM.DpS * sf_rat;
+                Rotation += "\r\n- Used Shadowfiend";
+            }
+
+            if (MPS > regen)
+            {   // Not enough still, use Hymn of Hope
+                float hh_rat = 8f / (60f * 5f);
+                regen += simStats.Mana * 0.02f * hh_rat;
+                DPS -= SM.DpS * hh_rat;
+                Rotation += "\r\n- Used Hymn of Hope";
+            }
+
+            DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
+            SustainDPS = (MPS < regen) ? DPS : (DPS * regen / MPS);
+
+        }
+    }
+
+
+// Decrepated
 
     public class Solver : SolverBase
     {
@@ -284,7 +506,7 @@ namespace Rawr.ShadowPriest
         }
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
-        {
+        {/*
             if(SpellPriority.Count == 0)
                 return;
 
@@ -376,7 +598,7 @@ namespace Rawr.ShadowPriest
             }
 
             DPS = OverallDamage / (CalculationOptions.FightLength * 60f);
-            SustainDPS = OverallMana / (CalculationOptions.FightLength * 60f); // Meeehh
+            SustainDPS = OverallMana / (CalculationOptions.FightLength * 60f); // Meeehh*/
         }
     }
 }

@@ -200,7 +200,13 @@ namespace Rawr.ShadowPriest
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + stats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + stats.Mp5;
 
-            SolverShadow solver = new SolverShadow(stats, character);
+
+            SolverBase solver = null;
+            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
+                solver = new SolverShadow(stats, character);
+            else
+                solver = new SolverHoly(stats, character);
+
             solver.Calculate(calculatedStats);
 
             calculatedStats.DpsPoints = solver.DPS;
