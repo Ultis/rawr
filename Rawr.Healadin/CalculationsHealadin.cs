@@ -55,10 +55,7 @@ namespace Rawr.Healadin
             {
                 if (_customChartNames == null)
                     _customChartNames = new string[] {
-                    //"Healing per second",
-                    //"Healing per mana",
-                    //"Mana per second",
-                    //"Average heal"
+                    "Mana Breakdown",
 					};
                 return _customChartNames;
             }
@@ -133,17 +130,20 @@ namespace Rawr.Healadin
             float base_mana = 2672;
             float fight_length = calcOpts.Length * 60;
 			float active_length = fight_length * calcOpts.Activity;
-            calc.TotalMana = stats.Mana // Base Mana Pool
-                + fight_length * stats.Mp5 / 5 // Mp5
-                + stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment // Replenishment
-                + (1 + stats.BonusManaPotion) * calcOpts.ManaAmt // Mana Potion
-                + calcOpts.Spiritual // Spiritual Attunement
-                + (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 60f - .25f) : 0) // Arcane Torrent
-                + stats.Mana * .25f * (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea)); // Divine Plea
+
+            calc.ManaBase = stats.Mana;
+            calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 60f - .25f) : 0);
+            calc.ManaDivinePlea = stats.Mana * .25f * (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
+            calc.ManaMp5 = fight_length * stats.Mp5 / 5;
+            calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
+            calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment;
+            calc.ManaSpiritual = calcOpts.Spiritual;
             if (stats.MementoProc > 0)
             {
-                calc.TotalMana += (float)Math.Ceiling(fight_length / 60f - .25f) * stats.MementoProc * 3f;
+                calc.ManaOther+= (float)Math.Ceiling(fight_length / 60f - .25f) * stats.MementoProc * 3f;
             }
+            calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + calc.ManaReplenishment + calc.ManaSpiritual;
+
             float benediction = 1f - talents.Benediction * .02f;
 
             float gcds_used = 0;
@@ -174,22 +174,22 @@ namespace Rawr.Healadin
             calc.FoLHeal = (623f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier);
             float fol_baseMana = base_mana * .07f;
             calc.FoLCrit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
-            float fol_avgMana = fol_baseMana * (1 - .6f * calc.FoLCrit) - ied;
+            calc.FoLCost = fol_baseMana * (1 - .12f * talents.Illumination * calc.FoLCrit) - ied;
             float fol_avgHeal = calc.FoLHeal * (1f + .5f * calc.FoLCrit);
             calc.FoLCastTime = 1.5f / (1f + stats.SpellHaste);
             calc.FoLHPS = fol_avgHeal / calc.FoLCastTime;
-            float fol_mps = fol_avgMana / calc.FoLCastTime;
+            float fol_mps = calc.FoLCost / calc.FoLCastTime;
             #endregion
 
             #region Holy Light
             calc.HLHeal = (2978f + (stats.HLHeal + stats.SpellPower) * 1.66f) * (1f + talents.HealingLight * .04f);
             float hl_baseMana = base_mana * .29f;
             calc.HLCrit = stats.SpellCrit + stats.HLCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
-            float hl_avgMana = hl_baseMana * (1 - .6f * calc.HLCrit) - ied;
+            calc.HLCost = hl_baseMana * (1 - .12f * talents.Illumination * calc.HLCrit) - ied;
             float hl_avgHeal = calc.HLHeal * (1f + .5f * calc.HLCrit);
             calc.HLCastTime = 2f / (1f + stats.SpellHaste);
             calc.HLHPS = hl_avgHeal / calc.HLCastTime;
-            float hl_mps = hl_avgMana / calc.HLCastTime;
+            float hl_mps = calc.HLCost / calc.HLCastTime;
             #endregion
 
             float healing_mana = calc.TotalMana - mana_used;
@@ -255,80 +255,31 @@ namespace Rawr.Healadin
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            //CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
-            //if (calc == null) calc = new CharacterCalculationsHealadin();
-            //ComparisonCalculationHealadin FoL = new ComparisonCalculationHealadin("Flash of Light");
-            //ComparisonCalculationHealadin HL11 = new ComparisonCalculationHealadin("Holy Light 11");
-            //ComparisonCalculationHealadin HL10 = new ComparisonCalculationHealadin("Holy Light 10");
-            //ComparisonCalculationHealadin HL9 = new ComparisonCalculationHealadin("Holy Light 9");
-            //ComparisonCalculationHealadin HL8 = new ComparisonCalculationHealadin("Holy Light 8");
-            //ComparisonCalculationHealadin HL7 = new ComparisonCalculationHealadin("Holy Light 7");
-            //ComparisonCalculationHealadin HL6 = new ComparisonCalculationHealadin("Holy Light 6");
-            //ComparisonCalculationHealadin HL5 = new ComparisonCalculationHealadin("Holy Light 5");
-            //ComparisonCalculationHealadin HL4 = new ComparisonCalculationHealadin("Holy Light 4");
+            if (chartName == "Mana Breakdown")
+            {
+                CharacterCalculationsHealadin calc = GetCharacterCalculations(character) as CharacterCalculationsHealadin;
+                if (calc == null) calc = new CharacterCalculationsHealadin();
 
-            //CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-            //if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
+                ComparisonCalculationHealadin Base = new ComparisonCalculationHealadin("Base");
+                ComparisonCalculationHealadin Mp5 = new ComparisonCalculationHealadin("Mp5");
+                ComparisonCalculationHealadin Potion = new ComparisonCalculationHealadin("Potion");
+                ComparisonCalculationHealadin Replenishment = new ComparisonCalculationHealadin("Replenishment");
+                ComparisonCalculationHealadin ArcaneTorrent = new ComparisonCalculationHealadin("Arcane Torrent");
+                ComparisonCalculationHealadin DivinePlea = new ComparisonCalculationHealadin("Divine Plea");
+                ComparisonCalculationHealadin Spiritual = new ComparisonCalculationHealadin("Spiritual Atunement");
+                ComparisonCalculationHealadin Other = new ComparisonCalculationHealadin("Other");
 
-            //calc[0] = new Spell("Flash of Light", 7, calcOpts.BoL);
-            //calc[1] = new Spell("Holy Light", 11, calcOpts.BoL);
-            //calc[2] = new Spell("Holy Light", 10, calcOpts.BoL);
-            //calc[3] = new Spell("Holy Light", 9, calcOpts.BoL);
-            //calc[4] = new Spell("Holy Light", 8, calcOpts.BoL);
-            //calc[5] = new Spell("Holy Light", 7, calcOpts.BoL);
-            //calc[6] = new Spell("Holy Light", 6, calcOpts.BoL);
-            //calc[7] = new Spell("Holy Light", 5, calcOpts.BoL);
-            //calc[8] = new Spell("Holy Light", 4, calcOpts.BoL);
+                Base.OverallPoints = Base.ThroughputPoints = calc.ManaBase;
+                Mp5.OverallPoints = Mp5.ThroughputPoints = calc.ManaMp5;
+                Potion.OverallPoints = Potion.ThroughputPoints = calc.ManaPotion;
+                Replenishment.OverallPoints = Replenishment.ThroughputPoints = calc.ManaReplenishment;
+                ArcaneTorrent.OverallPoints = ArcaneTorrent.ThroughputPoints = calc.ManaArcaneTorrent;
+                DivinePlea.OverallPoints = DivinePlea.ThroughputPoints = calc.ManaDivinePlea;
+                Spiritual.OverallPoints = Spiritual.ThroughputPoints = calc.ManaSpiritual;
+                Other.OverallPoints = Other.ThroughputPoints = calc.ManaOther;
 
-            //switch (chartName)
-            //{
-            //    case "Healing per second":
-            //        FoL.OverallPoints = FoL.ThroughputPoints = calc[0].Hps;
-            //        HL11.OverallPoints = HL11.ThroughputPoints = calc[1].Hps;
-            //        HL10.OverallPoints = HL10.ThroughputPoints = calc[2].Hps;
-            //        HL9.OverallPoints = HL9.ThroughputPoints = calc[3].Hps;
-            //        HL8.OverallPoints = HL8.ThroughputPoints = calc[4].Hps;
-            //        HL7.OverallPoints = HL7.ThroughputPoints = calc[5].Hps;
-            //        HL6.OverallPoints = HL6.ThroughputPoints = calc[6].Hps;
-            //        HL5.OverallPoints = HL5.ThroughputPoints = calc[7].Hps;
-            //        HL4.OverallPoints = HL4.ThroughputPoints = calc[8].Hps;
-            //        break;
-            //    case "Average heal":
-            //        FoL.OverallPoints = FoL.ThroughputPoints = calc[0].AverageHeal;
-            //        HL11.OverallPoints = HL11.ThroughputPoints = calc[1].AverageHeal;
-            //        HL10.OverallPoints = HL10.ThroughputPoints = calc[2].AverageHeal;
-            //        HL9.OverallPoints = HL9.ThroughputPoints = calc[3].AverageHeal;
-            //        HL8.OverallPoints = HL8.ThroughputPoints = calc[4].AverageHeal;
-            //        HL7.OverallPoints = HL7.ThroughputPoints = calc[5].AverageHeal;
-            //        HL6.OverallPoints = HL6.ThroughputPoints = calc[6].AverageHeal;
-            //        HL5.OverallPoints = HL5.ThroughputPoints = calc[7].AverageHeal;
-            //        HL4.OverallPoints = HL4.ThroughputPoints = calc[8].AverageHeal;
-            //        break;
-            //    case "Healing per mana":
-            //        FoL.OverallPoints = FoL.LongevityPoints = calc[0].Hpm;
-            //        HL11.OverallPoints = HL11.LongevityPoints = calc[1].Hpm;
-            //        HL10.OverallPoints = HL10.LongevityPoints = calc[2].Hpm;
-            //        HL9.OverallPoints = HL9.LongevityPoints = calc[3].Hpm;
-            //        HL8.OverallPoints = HL8.LongevityPoints = calc[4].Hpm;
-            //        HL7.OverallPoints = HL7.LongevityPoints = calc[5].Hpm;
-            //        HL6.OverallPoints = HL6.LongevityPoints = calc[6].Hpm;
-            //        HL5.OverallPoints = HL5.LongevityPoints = calc[7].Hpm;
-            //        HL4.OverallPoints = HL4.LongevityPoints = calc[8].Hpm;
-            //        break;
-            //    case "Mana per second":
-            //        FoL.OverallPoints = FoL.LongevityPoints = calc[0].Mps;
-            //        HL11.OverallPoints = HL11.LongevityPoints = calc[1].Mps;
-            //        HL10.OverallPoints = HL10.LongevityPoints = calc[2].Mps;
-            //        HL9.OverallPoints = HL9.LongevityPoints = calc[3].Mps;
-            //        HL8.OverallPoints = HL8.LongevityPoints = calc[4].Mps;
-            //        HL7.OverallPoints = HL7.LongevityPoints = calc[5].Mps;
-            //        HL6.OverallPoints = HL6.LongevityPoints = calc[6].Mps;
-            //        HL5.OverallPoints = HL5.LongevityPoints = calc[7].Mps;
-            //        HL4.OverallPoints = HL4.LongevityPoints = calc[8].Mps;
-            //        break;
-            //}
-
-            //return new ComparisonCalculationBase[] { FoL, HL11, HL10, HL9, HL8, HL7, HL6, HL5, HL4 };
+                return new ComparisonCalculationBase[] { Base, Mp5, Potion, Replenishment, ArcaneTorrent, DivinePlea, Spiritual, Other };
+            }
             return new ComparisonCalculationBase[] {};
         }
 
@@ -346,6 +297,8 @@ namespace Rawr.Healadin
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
+                SpellCrit = stats.SpellCrit,
+                SpellHaste = stats.SpellHaste,
                 FoLBoL = stats.FoLBoL,
                 FoLCrit = stats.FoLCrit,
                 FoLHeal = stats.FoLHeal,
@@ -362,7 +315,7 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal + stats.ManaRestoreFromMaxManaPerSecond) > 0;

@@ -116,7 +116,7 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Replenishment = (float)nudDivinePlea.Value;
+                calcOpts.DivinePlea = (float)nudDivinePlea.Value;
                 Character.OnCalculationsInvalidated();
             }
         }

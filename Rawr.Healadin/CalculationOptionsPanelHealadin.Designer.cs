@@ -142,6 +142,7 @@
             // 
             // nudDivinePlea
             // 
+            this.nudDivinePlea.DecimalPlaces = 1;
             this.nudDivinePlea.Increment = new decimal(new int[] {
             1,
             0,
