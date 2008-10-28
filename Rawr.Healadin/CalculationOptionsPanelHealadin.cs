@@ -25,10 +25,18 @@ namespace Rawr.Healadin
 			CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
             cmbLength.Value = (decimal)calcOpts.Length;
             cmbManaAmt.Text = calcOpts.ManaAmt.ToString();
-            cmbSpiritual.Value = (decimal)calcOpts.Spiritual;
 
-			trkActivity.Value = (int)calcOpts.Activity;
+            nudSpiritual.Value = (decimal)calcOpts.Spiritual;
+            nudDivinePlea.Value = (decimal)calcOpts.DivinePlea;
+
+			trkActivity.Value = (int)(calcOpts.Activity * 100);
             lblActivity.Text = trkActivity.Value + "%";
+
+            chkJotP.Checked = calcOpts.JotP;
+            chkBoL.Checked = calcOpts.BoL;
+
+            trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
+            trkReplenishment.Text = trkReplenishment.Value + "%";
 
             loading = false;
         }
@@ -77,21 +85,61 @@ namespace Rawr.Healadin
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
                 lblActivity.Text = trkActivity.Value + "%";
-                calcOpts.Activity = trkActivity.Value;
+                calcOpts.Activity = trkActivity.Value / 100f;
                 Character.OnCalculationsInvalidated();
             }
         }
 
-        private void cmbSpiritual_ValueChanged(object sender, EventArgs e)
+        private void trkReplenishment_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Spiritual = (float)cmbSpiritual.Value;
+                lblReplenishment.Text = trkReplenishment.Value + "%";
+                calcOpts.Replenishment = trkReplenishment.Value / 100f;
                 Character.OnCalculationsInvalidated();
             }
         }
 
+        private void nudSpiritual_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Spiritual = (float)nudSpiritual.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudDivinePlea_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Replenishment = (float)nudDivinePlea.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkJotP_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.JotP = chkJotP.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkBoL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.BoL = chkBoL.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
     }
 
@@ -108,9 +156,13 @@ namespace Rawr.Healadin
 			return xml.ToString();
 		}
 
-		public float Length = 5;
+		public float Length = 6;
 		public float ManaAmt = 2400;
-		public float Activity = 80;
-		public float Spiritual = 0;
+		public float Activity = .85f;
+		public float Spiritual = 3600;
+        public float Replenishment = .9f;
+        public float DivinePlea = 1.5f;
+        public bool JotP = true;
+        public bool BoL = true;
 	}
 }
