@@ -467,7 +467,7 @@ namespace Rawr
                     break;
                 default:
                     throw new IndexOutOfRangeException("the name used for the gems is used in parsing their colors. Please follow the existing convention.");
-                    break;
+                   
             }
 
         }

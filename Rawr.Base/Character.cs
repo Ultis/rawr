@@ -465,24 +465,32 @@ namespace Rawr //O O . .
 
         public bool IsEquipped(Item itemToBeChecked)
         {
+                     
             CharacterSlot Loc = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
-            
-            if (Loc == CharacterSlot.Finger1)
+           
+            if ((Loc == CharacterSlot.Finger1)||(itemToBeChecked.Slot == Item.ItemSlot.OneHand))
             {
                 CharacterSlot tempLoc;
-                bool ring; 
+                
+                if (Loc == CharacterSlot.Finger1)
+                {
+                   tempLoc = CharacterSlot.Finger2;
+                }
+                else
+                {
+                   tempLoc = CharacterSlot.OffHand;
+                    Loc = CharacterSlot.MainHand;
+                }
+               
+                bool multiSlotToggle; 
                 bool A;
                 bool B;
-
-               tempLoc = CharacterSlot.Finger2;
-                
-               
                 
                 A=(IsEquipped(itemToBeChecked,Loc));
                 B=(IsEquipped(itemToBeChecked,tempLoc));
                  
-                ring = (A || B);
-                return ring;
+                multiSlotToggle = (A || B);
+                return multiSlotToggle;
             }
             
             else
@@ -492,12 +500,14 @@ namespace Rawr //O O . .
 
         }
         public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
-        {
-            string ID = itemToBeChecked.GemmedId;
-
-            if ( this[slot].GemmedId == ID)
+        { 
+                //int tempint = slot.GetHashCode();
+                string ID = itemToBeChecked.GemmedId;
+               
+                if (this[slot].GemmedId == ID)
                     return true;
             
+           
             return false;
         }
 
@@ -505,10 +515,12 @@ namespace Rawr //O O . .
         {
             
             //note: When converting ItemSlot.Finger and ItemSlot.Trinket, this will ALWAYS
-            //place them in Slot 1 of the 2 possibilities. 
+            //place them in Slot 1 of the 2 possibilities. Items listed as OneHand or TwoHand 
+            //in their Itemslot profile, will be parsed into the MainHand CharacterSlot.
             
             switch (slot)
             {
+               
                 case Rawr.Item.ItemSlot.Projectile: return Character.CharacterSlot.Projectile;
                 case Rawr.Item.ItemSlot.Head: return Character.CharacterSlot.Head;
                 case Rawr.Item.ItemSlot.Neck: return Character.CharacterSlot.Neck;
@@ -524,6 +536,8 @@ namespace Rawr //O O . .
                 case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
             //    case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
                 case Rawr.Item.ItemSlot.Back: return Character.CharacterSlot.Back;
+                case Rawr.Item.ItemSlot.OneHand: return Character.CharacterSlot.MainHand;
+                case Rawr.Item.ItemSlot.TwoHand: return Character.CharacterSlot.MainHand;
                 case Rawr.Item.ItemSlot.MainHand: return Character.CharacterSlot.MainHand;
                 case Rawr.Item.ItemSlot.OffHand: return Character.CharacterSlot.OffHand;
                 case Rawr.Item.ItemSlot.Ranged: return Character.CharacterSlot.Ranged;
