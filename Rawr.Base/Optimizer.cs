@@ -626,9 +626,14 @@ namespace Rawr
                                 lockedSlot = Character.CharacterSlot.Trinket2;
                             }
                             _character = BuildSingleItemSwapCharacter(_character, lockedSlot, lockedItems[0]);
-                            float best;
+                            // instead of just putting in the first gemming on the list select the best one
+                            float best = -10000000f;
                             CharacterCalculationsBase bestCalculations;
                             Character bestCharacter;
+                            if (lockedItems.Length > 1)
+                            {
+                                _character = LookForDirectItemUpgrades(null, lockedSlot, best, _character, out bestCalculations).Value;
+                            }
                             if (_thoroughness > 1)
                             {
                                 int saveThoroughness = _thoroughness;
