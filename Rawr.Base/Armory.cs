@@ -824,9 +824,9 @@ namespace Rawr
                             spellDesc = spellDesc.Substring(0, spellDesc.IndexOf(" spell damage and healing for 10 sec."));
                             stats.UnseenMoonDamageBonus += (float)int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Increases the final healing value of your Lifebloom by "))
+                        else if (spellDesc.StartsWith("Increases the spell power of the final healing value of your Lifebloom by "))
                         {
-                            spellDesc = spellDesc.Substring("Increases the final healing value of your Lifebloom by ".Length);
+                            spellDesc = spellDesc.Substring("Increases the spell power of the final healing value of your Lifebloom by ".Length);
                             spellDesc = spellDesc.Replace(".", "");
                             stats.LifebloomFinalHealBonus += (float)int.Parse(spellDesc);
                         }
@@ -846,15 +846,15 @@ namespace Rawr
                         {
                             stats.ReduceHealingTouchCost += 25;
                         }
-                        else if (spellDesc.StartsWith("Increases healing done by Rejuvenation by up to "))
+                        else if (spellDesc.StartsWith("Increases spell power of Rejuvenation by "))
                         {
-                            spellDesc = spellDesc.Substring("Increases healing done by Rejuvenation by up to ".Length);
+                            spellDesc = spellDesc.Substring("Increases spell power of Rejuvenation by ".Length);
                             spellDesc = spellDesc.Replace(".", "");
                             stats.RejuvenationHealBonus += (float)int.Parse(spellDesc);
                         }
-                        else if (spellDesc.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+                        else if (spellDesc.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by "))
                         {
-                            spellDesc = spellDesc.Substring("Increases the periodic healing of your Lifebloom by up to ".Length);
+                            spellDesc = spellDesc.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
                             spellDesc = spellDesc.Replace(".", "");
                             stats.LifebloomTickHealBonus += (float)int.Parse(spellDesc);
                         }
