@@ -9,7 +9,7 @@ namespace Rawr
 {
 	public static class ItemCache
 	{
-        public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data\\ItemCache.xml");
+		public static readonly string SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "ItemCache.xml");
 		private static ItemCacheInstance _instance = new ItemCacheInstance();
 		public static ItemCacheInstance Instance
 		{
@@ -291,8 +291,8 @@ namespace Rawr
                 writer.Close();
             }
 
-            LocationFactory.Save("Data\\ItemSource.xml");
-            ItemFilter.Save("Data\\ItemFilter.xml");
+			LocationFactory.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemSource.xml");
+			ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
 #else
             //this is handy for debugging
             foreach (Item item in AllItems)
@@ -343,8 +343,8 @@ namespace Rawr
 				AddItem(item, true, false);
 			}
 
-            LocationFactory.Load("Data\\ItemSource.xml");
-            ItemFilter.Load("Data\\ItemFilter.xml");
+			LocationFactory.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemSource.xml");
+			ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 

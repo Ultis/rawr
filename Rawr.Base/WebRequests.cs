@@ -339,7 +339,7 @@ namespace Rawr
 			talentTree = talentTree.Replace(" ", "");
 			talentName = talentName.Replace(" ", "");
 			string imageName = talentName + ".jpg";
-			string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + "\\" + talentTree + "\\" + imageName);
+			string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName);
 
 			if (!String.IsNullOrEmpty(talentTree) && !String.IsNullOrEmpty(talentName))
 			{

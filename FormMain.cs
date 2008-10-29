@@ -593,7 +593,7 @@ namespace Rawr
             ItemRefinement.updateBoxes();
             if (ItemRefinement.ShowDialog(this) == DialogResult.OK)
             {
-                ItemFilter.Save("Data\\ItemFilter.xml");
+                ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
             }
         }
 
@@ -1407,13 +1407,13 @@ namespace Rawr
             FormItemFilter.bindingSourceItemFilter.DataSource = ItemFilter.RegexList;
             if (FormItemFilter.ShowDialog(this) == DialogResult.OK)
             {
-                ItemFilter.Save("Data\\ItemFilter.xml");
+				ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
                 UpdateItemFilterDropDown();
                 ItemCache.OnItemsChanged();
             }
             else
             {
-                ItemFilter.Load("Data\\ItemFilter.xml");
+				ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
             }
         }
 

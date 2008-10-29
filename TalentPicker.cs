@@ -17,7 +17,7 @@ namespace Rawr
         private static readonly string _SavedFilePath;
         static TalentPicker()
         {
-            _SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data\\Talents.xml");
+			_SavedFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "Talents.xml");
         }
 
 		public TalentPicker()
