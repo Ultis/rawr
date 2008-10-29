@@ -234,7 +234,8 @@ namespace Rawr.Mage
                     else
                     {
                         maintainSnareState = (CastingState)MemberwiseClone();
-                        Array.Clear(maintainSnareState.Spells, 0, SpellIdCount);
+                        maintainSnareState.Spells = new Spell[SpellIdCount];
+                        maintainSnareState.Spells[(int)SpellId.Wand] = Spells[(int)SpellId.Wand];
                         maintainSnareState.SnaredTime = 1.0f;
                     }
                 }
