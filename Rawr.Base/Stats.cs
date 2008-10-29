@@ -89,7 +89,7 @@ namespace Rawr
         ManaSpringMp5Increase,
         ManaRestorePerCast,
         ManaRestorePerCast_5_15,
-        ManaRestorePerHit,
+        ManaRestoreFromMaxManaPerHit,
         ManaRestoreFromMaxManaPerSecond,
         MangleCostReduction,
         MementoProc,
@@ -982,11 +982,13 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.WindfuryAPBonus] = value; }
         }
 
+        [Percentage]
+        [DisplayName("% Max Mana / Hit")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestorePerHit
+        public float ManaRestoreFromMaxManaPerHit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerHit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerHit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreFromMaxManaPerHit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

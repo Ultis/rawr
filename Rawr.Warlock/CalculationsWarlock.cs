@@ -821,7 +821,7 @@ namespace Rawr.Warlock
                 HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaRestorePerCast = stats.ManaRestorePerCast,
-                ManaRestorePerHit = stats.ManaRestorePerHit,
+                ManaRestoreFromMaxManaPerHit = stats.ManaRestoreFromMaxManaPerHit,
                 SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
                 SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
@@ -866,7 +866,7 @@ namespace Rawr.Warlock
                 + stats.SpellPowerFor20SecOnUse2Min
                 + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min
-                + stats.ManaRestorePerHit
+                + stats.ManaRestoreFromMaxManaPerHit
                 + stats.SpellPowerFor10SecOnHit_10_45
                 + stats.SpellDamageFromSpiritPercentage
                 + stats.SpellPowerFor10SecOnResist

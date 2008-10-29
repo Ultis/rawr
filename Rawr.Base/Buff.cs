@@ -817,7 +817,7 @@ namespace Rawr
 			{
 				Name = "Judgement of Wisdom",
 				Group = "Mana Restore",
-				Stats = { ManaRestorePerHit = 0.02f }
+				Stats = { ManaRestoreFromMaxManaPerHit = 0.0025f }
 			});
 			#endregion
 

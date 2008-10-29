@@ -936,12 +936,12 @@ namespace Rawr.Moonkin
                     wrathAverageCastTime = rotation.Duration / (rotation.WrathCount * SpellRotation.Wrath.CastTime);
 
                 // Judgement of Wisdom
-                if (calcs.BasicStats.ManaRestorePerHit > 0)
+                if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
                 {
                     if (rotation.StarfireCount > 0)
-                        SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
+                        SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
                     if (rotation.WrathCount > 0)
-                        SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
+                        SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
                     rotation.CalculateRotationalVariables();
                 }
                 // Omen of Clarity
@@ -1118,12 +1118,12 @@ namespace Rawr.Moonkin
                     }
                 }
                 // Undo Judgement of Wisdom
-                if (calcs.BasicStats.ManaRestorePerHit > 0)
+                if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
                 {
                     if (rotation.StarfireCount > 0)
-                        SpellRotation.Starfire.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
+                        SpellRotation.Starfire.ManaCost += spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
                     if (rotation.WrathCount > 0)
-                        SpellRotation.Wrath.ManaCost += spellHitRate * calcs.BasicStats.ManaRestorePerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
+                        SpellRotation.Wrath.ManaCost += spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
                 }
 
                 // Restore Starfire/Wrath's cast time because the objects are reused
