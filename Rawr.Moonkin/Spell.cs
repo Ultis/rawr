@@ -976,8 +976,8 @@ namespace Rawr.Moonkin
                 rotation.ManaGained = effectiveMana;
 
                 // The heart of the matter.  Calculate rotation DPS based on previously calculated stats.
-                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(effectiveNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
-                float currentDPS = rotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
+                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(tempNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
+                float currentDPS = rotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
 
                 // Handle the Starfire glyph
@@ -1035,7 +1035,7 @@ namespace Rawr.Moonkin
                             };
                         }
                         newRotation.CalculateRotationalVariables();
-                        currentDPS = newRotation.DPS(effectiveArcaneDamage, effectiveNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
+                        currentDPS = newRotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
                         currentRawDPS = newRotation.RawDPS + trinketExtraDPS + treeDPS;
                         rotation.ManaUsed = newRotation.ManaUsed;
                         rotation.TimeToOOM = newRotation.TimeToOOM;
@@ -1062,7 +1062,7 @@ namespace Rawr.Moonkin
                     float normalLength = rotationLength - 10.0f + starfireAverageCastTime;
 
                     float timeInEclipse = 10.0f - starfireAverageCastTime;
-                    float eclipseDPS = SpellRotation.Wrath.DPS(effectiveNatureDamage, spellHitRate, spellCritRate) * 1.2f;
+                    float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f;
 
                     float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
                     float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
@@ -1085,7 +1085,7 @@ namespace Rawr.Moonkin
                     float normalLength = rotationLength - 10.0f + wrathAverageCastTime;
 
                     float timeInEclipse = 10.0f - wrathAverageCastTime;
-                    float eclipseDPS = SpellRotation.Starfire.DPS(effectiveArcaneDamage, spellHitRate, spellCritRate + 0.3f);
+                    float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f);
 
                     float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
                     float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
