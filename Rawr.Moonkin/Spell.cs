@@ -91,6 +91,18 @@ namespace Rawr.Moonkin
                 specialDamageModifier = value;
             }
         }
+        protected float idolExtraSpellPower = 0.0f;
+        public float IdolExtraSpellPower
+        {
+            get
+            {
+                return idolExtraSpellPower;
+            }
+            set
+            {
+                idolExtraSpellPower = value;
+            }
+        }
         protected float baseCriticalMultiplier = 0.5f;
         public float CriticalHitMultiplier
         {
@@ -144,12 +156,12 @@ namespace Rawr.Moonkin
 
         public float DPS(float spellDamage, float hitRate, float critRate)
         {
-            float damageCoefficient = (baseDamage + spellDamageMultiplier * spellDamage) * specialDamageModifier;
+            float damageCoefficient = (baseDamage + spellDamageMultiplier * (spellDamage + idolExtraSpellPower)) * specialDamageModifier;
             float critDamageCoefficient = baseCriticalMultiplier;
             float critChanceCoefficient = baseCriticalChance + critRate;
             float hitCoefficient = hitRate;
 
-            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / (dotEffect == null ? baseCastTime : dotEffect.Duration) + (dotEffect == null ? 0 : dotEffect.DPS(spellDamage, hitRate));
+            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / (dotEffect == null ? baseCastTime : dotEffect.Duration) + (dotEffect == null ? 0 : dotEffect.DPS(spellDamage + idolExtraSpellPower, hitRate));
         }
         protected DotEffect dotEffect = null;
         public DotEffect DoT
@@ -714,8 +726,8 @@ namespace Rawr.Moonkin
             SpellRotation.Starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
 
             // Add spell damage from idols
-            SpellRotation.Starfire.DamagePerHit += stats.StarfireDmg;
-            SpellRotation.Moonfire.DamagePerHit += stats.MoonfireDmg;
+            SpellRotation.Starfire.IdolExtraSpellPower += stats.StarfireDmg;
+            SpellRotation.Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
             SpellRotation.Wrath.DamagePerHit += stats.WrathDmg;
 
             // Add spell-specific damage
@@ -877,6 +889,13 @@ namespace Rawr.Moonkin
             SpellRotation.Moonfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             SpellRotation.Wrath.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             SpellRotation.InsectSwarm.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
+            // Judgement of Wisdom (now generic!)
+            if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
+            {
+                SpellRotation.Moonfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
+                SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
+                SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
+            }
 
             float maxDPS = 0.0f;
             float maxRawDPS = 0.0f;
@@ -935,32 +954,19 @@ namespace Rawr.Moonkin
                 if (rotation.WrathCount > 0)
                     wrathAverageCastTime = rotation.Duration / (rotation.WrathCount * SpellRotation.Wrath.CastTime);
 
-                // Judgement of Wisdom
-                if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
-                {
-                    if (rotation.StarfireCount > 0)
-                        SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
-                    if (rotation.WrathCount > 0)
-                        SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
-                    rotation.CalculateRotationalVariables();
-                }
                 // Omen of Clarity
                 if (character.DruidTalents.OmenOfClarity > 0)
                 {
                     // Starfire
                     if (starfireAverageCastTime > 0)
                     {
-                        float castsDuringCooldown = 10.0f / starfireAverageCastTime;
-                        float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
-                        float expectedProcChance = 1 / expectedCastsToProc;
+                        float expectedProcChance = (3.5f / 60.0f) * starfireAverageCastTime;
                         SpellRotation.Starfire.ManaCost -= SpellRotation.Starfire.ManaCost * expectedProcChance;
                     }
                     // Wrath
                     if (wrathAverageCastTime > 0)
                     {
-                        float castsDuringCooldown = 10.0f / wrathAverageCastTime;
-                        float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
-                        float expectedProcChance = 1 / expectedCastsToProc;
+                        float expectedProcChance = (3.5f / 60.0f) * wrathAverageCastTime;
                         SpellRotation.Wrath.ManaCost -= SpellRotation.Wrath.ManaCost * expectedProcChance;
                     }
                     rotation.CalculateRotationalVariables();
@@ -1103,27 +1109,15 @@ namespace Rawr.Moonkin
                     // Starfire
                     if (starfireAverageCastTime > 0)
                     {
-                        float castsDuringCooldown = 10.0f / starfireAverageCastTime;
-                        float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
-                        float expectedProcChance = 1 / expectedCastsToProc;
+                        float expectedProcChance = (3.5f / 60.0f) * starfireAverageCastTime;
                         SpellRotation.Starfire.ManaCost += SpellRotation.Starfire.ManaCost * expectedProcChance;
                     }
                     // Wrath
                     if (wrathAverageCastTime > 0)
                     {
-                        float castsDuringCooldown = 10.0f / wrathAverageCastTime;
-                        float expectedCastsToProc = (1 / (0.06f * spellHitRate)) + castsDuringCooldown;
-                        float expectedProcChance = 1 / expectedCastsToProc;
+                        float expectedProcChance = (3.5f / 60.0f) * wrathAverageCastTime;
                         SpellRotation.Wrath.ManaCost += SpellRotation.Wrath.ManaCost * expectedProcChance;
                     }
-                }
-                // Undo Judgement of Wisdom
-                if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
-                {
-                    if (rotation.StarfireCount > 0)
-                        SpellRotation.Starfire.ManaCost += spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / starfireAverageCastTime) + 1);
-                    if (rotation.WrathCount > 0)
-                        SpellRotation.Wrath.ManaCost += spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana / ((float)Math.Floor(4.0f / wrathAverageCastTime) + 1);
                 }
 
                 // Restore Starfire/Wrath's cast time because the objects are reused
