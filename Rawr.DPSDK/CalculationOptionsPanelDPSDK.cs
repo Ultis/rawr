@@ -350,6 +350,11 @@ namespace Rawr.DPSDK
             else { calcOpts.CryptFever = false; }
             Character.OnCalculationsInvalidated();
         }
+
+        private void btnRotation_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 	[Serializable]

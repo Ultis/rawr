@@ -57,10 +57,10 @@
             this.cbUREffect = new System.Windows.Forms.CheckBox();
             this.cbMagicVuln = new System.Windows.Forms.CheckBox();
             this.cbCryptFever = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.tbFightLength ) ).BeginInit();
             this.gbFightInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbFerociousInspiration)).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.nudTargetArmor ) ).BeginInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.tbFerociousInspiration ) ).BeginInit();
             this.gbDrums.SuspendLayout();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
@@ -68,7 +68,7 @@
             // lblTargetLevel
             // 
             this.lblTargetLevel.AutoSize = true;
-            this.lblTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.lblTargetLevel.Location = new System.Drawing.Point(6, 17);
             this.lblTargetLevel.Name = "lblTargetLevel";
             this.lblTargetLevel.Size = new System.Drawing.Size(77, 15);
@@ -78,7 +78,7 @@
             // cbTargetLevel
             // 
             this.cbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbTargetLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.cbTargetLevel.FormattingEnabled = true;
             this.cbTargetLevel.Items.AddRange(new object[] {
             "70",
@@ -110,7 +110,7 @@
             this.gbFightInfo.Controls.Add(this.lblTargetLevel);
             this.gbFightInfo.Controls.Add(this.cbTargetLevel);
             this.gbFightInfo.Controls.Add(this.lblFightLength);
-            this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbFightInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.gbFightInfo.Location = new System.Drawing.Point(13, 3);
             this.gbFightInfo.Name = "gbFightInfo";
             this.gbFightInfo.Size = new System.Drawing.Size(185, 127);
@@ -157,7 +157,7 @@
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFightLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.lblFightLength.Location = new System.Drawing.Point(6, 73);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(78, 15);
@@ -166,7 +166,7 @@
             // 
             // btnGraph
             // 
-            this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGraph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.btnGraph.Location = new System.Drawing.Point(61, 794);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(75, 23);
@@ -178,7 +178,7 @@
             // checkBoxMeta
             // 
             this.checkBoxMeta.AutoSize = true;
-            this.checkBoxMeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxMeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.checkBoxMeta.Location = new System.Drawing.Point(13, 136);
             this.checkBoxMeta.Name = "checkBoxMeta";
             this.checkBoxMeta.Size = new System.Drawing.Size(180, 19);
@@ -189,8 +189,8 @@
             // 
             // lblFerociousInspirationNum
             // 
-            this.lblFerociousInspirationNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFerociousInspirationNum.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.lblFerociousInspirationNum.AutoSize = true;
             this.lblFerociousInspirationNum.Location = new System.Drawing.Point(67, 276);
             this.lblFerociousInspirationNum.Name = "lblFerociousInspirationNum";
@@ -200,8 +200,8 @@
             // 
             // tbFerociousInspiration
             // 
-            this.tbFerociousInspiration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFerociousInspiration.Anchor = ( (System.Windows.Forms.AnchorStyles)( ( ( System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left )
+                        | System.Windows.Forms.AnchorStyles.Right ) ) );
             this.tbFerociousInspiration.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbFerociousInspiration.Location = new System.Drawing.Point(70, 244);
             this.tbFerociousInspiration.Maximum = 4;
@@ -225,7 +225,7 @@
             // chkBloodLust
             // 
             this.chkBloodLust.AutoSize = true;
-            this.chkBloodLust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkBloodLust.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.chkBloodLust.Location = new System.Drawing.Point(13, 161);
             this.chkBloodLust.Name = "chkBloodLust";
             this.chkBloodLust.Size = new System.Drawing.Size(164, 19);
@@ -239,7 +239,7 @@
             this.gbDrums.Controls.Add(this.rbDrumsBattle);
             this.gbDrums.Controls.Add(this.rbDrumsWar);
             this.gbDrums.Controls.Add(this.rbDrumsNone);
-            this.gbDrums.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbDrums.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.gbDrums.Location = new System.Drawing.Point(13, 186);
             this.gbDrums.Name = "gbDrums";
             this.gbDrums.Size = new System.Drawing.Size(185, 52);
@@ -250,7 +250,7 @@
             // rbDrumsBattle
             // 
             this.rbDrumsBattle.AutoSize = true;
-            this.rbDrumsBattle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbDrumsBattle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbDrumsBattle.Location = new System.Drawing.Point(124, 20);
             this.rbDrumsBattle.Name = "rbDrumsBattle";
             this.rbDrumsBattle.Size = new System.Drawing.Size(56, 19);
@@ -263,7 +263,7 @@
             // rbDrumsWar
             // 
             this.rbDrumsWar.AutoSize = true;
-            this.rbDrumsWar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbDrumsWar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbDrumsWar.Location = new System.Drawing.Point(66, 20);
             this.rbDrumsWar.Name = "rbDrumsWar";
             this.rbDrumsWar.Size = new System.Drawing.Size(47, 19);
@@ -276,7 +276,7 @@
             // rbDrumsNone
             // 
             this.rbDrumsNone.AutoSize = true;
-            this.rbDrumsNone.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbDrumsNone.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbDrumsNone.Location = new System.Drawing.Point(5, 20);
             this.rbDrumsNone.Name = "rbDrumsNone";
             this.rbDrumsNone.Size = new System.Drawing.Size(55, 19);
@@ -288,7 +288,7 @@
             // 
             // gbMajorGlyph
             // 
-            this.gbMajorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbMajorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.gbMajorGlyph.Location = new System.Drawing.Point(13, 295);
             this.gbMajorGlyph.Name = "gbMajorGlyph";
             this.gbMajorGlyph.Size = new System.Drawing.Size(185, 148);
@@ -298,7 +298,7 @@
             // 
             // gbMinorGlyph
             // 
-            this.gbMinorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbMinorGlyph.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.gbMinorGlyph.Location = new System.Drawing.Point(13, 449);
             this.gbMinorGlyph.Name = "gbMinorGlyph";
             this.gbMinorGlyph.Size = new System.Drawing.Size(185, 46);
@@ -311,7 +311,7 @@
             this.gbRotation.Controls.Add(this.rbFrost);
             this.gbRotation.Controls.Add(this.rbBlood);
             this.gbRotation.Controls.Add(this.rbUnholy);
-            this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.gbRotation.Location = new System.Drawing.Point(13, 501);
             this.gbRotation.Name = "gbRotation";
             this.gbRotation.Size = new System.Drawing.Size(185, 74);
@@ -322,7 +322,7 @@
             // rbFrost
             // 
             this.rbFrost.AutoSize = true;
-            this.rbFrost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbFrost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbFrost.Location = new System.Drawing.Point(124, 20);
             this.rbFrost.Name = "rbFrost";
             this.rbFrost.Size = new System.Drawing.Size(52, 19);
@@ -335,7 +335,7 @@
             // rbBlood
             // 
             this.rbBlood.AutoSize = true;
-            this.rbBlood.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbBlood.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbBlood.Location = new System.Drawing.Point(66, 49);
             this.rbBlood.Name = "rbBlood";
             this.rbBlood.Size = new System.Drawing.Size(57, 19);
@@ -348,7 +348,7 @@
             // rbUnholy
             // 
             this.rbUnholy.AutoSize = true;
-            this.rbUnholy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbUnholy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.rbUnholy.Location = new System.Drawing.Point(9, 20);
             this.rbUnholy.Name = "rbUnholy";
             this.rbUnholy.Size = new System.Drawing.Size(63, 19);
@@ -360,18 +360,19 @@
             // 
             // btnRotation
             // 
-            this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.btnRotation.Location = new System.Drawing.Point(39, 581);
             this.btnRotation.Name = "btnRotation";
             this.btnRotation.Size = new System.Drawing.Size(125, 23);
             this.btnRotation.TabIndex = 36;
             this.btnRotation.Text = "Rotation Details";
             this.btnRotation.UseVisualStyleBackColor = true;
+            this.btnRotation.Click += new System.EventHandler(this.btnRotation_Click);
             // 
             // cbWindfuryEffect
             // 
             this.cbWindfuryEffect.AutoSize = true;
-            this.cbWindfuryEffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbWindfuryEffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.cbWindfuryEffect.Location = new System.Drawing.Point(13, 610);
             this.cbWindfuryEffect.Name = "cbWindfuryEffect";
             this.cbWindfuryEffect.Size = new System.Drawing.Size(160, 19);
@@ -383,7 +384,7 @@
             // cbUREffect
             // 
             this.cbUREffect.AutoSize = true;
-            this.cbUREffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbUREffect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.cbUREffect.Location = new System.Drawing.Point(13, 635);
             this.cbUREffect.Name = "cbUREffect";
             this.cbUREffect.Size = new System.Drawing.Size(119, 19);
@@ -395,7 +396,7 @@
             // cbMagicVuln
             // 
             this.cbMagicVuln.AutoSize = true;
-            this.cbMagicVuln.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbMagicVuln.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.cbMagicVuln.Location = new System.Drawing.Point(13, 660);
             this.cbMagicVuln.Name = "cbMagicVuln";
             this.cbMagicVuln.Size = new System.Drawing.Size(129, 19);
@@ -407,7 +408,7 @@
             // cbCryptFever
             // 
             this.cbCryptFever.AutoSize = true;
-            this.cbCryptFever.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCryptFever.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
             this.cbCryptFever.Location = new System.Drawing.Point(13, 685);
             this.cbCryptFever.Name = "cbCryptFever";
             this.cbCryptFever.Size = new System.Drawing.Size(86, 19);
@@ -439,11 +440,11 @@
             this.Controls.Add(this.gbFightInfo);
             this.Name = "CalculationOptionsPanelDPSDK";
             this.Size = new System.Drawing.Size(209, 820);
-            ((System.ComponentModel.ISupportInitialize)(this.tbFightLength)).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.tbFightLength ) ).EndInit();
             this.gbFightInfo.ResumeLayout(false);
             this.gbFightInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTargetArmor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbFerociousInspiration)).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.nudTargetArmor ) ).EndInit();
+            ( (System.ComponentModel.ISupportInitialize)( this.tbFerociousInspiration ) ).EndInit();
             this.gbDrums.ResumeLayout(false);
             this.gbDrums.PerformLayout();
             this.gbRotation.ResumeLayout(false);

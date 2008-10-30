@@ -32,7 +32,7 @@ namespace Rawr.DPSDK
         
         public enum Type
         {            
-            Blood, Frost, Unholy
+            Custom, Blood, Frost, Unholy
         }
 
         public Rotation()
@@ -92,6 +92,22 @@ namespace Rawr.DPSDK
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 16f;
+                    break;
+                case Type.Custom:
+                    numDisease = 0f;
+                    diseaseUptime = 0f;
+                    DeathCoil = 0f;
+                    IcyTouch = 0f;
+                    PlagueStrike = 0f;
+                    ScourgeStrike = 0f;
+                    UnholyBlight = 0f;
+                    FrostStrike = 0f;
+                    HowlingBlast = 0f;
+                    Obliterate = 0f;
+                    BloodStrike = 0f;
+                    HeartStrike = 0f;
+                    DancingRuneWeapon = 0f;
+                    curRotationDuration = 0f;
                     break;
             }
 
