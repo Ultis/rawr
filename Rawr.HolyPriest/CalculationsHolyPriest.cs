@@ -32,7 +32,7 @@ namespace Rawr.HolyPriest
                         _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
                         break;
                 }
-               
+                _currentChartName = null;
                 return _subPointNameColors;
             }
         }

@@ -48,9 +48,9 @@ namespace Rawr.ShadowPriest
 
     public class SpellStatistics
     {
-        public int CritCount { get; set; }
-        public int MissCount { get; set; }
-        public int HitCount { get; set; }
+        public float CritCount { get; set; }
+        public float MissCount { get; set; }
+        public float HitCount { get; set; }
         public float CooldownReset { get; set; }
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
@@ -429,8 +429,10 @@ namespace Rawr.ShadowPriest
 
         protected void Calculate(Stats stats, Character character)
         {
-            MinDamage = MaxDamage = (MinDamage + stats.SpellPower
+            MinDamage = MaxDamage = (MinDamage * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
+                + stats.SpellPower * 1.88f
                 * (DamageCoef + character.PriestTalents.BorrowedTime * 0.04f))
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 

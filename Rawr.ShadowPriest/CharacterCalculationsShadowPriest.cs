@@ -60,6 +60,14 @@ namespace Rawr.ShadowPriest
             set { subPoints[2] = value; }
         }
 
+        public SolverBase GetSolver(Character character, Stats stats)
+        {
+            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
+                return new SolverShadow(stats, character);
+            else
+                return new SolverHoly(stats, character);
+        }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -123,11 +131,7 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), (BasicStats.HasteRating / 15.77).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - (BasicStats.HasteRating / 15.77f)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
-            SolverBase solver = null;
-            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
-                solver = new SolverShadow(BasicStats, character);
-            else
-                solver = new SolverHoly(BasicStats, character);
+            SolverBase solver = GetSolver(character, BasicStats);
             solver.Calculate(this);
 
             dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));

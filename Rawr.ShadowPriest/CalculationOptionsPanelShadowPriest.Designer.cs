@@ -42,12 +42,18 @@
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.trkShadowfiend = new System.Windows.Forms.TrackBar();
             this.trkReplenishment = new System.Windows.Forms.TrackBar();
+            this.trkJoW = new System.Windows.Forms.TrackBar();
             this.lblShadowfiend = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
+            this.lblJoW = new System.Windows.Forms.Label();
+            this.trkSurvivability = new System.Windows.Forms.TrackBar();
+            this.lblSurvivability = new System.Windows.Forms.Label();
             this.gbSpellPriority.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).BeginInit();
             this.SuspendLayout();
             // 
             // lblFightLength
@@ -62,7 +68,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 198);
+            this.label4.Location = new System.Drawing.Point(9, 239);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 2;
@@ -75,9 +81,10 @@
             this.cmbManaAmt.Items.AddRange(new object[] {
             "(None) 0",
             "(Major) 1350-2250, Avg 1800",
+            "(Mad) 1650-2750, Avg 2200",
             "(Super) 1800-3000, Avg 2400",
             "(Runic) 4200-4400, Avg 4300"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(90, 198);
+            this.cmbManaAmt.Location = new System.Drawing.Point(90, 239);
             this.cmbManaAmt.Name = "cmbManaAmt";
             this.cmbManaAmt.Size = new System.Drawing.Size(192, 21);
             this.cmbManaAmt.TabIndex = 0;
@@ -152,7 +159,7 @@
             // trkShadowfiend
             // 
             this.trkShadowfiend.Location = new System.Drawing.Point(12, 101);
-            this.trkShadowfiend.Maximum = 100;
+            this.trkShadowfiend.Maximum = 150;
             this.trkShadowfiend.Name = "trkShadowfiend";
             this.trkShadowfiend.Size = new System.Drawing.Size(270, 42);
             this.trkShadowfiend.TabIndex = 46;
@@ -171,10 +178,21 @@
             this.toolTip1.SetToolTip(this.trkReplenishment, "How much uptime do you expect on Replenishment?");
             this.trkReplenishment.Scroll += new System.EventHandler(this.trkReplenishment_Scroll);
             // 
+            // trkJoW
+            // 
+            this.trkJoW.Location = new System.Drawing.Point(12, 195);
+            this.trkJoW.Maximum = 100;
+            this.trkJoW.Name = "trkJoW";
+            this.trkJoW.Size = new System.Drawing.Size(270, 42);
+            this.trkJoW.TabIndex = 50;
+            this.trkJoW.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkJoW, "Uptime of Judgment of Wisdom on Target.");
+            this.trkJoW.Scroll += new System.EventHandler(this.trkJoW_Scroll);
+            // 
             // lblShadowfiend
             // 
             this.lblShadowfiend.AutoSize = true;
-            this.lblShadowfiend.Location = new System.Drawing.Point(9, 85);
+            this.lblShadowfiend.Location = new System.Drawing.Point(9, 81);
             this.lblShadowfiend.Name = "lblShadowfiend";
             this.lblShadowfiend.Size = new System.Drawing.Size(80, 13);
             this.lblShadowfiend.TabIndex = 45;
@@ -183,16 +201,49 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(9, 134);
+            this.lblReplenishment.Location = new System.Drawing.Point(9, 130);
             this.lblReplenishment.Name = "lblReplenishment";
             this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
             this.lblReplenishment.TabIndex = 47;
             this.lblReplenishment.Text = "% Replenishment";
             // 
+            // lblJoW
+            // 
+            this.lblJoW.AutoSize = true;
+            this.lblJoW.Location = new System.Drawing.Point(9, 179);
+            this.lblJoW.Name = "lblJoW";
+            this.lblJoW.Size = new System.Drawing.Size(123, 13);
+            this.lblJoW.TabIndex = 49;
+            this.lblJoW.Text = "% Judgement of Wisdom";
+            // 
+            // trkSurvivability
+            // 
+            this.trkSurvivability.Location = new System.Drawing.Point(12, 278);
+            this.trkSurvivability.Maximum = 100;
+            this.trkSurvivability.Name = "trkSurvivability";
+            this.trkSurvivability.Size = new System.Drawing.Size(270, 42);
+            this.trkSurvivability.TabIndex = 51;
+            this.trkSurvivability.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkSurvivability, "Tell Rawr how much you value your life.");
+            this.trkSurvivability.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // lblSurvivability
+            // 
+            this.lblSurvivability.AutoSize = true;
+            this.lblSurvivability.Location = new System.Drawing.Point(9, 262);
+            this.lblSurvivability.Name = "lblSurvivability";
+            this.lblSurvivability.Size = new System.Drawing.Size(121, 13);
+            this.lblSurvivability.TabIndex = 52;
+            this.lblSurvivability.Text = "% Focus on Survivability";
+            // 
             // CalculationOptionsPanelShadowPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblSurvivability);
+            this.Controls.Add(this.trkSurvivability);
+            this.Controls.Add(this.trkJoW);
+            this.Controls.Add(this.lblJoW);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.trkReplenishment);
             this.Controls.Add(this.cmbManaAmt);
@@ -210,6 +261,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -231,5 +284,9 @@
         private System.Windows.Forms.TrackBar trkShadowfiend;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.TrackBar trkReplenishment;
+        private System.Windows.Forms.Label lblJoW;
+        private System.Windows.Forms.TrackBar trkJoW;
+        private System.Windows.Forms.TrackBar trkSurvivability;
+        private System.Windows.Forms.Label lblSurvivability;
     }
 }

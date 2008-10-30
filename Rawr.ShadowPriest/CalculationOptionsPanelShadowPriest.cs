@@ -35,6 +35,11 @@ namespace Rawr.ShadowPriest
             trkReplenishment.Value = (int)calcOpts.Replenishment;
             lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
 
+            trkJoW.Value = (int)calcOpts.JoW;
+            lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+
+            trkSurvivability.Value = (int)calcOpts.Survivability;
+            lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
             
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -105,6 +110,28 @@ namespace Rawr.ShadowPriest
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void trkJoW_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.JoW = trkJoW.Value;
+                lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.Survivability = trkSurvivability.Value;
+                lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
     [Serializable]
 	public class CalculationOptionsShadowPriest : ICalculationOptionBase
@@ -113,13 +140,15 @@ namespace Rawr.ShadowPriest
         public float FightLength { get; set; }
         public float Shadowfiend { get; set; }
         public float Replenishment { get; set; }
+        public float JoW { get; set; }
+        public float Survivability { get; set; }
 
         public List<string> SpellPriority { get; set; }
 
         private static readonly List<int> targetHit = new List<int>() {100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39};
         public int TargetHit { get { return targetHit[TargetLevel]; } }
 
-        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2400, 4300 };
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
         public int ManaPot { get; set; }
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public float Spriest { get; set; }
@@ -132,9 +161,11 @@ namespace Rawr.ShadowPriest
             FightLength = 6f;
             Shadowfiend = 80f;
             Replenishment = 100f;
+            JoW = 100f;
+            Survivability = 5f;
 
             SpellPriority = null;
-            ManaPot = 2;
+            ManaPot = 3;
             Lag = 100;
             WaitTime = 50;
         }

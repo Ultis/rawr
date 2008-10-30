@@ -1039,10 +1039,10 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character, int rank)
         {
             Rank = rank;
-            MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal +
-                stats.SpellPower * SP2HP * HealingCoef * (1 - baseSpellTable[Rank - 1].RankCoef)
-                + stats.SpellPower * SP2HP * character.PriestTalents.BorrowedTime * 0.08f)
+            MinHeal = MaxHeal = (baseSpellTable[Rank - 1].MinHeal * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
+                + stats.SpellPower * SP2HP * (HealingCoef + character.PriestTalents.BorrowedTime * 0.08f) * (1 - baseSpellTable[Rank - 1].RankCoef))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
 
             ManaCostBase = (int)Math.Floor(baseSpellTable[Rank - 1].ManaCostBase / 100f * BaseMana[character.Level]);

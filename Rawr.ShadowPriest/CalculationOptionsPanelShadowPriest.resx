@@ -121,6 +121,6 @@
     <value>17, 17</value>
   </metadata>
   <data name="trkShadowfiend.ToolTip" xml:space="preserve">
-    <value>If Shadowfiend hits on all hits, it will regenerate 40% of your maximum mana. Against a Boss mob, the Shadowfiend will miss 9% of the swings, and 6.5% of the swings are dodged. This gives it a 15.5% chance to not hit.</value>
+    <value>Tells Rawr how effective your Shadowfiend is expected to be. Against a boss, your Shadowfiend has a 9% chance to miss, and 6.5% chance to be dodged, a total of 15.5% miss. Some haste effects like Windfury Totem and Heroism will affect the Shadowfiend, for up to a maximum effect of 150%.</value>
   </data>
 </root>

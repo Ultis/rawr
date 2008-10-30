@@ -18,6 +18,7 @@ namespace Rawr.ShadowPriest
         public Character character { get; set; }
         public float HitChance { get; set; }
         public List<Trinket> Trinkets { get; set; }
+        public List<ManaSource> ManaSources { get; set; }
 
         public string Name { get; protected set; }
         public string Rotation { get; protected set; }
@@ -30,6 +31,17 @@ namespace Rawr.ShadowPriest
             public float CooldownTimer { get; set; }
             public float UpTime { get; set; }
             public float UpTimeTimer { get; set; }
+        }
+
+        public class ManaSource
+        {
+            public string Name { get; set; }
+            public float Value { get; set; }
+
+            public ManaSource(string name, float value)
+            {
+                Name = name; Value = value;
+            }
         }
 
         public class SpellComparerDpCT: IComparer<Spell>
@@ -97,6 +109,7 @@ namespace Rawr.ShadowPriest
 
             Trinkets = new List<Trinket>();
             Sequence = new Dictionary<float, Spell>();
+            ManaSources = new List<ManaSource>();
         }
 
         public virtual void Calculate(CharacterCalculationsShadowPriest calculatedStats)
@@ -162,8 +175,8 @@ namespace Rawr.ShadowPriest
         public SolverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
         {
-            SpellPriority = new List<Spell>(Spell.ShadowSpellList.Count);
-            foreach (string spellname in Spell.ShadowSpellList)
+            SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
+            foreach (string spellname in CalculationOptions.SpellPriority)
                 SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
 
             Name = "Shadowform w/Mind Flay";
@@ -207,7 +220,17 @@ namespace Rawr.ShadowPriest
 
             // Initial SW:Pain application
             if (bPnS)
+            {
                 SWP.SpellStatistics.CooldownReset = timer + SWP.DebuffDuration;
+                SWP.SpellStatistics.HitCount++;
+                SWP.SpellStatistics.ManaUsed = SWP.ManaCost;
+            }
+
+            if (VE != null)
+            {
+                VE.SpellStatistics.HitCount = CalculationOptions.FightLength;
+                VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost; 
+            }
 
             while (timer < (CalculationOptions.FightLength * 60f))
             {
@@ -219,6 +242,7 @@ namespace Rawr.ShadowPriest
                 }
 
                 CastList.Add(spell);
+                spell.SpellStatistics.HitCount++;
 
                 if (bPnS && spell == MF)
                     SWP.SpellStatistics.CooldownReset = timer + SWP.DebuffDuration;
@@ -241,9 +265,15 @@ namespace Rawr.ShadowPriest
 
 
             timer = 0;
+            float HPC = 0, CPC = 0; // Hits Pr Cycle, Crits Pr Cycle
             foreach (Spell spell in CastList)
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+                HPC++;
+                if (spell == MF)
+                    HPC += 2;   // MF can hit 3 times / cast
+                if (spell == SWD || spell == MB)
+                    CPC++;
                 float Damage = spell.AvgDamage;
                 float Cost = spell.ManaCost - simStats.ManaRestorePerCast_5_15 * 0.05f;
                 switch (spell.Name)
@@ -260,7 +290,7 @@ namespace Rawr.ShadowPriest
                         // Pain and Suffering.
                         if (bPnS)
                             break;
-                        Damage -= MF.AvgDamage / 2 * (1f - ShadowHitChance / 100f);
+                        Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);
                         Cost *= (2f - ShadowHitChance / 100f);
                         break;
                     case "Mind Blast":
@@ -280,6 +310,19 @@ namespace Rawr.ShadowPriest
                 OverallDamage += Damage;
                 OverallMana += Cost;
             }
+            CPC = CPC / timer;
+            HPC = HPC / timer;
+            foreach (Spell spell in SpellPriority)
+            {
+                spell.SpellStatistics.HitCount /= timer;
+                spell.SpellStatistics.CritCount = spell.SpellStatistics.HitCount * spell.CritChance;
+                spell.SpellStatistics.MissCount = spell.SpellStatistics.HitCount * (1 - ShadowHitChance / 100f);
+                spell.SpellStatistics.ManaUsed /= timer;
+                if (bPnS && spell == SWP)
+                    spell.SpellStatistics.DamageDone = spell.DpS * (1f + simStats.BonusShadowDamageMultiplier);
+                else
+                    spell.SpellStatistics.DamageDone /= timer;
+            }
 
             DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) : 0);
             if (simStats.TimbalsProc > 0.0f)
@@ -292,36 +335,64 @@ namespace Rawr.ShadowPriest
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * ShadowHitChance / 100f;
             }
 
+            float SustDPS = DPS;
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
-            float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
-            regen += simStats.Mana / (CalculationOptions.FightLength * 60f);
-            regen += simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+            float ImpSTUptime = CPC * MB.CritChance * 8f;
+            simStats.Spirit *= 1f + ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
+            float SpiritRegen = (float)Math.Floor((0.001f + 0.0093271 * simStats.Spirit * Math.Sqrt(simStats.Intellect)));
+            float regen = 0, tmpregen = 0;
+            tmpregen = (SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR + SpiritRegen * (1f - TimeInFSR));
+            ManaSources.Add(new ManaSource("Meditation", tmpregen));
+            regen += tmpregen;
+            tmpregen = simStats.Mp5 / 5;
+            ManaSources.Add(new ManaSource("MP5", tmpregen));
+            regen += tmpregen;
+            tmpregen = SpiritRegen * character.PriestTalents.ImprovedSpiritTap * 0.1f * ImpSTUptime;
+            ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
+            regen += tmpregen;
+            tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
+            ManaSources.Add(new ManaSource("Intellect", tmpregen));
+            regen += tmpregen;
+            tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
+            ManaSources.Add(new ManaSource("Replenishment", tmpregen));
+            regen += tmpregen;
+            tmpregen = simStats.Mana * 0.01f * (HPC * 0.25f) * (CalculationOptions.JoW / 100f);
+            ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
+            regen += tmpregen;
 
             if (MPS > regen && CalculationOptions.ManaAmt > 0)
             {   // Not enough mana, use Mana Potion
-                regen += CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                tmpregen = CalculationOptions.ManaAmt / (CalculationOptions.FightLength * 60f) * (1f + simStats.BonusManaPotion);
+                ManaSources.Add(new ManaSource("Mana Potion", tmpregen));
+                regen += tmpregen;
                 Rotation += "\r\n- Used Mana Potion";
             }
 
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
                 float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
-                regen += simStats.Mana * 0.4f * sf_rat;
-                DPS -= MF.DpS * sf_rat;
+                tmpregen = simStats.Mana * 0.4f * sf_rat;
+                ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
+                regen += tmpregen;
+                SustDPS -= MF.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";
             }
 
             if (MPS > regen && character.PriestTalents.Dispersion > 0)
             {   // Not enough mana, so eat a Dispersion, remove DPS worth of 6 seconds of mindflay.
                 float disp_rat = 6f / (60f * 3f);
-                regen += simStats.Mana * 0.06f * disp_rat;
-                DPS -= MF.DpS * disp_rat;
+                tmpregen = simStats.Mana * 0.06f * disp_rat;
+                ManaSources.Add(new ManaSource("Dispersion", tmpregen));
+                regen += tmpregen;
+                SustDPS -= MF.DpS * disp_rat;
                 Rotation += "\r\n- Used Dispersion";
             }
 
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
-            SustainDPS = (MPS < regen) ? DPS : (DPS * regen / MPS);
+            SustDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+
+            SustainDPS = (MPS < regen) ? SustDPS : (SustDPS * regen / MPS);
 
         }
     }
@@ -455,7 +526,7 @@ namespace Rawr.ShadowPriest
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * HitChance / 100f;
             }
 
-
+            float SustDPS = DPS;
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
             float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
@@ -472,7 +543,7 @@ namespace Rawr.ShadowPriest
             {   // Not enough mana, use Shadowfiend
                 float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
                 regen += simStats.Mana * 0.4f * sf_rat;
-                DPS -= SM.DpS * sf_rat;
+                SustDPS -= SM.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";
             }
 
@@ -480,12 +551,14 @@ namespace Rawr.ShadowPriest
             {   // Not enough still, use Hymn of Hope
                 float hh_rat = 8f / (60f * 5f);
                 regen += simStats.Mana * 0.02f * hh_rat;
-                DPS -= SM.DpS * hh_rat;
+                SustDPS -= SM.DpS * hh_rat;
                 Rotation += "\r\n- Used Hymn of Hope";
             }
 
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
-            SustainDPS = (MPS < regen) ? DPS : (DPS * regen / MPS);
+            SustDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+
+            SustainDPS = (MPS < regen) ? SustDPS : (SustDPS * regen / MPS);
 
         }
     }

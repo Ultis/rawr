@@ -10,18 +10,33 @@ namespace Rawr.ShadowPriest
     {
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
+        private string _currentChartName = null;
+        private float _currentChartTotal = 0;
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
             {
-                if (_subPointNameColors == null)
+                _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                switch (_currentChartName)
                 {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
+                    case "Mana Sources":
+                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+                        break;
+                    case "DPS Sources":
+                        _subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Red);
+                        break;
+                    case "Mana Usage":
+                        _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+                        break;
+                    default:
+                        _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
+                        _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
+                        _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
+                        break;
                 }
+                _currentChartName = null;
                 return _subPointNameColors;
             }
         }
@@ -80,7 +95,7 @@ namespace Rawr.ShadowPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stat Values" };
+                    _customChartNames = new string[] { "Stat Values", "Mana Sources", "DPS Sources", "Mana Usage" };
                 return _customChartNames;
             }
         }
@@ -109,9 +124,58 @@ namespace Rawr.ShadowPriest
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            ComparisonCalculationBase comparison;
+
+            _currentChartTotal = 0;
+            _currentChartName = chartName;
 
             switch (chartName)
             {
+                case "Mana Sources":
+                    CharacterCalculationsShadowPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
+                    SolverBase mssolver = mscalcs.GetSolver(character, mscalcs.BasicStats);
+                    mssolver.Calculate(mscalcs);
+                    foreach (SolverBase.ManaSource Source in mssolver.ManaSources)
+                    {
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = Source.Name;
+                        comparison.SubPoints[0] = Source.Value * 5;
+                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                case "DPS Sources":
+                    CharacterCalculationsShadowPriest dpscalcs = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
+                    SolverBase dpssolver = dpscalcs.GetSolver(character, dpscalcs.BasicStats);
+                    dpssolver.Calculate(dpscalcs);
+                    foreach (Spell spell in dpssolver.SpellPriority)
+                    {
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = spell.Name;
+                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone;
+                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                case "Mana Usage":
+                    CharacterCalculationsShadowPriest mucalcs = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
+                    SolverBase musolver = mucalcs.GetSolver(character, mucalcs.BasicStats);
+                    musolver.Calculate(mucalcs);
+                    foreach (Spell spell in musolver.SpellPriority)
+                    {
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = spell.Name;
+                        comparison.SubPoints[0] = spell.SpellStatistics.ManaUsed * 5;
+                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
                 case "Stat Values":
                     CharacterCalculationsShadowPriest calcsBase = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
                     CharacterCalculationsShadowPriest calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 50 } }) as CharacterCalculationsShadowPriest;
@@ -180,7 +244,8 @@ namespace Rawr.ShadowPriest
                             SurvivalPoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
                         }};
                 default:
-                    _customChartNames = null;
+                    //_customChartNames = null;
+                    _currentChartName = null;
                     return new ComparisonCalculationBase[0];
             }
         }
@@ -197,16 +262,11 @@ namespace Rawr.ShadowPriest
             calculatedStats.Character = character;
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * (0.001f + 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect)));
-            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + stats.Mp5;
-            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + stats.Mp5;
+            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
+            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
 
 
-            SolverBase solver = null;
-            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
-                solver = new SolverShadow(stats, character);
-            else
-                solver = new SolverHoly(stats, character);
-
+            SolverBase solver = calculatedStats.GetSolver(character, stats);
             solver.Calculate(calculatedStats);
 
             calculatedStats.DpsPoints = solver.DPS;
@@ -215,7 +275,7 @@ namespace Rawr.ShadowPriest
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * 5f / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
             calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SustainPoints + calculatedStats.SurvivalPoints;
 
             return calculatedStats;

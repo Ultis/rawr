@@ -164,14 +164,12 @@
             // trkShadowfiend
             // 
             this.trkShadowfiend.Location = new System.Drawing.Point(10, 401);
-            this.trkShadowfiend.Maximum = 100;
+            this.trkShadowfiend.Maximum = 150;
             this.trkShadowfiend.Name = "trkShadowfiend";
             this.trkShadowfiend.Size = new System.Drawing.Size(235, 42);
             this.trkShadowfiend.TabIndex = 35;
             this.trkShadowfiend.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkShadowfiend, "Tells Rawr how effective your Shadowfiend is expected to be. Against a boss, your" +
-                    " Shadowfiend has a 9% chance to miss, and 6.5% chance to be dodged, a total of 1" +
-                    "5.5% miss. Keep that in mind.");
+            this.toolTip1.SetToolTip(this.trkShadowfiend, resources.GetString("trkShadowfiend.ToolTip"));
             this.trkShadowfiend.Scroll += new System.EventHandler(this.trkShadowfiend_Scroll);
             // 
             // ckbManaPotion
