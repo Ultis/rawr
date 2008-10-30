@@ -981,7 +981,7 @@ namespace Rawr.Moonkin
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
 
                 // Handle the Starfire glyph
-                if ((calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire") && rotation.HasMoonfire)
+                if ((calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire") && rotation.HasMoonfire)
                 {
                     if (rotation.StarfireCount > 0)
                     {
@@ -1400,13 +1400,13 @@ namespace Rawr.Moonkin
             SpellRotation.RecreateSpells();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Moonfire glyph
-            if (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire")
+            if (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire")
             {
                 SpellRotation.Moonfire.SpecialDamageModifier -= 0.9f;
                 SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.75f;
             }
             // Insect swarm glyph
-            if (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm")
+            if (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm" || calcOpts.glyph3 == "Insect Swarm")
             {
                 SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier += 0.3f;
             }
