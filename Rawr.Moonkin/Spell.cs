@@ -981,29 +981,24 @@ namespace Rawr.Moonkin
                 float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
 
                 // Handle the Starfire glyph
-                if (calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire")
+                if ((calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire") && rotation.HasMoonfire)
                 {
-                    if (rotation.HasMoonfire && rotation.StarfireCount > 0)
+                    if (rotation.StarfireCount > 0)
                     {
-                        // Spread the damage of the initial Moonfire DD hit over the length of the fight
-                        // Since there is 1 MF per rotation, number of rotations during fight = number of MF's cast
-                        float numberRotations = fightLength / rotation.Duration;
                         Spell newMoonfire = new Spell()
                         {
                             Name = "MF",
                             School = SpellSchool.Arcane,
-                            // With no need to re-cast Moonfire, this "special" version has effectively zero cast time
-                            // Please note that this does NOT take into account the chance of dropping MF during Eclipse
-                            CastTime = 0.0f,
+                            CastTime = SpellRotation.Moonfire.CastTime,
                             CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
-                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit / numberRotations,
-                            ManaCost = SpellRotation.Moonfire.ManaCost / numberRotations,
+                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit,
+                            ManaCost = SpellRotation.Moonfire.ManaCost,
                             SpecialCriticalModifier = SpellRotation.Moonfire.SpecialCriticalModifier,
                             SpecialDamageModifier = SpellRotation.Moonfire.SpecialDamageModifier,
                             SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
                             DoT = new DotEffect()
                             {
-                                Duration = SpellRotation.Moonfire.DoT.Duration,
+                                Duration = SpellRotation.Moonfire.DoT.Duration + 3.0f * Math.Min(rotation.StarfireCount, 3),
                                 TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
                                 DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
                                 SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
@@ -1031,6 +1026,86 @@ namespace Rawr.Moonkin
                                 {
                                     newMoonfire,
                                     SpellRotation.Starfire
+                                }
+                            };
+                        }
+                        newRotation.CalculateRotationalVariables();
+                        currentDPS = newRotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
+                        currentRawDPS = newRotation.RawDPS + trinketExtraDPS + treeDPS;
+                        rotation.ManaUsed = newRotation.ManaUsed;
+                        rotation.TimeToOOM = newRotation.TimeToOOM;
+                        rotation.RawDPS = newRotation.RawDPS;
+                        rotation.DPM = newRotation.DPM;
+                    }
+                    else
+                    {
+                        Spell newMoonfireFirst = new Spell()
+                        {
+                            Name = "MF",
+                            School = SpellSchool.Arcane,
+                            CastTime = SpellRotation.Moonfire.CastTime,
+                            CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
+                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit,
+                            ManaCost = SpellRotation.Moonfire.ManaCost,
+                            SpecialCriticalModifier = SpellRotation.Moonfire.SpecialCriticalModifier,
+                            SpecialDamageModifier = SpellRotation.Moonfire.SpecialDamageModifier,
+                            SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
+                            DoT = new DotEffect()
+                            {
+                                Duration = 3 * SpellRotation.Starfire.CastTime + SpellRotation.Moonfire.CastTime,
+                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
+                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
+                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
+                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
+                            },
+                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
+                        };
+                        Spell newMoonfireSecond = new Spell()
+                        {
+                            Name = "MF",
+                            School = SpellSchool.Arcane,
+                            CastTime = 0.0f,
+                            CriticalHitMultiplier = 0.0f,
+                            DamagePerHit = 0.0f,
+                            ManaCost = 0.0f,
+                            SpecialCriticalModifier = 0.0f,
+                            SpecialDamageModifier = 0.0f,
+                            SpellDamageModifier = 0.0f,
+                            DoT = new DotEffect()
+                            {
+                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f - 3 * SpellRotation.Starfire.CastTime - SpellRotation.Moonfire.CastTime,
+                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
+                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
+                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
+                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
+                            },
+                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
+                        };
+                        SpellRotation newRotation = null;
+                        if (rotation.HasInsectSwarm)
+                        {
+                            newRotation = new SpellRotation()
+                            {
+                                Spells = new List<Spell>()
+                                {
+                                    newMoonfireFirst,
+                                    SpellRotation.Starfire,
+                                    newMoonfireSecond,
+                                    SpellRotation.InsectSwarm,
+                                    SpellRotation.Wrath
+                                }
+                            };
+                        }
+                        else
+                        {
+                            newRotation = new SpellRotation()
+                            {
+                                Spells = new List<Spell>()
+                                {
+                                    newMoonfireFirst,
+                                    SpellRotation.Starfire,
+                                    newMoonfireSecond,
+                                    SpellRotation.Wrath
                                 }
                             };
                         }
