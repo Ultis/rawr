@@ -282,13 +282,13 @@ namespace Rawr.Moonkin
                 if (_spellData == null)
                 {
                     // For Moonfire calculations
-                    float baseDamage = (305.0f + 357.0f) / 2.0f;
+                    float baseDamage = (406.0f + 476.0f) / 2.0f;
 
                     _spellData = new Spell[] {
                         new Spell()
                         {
                             Name = "SF",
-                            DamagePerHit = (818.0f + 964.0f) / 2.0f,
+                            DamagePerHit = (1028.0f + 1212.0f) / 2.0f,
                             SpellDamageModifier = 1.0f,
                             CastTime = 3.5f,
                             ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f),
@@ -298,23 +298,23 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "MF",
-                            DamagePerHit = (305.0f + 357.0f) / 2.0f,
-                            SpellDamageModifier = (1.5f/3.5f) * (baseDamage / (baseDamage + 150.0f*4.0f)),
+                            DamagePerHit = (406.0f + 476.0f) / 2.0f,
+                            SpellDamageModifier = (1.5f/3.5f) * (baseDamage / (baseDamage + 200.0f*4.0f)),
                             CastTime = Spell.GlobalCooldown,
                             ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.21f),
                             DoT = new DotEffect()
                                 {
                                     Duration = 12.0f,
                                     TickDuration = 3.0f,
-                                    DamagePerTick = 150.0f,
-                                    SpellDamageMultiplier = (12.0f/15.0f) * (150.0f*4.0f / (baseDamage + 150.0f*4.0f))
+                                    DamagePerTick = 200.0f,
+                                    SpellDamageMultiplier = (12.0f/15.0f) * (200.0f*4.0f / (baseDamage + 200.0f*4.0f))
                                 },
                             School = SpellSchool.Arcane
                         },
                         new Spell()
                         {
                             Name = "W",
-                            DamagePerHit = (431.0f + 485.0f) / 2.0f,
+                            DamagePerHit = (553.0f + 623.0f) / 2.0f,
                             SpellDamageModifier = 2.0f/3.5f,
                             CastTime = 2.0f,
                             ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
@@ -332,7 +332,7 @@ namespace Rawr.Moonkin
                             {
                                 Duration = 12.0f,
                                 TickDuration = 2.0f,
-                                DamagePerTick = 172.0f,
+                                DamagePerTick = 1290.0f / 6.0f,
                                 SpellDamageMultiplier = 0.76f
                             },
                             School = SpellSchool.Nature
@@ -670,8 +670,8 @@ namespace Rawr.Moonkin
             if (numPots > 0)
             {
                 float manaPerPot = 0.0f;
-                if (calcOpts.ManaPotType == "Super Mana Potion")
-                    manaPerPot = 2400.0f;
+                if (calcOpts.ManaPotType == "Runic Mana Potion")
+                    manaPerPot = 4320.0f;
                 if (calcOpts.ManaPotType == "Fel Mana Potion")
                     manaPerPot = 3200.0f;
                 // Bonus from Alchemist's Stone
@@ -731,11 +731,11 @@ namespace Rawr.Moonkin
             SpellRotation.Wrath.DamagePerHit += stats.WrathDmg;
 
             // Add spell-specific damage
-            // Starfire, Moonfire, Wrath: Damage +(0.02 * Moonfury)
-            SpellRotation.Wrath.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
-            SpellRotation.Moonfire.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.02f * character.DruidTalents.Moonfury;
-            SpellRotation.Starfire.SpecialDamageModifier += 0.02f * character.DruidTalents.Moonfury;
+            // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
+            SpellRotation.Wrath.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            SpellRotation.Moonfire.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            SpellRotation.Starfire.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
             // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
             SpellRotation.Moonfire.DoT.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
             SpellRotation.InsectSwarm.DoT.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
@@ -756,10 +756,10 @@ namespace Rawr.Moonkin
             SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
 
             // Level-based partial resistances
-            SpellRotation.Wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
-            SpellRotation.Starfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
-            SpellRotation.Moonfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 70);
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= 1 - 0.02f * (calcs.TargetLevel - 70);
+            SpellRotation.Wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            SpellRotation.Starfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            SpellRotation.Moonfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= 1 - 0.02f * (calcs.TargetLevel - 80);
             // Insect Swarm is a binary spell
 
             // Add spell-specific crit chance
@@ -828,16 +828,16 @@ namespace Rawr.Moonkin
 
             switch (calcs.TargetLevel)
             {
-                case 70:
+                case 80:
                     baseHitRate = 0.96f;
                     break;
-                case 71:
+                case 81:
                     baseHitRate = 0.95f;
                     break;
-                case 72:
+                case 82:
                     baseHitRate = 0.94f;
                     break;
-                case 73:
+                case 83:
                     baseHitRate = 0.83f;
                     break;
                 default:
@@ -1399,15 +1399,6 @@ namespace Rawr.Moonkin
         {
             SpellRotation.RecreateSpells();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            // Level 80 base spell damages
-            if (calcOpts.PlayerLevel == 80)
-            {
-                SpellRotation.Starfire.DamagePerHit = (1028.0f + 1212.0f) / 2.0f;
-                SpellRotation.Wrath.DamagePerHit = (553.0f + 623.0f) / 2.0f;
-                SpellRotation.Moonfire.DamagePerHit = (406.0f + 476.0f) / 2.0f;
-                SpellRotation.Moonfire.DoT.DamagePerTick = 800.0f / 4.0f;
-                SpellRotation.InsectSwarm.DoT.DamagePerTick = 1290.0f / 6.0f;
-            }
             // Moonfire glyph
             if (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire")
             {

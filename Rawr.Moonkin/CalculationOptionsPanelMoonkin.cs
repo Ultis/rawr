@@ -41,9 +41,9 @@ namespace Rawr.Moonkin
             rdbScryer.Checked = calcOpts.AldorScryer == "Scryer";
             trkReplenishmentUptime.Value = (int)(calcOpts.ReplenishmentUptime * 100);
             trkTreantLifespan.Value = (int)(calcOpts.TreantLifespan * 100);
-            cmbPlayerLevel.SelectedItem = calcOpts.PlayerLevel.ToString();
             cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
             cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
+            cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -157,10 +157,10 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void cmbPlayerLevel_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbGlyph3_SelectedIndexChanged(object sender, EventArgs e)
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.PlayerLevel = int.Parse(cmbPlayerLevel.SelectedItem.ToString());
+            calcOpts.glyph3 = cmbGlyph3.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
         }
     }
@@ -287,21 +287,21 @@ namespace Rawr.Moonkin
             #endregion
         }
 
-        public int PlayerLevel = 70;
-		public int TargetLevel = 73;
+		public int TargetLevel = 83;
 		public float Latency = 0.2f;
 		public float FightLength = 5;
 		public bool Innervate = false;
 		public float InnervateDelay = 1;
 		public bool ManaPots = false;
-		public string ManaPotType = "Super Mana Potion";
+		public string ManaPotType = "Runic Mana Potion";
 		public bool InnervateWeapon = false;
 		public float InnervateWeaponInt = 0;
 		public float InnervateWeaponSpi = 0;
 		public string AldorScryer = "Aldor";
         public float ReplenishmentUptime = 1.0f;
         public float TreantLifespan = 1.0f;
-        public string glyph1 = "Moonfire";
-        public string glyph2 = "Insect Swarm";
+        public string glyph1 = "Starfire";
+        public string glyph2 = "Moonfire";
+        public string glyph3 = "Insect Swarm";
 	}
 }
