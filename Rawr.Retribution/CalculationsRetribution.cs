@@ -188,9 +188,11 @@ namespace Rawr.Retribution
             float physCritMult = 1f + stats.BonusCritMultiplier*2f;
             float spellCritMult = 1f + stats.BonusCritMultiplier*3f;
             float jotc = 219f;
-            float judgeCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
-            float csCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f;
-            float dsCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
+
+            //Art of War and Righteous Vengeance changed in 3.0.3 to be % overall damage increase, not just crit damage
+            //float judgeCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
+            //float csCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f;
+            //float dsCritMult = 1f + (float)calcOpts.TheArtOfWar * .1f + (float)calcOpts.RighteousVengeance * .05f;
 
             //new for 3.0 model, need these global for the method
             float whiteAvgDam = 0f, socAvgDmg = 0f, sobAvgDmg = 0f, socProcChanceCoeff = 0f;
@@ -361,7 +363,7 @@ namespace Rawr.Retribution
             {
                 float socActualPPM = 0f, sobActualPPM = 0f;
 
-                float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f, socWeapDmgMult = 0.56f;
+                float socPPM = 7f, socCoeff = 0.2f, socHolyCoeff = 0.29f, socWeapDmgMult = 0.45f;
 
                 // Find real PPM.  Procs 7 times per minute before misses
                 socActualPPM = socPPM * (1f - totalMiss);
@@ -405,7 +407,7 @@ namespace Rawr.Retribution
                     crusAvgDam *= crusCoeff*physDamMult*(1f + stats.BonusCrusaderStrikeDamageMultiplier);
 
                     // Crusader Strike average damage per swing
-                    crusAvgDam *= (1f + physCrits * physCritMult * csCritMult - totalMiss) * mitigation;
+                    crusAvgDam *= (1f + physCrits * physCritMult - totalMiss) * mitigation;
 
                     if (calcOpts.GlyphOfCS)
                     {
@@ -414,6 +416,7 @@ namespace Rawr.Retribution
 
                     // Total Crusader Strike DPS
                     dpsCrusader = crusAvgDam/crusCD;
+                    dpsCrusader *= 1f + (.4f * (float)calcOpts.TheArtOfWar);
 
                     dpsSoC += ( socAvgDmg / crusCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / crusCD;
@@ -431,11 +434,12 @@ namespace Rawr.Retribution
                     dsHit = whiteHit*physDamMult;
 
                     // Divine Storm avg dmg per swing;
-                    dsAvgDam = dsHit*(1f + physCrits * spellCritMult * dsCritMult - totalMiss);
+                    dsAvgDam = dsHit*(1f + physCrits * physCritMult - totalMiss);
 
                     dpsDivineStorm = dsAvgDam/dsCD;
-                    dpsDivineStorm += dpsDivineStorm*physCrits*dsCritMult;
+                    dpsDivineStorm += dpsDivineStorm * physCrits;
                     dpsDivineStorm *= mitigation;
+                    dpsDivineStorm *= 1f + ( .4f * (float)calcOpts.TheArtOfWar );
 
                     dpsSoC += ( socAvgDmg / dsCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / dsCD;
@@ -447,7 +451,8 @@ namespace Rawr.Retribution
             {
                 float judgeCD = 8.5f, judgeAvgDam = 0f;
                 float judgeCrit = physCrits + (0.05f * (float)calcOpts.Fanaticism);
-                float socDamMult = 0.30f, sobDamMult = .45f, apMult = 0.2f, spdmgMult = 0.32f;
+                float socDamMult = 0.24f, socAPMult = 0.16f, socSpdmgMult = 0.25f; 
+                float sobDamMult = .45f, sobAPMult = 0.2f, sobSpdmgMult = 0.32f;
 
                 if (calcOpts.ImprovedJudgements == 0)
                 {
@@ -461,15 +466,15 @@ namespace Rawr.Retribution
                 float sealHit = 0f;
                 if (calcOpts.Seal == 0) // SoC
                 {
-                    sealHit = socDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellPower;
+                    sealHit = socDamMult * whiteAvgDam + socAPMult * stats.AttackPower + socSpdmgMult * stats.SpellPower;
                 }
                 else // SoB/SotM
                 {
-                    sealHit = sobDamMult * whiteAvgDam + apMult * stats.AttackPower + spdmgMult * stats.SpellPower;
+                    sealHit = sobDamMult * whiteAvgDam + sobAPMult * stats.AttackPower + sobSpdmgMult * stats.SpellPower;
                 }
       
                 judgeAvgDam = sealHit * holyDamMult;
-                judgeAvgDam += .5f * (judgeCrit * judgeAvgDam * judgeCritMult);
+                judgeAvgDam += .5f * (judgeCrit * judgeAvgDam);
 
                 if (calcOpts.GlyphOfJudge)
                 {
@@ -477,6 +482,8 @@ namespace Rawr.Retribution
                 }
 
                 dpsJudgement = judgeAvgDam / judgeCD;
+                dpsJudgement *= 1f + (.04f * (float)calcOpts.TheArtOfWar);
+                dpsJudgement *= 1f + (.08f * (float)calcOpts.RighteousVengeance);  // i make the assumption that since judgement is used more and hits harder, only judgement damage is used for this
 
                 dpsSoC += (socAvgDmg / judgeCD) * socProcChanceCoeff;
                 dpsSoB += sobAvgDmg / judgeCD;
