@@ -38,11 +38,11 @@ namespace Rawr.Moonkin
                     characterDisplayCalculationLabels = new string[] {
 					"Basic Stats:Health",
 					"Basic Stats:Mana",
-					"Basic Stats:Armor",
                     "Basic Stats:Agility",
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
+					"Basic Stats:Armor",
                     "Spell Stats:Spell Hit",
                     "Spell Stats:Spell Crit",
                     "Spell Stats:Spell Haste",
@@ -262,9 +262,16 @@ namespace Rawr.Moonkin
             statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
 
             // Derived stats: Health, mana pool, armor
-            statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f)));
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 380;
-            statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
+			if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
+			{
+				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor + statsEnchants.Armor) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
+			}
+			else
+			{
+				statsTotal.Armor = (float)Math.Round(statsGearEnchantsBuffs.Armor + statsTotal.Agility * 2f);
+			}
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
 			statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
