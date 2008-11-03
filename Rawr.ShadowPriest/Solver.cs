@@ -270,8 +270,8 @@ namespace Rawr.ShadowPriest
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 HPC++;
-                if (spell == MF)
-                    HPC += 2;   // MF can hit 3 times / cast
+                //if (spell == MF)
+                //    HPC += 2;   // MF can hit 3 times / cast
                 if (spell == SWD || spell == MB)
                     CPC++;
                 float Damage = spell.AvgDamage;
@@ -357,7 +357,7 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * 0.01f * (HPC * 0.25f) * (CalculationOptions.JoW / 100f);
+            tmpregen = simStats.Mana * simStats.ManaRestoreFromMaxManaPerHit * HPC * (CalculationOptions.JoW / 100f);
             ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
             regen += tmpregen;
 

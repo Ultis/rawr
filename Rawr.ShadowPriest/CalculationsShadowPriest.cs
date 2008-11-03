@@ -415,6 +415,7 @@ namespace Rawr.ShadowPriest
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                ManaRestoreFromMaxManaPerHit = stats.ManaRestoreFromMaxManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -454,6 +455,7 @@ namespace Rawr.ShadowPriest
                 + stats.BonusShadowDamageMultiplier
                 + stats.BonusHolyDamageMultiplier
                 + stats.ManaRestorePerCast_5_15
+                + stats.ManaRestoreFromMaxManaPerHit
                 + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min
                 + stats.SpellPowerFor20SecOnUse2Min
