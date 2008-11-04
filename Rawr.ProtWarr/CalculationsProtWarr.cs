@@ -230,7 +230,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
             calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue * (1 + stats.BonusBlockValueMultiplier)) +
-                                         ((float)Math.Floor(stats.Strength * WarriorConversions.StrengthToBlockValue))));
+                                         ((float)Math.Floor(stats.Strength * WarriorConversions.StrengthToBlockValue))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -340,7 +340,7 @@ threat and limited threat scaled by the threat scale.",
             if((targetLevel - 70f) < 3)
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 70f) - hitBonus);
 
-            float defStanceThreatMod = 1.3f *
+            float defStanceThreatMod = 1.45f *
                                        //(1 + character.WarriorTalents.Defiance * 0.05f) * //TODO: Talent removed in WoW 3.0
                                        (1 + stats.ThreatIncreaseMultiplier);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
@@ -597,14 +597,14 @@ threat and limited threat scaled by the threat scale.",
                 {
                     Parry = tree.Deflection * 1.0f,
                     PhysicalCrit = tree.Cruelty * 1.0f,
-                    Defense = tree.Anticipation * 4.0f,
+                    Dodge = tree.Anticipation * 1.0f,
                     Block = tree.ShieldSpecialization * 1.0f,
                     BonusArmorMultiplier = tree.Toughness * 0.02f,
-                    BonusBlockValueMultiplier = tree.ShieldMastery * 0.1f,
+                    BonusBlockValueMultiplier = tree.ShieldMastery * 0.15f,
                     BonusDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
-                    BonusStaminaMultiplier = tree.Vitality * 0.01f,
+                    BonusStaminaMultiplier = tree.Vitality * 0.02f,
                     BonusStrengthMultiplier = tree.Vitality * 0.02f,
-                    //Expertise = tree.Defiance * 2f, //TODO: Talent removed in WoW 3.0
+                    Expertise = tree.Vitality * 2f,
                 };
 
             float oneProcPerMinAveUptime = 0f;
@@ -1102,7 +1102,7 @@ threat and limited threat scaled by the threat scale.",
         public static readonly float AgilityToDodge = 1.0f / 30.0f;
         public static readonly float DodgeRatingToDodge = 1.0f / 18.930f;
         public static readonly float StrengthToAP = 2.0f;
-        public static readonly float StrengthToBlockValue = 1.0f / 20.0f;
+        public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
         public static readonly float AgilityToCrit = 1.0f / 33.0f;
         public static readonly float StaminaToHP = 10.0f;
