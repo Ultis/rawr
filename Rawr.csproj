@@ -90,7 +90,6 @@
     <Compile Include="BuffSelector.Designer.cs">
       <DependentUpon>BuffSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="CSVParser.cs" />
     <Compile Include="ComparisonGraph.cs">
       <SubType>UserControl</SubType>
     </Compile>
