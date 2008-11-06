@@ -26,6 +26,7 @@ namespace Rawr
 
 				"".ToString();
 			}
+
 		}
 
 		public static Item ProcessItem(string itemData)
@@ -102,7 +103,7 @@ namespace Rawr
 				}
 				if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
 			}
-
+            item.IconPath = string.Empty;
 			return item;
 		}
 
@@ -111,6 +112,7 @@ namespace Rawr
 		private static SortedDictionary<string, List<Item>> _classsItems = new SortedDictionary<string, List<Item>>();
 		private static SortedDictionary<int, List<Item>> _subclassItems = new SortedDictionary<int, List<Item>>();
 		private static List<string> _unhandledKeys = new List<string>();
+        private static List<string> _unhandledSocketBonus = new List<string>();
 		private static bool ProcessKeyValue(Item item, string key, string value)
 		{
 			switch (key)
@@ -131,7 +133,12 @@ namespace Rawr
 				case "maxcount": //Rawr doesn't deal with stack sizes
 				case "cooldown": //Not handled yet
 				case "dura": //durability isn't handled
-					break;
+                    break;
+
+                case "reqrep": // reqrep=6: heroic 5 man, reqrep=1: heroic raid, reqrep=5: Arena, reqrep=4: Faction Friendly, reqrep=5: Faction Honored, etc
+                case "reqfaction":
+                    // Currently faction & reputation is not handled.
+                    break;
 
 				case "slot":
 					int slot = int.Parse(value);
@@ -151,18 +158,19 @@ namespace Rawr
 					break;
 
 				case "speed":
-					item.Speed = float.Parse(value);
+					item.Speed = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "displayid":
+                    // Possibly link to the model/icon.
 					break;
 
 				case "dmgmin1":
-					item.MinDamage += (int)float.Parse(value);
+					item.MinDamage += (int)float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "dmgmax1":
-					item.MaxDamage += (int)float.Parse(value);
+					item.MaxDamage += (int)float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "dmgtype1":
@@ -175,35 +183,35 @@ namespace Rawr
 					break;
 
 				case "healthrgn":
-					item.Stats.Hp5 += float.Parse(value);
+					item.Stats.Hp5 += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "manargn":
-					item.Stats.Mp5 += float.Parse(value);
+					item.Stats.Mp5 += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "health":
-					item.Stats.Health += float.Parse(value);
+					item.Stats.Health += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "agi":
-					item.Stats.Agility += float.Parse(value);
+					item.Stats.Agility += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "int":
-					item.Stats.Intellect += float.Parse(value);
+					item.Stats.Intellect += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "spi":
-					item.Stats.Spirit += float.Parse(value);
+					item.Stats.Spirit += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "sta":
-					item.Stats.Stamina += float.Parse(value);
+					item.Stats.Stamina += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "str":
-					item.Stats.Strength += float.Parse(value);
+					item.Stats.Strength += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "races":
@@ -212,7 +220,7 @@ namespace Rawr
 				case "mlehastertng":
 				case "rgdhastertng":
 				case "splhastertng":
-					item.Stats.HasteRating = float.Parse(value);
+					item.Stats.HasteRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "skill":
@@ -226,81 +234,89 @@ namespace Rawr
 
 				case "splheal":
 				case "spldmg":
-					item.Stats.SpellPower = float.Parse(value);
+					item.Stats.SpellPower = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "mlecritstrkrtng":
 				case "rgdcritstrkrtng":
 				case "splcritstrkrtng":
-					item.Stats.CritRating = float.Parse(value);
+					item.Stats.CritRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "holres":
 					break;
 
 				case "firres":
-					item.Stats.FireResistance = float.Parse(value);
+					item.Stats.FireResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "natres":
-					item.Stats.NatureResistance = float.Parse(value);
+					item.Stats.NatureResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "frores":
-					item.Stats.FrostResistance = float.Parse(value);
+					item.Stats.FrostResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "shares":
-					item.Stats.ShadowResistance = float.Parse(value);
+					item.Stats.ShadowResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "arcres":
-					item.Stats.ArcaneResistance = float.Parse(value);
+					item.Stats.ArcaneResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "mlehitrtng":
 				case "rgdhitrtng":
 				case "splhitrtng":
-					item.Stats.HitRating = float.Parse(value);
+					item.Stats.HitRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "mleatkpwr":
 				case "rgdatkpwr":
 				case "feratkpwr":
-					item.Stats.AttackPower += float.Parse(value);
+					item.Stats.AttackPower += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
-				case "reqrep":
-					break;
 
 				case "block":
+                    item.Stats.BlockValue += int.Parse(value);
 					break;
 
 				case "exprtng":
+                    item.Stats.ExpertiseRating += int.Parse(value);
 					break;
 
 				case "defrtng":
+                    item.Stats.DefenseRating += int.Parse(value);
 					break;
 
 				case "dodgertng":
+                    item.Stats.DodgeRating += int.Parse(value);
 					break;
 
 				case "blockrtng":
+                    item.Stats.BlockRating += int.Parse(value);
 					break;
 
 				case "socket1":
+                    item.Sockets.Color1 = GetSocketType(value);
 					break;
 
 				case "socket2":
+                    item.Sockets.Color2 = GetSocketType(value);
 					break;
 
 				case "socket3":
+                    item.Sockets.Color3 = GetSocketType(value);
 					break;
 
 				case "socketbonus":
-					break;
+                    item.Sockets.Stats = GetSocketBonus(value);
+                    break;
 
 				case "nsockets":
+                    // Rawr figures this out itself, Smart program.
 					break;
 
 				case "parryrtng":
@@ -308,6 +324,31 @@ namespace Rawr
 					break;
 
 				case "classes":
+                    List<string> requiredClasses = new List<string>();
+                    int classbitfield = int.Parse(value);
+                    if ((classbitfield & 1) > 0)
+                        requiredClasses.Add("Warrior");
+                    if ((classbitfield & 2) > 0)
+                        requiredClasses.Add("Paladin");
+                    if ((classbitfield & 4) > 0)
+                        requiredClasses.Add("Hunter");
+                    if ((classbitfield & 8) > 0)
+                        requiredClasses.Add("Rogue");
+                    if ((classbitfield & 16) > 0)
+                        requiredClasses.Add("Priest");
+                    if ((classbitfield & 32) > 0)
+                        requiredClasses.Add("Death Knight");
+                    if ((classbitfield & 64) > 0)
+                        requiredClasses.Add("Shaman");
+                    if ((classbitfield & 128) > 0)
+                        requiredClasses.Add("Mage");
+                    if ((classbitfield & 256) > 0)
+                        requiredClasses.Add("Warlock");
+                    //if ((classbitfield & 512) > 0) ; // Only seems to occur in PvP gear, along with another huge value
+                    //    requiredClasses.Add("");
+                    if ((classbitfield & 1024) > 0)
+                        requiredClasses.Add("Druid");
+                    item.RequiredClasses = string.Join("|", requiredClasses.ToArray());
 					break;
 
 				case "itemset":
@@ -320,11 +361,8 @@ namespace Rawr
 				case "armorpen":
 					item.Stats.ArmorPenetrationRating = int.Parse(value);
 					break;
-
-				case "nslots":
-					break;
-
-				case "reqfaction":
+                
+                case "nslots":
 					break;
 
 				case "splpen":
@@ -367,35 +405,135 @@ namespace Rawr
 
 
 				//sourcemore keys
-				case "t":
-					break;
+				case "t":       // Type (1 = drop)
+                    break;
 
-				case "ti":
-					break;
+				case "ti":      // NPC that drops/gives
+                    break;
 
-				case "n":
-					break;
+				case "n":       // NPC 'Name'
+                    break;
 
-				case "z":
-					break;
+				case "z":       // Zone
+                    string zonename = "Unknown";
+                    switch (value)
+                    {
+                        #region Hugeass switch for all Zones.
+                        case "65":
+                            zonename = "Dragonblight";
+                            break;
+                        case "66":
+                            zonename = "Zul'Drak";
+                            break;
+                        case "67":
+                            zonename = "The Storm Peaks";
+                            break;
+                        case "206":
+                            zonename = "Utgarde Keep";
+                            break;
+                        case "210":
+                            zonename = "Icecrown";
+                            break;
+                        case "394":
+                            zonename = "Grizzly Hills";
+                            break;
+                        case "495":
+                            zonename = "Howling Fjord";
+                            break;
+                        case "1196":
+                            zonename = "Utgarde Pinnacle";
+                            break;
+                        case "2817":
+                            zonename = "Crystalsong Forest";
+                            break;
+                        case "2917":
+                            zonename = "Hall of Legends";
+                            break;
+                        case "2918":
+                            zonename = "Champion's Hall";
+                            break;
+                        case "3477":
+                            zonename = "Azjol-Nerub";
+                            break;
+                        case "3537":
+                            zonename = "Borean Tundra";
+                            break;
+                        case "3711":
+                            zonename = "Sholazar Basin";
+                            break;
+                        case "4100":
+                            zonename = "CoT: Stratholme";
+                            break;
+                        case "4120":
+                            zonename = "The Nexus";
+                            break;
+                        case "4196":
+                            zonename = "Drak'Tharon Keep";
+                            break;
+                        case "4197":
+                            zonename = "Wintergrasp";
+                            break;
+                        case "4228":
+                            zonename = "The Oculus";
+                            break;
+                        case "4264":
+                            zonename = "Halls of Stone";
+                            break;
+                        case "4272":
+                            zonename = "Halls of Lightning";
+                            break;
+                        case "4298":
+                            zonename = "The Scarlet Enclave";
+                            break;
+                        case "4375":
+                            zonename = "Gundrak";
+                            break;
+                        case "4395":
+                            zonename = "Dalaran";
+                            break;
+                        case "4415":
+                            zonename = "The Violet Hold";
+                            break;
+                        case "4493":
+                            zonename = "The Obsidian Sanctum";
+                            break;
+                        case "4494":
+                            zonename = "Ahn'kahet";
+                            break;
+                        case "4500":
+                            zonename = "The Eye of Eternity";
+                            break;
+                        case "4603":
+                            zonename = "Vault of Archavon";
+                            break;
+                        #endregion
+                        default:
+                            throw (new Exception("Unknown Area id :" + value));
+                    }
+                    break;
 
 				case "c":
-					break;
+                    "".ToString();
+                    break;
 
 				case "c2":
-					break;
+                    "".ToString();
+                    break;
 
-				case "dd":
-					break;
+				case "dd":      // ??? Dungeon Difficulty? (1 = Normal, 2 = Heroic)
+                    break;
 
 				case "s":
-					break;
+                    "".ToString();
+                    break;
 
 				case "q":
-					break;
+                    "".ToString();
+                    break;
 
 				case "p":
-					break;
+                    "".ToString();
+                    break;
 
 
 				default:
@@ -406,7 +544,264 @@ namespace Rawr
 			return false;
 		}
 
+        private static Item.ItemSlot GetSocketType(string socket)
+        {
+            switch (socket)
+            {
+                case "1":
+                    return Item.ItemSlot.Meta;
+                case "2":
+                    return Item.ItemSlot.Red;
+                case "4":
+                    return Item.ItemSlot.Yellow;
+                case "6":
+                    return Item.ItemSlot.Orange;
+                case "8":
+                    return Item.ItemSlot.Blue;
+                case "10":
+                    return Item.ItemSlot.Purple;
+                case "12":
+                    return Item.ItemSlot.Green;
+                case "14":
+                    return Item.ItemSlot.Prismatic;
+                default:
+                    throw( new Exception("Unknown Slot Type :" + socket));
+            }
+        }
 
+        private static Stats GetSocketBonus(string socketbonus)
+        {
+            Stats stats = new Stats();
+            switch (socketbonus)
+            {
+                #region Hugeass switch to deal with all the socket bonuses. You dont want to see this. Really!
+                case "2770":
+                    stats.SpellPower += 7;
+                    break;
+                case "2771":
+                    stats.CritRating += 8;
+                    break;
+                case "2787":
+                    stats.CritRating += 8;
+                    break;
+                case "2842":
+                    stats.Spirit += 8;
+                    break;
+                case "2843":
+                    stats.CritRating += 8;
+                    break;
+                case "2854":
+                    stats.Mp5 += 3;
+                    break;
+                case "2864":
+                    stats.CritRating += 4;
+                    break;
+                case "2865":
+                    stats.Mp5 += 2;
+                    break;
+                case "2868":
+                    stats.Stamina += 6;
+                    break;
+                case "2869":
+                    stats.Intellect += 4;
+                    break;
+                case "2872":
+                    stats.SpellPower += 5;
+                    break;
+                case "2873":
+                    stats.HitRating += 4;
+                    break;
+                case "2874":
+                    stats.CritRating += 4;
+                    break;
+                case "2877":
+                    stats.Agility += 4;
+                    break;
+                case "2878":
+                    stats.Resilience += 4;
+                    break;
+                case "2882":
+                    stats.Stamina += 6;
+                    break;
+                case "2888":
+                    stats.BlockValue += 6;
+                    break;
+                case "2889":
+                    stats.SpellPower += 5;
+                    break;
+                case "2890":
+                    stats.Spirit += 4;
+                    break;
+                case "2892":
+                    stats.Strength += 4;
+                    break;
+                case "2895":
+                    stats.Stamina += 4;
+                    break;
+                case "2900":
+                    stats.SpellPower += 4;
+                    break;
+                case "2908":
+                    stats.CritRating += 6;
+                    break;
+                case "2927":
+                    stats.Strength += 4;
+                    break;
+                case "2932":
+                    stats.DefenseRating += 4;
+                    break;
+                case "2936":
+                    stats.AttackPower += 8;
+                    break;
+                case "2951":
+                    stats.CritRating += 4;
+                    break;
+                case "2952":
+                    stats.CritRating += 4;
+                    break;
+                case "2963":
+                    stats.HasteRating += 8;
+                    break;
+                case "2972":
+                    stats.BlockRating += 4;
+                    break;
+                case "3094":
+                    stats.ExpertiseRating += 4;
+                    break;
+                case "3198":
+                    stats.SpellPower += 5;
+                    break;
+                case "3204":
+                    stats.CritRating += 3;
+                    break;
+                case "3263":
+                    stats.CritRating += 4;
+                    break;
+                case "3267":
+                    stats.HasteRating += 4;
+                    break;
+                case "3301":
+                    stats.CritRating += 6;
+                    break;
+                case "3302":
+                    stats.DefenseRating += 8;
+                    break;
+                case "3303":
+                    stats.HasteRating += 8;
+                    break;
+                case "3305":
+                    stats.Stamina += 12;
+                    break;
+                case "3306":
+                    stats.Mp5 += 2;
+                    break;
+                case "3307":
+                    stats.Stamina += 9;
+                    break;
+                case "3308":
+                    stats.HasteRating += 4;
+                    break;
+                case "3309":
+                    stats.HasteRating += 6;
+                    break;
+                case "3310":
+                    stats.Intellect += 6;
+                    break;
+                case "3311":
+                    stats.Spirit += 6;
+                    break;
+                case "3312":
+                    stats.Strength += 8;
+                    break;
+                case "3313":
+                    stats.Agility += 8;
+                    break;
+                case "3314":
+                    stats.CritRating += 8;
+                    break;
+                case "3316":
+                    stats.CritRating += 6;
+                    break;
+                case "3351":
+                    stats.HitRating += 6;
+                    break;
+                case "3352":
+                    stats.Spirit += 8;
+                    break;
+                case "3353":
+                    stats.Intellect += 8;
+                    break;
+                case "3354":
+                    stats.Stamina += 12;
+                    break;
+                case "3355":
+                    stats.Agility += 6;
+                    break;
+                case "3356":
+                    stats.AttackPower += 12;
+                    break;
+                case "3357":
+                    stats.Strength += 6;
+                    break;
+                case "3358":
+                    stats.DodgeRating += 6;
+                    break;
+                case "3359":
+                    stats.ParryRating += 4;
+                    break;
+                case "3360":
+                    stats.ParryRating += 8;
+                    break;
+                case "3361":
+                    stats.BlockRating += 6;
+                    break;
+                case "3362":
+                    stats.ExpertiseRating += 6;
+                    break;
+                case "3363":
+                    stats.BlockValue += 9;
+                    break;
+                case "3596":
+                    stats.SpellPower += 5;
+                    break;
+                case "3600":
+                    stats.Resilience += 6;
+                    break;
+                case "3602":
+                    stats.SpellPower += 7;
+                    break;
+                case "3751":
+                    stats.DefenseRating += 6;
+                    break;
+                case "3752":
+                    stats.SpellPower += 5;
+                    break;
+                case "3753":
+                    stats.SpellPower += 9;
+                    break;
+                case "3764":
+                    stats.AttackPower += 12;
+                    break;
+                case "3765":
+                    stats.ArmorPenetrationRating += 4;
+                    break;
+                case "3766":
+                    stats.Stamina += 12;
+                    break;
+                case "3778":
+                    stats.ExpertiseRating += 8;
+                    break;
+                case "3821":
+                    stats.Resilience += 8;
+                    break;
+                default:
+                    if (!_unhandledSocketBonus.Contains(socketbonus))
+                        _unhandledSocketBonus.Add(socketbonus);
+                    break;
+                #endregion
+            }
+            return stats;
+        }
 
 
 		private static Item.ItemType GetItemType(string classSubclass)
