@@ -30,6 +30,15 @@ namespace Rawr
 			CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
+			numericUpDownTargetArmor.Value = (decimal)calcOpts.TargetArmor;
+
+			radioButtonNoAuto.Checked = !calcOpts.CustomUseMaul.HasValue;
+			radioButtonMelee.Checked = calcOpts.CustomUseMaul.HasValue && !calcOpts.CustomUseMaul.Value;
+			radioButtonMaul.Checked = calcOpts.CustomUseMaul.HasValue && calcOpts.CustomUseMaul.Value;
+			checkBoxMangle.Checked = calcOpts.CustomUseMangle;
+			checkBoxSwipe.Checked = calcOpts.CustomUseSwipe;
+			checkBoxFaerieFire.Checked = calcOpts.CustomUseFaerieFire;
+			checkBoxLacerate.Checked = calcOpts.CustomUseLacerate;
 			
 			switch (numericUpDownThreatValue.Value.ToString())
 			{
@@ -65,6 +74,15 @@ namespace Rawr
 				CalculationOptionsBear calcOpts = Character.CalculationOptions as CalculationOptionsBear;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
+				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
+
+				if (radioButtonNoAuto.Checked) calcOpts.CustomUseMaul = null;
+				else if (radioButtonMelee.Checked) calcOpts.CustomUseMaul = false;
+				else if (radioButtonMaul.Checked)  calcOpts.CustomUseMaul = true;
+				calcOpts.CustomUseMangle = checkBoxMangle.Checked;
+				calcOpts.CustomUseSwipe = checkBoxSwipe.Checked;
+				calcOpts.CustomUseFaerieFire = checkBoxFaerieFire.Checked;
+				calcOpts.CustomUseLacerate = checkBoxLacerate.Checked;
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -90,7 +108,14 @@ namespace Rawr
 			return xml.ToString();
 		}
 
-		public int TargetLevel = 73;
+		public int TargetLevel = 83;
 		public float ThreatScale = 10f;
+		public int TargetArmor = 11000;
+
+		public bool? CustomUseMaul = null;
+		public bool CustomUseMangle = false;
+		public bool CustomUseSwipe = false;
+		public bool CustomUseFaerieFire = false;
+		public bool CustomUseLacerate = false;
 	}
 }

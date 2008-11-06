@@ -180,8 +180,9 @@ namespace Rawr
 		SpellPower,
         RenewDurationIncrease,
         SWPDurationIncrease,
-        ManaGainOnGreaterHealOverheal
-
+        ManaGainOnGreaterHealOverheal,
+		BonusRageOnCrit,
+		MangleCooldownReduction
     }
 
     enum MultiplicativeStat : int
@@ -211,8 +212,11 @@ namespace Rawr
         BonusSpiritMultiplier,
         BonusHealthMultiplier,
         BonusStaminaMultiplier,
-        BonusStrengthMultiplier,
+		BonusStrengthMultiplier,
 		BonusSwipeDamageMultiplier,
+		BonusMangleDamageMultiplier,
+		BonusMaulDamageMultiplier,
+		BonusEnrageDamageMultiplier,
 		BonusShadowDamageMultiplier,
 		BonusHolyDamageMultiplier,
         FoLMultiplier,
@@ -2049,6 +2053,33 @@ namespace Rawr
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Percentage]
+		[DisplayName("% Mangle Dmg")]
+		public float BonusMangleDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Maul Dmg")]
+		public float BonusMaulDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Enrage Dmg")]
+		public float BonusEnrageDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusEnrageDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
 		[DisplayName("% Physical Dmg")]
 		public float BonusPhysicalDamageMultiplier
 		{
@@ -2098,6 +2129,24 @@ namespace Rawr
 		{
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier]; }
 			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPetDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("Bonus Rage on Crit")]
+		public float BonusRageOnCrit
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("Mangle Cooldown Reduction")]
+		public float MangleCooldownReduction
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction]; }
+			set { _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction] = value; }
 		}
 
         // Holy Priest set bonuses
