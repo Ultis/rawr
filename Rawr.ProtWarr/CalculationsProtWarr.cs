@@ -210,17 +210,25 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-            calculatedStats.Miss = 5f + (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToMiss) +
-                                   stats.Miss - levelDifference;
-            calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss,
-                                    stats.Agility * WarriorConversions.AgilityToDodge +
-                                    stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
-                                    (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToDodge) +
-                                    stats.Dodge - levelDifference);
-            calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge,
-                                    5f + stats.ParryRating * WarriorConversions.ParryRatingToParry +
-                                    (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToParry) +
-                                    stats.Parry - levelDifference);
+
+            float defSkill = (float)Math.Floor(stats.DefenseRating * WarriorConversions.DefenseRatingToDefense);
+            float dodgeNonDR = stats.Dodge - levelDifference;
+            float missNonDR = stats.Miss * 100f - levelDifference;
+            float parryNonDR = stats.Parry - levelDifference;
+            float dodgePreDR = stats.Agility * WarriorConversions.AgilityToDodge + stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
+                               defSkill * WarriorConversions.DefenseToDodge;
+            float missPreDR = defSkill * WarriorConversions.DefenseToMiss;
+            float parryPreDR = stats.ParryRating * WarriorConversions.ParryRatingToParry + defSkill * WarriorConversions.DefenseToParry;
+            float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
+            float missPostDR = 1f / (1f / 88.129021f + 0.9560f / missPreDR);
+            float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
+            float dodgeTotal = dodgeNonDR + dodgePostDR;
+            float missTotal = missNonDR + missPostDR;
+            float parryTotal = parryNonDR + parryPostDR;
+
+            calculatedStats.Miss = missTotal;
+            calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
+            calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge, parryTotal);
             calculatedStats.Defense = (float)Math.Floor(350f + stats.Defense + stats.DefenseRating *
                                       WarriorConversions.DefenseRatingToDefense);
 
@@ -1100,26 +1108,26 @@ threat and limited threat scaled by the threat scale.",
     public class WarriorConversions
     {
         public static readonly float AgilityToDodge = 1.0f / 30.0f;
-        public static readonly float DodgeRatingToDodge = 1.0f / 18.930f;
+        public static readonly float DodgeRatingToDodge = 1.0f / 18.92307854f;
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 33.0f;
+        public static readonly float AgilityToCrit = 1.0f / 30.03003003f;
         public static readonly float StaminaToHP = 10.0f;
-        public static readonly float HitRatingToHit = 1.0f / 15.7692f;
-        public static readonly float CritRatingToCrit = 1.0f / 22.0769f; //14*82/52
-        public static readonly float HasteRatingToHaste = 1.0f / 15.77f;
+        public static readonly float HitRatingToHit = 1.0f / 15.76923275f;
+        public static readonly float CritRatingToCrit = 1.0f / 22.07692337f; //14*82/52
+        public static readonly float HasteRatingToHaste = 1.0f / 15.76923275f;
         public static readonly float ExpertiseRatingToExpertise = 1.0f / 3.9423f;
         public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
-        public static readonly float DefenseRatingToDefense = 1.0f / 2.3654f;
+        public static readonly float DefenseRatingToDefense = 1.0f / 2.365385056f;
         public static readonly float DefenseToDodge = 0.04f;
         public static readonly float DefenseToBlock = 0.04f;
         public static readonly float DefenseToParry = 0.04f;
         public static readonly float DefenseToMiss = 0.04f;
         public static readonly float DefenseToCritReduction = 0.04f;
         public static readonly float DefenseToDazeReduction = 0.04f;
-        public static readonly float ParryRatingToParry = 1.0f / 23.6538461538462f;
-        public static readonly float BlockRatingToBlock = 1.0f / 7.8846f;
-        public static readonly float ResilienceRatingToCritReduction = 1.0f / 39.4231f;
+        public static readonly float ParryRatingToParry = 1.0f / 23.65384674f;
+        public static readonly float BlockRatingToBlock = 1.0f / 7.884614944f;
+        public static readonly float ResilienceRatingToCritReduction = 1.0f / 39.42308044f;
     }
 }
