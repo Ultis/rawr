@@ -1417,6 +1417,34 @@ namespace Rawr
             }
         }
 
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            if (PromptToSaveBeforeClosing())
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.DefaultExt = ".csv";
+                dialog.Filter = "Comma Seperated Values| *.csv";
+                dialog.Multiselect = false;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        CSVParser parser = new CSVParser();
+                        parser.Parse(dialog.FileName);
+                    }
+                    catch (InvalidDataException ex)
+                    {
+                        MessageBox.Show("Unable to parse CSV: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error reading CSV: " + ex.Message);
+                    }
+                }
+                dialog.Dispose();
+            }
+        }
+
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
 		//    FormItemEditor itemEditor = new FormItemEditor(Character);
