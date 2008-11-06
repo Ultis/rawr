@@ -134,7 +134,7 @@ namespace Rawr.DPSDK
             }
         }
 
-        private void rbUnholy_CheckedChanged(object sender, EventArgs e)
+        private void rbBlood_CheckedChanged(object sender, EventArgs e)
         {
             if (rbUnholy.Checked)
             {
