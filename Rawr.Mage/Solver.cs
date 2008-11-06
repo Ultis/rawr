@@ -998,7 +998,7 @@ namespace Rawr.Mage
                             lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
                             lp.SetCostUnsafe(column, minimizeTime ? -1 : waterbolt.DamagePerSecond);
                             tpsList.Add(0.0);
-                            if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                            lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
                             if (restrictManaUse)
                             {
                                 for (int ss = segment; ss < segments - 1; ss++)
