@@ -131,14 +131,27 @@ namespace Rawr
 				case "reqlevel": //Rawr assumes that you meet all level requirements
 				case "dps": //Rawr calculates weapon dps based on min/max and speed
 				case "maxcount": //Rawr doesn't deal with stack sizes
-				case "cooldown": //Not handled yet
 				case "dura": //durability isn't handled
-                    break;
+				case "nsockets": //Rawr figures this out itself, Smart program.
+				case "displayid": //An ID# for each icon, but we'll just get the icon name from the xml
+				case "races": //Not worried about race restrictions
+				case "source": //Handled below by individual keyvals
+				case "sourcemore": //Handled below by individual keyvals
+				case "nslots": //Don't care about bag sizes...
+				case "avgmoney": //For containers, average amount of money inside
+				case "glyph": //1=Major, 2=Minor
+					break;
 
-                case "reqrep": // reqrep=6: heroic 5 man, reqrep=1: heroic raid, reqrep=5: Arena, reqrep=4: Faction Friendly, reqrep=5: Faction Honored, etc
-                case "reqfaction":
-                    // Currently faction & reputation is not handled.
-                    break;
+					//TODO:
+				case "cooldown": //Not handled yet
+				case "skill": //Related to skill requirements
+				case "reqskill": //Related to skill requirements
+				case "reqskillrank": //Related to skill requirements
+				case "reqrep": //reqrep=6: heroic 5 man, reqrep=1: heroic raid, reqrep=5: Arena, reqrep=4: Faction Friendly, reqrep=5: Faction Honored, etc
+                case "reqfaction": //Currently faction & reputation is not handled.
+				case "itemset": //Contains the itemset id... May want to parse this,
+				case "reqspell": //Profession specialization requirements, like weaponcrafting, armorsmithing, etc
+					break;
 
 				case "slot":
 					int slot = int.Parse(value);
@@ -151,18 +164,8 @@ namespace Rawr
 					item.Type = GetItemType(value);
 					break;
 
-				case "source":
-					break;
-
-				case "sourcemore":
-					break;
-
 				case "speed":
 					item.Speed = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-					break;
-
-				case "displayid":
-                    // Possibly link to the model/icon.
 					break;
 
 				case "dmgmin1":
@@ -214,22 +217,10 @@ namespace Rawr
 					item.Stats.Strength += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
-				case "races":
-					break;
-
 				case "mlehastertng":
 				case "rgdhastertng":
 				case "splhastertng":
 					item.Stats.HasteRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
-					break;
-
-				case "skill":
-					break;
-
-				case "reqskill":
-					break;
-
-				case "reqskillrank":
 					break;
 
 				case "splheal":
@@ -278,7 +269,6 @@ namespace Rawr
 					item.Stats.AttackPower += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
-
 				case "block":
                     item.Stats.BlockValue += int.Parse(value);
 					break;
@@ -315,10 +305,6 @@ namespace Rawr
                     item.Sockets.Stats = GetSocketBonus(value);
                     break;
 
-				case "nsockets":
-                    // Rawr figures this out itself, Smart program.
-					break;
-
 				case "parryrtng":
 					item.Stats.ParryRating += int.Parse(value);
 					break;
@@ -351,9 +337,6 @@ namespace Rawr
                     item.RequiredClasses = string.Join("|", requiredClasses.ToArray());
 					break;
 
-				case "itemset":
-					break;
-
 				case "resirtng":
 					item.Stats.Resilience += int.Parse(value);
 					break;
@@ -362,9 +345,6 @@ namespace Rawr
 					item.Stats.ArmorPenetrationRating = int.Parse(value);
 					break;
                 
-                case "nslots":
-					break;
-
 				case "splpen":
 					item.Stats.SpellPenetration = int.Parse(value);
 					break;
@@ -393,15 +373,6 @@ namespace Rawr
 					item.Stats.SpellArcaneDamageRating = int.Parse(value);
 					break;
 
-				case "avgmoney":
-					break;
-
-				case "glyph":
-					break;
-
-				case "reqspell":
-					break;
-
 
 
 				//sourcemore keys
@@ -415,101 +386,8 @@ namespace Rawr
                     break;
 
 				case "z":       // Zone
-                    string zonename = "Unknown";
-                    switch (value)
-                    {
-                        #region Hugeass switch for all Zones.
-                        case "65":
-                            zonename = "Dragonblight";
-                            break;
-                        case "66":
-                            zonename = "Zul'Drak";
-                            break;
-                        case "67":
-                            zonename = "The Storm Peaks";
-                            break;
-                        case "206":
-                            zonename = "Utgarde Keep";
-                            break;
-                        case "210":
-                            zonename = "Icecrown";
-                            break;
-                        case "394":
-                            zonename = "Grizzly Hills";
-                            break;
-                        case "495":
-                            zonename = "Howling Fjord";
-                            break;
-                        case "1196":
-                            zonename = "Utgarde Pinnacle";
-                            break;
-                        case "2817":
-                            zonename = "Crystalsong Forest";
-                            break;
-                        case "2917":
-                            zonename = "Hall of Legends";
-                            break;
-                        case "2918":
-                            zonename = "Champion's Hall";
-                            break;
-                        case "3477":
-                            zonename = "Azjol-Nerub";
-                            break;
-                        case "3537":
-                            zonename = "Borean Tundra";
-                            break;
-                        case "3711":
-                            zonename = "Sholazar Basin";
-                            break;
-                        case "4100":
-                            zonename = "CoT: Stratholme";
-                            break;
-                        case "4120":
-                            zonename = "The Nexus";
-                            break;
-                        case "4196":
-                            zonename = "Drak'Tharon Keep";
-                            break;
-                        case "4197":
-                            zonename = "Wintergrasp";
-                            break;
-                        case "4228":
-                            zonename = "The Oculus";
-                            break;
-                        case "4264":
-                            zonename = "Halls of Stone";
-                            break;
-                        case "4272":
-                            zonename = "Halls of Lightning";
-                            break;
-                        case "4298":
-                            zonename = "The Scarlet Enclave";
-                            break;
-                        case "4375":
-                            zonename = "Gundrak";
-                            break;
-                        case "4395":
-                            zonename = "Dalaran";
-                            break;
-                        case "4415":
-                            zonename = "The Violet Hold";
-                            break;
-                        case "4493":
-                            zonename = "The Obsidian Sanctum";
-                            break;
-                        case "4494":
-                            zonename = "Ahn'kahet";
-                            break;
-                        case "4500":
-                            zonename = "The Eye of Eternity";
-                            break;
-                        case "4603":
-                            zonename = "Vault of Archavon";
-                            break;
-                        #endregion
-                        default:
-                            throw (new Exception("Unknown Area id :" + value));
-                    }
+                    string zonename = GetZoneName(value);
+					//TODO: Do something with this?
                     break;
 
 				case "c":
@@ -542,6 +420,43 @@ namespace Rawr
 					break;
 			}
 			return false;
+		}
+
+		private static string GetZoneName(string zoneId)
+		{
+			switch (zoneId)
+			{
+				case "65": return "Dragonblight";
+				case "66": return "Zul'Drak";
+				case "67": return "The Storm Peaks";
+				case "206": return "Utgarde Keep";
+				case "210": return "Icecrown";
+				case "394": return "Grizzly Hills";
+				case "495": return "Howling Fjord";
+				case "1196": return "Utgarde Pinnacle";
+				case "2817": return "Crystalsong Forest";
+				case "2917": return "Hall of Legends";
+				case "2918": return "Champion's Hall";
+				case "3477": return "Azjol-Nerub";
+				case "3537": return "Borean Tundra";
+				case "3711": return "Sholazar Basin";
+				case "4100": return "CoT: Stratholme";
+				case "4120": return "The Nexus";
+				case "4196": return "Drak'Tharon Keep";
+				case "4197": return "Wintergrasp";
+				case "4228": return "The Oculus";
+				case "4264": return "Halls of Stone";
+				case "4272": return "Halls of Lightning";
+				case "4298": return "The Scarlet Enclave";
+				case "4375": return "Gundrak";
+				case "4395": return "Dalaran";
+				case "4415": return "The Violet Hold";
+				case "4493": return "The Obsidian Sanctum";
+				case "4494": return "Ahn'kahet";
+				case "4500": return "The Eye of Eternity";
+				case "4603": return "Vault of Archavon";
+				default: return "Unknown - " + zoneId;
+			}
 		}
 
         private static Item.ItemSlot GetSocketType(string socket)
@@ -802,7 +717,6 @@ namespace Rawr
             }
             return stats;
         }
-
 
 		private static Item.ItemType GetItemType(string classSubclass)
 		{
