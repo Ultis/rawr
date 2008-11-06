@@ -464,7 +464,7 @@ namespace Rawr
 				case "2.18":
 					return Item.ItemType.Crossbow;
 
-				case "2.13":
+				case "2.3":
 					return Item.ItemType.Gun;
 
 				case "2.19":
@@ -479,7 +479,7 @@ namespace Rawr
 				case "4.7":
 					return Item.ItemType.Libram;
 
-				case "4.8":
+				case "4.9":
 					return Item.ItemType.Totem;
 
 				case "6.2":
