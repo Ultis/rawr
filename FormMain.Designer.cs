@@ -181,7 +181,6 @@ namespace Rawr
             this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -518,7 +517,7 @@ namespace Rawr
             this.tabPageTalents.Location = new System.Drawing.Point(4, 22);
             this.tabPageTalents.Name = "tabPageTalents";
             this.tabPageTalents.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTalents.Size = new System.Drawing.Size(303, 582);
+            this.tabPageTalents.Size = new System.Drawing.Size(303, 589);
             this.tabPageTalents.TabIndex = 4;
             this.tabPageTalents.Text = "Talents";
             this.tabPageTalents.UseVisualStyleBackColor = true;
@@ -530,7 +529,7 @@ namespace Rawr
             this.talentPicker1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.talentPicker1.Location = new System.Drawing.Point(3, 3);
             this.talentPicker1.Name = "talentPicker1";
-            this.talentPicker1.Size = new System.Drawing.Size(297, 576);
+            this.talentPicker1.Size = new System.Drawing.Size(297, 583);
             this.talentPicker1.TabIndex = 0;
             this.talentPicker1.Talents = null;
             // 
@@ -539,7 +538,7 @@ namespace Rawr
             this.tabPageBuffs.Controls.Add(this.buffSelector1);
             this.tabPageBuffs.Location = new System.Drawing.Point(4, 22);
             this.tabPageBuffs.Name = "tabPageBuffs";
-            this.tabPageBuffs.Size = new System.Drawing.Size(303, 582);
+            this.tabPageBuffs.Size = new System.Drawing.Size(303, 589);
             this.tabPageBuffs.TabIndex = 2;
             this.tabPageBuffs.Text = "Buffs";
             this.tabPageBuffs.UseVisualStyleBackColor = true;
@@ -552,14 +551,14 @@ namespace Rawr
             this.buffSelector1.Location = new System.Drawing.Point(0, 0);
             this.buffSelector1.Name = "buffSelector1";
             this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.buffSelector1.Size = new System.Drawing.Size(303, 582);
+            this.buffSelector1.Size = new System.Drawing.Size(303, 589);
             this.buffSelector1.TabIndex = 0;
             // 
             // tabPageOptions
             // 
             this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
             this.tabPageOptions.Name = "tabPageOptions";
-            this.tabPageOptions.Size = new System.Drawing.Size(303, 582);
+            this.tabPageOptions.Size = new System.Drawing.Size(303, 589);
             this.tabPageOptions.TabIndex = 3;
             this.tabPageOptions.Text = "Options";
             this.tabPageOptions.UseVisualStyleBackColor = true;
@@ -1565,8 +1564,7 @@ namespace Rawr
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.exitToolStripMenuItem,
-            this.toolStripMenuItem7});
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "&File";
@@ -1827,13 +1825,6 @@ namespace Rawr
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(259, 22);
-            this.toolStripMenuItem7.Text = "Load Item CSV";
-            this.toolStripMenuItem7.Click += new System.EventHandler(this.toolStripMenuItem7_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2021,7 +2012,6 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonFilter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFilterOther;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
         
     }
 }
