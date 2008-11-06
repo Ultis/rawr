@@ -158,11 +158,11 @@ namespace Rawr
 					break;
 
 				case "dmgmin1":
-					item.MinDamage += int.Parse(value);
+					item.MinDamage += (int)float.Parse(value);
 					break;
 
 				case "dmgmax1":
-					item.MaxDamage += int.Parse(value);
+					item.MaxDamage += (int)float.Parse(value);
 					break;
 
 				case "dmgtype1":
