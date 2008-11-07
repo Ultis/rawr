@@ -48,6 +48,7 @@ namespace Rawr
             checkBoxes.Add(this.checkBoxCrossbow);
             checkBoxes.Add(this.checkBoxGun);
             checkBoxes.Add(this.checkBoxThrown);
+            checkBoxes.Add(this.checkBoxRelic);
             checkBoxes.Add(this.checkBoxWand);
             checkBoxes.Add(this.checkBoxShield);
             checkBoxes.Add(this.checkBoxMisc);
@@ -72,20 +73,43 @@ namespace Rawr
             _RelevantItemTypes = ItemFilter.GetRelevantItemTypesList(Calculations.Instance);
             foreach (CheckBox box in checkBoxes)
             {
-                box.Enabled = _relevantItemTypes.Contains((Item.ItemType)box.Tag);
-                box.Checked = _RelevantItemTypes.Contains((Item.ItemType)box.Tag);
+                if (box.Equals(checkBoxRelic))
+                {
+                    box.Enabled = _relevantItemTypes.Contains(Item.ItemType.Libram) || _relevantItemTypes.Contains(Item.ItemType.Idol)
+                        || _relevantItemTypes.Contains(Item.ItemType.Totem) || _relevantItemTypes.Contains(Item.ItemType.Sigil);
+                    box.Checked = _RelevantItemTypes.Contains(Item.ItemType.Libram) || _RelevantItemTypes.Contains(Item.ItemType.Idol)
+                        || _RelevantItemTypes.Contains(Item.ItemType.Totem) || _RelevantItemTypes.Contains(Item.ItemType.Sigil);
+                }
+                else
+                {
+                    box.Enabled = _relevantItemTypes.Contains((Item.ItemType)box.Tag);
+                    box.Checked = _RelevantItemTypes.Contains((Item.ItemType)box.Tag);
+                }
             }
         }
 
         private void OKButton_Click(object sender, EventArgs e)
         {
             _RelevantItemTypes.Clear();
-
+            if (_relevantItemTypes == null)
+            {
+                _relevantItemTypes = Calculations.Instance.RelevantItemTypes;
+            }
             foreach (CheckBox box in checkBoxes)
             {
                 if (box.Checked && box.Enabled)
                 {
-                    _RelevantItemTypes.Add((Item.ItemType)box.Tag);
+                    if (box.Equals(checkBoxRelic))
+                    {
+                        if (_relevantItemTypes.Contains(Item.ItemType.Libram)) _RelevantItemTypes.Add(Item.ItemType.Libram);
+                        if (_relevantItemTypes.Contains(Item.ItemType.Totem)) _RelevantItemTypes.Add(Item.ItemType.Totem);
+                        if (_relevantItemTypes.Contains(Item.ItemType.Idol)) _RelevantItemTypes.Add(Item.ItemType.Idol);
+                        if (_relevantItemTypes.Contains(Item.ItemType.Sigil)) _RelevantItemTypes.Add(Item.ItemType.Sigil);
+                    }
+                    else
+                    {
+                        _RelevantItemTypes.Add((Item.ItemType)box.Tag);
+                    }
                 }
             }
             ItemCache.OnItemsChanged();
