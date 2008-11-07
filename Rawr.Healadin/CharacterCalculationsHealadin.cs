@@ -46,6 +46,21 @@ namespace Rawr.Healadin
         public float FoLCost { get; set; }
         public float FoLCastTime { get; set; }
 
+        public float HSTime { get; set; }
+        public float HSHeal { get; set; }
+        public float HSHPS { get; set; }
+        public float HSCrit { get; set; }
+        public float HSCost { get; set; }
+        public float HSCastTime { get; set; }
+
+        public float BoLCost { get; set; }
+        public float BoLCasts { get; set; }
+        public float BoLHealed { get; set; }
+
+        public float JotPCost { get; set; }
+        public float JotPGCDs { get; set; }
+        public float JotPHaste { get; set; }
+
         public float ManaBase { get; set; }
         public float ManaMp5 { get; set; }
         public float ManaPotion { get; set; }
@@ -84,7 +99,10 @@ namespace Rawr.Healadin
                 Math.Round(FoLHPS), Math.Round(FoLCastTime, 2), Math.Round(FoLCrit*100, 2), Math.Round(FoLHeal), Math.Round(FoLCost)));
             dictValues.Add("Holy Light", string.Format("{0} hps*{1}s cast time\n{2}% crit chance\n{3} average heal\n{4} average cost",
                 Math.Round(HLHPS), Math.Round(HLCastTime, 2), Math.Round(HLCrit * 100, 2), Math.Round(HLHeal), Math.Round(HLCost)));
-            dictValues.Add("Holy Shock", "nyi");
+            dictValues.Add("Holy Shock", string.Format("{0} hps*{1}s cast time\n{2}% crit chance\n{3} average heal\n{4} average cost",
+                Math.Round(HSHPS), Math.Round(HSCastTime, 2), Math.Round(HSCrit * 100, 2), Math.Round(HSHeal), Math.Round(HSCost)));
+            dictValues.Add("Beacon of Light", string.Format("{0} healing*{1} mana\n{2} GCDs", Math.Round(BoLHealed), Math.Round(BoLCost), Math.Round(BoLCasts)));
+            dictValues.Add("Judgement", string.Format("{0}% haste*{1} GCDs\n{2} mana", Math.Round(JotPHaste * 100), Math.Round(JotPGCDs), Math.Round(JotPCost)));
             return dictValues;
         }
     }

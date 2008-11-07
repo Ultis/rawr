@@ -33,10 +33,19 @@ namespace Rawr.Healadin
             lblActivity.Text = trkActivity.Value + "%";
 
             chkJotP.Checked = calcOpts.JotP;
-            chkBoL.Checked = calcOpts.BoL;
 
             trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
-            trkReplenishment.Text = trkReplenishment.Value + "%";
+            lblReplenishment.Text = trkReplenishment.Value + "%";
+
+            trkBoLUp.Value = (int)(calcOpts.BoLUp * 100);
+            lblBoLUp.Text = trkBoLUp.Value + "%";
+
+            trkBoLEff.Value = (int)(calcOpts.BoLEff * 100);
+            lblBoLEff.Text = trkBoLEff.Value + "%";
+
+            trkRatio.Value = (int)(calcOpts.Ratio * 100);
+            lblRatio1.Text = trkRatio.Value + "%";
+            lblRatio2.Text = (100 - trkRatio.Value) + "%";
 
             loading = false;
         }
@@ -131,15 +140,41 @@ namespace Rawr.Healadin
             }
         }
 
-        private void chkBoL_CheckedChanged(object sender, EventArgs e)
+        private void trkBoLUp_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.BoL = chkBoL.Checked;
+                lblBoLUp.Text = trkBoLUp.Value + "%";
+                calcOpts.BoLUp = trkBoLUp.Value / 100f;
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void trkBoLEff_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                lblBoLEff.Text = trkBoLEff.Value + "%";
+                calcOpts.BoLEff = trkBoLEff.Value / 100f;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkRatio_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Ratio = trkRatio.Value / 100f;
+                lblRatio1.Text = trkRatio.Value + "%";
+                lblRatio2.Text = (100 - trkRatio.Value) + "%";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+
 
     }
 
@@ -162,7 +197,9 @@ namespace Rawr.Healadin
 		public float Spiritual = 3600;
         public float Replenishment = .9f;
         public float DivinePlea = 1.5f;
+        public float BoLUp = 1f;
+        public float BoLEff = .3f;
+        public float Ratio = .2f;
         public bool JotP = true;
-        public bool BoL = true;
 	}
 }

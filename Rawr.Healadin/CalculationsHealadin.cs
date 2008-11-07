@@ -42,7 +42,9 @@ namespace Rawr.Healadin
 					"Cycle Stats:Holy Light Time",
                     "Spell Stats:Flash of Light",
                     "Spell Stats:Holy Light",
-                    "Spell Stats:Holy Shock"
+                    "Spell Stats:Holy Shock",
+                    "Spell Stats:Beacon of Light",
+                    "Spell Stats:Judgement"
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -127,7 +129,7 @@ namespace Rawr.Healadin
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 
-            float base_mana = 2672;
+            float base_mana = 2953;// 4394;
             float fight_length = calcOpts.Length * 60;
 			float active_length = fight_length * calcOpts.Activity;
 
@@ -146,37 +148,37 @@ namespace Rawr.Healadin
 
             float benediction = 1f - talents.Benediction * .02f;
 
-            float gcds_used = 0;
-            float mana_used = 0;
-
             if (calcOpts.JotP && talents.JudgementsOfThePure > 0)
             {
+                float oldhaste = fight_length * (1f + stats.SpellHaste);
                 stats.SpellHaste += talents.JudgementsOfThePure * .03f;
 
                 float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
-                gcds_used += seals_cast;
-                mana_used += base_mana * .14f * seals_cast;
+                calc.JotPGCDs += seals_cast;
+                calc.JotPCost += base_mana * .14f * seals_cast;
 
                 float judgements_cast = (float)Math.Ceiling(fight_length / 60f);
-                gcds_used += judgements_cast;
-                mana_used += base_mana * .05f * judgements_cast;
+                calc.JotPGCDs += judgements_cast;
+                calc.JotPCost += base_mana * .05f * judgements_cast;
+
+                float newhaste = fight_length * (1f + stats.SpellHaste) - (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.JotPGCDs;
+                calc.JotPHaste = 1f - oldhaste / newhaste;
             }
-            if (calcOpts.BoL && talents.BeaconOfLight > 0)
+            if (talents.BeaconOfLight > 0)
             {
-                float bols_cast = (float)Math.Ceiling(fight_length / 60f);
-                gcds_used += bols_cast;
-                mana_used += base_mana * .35f * benediction * bols_cast;
+                calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / 60f);
+                calc.BoLCost = calc.BoLCasts * base_mana * .35f * benediction;
             }
 
             float ied = stats.ManaRestorePerCast_5_15 * .035f; 
-
+            
             #region Flash of Light
-            calc.FoLHeal = (623f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier);
+            calc.FoLHeal = (635f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier);
             float fol_baseMana = base_mana * .07f;
             calc.FoLCrit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
             calc.FoLCost = fol_baseMana * (1 - .12f * talents.Illumination * calc.FoLCrit) - ied;
             float fol_avgHeal = calc.FoLHeal * (1f + .5f * calc.FoLCrit);
-            calc.FoLCastTime = 1.5f / (1f + stats.SpellHaste);
+            calc.FoLCastTime = (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste));
             calc.FoLHPS = fol_avgHeal / calc.FoLCastTime;
             float fol_mps = calc.FoLCost / calc.FoLCastTime;
             #endregion
@@ -192,8 +194,19 @@ namespace Rawr.Healadin
             float hl_mps = calc.HLCost / calc.HLCastTime;
             #endregion
 
-            float healing_mana = calc.TotalMana - mana_used;
-            float healing_time = active_length - (1.5f / (1f + stats.SpellHaste) * gcds_used);
+            #region Holy Shock
+            calc.HSHeal = (1310f + stats.SpellPower) * (1f + talents.HealingLight * .04f);
+            float hs_baseMana = base_mana * .18f * benediction;
+            calc.HSCrit = stats.SpellCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
+            calc.HSCost = hs_baseMana * (1 - .12f * talents.Illumination * calc.HSCrit) - ied;
+            float hs_avgHeal = calc.HSHeal * (1f + .5f * calc.HSCrit);
+            calc.HSCastTime = 1.5f / (1f + stats.SpellHaste);
+            calc.HSHPS = hs_avgHeal / calc.HSCastTime;
+            float hs_mps = calc.HSCost / calc.HSCastTime;
+            #endregion
+
+            float healing_mana = calc.TotalMana - calc.BoLCost - calc.JotPCost;
+            float healing_time = active_length - ((float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.BoLCasts * calc.JotPGCDs);
             float hl_time = Math.Min(active_length, Math.Max(0, (healing_mana - (healing_time * fol_mps)) / (hl_mps - fol_mps)));
             float fol_time = healing_time - hl_time;
             if (hl_time == 0)
@@ -204,8 +217,9 @@ namespace Rawr.Healadin
 
             float fol_healing = fol_time * calc.FoLHPS;
             float hl_healing = hl_time * calc.HLHPS;
-
-            calc.TotalHealed = fol_healing + hl_healing;
+            
+            calc.TotalHealed = (fol_healing + hl_healing);
+            if (talents.BeaconOfLight > 0) calc.TotalHealed += calc.BoLHealed = calcOpts.BoLEff * calcOpts.BoLUp * calc.TotalHealed;
 
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
             calc.OverallPoints = calc.ThroughputPoints = calc.AvgHPS = calc.TotalHealed / fight_length;
@@ -231,7 +245,7 @@ namespace Rawr.Healadin
             }
             else
             {
-                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 118, Intellect = 86, Spirit = 88 };
+                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 118, Intellect = 87, Spirit = 88 };
             }
 
 
