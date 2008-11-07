@@ -990,6 +990,8 @@ namespace Rawr
 				//Clipboard isn't working
 				System.IO.File.WriteAllText("stats.txt", sb.ToString());
 			}
+
+			if (Control.ModifierKeys == Keys.Control) Wowhead.ProcessFile();
 		}
 
 		private void slotToolStripMenuItem_Click(object sender, EventArgs e)

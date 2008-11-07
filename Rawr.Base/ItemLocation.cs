@@ -894,6 +894,12 @@ namespace Rawr
             return item;
         }
 
+		public static void Add(string itemId, ItemLocation itemLocation)
+		{
+			if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
+			_allLocations.Add(itemId, itemLocation);
+		}
+
         static SortedList<string, Construct> _LocationFactory = null;
     }
 }

@@ -15,16 +15,20 @@ namespace Rawr
 		{
 			if (System.IO.File.Exists("C:\\wotlkitems.csv"))
 			{
-				string[] lines = System.IO.File.ReadAllLines("C:\\wotlkitems.csv");
-				List<Item> items = new List<Item>();
-				foreach (string line in lines)
-					if (line != lines[0])
-					{
-						Item item = ProcessItem(line);
-						if (item != null) items.Add(item);
-					}
+				//if (false) //Break point here, step into it if you want to import the data
+				{
+					string[] lines = System.IO.File.ReadAllLines("C:\\wotlkitems.csv");
+					List<Item> items = new List<Item>();
+					foreach (string line in lines)
+						if (line != lines[0])
+						{
+							Item item = ProcessItem(line);
+							if (item != null) items.Add(item);
+							ItemCache.AddItem(item, true, false);
+						}
 
-				"".ToString();
+					"".ToString();
+				}
 			}
 
 		}
@@ -47,7 +51,7 @@ namespace Rawr
 			string quality = data.Substring(0, data.IndexOf(','));
 			data = data.Substring(data.IndexOf(',') + 2);
 
-			string json1 = data.Substring(0, data.IndexOf("\",")).Replace(",subclass:",".");
+			string json1 = data.Substring(0, data.IndexOf("\",")).Replace(",subclass:",".").Replace(",armor:",",armorDUPE:");
 			data = data.Substring(data.IndexOf("\",") + 2);
 			string json2 = data.Trim('"');//string.IsNullOrEmpty(data) ? string.Empty : data.Substring(1, data.IndexOf('"'));
 
@@ -67,7 +71,16 @@ namespace Rawr
 				json1 = json1.Replace(sourcemore, "SOURCEMORE");
 			}
 
-			Item item = new Item() { Stats = new Stats(), Sockets = new Sockets(), Name = name };
+			Item item = new Item() { 
+				Stats = new Stats(), 
+				Sockets = new Sockets(), 
+				Name = name, 
+				Quality = (Item.ItemQuality)int.Parse(quality),
+				_id = int.Parse(id),
+				IconPath = string.Empty
+			};
+
+			if ((int)item.Quality < 2) return null;
 
 			foreach (string keyval in (json1 + "," + json2).Split(','))
 			{
@@ -76,9 +89,11 @@ namespace Rawr
 					string[] keyvalsplit = keyval.Split(':');
 					string key = keyvalsplit[0];
 					string val = keyvalsplit[1];
-					if (ProcessKeyValue(item, key, val)) return null;
+					if (ProcessKeyValue(item, key, val) && !json1.Contains("classs:3.")) 
+						return null;
 				}
 			}
+			if (item.Slot == Item.ItemSlot.None) return null;
 			if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
 			if (!string.IsNullOrEmpty(sourcemore))
 			{
@@ -103,8 +118,8 @@ namespace Rawr
 				}
 				if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
 			}
-            item.IconPath = string.Empty;
-			return item;
+			if (item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
+            return item;
 		}
 
 
@@ -117,10 +132,7 @@ namespace Rawr
 		{
 			switch (key)
 			{
-				case "id":
-					item.Id = int.Parse(value);
-					break;
-
+				case "id": //ID's are parsed out of the main data, not the json
 				case "name": //Item names are parsed out of the main data, not the json
 				case "level": //Rawr doesn't handle item levels
 				case "slotbak": //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
@@ -161,7 +173,25 @@ namespace Rawr
 
 				case "classs":
 					if (value.StartsWith("1.") || value.StartsWith("12.")) return true; //Container and Quest
-					item.Type = GetItemType(value);
+					if (value.StartsWith("3."))
+					{
+						item.Type = Item.ItemType.None;
+						switch (value)
+						{
+							case "3.0": item.Slot = Item.ItemSlot.Red; break;
+							case "3.1": item.Slot = Item.ItemSlot.Blue; break;
+							case "3.2": item.Slot = Item.ItemSlot.Yellow; break;
+							case "3.3": item.Slot = Item.ItemSlot.Purple; break;
+							case "3.4": item.Slot = Item.ItemSlot.Green; break;
+							case "3.5": item.Slot = Item.ItemSlot.Orange; break;
+							case "3.6": item.Slot = Item.ItemSlot.Meta; break;
+							case "3.8": item.Slot = Item.ItemSlot.Prismatic; break;
+						}
+					}
+					else
+					{
+						item.Type = GetItemType(value);
+					}
 					break;
 
 				case "speed":
@@ -376,30 +406,71 @@ namespace Rawr
 
 
 				//sourcemore keys
-				case "t":       // Type (1 = drop)
-                    break;
+				case "t":   //Source Type
+					switch (value)
+					{
+						case "1": //Dropped by a mob...
+							LocationFactory.Add(item.Id.ToString(), StaticDrop.Construct());
+							break;
 
-				case "ti":      // NPC that drops/gives
+						case "2": //Found in a container object
+							LocationFactory.Add(item.Id.ToString(), ContainerItem.Construct());
+							break;
+
+						case "3": //Found in a container item
+							LocationFactory.Add(item.Id.ToString(), ContainerItem.Construct());
+							break;
+						
+						case "5": //Rewarded from a quest...
+							LocationFactory.Add(item.Id.ToString(), QuestItem.Construct());
+							break;
+
+						case "6": //Crafted by a profession...
+							LocationFactory.Add(item.Id.ToString(), CraftedItem.Construct());
+							break;
+
+						default:
+							"".ToString();
+							break;
+                    }
+					break;
+
+				case "ti":      // NPC ID that drops/gives... We use the name, so ignoring this
                     break;
 
 				case "n":       // NPC 'Name'
+					ItemLocation locationName = item.LocationInfo;
+					if (locationName is StaticDrop)	(locationName as StaticDrop).Boss = value;
+					if (locationName is ContainerItem) (locationName as ContainerItem).Container = value;
+					if (locationName is QuestItem) (locationName as QuestItem).Quest = value;
+					if (locationName is CraftedItem) (locationName as CraftedItem).SpellName = value;
                     break;
 
 				case "z":       // Zone
                     string zonename = GetZoneName(value);
-					//TODO: Do something with this?
-                    break;
+					ItemLocation locationZone = item.LocationInfo;
+					if (locationZone is StaticDrop) (locationZone as StaticDrop).Area = value;
+					if (locationZone is ContainerItem) (locationZone as ContainerItem).Area = value;
+					if (locationZone is QuestItem) (locationZone as QuestItem).Area = value;
+					if (locationZone is CraftedItem) (locationZone as CraftedItem).Skill = value;
+					break;
 
-				case "c":
-                    "".ToString();
-                    break;
+				case "c": //Zone again, used for quests
+					string continentname = GetZoneName(value);
+					ItemLocation locationContinent = item.LocationInfo;
+					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = value;
+					if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = value;
+					if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = value;
+					if (locationContinent is CraftedItem) (locationContinent as CraftedItem).Skill = value;
+					break;
 
-				case "c2":
-                    "".ToString();
-                    break;
+				case "c2": //Don't care about continent
+					break;
 
-				case "dd":      // ??? Dungeon Difficulty? (1 = Normal, 2 = Heroic)
-                    break;
+				case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+					ItemLocation locationDifficulty = item.LocationInfo;
+					if (locationDifficulty is StaticDrop) (locationDifficulty as StaticDrop).Heroic = value == "2";
+					break;
 
 				case "s":
                     "".ToString();
@@ -878,6 +949,7 @@ namespace Rawr
 				case 24:
 					return Item.ItemSlot.Projectile;
 
+				case 18:
 				case 27:
 					return Item.ItemSlot.ProjectileBag;
 

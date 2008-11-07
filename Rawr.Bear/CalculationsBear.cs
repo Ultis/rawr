@@ -227,11 +227,13 @@ the Threat Scale defined on the Options tab.",
 			CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
+
+			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 75 : 65; //TODO: Find correct base agi values at 80
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
-			float dodgeNonDR = stats.Dodge * 100f - levelDifference;
+			float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi / 44f; //TODO: Find correct Agi->Dodge ratio
 			float missNonDR = stats.Miss * 100f - levelDifference;
-			float dodgePreDR = stats.Agility / 20f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f);
+			float dodgePreDR = (stats.Agility - baseAgi) / 44f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
 			float missPreDR = (defSkill * 0.04f);
 			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
 			float missPostDR = 1f / (1f / 116.890707f + 0.972f / missPreDR);

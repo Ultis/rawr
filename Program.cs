@@ -15,10 +15,6 @@ namespace Rawr
 		{
             try
             {
-#if DEBUG
-				Rawr.Wowhead.ProcessFile();
-#endif
-
                 bool bAppFirstInstance;
                 //use the app domain base directory to allow a second copy running in a different folder.
 				System.Threading.Mutex oMutex = new System.Threading.Mutex(true, "Global\\Rawr-" + AppDomain.CurrentDomain.BaseDirectory.Replace('\\','|'), out bAppFirstInstance);

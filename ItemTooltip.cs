@@ -130,7 +130,7 @@ namespace Rawr
                             string location = "Unknown source";
                             if (_currentItem.LocationInfo != null)
                             {
-                                location = _currentItem .LocationInfo.Description;
+                                location = _currentItem.LocationInfo.Description;
                             }
                             SizeF locationSize = _sizeTest.MeasureString(location, _fontStats);
                             if (locationSize.Width > 300)

@@ -446,7 +446,9 @@ namespace Rawr
 			Uncommon,
 			Rare,
 			Epic,
-			Legendary
+			Legendary,
+			Artifact,
+			Heirloom
 		}
 
 		public enum ItemType
