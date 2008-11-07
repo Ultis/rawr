@@ -212,15 +212,15 @@ threat and limited threat scaled by the threat scale.",
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
             float defSkill = (float)Math.Floor(stats.DefenseRating * WarriorConversions.DefenseRatingToDefense);
-            float dodgeNonDR = stats.Dodge - levelDifference;
+            float dodgeNonDR = stats.Dodge + stats.BaseAgility * WarriorConversions.AgilityToDodge - levelDifference;
             float missNonDR = stats.Miss * 100f - levelDifference;
             float parryNonDR = stats.Parry - levelDifference;
-            float dodgePreDR = stats.Agility * WarriorConversions.AgilityToDodge + stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
+            float dodgePreDR = (stats.Agility - stats.BaseAgility) * WarriorConversions.AgilityToDodge + stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
                                defSkill * WarriorConversions.DefenseToDodge;
             float missPreDR = defSkill * WarriorConversions.DefenseToMiss;
             float parryPreDR = stats.ParryRating * WarriorConversions.ParryRatingToParry + defSkill * WarriorConversions.DefenseToParry;
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
-            float missPostDR = 1f / (1f / 88.129021f + 0.9560f / missPreDR);
+            float missPostDR = 1f / (1f / 50 + 0.9560f / missPreDR);
             float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
             float dodgeTotal = dodgeNonDR + dodgePostDR;
             float missTotal = missNonDR + missPostDR;
@@ -459,6 +459,8 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Miss = 0.05f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     if ((character.MainHand != null) &&
@@ -754,7 +756,8 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ThreatIncreaseMultiplier = ((1 + statsRace.ThreatIncreaseMultiplier) *
                                                    (1 + statsGearEnchantsBuffs.ThreatIncreaseMultiplier) *
                                                    (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
-            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility) * (1 + statsBuffs.BonusAgilityMultiplier));
+            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsBaseGear.Agility + statsBuffs.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility) * (1 + statsBuffs.BonusAgilityMultiplier));
+            statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
             statsTotal.Strength = strength;
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;

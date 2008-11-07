@@ -21,6 +21,7 @@ namespace Rawr
         AttackPower,
         AverageAgility,
         AverageArmor,
+        BaseAgility,
         Block,
         BlockRating,
         BlockValue,
@@ -365,6 +366,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Agility]; }
             set { _rawAdditiveData[(int)AdditiveStat.Agility] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Agility before gear")]
+        public float BaseAgility
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BaseAgility]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BaseAgility] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
