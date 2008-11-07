@@ -28,6 +28,7 @@ namespace Rawr
 						}
 
 					"".ToString();
+					ItemCache.OnItemsChanged();
 				}
 			}
 
