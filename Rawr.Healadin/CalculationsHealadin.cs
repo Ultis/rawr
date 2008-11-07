@@ -154,7 +154,7 @@ namespace Rawr.Healadin
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 
-            float base_mana = 2953;// 4394;
+            const float base_mana = 4394;
             float fight_length = calcOpts.Length * 60;
 			float active_length = fight_length * calcOpts.Activity;
 
@@ -270,19 +270,19 @@ namespace Rawr.Healadin
             Stats statsRace;
             if (character.Race == Character.CharacterRace.Draenei)
             {
-                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 123, Intellect = 84, Spirit = 91 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 145, Intellect = 99, Spirit = 107 };
             }
             else if (character.Race == Character.CharacterRace.Dwarf)
             {
-                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 129, Intellect = 82, Spirit = 88 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 151, Intellect = 97, Spirit = 104 };
             }
             else if (character.Race == Character.CharacterRace.Human)
             {
-                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 126, Intellect = 83, Spirit = 90, BonusSpiritMultiplier = 1.1f };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 148, Intellect = 98, Spirit = 106, BonusSpiritMultiplier = 1.03f };
             }
             else
             {
-                statsRace = new Stats() { Health = 3197, Mana = 2672, Stamina = 118, Intellect = 87, Spirit = 88 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 140, Intellect = 102, Spirit = 104 };
             }
 
 
@@ -295,9 +295,9 @@ namespace Rawr.Healadin
             statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f));
             statsTotal.Spirit = (float)Math.Round(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (0.2f * statsTotal.Intellect));
-            statsTotal.SpellCrit = .03336f + statsTotal.SpellCrit + statsTotal.Intellect / 8000 + statsTotal.CritRating / 2208 +
+            statsTotal.SpellCrit = .03336f + statsTotal.SpellCrit + statsTotal.Intellect / 16666.66709f + statsTotal.CritRating / 4590.598679f +
                 talents.SanctifiedSeals * .01f + talents.Conviction * .01f;
-            statsTotal.SpellHaste += statsTotal.HasteRating / 1570;
+            statsTotal.SpellHaste += statsTotal.HasteRating / 3278.998947f;
             statsTotal.Mana = statsTotal.Mana + (statsTotal.Intellect * 15);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);
 
