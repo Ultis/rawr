@@ -210,7 +210,6 @@
             this.trkReplenishment.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkReplenishment.Location = new System.Drawing.Point(144, 99);
             this.trkReplenishment.Maximum = 100;
-            this.trkReplenishment.Minimum = 10;
             this.trkReplenishment.Name = "trkReplenishment";
             this.trkReplenishment.Size = new System.Drawing.Size(142, 45);
             this.trkReplenishment.TabIndex = 25;
@@ -393,7 +392,6 @@
             this.trkBoLEff.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkBoLEff.Location = new System.Drawing.Point(144, 66);
             this.trkBoLEff.Maximum = 100;
-            this.trkBoLEff.Minimum = 10;
             this.trkBoLEff.Name = "trkBoLEff";
             this.trkBoLEff.Size = new System.Drawing.Size(145, 45);
             this.trkBoLEff.TabIndex = 31;
@@ -424,7 +422,6 @@
             this.trkBoLUp.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkBoLUp.Location = new System.Drawing.Point(144, 15);
             this.trkBoLUp.Maximum = 100;
-            this.trkBoLUp.Minimum = 10;
             this.trkBoLUp.Name = "trkBoLUp";
             this.trkBoLUp.Size = new System.Drawing.Size(145, 45);
             this.trkBoLUp.TabIndex = 28;
