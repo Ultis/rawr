@@ -154,18 +154,19 @@ namespace Rawr.Healadin
 			CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
             if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
 
-            const float base_mana = 4394;
-
-            float glyph_sow = 1f - (calcOpts.Glyph_SoW ? .05f : 0f);
-            float glyph_sol = 1f + (calcOpts.Glyph_SoL ? .05f : 0f);
-
+            const float base_mana = 4394;            
             float fight_length = calcOpts.Length * 60;
 			float active_length = fight_length * calcOpts.Activity;
+
+            float divine_pleas = (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
+            float glyph_sow = (calcOpts.Glyph_SoW ? .95f : 1f);
+            float heal_multi = (calcOpts.Glyph_SoL ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier) * (1f - .2f * divine_pleas * 15f / fight_length);
+
 
             calc.ManaBase = stats.Mana;
             calc.ManaLayOnHands = 1950 * ((calcOpts.Glyph_Divinity ? 1 : 0) + (calcOpts.LoHSelf ? 1 : 0)) * (calcOpts.Glyph_LoH ? 1.2f : 1f);
             calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 60f - .25f) : 0);
-            calc.ManaDivinePlea = stats.Mana * .25f * (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
+            calc.ManaDivinePlea = stats.Mana * .25f * divine_pleas;
             calc.ManaMp5 = fight_length * stats.Mp5 / 5;
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
             calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment;
@@ -204,9 +205,9 @@ namespace Rawr.Healadin
 
             
             #region Flash of Light
-            // TODO: Update to level 80 value (from 79)!!!
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
-            calc.FoLAvgHeal = (832f + (stats.SpellPower + stats.FoLHeal) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier) * glyph_sol;
+            // TODO: Update to level 80 value (from 79)!!!
+            calc.FoLAvgHeal = (832f + (stats.SpellPower + stats.FoLHeal) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier) * heal_multi;
             float fol_baseMana = (float)Math.Round(base_mana * .07f);
             calc.FoLCrit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
             calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied;
@@ -219,10 +220,10 @@ namespace Rawr.Healadin
 
             #region Holy Light
             const float hl_coef = 2.5f / 3.5f * 66f / 35f * 1.25f;
-            calc.HLAvgHeal = (5166f + (stats.HLHeal + stats.SpellPower) * hl_coef) * (1f + talents.HealingLight * .04f) * glyph_sol;
+            calc.HLAvgHeal = (5166f + (stats.HLHeal + stats.SpellPower) * hl_coef) * (1f + talents.HealingLight * .04f) * heal_multi;
             float hl_baseMana = (float)Math.Round(base_mana * .29f);
             calc.HLCrit = stats.SpellCrit + stats.HLCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
-            calc.HLCost = hl_baseMana * glyph_sow - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - ied;
+            calc.HLCost = hl_baseMana * glyph_sow - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HLCost - ied;
             float hl_heal = calc.HLAvgHeal * (1f + .5f * calc.HLCrit);
             calc.HLCastTime = 2f / (1f + stats.SpellHaste);
             calc.HLHPS = hl_heal / calc.HLCastTime;
@@ -232,7 +233,7 @@ namespace Rawr.Healadin
 
             #region Holy Shock
             const float hs_coef = 1.5f / 3.5f * 66f / 35f;
-            calc.HSAvgHeal = (2500f + stats.SpellPower * hs_coef) * (1f + talents.HealingLight * .04f) * glyph_sol;
+            calc.HSAvgHeal = (2500f + stats.SpellPower * hs_coef) * (1f + talents.HealingLight * .04f) * heal_multi;
             float hs_baseMana = (float)Math.Round(base_mana * .18f * benediction);
             calc.HSCrit = stats.SpellCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
             calc.HSCost = hs_baseMana * glyph_sow - hs_baseMana * .12f * talents.Illumination * calc.HSCrit - ied;
@@ -382,16 +383,16 @@ namespace Rawr.Healadin
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
-                FoLBoL = stats.FoLBoL,
                 FoLCrit = stats.FoLCrit,
                 FoLHeal = stats.FoLHeal,
                 FoLMultiplier = stats.FoLMultiplier,
                 HLHeal = stats.HLHeal,
                 HLCrit = stats.HLCrit,
                 HLCost = stats.HLCost,
-                HLBoL = stats.HLBoL,
                 MementoProc = stats.MementoProc,
-                AverageHeal = stats.AverageHeal,
+                HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
+                // Gear Procs
+                ManaRestorePerCast_5_15 =  stats.ManaRestorePerCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond
             };
         }
@@ -399,10 +400,10 @@ namespace Rawr.Healadin
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
-                + stats.BonusIntellectMultiplier
-                + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.FoLBoL + stats.HLBoL + stats.HLCost
-                + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.AverageHeal + stats.ManaRestoreFromMaxManaPerSecond) > 0;
+                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.Stamina
+                + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.HLCost
+                + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.ManaRestoreFromMaxManaPerSecond
+                + stats.HealingReceivedMultiplier + stats.ManaRestorePerCast_5_15) > 0;
         }
     }
 }

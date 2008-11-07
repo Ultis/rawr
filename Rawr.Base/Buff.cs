@@ -360,13 +360,13 @@ namespace Rawr
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Improved Devotion Aura (Healing Received %)",
-				Group = "Damage Reduction (%)",
+                Group = "Healing Received (%)",
 				Stats = { HealingReceivedMultiplier = 0.06f }
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Tree of Life Aura",
-				Group = "Damage Reduction (%)",
+                Group = "Healing Received (%)",
 				Stats = { HealingReceivedMultiplier = 0.06f }
 			});
 			#endregion
