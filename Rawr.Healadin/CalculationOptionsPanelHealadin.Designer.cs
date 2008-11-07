@@ -51,11 +51,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.lblBoLUp = new System.Windows.Forms.Label();
             this.trkBoLUp = new System.Windows.Forms.TrackBar();
-            this.trkRatio = new System.Windows.Forms.TrackBar();
+            this.trkHS = new System.Windows.Forms.TrackBar();
+            this.lblHS = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.lblRatio2 = new System.Windows.Forms.Label();
-            this.lblRatio1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -65,7 +63,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLEff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLUp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkRatio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkHS)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -175,7 +173,7 @@
             0,
             0});
             this.nudDivinePlea.Name = "nudDivinePlea";
-            this.nudDivinePlea.Size = new System.Drawing.Size(145, 20);
+            this.nudDivinePlea.Size = new System.Drawing.Size(112, 20);
             this.nudDivinePlea.TabIndex = 10;
             this.nudDivinePlea.Value = new decimal(new int[] {
             1,
@@ -207,7 +205,7 @@
             0,
             0});
             this.nudSpiritual.Name = "nudSpiritual";
-            this.nudSpiritual.Size = new System.Drawing.Size(145, 20);
+            this.nudSpiritual.Size = new System.Drawing.Size(112, 20);
             this.nudSpiritual.TabIndex = 8;
             this.nudSpiritual.Value = new decimal(new int[] {
             2000,
@@ -244,7 +242,7 @@
             "2400"});
             this.cmbManaAmt.Location = new System.Drawing.Point(146, 19);
             this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(145, 21);
+            this.cmbManaAmt.Size = new System.Drawing.Size(112, 21);
             this.cmbManaAmt.TabIndex = 0;
             this.cmbManaAmt.Text = "2400";
             this.cmbManaAmt.ValueMember = "2400";
@@ -275,7 +273,7 @@
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(65, 38);
+            this.label9.Location = new System.Drawing.Point(66, 33);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(78, 40);
             this.label9.TabIndex = 25;
@@ -370,64 +368,44 @@
             this.trkBoLUp.Value = 90;
             this.trkBoLUp.Scroll += new System.EventHandler(this.trkBoLUp_Scroll);
             // 
-            // trkRatio
+            // trkHS
             // 
-            this.trkRatio.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkRatio.LargeChange = 10;
-            this.trkRatio.Location = new System.Drawing.Point(56, 85);
-            this.trkRatio.Maximum = 100;
-            this.trkRatio.Name = "trkRatio";
-            this.trkRatio.Size = new System.Drawing.Size(190, 45);
-            this.trkRatio.TabIndex = 29;
-            this.trkRatio.TickFrequency = 10;
-            this.trkRatio.Value = 20;
-            this.trkRatio.Scroll += new System.EventHandler(this.trkRatio_Scroll);
+            this.trkHS.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkHS.LargeChange = 10;
+            this.trkHS.Location = new System.Drawing.Point(149, 84);
+            this.trkHS.Maximum = 100;
+            this.trkHS.Name = "trkHS";
+            this.trkHS.Size = new System.Drawing.Size(151, 45);
+            this.trkHS.TabIndex = 29;
+            this.trkHS.TickFrequency = 10;
+            this.trkHS.Value = 20;
+            this.trkHS.Scroll += new System.EventHandler(this.trkHS_Scroll);
+            // 
+            // lblHS
+            // 
+            this.lblHS.Location = new System.Drawing.Point(150, 116);
+            this.lblHS.Name = "lblHS";
+            this.lblHS.Size = new System.Drawing.Size(33, 13);
+            this.lblHS.TabIndex = 34;
+            this.lblHS.Text = "100%";
+            this.lblHS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(27, 117);
+            this.label7.Location = new System.Drawing.Point(66, 84);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(62, 13);
-            this.label7.TabIndex = 30;
-            this.label7.Text = "Holy Shock";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(220, 117);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(54, 13);
-            this.label8.TabIndex = 31;
-            this.label8.Text = "Holy Light";
-            // 
-            // lblRatio2
-            // 
-            this.lblRatio2.Location = new System.Drawing.Point(241, 90);
-            this.lblRatio2.Name = "lblRatio2";
-            this.lblRatio2.Size = new System.Drawing.Size(33, 13);
-            this.lblRatio2.TabIndex = 33;
-            this.lblRatio2.Text = "100%";
-            this.lblRatio2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblRatio1
-            // 
-            this.lblRatio1.Location = new System.Drawing.Point(27, 90);
-            this.lblRatio1.Name = "lblRatio1";
-            this.lblRatio1.Size = new System.Drawing.Size(33, 13);
-            this.lblRatio1.TabIndex = 34;
-            this.lblRatio1.Text = "100%";
-            this.lblRatio1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label7.Size = new System.Drawing.Size(78, 40);
+            this.label7.TabIndex = 35;
+            this.label7.Text = "Holy Shock:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.lblRatio1);
-            this.Controls.Add(this.lblRatio2);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.trkRatio);
+            this.Controls.Add(this.lblHS);
+            this.Controls.Add(this.trkHS);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.chkJotP);
             this.Controls.Add(this.label9);
@@ -449,7 +427,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLEff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLUp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkRatio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkHS)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -480,10 +458,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblBoLUp;
         private System.Windows.Forms.TrackBar trkBoLUp;
-        private System.Windows.Forms.TrackBar trkRatio;
+        private System.Windows.Forms.TrackBar trkHS;
+        private System.Windows.Forms.Label lblHS;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label lblRatio2;
-        private System.Windows.Forms.Label lblRatio1;
     }
 }

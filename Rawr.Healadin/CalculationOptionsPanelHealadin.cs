@@ -43,9 +43,8 @@ namespace Rawr.Healadin
             trkBoLEff.Value = (int)(calcOpts.BoLEff * 100);
             lblBoLEff.Text = trkBoLEff.Value + "%";
 
-            trkRatio.Value = (int)(calcOpts.Ratio * 100);
-            lblRatio1.Text = trkRatio.Value + "%";
-            lblRatio2.Text = (100 - trkRatio.Value) + "%";
+            trkHS.Value = (int)(calcOpts.HolyShock * 100);
+            lblHS.Text = trkHS.Value + "%";
 
             loading = false;
         }
@@ -162,14 +161,13 @@ namespace Rawr.Healadin
             }
         }
 
-        private void trkRatio_Scroll(object sender, EventArgs e)
+        private void trkHS_Scroll(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Ratio = trkRatio.Value / 100f;
-                lblRatio1.Text = trkRatio.Value + "%";
-                lblRatio2.Text = (100 - trkRatio.Value) + "%";
+                calcOpts.HolyShock = trkHS.Value / 100f;
+                lblHS.Text = trkHS.Value + "%";
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -199,7 +197,7 @@ namespace Rawr.Healadin
         public float DivinePlea = 1.5f;
         public float BoLUp = 1f;
         public float BoLEff = .3f;
-        public float Ratio = .2f;
+        public float HolyShock = .2f;
         public bool JotP = true;
 	}
 }

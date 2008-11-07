@@ -33,32 +33,41 @@ namespace Rawr.Healadin
         public float TotalMana { get; set; }
 
         public float HLTime { get; set; }
-        public float HLHeal { get; set; }
+        public float HLAvgHeal { get; set; }
+        public float HLHealed { get; set; }
         public float HLHPS { get; set; }
+        public float HLHPM { get; set; }
         public float HLCrit { get; set; }
         public float HLCost { get; set; }
         public float HLCastTime { get; set; }
+        public float HLUsage { get; set; }
 
         public float FoLTime { get; set; }
-        public float FoLHeal { get; set; }
+        public float FoLAvgHeal { get; set; }
+        public float FoLHealed { get; set; }
         public float FoLHPS { get; set; }
+        public float FoLHPM { get; set; }
         public float FoLCrit { get; set; }
         public float FoLCost { get; set; }
         public float FoLCastTime { get; set; }
+        public float FoLUsage { get; set; }
 
         public float HSTime { get; set; }
-        public float HSHeal { get; set; }
+        public float HSAvgHeal { get; set; }
+        public float HSHealed { get; set; }
         public float HSHPS { get; set; }
+        public float HSHPM { get; set; }
         public float HSCrit { get; set; }
         public float HSCost { get; set; }
         public float HSCastTime { get; set; }
+        public float HSUsage { get; set; }
 
-        public float BoLCost { get; set; }
+        public float BoLUsage { get; set; }
         public float BoLCasts { get; set; }
         public float BoLHealed { get; set; }
 
-        public float JotPCost { get; set; }
-        public float JotPGCDs { get; set; }
+        public float JotPUsage { get; set; }
+        public float JotPCasts { get; set; }
         public float JotPHaste { get; set; }
 
         public float ManaBase { get; set; }
@@ -81,7 +90,7 @@ namespace Rawr.Healadin
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-
+            //Basic Stats
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
@@ -90,19 +99,47 @@ namespace Rawr.Healadin
             dictValues.Add("Mp5", BasicStats.Mp5.ToString());
             dictValues.Add("Spell Crit", string.Format("{0}%*{1} Crit Rating", Math.Round(BasicStats.SpellCrit * 100, 2), BasicStats.CritRating));
             dictValues.Add("Spell Haste", string.Format("{0}%*{1} Haste Rating", Math.Round(BasicStats.SpellHaste * 100, 2), BasicStats.HasteRating));
+            // Cycle Stats
             dictValues.Add("Total Healed", Math.Round(TotalHealed).ToString());
             dictValues.Add("Total Mana", Math.Round(TotalMana).ToString());
             dictValues.Add("Average Hps", Math.Round(AvgHPS).ToString());
             dictValues.Add("Average Hpm", Math.Round(AvgHPM, 2).ToString());
-            dictValues.Add("Holy Light Time", Math.Round(HLTime * 100).ToString() + "%");
-            dictValues.Add("Flash of Light", string.Format("{0} hps*{1}s cast time\n{2}% crit chance\n{3} average heal\n{4} average cost", 
-                Math.Round(FoLHPS), Math.Round(FoLCastTime, 2), Math.Round(FoLCrit*100, 2), Math.Round(FoLHeal), Math.Round(FoLCost)));
-            dictValues.Add("Holy Light", string.Format("{0} hps*{1}s cast time\n{2}% crit chance\n{3} average heal\n{4} average cost",
-                Math.Round(HLHPS), Math.Round(HLCastTime, 2), Math.Round(HLCrit * 100, 2), Math.Round(HLHeal), Math.Round(HLCost)));
-            dictValues.Add("Holy Shock", string.Format("{0} hps*{1}s cast time\n{2}% crit chance\n{3} average heal\n{4} average cost",
-                Math.Round(HSHPS), Math.Round(HSCastTime, 2), Math.Round(HSCrit * 100, 2), Math.Round(HSHeal), Math.Round(HSCost)));
-            dictValues.Add("Beacon of Light", string.Format("{0} healing*{1} mana\n{2} GCDs", Math.Round(BoLHealed), Math.Round(BoLCost), Math.Round(BoLCasts)));
-            dictValues.Add("Judgement", string.Format("{0}% haste*{1} GCDs\n{2} mana", Math.Round(JotPHaste * 100), Math.Round(JotPGCDs), Math.Round(JotPCost)));
+            // Flash of Light
+            dictValues.Add("FoL Average Heal", string.Format("{0}", Math.Round(FoLAvgHeal)));
+            dictValues.Add("FoL Crit", string.Format("{0}%", Math.Round(FoLCrit * 100, 2)));
+            dictValues.Add("FoL Cast Time", string.Format("{0} sec", Math.Round(FoLCastTime, 2)));
+            dictValues.Add("FoL Healing per sec", string.Format("{0} hps", Math.Round(FoLHPS)));
+            dictValues.Add("FoL Healing per mana", string.Format("{0} hpm", Math.Round(FoLHPM, 2)));
+            dictValues.Add("FoL Rotation Time", string.Format("{0} sec", Math.Round(FoLTime, 2)));
+            dictValues.Add("FoL Healed", string.Format("{0}", Math.Round(FoLHealed)));
+            dictValues.Add("FoL Mana Usage", string.Format("{0} mana", Math.Round(FoLUsage)));
+            // Holy Light
+            dictValues.Add("HL Average Heal", string.Format("{0}", Math.Round(HLAvgHeal)));
+            dictValues.Add("HL Crit", string.Format("{0}%", Math.Round(HLCrit * 100, 2)));
+            dictValues.Add("HL Cast Time", string.Format("{0} sec", Math.Round(HLCastTime, 2)));
+            dictValues.Add("HL Healing per sec", string.Format("{0} hps", Math.Round(HLHPS)));
+            dictValues.Add("HL Healing per mana", string.Format("{0} hpm", Math.Round(HLHPM, 2)));
+            dictValues.Add("HL Rotation Time", string.Format("{0} sec", Math.Round(HLTime, 2)));
+            dictValues.Add("HL Healed", string.Format("{0}", Math.Round(HLHealed)));
+            dictValues.Add("HL Mana Usage", string.Format("{0} mana", Math.Round(HLUsage)));
+            // Holy Shock
+            dictValues.Add("HS Average Heal", string.Format("{0}", Math.Round(HSAvgHeal)));
+            dictValues.Add("HS Crit", string.Format("{0}%", Math.Round(HSCrit * 100, 2)));
+            dictValues.Add("HS Cast Time", string.Format("{0} sec", Math.Round(HSCastTime, 2)));
+            dictValues.Add("HS Healing per sec", string.Format("{0} hps", Math.Round(HSHPS)));
+            dictValues.Add("HS Healing per mana", string.Format("{0} hpm", Math.Round(HSHPM, 2)));
+            dictValues.Add("HS Rotation Time", string.Format("{0} sec", Math.Round(HSTime, 2)));
+            dictValues.Add("HS Healed", string.Format("{0}", Math.Round(HSHealed)));
+            dictValues.Add("HS Mana Usage", string.Format("{0} mana", Math.Round(HSUsage)));
+            // Beacon of Light
+            dictValues.Add("BoL Healed", string.Format("{0}", Math.Round(BoLHealed)));
+            dictValues.Add("BoL Casts", string.Format("{0} gcds", Math.Round(BoLCasts)));
+            dictValues.Add("BoL Mana Usage", string.Format("{0} mana", Math.Round(BoLUsage)));
+            // Judgement
+            dictValues.Add("JotP Effective Haste", string.Format("{0}%", Math.Round(JotPHaste * 100, 2)));
+            dictValues.Add("JotP Casts", string.Format("{0} gcds", Math.Round(JotPCasts)));
+            dictValues.Add("JotP Mana Usage", string.Format("{0} mana", Math.Round(JotPUsage)));
+
             return dictValues;
         }
     }
