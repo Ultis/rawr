@@ -178,6 +178,7 @@ namespace Rawr.Healadin
                 calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
 
             float benediction = 1f - talents.Benediction * .02f;
+            float ied = stats.ManaRestorePerCast_5_15 * .035f; 
 
             if (calcOpts.JotP && talents.JudgementsOfThePure > 0)
             {
@@ -186,11 +187,11 @@ namespace Rawr.Healadin
 
                 float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
                 calc.JotPCasts += seals_cast;
-                calc.JotPUsage += (float)Math.Round(base_mana * .14f) * seals_cast * glyph_sow;
+                calc.JotPUsage += ((float)Math.Round(base_mana * .14f) * glyph_sow - ied) * seals_cast;
 
                 float judgements_cast = (float)Math.Ceiling(fight_length / 60f);
                 calc.JotPCasts += judgements_cast;
-                calc.JotPUsage += (float)Math.Round(base_mana * .05f) * judgements_cast * glyph_sow;
+                calc.JotPUsage += ((float)Math.Round(base_mana * .05f) * glyph_sow - ied) * judgements_cast;
 
                 float newhaste = fight_length * (1f + stats.SpellHaste) - (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.JotPCasts;
                 calc.JotPHaste = 1f - oldhaste / newhaste;
@@ -198,16 +199,17 @@ namespace Rawr.Healadin
             if (talents.BeaconOfLight > 0)
             {
                 calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / 60f);
-                calc.BoLUsage = calc.BoLCasts * (float)Math.Round(base_mana * .35f * benediction) * glyph_sow;
+                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) * glyph_sow - ied);
             }
 
-            float ied = stats.ManaRestorePerCast_5_15 * .035f; 
             
             #region Flash of Light
-            calc.FoLAvgHeal = (635f + stats.SpellPower + stats.FoLHeal) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier) * glyph_sol;
+            // TODO: Update to level 80 value (from 79)!!!
+            const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
+            calc.FoLAvgHeal = (832f + (stats.SpellPower + stats.FoLHeal) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FoLMultiplier) * glyph_sol;
             float fol_baseMana = (float)Math.Round(base_mana * .07f);
             calc.FoLCrit = stats.SpellCrit + stats.FoLCrit + talents.HolyPower * .01f;
-            calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * (1 - .12f * talents.Illumination * calc.FoLCrit) - ied;
+            calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied;
             float fol_heal = calc.FoLAvgHeal * (1f + .5f * calc.FoLCrit);
             calc.FoLCastTime = (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste));
             calc.FoLHPS = fol_heal / calc.FoLCastTime;
@@ -216,10 +218,11 @@ namespace Rawr.Healadin
             #endregion
 
             #region Holy Light
-            calc.HLAvgHeal = (2978f + (stats.HLHeal + stats.SpellPower) * 1.66f) * (1f + talents.HealingLight * .04f) * glyph_sol;
+            const float hl_coef = 2.5f / 3.5f * 66f / 35f * 1.25f;
+            calc.HLAvgHeal = (5166f + (stats.HLHeal + stats.SpellPower) * hl_coef) * (1f + talents.HealingLight * .04f) * glyph_sol;
             float hl_baseMana = (float)Math.Round(base_mana * .29f);
             calc.HLCrit = stats.SpellCrit + stats.HLCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
-            calc.HLCost = hl_baseMana * glyph_sow - hl_baseMana * (1 - .12f * talents.Illumination * calc.HLCrit) - ied;
+            calc.HLCost = hl_baseMana * glyph_sow - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - ied;
             float hl_heal = calc.HLAvgHeal * (1f + .5f * calc.HLCrit);
             calc.HLCastTime = 2f / (1f + stats.SpellHaste);
             calc.HLHPS = hl_heal / calc.HLCastTime;
@@ -228,10 +231,11 @@ namespace Rawr.Healadin
             #endregion
 
             #region Holy Shock
-            calc.HSAvgHeal = (1310f + stats.SpellPower) * (1f + talents.HealingLight * .04f) * glyph_sol;
+            const float hs_coef = 1.5f / 3.5f * 66f / 35f;
+            calc.HSAvgHeal = (2500f + stats.SpellPower * hs_coef) * (1f + talents.HealingLight * .04f) * glyph_sol;
             float hs_baseMana = (float)Math.Round(base_mana * .18f * benediction);
             calc.HSCrit = stats.SpellCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
-            calc.HSCost = hs_baseMana * glyph_sow - hs_baseMana * (1 - .12f * talents.Illumination * calc.HSCrit) - ied;
+            calc.HSCost = hs_baseMana * glyph_sow - hs_baseMana * .12f * talents.Illumination * calc.HSCrit - ied;
             float hs_heal = calc.HSAvgHeal * (1f + .5f * calc.HSCrit);
             calc.HSCastTime = (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste));
             calc.HSHPS = hs_heal / calc.HSCastTime;
