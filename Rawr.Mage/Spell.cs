@@ -1074,7 +1074,7 @@ namespace Rawr.Mage
             DotDuration = 8;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
-            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFireball;
+            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
             CalculateDerivedStats(castingState);
@@ -1116,7 +1116,7 @@ namespace Rawr.Mage
             }
             Calculate(castingState);
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
-            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFireball;
+            SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
             SpammedDot = true;
             DotDuration = 9;
             if (averageFingersOfFrost)

@@ -245,7 +245,7 @@ namespace Rawr.Moonkin
                     character.DruidTalents.LeaderOfThePack = int.Parse(talentCode.Substring(46, 1));
                     character.DruidTalents.ImprovedLeaderOfThePack = int.Parse(talentCode.Substring(47, 1));
                     character.DruidTalents.PrimalTenacity = int.Parse(talentCode.Substring(48, 1));
-                    character.DruidTalents.MotherBear = int.Parse(talentCode.Substring(49, 1));
+                    character.DruidTalents.ProtectorOfThePack = int.Parse(talentCode.Substring(49, 1));
                     character.DruidTalents.PredatoryInstincts = int.Parse(talentCode.Substring(50, 1));
                     character.DruidTalents.InfectedWounds = int.Parse(talentCode.Substring(51, 1));
                     character.DruidTalents.KingOfTheJungle = int.Parse(talentCode.Substring(52, 1));

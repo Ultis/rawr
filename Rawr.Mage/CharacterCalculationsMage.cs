@@ -204,7 +204,7 @@ namespace Rawr.Mage
                     Spell s = BaseState.GetSpell(SpellId.ArcaneExplosion);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
-                else if (Character.MageTalents.EmpoweredFireball > 0)
+                else if (Character.MageTalents.EmpoweredFire > 0)
                 {
                     Spell s = BaseState.GetSpell(SpellId.Fireball);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;

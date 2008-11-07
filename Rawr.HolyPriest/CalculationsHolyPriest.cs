@@ -214,7 +214,7 @@ namespace Rawr.HolyPriest
             // MP5 from Shadowfiend (15 second duration, 1.5 attack speed = 10 attacks @ 4% regen = total 40%)
             // Cooldown is 5 minutes - talents in shadow.
             simstats.Mp5 += (simstats.Mana * 0.4f * calculationOptions.Shadowfiend / 100f)
-                / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f) * 5f;
+                / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f) * 5f;
 
             // Insightful Earthstorm Diamond.
             float metaSpellCostReduction = simstats.ManaRestorePerCast_5_15 * 0.05f;

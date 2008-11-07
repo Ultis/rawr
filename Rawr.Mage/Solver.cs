@@ -1270,7 +1270,7 @@ namespace Rawr.Mage
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.EmpoweredFireball > 0)
+            else if (character.MageTalents.EmpoweredFire > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
@@ -2069,7 +2069,7 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.EmpoweredFireball > 0)
+                        if (character.MageTalents.EmpoweredFire > 0)
                         {
                             if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
                             {

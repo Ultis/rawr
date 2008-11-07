@@ -371,7 +371,7 @@ namespace Rawr.ShadowPriest
 
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
-                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
+                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
                 tmpregen = simStats.Mana * 0.4f * sf_rat;
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
@@ -541,7 +541,7 @@ namespace Rawr.ShadowPriest
 
             if (MPS > regen)
             {   // Not enough mana, use Shadowfiend
-                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.ImprovedFade * 1f) * 60f);
+                float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
                 regen += simStats.Mana * 0.4f * sf_rat;
                 SustDPS -= SM.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";

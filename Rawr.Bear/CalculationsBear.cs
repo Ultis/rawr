@@ -648,7 +648,7 @@ the Threat Scale defined on the Options tab.",
 				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
 				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
-				BonusAttackPowerMultiplier = 0.02f * talents.MotherBear,
+				BonusAttackPowerMultiplier = 0.02f * talents.ProtectorOfThePack,
 				BonusPhysicalDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
 				BonusMangleDamageMultiplier = 0.1f * talents.SavageFury,
 				BonusMaulDamageMultiplier = (1 + 0.1f * talents.SavageFury) * (1 + 0.04f * talents.RendAndTear) - 1f,
@@ -659,7 +659,7 @@ the Threat Scale defined on the Options tab.",
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
 				//BonusCritMultiplier = 0.05f * talents.PredatoryInstincts, PI doesn't work in bear form as of latest beta build
-				DamageTakenMultiplier = -0.04f * talents.MotherBear,
+                DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle),
 
 			};
