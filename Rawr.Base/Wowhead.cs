@@ -72,13 +72,14 @@ namespace Rawr
 			}
 
 			Item item = new Item() { 
-				Stats = new Stats(), 
-				Sockets = new Sockets(), 
-				Name = name, 
-				Quality = (Item.ItemQuality)int.Parse(quality),
 				_id = int.Parse(id),
-				IconPath = string.Empty
-			};
+				Name = name, 
+				Sockets = new Sockets(), 
+				Quality = (Item.ItemQuality)int.Parse(quality),
+				IconPath = string.Empty,
+				Stats = new Stats()
+   			};
+            //item.Stats += GetAdditionalItemEffect(item._id);
 
 			if ((int)item.Quality < 2) return null;
 
@@ -449,19 +450,19 @@ namespace Rawr
 				case "z":       // Zone
                     string zonename = GetZoneName(value);
 					ItemLocation locationZone = item.LocationInfo;
-					if (locationZone is StaticDrop) (locationZone as StaticDrop).Area = value;
-					if (locationZone is ContainerItem) (locationZone as ContainerItem).Area = value;
-					if (locationZone is QuestItem) (locationZone as QuestItem).Area = value;
-					if (locationZone is CraftedItem) (locationZone as CraftedItem).Skill = value;
+					if (locationZone is StaticDrop) (locationZone as StaticDrop).Area = zonename;
+					else if (locationZone is ContainerItem) (locationZone as ContainerItem).Area = zonename;
+					else if (locationZone is QuestItem) (locationZone as QuestItem).Area = zonename;
+					else if (locationZone is CraftedItem) (locationZone as CraftedItem).Skill = value;
 					break;
 
 				case "c": //Zone again, used for quests
 					string continentname = GetZoneName(value);
 					ItemLocation locationContinent = item.LocationInfo;
-					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = value;
-					if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = value;
-					if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = value;
-					if (locationContinent is CraftedItem) (locationContinent as CraftedItem).Skill = value;
+					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = continentname;
+					else if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = continentname;
+					else if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = continentname;
+					else if (locationContinent is CraftedItem) (locationContinent as CraftedItem).Skill = value;
 					break;
 
 				case "c2": //Don't care about continent
@@ -472,7 +473,7 @@ namespace Rawr
 					if (locationDifficulty is StaticDrop) (locationDifficulty as StaticDrop).Heroic = value == "2";
 					break;
 
-				case "s":
+				case "s":   // Source (755 = Jewelcrafting apparently?)
                     "".ToString();
                     break;
 
@@ -529,6 +530,30 @@ namespace Rawr
 				default: return "Unknown - " + zoneId;
 			}
 		}
+        /* Unused
+        private static Stats GetAdditionalItemEffect(int itemid)
+        {
+            Stats stats = new Stats();
+            switch (itemid)
+            {
+                case 41285: // Chaotic Skyflare Diamond
+                    stats.BonusCritMultiplier = 0.03f;
+                    break;
+                case 41333: // Ember Skyflare Diamond
+                    stats.BonusIntellectMultiplier = 0.02f;
+                    break;
+                case 41395: // Bracing Earthsiege Diamond
+                    stats.ThreatReductionMultiplier = 0.02f;
+                    break;
+                case 41389: // Beaming Earthsiege Diamond
+                    // Max Mana +2%
+                    break;
+                case 41401: // Insightful Earthsiege Diamond
+                    stats.ManaRestorePerCast_5_15 = 300f;
+                    break;
+            }
+            return stats;
+        }*/
 
         private static Item.ItemSlot GetSocketType(string socket)
         {
