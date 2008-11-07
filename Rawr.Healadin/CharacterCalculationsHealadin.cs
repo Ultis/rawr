@@ -76,6 +76,7 @@ namespace Rawr.Healadin
         public float ManaReplenishment { get; set; }
         public float ManaArcaneTorrent { get; set; }
         public float ManaDivinePlea { get; set; }
+        public float ManaLayOnHands { get; set; }
         public float ManaSpiritual { get; set; }
         public float ManaOther { get; set; }
 
@@ -111,7 +112,7 @@ namespace Rawr.Healadin
             dictValues.Add("FoL Healing per sec", string.Format("{0} hps", Math.Round(FoLHPS)));
             dictValues.Add("FoL Healing per mana", string.Format("{0} hpm", Math.Round(FoLHPM, 2)));
             dictValues.Add("FoL Rotation Time", string.Format("{0} sec", Math.Round(FoLTime, 2)));
-            dictValues.Add("FoL Healed", string.Format("{0}", Math.Round(FoLHealed)));
+            dictValues.Add("FoL Healed", Math.Round(FoLHealed).ToString("N00"));
             dictValues.Add("FoL Mana Usage", string.Format("{0} mana", Math.Round(FoLUsage)));
             // Holy Light
             dictValues.Add("HL Average Heal", string.Format("{0}", Math.Round(HLAvgHeal)));
@@ -120,7 +121,7 @@ namespace Rawr.Healadin
             dictValues.Add("HL Healing per sec", string.Format("{0} hps", Math.Round(HLHPS)));
             dictValues.Add("HL Healing per mana", string.Format("{0} hpm", Math.Round(HLHPM, 2)));
             dictValues.Add("HL Rotation Time", string.Format("{0} sec", Math.Round(HLTime, 2)));
-            dictValues.Add("HL Healed", string.Format("{0}", Math.Round(HLHealed)));
+            dictValues.Add("HL Healed", Math.Round(HLHealed).ToString("N00"));
             dictValues.Add("HL Mana Usage", string.Format("{0} mana", Math.Round(HLUsage)));
             // Holy Shock
             dictValues.Add("HS Average Heal", string.Format("{0}", Math.Round(HSAvgHeal)));
@@ -129,10 +130,10 @@ namespace Rawr.Healadin
             dictValues.Add("HS Healing per sec", string.Format("{0} hps", Math.Round(HSHPS)));
             dictValues.Add("HS Healing per mana", string.Format("{0} hpm", Math.Round(HSHPM, 2)));
             dictValues.Add("HS Rotation Time", string.Format("{0} sec", Math.Round(HSTime, 2)));
-            dictValues.Add("HS Healed", string.Format("{0}", Math.Round(HSHealed)));
+            dictValues.Add("HS Healed", Math.Round(HSHealed).ToString("N00"));
             dictValues.Add("HS Mana Usage", string.Format("{0} mana", Math.Round(HSUsage)));
             // Beacon of Light
-            dictValues.Add("BoL Healed", string.Format("{0}", Math.Round(BoLHealed)));
+            dictValues.Add("BoL Healed", Math.Round(BoLHealed).ToString("N00"));
             dictValues.Add("BoL Casts", string.Format("{0} gcds", Math.Round(BoLCasts)));
             dictValues.Add("BoL Mana Usage", string.Format("{0} mana", Math.Round(BoLUsage)));
             // Judgement

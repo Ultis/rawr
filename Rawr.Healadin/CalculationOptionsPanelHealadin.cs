@@ -33,6 +33,14 @@ namespace Rawr.Healadin
             lblActivity.Text = trkActivity.Value + "%";
 
             chkJotP.Checked = calcOpts.JotP;
+            chkLoHSelf.Checked = calcOpts.LoHSelf;
+
+            chkGHL.Checked = calcOpts.Glyph_HL;
+            chkGFoL.Checked = calcOpts.Glyph_FoL;
+            chkGSoL.Checked = calcOpts.Glyph_SoL;
+            chkGSoW.Checked = calcOpts.Glyph_SoW;
+            chkGLoH.Checked = calcOpts.Glyph_LoH;
+            chkGDivinity.Checked = calcOpts.Glyph_Divinity;
 
             trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
             lblReplenishment.Text = trkReplenishment.Value + "%";
@@ -172,6 +180,76 @@ namespace Rawr.Healadin
             }
         }
 
+        private void chkGSoW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_SoW = chkGSoW.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGLoH_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_LoH = chkGLoH.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGHL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_HL = chkGHL.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGDivinity_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_Divinity = chkGDivinity.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGFoL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_FoL = chkGFoL.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGSoL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Glyph_SoL = chkGSoL.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkLoHSelf_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.LoHSelf = chkLoHSelf.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
 
 
     }
@@ -190,7 +268,7 @@ namespace Rawr.Healadin
 		}
 
 		public float Length = 6;
-		public float ManaAmt = 2400;
+		public float ManaAmt = 4300;
 		public float Activity = .85f;
 		public float Spiritual = 3600;
         public float Replenishment = .9f;
@@ -198,6 +276,14 @@ namespace Rawr.Healadin
         public float BoLUp = 1f;
         public float BoLEff = .3f;
         public float HolyShock = .2f;
+
         public bool JotP = true;
+        public bool LoHSelf = false;
+        public bool Glyph_HL = true;
+        public bool Glyph_FoL = false;
+        public bool Glyph_Divinity = true;
+        public bool Glyph_LoH = true;
+        public bool Glyph_SoW = true;
+        public bool Glyph_SoL = false;
 	}
 }
