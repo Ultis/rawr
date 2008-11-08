@@ -34,6 +34,7 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemEdit;
 		private ToolStripMenuItem _menuItemWowhead;
 		private ToolStripMenuItem _menuItemRefresh;
+		private ToolStripMenuItem _menuItemRefreshWowhead;
 		private ToolStripMenuItem _menuItemEquip;
         private ToolStripMenuItem _menuItemEquipAll;
         private ToolStripMenuItem _menuItemDelete;
@@ -51,8 +52,11 @@ namespace Rawr
 			_menuItemWowhead = new ToolStripMenuItem("Open in Wowhead");
 			_menuItemWowhead.Click += new EventHandler(_menuItemWowhead_Click);
 
-			_menuItemRefresh = new ToolStripMenuItem("Refresh Item Data");
+			_menuItemRefresh = new ToolStripMenuItem("Refresh Item Data from Armory");
 			_menuItemRefresh.Click += new EventHandler(_menuItemRefresh_Click);
+
+			_menuItemRefreshWowhead = new ToolStripMenuItem("Refresh Item Data from Wowhead");
+			_menuItemRefreshWowhead.Click += new EventHandler(_menuItemRefreshWowhead_Click);
 
 			_menuItemEquip = new ToolStripMenuItem("Equip");
 			_menuItemEquip.Click += new EventHandler(_menuItemEquip_Click);
@@ -77,6 +81,7 @@ namespace Rawr
 			this.Items.Add(_menuItemEdit);
 			this.Items.Add(_menuItemWowhead);
 			this.Items.Add(_menuItemRefresh);
+			this.Items.Add(_menuItemRefreshWowhead);
 			this.Items.Add(_menuItemEquip);
             this.Items.Add(_menuItemEquipAll);
             this.Items.Add(_menuItemDelete);
@@ -272,6 +277,22 @@ namespace Rawr
 			{
 				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
 				ItemCache.AddItem(_item, true, false);
+			}
+			ItemCache.OnItemsChanged();
+		}
+
+		void _menuItemRefreshWowhead_Click(object sender, EventArgs e)
+		{
+			ItemCache.DeleteItem(_item);
+			Item newItem = Wowhead.GetItem(_item.GemmedId);
+			if (newItem == null)
+			{
+				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
+				ItemCache.AddItem(_item, true, false);
+			}
+			else
+			{
+				ItemCache.AddItem(newItem, true, true);
 			}
 			ItemCache.OnItemsChanged();
 		}

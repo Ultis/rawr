@@ -1,0 +1,684 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace Rawr
+{
+	public static class SpecialEffects
+	{
+		public static void ProcessEquipLine(string line, Stats stats, bool isArmory)
+		{
+			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
+			{
+				stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
+			}
+			else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
+			{ //Shattered Sun Pendant of Might
+				stats.ShatteredSunMightProc += 1f;
+			}
+			else if (line.StartsWith("Your spells have a chance to call on the power"))
+			{ //Shattered Sun Pendant of Acumen
+				stats.ShatteredSunAcumenProc += 1f;
+			}
+			else if (line.StartsWith("Your heals have a chance to call on the power"))
+			{ //Shattered Sun Pendant of Restoration
+				stats.ShatteredSunRestoProc += 1f;
+			}
+			else if (line.StartsWith("Chance on hit to increase your attack power by 230"))
+			{ //Special handling for Shard of Contempt due to higher uptime
+				stats.AttackPower += 90f;
+			}
+			else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
+			{
+				stats.AttackPower += 120; //Crusade = 120ap
+				stats.SpellPower += 80;
+			}
+			else if (line.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
+				stats.WeaponDamage += 2f; //Romulo's = 4dmg
+			else if (line.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8 sec"))
+			{
+				stats.Strength += 37f; //Ashtongue = 37str
+				stats.DruidAshtongueTrinket = 150.0f;
+			}
+			else if (line.StartsWith("Your spells and attacks in each form have a chance to grant you a blessing for 15 sec."))
+				stats.Strength += 32f; //LivingRoot = 32str
+			else if (line.StartsWith("Chance on critical hit to increase your attack power by "))
+			{
+				line = line.Substring("Chance on critical hit to increase your attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += ((float)int.Parse(line)) / 6f;
+			}
+			else if (line.StartsWith("Chance on hit to increase your attack power by "))
+			{
+				line = line.Substring("Chance on hit to increase your attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += ((float)int.Parse(line)) / 6f;
+			}
+			// Idol of the Raven Goddess (already added)
+			else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
+			{
+				string moonkinline = line;
+				string treeline = line;
+				// Bear/Cat form
+				line = line.Substring(0, line.IndexOf(" critical strike rating to the Leader of the Pack aura"));
+				line = line.Substring(line.LastIndexOf(' ') + 1);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.CritRating += (float)int.Parse(line);
+				// Moonkin Form
+				moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" spell critical strike rating to the Moonkin form aura."));
+				moonkinline = moonkinline.Substring(moonkinline.LastIndexOf(' ') + 1);
+				if (moonkinline.Contains(".")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf("."));
+				if (moonkinline.Contains(" ")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" "));
+				stats.IdolCritRating += (float)int.Parse(moonkinline);
+				// Tree of Life form
+				treeline = treeline.Substring("Increases the healing granted by the Tree of Life form aura by ".Length);
+				if (treeline.Contains(",")) treeline = treeline.Substring(0, treeline.IndexOf(","));
+				if (treeline.Contains(".")) treeline = treeline.Substring(0, treeline.IndexOf("."));
+				if (treeline.Contains(" ")) treeline = treeline.Substring(0, treeline.IndexOf(" "));
+				stats.TreeOfLifeAura += (float)int.Parse(treeline);
+			}
+			else if (line.StartsWith("Your Mangle ability also increases your attack power by "))
+			{
+				line = line.Substring("Your Mangle ability also increases your attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Increases periodic damage done by Rip by "))
+			{
+				line = line.Substring("Increases periodic damage done by Rip by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BonusRipDamagePerCPPerTick += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
+			{
+				line = line.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.HasteRating += ((float)int.Parse(line)) / 4f;
+			}
+			else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your armor penetration rating by "))
+			{
+				line = line.Substring("Your melee and ranged attacks have a chance to increase your armor penetration rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.ArmorPenetrationRating += ((float)int.Parse(line)) / 3f;
+			}
+			else if (isArmory && line.StartsWith("Increases attack power by "))
+			{
+				line = line.Substring("Increases attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases defense rating by "))
+			{
+				line = line.Substring("Increases defense rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.DefenseRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your dodge rating by "))
+			{
+				line = line.Substring("Increases your dodge rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.DodgeRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your parry rating by "))
+			{
+				line = line.Substring("Increases your parry rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.ParryRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases the block value of your shield by "))
+			{
+				line = line.Substring("Increases the block value of your shield by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BlockValue += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your shield block rating by "))
+			{
+				line = line.Substring("Increases your shield block rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BlockRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your block rating by "))
+			{
+				line = line.Substring("Increases your block rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BlockRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your hit rating by "))
+			{
+				line = line.Substring("Increases your hit rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.HitRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases armor penetration rating by "))
+			{
+				line = line.Substring("Increases armor penetration rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.ArmorPenetrationRating += int.Parse(line);
+			}
+			else if (line.StartsWith("Increases the damage dealt by Shred by "))
+			{
+				line = line.Substring("Increases the damage dealt by Shred by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BonusShredDamage += int.Parse(line);
+			}
+			else if (line.StartsWith("Increases the damage dealt by Mangle (Cat) by "))
+			{
+
+				line = line.Substring("Increases the damage dealt by Mangle (Cat) by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.BonusMangleCatDamage += int.Parse(line);
+
+				// WTB Regex
+				stats.BonusMangleBearDamage += 51.75f;
+
+			}
+			else if (line.EndsWith(" Weapon Damage."))
+			{
+				line = line.Trim('+').Substring(0, line.IndexOf(" "));
+				stats.WeaponDamage += int.Parse(line);
+			}
+			else if (line.StartsWith("Your Mangle ability has a chance to grant "))
+			{
+				line = line.Substring("Your Mangle ability has a chance to grant ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.TerrorProc += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases spell power by"))
+			{
+				line = line.Substring("Increases spell power by".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellPower += int.Parse(line);
+			}
+			// Increases healing done by up to 375 and damage done by up to 125 for all magical spells and effects.
+			else if (isArmory && line.StartsWith("Increases healing done by up to "))
+			{
+				stats.SpellPower += (float)Math.Round(int.Parse(line.Split(' ')[6]) / 1.88f);
+				line = line.Substring(line.IndexOf("damage done by up to "));
+				line = line.Substring("damage done by up to ".Length);
+				line = line.Substring(0, line.IndexOf(" for all magical spells and effects."));
+				//stats.SpellPower += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases damage done by Shadow spells and effects by up to"))
+			{
+				line = line.Substring("Increases damage done by Shadow spells and effects by up to".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellShadowDamageRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases damage done by Fire spells and effects by up to"))
+			{
+				line = line.Substring("Increases damage done by Fire spells and effects by up to".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellFireDamageRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases damage done by Frost spells and effects by up to"))
+			{
+				line = line.Substring("Increases damage done by Frost spells and effects by up to".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellFrostDamageRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases damage done by Arcane spells and effects by up to"))
+			{
+				line = line.Substring("Increases damage done by Arcane spells and effects by up to".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellArcaneDamageRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases damage done by Nature spells and effects by up to"))
+			{
+				line = line.Substring("Increases damage done by Nature spells and effects by up to".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellNatureDamageRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Improves haste rating by"))
+			{
+				line = line.Substring("Improves haste rating by".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.HasteRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Improves critical strike rating by"))
+			{
+				line = line.Substring("Improves critical strike rating by".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.CritRating += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases your spell penetration by"))
+			{
+				line = line.Substring("Increases your spell penetration by".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.SpellPenetration += int.Parse(line);
+			}
+			else if (isArmory && line.StartsWith("Increases hit rating by "))
+			{
+				line = line.Substring("Increases hit rating by ".Length);
+				line = line.Replace(".", "").Replace(" ", "");
+				stats.HitRating += int.Parse(line);
+			}
+			// Restores 7 mana per 5 sec.
+			// Check to see if the desc contains the token 'mana'.  Items like Frostwolf Insignia
+			// and Essense Infused Shroom Restore health.
+			else if (isArmory && line.StartsWith("Restores ") && line.Contains("mana"))
+			{
+				line = line.Substring("Restores ".Length);
+				line = line.Substring(0, line.IndexOf(" mana"));
+				stats.Mp5 += int.Parse(line);
+			}
+			else if (line.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
+			{
+				stats.LightningCapacitorProc = 1;
+			}
+			else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
+			{
+				// Serpent-Coil Braid
+				stats.BonusManaGem += 0.25f;
+				stats.SpellPowerFor15SecOnManaGem += 225;
+			}
+			else if (line.StartsWith("Grants 170 increased spell power for 10 sec when one of your spells is resisted."))
+			{
+				// Eye of Magtheridon
+				stats.SpellPowerFor10SecOnResist += 170;
+			}
+			else if (line.StartsWith("Your spell critical strikes have a 50% chance to grant you 145 spell haste rating for 5 sec."))
+			{
+				stats.SpellHasteFor5SecOnCrit_50 += 145;
+			}
+			else if (line.StartsWith("Your harmful spells have a chance to increase your spell haste rating by 320 for 6 secs."))
+			{
+				stats.SpellHasteFor6SecOnHit_10_45 += 320;
+			}
+			else if (line.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 secs."))
+			{
+				// Shiffar's Nexus-Horn
+				stats.SpellPowerFor10SecOnCrit_20_45 += 225;
+			}
+			else if (line.StartsWith("Increases the effect that healing and mana potions have on the wearer by "))
+			{
+				line = line.Substring("Increases the effect that healing and mana potions have on the wearer by ".Length);
+				line = line.Substring(0, line.IndexOf('%'));
+				stats.BonusManaPotion += int.Parse(line) / 100f;
+				// TODO health potion effect
+			}
+			//Your spell critical strikes have a chance to increase your spell power by 190 for 15 sec.
+			else if (line.StartsWith("Your spell critical strikes have a chance to increase your spell power by "))
+			{
+				line = line.Substring("Your spell critical strikes have a chance to increase your spell power by ".Length);
+				float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
+				line = line.Substring(line.IndexOf(" for") + " for ".Length);
+				int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
+
+				//switch (duration)
+				//{
+				//    case 15:
+				//        if (name == "Sextant of Unstable Currents")
+				//        {
+				stats.SpellPowerFor15SecOnCrit_20_45 += value;
+				//        }
+				//        break;
+				//}
+			}
+			// Timbal's Focusing Crystal
+			else if (line.StartsWith("Each time one of your spells deals periodic damage"))
+			{
+				stats.TimbalsProc = 1.0f;
+			}
+			// Wrath of Cenarius
+			else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132 for 10 sec."))
+			{
+				stats.SpellDamageFor10SecOnHit_5 += 132;
+			}
+			else if (line.StartsWith("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to "))
+			{
+				// Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to 130 for 10 sec.
+				line = line.Substring("Gives a chance when your harmful spells land to increase the damage of your spells and effects by up to ".Length);
+				float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
+				line = line.Substring(line.IndexOf(" for") + " for ".Length);
+				int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
+
+				//switch (duration)
+				//{
+				//    case 10:
+				//        if (name == "Robe of the Elder Scribes")
+				//        {
+				stats.SpellPowerFor10SecOnHit_10_45 += value;
+				//        }
+				//        break;
+				//}
+			}
+			else if (line.StartsWith("Your offensive spells have a chance on hit to increase your spell power by "))
+			{
+				// Your offensive spells have a chance on hit to increase your spell power by 95 for 10 secs.
+				line = line.Substring("Your offensive spells have a chance on hit to increase your spell power by ".Length);
+				float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
+				line = line.Substring(line.IndexOf(" for") + " for ".Length);
+				int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
+
+				//switch (duration)
+				//{
+				//    case 10:
+				//        if (name == "Band of the Eternal Sage")
+				//        {
+				// Fixed in 2.4 to be 10 sec instead of 15
+				stats.SpellPowerFor10SecOnHit_10_45 += value;
+				//        }
+				//        break;
+				//}
+			}
+			else if (line.StartsWith("Increases the spell power of your Starfire spell by "))
+			{
+				line = line.Substring("Increases the spell power of your Starfire spell by ".Length);
+				line = line.Replace(".", "");
+				stats.StarfireDmg += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Increases the spell power of your Moonfire spell by "))
+			{
+				line = line.Substring("Increases the spell power of your Moonfire spell by ".Length);
+				line = line.Replace(".", "");
+				stats.MoonfireDmg += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Increases the damage dealt by Wrath by "))
+			{
+				line = line.Substring("Increases the damage dealt by Wrath by ".Length);
+				line = line.Replace(".", "");
+				stats.WrathDmg += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Your Moonfire ability has a chance to grant "))
+			{
+				line = line.Substring("Your Moonfire ability has a chance to grant ".Length);
+				line = line.Substring(0, line.IndexOf(" spell power for 10 sec."));
+				stats.UnseenMoonDamageBonus += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Increases the final healing value of your Lifebloom by "))
+			{
+				line = line.Substring("Increases the final healing value of your Lifebloom by ".Length);
+				line = line.Replace(".", "");
+				stats.LifebloomFinalHealBonus += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Reduces the mana cost of Rejuvenation by "))
+			{
+				line = line.Substring("Reduces the mana cost of Rejuvenation by ".Length);
+				line = line.Replace(".", "");
+				stats.ReduceRejuvenationCost += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Reduces the mana cost of Regrowth by "))
+			{
+				line = line.Substring("Reduces the mana cost of Regrowth by ".Length);
+				line = line.Replace(".", "");
+				stats.ReduceRegrowthCost += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Gain up to 25 mana each time you cast Healing Touch."))
+			{
+				stats.ReduceHealingTouchCost += 25;
+			}
+			else if (line.StartsWith("Increases healing done by Rejuvenation by up to "))
+			{
+				line = line.Substring("Increases healing done by Rejuvenation by up to ".Length);
+				line = line.Replace(".", "");
+				stats.RejuvenationHealBonus += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+			{
+				line = line.Substring("Increases the periodic healing of your Lifebloom by up to ".Length);
+				line = line.Replace(".", "");
+				stats.LifebloomTickHealBonus += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Increases the amount healed by Healing Touch by "))
+			{
+				line = line.Substring("Increases the amount healed by Healing Touch by ".Length);
+				line = line.Replace(".", "");
+				stats.HealingTouchFinalHealBonus += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for "))
+			{ //NOTE: What the armory says is "10%" here, but that's for level 80 characters. Still provides 15% at level 70.
+				line = line.Substring("Your spell casts have a chance to allow 10% of your mana regeneration to continue while casting for ".Length);
+				line = line.Replace(" sec.", "");
+				stats.BangleProc += (float)int.Parse(line);
+			}
+			else if (line.StartsWith("2% chance on successful spellcast to allow 100% of your Mana regeneration to continue while casting for 15 sec."))
+			{
+				// Darkmoon Card: Blue Dragon
+				stats.FullManaRegenFor15SecOnSpellcast += 2f;
+			}
+			else if (line.StartsWith("Your Judgement of Command ability has a chance to grant "))
+			{
+				line = line.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);
+				stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+
+			}
+			else if (line.StartsWith("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by"))
+			{
+				line = line.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
+				line = line.Replace(".", "");
+				stats.CritRating += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture) * 5f / 9f;
+			}
+			else if (line.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
+			{
+				line = line.Substring("Increases the damage dealt by your Cruasder Strike ability by ".Length);
+				line = line.Replace("%", "");
+				line = line.Replace(".", "");
+				stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture) / 100f;
+
+			}
+			else if (line.StartsWith("Increases the benefit your Flash of Light"))
+			{
+				stats.HLBoL = 120;
+				stats.FoLBoL = 60;
+			}
+			else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
+			{
+				stats.HLCost = 34;
+			}
+			else if (line.StartsWith("Increases healing done by Flash of Light by up to"))
+			{
+				line = line.Substring("Increases healing done by Flash of Light by up to ".Length);
+				line = line.Replace(".", "");
+				stats.FoLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Increases healing done by Holy Light by up to"))
+			{
+				line = line.Substring("Increases healing done by Holy Light by up to ".Length);
+				line = line.Replace(".", "");
+				stats.HLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
+			{
+				stats.MementoProc = 76;
+			}
+			else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
+			{
+				line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
+				float value = int.Parse(line.Substring(0, line.IndexOf(" for")));
+				line = line.Substring(line.IndexOf(" for") + " for ".Length);
+				int duration = int.Parse(line.Substring(0, line.IndexOf(" ")));
+
+				//switch (duration)
+				//{
+				//    case 10:
+				//        if (name == "Band of the Eternal Defender")
+				//        {
+				//The buff is up about 1/6 the time, so 800/6 = 133 armor
+				//TODO: Don't count this before talents since it's a buff.
+				stats.AverageArmor += (float)Math.Round(value / 6f);
+				//        }
+				//        break;
+				//}
+			}
+			else if (line.StartsWith("Your healing and damage spells have a chance to increase your healing by up to 175 and damage by up to 59 for 10 secs."))
+			{
+				stats.AverageHeal = 29;
+			}
+			else if (line.StartsWith("Increases your pet's critical strike chance by "))
+			{
+				string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
+				if (critChance.EndsWith("%."))
+				{
+					stats.BonusPetCritChance = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
+				}
+			}
+			else if (line.StartsWith("Increases damage dealt by your pet by "))
+			{
+				string critChance = line.Substring("Increases damage dealt by your pet by ".Length).Trim();
+				if (critChance.EndsWith("%."))
+				{
+					stats.BonusPetDamageMultiplier = float.Parse(critChance.Substring(0, critChance.Length - 2)) / 100f;
+				}
+			}
+			else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
+			{
+				stats.ManacostReduceWithin15OnHealingCast += 450;
+			}
+		}
+
+		public static void ProcessUseLine(string line, Stats stats, bool isArmory)
+		{
+			if (line.StartsWith("Increases attack power by 320 for 12 sec."))
+				stats.AttackPower += 21f; //Nightseye Panther
+			else if (line.StartsWith("Increases attack power by 185 for 15 sec."))
+				stats.AttackPower += 23f; //Uniting Charm + Ogre Mauler's Badge
+			else if (line.StartsWith("Increases attack power by "))
+			{
+				line = line.Substring("Increases attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += ((float)int.Parse(line)) / 6f;
+			}
+			else if (line.StartsWith("Increases your melee and ranged attack power by "))
+			{
+				line = line.Substring("Increases your melee and ranged attack power by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.AttackPower += ((float)int.Parse(line)) / 6f;
+			}
+			else if (line.StartsWith("Increases haste rating by "))
+			{
+				line = line.Substring("Increases haste rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.HasteRating += ((float)int.Parse(line)) / 12f;
+			}
+			else if (line.StartsWith("Increases armor penetration rating by "))
+			{
+				line = line.Substring("Increases armor penetration rating by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.ArmorPenetrationRating += ((float)int.Parse(line));
+			}
+			else if (line.StartsWith("Increases agility by "))
+			{ //Special case: So that we don't increase bear stats by the average value, translate the agi to crit and ap
+				line = line.Substring("Increases agility by ".Length);
+				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+				stats.CritRating += ((((float)int.Parse(line)) / 6f) / 25f) * 22.08f;
+				stats.AttackPower += (((float)int.Parse(line)) / 6f) * 1.03f;
+			}
+			// Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
+			// some pre-tbc have passive spell damage as on use
+			else if (line.StartsWith("Increases spell power by "))
+			{
+				line = line.Substring("Increases spell power by ".Length);
+				string[] tokens = line.Split(' ', '.');
+				int damageIncrease = int.Parse(tokens[0]);
+				if (tokens.Length > 2)
+				{
+					int duration = int.Parse(tokens[2]);
+					switch (duration)
+					{
+						case 20:
+							stats.SpellPowerFor20SecOnUse2Min += damageIncrease;
+							break;
+						case 15:
+							stats.SpellPowerFor15SecOnUse90Sec += damageIncrease;
+							break;
+					}
+				}
+				else
+				{
+					stats.SpellPower += damageIncrease;
+					//stats.SpellPower * 1.88f += damageIncrease;
+				}
+			}
+			else if (line.StartsWith("Increases your Spirit by "))
+			{
+				// Bangle of Endless Blessings, Earring of Soulful Meditation
+				Regex r = new Regex("Increases your Spirit by \\+?(?<spi>\\d*) for (?<dur>\\d*) sec\\."); // \\(2 Min Cooldown\\)");
+				Match m = r.Match(line);
+				if (m.Success)
+				{
+					int spi = int.Parse(m.Groups["spi"].Value);
+					int dur = int.Parse(m.Groups["dur"].Value);
+					if (dur == 20)
+					{
+						stats.SpiritFor20SecOnUse2Min += spi;
+					}
+				}
+			}
+			else if (line.StartsWith("Your heals each cost "))
+			{
+				// Lower City Prayerbook
+				Regex r = new Regex("Your heals each cost (?<mana>\\d*) less mana for the next 15 sec.");
+				Match m = r.Match(line);
+				if (m.Success)
+				{
+					stats.ManacostReduceWithin15OnUse1Min += (float)int.Parse(m.Groups["mana"].Value);
+				}
+			}
+			else if (line.StartsWith("Gain 250 mana each sec. for "))
+			{
+				stats.ManaregenFor8SecOnUse5Min += 250;
+			}
+			else if (line.StartsWith("Conjures a Power Circle lasting for 15 sec.  While standing in this circle, the caster gains 320 spell power."))
+			{
+				// Shifting Naaru Sliver
+				stats.SpellPowerFor15SecOnUse90Sec += 320;
+			}
+			else if (line.StartsWith("Tap into the power of the skull, increasing haste rating by 175 for 20 sec."))
+			{
+				// The Skull of Gul'dan
+				stats.HasteRatingFor20SecOnUse2Min += 175;
+			}
+			else if (line.StartsWith("Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket."))
+			{
+				stats.Mp5OnCastFor20SecOnUse2Min += 21;
+			}
+			// Figurine - Talasite Owl, 5 min cooldown
+			else if (line.StartsWith("Restores 900 mana over 12 sec."))
+			{
+				if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
+					stats.ManaregenOver20SecOnUse3Min += 900;
+				else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
+					stats.ManaregenOver20SecOnUse5Min += 900;
+				// stats.Mp5 += 5f * 900f / 300f;
+			}
+			// Mind Quickening Gem
+			else if (line.StartsWith("Quickens the mind, increasing the Mage's haste rating by 330 for 20 sec."))
+			{
+				stats.HasteRatingFor20SecOnUse5Min += 330;
+			}
+			else if (line.StartsWith("Increases the block value of your shield by 200 for 20 sec."))
+			{
+				stats.BlockValue += (float)Math.Round(200f * (20f / 120f));
+			}
+			else if (line.StartsWith("Removes all movement impairing effects and all effects which cause loss of control of your character."))
+			{
+				stats.PVPTrinket += 1f;
+			}
+		}
+	}
+}

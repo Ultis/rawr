@@ -40,6 +40,14 @@ namespace Rawr
             }
         }
 
+		public bool UseArmory
+		{
+			get
+			{
+				return radioButtonArmory.Checked;
+			}
+		}
+
         public FormEnterId()
         {
             InitializeComponent();

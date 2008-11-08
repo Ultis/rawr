@@ -64,8 +64,9 @@ namespace Rawr
             string ClassTalentURI { get; }
             string CharacterTalentURI { get; }
             string CharacterSheetURI { get; }
-            string ItemToolTipSheetURI { get; }
-            string ItemUpgradeURI { get; }
+			string ItemToolTipSheetURI { get; }
+			string ItemUpgradeURI { get; }
+			string ItemWowheadURI { get; }
 			string TalentIconURI { get; }
 			string ItemInfoURI { get; }
         }
@@ -183,7 +184,12 @@ namespace Rawr
             public string ItemUpgradeURI
             {
                 get { return Rawr.Properties.NetworkSettings.Default.ItemUpgradeURI; }
-            }
+			}
+
+			public string ItemWowheadURI
+			{
+				get { return Rawr.Properties.NetworkSettings.Default.ItemWowheadURI; }
+			}
 
             public string TalentIconURI
             {
@@ -305,6 +311,16 @@ namespace Rawr
 			{
                 doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemToolTipSheetURI, id));
             }
+			return doc;
+		}
+
+		public XmlDocument DownloadItemWowhead(string id)
+		{
+			XmlDocument doc = null;
+			if (!string.IsNullOrEmpty(id))
+			{
+				doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadURI, id), true);
+			}
 			return doc;
 		}
 
@@ -575,7 +591,8 @@ namespace Rawr
 			return value;
 		}
 
-		private XmlDocument DownloadXml(string URI)
+		private XmlDocument DownloadXml(string URI) { return DownloadXml(URI, false); }
+		private XmlDocument DownloadXml(string URI, bool allowTable)
 		{
 			XmlDocument returnDocument = null;
             int retry = 0;
@@ -585,12 +602,12 @@ namespace Rawr
             {
                 string xml = DownloadText(URI);
                 //If it contains "<table", then the armory accidentally returned it as html instead of xml.
-                if (!string.IsNullOrEmpty(xml) && !xml.Contains("<table"))
+                if (!string.IsNullOrEmpty(xml) && (allowTable || !xml.Contains("<table")))
                 {
                     try
                     {
                         returnDocument = new XmlDocument();
-                        returnDocument.LoadXml(xml);
+                        returnDocument.LoadXml(xml.Replace("&",""));
                         if (returnDocument == null || returnDocument.DocumentElement == null
                                     || !returnDocument.DocumentElement.HasChildNodes
                                     || !returnDocument.DocumentElement.ChildNodes[0].HasChildNodes)

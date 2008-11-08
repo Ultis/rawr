@@ -990,8 +990,6 @@ namespace Rawr
 				//Clipboard isn't working
 				System.IO.File.WriteAllText("stats.txt", sb.ToString());
 			}
-
-			if (Control.ModifierKeys == Keys.Control) Wowhead.ProcessFile();
 		}
 
 		private void slotToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1418,6 +1416,16 @@ namespace Rawr
 				ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
             }
         }
+
+		private void reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("This will take a while (~10min maybe?), and I don't have a progress bar for it yet. " +
+				"Are you sure you'd like to do this?", "Reload WotLK items from Wowhead?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				Wowhead.LoadKnownWotlkItems();
+				MessageBox.Show("Wowhead WotLK Item Reload Done!");
+			}
+		}
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{

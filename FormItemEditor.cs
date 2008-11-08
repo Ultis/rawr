@@ -304,7 +304,7 @@ namespace Rawr
 				try
 				{
 					WebRequestWrapper.ResetFatalErrorIndicator();
-					AddItemById(form.Value);
+					AddItemById(form.Value, form.UseArmory);
 				}
 				finally
 				{
@@ -314,12 +314,16 @@ namespace Rawr
             form.Dispose();
 		}
 
-		private void AddItemById(int id) { AddItemsById(new int[] { id }); }
-		private void AddItemsById(int[] ids)
+		private void AddItemById(int id, bool useArmory) { AddItemsById(new int[] { id }, useArmory); }
+		private void AddItemsById(int[] ids, bool useArmory)
 		{
 			foreach (int id in ids)
 			{
-				Item newItem = Item.LoadFromId(id, true, "Manually Added",true);
+				Item newItem;
+				if (useArmory)
+					newItem = Item.LoadFromId(id, true, "Manually Added", true);
+				else
+					newItem = Wowhead.GetItem(id.ToString() + ".0.0.0");
 				if (newItem == null)
 				{
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
