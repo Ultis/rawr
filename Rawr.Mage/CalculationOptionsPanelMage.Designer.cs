@@ -236,6 +236,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.label11 = new System.Windows.Forms.Label();
+            this.checkBoxGlyphOfFrostfire = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -1977,6 +1979,8 @@
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.label11);
+            this.tabPage7.Controls.Add(this.checkBoxGlyphOfFrostfire);
             this.tabPage7.Controls.Add(this.label90);
             this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcanePower);
             this.tabPage7.Controls.Add(this.label89);
@@ -2414,6 +2418,26 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 203);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(89, 13);
+            this.label11.TabIndex = 191;
+            this.label11.Text = "Glyph of Frostfire:";
+            this.toolTipMage.SetToolTip(this.label11, "Optimize between mage and molten armor. Disable to improve performance.");
+            // 
+            // checkBoxGlyphOfFrostfire
+            // 
+            this.checkBoxGlyphOfFrostfire.AutoSize = true;
+            this.checkBoxGlyphOfFrostfire.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFrostfire", true));
+            this.checkBoxGlyphOfFrostfire.Location = new System.Drawing.Point(140, 203);
+            this.checkBoxGlyphOfFrostfire.Name = "checkBoxGlyphOfFrostfire";
+            this.checkBoxGlyphOfFrostfire.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxGlyphOfFrostfire.TabIndex = 190;
+            this.checkBoxGlyphOfFrostfire.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2650,6 +2674,8 @@
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label90;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfArcanePower;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfFrostfire;
 
     }
 }

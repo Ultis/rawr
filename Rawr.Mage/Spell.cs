@@ -113,10 +113,12 @@ namespace Rawr.Mage
         FBFBlast,
         FBPyro,
         FBLBPyro,
+        FFBLBPyro,
         FFBPyro,
         FBScPyro,
         FFBScPyro,
         FBScLBPyro,
+        FFBScLBPyro,
         Slow,
         ABABarSlow,
         FBABarSlow,
@@ -1115,6 +1117,11 @@ namespace Rawr.Mage
                 this.BaseCastTime = 0.0f;
             }
             Calculate(castingState);
+            if (castingState.CalculationOptions.GlyphOfFrostfire)
+            {
+                CritRate += 0.02f;
+                DirectDamageModifier *= 1.02f;
+            }
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
             SpammedDot = true;
@@ -3879,6 +3886,43 @@ namespace Rawr.Mage
         }
     }
 
+    class FFBLBPyro : Spell
+    {
+        BaseSpell FFB;
+        BaseSpell LB;
+        BaseSpell Pyro;
+        float X;
+        float K;
+
+        public FFBLBPyro(CastingState castingState)
+        {
+            Name = "FFBLBPyro";
+
+            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
+            LB = (BaseSpell)castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = (BaseSpell)castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+            if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+            X = (12.0f - LB.CastTime) / (12.0f + FFB.CastTime - LB.CastTime + Pyro.CastTime * K);
+
+            CastTime = X * FFB.CastTime + (1 - X) * LB.CastTime + K * Pyro.CastTime;
+            CostPerSecond = (X * FFB.CastTime * FFB.CostPerSecond + (1 - X) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * FFB.CastTime * FFB.DamagePerSecond + (1 - X) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * FFB.CastTime * FFB.ThreatPerSecond + (1 - X) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * FFB.CastTime * FFB.ManaRegenPerSecond + (1 - X) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * FFB.CastProcs + (1 - X) * LB.CastProcs + K * Pyro.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
+            LB.AddSpellContribution(dict, (1 - X) * LB.CastTime / CastTime * duration);
+            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+        }
+    }
+
     class ScLBPyro : Spell
     {
         BaseSpell Sc;
@@ -4282,6 +4326,94 @@ namespace Rawr.Mage
         public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
             FB.AddSpellContribution(dict, X * FB.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, Y * Sc.CastTime / CastTime * duration);
+            LB.AddSpellContribution(dict, (1 - X - Y) * LB.CastTime / CastTime * duration);
+            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+        }
+    }
+
+    class FFBScLBPyro : Spell
+    {
+        BaseSpell FFB;
+        BaseSpell Sc;
+        BaseSpell LB;
+        BaseSpell Pyro;
+        float K;
+        float X;
+        float Y;
+
+        public FFBScLBPyro(CastingState castingState)
+        {
+            Name = "FFBScLBPyro";
+            ProvidesScorch = true;
+
+            FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            LB = (BaseSpell)castingState.GetSpell(SpellId.LivingBomb);
+            Pyro = (BaseSpell)castingState.GetSpell(SpellId.PyroblastPOM);
+            sequence = "Frostfire Bolt";
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+            if (gap == 1.0f)
+            {
+                Y = 0.0f;
+                K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
+                X = (12.0f - LB.CastTime) / (12.0f + FFB.CastTime - LB.CastTime + Pyro.CastTime * K);
+            }
+            else
+            {
+                float P = 1.0f + Sc.CastTime / (12.0f * (1.0f - gap));
+                float FFBcrit = FFB.CritRate;
+                float SCcrit = Sc.CritRate;
+                float H = castingState.MageTalents.HotStreak / 3.0f;
+                if (castingState.MageTalents.Pyroblast == 0) H = 0.0f;
+                float K1 = Sc.CastTime - P * FFB.CastTime + (P - 1) * LB.CastTime - 12 * (P - 1);
+                float K2 = SCcrit - FFBcrit * P;
+                float K3 = 1.0f - P + K2;
+
+                float A2 = K3 * K1 + Pyro.CastTime * H * K2 * K2;
+                float A1 = FFB.CastTime * K3 + K1 * (1 + FFBcrit) + Pyro.CastTime * H * 2 * FFBcrit * K2;
+                float A0 = FFB.CastTime * (1 + FFBcrit) + Pyro.CastTime * H * FFBcrit * FFBcrit;
+                if (Math.Abs(A2) < 0.00001)
+                {
+                    Y = -A0 / A1;
+                }
+                else
+                {
+                    Y = (float)((-A1 - Math.Sqrt(A1 * A1 - 4 * A2 * A0)) / (2 * A2));
+                }
+                X = 1 - P * Y;
+                float C = (FFBcrit * X + SCcrit * Y) / (X + Y);
+                K = H * (X + Y) * C * C / (1 + C);
+            }
+
+            // X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + K * value(Pyro)
+            CastTime = X * FFB.CastTime + Y * Sc.CastTime + (1 - X - Y) * LB.CastTime + K * Pyro.CastTime;
+            CostPerSecond = (X * FFB.CastTime * FFB.CostPerSecond + Y * Sc.CastTime * Sc.CostPerSecond + (1 - X - Y) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * FFB.CastTime * FFB.DamagePerSecond + Y * Sc.CastTime * Sc.DamagePerSecond + (1 - X - Y) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * FFB.CastTime * FFB.ThreatPerSecond + Y * Sc.CastTime * Sc.ThreatPerSecond + (1 - X - Y) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * FFB.CastTime * FFB.ManaRegenPerSecond + Y * Sc.CastTime * Sc.ManaRegenPerSecond + (1 - X - Y) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * FFB.CastProcs + Y * Sc.CastProcs + (1 - X - Y) * LB.CastProcs + K * Pyro.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
             Sc.AddSpellContribution(dict, Y * Sc.CastTime / CastTime * duration);
             LB.AddSpellContribution(dict, (1 - X - Y) * LB.CastTime / CastTime * duration);
             Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);

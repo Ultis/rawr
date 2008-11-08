@@ -81,7 +81,9 @@ namespace Rawr.Mage
                     "Spell Info:Living Bomb",
                     "Spell Info:Frostfire Bolt",
                     "Spell Info:FFBPyro*Pyroblast on Hot Streak",
+                    "Spell Info:FFBLBPyro*Pyroblast on Hot Streak, maintain Living Bomb dot",
                     "Spell Info:FFBScPyro*Maintain Scorch and Pyroblast on Hot Streak",
+                    "Spell Info:FFBScLBPyro*Maintain Scorch, maintain Living Bomb dot and Pyroblast on Hot Streak",
                     "Spell Info:Frostbolt",
                     "Spell Info:FrBFB*Fireball on Brain Freeze",
                     "Spell Info:ABP*Pause to let debuff drop",
@@ -740,8 +742,8 @@ namespace Rawr.Mage
             return statsTotal;
         }
          
-        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower" };
-        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power" };
+        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire" };
+        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire" };
 
 
 

@@ -212,6 +212,7 @@ namespace Rawr.Mage
         }
 
         public bool GlyphOfFireball { get; set; }
+        public bool GlyphOfFrostfire { get; set; }
         public bool GlyphOfFrostbolt { get; set; }
         public bool GlyphOfIceArmor { get; set; }
         public bool GlyphOfImprovedScorch { get; set; }

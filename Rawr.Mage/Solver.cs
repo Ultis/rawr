@@ -2000,17 +2000,28 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.LivingBomb > 0)
+                        if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                         {
-                            list.Add(SpellId.FBScLBPyro);
-                        }
-                        else if (character.MageTalents.HotStreak > 0)
-                        {
-                            list.Add(SpellId.FBScPyro);
+                            if (character.MageTalents.LivingBomb > 0)
+                            {
+                                list.Add(SpellId.FFBScLBPyro);
+                            }
+                            list.Add(SpellId.FFBScPyro);
                         }
                         else
                         {
-                            list.Add(SpellId.FBSc);
+                            if (character.MageTalents.LivingBomb > 0)
+                            {
+                                list.Add(SpellId.FBScLBPyro);
+                            }
+                            if (character.MageTalents.HotStreak > 0)
+                            {
+                                list.Add(SpellId.FBScPyro);
+                            }
+                            else
+                            {
+                                list.Add(SpellId.FBSc);
+                            }
                         }
                     }
                     else
@@ -2028,7 +2039,14 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.FBSc);
                         }
-                        if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FFBScPyro);
+                        if (calculationOptions.PlayerLevel >= 75)
+                        {
+                            list.Add(SpellId.FFBScPyro);
+                            if (character.MageTalents.LivingBomb > 0)
+                            {
+                                list.Add(SpellId.FFBScLBPyro);
+                            }
+                        }
                         list.Add(SpellId.FBFBlast);
                     }
                 }
@@ -2071,15 +2089,23 @@ namespace Rawr.Mage
                     {
                         if (character.MageTalents.EmpoweredFire > 0)
                         {
-                            if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                            if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                             {
-                                list.Add(SpellId.FBPyro);
+                                list.Add(SpellId.FFBPyro);
+                                if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
                             }
                             else
                             {
-                                list.Add(SpellId.Fireball);
+                                if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                                {
+                                    list.Add(SpellId.FBPyro);
+                                }
+                                else
+                                {
+                                    list.Add(SpellId.Fireball);
+                                }
+                                if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                             }
-                            if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         }
                         else if (character.MageTalents.EmpoweredFrostbolt > 0)
                         {
@@ -2145,7 +2171,12 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.Fireball);
                         }
-                        if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
+                        if (calculationOptions.PlayerLevel >= 75)
+                        {
+                            list.Add(SpellId.FrostfireBoltFOF);
+                            list.Add(SpellId.FFBPyro);
+                            if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
+                        }
                         list.Add(SpellId.FBFBlast);
                         if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         list.Add(SpellId.FrostboltFOF);
