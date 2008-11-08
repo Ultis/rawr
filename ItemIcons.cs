@@ -26,6 +26,7 @@ namespace Rawr
                     _largeIcons = new ImageList();
                     _largeIcons.ImageSize = new Size(64, 64);
                     _largeIcons.ColorDepth = ColorDepth.Depth24Bit;
+                    _addedLargeEmptyIcon = false;
                 }
                 return _largeIcons;
             }
@@ -41,6 +42,7 @@ namespace Rawr
                     _smallIcons = new ImageList();
                     _smallIcons.ImageSize = new Size(32, 32);
                     _smallIcons.ColorDepth = ColorDepth.Depth24Bit;
+                    _addedSmallEmptyIcon = false;
                 }
                 return _smallIcons;
             }
@@ -115,7 +117,9 @@ namespace Rawr
         {
             return GetItemIcon(iconPath, false);
         }
-
+        
+        private static bool _addedSmallEmptyIcon = false;
+        private static bool _addedLargeEmptyIcon = false;
         public static Image GetItemIcon(string iconName, bool small)
         {
             Image returnImage = null;
@@ -194,7 +198,21 @@ namespace Rawr
 
                     if (returnImage != null)
                     {
-                        if (small)
+                        if (iconName == "")
+                        {
+                            if (small) returnImage = ScaleByPercent(returnImage, 50);
+                            if (small && !_addedSmallEmptyIcon)
+                            {
+                                SmallIcons.Images.Add(iconName, returnImage);
+                                _addedSmallEmptyIcon = true;
+                            }
+                            if (!small && !_addedLargeEmptyIcon)
+                            {
+                                LargeIcons.Images.Add(iconName, returnImage);
+                                _addedLargeEmptyIcon = true;
+                            }
+                        }
+                        else if (small)
                         {
                             returnImage = ScaleByPercent(returnImage, 50);
                             SmallIcons.Images.Add(iconName, returnImage);
