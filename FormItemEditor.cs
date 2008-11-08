@@ -320,10 +320,13 @@ namespace Rawr
 			foreach (int id in ids)
 			{
 				Item newItem;
-				if (useArmory)
-					newItem = Item.LoadFromId(id, true, "Manually Added", true);
-				else
-					newItem = Wowhead.GetItem(id.ToString() + ".0.0.0");
+                if (useArmory)
+                    newItem = Item.LoadFromId(id, true, "Manually Added", true);
+                else
+                {
+                    newItem = Wowhead.GetItem(id.ToString() + ".0.0.0");
+                    if (newItem != null) ItemCache.AddItem(newItem, true, true);
+                }
 				if (newItem == null)
 				{
 					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
