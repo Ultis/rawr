@@ -31,6 +31,7 @@ namespace Rawr.DPSDK
             txtSS.KeyPress += new KeyPressEventHandler(txtSS_KeyPress);
             txtUB.KeyPress += new KeyPressEventHandler(txtUB_KeyPress);
             txtUptime.KeyPress += new KeyPressEventHandler(txtUptime_KeyPress);
+            txtGargoyleDuration.KeyPress += new KeyPressEventHandler(txtGargoyleDuration_KeyPress);
         }
 
         private void loadCurRotation()
@@ -48,6 +49,7 @@ namespace Rawr.DPSDK
             txtSS.Text = rotation.ScourgeStrike.ToString();
             txtUB.Text = rotation.UnholyBlight.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
+            txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
         }
 
         private void lockTxt()
@@ -65,6 +67,7 @@ namespace Rawr.DPSDK
             txtSS.ReadOnly = true;
             txtUB.ReadOnly = true;
             txtUptime.ReadOnly = true;
+            txtGargoyleDuration.ReadOnly = true;
         }
 
         private void unLockTxt()
@@ -82,6 +85,7 @@ namespace Rawr.DPSDK
             txtSS.ReadOnly = false;
             txtUB.ReadOnly = false;
             txtUptime.ReadOnly = false;
+            txtGargoyleDuration.ReadOnly = false;
         }
 
         private void RotationViewer_Load(object sender, EventArgs e)
@@ -334,6 +338,32 @@ namespace Rawr.DPSDK
                 double d = double.Parse(t.Text);
                 float f = (float)d;
                 rotation.diseaseUptime = f;
+            }
+            catch
+            {
+                t.Text = "";
+            }
+        }
+
+        void txtGargoyleDuration_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox t = (TextBox)sender;
+            try
+            {
+                double d = double.Parse(t.Text);
+                float f = (float)d;
+
+                if (f < 0f)
+                {
+                    f = 0f;
+                }
+                else if (f > 60f)
+                {
+                    f = 60f;
+                }
+                t.Text = f.ToString();
+
+                rotation.GargoyleDuration = f;
             }
             catch
             {

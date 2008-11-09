@@ -56,6 +56,11 @@ namespace Rawr.DPSDK
             lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
 
             nudTargetArmor.Value = calcOpts.BossArmor;
+
+            cbWindfuryEffect.Checked = calcOpts.Windfury;
+            cbUREffect.Checked = calcOpts.UnleashedRage;
+            cbMagicVuln.Checked = calcOpts.MagicVuln;
+            cbCryptFever.Checked = calcOpts.CryptFever;
         }
         
         private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)

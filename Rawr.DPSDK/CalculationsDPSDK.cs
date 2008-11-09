@@ -229,7 +229,6 @@ namespace Rawr.DPSDK
             float OHExpertise = stats.Expertise;
 
             //damage multipliers
-            float spellPower = stats.AttackPower * (.25f + .05f * (float)talents.Impurity) + stats.SpellPower;
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
             // Covers all % spell damage increases.  Misery, FI.
             float physPowerMult = 1f + stats.BonusPhysicalDamageMultiplier;
@@ -237,13 +236,27 @@ namespace Rawr.DPSDK
             float partialResist = 0.94f; // Average of 6% damage lost to partial resists on spells
 
             //spell AP multipliers, for diseases its per tick
-            const float HowlingBlastAPMult = 0.2f;
-            const float IcyTouchAPMult = 0.1f;
-            const float FrostFeverAPMult = 0.055f;
-            const float BloodPlagueAPMult = 0.055f;
-            const float DeathCoilAPMult = 0.15f;
-            const float UnholyBlightAPMult = 0.01f;
-            const float GargoyleAPMult = 0.6f;
+            float HowlingBlastAPMult = 0.2f;
+            float IcyTouchAPMult = 0.1f;
+            float FrostFeverAPMult = 0.055f;
+            float BloodPlagueAPMult = 0.055f;
+            float DeathCoilAPMult = 0.15f;
+            float UnholyBlightAPMult = 0.013f;
+            float GargoyleAPMult = 0.4f;
+
+            #region Impurity Application
+            {
+                float impurityMult = 1f + (.05f*(float) talents.Impurity);
+
+                HowlingBlastAPMult *= impurityMult;
+                IcyTouchAPMult *= impurityMult;
+                FrostFeverAPMult *= impurityMult;
+                BloodPlagueAPMult *= impurityMult;
+                DeathCoilAPMult *= impurityMult;
+                UnholyBlightAPMult *= impurityMult;
+                GargoyleAPMult *= impurityMult;
+            }
+            #endregion
 
             if (character.Race == Character.CharacterRace.Dwarf || character.Race == Character.CharacterRace.Human)
             {
@@ -338,7 +351,8 @@ namespace Rawr.DPSDK
                 if (targetArmor < 0) targetArmor = 0f;
 
                 // Convert armor to mitigation
-                mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
+                //mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
+                mitigation = 1f - targetArmor / ( targetArmor + 400f + 85f * ( 5.5f * (float)calcOpts.TargetLevel - 265.5f ) );
 
                 calcs.EnemyMitigation = 1f - mitigation;
             }
@@ -464,18 +478,21 @@ namespace Rawr.DPSDK
 
             #region Death Coil
             {
-                float DCCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.DeathCoil;
-                float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower);
-                dpsDeathCoil = DCDmg / DCCD;
-                dpsDeathCoil *= 1f + spellCrits; 
+                if (calcOpts.rotation.DeathCoil > 0f)
+                {
+                    float DCCD = calcOpts.rotation.curRotationDuration/calcOpts.rotation.DeathCoil;
+                    float DCDmg = 443f + (DeathCoilAPMult*stats.AttackPower);
+                    dpsDeathCoil = DCDmg/DCCD;
+                    dpsDeathCoil *= 1f + spellCrits;
 
-                //sudden doom stuff
-                float affectedDCMult = calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike;
-                affectedDCMult *= .04f * (float) talents.SuddenDoom;
-                affectedDCMult /= calcOpts.rotation.DeathCoil;
-                dpsDeathCoil += dpsDeathCoil * affectedDCMult;
+                    //sudden doom stuff
+                    float affectedDCMult = calcOpts.rotation.BloodStrike + calcOpts.rotation.HeartStrike;
+                    affectedDCMult *= .04f*(float) talents.SuddenDoom;
+                    affectedDCMult /= calcOpts.rotation.DeathCoil;
+                    dpsDeathCoil += dpsDeathCoil*affectedDCMult;
 
-                dpsDeathCoil *= 1f + (.05f * (float)talents.Morbidity);
+                    dpsDeathCoil *= 1f + (.05f*(float) talents.Morbidity);
+                }
             }
             #endregion
 
@@ -495,9 +512,9 @@ namespace Rawr.DPSDK
                 float PSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.PlagueStrike;
                 float PSDmg = MH.damage * .3f + 113.4f;
                 dpsPlagueStrike = PSDmg / PSCD;
-                float PSCrit = 1f + physCrits + (.03f * (float)talents.ViciousStrikes);
-                float PSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes);
-                dpsPlagueStrike += (dpsPlagueStrike * PSCritDmgMult) * PSCrit;
+                float PSCritDmgMult = 1f + ( .15f * (float)talents.ViciousStrikes );
+                float PSCrit = 1f + ( ( physCrits + ( .03f * (float)talents.ViciousStrikes ) ) * PSCritDmgMult );
+                dpsPlagueStrike += dpsPlagueStrike * PSCrit;
 
                 dpsPlagueStrike *= 1f + (.1f * (float)talents.Outbreak);
             }
@@ -539,9 +556,9 @@ namespace Rawr.DPSDK
                     float SSCD = calcOpts.rotation.curRotationDuration/calcOpts.rotation.ScourgeStrike;
                     float SSDmg = MH.damage * .6f + 190.5f + (92.25f * calcOpts.rotation.avgDiseaseMult);
                     dpsScourgeStrike = SSDmg/SSCD;
-                    float SSCrit = 1f + physCrits + ( .03f * (float)talents.ViciousStrikes );
-                    float SSCritDmgMult = 1f + ( .15f * (float)talents.ViciousStrikes );
-                    dpsScourgeStrike += ( dpsScourgeStrike * SSCritDmgMult ) * SSCrit;
+                    float SSCritDmgMult = 1f + (.15f*(float) talents.ViciousStrikes);
+                    float SSCrit = 1f + ((physCrits + (.03f*(float) talents.ViciousStrikes))*SSCritDmgMult);
+                    dpsScourgeStrike += dpsScourgeStrike*SSCrit;
                 }
             }
             #endregion
@@ -560,12 +577,12 @@ namespace Rawr.DPSDK
                 if (talents.FrostStrike > 0 && calcOpts.rotation.FrostStrike > 0f)
                 {
                     float addedCritFromKM = numProcs * FSKMRatio / totalAbilities;
-                    float FSCritDmgMult = ( .15f * (float)talents.GuileOfGorefiend );
                     float FSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.FrostStrike;
                     float FSDmg = MH.damage * .6f + 150f;
                     dpsFrostStrike = FSDmg / FSCD;
+                    float FSCritDmgMult = ( .15f * (float)talents.GuileOfGorefiend );
                     float FSCrit = 1f + physCrits + addedCritFromKM;
-                    dpsFrostStrike += (dpsFrostStrike * FSCritDmgMult) * FSCrit;
+                    dpsFrostStrike += dpsFrostStrike * FSCrit;
                 }
             }
             #endregion
@@ -590,14 +607,15 @@ namespace Rawr.DPSDK
             {
                 if (calcOpts.rotation.Obliterate > 0f)
                 {
-                    float OblitCrit = 1f + physCrits + (.03f * (float)talents.Subversion);
-                    OblitCrit += .05f * (float)talents.Rime;
-                    float OblitCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
-                    OblitCritDmgMult += ( .15f * (float)talents.GuileOfGorefiend );
                     float OblitCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.Obliterate;
                     float OblitDmg = MH.damage + 292f + (146f * calcOpts.rotation.avgDiseaseMult);
                     dpsObliterate = OblitDmg / OblitCD;
-                    dpsObliterate += (dpsObliterate * OblitCritDmgMult) * OblitCrit;
+                    //float OblitCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
+                    //OblitCrit += .05f * (float)talents.Rime;
+                    float OblitCritDmgMult = 1f + ( .15f * (float)talents.MightOfMograine );
+                    OblitCritDmgMult += ( .15f * (float)talents.GuileOfGorefiend );
+                    float OblitCrit = 1f + ((physCrits + (.03f*(float) talents.Subversion)) * OblitCritDmgMult);
+                    dpsObliterate += dpsObliterate * OblitCrit;
                 }
             }
             #endregion
@@ -606,13 +624,14 @@ namespace Rawr.DPSDK
             {
                 if (calcOpts.rotation.BloodStrike > 0f)
                 {
-                    float BSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
-                    float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
-                    BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend);
                     float BSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.BloodStrike;
                     float BSDiseaseDmg = 95.5f * (1f + 0.2f * (float)talents.BloodyStrikes);
                     float BSDmg = MH.damage * .5f + 191f + ( BSDiseaseDmg * calcOpts.rotation.avgDiseaseMult );
                     dpsBloodStrike = BSDmg / BSCD;
+                    //float BSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
+                    float BSCritDmgMult = 1f + ( .15f * (float)talents.MightOfMograine );
+                    BSCritDmgMult += ( .15f * (float)talents.GuileOfGorefiend );
+                    float BSCrit = 1f + ((physCrits + (.03f*(float) talents.BloodyStrikes))*BSCritDmgMult);
                     dpsBloodStrike += (dpsBloodStrike * BSCritDmgMult) * BSCrit;
 
                     dpsBloodStrike *= 1f + (.03f * (float)talents.BloodOfTheNorth);
@@ -624,12 +643,13 @@ namespace Rawr.DPSDK
             {
                 if (talents.HeartStrike > 0 && calcOpts.rotation.HeartStrike > 0f)
                 {
-                    float HSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
-                    float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                     float HSCD = calcOpts.rotation.curRotationDuration / calcOpts.rotation.HeartStrike;
                     float HSDiseaseDmg = 110.4f * ( 1f + 0.2f * (float)talents.BloodyStrikes );
                     float HSDmg = MH.damage + 220.8f + ( HSDiseaseDmg * calcOpts.rotation.avgDiseaseMult );
                     dpsHeartStrike = HSDmg / HSCD;
+                    //float HSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
+                    float HSCritDmgMult = 1f + ( .15f * (float)talents.MightOfMograine );
+                    float HSCrit = 1f + ((physCrits + (.03f*(float) talents.Subversion))*HSCritDmgMult);
                     dpsHeartStrike += (dpsHeartStrike * HSCritDmgMult) * HSCrit;
                 }
             }
@@ -637,7 +657,15 @@ namespace Rawr.DPSDK
 
             #region Gargoyle
             {
-                //NOT YET IMPLEMENTED -------------------------------------------=========================================
+                if (calcOpts.rotation.GargoyleDuration > 0f)
+                {
+                    float GargoyleCastTime = 2.5f;
+                    float GargoyleStrike = GargoyleAPMult * stats.AttackPower;
+                    float GargoyleStrikeCount = calcOpts.rotation.GargoyleDuration / GargoyleCastTime;
+                    float GargoyleDmg = GargoyleStrike*GargoyleStrikeCount;
+                    GargoyleDmg *= 1f + spellCrits;
+                    dpsGargoyle = GargoyleDmg / 180f;
+                }
             }
             #endregion
 
@@ -656,8 +684,9 @@ namespace Rawr.DPSDK
 
             #region Apply Elemental Strike Mitigation
             {
-                float strikeMit = missedSpecial * partialResist * ( spellPowerMult );
+                float strikeMit = missedSpecial * partialResist;
                 strikeMit = 1f - strikeMit;
+                strikeMit *= spellPowerMult;
 
                 dpsScourgeStrike *= strikeMit;
                 dpsFrostStrike *= strikeMit;
@@ -666,8 +695,9 @@ namespace Rawr.DPSDK
 
             #region Apply Magical Mitigation
             {
-                float magicMit = partialResist * spellResist * ( spellPowerMult );
+                float magicMit = partialResist * spellResist;
                 magicMit = 1f - magicMit;
+                magicMit *= spellPowerMult;
 
                 dpsBloodPlague *= magicMit;
                 dpsDeathCoil *= magicMit;
@@ -709,10 +739,13 @@ namespace Rawr.DPSDK
                 dpsIcyTouch *= MercilessCombatMult;
                 dpsFrostStrike *= MercilessCombatMult;
 
-                float CryptFeverMult = 1f + (.1f * (float)talents.CryptFever);
-                dpsFrostFever *= CryptFeverMult;
-                dpsBloodPlague *= CryptFeverMult;
-                dpsUnholyBlight *= CryptFeverMult;
+                if ( calcOpts.CryptFever )
+                {
+                    float CryptFeverMult = 1.3f;
+                    dpsFrostFever *= CryptFeverMult;
+                    dpsBloodPlague *= CryptFeverMult;
+                    dpsUnholyBlight *= CryptFeverMult;
+                }
 
                 float DesicrationMult = 1f + (.05f * .15f * (float)talents.Desecration);  //uptime at 5/5 is about 75%
                 dpsBCB *= DesicrationMult;
@@ -920,6 +953,7 @@ namespace Rawr.DPSDK
 
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
+            //double check to make sure they dont have it selected in the buffs tab
             if (calcOpts.UnleashedRage)
             {
                 statsTotal.AttackPower *= 1.1f;
@@ -952,11 +986,6 @@ namespace Rawr.DPSDK
             if (calcOpts.MagicVuln)
             {
                 statsTotal.BonusSpellPowerMultiplier += .13f;
-            }
-            else
-            {
-                float increment = 13f/3f;
-                statsTotal.BonusSpellPowerMultiplier += increment * (float)talents.EbonPlaguebringer;
             }
 
             if (calcOpts.BloodPresence)  // a final, multiplicative component
@@ -1054,11 +1083,13 @@ namespace Rawr.DPSDK
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
                 PhysicalCrit = stats.PhysicalCrit,
-
-                //CritRating = stats.CritRating,
+                PhysicalHaste = stats.PhysicalHaste,
+                PhysicalHit = stats.PhysicalHit,
+                
                 //HitRating = stats.HitRating,
                 SpellPower = stats.SpellPower,
                 SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                SpellHit = stats.SpellHit,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
