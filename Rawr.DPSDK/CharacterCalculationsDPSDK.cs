@@ -265,6 +265,13 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
+        private DeathKnightTalents _talents;
+        public DeathKnightTalents Talents
+        {
+            get { return _talents; }
+            set { _talents = value; }
+        }
+
         public List<Buff> ActiveBuffs { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -309,6 +316,8 @@ namespace Rawr.DPSDK
             dictValues.Add("Expertise", string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
             dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
             dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
+            dictValues.Add("Armor", BasicStats.Armor.ToString("N0"));
+
 
             dictValues.Add("Weapon Damage", MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed", MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));

@@ -11,8 +11,16 @@ namespace Rawr.DPSDK
 
         public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, float expertise)
         {
-            if (i == null || stats == null || calcOpts == null)
+            if (stats == null || calcOpts == null)
                 return;
+
+            if (i == null)
+            {
+                i = new Item();
+                i.Speed = 2.0f;
+                i.MinDamage = 0;
+                i.MaxDamage = 0;
+            }
 
             effectiveExpertise = expertise;
             float fightDuration = calcOpts.FightLength * 60;
@@ -20,7 +28,7 @@ namespace Rawr.DPSDK
             if (i == null) return;
 
             baseSpeed = i.Speed;
-            baseDamage = (i.MinDamage + i.MaxDamage) / 2f + stats.WeaponDamage;
+            baseDamage = (float)(i.MinDamage + i.MaxDamage) / 2f + stats.WeaponDamage;
 
 
             #region Attack Speed

@@ -136,7 +136,7 @@ namespace Rawr.DPSDK
 
         private void rbBlood_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbUnholy.Checked)
+            if (rbBlood.Checked)
             {
                 lockTxt();
                 rotation.setRotation(Rotation.Type.Blood);

@@ -679,6 +679,11 @@ namespace Rawr
 			{
 				stats.PVPTrinket += 1f;
 			}
+            else if (line.StartsWith("Increases the damage dealt by your Scourge Strike and Obliterate abilities by 420."))
+            {
+                stats.BonusObliterateDamage += 420;
+                stats.BonusScourgeStrikeDamage += 420;
+            }
 		}
 	}
 }

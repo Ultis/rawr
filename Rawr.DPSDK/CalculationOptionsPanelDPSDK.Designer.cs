@@ -48,10 +48,6 @@
             this.rbDrumsNone = new System.Windows.Forms.RadioButton();
             this.gbMajorGlyph = new System.Windows.Forms.GroupBox();
             this.gbMinorGlyph = new System.Windows.Forms.GroupBox();
-            this.gbRotation = new System.Windows.Forms.GroupBox();
-            this.rbFrost = new System.Windows.Forms.RadioButton();
-            this.rbBlood = new System.Windows.Forms.RadioButton();
-            this.rbUnholy = new System.Windows.Forms.RadioButton();
             this.btnRotation = new System.Windows.Forms.Button();
             this.cbWindfuryEffect = new System.Windows.Forms.CheckBox();
             this.cbUREffect = new System.Windows.Forms.CheckBox();
@@ -62,7 +58,6 @@
             ( (System.ComponentModel.ISupportInitialize)( this.nudTargetArmor ) ).BeginInit();
             ( (System.ComponentModel.ISupportInitialize)( this.tbFerociousInspiration ) ).BeginInit();
             this.gbDrums.SuspendLayout();
-            this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTargetLevel
@@ -306,58 +301,6 @@
             this.gbMinorGlyph.TabStop = false;
             this.gbMinorGlyph.Text = "Minor Glyphs";
             // 
-            // gbRotation
-            // 
-            this.gbRotation.Controls.Add(this.rbFrost);
-            this.gbRotation.Controls.Add(this.rbBlood);
-            this.gbRotation.Controls.Add(this.rbUnholy);
-            this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
-            this.gbRotation.Location = new System.Drawing.Point(13, 501);
-            this.gbRotation.Name = "gbRotation";
-            this.gbRotation.Size = new System.Drawing.Size(185, 74);
-            this.gbRotation.TabIndex = 35;
-            this.gbRotation.TabStop = false;
-            this.gbRotation.Text = "Rotation";
-            // 
-            // rbFrost
-            // 
-            this.rbFrost.AutoSize = true;
-            this.rbFrost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
-            this.rbFrost.Location = new System.Drawing.Point(124, 20);
-            this.rbFrost.Name = "rbFrost";
-            this.rbFrost.Size = new System.Drawing.Size(52, 19);
-            this.rbFrost.TabIndex = 4;
-            this.rbFrost.TabStop = true;
-            this.rbFrost.Text = "Frost";
-            this.rbFrost.UseVisualStyleBackColor = true;
-            this.rbFrost.CheckedChanged += new System.EventHandler(this.rbFrost_CheckedChanged);
-            // 
-            // rbBlood
-            // 
-            this.rbBlood.AutoSize = true;
-            this.rbBlood.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
-            this.rbBlood.Location = new System.Drawing.Point(66, 49);
-            this.rbBlood.Name = "rbBlood";
-            this.rbBlood.Size = new System.Drawing.Size(57, 19);
-            this.rbBlood.TabIndex = 3;
-            this.rbBlood.TabStop = true;
-            this.rbBlood.Text = "Blood";
-            this.rbBlood.UseVisualStyleBackColor = true;
-            this.rbBlood.CheckedChanged += new System.EventHandler(this.rbBlood_CheckedChanged);
-            // 
-            // rbUnholy
-            // 
-            this.rbUnholy.AutoSize = true;
-            this.rbUnholy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
-            this.rbUnholy.Location = new System.Drawing.Point(9, 20);
-            this.rbUnholy.Name = "rbUnholy";
-            this.rbUnholy.Size = new System.Drawing.Size(63, 19);
-            this.rbUnholy.TabIndex = 2;
-            this.rbUnholy.TabStop = true;
-            this.rbUnholy.Text = "Unholy";
-            this.rbUnholy.UseVisualStyleBackColor = true;
-            this.rbUnholy.CheckedChanged += new System.EventHandler(this.rbUnholy_CheckedChanged);
-            // 
             // btnRotation
             // 
             this.btnRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
@@ -427,7 +370,6 @@
             this.Controls.Add(this.cbUREffect);
             this.Controls.Add(this.cbWindfuryEffect);
             this.Controls.Add(this.btnRotation);
-            this.Controls.Add(this.gbRotation);
             this.Controls.Add(this.gbMinorGlyph);
             this.Controls.Add(this.gbMajorGlyph);
             this.Controls.Add(this.gbDrums);
@@ -447,8 +389,6 @@
             ( (System.ComponentModel.ISupportInitialize)( this.tbFerociousInspiration ) ).EndInit();
             this.gbDrums.ResumeLayout(false);
             this.gbDrums.PerformLayout();
-            this.gbRotation.ResumeLayout(false);
-            this.gbRotation.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,10 +416,6 @@
         private System.Windows.Forms.RadioButton rbDrumsNone;
         private System.Windows.Forms.GroupBox gbMajorGlyph;
         private System.Windows.Forms.GroupBox gbMinorGlyph;
-        private System.Windows.Forms.GroupBox gbRotation;
-        private System.Windows.Forms.RadioButton rbFrost;
-        private System.Windows.Forms.RadioButton rbBlood;
-        private System.Windows.Forms.RadioButton rbUnholy;
         private System.Windows.Forms.Button btnRotation;
         private System.Windows.Forms.CheckBox cbWindfuryEffect;
         private System.Windows.Forms.CheckBox cbUREffect;

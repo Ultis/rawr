@@ -189,7 +189,9 @@ namespace Rawr
 		BonusEnergyOnTigersFury,
 		FinisherEnergyOnAvoid,
 		MangleCooldownReduction,
-		BonusFerociousBiteCrit
+		BonusFerociousBiteCrit,
+        BonusObliterateDamage,
+        BonusScourgeStrikeDamage
     }
 
     enum MultiplicativeStat : int
@@ -930,6 +932,20 @@ namespace Rawr
 		{
             get { return _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusEvisEnvenomDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusObliterateDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusObliterateDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusScourgeStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusScourgeStrikeDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

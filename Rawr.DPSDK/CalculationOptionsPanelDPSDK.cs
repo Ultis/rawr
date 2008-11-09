@@ -35,31 +35,13 @@ namespace Rawr.DPSDK
 				Character.CalculationOptions = new CalculationOptionsDPSDK();
 
 			CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+
+            if (calcOpts.rotation == null)
+                calcOpts.rotation = new Rotation();
             
             rbDrumsWar.Checked = calcOpts.DrumsOfWar;
             rbDrumsBattle.Checked = calcOpts.DrumsOfBattle;
             rbDrumsNone.Checked = !calcOpts.DrumsOfBattle && !calcOpts.DrumsOfWar;
-
-            if (calcOpts.rotation != null)
-            {
-                if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
-                {
-                    rbUnholy.Checked = true;
-                }
-                else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
-                {
-                    rbFrost.Checked = true;
-                }
-                else
-                {
-                    rbBlood.Checked = true;
-                }
-            }
-            else
-            {
-                calcOpts.rotation = new Rotation();
-                rbUnholy.Checked = true;
-            }
 
             chkBloodLust.Checked = calcOpts.Bloodlust;
             cbWindfuryEffect.Checked = calcOpts.Windfury;
@@ -279,46 +261,6 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-        private void rbUnholy_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbUnholy.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Unholy); }
-            Character.OnCalculationsInvalidated();
-
-            cbMagicVuln.Checked = true;
-            cbCryptFever.Checked = true;
-            cbWindfuryEffect.Enabled = true;
-            cbUREffect.Enabled = true;
-            cbMagicVuln.Enabled = false;
-            cbCryptFever.Enabled = false;
-        }
-
-        private void rbFrost_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbFrost.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Frost); }
-            Character.OnCalculationsInvalidated();
-
-            cbWindfuryEffect.Checked = true;
-            cbWindfuryEffect.Enabled = false;
-            cbUREffect.Enabled = true;
-            cbMagicVuln.Enabled = true;
-            cbCryptFever.Enabled = true;
-        }
-
-        private void rbBlood_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (rbBlood.Checked) { calcOpts.rotation.setRotation(Rotation.Type.Blood); }
-            Character.OnCalculationsInvalidated();
-
-            cbUREffect.Checked = true;
-            cbWindfuryEffect.Enabled = true;
-            cbUREffect.Enabled = false;
-            cbMagicVuln.Enabled = true;
-            cbCryptFever.Enabled = true;
-        }
-
         private void cbWindfuryEffect_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
@@ -353,7 +295,46 @@ namespace Rawr.DPSDK
 
         private void btnRotation_Click(object sender, EventArgs e)
         {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            RotationViewer RV = new RotationViewer(calcOpts.rotation);
+            RV.ShowDialog();
+            Character.OnCalculationsInvalidated();
 
+            if (calcOpts.rotation.curRotationType == Rotation.Type.Blood)
+            {
+                cbUREffect.Checked = true;
+
+                cbUREffect.Enabled = false;
+                cbWindfuryEffect.Enabled = true;
+                cbMagicVuln.Enabled = true;
+                cbCryptFever.Enabled = true;
+            }
+            else if (calcOpts.rotation.curRotationType == Rotation.Type.Frost)
+            {
+                cbWindfuryEffect.Checked = true;
+
+                cbUREffect.Enabled = true;
+                cbWindfuryEffect.Enabled = false;
+                cbMagicVuln.Enabled = true;
+                cbCryptFever.Enabled = true;
+            }
+            else if (calcOpts.rotation.curRotationType == Rotation.Type.Unholy)
+            {
+                cbCryptFever.Checked = true;
+                cbMagicVuln.Checked = true;
+
+                cbUREffect.Enabled = true;
+                cbWindfuryEffect.Enabled = true;
+                cbMagicVuln.Enabled = false;
+                cbCryptFever.Enabled = false;
+            }
+            else if (calcOpts.rotation.curRotationType == Rotation.Type.Custom)
+            {
+                cbUREffect.Enabled = true;
+                cbWindfuryEffect.Enabled = true;
+                cbMagicVuln.Enabled = true;
+                cbCryptFever.Enabled = true;
+            }
         }
     }
 

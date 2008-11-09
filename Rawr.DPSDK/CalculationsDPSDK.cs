@@ -190,6 +190,7 @@ namespace Rawr.DPSDK
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             calcs.BasicStats = stats;
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
+            calcs.Talents = calcOpts.talents;
 
             //DPS Subgroups
             float dpsWhite = 0f;
@@ -323,6 +324,7 @@ namespace Rawr.DPSDK
             if (character.MainHand == null && character.OffHand == null)
             {
                 combinedSwingTime = 2f;
+                MH = new Weapon(null, stats, calcOpts, 0f);
             }
 
             #region Mitigation
@@ -331,6 +333,8 @@ namespace Rawr.DPSDK
 
                 // Effective armor after ArP
                 targetArmor -= totalArP;
+                float ratingCoeff = stats.ArmorPenetrationRating / 15.4f;
+                targetArmor *= (1 - ratingCoeff);
                 if (targetArmor < 0) targetArmor = 0f;
 
                 // Convert armor to mitigation
@@ -769,6 +773,7 @@ namespace Rawr.DPSDK
             }
             #endregion
 
+            calcs.OverallPoints = calcs.DPSPoints;
             return calcs;
         }
 
@@ -1039,6 +1044,7 @@ namespace Rawr.DPSDK
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
+                Armor = stats.Armor,
 
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
