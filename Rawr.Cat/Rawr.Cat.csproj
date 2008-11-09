@@ -92,6 +92,7 @@
       <DependentUpon>CalculationOptionsPanelCat.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsCat.cs" />
+    <Compile Include="CatRotationCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

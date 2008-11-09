@@ -30,44 +30,21 @@
 		{
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.checkBoxShred = new System.Windows.Forms.CheckBox();
+			this.checkBoxRip = new System.Windows.Forms.CheckBox();
+			this.checkBoxFerociousBite = new System.Windows.Forms.CheckBox();
+			this.comboBoxSavageRoar = new System.Windows.Forms.ComboBox();
 			this.label2 = new System.Windows.Forms.Label();
+			this.numericUpDownTargetArmor = new System.Windows.Forms.NumericUpDown();
 			this.label3 = new System.Windows.Forms.Label();
-			this.comboBoxPowershift = new System.Windows.Forms.ComboBox();
-			this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
-			this.labelTargetArmorDescription = new System.Windows.Forms.Label();
-			this.radioButtonMangle = new System.Windows.Forms.RadioButton();
-			this.groupBoxPrimaryAttack = new System.Windows.Forms.GroupBox();
-			this.radioButtonBoth = new System.Windows.Forms.RadioButton();
-			this.radioButtonShred = new System.Windows.Forms.RadioButton();
-			this.groupBoxFinisher = new System.Windows.Forms.GroupBox();
-			this.radioButtonNone = new System.Windows.Forms.RadioButton();
-			this.radioButtonFerociousBite = new System.Windows.Forms.RadioButton();
-			this.radioButtonRip = new System.Windows.Forms.RadioButton();
+			this.checkBoxGlyphOfRip = new System.Windows.Forms.CheckBox();
+			this.checkBoxGlyphOfMangle = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
-			this.labelExposeWeakness = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
-			this.labelBloodlustUptime = new System.Windows.Forms.Label();
-			this.label7 = new System.Windows.Forms.Label();
-			this.trackBarDrumsOfBattleUptime = new System.Windows.Forms.TrackBar();
-			this.labelDrumsOfBattleUptime = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
-			this.trackBarDrumsOfWarUptime = new System.Windows.Forms.TrackBar();
-			this.labelDrumsOfWarUptime = new System.Windows.Forms.Label();
-			this.radioButtonAldor = new System.Windows.Forms.RadioButton();
-			this.radioButtonScryer = new System.Windows.Forms.RadioButton();
-			this.label6 = new System.Windows.Forms.Label();
-			this.trackBarNumberOfFerociousInspirations = new System.Windows.Forms.TrackBar();
-			this.labelNumberOfFerociousInspirations = new System.Windows.Forms.Label();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
-			this.groupBoxPrimaryAttack.SuspendLayout();
-			this.groupBoxFinisher.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
+			this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -84,472 +61,195 @@
 			this.comboBoxTargetLevel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxTargetLevel.Enabled = false;
 			this.comboBoxTargetLevel.FormattingEnabled = true;
 			this.comboBoxTargetLevel.Items.AddRange(new object[] {
-            "70",
-            "71",
-            "72",
-            "73"});
+            "80",
+            "81",
+            "82",
+            "83"});
 			this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
 			this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-			this.comboBoxTargetLevel.Size = new System.Drawing.Size(123, 21);
+			this.comboBoxTargetLevel.Size = new System.Drawing.Size(185, 21);
 			this.comboBoxTargetLevel.TabIndex = 1;
 			this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.checkBoxShred);
+			this.groupBox1.Controls.Add(this.checkBoxRip);
+			this.groupBox1.Controls.Add(this.checkBoxFerociousBite);
+			this.groupBox1.Controls.Add(this.comboBoxSavageRoar);
+			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Location = new System.Drawing.Point(5, 105);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(261, 88);
+			this.groupBox1.TabIndex = 7;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Custom Rotation";
+			// 
+			// checkBoxShred
+			// 
+			this.checkBoxShred.AutoSize = true;
+			this.checkBoxShred.Location = new System.Drawing.Point(54, 19);
+			this.checkBoxShred.Name = "checkBoxShred";
+			this.checkBoxShred.Size = new System.Drawing.Size(54, 17);
+			this.checkBoxShred.TabIndex = 1;
+			this.checkBoxShred.Text = "Shred";
+			this.checkBoxShred.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxRip
+			// 
+			this.checkBoxRip.AutoSize = true;
+			this.checkBoxRip.Location = new System.Drawing.Point(6, 19);
+			this.checkBoxRip.Name = "checkBoxRip";
+			this.checkBoxRip.Size = new System.Drawing.Size(42, 17);
+			this.checkBoxRip.TabIndex = 1;
+			this.checkBoxRip.Text = "Rip";
+			this.checkBoxRip.UseVisualStyleBackColor = true;
+			// 
+			// checkBoxFerociousBite
+			// 
+			this.checkBoxFerociousBite.AutoSize = true;
+			this.checkBoxFerociousBite.Location = new System.Drawing.Point(114, 19);
+			this.checkBoxFerociousBite.Name = "checkBoxFerociousBite";
+			this.checkBoxFerociousBite.Size = new System.Drawing.Size(93, 17);
+			this.checkBoxFerociousBite.TabIndex = 1;
+			this.checkBoxFerociousBite.Text = "Ferocious Bite";
+			this.checkBoxFerociousBite.UseVisualStyleBackColor = true;
+			// 
+			// comboBoxSavageRoar
+			// 
+			this.comboBoxSavageRoar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxSavageRoar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxSavageRoar.Enabled = false;
+			this.comboBoxSavageRoar.FormattingEnabled = true;
+			this.comboBoxSavageRoar.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+			this.comboBoxSavageRoar.Location = new System.Drawing.Point(156, 42);
+			this.comboBoxSavageRoar.Name = "comboBoxSavageRoar";
+			this.comboBoxSavageRoar.Size = new System.Drawing.Size(99, 21);
+			this.comboBoxSavageRoar.TabIndex = 1;
+			this.comboBoxSavageRoar.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 288);
+			this.label2.Location = new System.Drawing.Point(6, 45);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(74, 13);
+			this.label2.Size = new System.Drawing.Size(144, 13);
 			this.label2.TabIndex = 0;
-			this.label2.Text = "Target Armor: ";
+			this.label2.Text = "Savage Roar Combo Points: ";
+			// 
+			// numericUpDownTargetArmor
+			// 
+			this.numericUpDownTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(83, 30);
+			this.numericUpDownTargetArmor.Maximum = new decimal(new int[] {
+            15000,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetArmor.Name = "numericUpDownTargetArmor";
+			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(185, 20);
+			this.numericUpDownTargetArmor.TabIndex = 6;
+			this.numericUpDownTargetArmor.ThousandsSeparator = true;
+			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
+            11000,
+            0,
+            0,
+            0});
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 379);
+			this.label3.Location = new System.Drawing.Point(3, 32);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(62, 13);
-			this.label3.TabIndex = 0;
-			this.label3.Text = "Powershift: ";
+			this.label3.Size = new System.Drawing.Size(71, 13);
+			this.label3.TabIndex = 5;
+			this.label3.Text = "Target Armor:";
 			// 
-			// comboBoxPowershift
+			// checkBoxGlyphOfRip
 			// 
-			this.comboBoxPowershift.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.comboBoxPowershift.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxPowershift.FormattingEnabled = true;
-			this.comboBoxPowershift.Items.AddRange(new object[] {
-            "Never",
-            "Every Cycle",
-            "Every 2nd Cycle",
-            "Every 3rd Cycle",
-            "Every 4th Cycle",
-            "Every 5th Cycle"});
-			this.comboBoxPowershift.Location = new System.Drawing.Point(83, 376);
-			this.comboBoxPowershift.Name = "comboBoxPowershift";
-			this.comboBoxPowershift.Size = new System.Drawing.Size(123, 21);
-			this.comboBoxPowershift.TabIndex = 1;
-			this.comboBoxPowershift.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			this.checkBoxGlyphOfRip.AutoSize = true;
+			this.checkBoxGlyphOfRip.Location = new System.Drawing.Point(115, 82);
+			this.checkBoxGlyphOfRip.Name = "checkBoxGlyphOfRip";
+			this.checkBoxGlyphOfRip.Size = new System.Drawing.Size(84, 17);
+			this.checkBoxGlyphOfRip.TabIndex = 1;
+			this.checkBoxGlyphOfRip.Text = "Glyph of Rip";
+			this.checkBoxGlyphOfRip.UseVisualStyleBackColor = true;
 			// 
-			// trackBarTargetArmor
+			// checkBoxGlyphOfMangle
 			// 
-			this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarTargetArmor.LargeChange = 1000;
-			this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 285);
-			this.trackBarTargetArmor.Maximum = 9000;
-			this.trackBarTargetArmor.Minimum = 3000;
-			this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-			this.trackBarTargetArmor.Size = new System.Drawing.Size(139, 45);
-			this.trackBarTargetArmor.SmallChange = 100;
-			this.trackBarTargetArmor.TabIndex = 2;
-			this.trackBarTargetArmor.TickFrequency = 300;
-			this.trackBarTargetArmor.Value = 7700;
-			this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelTargetArmorDescription
-			// 
-			this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelTargetArmorDescription.Location = new System.Drawing.Point(6, 333);
-			this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-			this.labelTargetArmorDescription.Size = new System.Drawing.Size(200, 40);
-			this.labelTargetArmorDescription.TabIndex = 0;
-			this.labelTargetArmorDescription.Text = "7700 Armor: Hydross, Lurker, Leotheras, Tidewalker, Al\'ar, Naj\'entus, Supremus, A" +
-				"kama, Gurtogg";
-			// 
-			// radioButtonMangle
-			// 
-			this.radioButtonMangle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonMangle.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonMangle.Enabled = false;
-			this.radioButtonMangle.Location = new System.Drawing.Point(6, 19);
-			this.radioButtonMangle.Name = "radioButtonMangle";
-			this.radioButtonMangle.Size = new System.Drawing.Size(190, 43);
-			this.radioButtonMangle.TabIndex = 3;
-			this.radioButtonMangle.Tag = "Mangle";
-			this.radioButtonMangle.Text = "Mangle - For when you can\'t get behind your target to Shred, such as is common in" +
-				" PvP";
-			this.radioButtonMangle.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonMangle.UseVisualStyleBackColor = true;
-			this.radioButtonMangle.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// groupBoxPrimaryAttack
-			// 
-			this.groupBoxPrimaryAttack.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonBoth);
-			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonShred);
-			this.groupBoxPrimaryAttack.Controls.Add(this.radioButtonMangle);
-			this.groupBoxPrimaryAttack.Enabled = false;
-			this.groupBoxPrimaryAttack.Location = new System.Drawing.Point(3, 425);
-			this.groupBoxPrimaryAttack.Name = "groupBoxPrimaryAttack";
-			this.groupBoxPrimaryAttack.Size = new System.Drawing.Size(203, 170);
-			this.groupBoxPrimaryAttack.TabIndex = 4;
-			this.groupBoxPrimaryAttack.TabStop = false;
-			this.groupBoxPrimaryAttack.Text = "Primary Attack - Not Implemented Yet";
-			// 
-			// radioButtonBoth
-			// 
-			this.radioButtonBoth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonBoth.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonBoth.Checked = true;
-			this.radioButtonBoth.Enabled = false;
-			this.radioButtonBoth.Location = new System.Drawing.Point(6, 119);
-			this.radioButtonBoth.Name = "radioButtonBoth";
-			this.radioButtonBoth.Size = new System.Drawing.Size(190, 45);
-			this.radioButtonBoth.TabIndex = 3;
-			this.radioButtonBoth.TabStop = true;
-			this.radioButtonBoth.Tag = "Both";
-			this.radioButtonBoth.Text = "Both - For when you are behind the target, and are doing the Mangling yourself";
-			this.radioButtonBoth.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonBoth.UseVisualStyleBackColor = true;
-			this.radioButtonBoth.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// radioButtonShred
-			// 
-			this.radioButtonShred.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonShred.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonShred.Enabled = false;
-			this.radioButtonShred.Location = new System.Drawing.Point(6, 68);
-			this.radioButtonShred.Name = "radioButtonShred";
-			this.radioButtonShred.Size = new System.Drawing.Size(191, 45);
-			this.radioButtonShred.TabIndex = 3;
-			this.radioButtonShred.Tag = "Shred";
-			this.radioButtonShred.Text = "Shred - For when the target is being Mangled by someone else, such as when a bear" +
-				" is tanking";
-			this.radioButtonShred.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonShred.UseVisualStyleBackColor = true;
-			this.radioButtonShred.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// groupBoxFinisher
-			// 
-			this.groupBoxFinisher.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBoxFinisher.Controls.Add(this.radioButtonNone);
-			this.groupBoxFinisher.Controls.Add(this.radioButtonFerociousBite);
-			this.groupBoxFinisher.Controls.Add(this.radioButtonRip);
-			this.groupBoxFinisher.Enabled = false;
-			this.groupBoxFinisher.Location = new System.Drawing.Point(3, 601);
-			this.groupBoxFinisher.Name = "groupBoxFinisher";
-			this.groupBoxFinisher.Size = new System.Drawing.Size(203, 170);
-			this.groupBoxFinisher.TabIndex = 4;
-			this.groupBoxFinisher.TabStop = false;
-			this.groupBoxFinisher.Text = "Finisher - Not Implemented Yet";
-			// 
-			// radioButtonNone
-			// 
-			this.radioButtonNone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonNone.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonNone.Enabled = false;
-			this.radioButtonNone.Location = new System.Drawing.Point(6, 119);
-			this.radioButtonNone.Name = "radioButtonNone";
-			this.radioButtonNone.Size = new System.Drawing.Size(190, 45);
-			this.radioButtonNone.TabIndex = 3;
-			this.radioButtonNone.Tag = "None";
-			this.radioButtonNone.Text = "None - For when the target can\'t bleed and you want sustained damage";
-			this.radioButtonNone.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonNone.UseVisualStyleBackColor = true;
-			this.radioButtonNone.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// radioButtonFerociousBite
-			// 
-			this.radioButtonFerociousBite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonFerociousBite.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonFerociousBite.Enabled = false;
-			this.radioButtonFerociousBite.Location = new System.Drawing.Point(6, 68);
-			this.radioButtonFerociousBite.Name = "radioButtonFerociousBite";
-			this.radioButtonFerociousBite.Size = new System.Drawing.Size(191, 45);
-			this.radioButtonFerociousBite.TabIndex = 3;
-			this.radioButtonFerociousBite.Tag = "Ferocious Bite";
-			this.radioButtonFerociousBite.Text = "Ferocious Bite - For when the target can\'t bleed and you want burst damage";
-			this.radioButtonFerociousBite.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonFerociousBite.UseVisualStyleBackColor = true;
-			this.radioButtonFerociousBite.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// radioButtonRip
-			// 
-			this.radioButtonRip.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonRip.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonRip.Checked = true;
-			this.radioButtonRip.Enabled = false;
-			this.radioButtonRip.Location = new System.Drawing.Point(6, 19);
-			this.radioButtonRip.Name = "radioButtonRip";
-			this.radioButtonRip.Size = new System.Drawing.Size(190, 43);
-			this.radioButtonRip.TabIndex = 3;
-			this.radioButtonRip.TabStop = true;
-			this.radioButtonRip.Tag = "Rip";
-			this.radioButtonRip.Text = "Rip - For when the target can bleed and you want sustained damage";
-			this.radioButtonRip.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonRip.UseVisualStyleBackColor = true;
-			this.radioButtonRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			this.checkBoxGlyphOfMangle.AutoSize = true;
+			this.checkBoxGlyphOfMangle.Location = new System.Drawing.Point(6, 82);
+			this.checkBoxGlyphOfMangle.Name = "checkBoxGlyphOfMangle";
+			this.checkBoxGlyphOfMangle.Size = new System.Drawing.Size(103, 17);
+			this.checkBoxGlyphOfMangle.TabIndex = 1;
+			this.checkBoxGlyphOfMangle.Text = "Glyph of Mangle";
+			this.checkBoxGlyphOfMangle.UseVisualStyleBackColor = true;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(16, 33);
+			this.label4.Location = new System.Drawing.Point(3, 58);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(58, 39);
-			this.label4.TabIndex = 0;
-			this.label4.Text = "Expose\r\nWeakness\r\nAP Bonus:";
-			this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			this.label4.Size = new System.Drawing.Size(76, 13);
+			this.label4.TabIndex = 5;
+			this.label4.Text = "Duration (sec):";
 			// 
-			// trackBarExposeWeakness
+			// numericUpDownDuration
 			// 
-			this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this.numericUpDownDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarExposeWeakness.LargeChange = 50;
-			this.trackBarExposeWeakness.Location = new System.Drawing.Point(75, 30);
-			this.trackBarExposeWeakness.Maximum = 500;
-			this.trackBarExposeWeakness.Minimum = 50;
-			this.trackBarExposeWeakness.Name = "trackBarExposeWeakness";
-			this.trackBarExposeWeakness.Size = new System.Drawing.Size(139, 45);
-			this.trackBarExposeWeakness.SmallChange = 10;
-			this.trackBarExposeWeakness.TabIndex = 2;
-			this.trackBarExposeWeakness.TickFrequency = 25;
-			this.trackBarExposeWeakness.Value = 200;
-			this.trackBarExposeWeakness.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelExposeWeakness
-			// 
-			this.labelExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelExposeWeakness.AutoSize = true;
-			this.labelExposeWeakness.Location = new System.Drawing.Point(80, 62);
-			this.labelExposeWeakness.Name = "labelExposeWeakness";
-			this.labelExposeWeakness.Size = new System.Drawing.Size(25, 13);
-			this.labelExposeWeakness.TabIndex = 0;
-			this.labelExposeWeakness.Text = "200";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(16, 84);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(54, 26);
-			this.label5.TabIndex = 0;
-			this.label5.Text = "Bloodlust\r\nUptime %:";
-			this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// trackBarBloodlustUptime
-			// 
-			this.trackBarBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarBloodlustUptime.Location = new System.Drawing.Point(75, 81);
-			this.trackBarBloodlustUptime.Maximum = 100;
-			this.trackBarBloodlustUptime.Minimum = 5;
-			this.trackBarBloodlustUptime.Name = "trackBarBloodlustUptime";
-			this.trackBarBloodlustUptime.Size = new System.Drawing.Size(139, 45);
-			this.trackBarBloodlustUptime.TabIndex = 2;
-			this.trackBarBloodlustUptime.TickFrequency = 5;
-			this.trackBarBloodlustUptime.Value = 15;
-			this.trackBarBloodlustUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelBloodlustUptime
-			// 
-			this.labelBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelBloodlustUptime.AutoSize = true;
-			this.labelBloodlustUptime.Location = new System.Drawing.Point(80, 113);
-			this.labelBloodlustUptime.Name = "labelBloodlustUptime";
-			this.labelBloodlustUptime.Size = new System.Drawing.Size(27, 13);
-			this.labelBloodlustUptime.TabIndex = 0;
-			this.labelBloodlustUptime.Text = "15%";
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(16, 135);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(54, 39);
-			this.label7.TabIndex = 0;
-			this.label7.Text = "Drums\r\nof Battle\r\nUptime %:";
-			this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// trackBarDrumsOfBattleUptime
-			// 
-			this.trackBarDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarDrumsOfBattleUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarDrumsOfBattleUptime.Location = new System.Drawing.Point(75, 132);
-			this.trackBarDrumsOfBattleUptime.Maximum = 100;
-			this.trackBarDrumsOfBattleUptime.Minimum = 20;
-			this.trackBarDrumsOfBattleUptime.Name = "trackBarDrumsOfBattleUptime";
-			this.trackBarDrumsOfBattleUptime.Size = new System.Drawing.Size(139, 45);
-			this.trackBarDrumsOfBattleUptime.TabIndex = 2;
-			this.trackBarDrumsOfBattleUptime.TickFrequency = 5;
-			this.trackBarDrumsOfBattleUptime.Value = 25;
-			this.trackBarDrumsOfBattleUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelDrumsOfBattleUptime
-			// 
-			this.labelDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDrumsOfBattleUptime.AutoSize = true;
-			this.labelDrumsOfBattleUptime.Location = new System.Drawing.Point(80, 164);
-			this.labelDrumsOfBattleUptime.Name = "labelDrumsOfBattleUptime";
-			this.labelDrumsOfBattleUptime.Size = new System.Drawing.Size(27, 13);
-			this.labelDrumsOfBattleUptime.TabIndex = 0;
-			this.labelDrumsOfBattleUptime.Text = "25%";
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(16, 186);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(54, 39);
-			this.label9.TabIndex = 0;
-			this.label9.Text = "Drums\r\nof War\r\nUptime %:";
-			this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// trackBarDrumsOfWarUptime
-			// 
-			this.trackBarDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarDrumsOfWarUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarDrumsOfWarUptime.Location = new System.Drawing.Point(75, 183);
-			this.trackBarDrumsOfWarUptime.Maximum = 100;
-			this.trackBarDrumsOfWarUptime.Minimum = 20;
-			this.trackBarDrumsOfWarUptime.Name = "trackBarDrumsOfWarUptime";
-			this.trackBarDrumsOfWarUptime.Size = new System.Drawing.Size(139, 45);
-			this.trackBarDrumsOfWarUptime.TabIndex = 2;
-			this.trackBarDrumsOfWarUptime.TickFrequency = 5;
-			this.trackBarDrumsOfWarUptime.Value = 25;
-			this.trackBarDrumsOfWarUptime.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelDrumsOfWarUptime
-			// 
-			this.labelDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelDrumsOfWarUptime.AutoSize = true;
-			this.labelDrumsOfWarUptime.Location = new System.Drawing.Point(80, 215);
-			this.labelDrumsOfWarUptime.Name = "labelDrumsOfWarUptime";
-			this.labelDrumsOfWarUptime.Size = new System.Drawing.Size(27, 13);
-			this.labelDrumsOfWarUptime.TabIndex = 0;
-			this.labelDrumsOfWarUptime.Text = "25%";
-			// 
-			// radioButtonAldor
-			// 
-			this.radioButtonAldor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonAldor.AutoSize = true;
-			this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonAldor.Checked = true;
-			this.radioButtonAldor.Location = new System.Drawing.Point(7, 402);
-			this.radioButtonAldor.Name = "radioButtonAldor";
-			this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
-			this.radioButtonAldor.TabIndex = 3;
-			this.radioButtonAldor.TabStop = true;
-			this.radioButtonAldor.Tag = "Mangle";
-			this.radioButtonAldor.Text = "Aldor";
-			this.radioButtonAldor.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonAldor.UseVisualStyleBackColor = true;
-			this.radioButtonAldor.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// radioButtonScryer
-			// 
-			this.radioButtonScryer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.radioButtonScryer.AutoSize = true;
-			this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonScryer.Location = new System.Drawing.Point(83, 402);
-			this.radioButtonScryer.Name = "radioButtonScryer";
-			this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
-			this.radioButtonScryer.TabIndex = 3;
-			this.radioButtonScryer.Tag = "Shred";
-			this.radioButtonScryer.Text = "Scryer";
-			this.radioButtonScryer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-			this.radioButtonScryer.UseVisualStyleBackColor = true;
-			this.radioButtonScryer.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(16, 237);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(60, 39);
-			this.label6.TabIndex = 0;
-			this.label6.Text = "Number of\r\nFerocious\r\nInspirations";
-			this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// trackBarNumberOfFerociousInspirations
-			// 
-			this.trackBarNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(75, 234);
-			this.trackBarNumberOfFerociousInspirations.Maximum = 4;
-			this.trackBarNumberOfFerociousInspirations.Minimum = 1;
-			this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
-			this.trackBarNumberOfFerociousInspirations.Size = new System.Drawing.Size(139, 45);
-			this.trackBarNumberOfFerociousInspirations.TabIndex = 2;
-			this.trackBarNumberOfFerociousInspirations.Value = 2;
-			this.trackBarNumberOfFerociousInspirations.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
-			// 
-			// labelNumberOfFerociousInspirations
-			// 
-			this.labelNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.labelNumberOfFerociousInspirations.AutoSize = true;
-			this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(80, 266);
-			this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
-			this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
-			this.labelNumberOfFerociousInspirations.TabIndex = 0;
-			this.labelNumberOfFerociousInspirations.Text = "2";
+			this.numericUpDownDuration.Location = new System.Drawing.Point(83, 56);
+			this.numericUpDownDuration.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+			this.numericUpDownDuration.Minimum = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+			this.numericUpDownDuration.Name = "numericUpDownDuration";
+			this.numericUpDownDuration.Size = new System.Drawing.Size(185, 20);
+			this.numericUpDownDuration.TabIndex = 6;
+			this.numericUpDownDuration.ThousandsSeparator = true;
+			this.numericUpDownDuration.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
 			// 
 			// CalculationOptionsPanelCat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
-			this.Controls.Add(this.radioButtonScryer);
-			this.Controls.Add(this.radioButtonAldor);
-			this.Controls.Add(this.groupBoxFinisher);
-			this.Controls.Add(this.groupBoxPrimaryAttack);
-			this.Controls.Add(this.labelNumberOfFerociousInspirations);
-			this.Controls.Add(this.labelDrumsOfWarUptime);
-			this.Controls.Add(this.labelDrumsOfBattleUptime);
-			this.Controls.Add(this.labelBloodlustUptime);
-			this.Controls.Add(this.labelExposeWeakness);
-			this.Controls.Add(this.labelTargetArmorDescription);
-			this.Controls.Add(this.trackBarNumberOfFerociousInspirations);
-			this.Controls.Add(this.trackBarDrumsOfWarUptime);
-			this.Controls.Add(this.trackBarDrumsOfBattleUptime);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.trackBarBloodlustUptime);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.trackBarExposeWeakness);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.trackBarTargetArmor);
-			this.Controls.Add(this.label5);
-			this.Controls.Add(this.comboBoxPowershift);
+			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.checkBoxGlyphOfMangle);
+			this.Controls.Add(this.checkBoxGlyphOfRip);
+			this.Controls.Add(this.numericUpDownDuration);
 			this.Controls.Add(this.label4);
+			this.Controls.Add(this.numericUpDownTargetArmor);
 			this.Controls.Add(this.label3);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label1);
 			this.Name = "CalculationOptionsPanelCat";
-			this.Size = new System.Drawing.Size(209, 827);
-			((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
-			this.groupBoxPrimaryAttack.ResumeLayout(false);
-			this.groupBoxFinisher.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
+			this.Size = new System.Drawing.Size(271, 827);
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -559,35 +259,17 @@
 
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ComboBox comboBoxTargetLevel;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.CheckBox checkBoxShred;
+		private System.Windows.Forms.CheckBox checkBoxRip;
+		private System.Windows.Forms.CheckBox checkBoxFerociousBite;
+		private System.Windows.Forms.ComboBox comboBoxSavageRoar;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.NumericUpDown numericUpDownTargetArmor;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.ComboBox comboBoxPowershift;
-		private System.Windows.Forms.TrackBar trackBarTargetArmor;
-		private System.Windows.Forms.Label labelTargetArmorDescription;
-		private System.Windows.Forms.RadioButton radioButtonMangle;
-		private System.Windows.Forms.GroupBox groupBoxPrimaryAttack;
-		private System.Windows.Forms.RadioButton radioButtonBoth;
-		private System.Windows.Forms.RadioButton radioButtonShred;
-		private System.Windows.Forms.GroupBox groupBoxFinisher;
-		private System.Windows.Forms.RadioButton radioButtonNone;
-		private System.Windows.Forms.RadioButton radioButtonFerociousBite;
-		private System.Windows.Forms.RadioButton radioButtonRip;
+		private System.Windows.Forms.CheckBox checkBoxGlyphOfRip;
+		private System.Windows.Forms.CheckBox checkBoxGlyphOfMangle;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.TrackBar trackBarExposeWeakness;
-		private System.Windows.Forms.Label labelExposeWeakness;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
-		private System.Windows.Forms.Label labelBloodlustUptime;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TrackBar trackBarDrumsOfBattleUptime;
-		private System.Windows.Forms.Label labelDrumsOfBattleUptime;
-		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.TrackBar trackBarDrumsOfWarUptime;
-		private System.Windows.Forms.Label labelDrumsOfWarUptime;
-		private System.Windows.Forms.RadioButton radioButtonAldor;
-		private System.Windows.Forms.RadioButton radioButtonScryer;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.TrackBar trackBarNumberOfFerociousInspirations;
-		private System.Windows.Forms.Label labelNumberOfFerociousInspirations;
+		private System.Windows.Forms.NumericUpDown numericUpDownDuration;
 	}
 }

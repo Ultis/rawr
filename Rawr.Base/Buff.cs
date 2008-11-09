@@ -1291,7 +1291,7 @@ namespace Rawr
             {
                 Name = "Thunderheart Harness 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { BonusRipDamageMultiplier = .15f, BonusSwipeDamageMultiplier = .15f },
+                Stats = { BonusRipDamageMultiplier = .15f, BonusFerociousBiteDamageMultiplier = .15f, BonusSwipeDamageMultiplier = .15f },
                 SetName = "Thunderheart Harness",
                 SetThreshold = 4
             });

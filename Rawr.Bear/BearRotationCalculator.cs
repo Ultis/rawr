@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr
+namespace Rawr.Bear
 {
 	public class BearRotationCalculator
 	{
@@ -59,13 +59,13 @@ namespace Rawr
 		}
 
 		/// <summary>
-		/// Gets 
+		/// Gets calculations about a bear rotation
 		/// </summary>
-		/// <param name="useMaul">null = no auto or maul, false = auto, true = maul</param>
-		/// <param name="useMangle"></param>
-		/// <param name="useSwipe"></param>
-		/// <param name="useFaerieFire"></param>
-		/// <param name="useLacerate"></param>
+		/// <param name="useMaul">Null = no auto or maul, false = auto, true = maul</param>
+		/// <param name="useMangle">Whether to use Mangle</param>
+		/// <param name="useSwipe">Whether to use Swipe</param>
+		/// <param name="useFaerieFire">Whether to use Faerie Fire (Feral)</param>
+		/// <param name="useLacerate">Whether to use Lacerate</param>
 		public BearRotationCalculation GetRotationCalculations(bool? useMaul, bool useMangle, bool useSwipe, bool useFaerieFire, bool useLacerate)
 		{
 			//36 GCDs, 54 sec

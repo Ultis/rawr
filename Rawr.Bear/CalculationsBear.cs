@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rawr
+namespace Rawr.Bear
 {
 	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", Character.CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
@@ -231,9 +231,9 @@ the Threat Scale defined on the Options tab.",
 			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 75 : 65; //TODO: Find correct base agi values at 80
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
-			float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi / 44f; //TODO: Find correct Agi->Dodge ratio
+			float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * 0.024f; //TODO: Find correct Agi->Dodge ratio
 			float missNonDR = stats.Miss * 100f - levelDifference;
-			float dodgePreDR = (stats.Agility - baseAgi) / 44f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
+			float dodgePreDR = (stats.Agility - baseAgi) * 0.024f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
 			float missPreDR = (defSkill * 0.04f);
 			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
 			float missPostDR = 1f / (1f / 116.890707f + 0.972f / missPreDR);
@@ -666,7 +666,7 @@ the Threat Scale defined on the Options tab.",
 
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
 
-			Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character);
+			Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
 			statsWeapon.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
 			statsWeapon.AttackPower += statsWeapon.Strength * 2;
 

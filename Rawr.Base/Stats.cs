@@ -93,6 +93,8 @@ namespace Rawr
         ManaRestoreFromMaxManaPerHit,
         ManaRestoreFromMaxManaPerSecond,
         MangleCostReduction,
+		RakeCostReduction,
+		ShredCostReduction,
         MementoProc,
         Miss,
         MoonfireDmg,
@@ -181,9 +183,13 @@ namespace Rawr
 		SpellPower,
         RenewDurationIncrease,
         SWPDurationIncrease,
-        ManaGainOnGreaterHealOverheal,
+		ManaGainOnGreaterHealOverheal,
 		BonusRageOnCrit,
-		MangleCooldownReduction
+		BonusCPOnCrit,
+		BonusEnergyOnTigersFury,
+		FinisherEnergyOnAvoid,
+		MangleCooldownReduction,
+		BonusFerociousBiteCrit
     }
 
     enum MultiplicativeStat : int
@@ -216,6 +222,9 @@ namespace Rawr
 		BonusStrengthMultiplier,
 		BonusSwipeDamageMultiplier,
 		BonusMangleDamageMultiplier,
+		BonusShredDamageMultiplier,
+		BonusRakeDamageMultiplier,
+		BonusFerociousBiteDamageMultiplier,
 		BonusMaulDamageMultiplier,
 		BonusEnrageDamageMultiplier,
 		BonusShadowDamageMultiplier,
@@ -1034,7 +1043,21 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MangleCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.MangleCostReduction] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float RakeCostReduction
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.RakeCostReduction]; }
+			set { _rawAdditiveData[(int)AdditiveStat.RakeCostReduction] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float ShredCostReduction
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.ShredCostReduction]; }
+			set { _rawAdditiveData[(int)AdditiveStat.ShredCostReduction] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float ExposeWeakness
@@ -2049,7 +2072,16 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRipDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRipDamageMultiplier] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Ferocious Bite Dmg")]
+		public float BonusFerociousBiteDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFerociousBiteDamageMultiplier] = value; }
+		}
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -2076,6 +2108,24 @@ namespace Rawr
 		{
 			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier]; }
 			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMaulDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Rake Dmg")]
+		public float BonusRakeDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Shred Dmg")]
+		public float BonusShredDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShredDamageMultiplier] = value; }
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2141,7 +2191,6 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Percentage]
 		[DisplayName("Bonus Rage on Crit")]
 		public float BonusRageOnCrit
 		{
@@ -2150,12 +2199,43 @@ namespace Rawr
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Percentage]
+		[DisplayName("Bonus Ferocious Bite Crit Chance")]
+		public float BonusFerociousBiteCrit
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusFerociousBiteCrit]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusFerociousBiteCrit] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus CP on Crit")]
+		public float BonusCPOnCrit
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusCPOnCrit] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[DisplayName("Mangle Cooldown Reduction")]
 		public float MangleCooldownReduction
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction]; }
 			set { _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Energy On Tiger's Fury")]
+		public float BonusEnergyOnTigersFury
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusEnergyOnTigersFury] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Finisher Energy On Avoid")]
+		public float FinisherEnergyOnAvoid
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid]; }
+			set { _rawAdditiveData[(int)AdditiveStat.FinisherEnergyOnAvoid] = value; }
 		}
 
         // Holy Priest set bonuses
