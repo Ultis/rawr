@@ -128,7 +128,8 @@ namespace Rawr.HolyPriest
                     MaxHeal = sd.MaxHeal;
                     CastTime = sd.CastTime;
                 }
-            Name = string.Format("{0}, Rank {1}", name, Rank);
+//            Name = string.Format("{0}, Rank {1}", name, Rank);
+            Name = name;
             GlobalCooldown = Math.Max(1.5f / (1 + stats.SpellHaste), 1.0f);
             if (CastTime == 0)
                 CastTime = GlobalCooldown;

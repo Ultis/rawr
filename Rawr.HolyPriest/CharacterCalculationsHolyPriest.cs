@@ -71,9 +71,12 @@ namespace Rawr.HolyPriest
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
             dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
             //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
-            dictValues.Add("Mp5", Math.Floor(BasicStats.Mp5).ToString("0"));
-            dictValues.Add("Regen InFSR", Math.Floor(BasicStats.Mp5 + RegenInFSR).ToString("0"));
-            dictValues.Add("Regen OutFSR", Math.Floor(BasicStats.Mp5 + RegenOutFSR).ToString("0"));
+            dictValues.Add("In FSR MP5", string.Format("{0}*{1} from MP5\r\n{2} from Meditation\r\n{3} Outside FSR\r\n{4} OFSR w/MP5 from Gear",
+                (BasicStats.Mp5 + RegenInFSR).ToString("0"),
+                BasicStats.Mp5.ToString("0"),
+                RegenInFSR.ToString("0"),
+                RegenOutFSR.ToString("0"),
+                (BasicStats.Mp5 + RegenOutFSR).ToString("0")));
             dictValues.Add("Spell Crit", string.Format("{0}%*{1}% from Intellect\r\n{2}% from {5} Crit rating\r\n{3}% Class Base\r\n{4}% from Buffs",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"), (BasicStats.Intellect / 80f).ToString("0.00"), (BasicStats.CritRating / 22.08f).ToString("0.00"), 1.24f, (BasicStats.SpellCrit * 100f - 1.24f - BasicStats.CritRating / 22.08 - BasicStats.Intellect / 80).ToString("0.00"), BasicStats.CritRating));
             dictValues.Add("Healing Crit", string.Format("{0}%*{1} ({1}%) points in Holy Specialization\r\n{2} ({3}%) points in Renewed Hope",

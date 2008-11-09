@@ -187,7 +187,8 @@ namespace Rawr.ShadowPriest
                     MinDamage = sd.MinDamage;
                     MaxDamage = sd.MaxDamage;
                 }
-            Name = string.Format("{0}, Rank {1}", name, Rank);
+            //Name = string.Format("{0}, Rank {1}", name, Rank);
+            Name = name;
             ManaCost = manaCost;
             CastTime = castTime;
             DebuffDuration = dotDuration;

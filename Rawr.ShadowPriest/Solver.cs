@@ -134,7 +134,7 @@ namespace Rawr.ShadowPriest
         {
             foreach (Spell spell in SpellPriority)
             {
-                if (spell.Name == name)
+                if (spell.Name.Contains(name))
                     return spell;
             }
             return null;
@@ -191,6 +191,8 @@ namespace Rawr.ShadowPriest
             SWD = GetSpellByName("Shadow Word: Death");
             MB = GetSpellByName("Mind Blast");
             DP = GetSpellByName("Devouring Plague");
+            if (SWP == null)
+                "".ToString();
 
             if (VE != null)
             {   // Functional yet abysmal method of moving VE to bottom of priority.

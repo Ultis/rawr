@@ -51,9 +51,7 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Intellect",
 					"Basic Stats:Spirit",
                     "Basic Stats:Spell Power",
-					"Basic Stats:Mp5",
-					"Basic Stats:Regen InFSR",
-					"Basic Stats:Regen OutFSR",
+					"Basic Stats:In FSR MP5",
                     "Basic Stats:Spell Crit",
 					"Basic Stats:Healing Crit",
 					"Basic Stats:Spell Haste",
@@ -656,11 +654,11 @@ namespace Rawr.HolyPriest
                     spellList.Add(new Renew(p.BasicStats, character));
                     spellList.Add(new FlashHeal(p.BasicStats, character));
                     spellList.Add(new Heal(p.BasicStats, character));
-                    spellList.Add(new PrayerOfHealing(p.BasicStats, character));
+                    spellList.Add(new PrayerOfHealing(p.BasicStats, character, 1));
                     spellList.Add(new BindingHeal(p.BasicStats, character));
-                    spellList.Add(new PrayerOfMending(p.BasicStats, character));
-                    spellList.Add(new CircleOfHealing(p.BasicStats, character));
-                    spellList.Add(new HolyNova(p.BasicStats, character));
+                    spellList.Add(new PrayerOfMending(p.BasicStats, character, 1));
+                    spellList.Add(new CircleOfHealing(p.BasicStats, character, 1));
+                    spellList.Add(new HolyNova(p.BasicStats, character, 1));
                     spellList.Add(new Penance(p.BasicStats, character));
                     spellList.Add(new PowerWordShield(p.BasicStats, character));
 
@@ -685,11 +683,11 @@ namespace Rawr.HolyPriest
                     spellList.Add(new Renew(p.BasicStats, character));
                     spellList.Add(new FlashHeal(p.BasicStats, character));
                     spellList.Add(new Heal(p.BasicStats, character));
-                    spellList.Add(new PrayerOfHealing(p.BasicStats, character));
+                    spellList.Add(new PrayerOfHealing(p.BasicStats, character, 1));
                     spellList.Add(new BindingHeal(p.BasicStats, character));
-                    spellList.Add(new PrayerOfMending(p.BasicStats, character));
-                    spellList.Add(new CircleOfHealing(p.BasicStats, character));
-                    spellList.Add(new HolyNova(p.BasicStats, character));
+                    spellList.Add(new PrayerOfMending(p.BasicStats, character, 1));
+                    spellList.Add(new CircleOfHealing(p.BasicStats, character, 1));
+                    spellList.Add(new HolyNova(p.BasicStats, character, 1));
                     spellList.Add(new Penance(p.BasicStats, character));
                     spellList.Add(new PowerWordShield(p.BasicStats, character));
 
