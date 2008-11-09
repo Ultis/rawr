@@ -7,6 +7,163 @@ namespace Rawr
 {
 	public static class SpecialEffects
 	{
+        public static void ProcessMetaGem(string line, Stats stats, bool bisArmory)
+        {
+            List<string> gemBonuses = new List<string>();
+			string[] gemBonusStrings = line.Split(new string[] { " and ", " & ", ", " }, StringSplitOptions.None);
+			foreach (string gemBonusString in gemBonusStrings)
+			{
+                if (gemBonusString.IndexOf('+') != gemBonusString.LastIndexOf('+'))
+                {
+                    gemBonuses.Add(gemBonusString.Substring(0, gemBonusString.IndexOf(" +")));
+                    gemBonuses.Add(gemBonusString.Substring(gemBonusString.IndexOf(" +") + 1));
+                }
+                else
+                    gemBonuses.Add(gemBonusString);
+			}
+            foreach (string gemBonus in gemBonuses)
+            {
+                if (gemBonus == "Spell Damage +6")
+                {
+                    stats.SpellPower = 6.0f;
+                }
+                else if (gemBonus == "Stamina +6")
+                {
+                    stats.Stamina = 6.0f;
+                }
+                else if (gemBonus == "Chance to restore mana on spellcast")
+                {
+                    stats.ManaRestorePerCast_5_15 = 300; // IED
+                }
+                else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
+                {
+                    stats.SpellHasteFor6SecOnCast_15_45 = 320; // MSD changed in 2.4
+                }
+                else if (gemBonus == "+5% Shield Block Value")
+                {
+                    stats.BonusBlockValueMultiplier = 0.05f;
+                }
+                else if (gemBonus == "+2% Intellect")
+                {
+                    stats.BonusIntellectMultiplier = 0.02f;
+                }
+                else if (gemBonus == "2% Reduced Threat")
+                {
+                    stats.ThreatReductionMultiplier = 0.02f;
+                }
+                else
+                {
+                    try
+                    {
+                        int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
+                        switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
+                        {
+                            case "Resist All":
+                                stats.ArcaneResistance = gemBonusValue;
+                                stats.FireResistance = gemBonusValue;
+                                stats.FrostResistance = gemBonusValue;
+                                stats.NatureResistance = gemBonusValue;
+                                stats.ShadowResistance = gemBonusValue;
+                                break;
+                            case "Increased Critical Damage":
+                                stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
+                                stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+                                break;
+                            case "Agility":
+                                stats.Agility = gemBonusValue;
+                                break;
+                            case "Stamina":
+                                stats.Stamina = gemBonusValue;
+                                break;
+                            case "Dodge Rating":
+                                stats.DodgeRating = gemBonusValue;
+                                break;
+                            case "Parry Rating":
+                                stats.ParryRating = gemBonusValue;
+                                break;
+                            case "Block Rating":
+                                stats.BlockRating = gemBonusValue;
+                                break;
+                            case "Defense Rating":
+                                stats.DefenseRating = gemBonusValue;
+                                break;
+                            case "Hit Rating":
+                                stats.HitRating = gemBonusValue;
+                                break;
+                            case "Haste Rating":
+                                stats.HasteRating = gemBonusValue;
+                                break;
+                            case "Expertise Rating":
+                                stats.ExpertiseRating = gemBonusValue;
+                                break;
+                            case "Armor Penetration Rating":
+                                stats.ArmorPenetrationRating = gemBonusValue;
+                                break;
+                            case "Strength":
+                                stats.Strength = gemBonusValue;
+                                break;
+                            case "Crit Rating":
+                            case "Crit Strike Rating":
+                            case "Critical Rating":
+                            case "Critical Strike Rating":
+                                stats.CritRating = gemBonusValue;
+                                break;
+                            case "Attack Power":
+                                stats.AttackPower = gemBonusValue;
+                                break;
+                            case "Weapon Damage":
+                                stats.WeaponDamage = gemBonusValue;
+                                break;
+                            case "Resilience":
+                            case "Resilience Rating":
+                                stats.Resilience = gemBonusValue;
+                                break;
+                            case "Spell Hit Rating":
+                                stats.HitRating = gemBonusValue;
+                                break;
+                            case "Spell Haste Rating":
+                                stats.HasteRating = gemBonusValue;
+                                break;
+                            case "Spell Damage":
+                                // Ignore spell damage from gem if Healing has already been applied, as it might be a "9 Healing 3 Spell" gem. 
+                                if (stats.SpellPower == 0)
+                                    stats.SpellPower = gemBonusValue;
+                                break;
+                            case "Spell Damage and Healing":
+                                stats.SpellPower = gemBonusValue;
+                                break;
+                            case "Healing":
+                                stats.SpellPower = (float)Math.Round(gemBonusValue / 1.88f);
+                                break;
+                            case "Spell Power":
+                                stats.SpellPower = gemBonusValue;
+                                break;
+                            case "Spell Crit":
+                            case "Spell Crit Rating":
+                            case "Spell Critical":
+                            case "Spell Critical Rating":
+                                stats.CritRating = gemBonusValue;
+                                break;
+                            case "Mana every 5 seconds":
+                            case "Mana ever 5 Sec":
+                            case "mana per 5 sec":
+                            case "mana per 5 sec.":
+                            case "Mana per 5 Seconds":
+                                stats.Mp5 = gemBonusValue;
+                                break;
+                            case "Intellect":
+                                stats.Intellect = gemBonusValue;
+                                break;
+                            case "Spirit":
+                                stats.Spirit = gemBonusValue;
+                                break;
+                        }
+                    }
+                    catch { }
+                }
+            }
+        }
+
 		public static void ProcessEquipLine(string line, Stats stats, bool isArmory)
 		{
 			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))

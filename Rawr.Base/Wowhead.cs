@@ -220,8 +220,19 @@ namespace Rawr
 						ProcessKeyValue(item, key, val);
 					}
 				}
-				if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
-			}
+				if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);            
+            }
+
+            if (item.Slot == Item.ItemSlot.Meta)
+            {
+                if (htmlTooltip.Contains("<span class=\"q1\">") && htmlTooltip.Contains("</span>"))
+                {
+                    string line = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q1\">") + "<span class=\"q1\">".Length);
+                    line = line.Substring(0, line.IndexOf("</span>"));
+                    SpecialEffects.ProcessMetaGem(line, item.Stats, false);
+                }
+                else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
+            }
 
 			List<string> useLines = new List<string>();
 			List<string> equipLines = new List<string>();

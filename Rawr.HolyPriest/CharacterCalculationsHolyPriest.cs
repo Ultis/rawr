@@ -84,8 +84,7 @@ namespace Rawr.HolyPriest
 
             dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());
-            dictValues.Add("Greater Heal", new GreaterHeal(BasicStats, character).ToString());
-            //dictValues.Add("Heal", new Heal(BasicStats, character).ToString());
+            dictValues.Add("Greater Heal", new Heal(BasicStats, character).ToString());
             dictValues.Add("PoH", new PrayerOfHealing(BasicStats, character).ToString());
             dictValues.Add("Binding Heal", new BindingHeal(BasicStats, character).ToString());
             dictValues.Add("Prayer of Mending", new PrayerOfMending(BasicStats, character).ToString());
