@@ -7,7 +7,7 @@ namespace Rawr.Hunter
 	[Serializable]
 	public class CalculationOptionsHunter : ICalculationOptionBase
 	{
-		private int _TargetLevel = 73;
+		private int _TargetLevel = 83;
 		private int _TargetArmor = 7700;
 		private Aspect _Aspect = Aspect.Hawk;
 		private ShotRotation _shotRotation = ShotRotation.OneToOne;

@@ -41,13 +41,17 @@ namespace Rawr.Hunter
         double armorReduction;
         double talentedArmorReduction;
 
+        HunterRatings ratings;
+
 
         public ShotRotationCalculator(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter options, double totalStaticHaste, double effectiveRAPAgainstMob, double abilitiesCritDmgModifier, double yellowCritDmgModifier, double weaponDamageAverage, double ammoDamage, double talentModifiers)
         {
+            ratings = new HunterRatings();
+
             this.character = character;
             this.calculatedStats = calculatedStats;
             this.options = options;
-            this.hawkRAPBonus = 155 * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
+            this.hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
             this.totalStaticHaste = totalStaticHaste;
             this.effectiveRAPAgainstMob = effectiveRAPAgainstMob;
             this.abilitiesCritDmgModifier = abilitiesCritDmgModifier;
@@ -55,10 +59,10 @@ namespace Rawr.Hunter
             this.weaponDamageAverage = weaponDamageAverage;
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
-            double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0));
+            double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
             this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
-            targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0) - character.HunterTalents.PiercingShots * 0.02); // TODO: Level80
+            targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0) - character.HunterTalents.PiercingShots * 0.02);
             
             this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
@@ -169,7 +173,7 @@ namespace Rawr.Hunter
             //chimeraDmg *= this.talentedArmorReduction; // Both dmg components seem to be nature damage
 
 
-            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
+            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.SERPENT_BONUS_DMG;
             double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
             serpentStingDmg *= serpentTalentModifiers;
             
@@ -186,7 +190,7 @@ namespace Rawr.Hunter
             double explosiveCrit = calculatedStats.BasicStats.PhysicalCrit + 0.03 * character.HunterTalents.TNT + 0.02 * character.HunterTalents.SurvivalInstincts;
             double critHitModifier = (explosiveCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double explosiveShotDmg = 0.08 * (effectiveRAPAgainstMob + hawkRAPBonus) + 238; // TODO: Level80
+            double explosiveShotDmg = ratings.EXPLOSIVE_AP_SCALE * (effectiveRAPAgainstMob + hawkRAPBonus) + ratings.EXPLOSIVE_BONUS_DMG;
 
             explosiveShotDmg *= critHitModifier * talentModifiers;
 
@@ -200,7 +204,7 @@ namespace Rawr.Hunter
         {
             double steadyCritDmgModifier = abilitiesCritDmgModifier + 0.02 * character.HunterTalents.MarkedForDeath;
             double critHitModifier = (calculatedStats.BasicStats.PhysicalCrit * steadyCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
-            double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 108; // TODO: Level80
+            double steadyShotDmg = weaponDamageAverage + ammoDamage + (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.STEADY_AP_SCALE + ratings.STEADY_BONUS_DMG;
 
             steadyShotDmg *= critHitModifier * talentModifiers;
 
@@ -215,7 +219,7 @@ namespace Rawr.Hunter
             double arcaneShotCrit = calculatedStats.BasicStats.PhysicalCrit + 0.02 * character.HunterTalents.SurvivalInstincts;
 
             double critHitModifier = (arcaneShotCrit * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
-            double arcaneShotDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.15 + 273; // TODO: Level80
+            double arcaneShotDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.ARCANE_AP_SCALE + ratings.ARCANE_BONUS_DMG;
 
             double asTalentModifiers = 1.0 + character.HunterTalents.ImprovedArcaneShot * 0.05;
 
@@ -229,7 +233,7 @@ namespace Rawr.Hunter
 
         protected void ShotSerpentSting(RotationInfo info)
         {
-            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * 0.20 + 660; // TODO: Level80
+            double serpentStingDmg = (effectiveRAPAgainstMob + hawkRAPBonus) * ratings.SERPENT_AP_SCALE + ratings.SERPENT_BONUS_DMG;
 
             double serpentTalentModifiers = 1.0 + character.HunterTalents.ImprovedStings * 0.10;
 
@@ -241,10 +245,9 @@ namespace Rawr.Hunter
 
         protected void ShotMulti(RotationInfo info)
         {
-            // TODO: Level80
             double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
+            double shotDmg = (weaponDamageAverage + ratings.MULTI_BONUS_DMG) * critHitModifier;
             shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
             info.rotationDmg += shotDmg * armorReduction;
@@ -253,10 +256,9 @@ namespace Rawr.Hunter
 
         protected void ShotAimed(RotationInfo info)
         {
-            // TODO: Level80
             double critHitModifier = ((calculatedStats.BasicStats.PhysicalCrit + character.HunterTalents.ImprovedBarrage * 0.04) * abilitiesCritDmgModifier + 1.0) * calculatedStats.BasicStats.PhysicalHit;
 
-            double shotDmg = (weaponDamageAverage + 205.0) * critHitModifier;
+            double shotDmg = (weaponDamageAverage + ratings.AIMED_BONUS_DMG) * critHitModifier;
             shotDmg *= talentModifiers * (1.0 + character.HunterTalents.Barrage * 0.04);
 
             info.rotationDmg += shotDmg * talentedArmorReduction;

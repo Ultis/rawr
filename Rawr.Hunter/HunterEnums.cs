@@ -83,23 +83,37 @@ namespace Rawr.Hunter
 
     public class HunterRatings
     {
-        public double BASE_HIT_PERCENT = .95;
-        public double HIT_RATING_PER_PERCENT = 15.76;
+        public double BASE_HIT_PERCENT = .95; // Check
+        public double HIT_RATING_PER_PERCENT = 32.78998947;
 
-        public double AGILITY_PER_CRIT = 40;
-        public double BASE_CRIT_PERCENT = -.0153;
-        public double CRIT_RATING_PER_PERCENT = 22.0765;
+        public double AGILITY_PER_CRIT = 83.33333333;
+        public double BASE_CRIT_PERCENT = -.0153; // Check
+        public double CRIT_RATING_PER_PERCENT = 45.90598679;
 
-        public double HASTE_RATING_PER_PERCENT = 15.70;
+        public double ARP_RATING_PER_PERCENT = 15.39529991;
+
+        public double HASTE_RATING_PER_PERCENT = 32.78998947;
 
         public double QUIVER_SPEED_INCREASE = 1.15;
-        public double STEADYSHOT_BASE_DAMAGE = 150;
-        public double STEADYSHOT_BASE_MANA = 110;
 
-        public double AUTO_SHOT_CAST_TIME = .5;
-        public double STEADY_SHOT_CAST_TIME = 1.5;
 
-        public int MAX_SHOT_TABLE_LOOPS = 50;
+        public double STEADY_AP_SCALE = 0.2;
+        public double STEADY_BONUS_DMG = 252.0;
+
+        public double EXPLOSIVE_AP_SCALE = 0.08;
+        public double EXPLOSIVE_BONUS_DMG = (238.0 + 286.0)/2.0;
+
+        public double ARCANE_AP_SCALE = 0.15;
+        public double ARCANE_BONUS_DMG = 492.0;
+
+        public double SERPENT_AP_SCALE = 0.2;
+        public double SERPENT_BONUS_DMG = 1210.0;
+
+        public double MULTI_BONUS_DMG = 408.0;
+
+        public double AIMED_BONUS_DMG = 408.0;
+
+        public double HAWK_BONUS_AP = 300.0;
     }
 
 

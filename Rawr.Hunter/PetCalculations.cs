@@ -50,10 +50,13 @@ namespace Rawr.Hunter
 
             petStats.AttackPower = (petStats.Strength - 10f) * 2f;
             petStats.AttackPower += (calculatedStats.BasicStats.RangedAttackPower * .22f);
+            petStats.AttackPower += (calculatedStats.BasicStats.Stamina * 0.1f * character.HunterTalents.HunterVsWild);
 
             #region Hit
             double petHitChance = calculatedStats.BasicStats.PhysicalHit;
-            petHitChance += (.02 * character.HunterTalents.AnimalHandler);
+
+            //TODO: Animal Handler
+
 
             /*
             if (character.Race == Character.CharacterRace.Draenei)

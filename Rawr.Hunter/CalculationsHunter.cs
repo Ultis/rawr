@@ -379,8 +379,7 @@ namespace Rawr.Hunter
 
             HunterRatings ratings = new HunterRatings();
 
-            double hawkRAPBonus = 155.0 * (1.0 + 0.5 * character.HunterTalents.AspectMastery); // TODO: Level80
-
+            double hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
             #region Remove Any Incorrect Modelling
             /*
             bool hasDST = false;
@@ -515,7 +514,7 @@ namespace Rawr.Hunter
 
                 autoshotDmg *= talentModifiers;
 
-                double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (7.40384579 * 100.0)); // TODO: Level80
+                double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
                 double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
                 autoshotDmg *= 1.0 - armorReduction;
@@ -658,13 +657,12 @@ namespace Rawr.Hunter
 								+ (character.Race == Character.CharacterRace.Draenei ? .01 : 0)
 								+ statsTalents.PhysicalHit);
 
-            // TODO: Change for level 80
-			//=IF((B54-B53) - 10 > 0,  ((B54-B53) -10) * -0.004 - 0.02, (B54-B53) * -0.001)
-			if (targetDefence > 360)
+
+			if (targetDefence > 410)
 			{
-				statsTotal.PhysicalHit = statsTotal.PhysicalHit - (targetDefence - 360) * .004f - .02f;
+				statsTotal.PhysicalHit = statsTotal.PhysicalHit - (targetDefence - 410) * .004f - .02f;
 			} else {
-				statsTotal.PhysicalHit -= ((targetDefence - 350) * .001f);
+				statsTotal.PhysicalHit -= ((targetDefence - 400) * .001f);
 			}
             if (statsTotal.PhysicalHit > 1.0f)
 			{

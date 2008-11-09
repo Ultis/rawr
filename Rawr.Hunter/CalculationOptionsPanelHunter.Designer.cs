@@ -74,10 +74,10 @@
             this.cmbTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTargetLevel.FormattingEnabled = true;
             this.cmbTargetLevel.Items.AddRange(new object[] {
-            "70",
-            "71",
-            "72",
-            "73"});
+            "80",
+            "81",
+            "82",
+            "83"});
             this.cmbTargetLevel.Location = new System.Drawing.Point(122, 11);
             this.cmbTargetLevel.Name = "cmbTargetLevel";
             this.cmbTargetLevel.Size = new System.Drawing.Size(131, 21);
