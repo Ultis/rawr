@@ -98,6 +98,7 @@
 			this.checkBoxShred.TabIndex = 1;
 			this.checkBoxShred.Text = "Shred";
 			this.checkBoxShred.UseVisualStyleBackColor = true;
+			this.checkBoxShred.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// checkBoxRip
 			// 
@@ -108,6 +109,7 @@
 			this.checkBoxRip.TabIndex = 1;
 			this.checkBoxRip.Text = "Rip";
 			this.checkBoxRip.UseVisualStyleBackColor = true;
+			this.checkBoxRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// checkBoxFerociousBite
 			// 
@@ -118,13 +120,13 @@
 			this.checkBoxFerociousBite.TabIndex = 1;
 			this.checkBoxFerociousBite.Text = "Ferocious Bite";
 			this.checkBoxFerociousBite.UseVisualStyleBackColor = true;
+			this.checkBoxFerociousBite.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// comboBoxSavageRoar
 			// 
 			this.comboBoxSavageRoar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.comboBoxSavageRoar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxSavageRoar.Enabled = false;
 			this.comboBoxSavageRoar.FormattingEnabled = true;
 			this.comboBoxSavageRoar.Items.AddRange(new object[] {
             "1",
@@ -166,6 +168,7 @@
             0,
             0,
             0});
+			this.numericUpDownTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// label3
 			// 
@@ -185,6 +188,7 @@
 			this.checkBoxGlyphOfRip.TabIndex = 1;
 			this.checkBoxGlyphOfRip.Text = "Glyph of Rip";
 			this.checkBoxGlyphOfRip.UseVisualStyleBackColor = true;
+			this.checkBoxGlyphOfRip.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// checkBoxGlyphOfMangle
 			// 
@@ -195,6 +199,7 @@
 			this.checkBoxGlyphOfMangle.TabIndex = 1;
 			this.checkBoxGlyphOfMangle.Text = "Glyph of Mangle";
 			this.checkBoxGlyphOfMangle.UseVisualStyleBackColor = true;
+			this.checkBoxGlyphOfMangle.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// label4
 			// 
@@ -229,6 +234,7 @@
             0,
             0,
             0});
+			this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// CalculationOptionsPanelCat
 			// 

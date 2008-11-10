@@ -419,9 +419,13 @@ namespace Rawr
 					break;
 
 				case "mleatkpwr":
-				case "rgdatkpwr":
 				case "feratkpwr":
 					item.Stats.AttackPower += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
+					break;
+
+				case "rgdatkpwr":
+					if (item.Stats.AttackPower != float.Parse(value, System.Globalization.CultureInfo.InvariantCulture))
+						item.Stats.RangedAttackPower = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
 				case "block":

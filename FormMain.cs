@@ -1427,6 +1427,31 @@ namespace Rawr
 			}
 		}
 
+		private void FormMain_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == (Keys)192 && e.Modifiers == Keys.Alt)
+			{
+				ToString(); //Breakpoint Here
+
+				Character charBase = Character.Clone();
+				Character charMark = Character.Clone();
+				Character charHost = Character.Clone();
+				charBase.Trinket1 = null;
+				charMark.Trinket1 = ItemCache.FindItemById(13966);
+				charHost.Trinket1 = ItemCache.FindItemById(42128);
+
+				Stats statsBase = Calculations.GetCharacterStats(charBase);
+				Stats statsMark = Calculations.GetCharacterStats(charMark);
+				Stats statsHost = Calculations.GetCharacterStats(charHost);
+
+				CharacterCalculationsBase calcBase = Calculations.GetCharacterCalculations(charBase);
+				CharacterCalculationsBase calcMark = Calculations.GetCharacterCalculations(charMark);
+				CharacterCalculationsBase calcHost = Calculations.GetCharacterCalculations(charHost);
+
+				ToString();
+			}
+		}
+
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
 		//    FormItemEditor itemEditor = new FormItemEditor(Character);

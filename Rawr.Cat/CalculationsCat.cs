@@ -30,6 +30,10 @@ namespace Rawr.Cat
 			{
 				if (_characterDisplayCalculationLabels == null)
 					_characterDisplayCalculationLabels = new string[] {
+					"Summary:Overall Points*Sum of your DPS Points and Survivability Points",
+					"Summary:DPS Points*DPS Points is your theoretical DPS.",
+					"Summary:Survivability Points*One hundreth of your health.",
+
 					"Basic Stats:Health",
 					"Basic Stats:Attack Power",
 					"Basic Stats:Agility",
@@ -38,25 +42,23 @@ namespace Rawr.Cat
 					"Basic Stats:Hit Rating",
 					"Basic Stats:Expertise Rating",
 					"Basic Stats:Haste Rating",
-					"Basic Stats:Armor Penetration",
+					"Basic Stats:Armor Penetration Rating",
 					"Basic Stats:Weapon Damage",
+					
 					"Complex Stats:Avoided Attacks",
-					"Complex Stats:White Crit",
-					"Complex Stats:Yellow Crit",
+					"Complex Stats:Crit Chance",
 					"Complex Stats:Attack Speed",
 					"Complex Stats:Armor Mitigation",
-					"Complex Stats:Shreds Per Cycle",
-					"Complex Stats:Cycle Time",
-					"Complex Stats:4cp Finishers",
-					"Complex Stats:5cp Finishers",
-					"Complex Stats:Mangle Damage",
-					"Complex Stats:Shred Damage",
-					"Complex Stats:Melee Damage",
-					"Complex Stats:Rip Damage",
-					"Complex Stats:Bite Damage",
-					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
-					"Complex Stats:Survivability Points*One thousandth of your health.",
-					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Cats only have DPS, so Overall Points will always be identical to DPS Points."
+					
+					"Attacks:Melee Damage",
+					"Attacks:Mangle Damage",
+					"Attacks:Shred Damage",
+					"Attacks:Rake Damage",
+					"Attacks:Rip Damage",
+					"Attacks:Bite Damage",
+					"Attacks:Optimal Rotation",
+					"Attacks:Optimal Rotation DPS",
+					"Attacks:Custom Rotation DPS",
 				};
 				return _characterDisplayCalculationLabels;
 			}
@@ -69,6 +71,7 @@ namespace Rawr.Cat
 			{
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
+					"Custom Rotation DPS",
 					"Health",
 					"Avoided Attacks %",
                     "Nature Resist",
@@ -88,8 +91,6 @@ namespace Rawr.Cat
 			{
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
-					"Combat Table (White)",
-					"Combat Table (Yellow)",
 					"Relative Stat Values"
 					};
 				return _customChartNames;
@@ -155,16 +156,7 @@ namespace Rawr.Cat
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
-			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
-			//    Cost, Damage
-			//Melee
-			//Mangle
-			//Rake
-			//Savage Roar
-			//Rip
-			//Ferocious Bite
-			//Shred
 
 			#region Basic Chances and Constants
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
@@ -225,7 +217,7 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Energy Costs
-			float mangleEnergyRaw = 40f - stats.MangleCatCostReduction;
+			float mangleEnergyRaw = 45f - stats.MangleCatCostReduction;
 			float shredEnergyRaw = 60f - stats.ShredCostReduction;
 			float rakeEnergyRaw = 40f - stats.RakeCostReduction;
 			float ripEnergyRaw = 30f;
@@ -241,14 +233,52 @@ namespace Rawr.Cat
 			float roarEnergyAverage = roarEnergyRaw;
 			#endregion
 
-			CatRotationCalculator calculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
+			#region Rotations
+			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
 				(!character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma")),
 				calcOpts.GlyphOfMangle ? 18f : 12f, calcOpts.GlyphOfRip ? 16f : 12f, attackSpeed, 
 				character.DruidTalents.OmenOfClarity > 0, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
+			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
 
-			calculatedStats.DPSPoints = calculatedStats.OverallPoints = calculator.GetRotationCalculations(true, true, true, 5).DPS;
+			StringBuilder rotations = new StringBuilder();
+			for (int roarCP = 1; roarCP < 6; roarCP++)
+				for (int useShred = 0; useShred < 2; useShred++)
+					for (int useRip = 0; useRip < 2; useRip++)
+						for (int useFerociousBite = 0; useFerociousBite < 2; useFerociousBite++)
+						{
+							CatRotationCalculator.CatRotationCalculation rotationCalculation =
+								rotationCalculator.GetRotationCalculations(
+								useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
+							rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
+							if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+								rotationCalculationDPS = rotationCalculation;
+						}
+
+
+			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
+			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
+				calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
+			calculatedStats.Rotations = rotations.ToString();
+			#endregion
+
+			calculatedStats.MeleeDamagePerHit = meleeDamageRaw;
+			calculatedStats.MeleeDamagePerSwing = meleeDamageAverage;
+			calculatedStats.MangleDamagePerHit = mangleDamageRaw;
+			calculatedStats.MangleDamagePerSwing = mangleDamageAverage * chanceNonAvoided;
+			calculatedStats.ShredDamagePerHit = shredDamageRaw;
+			calculatedStats.ShredDamagePerSwing = shredDamageAverage * chanceNonAvoided;
+			calculatedStats.RakeDamagePerHit = rakeDamageRaw;
+			calculatedStats.RakeDamagePerSwing = rakeDamageAverage * chanceNonAvoided;
+			calculatedStats.RipDamagePerHit = ripDamageRaw;
+			calculatedStats.RipDamagePerSwing = ripDamageAverage * chanceNonAvoided;
+			calculatedStats.BiteDamagePerHit = biteDamageRaw;
+			calculatedStats.BiteDamagePerSwing = biteDamageAverage * chanceNonAvoided;
+
+			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS;
+			calculatedStats.SurvivabilityPoints = stats.Health / 100f;
+			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			return calculatedStats;
 			
 			#region OLD - Toskk's DPS calculations from 2.0
@@ -551,7 +581,8 @@ namespace Rawr.Cat
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
-			
+
+			#region OLD - Manul Stat Summing
 			//float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			//float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			//float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
@@ -604,7 +635,8 @@ namespace Rawr.Cat
 			//    statsEnchants.ShadowResistanceBuff + statsRace.ShadowResistanceBuff + statsBaseGear.ShadowResistanceBuff + statsBuffs.ShadowResistanceBuff;
 			//statsTotal.ArcaneResistance = statsEnchants.ArcaneResistance + statsRace.ArcaneResistance + statsBaseGear.ArcaneResistance + statsBuffs.ArcaneResistance +
 			//    statsEnchants.ArcaneResistanceBuff + statsRace.ArcaneResistanceBuff + statsBaseGear.ArcaneResistanceBuff + statsBuffs.ArcaneResistanceBuff;
-            
+			#endregion
+
 			return statsTotal;
 		}
 
@@ -612,41 +644,41 @@ namespace Rawr.Cat
 		{
 			switch (chartName)
 			{
-				case "Combat Table (White)":
-					CharacterCalculationsCat currentCalculationsCatWhite = GetCharacterCalculations(character) as CharacterCalculationsCat;
-					ComparisonCalculationCat calcMissWhite = new ComparisonCalculationCat()		{ Name = "    Miss    " };
-					ComparisonCalculationCat calcDodgeWhite = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
-					ComparisonCalculationCat calcCritWhite = new ComparisonCalculationCat()		{ Name = "  Crit  " };
-					ComparisonCalculationCat calcGlanceWhite = new ComparisonCalculationCat()	{ Name = " Glance " };
-					ComparisonCalculationCat calcHitWhite = new ComparisonCalculationCat()		{ Name = "Hit" };
-					if (currentCalculationsCatWhite != null)
-					{
-						calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsCatWhite.MissedAttacks;
-						calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsCatWhite.DodgedAttacks;
-						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsCatWhite.WhiteCrit;
-						calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 23.35774f;
-						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
-							calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
-					}
-					return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
+				//case "Combat Table (White)":
+				//    CharacterCalculationsCat currentCalculationsCatWhite = GetCharacterCalculations(character) as CharacterCalculationsCat;
+				//    ComparisonCalculationCat calcMissWhite = new ComparisonCalculationCat()		{ Name = "    Miss    " };
+				//    ComparisonCalculationCat calcDodgeWhite = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
+				//    ComparisonCalculationCat calcCritWhite = new ComparisonCalculationCat()		{ Name = "  Crit  " };
+				//    ComparisonCalculationCat calcGlanceWhite = new ComparisonCalculationCat()	{ Name = " Glance " };
+				//    ComparisonCalculationCat calcHitWhite = new ComparisonCalculationCat()		{ Name = "Hit" };
+				//    if (currentCalculationsCatWhite != null)
+				//    {
+				//        calcMissWhite.OverallPoints = calcMissWhite.DPSPoints = currentCalculationsCatWhite.MissedAttacks;
+				//        calcDodgeWhite.OverallPoints = calcDodgeWhite.DPSPoints = currentCalculationsCatWhite.DodgedAttacks;
+				//        calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsCatWhite.WhiteCrit;
+				//        calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 23.35774f;
+				//        calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
+				//            calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
+				//    }
+				//    return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
-				case "Combat Table (Yellow)":
-					CharacterCalculationsCat currentCalculationsCatYellow = GetCharacterCalculations(character) as CharacterCalculationsCat;
-					ComparisonCalculationCat calcMissYellow = new ComparisonCalculationCat()	{ Name = "    Miss    " };
-					ComparisonCalculationCat calcDodgeYellow = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
-					ComparisonCalculationCat calcCritYellow = new ComparisonCalculationCat()	{ Name = "  Crit  " };
-					ComparisonCalculationCat calcGlanceYellow = new ComparisonCalculationCat()	{ Name = " Glance " };
-					ComparisonCalculationCat calcHitYellow = new ComparisonCalculationCat()		{ Name = "Hit" };
-					if (currentCalculationsCatYellow != null)
-					{
-						calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsCatYellow.MissedAttacks;
-						calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsCatYellow.DodgedAttacks;
-						calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsCatYellow.YellowCrit;
-						calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
-						calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
-							calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
-					}
-					return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
+				//case "Combat Table (Yellow)":
+				//    CharacterCalculationsCat currentCalculationsCatYellow = GetCharacterCalculations(character) as CharacterCalculationsCat;
+				//    ComparisonCalculationCat calcMissYellow = new ComparisonCalculationCat()	{ Name = "    Miss    " };
+				//    ComparisonCalculationCat calcDodgeYellow = new ComparisonCalculationCat()	{ Name = "   Dodge   " };
+				//    ComparisonCalculationCat calcCritYellow = new ComparisonCalculationCat()	{ Name = "  Crit  " };
+				//    ComparisonCalculationCat calcGlanceYellow = new ComparisonCalculationCat()	{ Name = " Glance " };
+				//    ComparisonCalculationCat calcHitYellow = new ComparisonCalculationCat()		{ Name = "Hit" };
+				//    if (currentCalculationsCatYellow != null)
+				//    {
+				//        calcMissYellow.OverallPoints = calcMissYellow.DPSPoints = currentCalculationsCatYellow.MissedAttacks;
+				//        calcDodgeYellow.OverallPoints = calcDodgeYellow.DPSPoints = currentCalculationsCatYellow.DodgedAttacks;
+				//        calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsCatYellow.YellowCrit;
+				//        calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
+				//        calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
+				//            calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
+				//    }
+				//    return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
 
 				case "Relative Stat Values":
 					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
@@ -862,190 +894,68 @@ namespace Rawr.Cat
 			set { _subPoints[1] = value; }
 		}
 
-		private Stats _basicStats;
-		public Stats BasicStats
-		{
-			get { return _basicStats; }
-			set { _basicStats = value; }
-		}
+		public Stats BasicStats { get; set; }
+		public int TargetLevel { get; set; }
 
-		private int _targetLevel;
-		public int TargetLevel
-		{
-			get { return _targetLevel; }
-			set { _targetLevel = value; }
-		}
+		public float AvoidedAttacks { get; set; }
+		public float DodgedAttacks { get; set; }
+		public float MissedAttacks { get; set; }
+		public float CritChance { get; set; }
+		public float AttackSpeed { get; set; }
+		public float ArmorMitigation { get; set; }
 
-		private float _avoidedAttacks;
-		public float AvoidedAttacks
-		{
-			get { return _avoidedAttacks; }
-			set { _avoidedAttacks = value; }
-		}
+		public float MeleeDamagePerHit { get; set; }
+		public float MangleDamagePerHit { get; set; }
+		public float ShredDamagePerHit { get; set; }
+		public float RakeDamagePerHit { get; set; }
+		public float RipDamagePerHit { get; set; }
+		public float BiteDamagePerHit { get; set; }
 
-		private float _dodgedAttacks;
-		public float DodgedAttacks
-		{
-			get { return _dodgedAttacks; }
-			set { _dodgedAttacks = value; }
-		}
+		public float MeleeDamagePerSwing { get; set; }
+		public float MangleDamagePerSwing { get; set; }
+		public float ShredDamagePerSwing { get; set; }
+		public float RakeDamagePerSwing { get; set; }
+		public float RipDamagePerSwing { get; set; }
+		public float BiteDamagePerSwing { get; set; }
 
-		private float _missedAttacks;
-		public float MissedAttacks
-		{
-			get { return _missedAttacks; }
-			set { _missedAttacks = value; }
-		}
-
-		private float _whiteCrit;
-		public float WhiteCrit
-		{
-			get { return _whiteCrit; }
-			set { _whiteCrit = value; }
-		}
-
-		private float _yellowCrit;
-		public float YellowCrit
-		{
-			get { return _yellowCrit; }
-			set { _yellowCrit = value; }
-		}
-
-		private float _attackSpeed;
-		public float AttackSpeed
-		{
-			get { return _attackSpeed; }
-			set { _attackSpeed = value; }
-		}
-
-		private float _armorMitigation;
-		public float ArmorMitigation
-		{
-			get { return _armorMitigation; }
-			set { _armorMitigation = value; }
-		}
-
-		private float _shredsPerCycle;
-		public float ShredsPerCycle
-		{
-			get { return _shredsPerCycle; }
-			set { _shredsPerCycle = value; }
-		}
-
-		private float _cycleTime;
-		public float CycleTime
-		{
-			get { return _cycleTime; }
-			set { _cycleTime = value; }
-		}
-
-		private float _finishers4cp;
-		public float Finishers4cp
-		{
-			get { return _finishers4cp; }
-			set { _finishers4cp = value; }
-		}
-
-		private float _finishers5cp;
-		public float Finishers5cp
-		{
-			get { return _finishers5cp; }
-			set { _finishers5cp = value; }
-		}
-
-		private float _mangleDamage;
-		public float MangleDamage
-		{
-			get { return _mangleDamage; }
-			set { _mangleDamage = value; }
-		}
-
-		private float _shredDamage;
-		public float ShredDamage
-		{
-			get { return _shredDamage; }
-			set { _shredDamage = value; }
-		}
-
-		private float _meleeDamage;
-		public float MeleeDamage
-		{
-			get { return _meleeDamage; }
-			set { _meleeDamage = value; }
-		}
-
-		private float _ripDamage;
-		public float RipDamage
-		{
-			get { return _ripDamage; }
-			set { _ripDamage = value; }
-		}
-
-		private float _ferociousBiteDamage;
-		public float FerociousBiteDamage
-		{
-			get { return _ferociousBiteDamage; }
-			set { _ferociousBiteDamage = value; }
-		}
-		public List<Buff> ActiveBuffs { get; set; }
+		public CatRotationCalculator.CatRotationCalculation HighestDPSRotation { get; set; }
+		public CatRotationCalculator.CatRotationCalculation CustomRotation { get; set; }
+		
+		public string Rotations { get; set; }
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
-			float critRating = BasicStats.CritRating;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
-				critRating -= 66.24f;
-			critRating -= 264.0768f; //Base 5% + 6% from talents
-			
-			float hitRating = BasicStats.HitRating;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
-				hitRating -= 47.3077f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-				hitRating -= 15.769f;
-
-			float armorPenetration = BasicStats.ArmorPenetration;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")))
-				armorPenetration -= 610f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")))
-				armorPenetration -= 2600f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")))
-				armorPenetration -= 800f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
-				armorPenetration -= 2000f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")))
-				armorPenetration -= 1000f;
-
-			float attackPower = BasicStats.AttackPower;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
-				attackPower -= 121f;
-			
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-			dictValues.Add("Health", BasicStats.Health.ToString());
-			dictValues.Add("Attack Power", attackPower.ToString());
-			dictValues.Add("Agility", BasicStats.Agility.ToString());
-			dictValues.Add("Strength", BasicStats.Strength.ToString());
-			dictValues.Add("Crit Rating", critRating.ToString());
-			dictValues.Add("Hit Rating", hitRating.ToString());
-			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
-			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-			dictValues.Add("Armor Penetration", armorPenetration.ToString());
-			dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
-			dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
-			dictValues.Add("White Crit", WhiteCrit.ToString() + "%");
-			dictValues.Add("Yellow Crit", YellowCrit.ToString() + "%");
-			dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
-			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
-			dictValues.Add("Shreds Per Cycle", ShredsPerCycle.ToString());
-			dictValues.Add("Cycle Time", CycleTime.ToString() + "s");
-			dictValues.Add("4cp Finishers", Finishers4cp.ToString() + "%");
-			dictValues.Add("5cp Finishers", Finishers5cp.ToString() + "%");
-			dictValues.Add("Mangle Damage", MangleDamage.ToString() + "%");
-			dictValues.Add("Shred Damage", ShredDamage.ToString() + "%");
-			dictValues.Add("Melee Damage", MeleeDamage.ToString() + "%");
-			dictValues.Add("Rip Damage", RipDamage.ToString() + "%");
-			dictValues.Add("Bite Damage", FerociousBiteDamage.ToString() + "%");
+			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("DPS Points", DPSPoints.ToString());
 			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
-			dictValues.Add("Overall Points", OverallPoints.ToString());
+			
+			dictValues.Add("Health", BasicStats.Health.ToString());
+			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+			dictValues.Add("Agility", BasicStats.Agility.ToString());
+			dictValues.Add("Strength", BasicStats.Strength.ToString());
+			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
+			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
+			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
+			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+			dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
+			dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
+			
+			dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+			dictValues.Add("Crit Chance", CritChance.ToString() + "%");
+			dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
+			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
+
+			string attackFormat = "{0}*Damage Per Hit: {1}, Damage Per Swing: {2}";
+			dictValues.Add("Melee Damage", string.Format(attackFormat, HighestDPSRotation.MeleeDamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing));
+			dictValues.Add("Mangle Damage", string.Format(attackFormat, HighestDPSRotation.MangleDamageTotal, MangleDamagePerHit, MangleDamagePerSwing));
+			dictValues.Add("Shred Damage", string.Format(attackFormat, HighestDPSRotation.ShredDamageTotal, ShredDamagePerHit, ShredDamagePerSwing));
+			dictValues.Add("Rake Damage", string.Format(attackFormat, HighestDPSRotation.RakeDamageTotal, RakeDamagePerHit, RakeDamagePerSwing));
+			dictValues.Add("Rip Damage", string.Format(attackFormat, HighestDPSRotation.RipDamageTotal, RipDamagePerHit, RipDamagePerSwing));
+			dictValues.Add("Bite Damage", string.Format(attackFormat, HighestDPSRotation.BiteDamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
+			dictValues.Add("Optimal Rotation", HighestDPSRotation.Name);
+			dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
+			dictValues.Add("Custom Rotation DPS", CustomRotation.DPS.ToString());
 			
 			return dictValues;
 		}
@@ -1061,6 +971,7 @@ namespace Rawr.Cat
 				case "Frost Resist": return BasicStats.FrostResistance;
 				case "Shadow Resist": return BasicStats.ShadowResistance;
 				case "Arcane Resist": return BasicStats.ArcaneResistance;
+				case "Custom Rotation DPS": return CustomRotation.DPS;
 			}
 			return 0f;
 		}

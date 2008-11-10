@@ -30,12 +30,8 @@ namespace Rawr
         {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-			this.comboBoxEnchantFinger2 = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantFeet = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantFinger1 = new System.Windows.Forms.ComboBox();
 			this.tabControlCharacter = new System.Windows.Forms.TabControl();
 			this.tabPageStats = new System.Windows.Forms.TabPage();
-			this.calculationDisplay1 = new Rawr.CalculationDisplay();
 			this.label32 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
@@ -52,43 +48,9 @@ namespace Rawr
 			this.label23 = new System.Windows.Forms.Label();
 			this.label25 = new System.Windows.Forms.Label();
 			this.tabPageTalents = new System.Windows.Forms.TabPage();
-			this.talentPicker1 = new Rawr.TalentPicker();
 			this.tabPageBuffs = new System.Windows.Forms.TabPage();
-			this.buffSelector1 = new Rawr.BuffSelector();
 			this.tabPageOptions = new System.Windows.Forms.TabPage();
-			this.comboBoxEnchantLegs = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantChest = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantHands = new System.Windows.Forms.ComboBox();
-			this.itemButtonBack = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonChest = new Rawr.ItemButtonWithEnchant();
-			this.comboBoxEnchantRanged = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantBack = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantOffHand = new System.Windows.Forms.ComboBox();
-			this.itemButtonFeet = new Rawr.ItemButtonWithEnchant();
-			this.comboBoxEnchantMainHand = new System.Windows.Forms.ComboBox();
-			this.itemButtonFinger1 = new Rawr.ItemButtonWithEnchant();
-			this.comboBoxEnchantWrists = new System.Windows.Forms.ComboBox();
-			this.comboBoxEnchantShoulders = new System.Windows.Forms.ComboBox();
-			this.itemButtonFinger2 = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonHands = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonHead = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonRanged = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonLegs = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonNeck = new Rawr.ItemButton();
-			this.comboBoxEnchantHead = new System.Windows.Forms.ComboBox();
-			this.itemButtonProjectileBag = new Rawr.ItemButton();
-			this.itemButtonProjectile = new Rawr.ItemButton();
-			this.itemButtonOffHand = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonShirt = new Rawr.ItemButton();
-			this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonTabard = new Rawr.ItemButton();
-			this.itemButtonTrinket1 = new Rawr.ItemButton();
-			this.itemButtonTrinket2 = new Rawr.ItemButton();
-			this.itemButtonWaist = new Rawr.ItemButton();
-			this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
-			this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
-			this.itemComparison1 = new Rawr.ItemComparison();
 			this.toolStripItemComparison = new System.Windows.Forms.ToolStrip();
 			this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSlot = new System.Windows.Forms.ToolStripDropDownButton();
@@ -179,9 +141,34 @@ namespace Rawr
 			this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.calculationDisplay1 = new Rawr.CalculationDisplay();
+			this.talentPicker1 = new Rawr.TalentPicker();
+			this.buffSelector1 = new Rawr.BuffSelector();
+			this.itemButtonBack = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonChest = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonFeet = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonFinger1 = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonFinger2 = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonHands = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonHead = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonRanged = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonLegs = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonNeck = new Rawr.ItemButton();
+			this.itemButtonProjectileBag = new Rawr.ItemButton();
+			this.itemButtonProjectile = new Rawr.ItemButton();
+			this.itemButtonOffHand = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonShirt = new Rawr.ItemButton();
+			this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonTabard = new Rawr.ItemButton();
+			this.itemButtonTrinket1 = new Rawr.ItemButton();
+			this.itemButtonTrinket2 = new Rawr.ItemButton();
+			this.itemButtonWaist = new Rawr.ItemButton();
+			this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
+			this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
+			this.itemComparison1 = new Rawr.ItemComparison();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -200,30 +187,17 @@ namespace Rawr
 			// 
 			// toolStripContainer1.ContentPanel
 			// 
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantFinger2);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantFeet);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantFinger1);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.tabControlCharacter);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantLegs);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantChest);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantHands);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonBack);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonChest);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantRanged);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantBack);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantOffHand);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonFeet);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantMainHand);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonFinger1);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantWrists);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantShoulders);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonFinger2);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonHands);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonHead);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonRanged);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonLegs);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonNeck);
-			this.toolStripContainer1.ContentPanel.Controls.Add(this.comboBoxEnchantHead);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonProjectileBag);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonProjectile);
 			this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonOffHand);
@@ -247,45 +221,6 @@ namespace Rawr
 			// toolStripContainer1.TopToolStripPanel
 			// 
 			this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.menuStripMain);
-			// 
-			// comboBoxEnchantFinger2
-			// 
-			this.comboBoxEnchantFinger2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantFinger2.DropDownWidth = 260;
-			this.comboBoxEnchantFinger2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantFinger2.FormattingEnabled = true;
-			this.comboBoxEnchantFinger2.Location = new System.Drawing.Point(384, 672);
-			this.comboBoxEnchantFinger2.Name = "comboBoxEnchantFinger2";
-			this.comboBoxEnchantFinger2.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantFinger2.TabIndex = 1;
-			this.comboBoxEnchantFinger2.Visible = false;
-			this.comboBoxEnchantFinger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantFeet
-			// 
-			this.comboBoxEnchantFeet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantFeet.DropDownWidth = 260;
-			this.comboBoxEnchantFeet.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantFeet.FormattingEnabled = true;
-			this.comboBoxEnchantFeet.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantFeet.Name = "comboBoxEnchantFeet";
-			this.comboBoxEnchantFeet.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantFeet.TabIndex = 1;
-			this.comboBoxEnchantFeet.Visible = false;
-			this.comboBoxEnchantFeet.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantFinger1
-			// 
-			this.comboBoxEnchantFinger1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantFinger1.DropDownWidth = 260;
-			this.comboBoxEnchantFinger1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantFinger1.FormattingEnabled = true;
-			this.comboBoxEnchantFinger1.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantFinger1.Name = "comboBoxEnchantFinger1";
-			this.comboBoxEnchantFinger1.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantFinger1.TabIndex = 1;
-			this.comboBoxEnchantFinger1.Visible = false;
-			this.comboBoxEnchantFinger1.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
 			// 
 			// tabControlCharacter
 			// 
@@ -313,17 +248,6 @@ namespace Rawr
 			this.tabPageStats.TabIndex = 0;
 			this.tabPageStats.Text = "Stats";
 			this.tabPageStats.UseVisualStyleBackColor = true;
-			// 
-			// calculationDisplay1
-			// 
-			this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)));
-			this.calculationDisplay1.AutoScroll = true;
-			this.calculationDisplay1.Location = new System.Drawing.Point(0, 121);
-			this.calculationDisplay1.Name = "calculationDisplay1";
-			this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-			this.calculationDisplay1.Size = new System.Drawing.Size(302, 449);
-			this.calculationDisplay1.TabIndex = 5;
 			// 
 			// label32
 			// 
@@ -523,17 +447,6 @@ namespace Rawr
 			this.tabPageTalents.Text = "Talents";
 			this.tabPageTalents.UseVisualStyleBackColor = true;
 			// 
-			// talentPicker1
-			// 
-			this.talentPicker1.Character = null;
-			this.talentPicker1.CustomSpec = null;
-			this.talentPicker1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.talentPicker1.Location = new System.Drawing.Point(3, 3);
-			this.talentPicker1.Name = "talentPicker1";
-			this.talentPicker1.Size = new System.Drawing.Size(297, 583);
-			this.talentPicker1.TabIndex = 0;
-			this.talentPicker1.Talents = null;
-			// 
 			// tabPageBuffs
 			// 
 			this.tabPageBuffs.Controls.Add(this.buffSelector1);
@@ -544,17 +457,6 @@ namespace Rawr
 			this.tabPageBuffs.Text = "Buffs";
 			this.tabPageBuffs.UseVisualStyleBackColor = true;
 			// 
-			// buffSelector1
-			// 
-			this.buffSelector1.AutoScroll = true;
-			this.buffSelector1.Character = null;
-			this.buffSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buffSelector1.Location = new System.Drawing.Point(0, 0);
-			this.buffSelector1.Name = "buffSelector1";
-			this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-			this.buffSelector1.Size = new System.Drawing.Size(303, 589);
-			this.buffSelector1.TabIndex = 0;
-			// 
 			// tabPageOptions
 			// 
 			this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
@@ -563,451 +465,6 @@ namespace Rawr
 			this.tabPageOptions.TabIndex = 3;
 			this.tabPageOptions.Text = "Options";
 			this.tabPageOptions.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxEnchantLegs
-			// 
-			this.comboBoxEnchantLegs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantLegs.DropDownWidth = 260;
-			this.comboBoxEnchantLegs.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantLegs.FormattingEnabled = true;
-			this.comboBoxEnchantLegs.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantLegs.Name = "comboBoxEnchantLegs";
-			this.comboBoxEnchantLegs.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantLegs.TabIndex = 1;
-			this.comboBoxEnchantLegs.Visible = false;
-			this.comboBoxEnchantLegs.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantChest
-			// 
-			this.comboBoxEnchantChest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantChest.DropDownWidth = 260;
-			this.comboBoxEnchantChest.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantChest.FormattingEnabled = true;
-			this.comboBoxEnchantChest.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantChest.Name = "comboBoxEnchantChest";
-			this.comboBoxEnchantChest.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantChest.TabIndex = 1;
-			this.comboBoxEnchantChest.Visible = false;
-			this.comboBoxEnchantChest.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantHands
-			// 
-			this.comboBoxEnchantHands.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantHands.DropDownWidth = 260;
-			this.comboBoxEnchantHands.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantHands.FormattingEnabled = true;
-			this.comboBoxEnchantHands.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantHands.Name = "comboBoxEnchantHands";
-			this.comboBoxEnchantHands.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantHands.TabIndex = 1;
-			this.comboBoxEnchantHands.Visible = false;
-			this.comboBoxEnchantHands.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// itemButtonBack
-			// 
-			this.itemButtonBack.Character = null;
-			this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
-			this.itemButtonBack.ItemIcon = null;
-			this.itemButtonBack.Location = new System.Drawing.Point(3, 257);
-			this.itemButtonBack.Name = "itemButtonBack";
-			this.itemButtonBack.SelectedEnchant = null;
-			this.itemButtonBack.SelectedEnchantId = 0;
-			this.itemButtonBack.SelectedItem = null;
-			this.itemButtonBack.SelectedItemId = 0;
-			this.itemButtonBack.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonBack.TabIndex = 2;
-			this.itemButtonBack.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonChest
-			// 
-			this.itemButtonChest.Character = null;
-			this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
-			this.itemButtonChest.ItemIcon = null;
-			this.itemButtonChest.Location = new System.Drawing.Point(3, 346);
-			this.itemButtonChest.Name = "itemButtonChest";
-			this.itemButtonChest.SelectedEnchant = null;
-			this.itemButtonChest.SelectedEnchantId = 0;
-			this.itemButtonChest.SelectedItem = null;
-			this.itemButtonChest.SelectedItemId = 0;
-			this.itemButtonChest.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonChest.TabIndex = 2;
-			this.itemButtonChest.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxEnchantRanged
-			// 
-			this.comboBoxEnchantRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.comboBoxEnchantRanged.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantRanged.DropDownWidth = 260;
-			this.comboBoxEnchantRanged.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantRanged.FormattingEnabled = true;
-			this.comboBoxEnchantRanged.Location = new System.Drawing.Point(384, 679);
-			this.comboBoxEnchantRanged.Name = "comboBoxEnchantRanged";
-			this.comboBoxEnchantRanged.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantRanged.TabIndex = 1;
-			this.comboBoxEnchantRanged.Visible = false;
-			this.comboBoxEnchantRanged.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantBack
-			// 
-			this.comboBoxEnchantBack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantBack.DropDownWidth = 260;
-			this.comboBoxEnchantBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantBack.FormattingEnabled = true;
-			this.comboBoxEnchantBack.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantBack.Name = "comboBoxEnchantBack";
-			this.comboBoxEnchantBack.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantBack.TabIndex = 1;
-			this.comboBoxEnchantBack.Visible = false;
-			this.comboBoxEnchantBack.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantOffHand
-			// 
-			this.comboBoxEnchantOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.comboBoxEnchantOffHand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantOffHand.DropDownWidth = 260;
-			this.comboBoxEnchantOffHand.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantOffHand.FormattingEnabled = true;
-			this.comboBoxEnchantOffHand.Location = new System.Drawing.Point(384, 684);
-			this.comboBoxEnchantOffHand.Name = "comboBoxEnchantOffHand";
-			this.comboBoxEnchantOffHand.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantOffHand.TabIndex = 1;
-			this.comboBoxEnchantOffHand.Visible = false;
-			this.comboBoxEnchantOffHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// itemButtonFeet
-			// 
-			this.itemButtonFeet.Character = null;
-			this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
-			this.itemButtonFeet.ItemIcon = null;
-			this.itemButtonFeet.Location = new System.Drawing.Point(396, 257);
-			this.itemButtonFeet.Name = "itemButtonFeet";
-			this.itemButtonFeet.SelectedEnchant = null;
-			this.itemButtonFeet.SelectedEnchantId = 0;
-			this.itemButtonFeet.SelectedItem = null;
-			this.itemButtonFeet.SelectedItemId = 0;
-			this.itemButtonFeet.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonFeet.TabIndex = 2;
-			this.itemButtonFeet.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxEnchantMainHand
-			// 
-			this.comboBoxEnchantMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.comboBoxEnchantMainHand.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantMainHand.DropDownWidth = 260;
-			this.comboBoxEnchantMainHand.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantMainHand.FormattingEnabled = true;
-			this.comboBoxEnchantMainHand.Location = new System.Drawing.Point(394, 684);
-			this.comboBoxEnchantMainHand.Name = "comboBoxEnchantMainHand";
-			this.comboBoxEnchantMainHand.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantMainHand.TabIndex = 1;
-			this.comboBoxEnchantMainHand.Visible = false;
-			this.comboBoxEnchantMainHand.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// itemButtonFinger1
-			// 
-			this.itemButtonFinger1.Character = null;
-			this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
-			this.itemButtonFinger1.ItemIcon = null;
-			this.itemButtonFinger1.Location = new System.Drawing.Point(396, 346);
-			this.itemButtonFinger1.Name = "itemButtonFinger1";
-			this.itemButtonFinger1.SelectedEnchant = null;
-			this.itemButtonFinger1.SelectedEnchantId = 0;
-			this.itemButtonFinger1.SelectedItem = null;
-			this.itemButtonFinger1.SelectedItemId = 0;
-			this.itemButtonFinger1.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonFinger1.TabIndex = 2;
-			this.itemButtonFinger1.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxEnchantWrists
-			// 
-			this.comboBoxEnchantWrists.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantWrists.DropDownWidth = 260;
-			this.comboBoxEnchantWrists.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantWrists.FormattingEnabled = true;
-			this.comboBoxEnchantWrists.Location = new System.Drawing.Point(394, 675);
-			this.comboBoxEnchantWrists.Name = "comboBoxEnchantWrists";
-			this.comboBoxEnchantWrists.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantWrists.TabIndex = 1;
-			this.comboBoxEnchantWrists.Visible = false;
-			this.comboBoxEnchantWrists.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// comboBoxEnchantShoulders
-			// 
-			this.comboBoxEnchantShoulders.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantShoulders.DropDownWidth = 260;
-			this.comboBoxEnchantShoulders.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantShoulders.FormattingEnabled = true;
-			this.comboBoxEnchantShoulders.Location = new System.Drawing.Point(384, 673);
-			this.comboBoxEnchantShoulders.Name = "comboBoxEnchantShoulders";
-			this.comboBoxEnchantShoulders.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantShoulders.TabIndex = 1;
-			this.comboBoxEnchantShoulders.Visible = false;
-			this.comboBoxEnchantShoulders.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// itemButtonFinger2
-			// 
-			this.itemButtonFinger2.Character = null;
-			this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
-			this.itemButtonFinger2.ItemIcon = null;
-			this.itemButtonFinger2.Location = new System.Drawing.Point(396, 435);
-			this.itemButtonFinger2.Name = "itemButtonFinger2";
-			this.itemButtonFinger2.SelectedEnchant = null;
-			this.itemButtonFinger2.SelectedEnchantId = 0;
-			this.itemButtonFinger2.SelectedItem = null;
-			this.itemButtonFinger2.SelectedItemId = 0;
-			this.itemButtonFinger2.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonFinger2.TabIndex = 2;
-			this.itemButtonFinger2.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonHands
-			// 
-			this.itemButtonHands.Character = null;
-			this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
-			this.itemButtonHands.ItemIcon = null;
-			this.itemButtonHands.Location = new System.Drawing.Point(396, 3);
-			this.itemButtonHands.Name = "itemButtonHands";
-			this.itemButtonHands.SelectedEnchant = null;
-			this.itemButtonHands.SelectedEnchantId = 0;
-			this.itemButtonHands.SelectedItem = null;
-			this.itemButtonHands.SelectedItemId = 0;
-			this.itemButtonHands.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonHands.TabIndex = 2;
-			this.itemButtonHands.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonHead
-			// 
-			this.itemButtonHead.Character = null;
-			this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
-			this.itemButtonHead.ItemIcon = null;
-			this.itemButtonHead.Location = new System.Drawing.Point(3, 3);
-			this.itemButtonHead.Name = "itemButtonHead";
-			this.itemButtonHead.SelectedEnchant = null;
-			this.itemButtonHead.SelectedEnchantId = 0;
-			this.itemButtonHead.SelectedItem = null;
-			this.itemButtonHead.SelectedItemId = 0;
-			this.itemButtonHead.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonHead.TabIndex = 2;
-			this.itemButtonHead.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonRanged
-			// 
-			this.itemButtonRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.itemButtonRanged.Character = null;
-			this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
-			this.itemButtonRanged.ItemIcon = null;
-			this.itemButtonRanged.Location = new System.Drawing.Point(258, 624);
-			this.itemButtonRanged.Name = "itemButtonRanged";
-			this.itemButtonRanged.SelectedEnchant = null;
-			this.itemButtonRanged.SelectedEnchantId = 0;
-			this.itemButtonRanged.SelectedItem = null;
-			this.itemButtonRanged.SelectedItemId = 0;
-			this.itemButtonRanged.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonRanged.TabIndex = 2;
-			this.itemButtonRanged.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonLegs
-			// 
-			this.itemButtonLegs.Character = null;
-			this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
-			this.itemButtonLegs.ItemIcon = null;
-			this.itemButtonLegs.Location = new System.Drawing.Point(396, 168);
-			this.itemButtonLegs.Name = "itemButtonLegs";
-			this.itemButtonLegs.SelectedEnchant = null;
-			this.itemButtonLegs.SelectedEnchantId = 0;
-			this.itemButtonLegs.SelectedItem = null;
-			this.itemButtonLegs.SelectedItemId = 0;
-			this.itemButtonLegs.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonLegs.TabIndex = 2;
-			this.itemButtonLegs.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonNeck
-			// 
-			this.itemButtonNeck.Character = null;
-			this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
-			this.itemButtonNeck.ItemIcon = null;
-			this.itemButtonNeck.Location = new System.Drawing.Point(3, 92);
-			this.itemButtonNeck.Name = "itemButtonNeck";
-			this.itemButtonNeck.SelectedItem = null;
-			this.itemButtonNeck.SelectedItemId = 0;
-			this.itemButtonNeck.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonNeck.TabIndex = 2;
-			this.itemButtonNeck.Text = "Neck";
-			this.itemButtonNeck.UseVisualStyleBackColor = true;
-			// 
-			// comboBoxEnchantHead
-			// 
-			this.comboBoxEnchantHead.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.comboBoxEnchantHead.DropDownWidth = 260;
-			this.comboBoxEnchantHead.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.comboBoxEnchantHead.FormattingEnabled = true;
-			this.comboBoxEnchantHead.Location = new System.Drawing.Point(384, 675);
-			this.comboBoxEnchantHead.Name = "comboBoxEnchantHead";
-			this.comboBoxEnchantHead.Size = new System.Drawing.Size(70, 20);
-			this.comboBoxEnchantHead.TabIndex = 1;
-			this.comboBoxEnchantHead.Visible = false;
-			this.comboBoxEnchantHead.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnchant_SelectedIndexChanged);
-			// 
-			// itemButtonProjectileBag
-			// 
-			this.itemButtonProjectileBag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.itemButtonProjectileBag.Character = null;
-			this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
-			this.itemButtonProjectileBag.ItemIcon = null;
-			this.itemButtonProjectileBag.Location = new System.Drawing.Point(343, 632);
-			this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
-			this.itemButtonProjectileBag.SelectedItem = null;
-			this.itemButtonProjectileBag.SelectedItemId = 0;
-			this.itemButtonProjectileBag.Size = new System.Drawing.Size(35, 35);
-			this.itemButtonProjectileBag.TabIndex = 2;
-			this.itemButtonProjectileBag.Text = "ProjBag";
-			this.itemButtonProjectileBag.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonProjectile
-			// 
-			this.itemButtonProjectile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.itemButtonProjectile.Character = null;
-			this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
-			this.itemButtonProjectile.ItemIcon = null;
-			this.itemButtonProjectile.Location = new System.Drawing.Point(343, 672);
-			this.itemButtonProjectile.Name = "itemButtonProjectile";
-			this.itemButtonProjectile.SelectedItem = null;
-			this.itemButtonProjectile.SelectedItemId = 0;
-			this.itemButtonProjectile.Size = new System.Drawing.Size(35, 35);
-			this.itemButtonProjectile.TabIndex = 2;
-			this.itemButtonProjectile.Text = "Proj";
-			this.itemButtonProjectile.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonOffHand
-			// 
-			this.itemButtonOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.itemButtonOffHand.Character = null;
-			this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
-			this.itemButtonOffHand.ItemIcon = null;
-			this.itemButtonOffHand.Location = new System.Drawing.Point(173, 624);
-			this.itemButtonOffHand.Name = "itemButtonOffHand";
-			this.itemButtonOffHand.SelectedEnchant = null;
-			this.itemButtonOffHand.SelectedEnchantId = 0;
-			this.itemButtonOffHand.SelectedItem = null;
-			this.itemButtonOffHand.SelectedItemId = 0;
-			this.itemButtonOffHand.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonOffHand.TabIndex = 2;
-			this.itemButtonOffHand.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonShirt
-			// 
-			this.itemButtonShirt.Character = null;
-			this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
-			this.itemButtonShirt.ItemIcon = null;
-			this.itemButtonShirt.Location = new System.Drawing.Point(3, 435);
-			this.itemButtonShirt.Name = "itemButtonShirt";
-			this.itemButtonShirt.SelectedItem = null;
-			this.itemButtonShirt.SelectedItemId = 0;
-			this.itemButtonShirt.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonShirt.TabIndex = 2;
-			this.itemButtonShirt.Text = "Shirt";
-			this.itemButtonShirt.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonShoulders
-			// 
-			this.itemButtonShoulders.Character = null;
-			this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
-			this.itemButtonShoulders.ItemIcon = null;
-			this.itemButtonShoulders.Location = new System.Drawing.Point(3, 168);
-			this.itemButtonShoulders.Name = "itemButtonShoulders";
-			this.itemButtonShoulders.SelectedEnchant = null;
-			this.itemButtonShoulders.SelectedEnchantId = 0;
-			this.itemButtonShoulders.SelectedItem = null;
-			this.itemButtonShoulders.SelectedItemId = 0;
-			this.itemButtonShoulders.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonShoulders.TabIndex = 2;
-			this.itemButtonShoulders.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonTabard
-			// 
-			this.itemButtonTabard.Character = null;
-			this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
-			this.itemButtonTabard.ItemIcon = null;
-			this.itemButtonTabard.Location = new System.Drawing.Point(3, 511);
-			this.itemButtonTabard.Name = "itemButtonTabard";
-			this.itemButtonTabard.SelectedItem = null;
-			this.itemButtonTabard.SelectedItemId = 0;
-			this.itemButtonTabard.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonTabard.TabIndex = 2;
-			this.itemButtonTabard.Text = "Tabard";
-			this.itemButtonTabard.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonTrinket1
-			// 
-			this.itemButtonTrinket1.Character = null;
-			this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
-			this.itemButtonTrinket1.ItemIcon = null;
-			this.itemButtonTrinket1.Location = new System.Drawing.Point(396, 524);
-			this.itemButtonTrinket1.Name = "itemButtonTrinket1";
-			this.itemButtonTrinket1.SelectedItem = null;
-			this.itemButtonTrinket1.SelectedItemId = 0;
-			this.itemButtonTrinket1.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonTrinket1.TabIndex = 2;
-			this.itemButtonTrinket1.Text = "Trinket1";
-			this.itemButtonTrinket1.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonTrinket2
-			// 
-			this.itemButtonTrinket2.Character = null;
-			this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
-			this.itemButtonTrinket2.ItemIcon = null;
-			this.itemButtonTrinket2.Location = new System.Drawing.Point(396, 600);
-			this.itemButtonTrinket2.Name = "itemButtonTrinket2";
-			this.itemButtonTrinket2.SelectedItem = null;
-			this.itemButtonTrinket2.SelectedItemId = 0;
-			this.itemButtonTrinket2.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonTrinket2.TabIndex = 2;
-			this.itemButtonTrinket2.Text = "Trinket2";
-			this.itemButtonTrinket2.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonWaist
-			// 
-			this.itemButtonWaist.Character = null;
-			this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
-			this.itemButtonWaist.ItemIcon = null;
-			this.itemButtonWaist.Location = new System.Drawing.Point(396, 92);
-			this.itemButtonWaist.Name = "itemButtonWaist";
-			this.itemButtonWaist.SelectedItem = null;
-			this.itemButtonWaist.SelectedItemId = 0;
-			this.itemButtonWaist.Size = new System.Drawing.Size(70, 70);
-			this.itemButtonWaist.TabIndex = 2;
-			this.itemButtonWaist.Text = "Waist";
-			this.itemButtonWaist.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonMainHand
-			// 
-			this.itemButtonMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.itemButtonMainHand.Character = null;
-			this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
-			this.itemButtonMainHand.ItemIcon = null;
-			this.itemButtonMainHand.Location = new System.Drawing.Point(88, 624);
-			this.itemButtonMainHand.Name = "itemButtonMainHand";
-			this.itemButtonMainHand.SelectedEnchant = null;
-			this.itemButtonMainHand.SelectedEnchantId = 0;
-			this.itemButtonMainHand.SelectedItem = null;
-			this.itemButtonMainHand.SelectedItemId = 0;
-			this.itemButtonMainHand.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonMainHand.TabIndex = 2;
-			this.itemButtonMainHand.UseVisualStyleBackColor = true;
-			// 
-			// itemButtonWrist
-			// 
-			this.itemButtonWrist.Character = null;
-			this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
-			this.itemButtonWrist.ItemIcon = null;
-			this.itemButtonWrist.Location = new System.Drawing.Point(3, 587);
-			this.itemButtonWrist.Name = "itemButtonWrist";
-			this.itemButtonWrist.SelectedEnchant = null;
-			this.itemButtonWrist.SelectedEnchantId = 0;
-			this.itemButtonWrist.SelectedItem = null;
-			this.itemButtonWrist.SelectedItemId = 0;
-			this.itemButtonWrist.Size = new System.Drawing.Size(70, 83);
-			this.itemButtonWrist.TabIndex = 2;
-			this.itemButtonWrist.UseVisualStyleBackColor = true;
 			// 
 			// groupBox4
 			// 
@@ -1022,19 +479,6 @@ namespace Rawr
 			this.groupBox4.TabIndex = 2;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Comparisons";
-			// 
-			// itemComparison1
-			// 
-			this.itemComparison1.BackColor = System.Drawing.Color.White;
-			this.itemComparison1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.itemComparison1.Character = null;
-			this.itemComparison1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Subpoints;
-			this.itemComparison1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.itemComparison1.Location = new System.Drawing.Point(3, 41);
-			this.itemComparison1.Name = "itemComparison1";
-			this.itemComparison1.Size = new System.Drawing.Size(407, 666);
-			this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
-			this.itemComparison1.TabIndex = 3;
 			// 
 			// toolStripItemComparison
 			// 
@@ -1815,6 +1259,13 @@ namespace Rawr
 			this.updateItemCacheToolStripMenuItem.Text = "Update Item Cache";
 			this.updateItemCacheToolStripMenuItem.Click += new System.EventHandler(this.updateAllItemsToolStripMenuItem_Click_1);
 			// 
+			// reloadKnownWotLKItemsFromWowheadToolStripMenuItem
+			// 
+			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Name = "reloadKnownWotLKItemsFromWowheadToolStripMenuItem";
+			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Text = "Reload Known WotLK Items from Wowhead";
+			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Click += new System.EventHandler(this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click);
+			// 
 			// toolStripSeparator10
 			// 
 			this.toolStripSeparator10.Name = "toolStripSeparator10";
@@ -1827,12 +1278,363 @@ namespace Rawr
 			this.optionsToolStripMenuItem.Text = "Options...";
 			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
 			// 
-			// reloadKnownWotLKItemsFromWowheadToolStripMenuItem
+			// calculationDisplay1
 			// 
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Name = "reloadKnownWotLKItemsFromWowheadToolStripMenuItem";
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Text = "Reload Known WotLK Items from Wowhead";
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Click += new System.EventHandler(this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click);
+			this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
+			this.calculationDisplay1.AutoScroll = true;
+			this.calculationDisplay1.Location = new System.Drawing.Point(0, 121);
+			this.calculationDisplay1.Name = "calculationDisplay1";
+			this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+			this.calculationDisplay1.Size = new System.Drawing.Size(302, 449);
+			this.calculationDisplay1.TabIndex = 5;
+			// 
+			// talentPicker1
+			// 
+			this.talentPicker1.Character = null;
+			this.talentPicker1.CustomSpec = null;
+			this.talentPicker1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.talentPicker1.Location = new System.Drawing.Point(3, 3);
+			this.talentPicker1.Name = "talentPicker1";
+			this.talentPicker1.Size = new System.Drawing.Size(297, 583);
+			this.talentPicker1.TabIndex = 0;
+			this.talentPicker1.Talents = null;
+			// 
+			// buffSelector1
+			// 
+			this.buffSelector1.AutoScroll = true;
+			this.buffSelector1.Character = null;
+			this.buffSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.buffSelector1.Location = new System.Drawing.Point(0, 0);
+			this.buffSelector1.Name = "buffSelector1";
+			this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+			this.buffSelector1.Size = new System.Drawing.Size(303, 589);
+			this.buffSelector1.TabIndex = 0;
+			// 
+			// itemButtonBack
+			// 
+			this.itemButtonBack.Character = null;
+			this.itemButtonBack.CharacterSlot = Rawr.Character.CharacterSlot.Back;
+			this.itemButtonBack.ItemIcon = null;
+			this.itemButtonBack.Location = new System.Drawing.Point(3, 257);
+			this.itemButtonBack.Name = "itemButtonBack";
+			this.itemButtonBack.SelectedEnchant = null;
+			this.itemButtonBack.SelectedEnchantId = 0;
+			this.itemButtonBack.SelectedItem = null;
+			this.itemButtonBack.SelectedItemId = 0;
+			this.itemButtonBack.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonBack.TabIndex = 2;
+			this.itemButtonBack.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonChest
+			// 
+			this.itemButtonChest.Character = null;
+			this.itemButtonChest.CharacterSlot = Rawr.Character.CharacterSlot.Chest;
+			this.itemButtonChest.ItemIcon = null;
+			this.itemButtonChest.Location = new System.Drawing.Point(3, 346);
+			this.itemButtonChest.Name = "itemButtonChest";
+			this.itemButtonChest.SelectedEnchant = null;
+			this.itemButtonChest.SelectedEnchantId = 0;
+			this.itemButtonChest.SelectedItem = null;
+			this.itemButtonChest.SelectedItemId = 0;
+			this.itemButtonChest.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonChest.TabIndex = 2;
+			this.itemButtonChest.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonFeet
+			// 
+			this.itemButtonFeet.Character = null;
+			this.itemButtonFeet.CharacterSlot = Rawr.Character.CharacterSlot.Feet;
+			this.itemButtonFeet.ItemIcon = null;
+			this.itemButtonFeet.Location = new System.Drawing.Point(396, 257);
+			this.itemButtonFeet.Name = "itemButtonFeet";
+			this.itemButtonFeet.SelectedEnchant = null;
+			this.itemButtonFeet.SelectedEnchantId = 0;
+			this.itemButtonFeet.SelectedItem = null;
+			this.itemButtonFeet.SelectedItemId = 0;
+			this.itemButtonFeet.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonFeet.TabIndex = 2;
+			this.itemButtonFeet.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonFinger1
+			// 
+			this.itemButtonFinger1.Character = null;
+			this.itemButtonFinger1.CharacterSlot = Rawr.Character.CharacterSlot.Finger1;
+			this.itemButtonFinger1.ItemIcon = null;
+			this.itemButtonFinger1.Location = new System.Drawing.Point(396, 346);
+			this.itemButtonFinger1.Name = "itemButtonFinger1";
+			this.itemButtonFinger1.SelectedEnchant = null;
+			this.itemButtonFinger1.SelectedEnchantId = 0;
+			this.itemButtonFinger1.SelectedItem = null;
+			this.itemButtonFinger1.SelectedItemId = 0;
+			this.itemButtonFinger1.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonFinger1.TabIndex = 2;
+			this.itemButtonFinger1.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonFinger2
+			// 
+			this.itemButtonFinger2.Character = null;
+			this.itemButtonFinger2.CharacterSlot = Rawr.Character.CharacterSlot.Finger2;
+			this.itemButtonFinger2.ItemIcon = null;
+			this.itemButtonFinger2.Location = new System.Drawing.Point(396, 435);
+			this.itemButtonFinger2.Name = "itemButtonFinger2";
+			this.itemButtonFinger2.SelectedEnchant = null;
+			this.itemButtonFinger2.SelectedEnchantId = 0;
+			this.itemButtonFinger2.SelectedItem = null;
+			this.itemButtonFinger2.SelectedItemId = 0;
+			this.itemButtonFinger2.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonFinger2.TabIndex = 2;
+			this.itemButtonFinger2.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonHands
+			// 
+			this.itemButtonHands.Character = null;
+			this.itemButtonHands.CharacterSlot = Rawr.Character.CharacterSlot.Hands;
+			this.itemButtonHands.ItemIcon = null;
+			this.itemButtonHands.Location = new System.Drawing.Point(396, 3);
+			this.itemButtonHands.Name = "itemButtonHands";
+			this.itemButtonHands.SelectedEnchant = null;
+			this.itemButtonHands.SelectedEnchantId = 0;
+			this.itemButtonHands.SelectedItem = null;
+			this.itemButtonHands.SelectedItemId = 0;
+			this.itemButtonHands.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonHands.TabIndex = 2;
+			this.itemButtonHands.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonHead
+			// 
+			this.itemButtonHead.Character = null;
+			this.itemButtonHead.CharacterSlot = Rawr.Character.CharacterSlot.Head;
+			this.itemButtonHead.ItemIcon = null;
+			this.itemButtonHead.Location = new System.Drawing.Point(3, 3);
+			this.itemButtonHead.Name = "itemButtonHead";
+			this.itemButtonHead.SelectedEnchant = null;
+			this.itemButtonHead.SelectedEnchantId = 0;
+			this.itemButtonHead.SelectedItem = null;
+			this.itemButtonHead.SelectedItemId = 0;
+			this.itemButtonHead.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonHead.TabIndex = 2;
+			this.itemButtonHead.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonRanged
+			// 
+			this.itemButtonRanged.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.itemButtonRanged.Character = null;
+			this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
+			this.itemButtonRanged.ItemIcon = null;
+			this.itemButtonRanged.Location = new System.Drawing.Point(258, 624);
+			this.itemButtonRanged.Name = "itemButtonRanged";
+			this.itemButtonRanged.SelectedEnchant = null;
+			this.itemButtonRanged.SelectedEnchantId = 0;
+			this.itemButtonRanged.SelectedItem = null;
+			this.itemButtonRanged.SelectedItemId = 0;
+			this.itemButtonRanged.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonRanged.TabIndex = 2;
+			this.itemButtonRanged.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonLegs
+			// 
+			this.itemButtonLegs.Character = null;
+			this.itemButtonLegs.CharacterSlot = Rawr.Character.CharacterSlot.Legs;
+			this.itemButtonLegs.ItemIcon = null;
+			this.itemButtonLegs.Location = new System.Drawing.Point(396, 168);
+			this.itemButtonLegs.Name = "itemButtonLegs";
+			this.itemButtonLegs.SelectedEnchant = null;
+			this.itemButtonLegs.SelectedEnchantId = 0;
+			this.itemButtonLegs.SelectedItem = null;
+			this.itemButtonLegs.SelectedItemId = 0;
+			this.itemButtonLegs.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonLegs.TabIndex = 2;
+			this.itemButtonLegs.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonNeck
+			// 
+			this.itemButtonNeck.Character = null;
+			this.itemButtonNeck.CharacterSlot = Rawr.Character.CharacterSlot.Neck;
+			this.itemButtonNeck.ItemIcon = null;
+			this.itemButtonNeck.Location = new System.Drawing.Point(3, 92);
+			this.itemButtonNeck.Name = "itemButtonNeck";
+			this.itemButtonNeck.SelectedItem = null;
+			this.itemButtonNeck.SelectedItemId = 0;
+			this.itemButtonNeck.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonNeck.TabIndex = 2;
+			this.itemButtonNeck.Text = "Neck";
+			this.itemButtonNeck.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonProjectileBag
+			// 
+			this.itemButtonProjectileBag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.itemButtonProjectileBag.Character = null;
+			this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
+			this.itemButtonProjectileBag.ItemIcon = null;
+			this.itemButtonProjectileBag.Location = new System.Drawing.Point(343, 632);
+			this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
+			this.itemButtonProjectileBag.SelectedItem = null;
+			this.itemButtonProjectileBag.SelectedItemId = 0;
+			this.itemButtonProjectileBag.Size = new System.Drawing.Size(35, 35);
+			this.itemButtonProjectileBag.TabIndex = 2;
+			this.itemButtonProjectileBag.Text = "ProjBag";
+			this.itemButtonProjectileBag.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonProjectile
+			// 
+			this.itemButtonProjectile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.itemButtonProjectile.Character = null;
+			this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
+			this.itemButtonProjectile.ItemIcon = null;
+			this.itemButtonProjectile.Location = new System.Drawing.Point(343, 672);
+			this.itemButtonProjectile.Name = "itemButtonProjectile";
+			this.itemButtonProjectile.SelectedItem = null;
+			this.itemButtonProjectile.SelectedItemId = 0;
+			this.itemButtonProjectile.Size = new System.Drawing.Size(35, 35);
+			this.itemButtonProjectile.TabIndex = 2;
+			this.itemButtonProjectile.Text = "Proj";
+			this.itemButtonProjectile.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonOffHand
+			// 
+			this.itemButtonOffHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.itemButtonOffHand.Character = null;
+			this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
+			this.itemButtonOffHand.ItemIcon = null;
+			this.itemButtonOffHand.Location = new System.Drawing.Point(173, 624);
+			this.itemButtonOffHand.Name = "itemButtonOffHand";
+			this.itemButtonOffHand.SelectedEnchant = null;
+			this.itemButtonOffHand.SelectedEnchantId = 0;
+			this.itemButtonOffHand.SelectedItem = null;
+			this.itemButtonOffHand.SelectedItemId = 0;
+			this.itemButtonOffHand.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonOffHand.TabIndex = 2;
+			this.itemButtonOffHand.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonShirt
+			// 
+			this.itemButtonShirt.Character = null;
+			this.itemButtonShirt.CharacterSlot = Rawr.Character.CharacterSlot.Shirt;
+			this.itemButtonShirt.ItemIcon = null;
+			this.itemButtonShirt.Location = new System.Drawing.Point(3, 435);
+			this.itemButtonShirt.Name = "itemButtonShirt";
+			this.itemButtonShirt.SelectedItem = null;
+			this.itemButtonShirt.SelectedItemId = 0;
+			this.itemButtonShirt.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonShirt.TabIndex = 2;
+			this.itemButtonShirt.Text = "Shirt";
+			this.itemButtonShirt.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonShoulders
+			// 
+			this.itemButtonShoulders.Character = null;
+			this.itemButtonShoulders.CharacterSlot = Rawr.Character.CharacterSlot.Shoulders;
+			this.itemButtonShoulders.ItemIcon = null;
+			this.itemButtonShoulders.Location = new System.Drawing.Point(3, 168);
+			this.itemButtonShoulders.Name = "itemButtonShoulders";
+			this.itemButtonShoulders.SelectedEnchant = null;
+			this.itemButtonShoulders.SelectedEnchantId = 0;
+			this.itemButtonShoulders.SelectedItem = null;
+			this.itemButtonShoulders.SelectedItemId = 0;
+			this.itemButtonShoulders.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonShoulders.TabIndex = 2;
+			this.itemButtonShoulders.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonTabard
+			// 
+			this.itemButtonTabard.Character = null;
+			this.itemButtonTabard.CharacterSlot = Rawr.Character.CharacterSlot.Tabard;
+			this.itemButtonTabard.ItemIcon = null;
+			this.itemButtonTabard.Location = new System.Drawing.Point(3, 511);
+			this.itemButtonTabard.Name = "itemButtonTabard";
+			this.itemButtonTabard.SelectedItem = null;
+			this.itemButtonTabard.SelectedItemId = 0;
+			this.itemButtonTabard.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonTabard.TabIndex = 2;
+			this.itemButtonTabard.Text = "Tabard";
+			this.itemButtonTabard.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonTrinket1
+			// 
+			this.itemButtonTrinket1.Character = null;
+			this.itemButtonTrinket1.CharacterSlot = Rawr.Character.CharacterSlot.Trinket1;
+			this.itemButtonTrinket1.ItemIcon = null;
+			this.itemButtonTrinket1.Location = new System.Drawing.Point(396, 524);
+			this.itemButtonTrinket1.Name = "itemButtonTrinket1";
+			this.itemButtonTrinket1.SelectedItem = null;
+			this.itemButtonTrinket1.SelectedItemId = 0;
+			this.itemButtonTrinket1.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonTrinket1.TabIndex = 2;
+			this.itemButtonTrinket1.Text = "Trinket1";
+			this.itemButtonTrinket1.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonTrinket2
+			// 
+			this.itemButtonTrinket2.Character = null;
+			this.itemButtonTrinket2.CharacterSlot = Rawr.Character.CharacterSlot.Trinket2;
+			this.itemButtonTrinket2.ItemIcon = null;
+			this.itemButtonTrinket2.Location = new System.Drawing.Point(396, 600);
+			this.itemButtonTrinket2.Name = "itemButtonTrinket2";
+			this.itemButtonTrinket2.SelectedItem = null;
+			this.itemButtonTrinket2.SelectedItemId = 0;
+			this.itemButtonTrinket2.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonTrinket2.TabIndex = 2;
+			this.itemButtonTrinket2.Text = "Trinket2";
+			this.itemButtonTrinket2.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonWaist
+			// 
+			this.itemButtonWaist.Character = null;
+			this.itemButtonWaist.CharacterSlot = Rawr.Character.CharacterSlot.Waist;
+			this.itemButtonWaist.ItemIcon = null;
+			this.itemButtonWaist.Location = new System.Drawing.Point(396, 92);
+			this.itemButtonWaist.Name = "itemButtonWaist";
+			this.itemButtonWaist.SelectedItem = null;
+			this.itemButtonWaist.SelectedItemId = 0;
+			this.itemButtonWaist.Size = new System.Drawing.Size(70, 70);
+			this.itemButtonWaist.TabIndex = 2;
+			this.itemButtonWaist.Text = "Waist";
+			this.itemButtonWaist.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonMainHand
+			// 
+			this.itemButtonMainHand.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.itemButtonMainHand.Character = null;
+			this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
+			this.itemButtonMainHand.ItemIcon = null;
+			this.itemButtonMainHand.Location = new System.Drawing.Point(88, 624);
+			this.itemButtonMainHand.Name = "itemButtonMainHand";
+			this.itemButtonMainHand.SelectedEnchant = null;
+			this.itemButtonMainHand.SelectedEnchantId = 0;
+			this.itemButtonMainHand.SelectedItem = null;
+			this.itemButtonMainHand.SelectedItemId = 0;
+			this.itemButtonMainHand.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonMainHand.TabIndex = 2;
+			this.itemButtonMainHand.UseVisualStyleBackColor = true;
+			// 
+			// itemButtonWrist
+			// 
+			this.itemButtonWrist.Character = null;
+			this.itemButtonWrist.CharacterSlot = Rawr.Character.CharacterSlot.Wrist;
+			this.itemButtonWrist.ItemIcon = null;
+			this.itemButtonWrist.Location = new System.Drawing.Point(3, 587);
+			this.itemButtonWrist.Name = "itemButtonWrist";
+			this.itemButtonWrist.SelectedEnchant = null;
+			this.itemButtonWrist.SelectedEnchantId = 0;
+			this.itemButtonWrist.SelectedItem = null;
+			this.itemButtonWrist.SelectedItemId = 0;
+			this.itemButtonWrist.Size = new System.Drawing.Size(70, 83);
+			this.itemButtonWrist.TabIndex = 2;
+			this.itemButtonWrist.UseVisualStyleBackColor = true;
+			// 
+			// itemComparison1
+			// 
+			this.itemComparison1.BackColor = System.Drawing.Color.White;
+			this.itemComparison1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.itemComparison1.Character = null;
+			this.itemComparison1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Subpoints;
+			this.itemComparison1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.itemComparison1.Location = new System.Drawing.Point(3, 41);
+			this.itemComparison1.Name = "itemComparison1";
+			this.itemComparison1.Size = new System.Drawing.Size(407, 666);
+			this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
+			this.itemComparison1.TabIndex = 3;
 			// 
 			// FormMain
 			// 
@@ -1841,10 +1643,12 @@ namespace Rawr
 			this.ClientSize = new System.Drawing.Size(888, 742);
 			this.Controls.Add(this.toolStripContainer1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.KeyPreview = true;
 			this.MinimumSize = new System.Drawing.Size(896, 769);
 			this.Name = "FormMain";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyDown);
 			this.toolStripContainer1.ContentPanel.ResumeLayout(false);
 			this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
 			this.toolStripContainer1.TopToolStripPanel.PerformLayout();
@@ -1912,15 +1716,6 @@ namespace Rawr
         private System.Windows.Forms.TabControl tabControlCharacter;
 		private System.Windows.Forms.TabPage tabPageStats;
 		private System.Windows.Forms.TabPage tabPageBuffs;
-        private System.Windows.Forms.ComboBox comboBoxEnchantFeet;
-        private System.Windows.Forms.ComboBox comboBoxEnchantChest;
-        private System.Windows.Forms.ComboBox comboBoxEnchantLegs;
-        private System.Windows.Forms.ComboBox comboBoxEnchantBack;
-        private System.Windows.Forms.ComboBox comboBoxEnchantHands;
-        private System.Windows.Forms.ComboBox comboBoxEnchantShoulders;
-        private System.Windows.Forms.ComboBox comboBoxEnchantMainHand;
-        private System.Windows.Forms.ComboBox comboBoxEnchantWrists;
-		private System.Windows.Forms.ComboBox comboBoxEnchantHead;
 		private System.Windows.Forms.GroupBox groupBox4;
 		private ItemComparison itemComparison1;
 		private System.Windows.Forms.ToolStripMenuItem loadFromArmoryToolStripMenuItem;
@@ -1981,8 +1776,6 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem allBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem currentBuffsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-		private System.Windows.Forms.ComboBox comboBoxEnchantFinger1;
-		private System.Windows.Forms.ComboBox comboBoxEnchantFinger2;
 		private System.Windows.Forms.ToolStripMenuItem fingerToolStripMenuItem1;
 		private System.Windows.Forms.Label label32;
 		private CalculationDisplay calculationDisplay1;
@@ -1992,8 +1785,6 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxRace;
 		private ItemButton itemButtonProjectileBag;
 		private ItemButton itemButtonProjectile;
-		private System.Windows.Forms.ComboBox comboBoxEnchantRanged;
-		private System.Windows.Forms.ComboBox comboBoxEnchantOffHand;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;

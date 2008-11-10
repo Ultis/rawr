@@ -181,12 +181,13 @@ namespace Rawr
                                 case Item.ItemQuality.Epic:
                                     nameBrush = new SolidBrush(Color.Purple);
                                     break;
-                                case Item.ItemQuality.Heirloom:
-                                    nameBrush = new SolidBrush(Color.OrangeRed);
-                                    break;
                                 case Item.ItemQuality.Legendary:
                                     nameBrush = new SolidBrush(Color.Orange);
-                                    break;
+									break;
+								case Item.ItemQuality.Heirloom:
+								case Item.ItemQuality.Artifact:
+									nameBrush = new SolidBrush(Color.Gold);
+									break;
                                 case Item.ItemQuality.Poor:
                                     nameBrush = new SolidBrush(Color.Gray);
                                     break;

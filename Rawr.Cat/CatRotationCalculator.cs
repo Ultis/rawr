@@ -205,13 +205,84 @@ namespace Rawr.Cat
 			float damageTotal = meleeDamageTotal + mangleDamageTotal + rakeDamageTotal + shredDamageTotal + ripDamageTotal + biteDamageTotal;
 			#endregion
 
-			return new CatRotationCalculation() { DPS = damageTotal / Duration };
+			List<string> rotationName = new List<string>();
+			if (MaintainMangle || !useShred) rotationName.Add("Mangle");
+			if (useShred) rotationName.Add("Shred");
+			if (useRip) rotationName.Add("Rip");
+			if (useFerociousBite) rotationName.Add("Bite");
+			rotationName.Add("Roar" + roarCP.ToString());
+			
+			return new CatRotationCalculation()
+			{ 
+				Name = string.Join(" + ", rotationName.ToArray()),
+				DPS = damageTotal / Duration,
+				
+				//Stats = Stats,
+				//Duration = Duration,
+				//CPPerCPG = CPPerCPG,
+				//MaintainMangle = MaintainMangle,
+				//MangleDuration = MangleDuration,
+				//RipDuration = RipDuration,
+				//AttackSpeed = AttackSpeed,
+				//OmenOfClarity = OmenOfClarity,
+
+				//MeleeDamage = MeleeDamage,
+				//MangleDamage = MangleDamage,
+				//ShredDamage = ShredDamage,
+				//RakeDamage = RakeDamage,
+				//RipDamage = RipDamage,
+				//BiteDamage = BiteDamage,
+
+				//MangleEnergy = MangleEnergy,
+				//ShredEnergy = ShredEnergy,
+				//RakeEnergy = RakeEnergy,
+				//RipEnergy = RipEnergy,
+				//BiteEnergy = BiteEnergy,
+				//RoarEnergy = RoarEnergy,
+				
+				MeleeDamageTotal = meleeDamageTotal,
+				MangleDamageTotal = mangleDamageTotal,
+				RakeDamageTotal = rakeDamageTotal,
+				ShredDamageTotal = shredDamageTotal,
+				RipDamageTotal = ripDamageTotal,
+				BiteDamageTotal = biteDamageTotal,
+			};
 		}
 
 		public class CatRotationCalculation
 		{
 			public string Name { get; set; }
 			public float DPS { get; set; }
+
+			//public Stats Stats { get; set; }
+			//public float Duration { get; set; }
+			//public float CPPerCPG { get; set; }
+			//public bool MaintainMangle { get; set; }
+			//public float MangleDuration { get; set; }
+			//public float RipDuration { get; set; }
+			//public float AttackSpeed { get; set; }
+			//public bool OmenOfClarity { get; set; }
+
+			//public float MeleeDamage { get; set; }
+			//public float MangleDamage { get; set; }
+			//public float ShredDamage { get; set; }
+			//public float RakeDamage { get; set; }
+			//public float RipDamage { get; set; }
+			//public float BiteDamage { get; set; }
+
+			//public float MangleEnergy { get; set; }
+			//public float ShredEnergy { get; set; }
+			//public float RakeEnergy { get; set; }
+			//public float RipEnergy { get; set; }
+			//public float BiteEnergy { get; set; }
+			//public float RoarEnergy { get; set; }
+
+			public float MeleeDamageTotal { get; set; }
+			public float MangleDamageTotal { get; set; }
+			public float RakeDamageTotal { get; set; }
+			public float ShredDamageTotal { get; set; }
+			public float RipDamageTotal { get; set; }
+			public float BiteDamageTotal { get; set; }
 		}
 	}
 }
