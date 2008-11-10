@@ -118,7 +118,7 @@ namespace Rawr.ProtWarr
 			return xml.ToString();
 		}
 
-		public int TargetLevel = 73;
+		public int TargetLevel = 83;
 		public int TargetArmor = 7700;
 		public int BossAttackValue = 20000;
 		public float ThreatScale = 20;

@@ -73,10 +73,10 @@ namespace Rawr.ProtWarr
             this.comboBoxTargetLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTargetLevel.FormattingEnabled = true;
             this.comboBoxTargetLevel.Items.AddRange(new object[] {
-            "70",
-            "71",
-            "72",
-            "73"});
+            "80",
+            "81",
+            "82",
+            "83"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
             this.comboBoxTargetLevel.Size = new System.Drawing.Size(123, 21);

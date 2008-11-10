@@ -290,7 +290,7 @@ namespace Rawr.ProtWarr
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
-            float levelDifference = 0.2f * (TargetLevel - 70);
+            float levelDifference = 0.2f * (TargetLevel - 80f);
             float targetCritReduction = 5f + levelDifference;
             float currentCritReduction = ((float)Math.Floor(
                 (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
@@ -463,7 +463,7 @@ Windfury TPS: {4}", HeroicStrikeThreat, ShieldSlamThreat, RevengeThreat, Devasta
                 case "Health": return BasicStats.Health;
                 case "Mitigation % from Armor": return Mitigation;
                 case "Avoidance %": return DodgePlusMissPlusParry;
-                case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 70))) - CritReduction);
+                case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 80f))) - CritReduction);
                 case "% to be Crushed": return CrushChance;
                 case "Nature Survival": return NatureSurvivalPoints;
                 case "Fire Survival": return FireSurvivalPoints;
