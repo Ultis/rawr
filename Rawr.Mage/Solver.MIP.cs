@@ -453,13 +453,14 @@ namespace Rawr.Mage
                 {
                     valid = ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown);
                 }
-                if (valid && trinket1OnManaGem)
+                // mana gem effect
+                if (valid && manaGemEffectAvailable)
                 {
-                    valid = ValidateSCB(Cooldown.Trinket1);
+                    valid = ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f);
                 }
-                if (valid && trinket2OnManaGem)
+                if (valid && manaGemEffectAvailable)
                 {
-                    valid = ValidateSCB(Cooldown.Trinket2);
+                    valid = ValidateManaGemEffect(Cooldown.ManaGemEffect);
                 }
             }
 
@@ -3293,7 +3294,7 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private bool ValidateSCB(Cooldown trinket)
+        private bool ValidateManaGemEffect(Cooldown trinket)
         {
             const double eps = 0.00001;
             double[] trinketCount = new double[segments];

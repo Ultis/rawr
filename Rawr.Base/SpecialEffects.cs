@@ -33,7 +33,7 @@ namespace Rawr
                 }
                 else if (gemBonus == "Chance to restore mana on spellcast")
                 {
-                    stats.ManaRestorePerCast_5_15 = 300; // IED
+                    stats.ManaRestoreOnCast_5_15 = 300; // IED
                 }
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {
@@ -67,7 +67,7 @@ namespace Rawr
                                 break;
                             case "Increased Critical Damage":
                                 stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
-                                stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+                                stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on id
                                 break;
                             case "Agility":
                                 stats.Agility = gemBonusValue;
@@ -701,7 +701,47 @@ namespace Rawr
 			{
 				stats.ManacostReduceWithin15OnHealingCast += 450;
 			}
-		}
+            else if (line.StartsWith("Your spells have a chance to increase your spell power by 512 for 10 sec."))
+            {
+                // Forge Ember
+                stats.SpellPowerFor10SecOnHit_10_45 += 512;
+            }
+            else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
+            {
+                // Sundial of the Exiled
+                stats.SpellPowerFor10SecOnHit_10_45 += 590;
+            }
+            else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
+            {
+                // Sundial of the Exiled
+                stats.SpellPowerFor10SecOnCast_15_45 += 765;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
+            {
+                // Spark of Life
+                stats.ManaRestoreOnCast_10_45 += 176 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
+            {
+                // Je'Tze's Bell
+                stats.ManaRestoreOnCast_10_45 += 100 * 3;
+            }
+            else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
+            {
+                // Embrace of the Spider
+                stats.SpellHasteFor10SecOnCast_10_45 += 505;
+            }
+            else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
+            {
+                // Soul of the Dead
+                stats.ManaRestorePerCrit += 0.25f * 900;
+            }
+            else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
+            {
+                // Pendulum of Telluric Currents
+                stats.PendulumOfTelluricCurrentsProc += 1;
+            }
+        }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory)
 		{

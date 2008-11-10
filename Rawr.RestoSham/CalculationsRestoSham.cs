@@ -238,7 +238,7 @@ namespace Rawr.RestoSham
                 calcStats.AverageCastTime += spell.CastTime * spell.Weight;
                 calcStats.AverageManaCost += spell.ManaCost * spell.Weight;
               }
-            calcStats.AverageManaCost -= stats.ManaRestorePerCast_5_15 * .02f;  // Insightful Earthstorm Diamond
+            calcStats.AverageManaCost -= stats.ManaRestoreOnCast_5_15 * .02f;  // Insightful Earthstorm Diamond
             
             // Earth Shield computations:
             
@@ -560,7 +560,7 @@ namespace Rawr.RestoSham
                 LHWManaReduction = stats.LHWManaReduction,
                 CHHealIncrease = stats.CHHealIncrease,
                 CHManaReduction = stats.CHManaReduction,
-                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ShatteredSunRestoProc = stats.ShatteredSunRestoProc
               };
           }
@@ -571,7 +571,7 @@ namespace Rawr.RestoSham
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating +
                     stats.HasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
                     stats.BonusManaPotion + stats.CHManaReduction + stats.CHHealIncrease + stats.LHWManaReduction +
-                    stats.ManaSpringMp5Increase + stats.ManaRestorePerCast_5_15 + stats.ShatteredSunRestoProc) > 0;
+                    stats.ManaSpringMp5Increase + stats.ManaRestoreOnCast_5_15 + stats.ShatteredSunRestoProc) > 0;
           }
 
 

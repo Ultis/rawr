@@ -97,6 +97,7 @@ namespace Rawr.Mage
         public double Trinket1Cooldown;
         public double Trinket2Duration;
         public double Trinket2Cooldown;
+        public double ManaGemEffectDuration;
         public string Trinket1Name;
         public string Trinket2Name;
         public int MaxManaPotion;
@@ -185,18 +186,10 @@ namespace Rawr.Mage
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
             sequence.GroupDestructionPotion();
-            List<SequenceGroup> list1 = sequence.GroupTrinket1();
-            List<SequenceGroup> list2 = sequence.GroupTrinket2();
-            List<SequenceGroup> list = null;
-            if (Character.Trinket1 != null && Character.Trinket1.Stats.SpellPowerFor15SecOnManaGem > 0)
-            {
-                list = list1;
-            }
-            if (Character.Trinket2 != null && Character.Trinket2.Stats.SpellPowerFor15SecOnManaGem > 0)
-            {
-                list = list2;
-            }
-            if (list != null && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
+            sequence.GroupTrinket1();
+            sequence.GroupTrinket2();
+            List<SequenceGroup> list = sequence.GroupManaGemEffect();
+            if (list != null && BaseStats.SpellPowerFor15SecOnManaGem > 0 && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
             {
                 float manaBurn = 80;
                 if (CalculationOptions.AoeDuration > 0)

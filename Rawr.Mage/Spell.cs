@@ -23,6 +23,7 @@ namespace Rawr.Mage
         [Description("Arcane Barrage")]
         ArcaneBarrage,
         ArcaneBolt,
+        PendulumOfTelluricCurrents,
         [Description("Arcane Missiles")]
         ArcaneMissiles,
         [Description("MBAM")]
@@ -204,6 +205,7 @@ namespace Rawr.Mage
         public bool Channeled;
         public float HitProcs;
         public float CastProcs;
+        public float CritProcs;
         public float CastTime;
 
         public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration);
@@ -533,6 +535,28 @@ namespace Rawr.Mage
                 if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
             }
 
+            // Embrace of the Spider
+            if (castingState.BaseStats.SpellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
+            {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + castingState.Latency;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
+
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                float castsAffected = 0;
+                for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((10f - c * CastTime / CastProcs) / cast) / CastProcs;
+                Haste += castingState.BaseStats.SpellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
+                //Haste += castingState.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+
+                GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+            }
 
             // AToI, first cast after proc is not affected for non-instant
             if (castingState.BaseStats.SpellHasteFor5SecOnCrit_50 > 0)
@@ -560,6 +584,7 @@ namespace Rawr.Mage
             Cost = (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier); // glyph and talent amplifiers are rounded down
 
             CritRate = Math.Min(1, CritRate);
+            CritProcs = HitProcs * CritRate;
             //Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) Cost += CritRate * Cost * 0.01f * castingState.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
             Cost -= CritRate * BaseCost * 0.1f * castingState.MageTalents.MasterOfElements; // from what I know MOE works on base cost
@@ -585,6 +610,7 @@ namespace Rawr.Mage
             if (castingState.BaseStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
             if (castingState.BaseStats.SpellPowerFor6SecOnCrit > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
             if (castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            if (castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
             if (castingState.BaseStats.SpellPowerFor10SecOnResist > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
             if (castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
             if (castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
@@ -639,6 +665,13 @@ namespace Rawr.Mage
                 DamagePerSecond += boltDps;
                 ThreatPerSecond += boltDps * castingState.ArcaneThreatMultiplier;
             }
+            if (!ForceMiss && !EffectProc && castingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
+            {
+                BaseSpell PendulumOfTelluricCurrents = castingState.PendulumOfTelluricCurrents;
+                float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
+                DamagePerSecond += boltDps;
+                ThreatPerSecond += boltDps * castingState.ShadowThreatMultiplier;
+            }
 
             /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
             float OO5SR = 0;
@@ -660,7 +693,7 @@ namespace Rawr.Mage
                 OO5SR = 1;
             }
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromMaxManaPerHit * castingState.BaseStats.Mana / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCast_5_15 / (15f + CastTime / CastProcs / 0.05f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromMaxManaPerHit * castingState.BaseStats.Mana / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritRate * HitProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.WaterElemental)
             {
                 ManaRegenPerSecond += 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
@@ -722,6 +755,18 @@ namespace Rawr.Mage
                 }
                 float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.1f);
+                contrib.Damage += boltDps * duration;
+            }
+            if (!EffectProc && castingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
+            {
+                BaseSpell PendulumOfTelluricCurrents = castingState.PendulumOfTelluricCurrents;
+                if (!dict.TryGetValue(PendulumOfTelluricCurrents.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = PendulumOfTelluricCurrents.Name };
+                    dict[PendulumOfTelluricCurrents.Name] = contrib;
+                }
+                float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
+                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Damage += boltDps * duration;
             }
         }
@@ -1707,6 +1752,24 @@ namespace Rawr.Mage
             CalculateDerivedStats(castingState);
         }
     }
+
+    // Pendulum of Telluric Currents
+    public class PendulumOfTelluricCurrents : BaseSpell
+    {
+        public PendulumOfTelluricCurrents(CastingState castingState)
+            : base("Pendulum of Telluric Currents", false, false, true, false, 0, 50, 0, 0, MagicSchool.Shadow, 1168, 1752, 0, 0, 0, 0, 0, 0, false)
+        {
+            EffectProc = true;
+            Calculate(castingState);
+        }
+
+        public override void Calculate(CastingState castingState)
+        {
+            base.Calculate(castingState);
+            CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
+            CalculateDerivedStats(castingState);
+        }
+    }
     #endregion
 
     class SpellCycle : Spell
@@ -1745,6 +1808,7 @@ namespace Rawr.Mage
             fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
+            CritProcs += spell.CritProcs;
             AverageDamage += spell.DamagePerSecond * spell.CastTime;
             AverageThreat += spell.ThreatPerSecond * spell.CastTime;
             Cost += spell.CostPerSecond * spell.CastTime;
@@ -1769,7 +1833,7 @@ namespace Rawr.Mage
 
             float OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromMaxManaPerHit * castingState.BaseStats.Mana / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime;
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromMaxManaPerHit * castingState.BaseStats.Mana / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {

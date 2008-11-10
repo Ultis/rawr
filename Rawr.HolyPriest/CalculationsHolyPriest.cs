@@ -215,7 +215,7 @@ namespace Rawr.HolyPriest
                 / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f) * 5f;
 
             // Insightful Earthstorm Diamond.
-            float metaSpellCostReduction = simstats.ManaRestorePerCast_5_15 * 0.05f;
+            float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
             float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
                 * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
             float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);

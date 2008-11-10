@@ -195,7 +195,7 @@ namespace Rawr.Mage
                     if (Trinket2) buffList.Add(calculations.Trinket2Name);
                     if (DestructionPotion) buffList.Add("Destruction Potion");
                     if (WaterElemental) buffList.Add("Water Elemental");
-                    // TODO mana gem effect
+                    if (ManaGemEffect) buffList.Add("Mana Gem Effect");
 
                     buffLabel = string.Join("+", buffList.ToArray());
                 }
@@ -265,18 +265,21 @@ namespace Rawr.Mage
             if (trinket1)
             {
                 Stats t = character.Trinket1.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
+                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
-                if (t.SpellPowerFor15SecOnManaGem > 0.0) ManaGemActivation = true;
             }
             if (trinket2)
             {
                 Stats t = character.Trinket2.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnManaGem + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
+                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
                 Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
-                if (t.SpellPowerFor15SecOnManaGem > 0.0) ManaGemActivation = true;
+            }
+            if (manaGemEffect)
+            {
+                SpellDamageRating += BaseStats.SpellPowerFor15SecOnManaGem;
+                ManaGemActivation = true;
             }
             if (drums)
             {
@@ -499,10 +502,15 @@ namespace Rawr.Mage
             {
                 ArcaneBolt = (ArcaneBolt)GetSpell(SpellId.ArcaneBolt);
             }
+            if (BaseStats.PendulumOfTelluricCurrentsProc > 0)
+            {
+                PendulumOfTelluricCurrents = (PendulumOfTelluricCurrents)GetSpell(SpellId.PendulumOfTelluricCurrents);
+            }
         }
 
         public ArcaneBolt ArcaneBolt { get; set; }
         public LightningBolt LightningBolt { get; set; }
+        public PendulumOfTelluricCurrents PendulumOfTelluricCurrents { get; set; }
 
         private static int SpellIdCount;
 
@@ -531,6 +539,9 @@ namespace Rawr.Mage
             {
                 case SpellId.ArcaneBolt:
                     s = new ArcaneBolt(this);
+                    break;
+                case SpellId.PendulumOfTelluricCurrents:
+                    s = new PendulumOfTelluricCurrents(this);
                     break;
                 case SpellId.LightningBolt:
                     s = new LightningBolt(this);

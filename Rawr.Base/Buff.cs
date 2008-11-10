@@ -1412,7 +1412,7 @@ namespace Rawr
             {
                 Name = "Malorne Raiment 2 Piece",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { ManaRestorePerCast_5_15 = 120 },
+                Stats = { ManaRestoreOnCast_5_15 = 120 },
                 SetName = "Malorne Raiment",
                 SetThreshold = 2
             });
@@ -1438,6 +1438,24 @@ namespace Rawr
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { BonusHealingTouchMultiplier = 0.05f },
                 SetName = "Thunderheart Raiment",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Frostfire Garb 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusManaGem = 0.4f, SpellPowerFor15SecOnManaGem = 225f },
+                SetName = "Frostfire Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Frostfire Garb 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusSpellCritMultiplier = 0.05f },
+                SetName = "Frostfire Garb",
                 SetThreshold = 4
             });
             

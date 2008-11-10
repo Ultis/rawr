@@ -179,7 +179,7 @@ namespace Rawr.Healadin
                 calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
 
             float benediction = 1f - talents.Benediction * .02f;
-            float ied = stats.ManaRestorePerCast_5_15 * .035f; 
+            float ied = stats.ManaRestoreOnCast_5_15 * .035f; 
 
             if (calcOpts.JotP && talents.JudgementsOfThePure > 0)
             {
@@ -392,7 +392,7 @@ namespace Rawr.Healadin
                 MementoProc = stats.MementoProc,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 // Gear Procs
-                ManaRestorePerCast_5_15 =  stats.ManaRestorePerCast_5_15,
+                ManaRestoreOnCast_5_15 =  stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond
             };
         }
@@ -403,7 +403,7 @@ namespace Rawr.Healadin
                 + stats.HasteRating + stats.BonusIntellectMultiplier + stats.Stamina
                 + stats.BonusManaPotion + stats.FoLMultiplier + stats.FoLHeal + stats.FoLCrit + stats.HLCost
                 + stats.HLCrit + stats.HLHeal + stats.MementoProc + stats.ManaRestoreFromMaxManaPerSecond
-                + stats.HealingReceivedMultiplier + stats.ManaRestorePerCast_5_15) > 0;
+                + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15) > 0;
         }
     }
 }

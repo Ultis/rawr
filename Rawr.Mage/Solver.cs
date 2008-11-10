@@ -45,9 +45,8 @@ namespace Rawr.Mage
         private bool flameCapAvailable;
         private bool waterElementalAvailable;
         private bool manaGemEffectAvailable;
-      
-        private bool trinket1OnManaGem;
-        private bool trinket2OnManaGem;
+
+        private double manaGemEffectDuration;
         private double trinket1Cooldown;
         private double trinket1Duration;
         private double trinket2Cooldown;
@@ -76,11 +75,12 @@ namespace Rawr.Mage
         private int rowFlameCapDestructionPotion = -1;
         private int rowTrinket1 = -1;
         private int rowTrinket2 = -1;
+        private int rowManaGemEffect = -1;
         private int rowMoltenFuryTrinket1 = -1;
         private int rowMoltenFuryTrinket2 = -1;
         private int rowHeroismTrinket1 = -1;
         private int rowHeroismTrinket2 = -1;
-        private int rowTrinketManaGem = -1;
+        private int rowManaGemEffectActivation = -1;
         private int rowDpsTime = -1;
         private int rowAoe = -1;
         private int rowFlamestrike = -1;
@@ -119,6 +119,7 @@ namespace Rawr.Mage
         private int rowSegmentPotion = -1;
         private int rowSegmentTrinket1 = -1;
         private int rowSegmentTrinket2 = -1;
+        private int rowSegmentManaGemEffect = -1;
         private int rowSegment = -1;
         private int rowSegmentManaOverflow = -1;
         private int rowSegmentManaUnderflow = -1;
@@ -138,7 +139,7 @@ namespace Rawr.Mage
         private static bool IsItemActivatable(Item item)
         {
             if (item == null) return false;
-            return (item.Stats.SpellPowerFor15SecOnUse2Min + item.Stats.SpellPowerFor20SecOnUse2Min + item.Stats.HasteRatingFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellPowerFor15SecOnManaGem + item.Stats.SpellPowerFor15SecOnUse90Sec + item.Stats.HasteRatingFor20SecOnUse5Min > 0);
+            return (item.Stats.SpellPowerFor15SecOnUse2Min + item.Stats.SpellPowerFor20SecOnUse2Min + item.Stats.HasteRatingFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellPowerFor15SecOnUse90Sec + item.Stats.HasteRatingFor20SecOnUse5Min > 0);
         }
 
         private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
@@ -281,7 +282,7 @@ namespace Rawr.Mage
                 flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
-                manaGemEffectAvailable = false; // Naxx set bonus, treat as trinket with on mana gem effect
+                manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
                 calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
                 calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
@@ -309,10 +310,6 @@ namespace Rawr.Mage
                     calculationResult.MaxManaPotionValue = 4400.0;
                 }
 
-
-                trinket1OnManaGem = false;
-                trinket2OnManaGem = false;
-
                 #region Setup Trinkets
                 if (trinket1Available)
                 {
@@ -321,12 +318,6 @@ namespace Rawr.Mage
                     {
                         trinket1Duration = 20;
                         trinket1Cooldown = 120;
-                    }
-                    if (s.SpellPowerFor15SecOnManaGem > 0)
-                    {
-                        trinket1Duration = 15;
-                        trinket1Cooldown = 120;
-                        trinket1OnManaGem = true;
                     }
                     if (s.SpellPowerFor15SecOnUse90Sec > 0)
                     {
@@ -355,12 +346,6 @@ namespace Rawr.Mage
                         trinket2Duration = 20;
                         trinket2Cooldown = 120;
                     }
-                    if (s.SpellPowerFor15SecOnManaGem > 0)
-                    {
-                        trinket2Duration = 15;
-                        trinket2Cooldown = 120;
-                        trinket2OnManaGem = true;
-                    }
                     if (s.SpellPowerFor15SecOnUse90Sec > 0)
                     {
                         trinket2Duration = 15;
@@ -379,6 +364,14 @@ namespace Rawr.Mage
                     calculationResult.Trinket2Duration = trinket2Duration;
                     calculationResult.Trinket2Cooldown = trinket2Cooldown;
                     calculationResult.Trinket2Name = character.Trinket2.Name;
+                }
+                if (manaGemEffectAvailable)
+                {
+                    if (characterStats.SpellPowerFor15SecOnManaGem > 0)
+                    {
+                        manaGemEffectDuration = 15;
+                    }
+                    calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
                 }
                 #endregion
 
@@ -780,7 +773,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemOnly, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
-                        lp.SetElementUnsafe(rowTrinketManaGem, column, -1.0);
+                        lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
                         lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegen * 0.5f * threatFactor);
                         calculationResult.ManaGemTps = tps;
                         lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
@@ -1069,6 +1062,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowManaGemFlameCap, column, 1f / 120f);
                     lp.SetElementUnsafe(rowTrinket1, column, trinket1Duration / trinket1Cooldown);
                     lp.SetElementUnsafe(rowTrinket2, column, trinket2Duration / trinket2Cooldown);
+                    lp.SetElementUnsafe(rowManaGemEffect, column, manaGemEffectDuration / 120f);
                     lp.SetElementUnsafe(rowDpsTime, column, -(1 - dpsTime));
                     lp.SetElementUnsafe(rowAoe, column, calculationOptions.AoeDuration);
                     lp.SetElementUnsafe(rowCombustion, column, 1.0 / 180.0);
@@ -1332,6 +1326,7 @@ namespace Rawr.Mage
             //lp.SetRHSUnsafe(rowFlameCapDestructionPotion, dpflamelength);
             if (trinket1Available) lp.SetRHSUnsafe(rowTrinket1, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * trinket1Duration / trinket1Cooldown : ((1 + (int)((calculationOptions.FightDuration - trinket1Duration) / trinket1Cooldown)) * trinket1Duration));
             if (trinket2Available) lp.SetRHSUnsafe(rowTrinket2, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * trinket2Duration / trinket2Cooldown : ((1 + (int)((calculationOptions.FightDuration - trinket2Duration) / trinket2Cooldown)) * trinket2Duration));
+            if (manaGemEffectAvailable) lp.SetRHSUnsafe(rowManaGemEffect, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * manaGemEffectDuration / 120f : ((1 + (int)((calculationOptions.FightDuration - manaGemEffectDuration) / 120f)) * manaGemEffectDuration));
             if (moltenFuryAvailable && trinket1Available) lp.SetRHSUnsafe(rowMoltenFuryTrinket1, trinket1Duration);
             if (moltenFuryAvailable && trinket2Available) lp.SetRHSUnsafe(rowMoltenFuryTrinket2, trinket2Duration);
             if (heroismAvailable && trinket1Available) lp.SetRHSUnsafe(rowHeroismTrinket1, trinket1Duration);
@@ -1356,7 +1351,7 @@ namespace Rawr.Mage
             {
                 manaConsum = ((calculationOptions.FightDuration - 7800 / manaBurn) / 60f + 2);
             }
-            if ((trinket1OnManaGem || trinket2OnManaGem) && manaConsum < calculationResult.MaxManaGem) manaConsum = calculationResult.MaxManaGem;
+            if (manaGemEffectAvailable && manaConsum < calculationResult.MaxManaGem) manaConsum = calculationResult.MaxManaGem;
             lp.SetRHSUnsafe(rowManaPotionManaGem, manaConsum * 40.0);
             lp.SetRHSUnsafe(rowDrumsOfBattle, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration * calculationResult.BaseState.GlobalCooldown / 120.0 : calculationResult.BaseState.GlobalCooldown * (1 + (int)((calculationOptions.FightDuration - 30) / 120)));
             if (waterElementalAvailable)
@@ -1499,6 +1494,15 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
+                if (manaGemEffectAvailable)
+                {
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        lp.SetRHSUnsafe(rowSegmentManaGemEffect + seg, manaGemEffectDuration);
+                        double cool = 120f;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                }
                 // timing
                 for (int seg = 0; seg < segments; seg++)
                 {
@@ -1554,7 +1558,7 @@ namespace Rawr.Mage
             if (moltenFuryAvailable && trinket2Available) rowMoltenFuryTrinket2 = rowCount++;
             if (heroismAvailable && trinket1Available) rowHeroismTrinket1 = rowCount++;
             if (heroismAvailable && trinket2Available) rowHeroismTrinket2 = rowCount++;
-            if (trinket1OnManaGem || trinket2OnManaGem) rowTrinketManaGem = rowCount++;
+            if (manaGemEffectAvailable) rowManaGemEffectActivation = rowCount++;
             if (calculationOptions.AoeDuration > 0)
             {
                 rowAoe = rowCount++;
@@ -1730,6 +1734,17 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
+                // mana gem effect
+                if (manaGemEffectAvailable)
+                {
+                    rowSegmentManaGemEffect = rowCount;
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        rowCount++;
+                        double cool = 120f;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                }
                 // max segment time
                 rowSegment = rowCount;
                 rowCount += segments;
@@ -1777,11 +1792,12 @@ namespace Rawr.Mage
             if (state.DestructionPotion && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
             if (state.Trinket1) lp.SetElementUnsafe(rowTrinket1, column, 1.0);
             if (state.Trinket2) lp.SetElementUnsafe(rowTrinket2, column, 1.0);
+            if (state.ManaGemEffect) lp.SetElementUnsafe(rowManaGemEffect, column, 1.0);
             if (state.MoltenFury && state.Trinket1) lp.SetElementUnsafe(rowMoltenFuryTrinket1, column, 1.0);
             if (state.MoltenFury && state.Trinket2) lp.SetElementUnsafe(rowMoltenFuryTrinket2, column, 1.0);
             if (state.Heroism && state.Trinket1) lp.SetElementUnsafe(rowHeroismTrinket1, column, 1.0);
             if (state.Heroism && state.Trinket2) lp.SetElementUnsafe(rowHeroismTrinket2, column, 1.0);
-            lp.SetElementUnsafe(rowTrinketManaGem, column, ((state.Trinket1 && trinket1OnManaGem) ? 1 / trinket1Duration : 0) + ((state.Trinket2 && trinket2OnManaGem) ? 1 / trinket2Duration : 0));
+            lp.SetElementUnsafe(rowManaGemEffectActivation, column, ((state.ManaGemEffect) ? 1 / manaGemEffectDuration : 0));
             if (spell.AreaEffect) lp.SetElementUnsafe(rowAoe, column, 1.0);
             if (spell.AreaEffect)
             {
@@ -1955,6 +1971,18 @@ namespace Rawr.Mage
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentTrinket2 + ss, column, 1.0);
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                }
+                if (state.ManaGemEffect)
+                {
+                    bound = Math.Min(bound, manaGemEffectDuration);
+                    for (int ss = 0; ss < segments; ss++)
+                    {
+                        double cool = 120f;
+                        int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                        if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentManaGemEffect + ss, column, 1.0);
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
@@ -2214,7 +2242,7 @@ namespace Rawr.Mage
             List<CastingState> list = new List<CastingState>();
 
             int availableMask = 0;
-            bool canDoubleTrinket = trinket1OnManaGem || trinket2OnManaGem;
+            bool canDoubleTrinket = false;
             int mask = 0x3FF;
             if (manaGemEffectAvailable) availableMask |= 0x200;
             if (waterElementalAvailable) availableMask |= 0x100;
@@ -2250,7 +2278,7 @@ namespace Rawr.Mage
                             {
                                 if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                                 {
-                                    if ((!trinket1 || !trinket1OnManaGem || !flameCap) && (!trinket2 || !trinket2OnManaGem || !flameCap)) // do not allow SCB together with flame cap
+                                    if (!mg || !flameCap) // do not allow mana gem together with flame cap
                                     {
                                         if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == mask && !trinket1 && !trinket2)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
@@ -2290,7 +2318,7 @@ namespace Rawr.Mage
                             {
                                 if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                                 {
-                                    if ((!trinket1 || !trinket1OnManaGem || !flameCap) && (!trinket2 || !trinket2OnManaGem || !flameCap)) // do not allow SCB together with flame cap
+                                    if (!mg || !flameCap) // do not allow mana gem together with flame cap
                                     {
                                         if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == mask && !trinket1 && !trinket2)))
                                         {

@@ -459,7 +459,7 @@ namespace Rawr
                         }
                         else if (gemBonus == "Chance to restore mana on spellcast")
                         {
-                            stats.ManaRestorePerCast_5_15 = 300; // IED
+                            stats.ManaRestoreOnCast_5_15 = 300; // IED
                         }
                         else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                         {

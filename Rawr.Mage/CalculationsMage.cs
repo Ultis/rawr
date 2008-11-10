@@ -1068,9 +1068,9 @@ namespace Rawr.Mage
                         Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         int legendY = 2;
 
-                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.DrumsOfBattle, Cooldown.Combustion, Cooldown.WaterElemental };
-                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion", "Water Elemental" };
-                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed, Color.DarkCyan };
+                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.DrumsOfBattle, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
+                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion", "Water Elemental", "Mana Gem Effect" };
+                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
                         Brush[] brushSubPoints = new Brush[cooldownColors.Length];
                         Color[] colorSubPointsA = new Color[cooldownColors.Length];
                         Color[] colorSubPointsB = new Color[cooldownColors.Length];
@@ -1121,7 +1121,8 @@ namespace Rawr.Mage
                         float graphStart = 20f;
                         float graphWidth = width - 40f;
                         float graphTop = legendY;
-                        float graphHeight = height - 44 - graphTop - 40;
+                        float graphBottom = height - 48;
+                        float graphHeight = graphBottom - graphTop - 40;
                         float maxScale = calculationOptions.FightDuration;
                         float graphEnd = graphStart + graphWidth;
                         float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
@@ -1162,7 +1163,7 @@ namespace Rawr.Mage
                         g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
                         g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
                         g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
-                        g.DrawLine(black200, graphStart - 4, height - 44, graphEnd + 4, height - 44);
+                        g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
 
                         g.DrawString(TimeFormat(0f), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
                         g.DrawString(TimeFormat(maxScale), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
@@ -1211,7 +1212,7 @@ namespace Rawr.Mage
                                 {
                                     mana = maxMana;
                                 }
-                                g.DrawLine(Pens.Aqua, graphStart + time / maxScale * graphWidth, height - 44 - graphHeight * lastMana / maxMana, graphStart + time / maxScale * graphWidth, height - 44 - graphHeight * mana / maxMana);
+                                g.DrawLine(Pens.Aqua, graphStart + time / maxScale * graphWidth, graphBottom - graphHeight * lastMana / maxMana, graphStart + time / maxScale * graphWidth, height - 44 - graphHeight * mana / maxMana);
                             }
                             else
                             {
@@ -1231,9 +1232,9 @@ namespace Rawr.Mage
                                 float x1 = graphStart + time / maxScale * graphWidth;
                                 float x2 = graphStart + (time + partTime) / maxScale * graphWidth;
                                 float x3 = graphStart + (time + duration) / maxScale * graphWidth;
-                                float y1 = height - 44 - graphHeight * lastMana / maxMana;
-                                float y2 = height - 44 - graphHeight * mana / maxMana;
-                                float y3 = height - 44;
+                                float y1 = graphBottom - graphHeight * lastMana / maxMana;
+                                float y2 = graphBottom - graphHeight * mana / maxMana;
+                                float y3 = graphBottom;
                                 g.FillPolygon(new SolidBrush(manaFill), new PointF[] { new PointF(x1, y1), new PointF(x2, y2), new PointF(x3, y2), new PointF(x3, y3), new PointF(x1, y3) });
                                 g.DrawLine(Pens.Aqua, x1, y1, x2, y2);
                                 g.DrawLine(Pens.Aqua, x2, y2, x3, y2);
@@ -1261,8 +1262,8 @@ namespace Rawr.Mage
                             }
                             if (duration > 0)
                             {
-                                list.Add(new PointF(graphStart + (time + 0.1f * duration) / maxScale * graphWidth, height - 44 - graphHeight * dps / maxDps));
-                                list.Add(new PointF(graphStart + (time + 0.9f * duration) / maxScale * graphWidth, height - 44 - graphHeight * dps / maxDps));
+                                list.Add(new PointF(graphStart + (time + 0.1f * duration) / maxScale * graphWidth, graphBottom - graphHeight * dps / maxDps));
+                                list.Add(new PointF(graphStart + (time + 0.9f * duration) / maxScale * graphWidth, graphBottom - graphHeight * dps / maxDps));
                             }
                             time += duration;
                         }
@@ -1285,7 +1286,7 @@ namespace Rawr.Mage
                                     on = false;
                                     if (time > timeOn)
                                     {
-                                        RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
+                                        RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, graphBottom + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
                                         brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
                                         brushSubPointFill.InterpolationColors = blendSubPoint;
 
@@ -1304,7 +1305,7 @@ namespace Rawr.Mage
                             }
                             if (on)
                             {
-                                RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, height - 44 + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
+                                RectangleF rect = new RectangleF(graphStart + graphWidth * timeOn / maxScale, graphBottom + cooldown * 4, graphWidth * (time - timeOn) / maxScale, 4);
                                 brushSubPointFill = new System.Drawing.Drawing2D.LinearGradientBrush(rect, colorSubPointsA[cooldown], colorSubPointsB[cooldown], 67f);
                                 brushSubPointFill.InterpolationColors = blendSubPoint;
 
@@ -1411,7 +1412,7 @@ namespace Rawr.Mage
                 AldorRegaliaInterruptProtection = stats.AldorRegaliaInterruptProtection,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 InterruptProtection = stats.InterruptProtection,
                 ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
                 FireResistanceBuff = stats.FireResistanceBuff,
@@ -1426,13 +1427,18 @@ namespace Rawr.Mage
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 SpellHit = stats.SpellHit,
                 SpellCrit = stats.SpellCrit,
-                SpellHaste = stats.SpellHaste
+                SpellHaste = stats.SpellHaste,
+                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
+                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                ManaRestorePerCrit = stats.ManaRestorePerCrit,
+                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.SpellPowerFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromMaxManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor15SecOnManaGem + stats.BonusManaGem + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestorePerCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste;
+            float mageStats = stats.Intellect + stats.Spirit + stats.Mp5 + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.ArcaneBlastBonus + stats.SpellPowerFor6SecOnCrit + stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromMaxManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor15SecOnManaGem + stats.BonusManaGem + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.MageAllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.AldorRegaliaInterruptProtection + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestoreOnCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.SpellPowerFor10SecOnCast_15_45 + stats.ManaRestoreOnCast_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestorePerCrit + stats.PendulumOfTelluricCurrentsProc;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }

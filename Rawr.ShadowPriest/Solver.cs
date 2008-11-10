@@ -277,7 +277,7 @@ namespace Rawr.ShadowPriest
                 if (spell == SWD || spell == MB)
                     CPC++;
                 float Damage = spell.AvgDamage;
-                float Cost = spell.ManaCost - simStats.ManaRestorePerCast_5_15 * 0.05f;
+                float Cost = spell.ManaCost - simStats.ManaRestoreOnCast_5_15 * 0.05f;
                 switch (spell.Name)
                 {
                     case "Vampiric Touch":
@@ -489,7 +489,7 @@ namespace Rawr.ShadowPriest
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 float Damage = spell.AvgDamage;
-                float Cost = spell.ManaCost - simStats.ManaRestorePerCast_5_15 * 0.05f;
+                float Cost = spell.ManaCost - simStats.ManaRestoreOnCast_5_15 * 0.05f;
                 switch (spell.Name)
                 {
                     case "Smite":

@@ -6,6 +6,7 @@ namespace Rawr.Mage.SequenceReconstruction
 {
     public class SequenceGroup
     {
+        public bool UnavailableForMinManaCorrections;
         public double Mana;
         public double Threat;
         public double Duration;

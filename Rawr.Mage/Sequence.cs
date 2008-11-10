@@ -200,6 +200,7 @@ namespace Rawr.Mage.SequenceReconstruction
                             projectMana += SequenceItem.Calculations.ManaGemValue * (1 + BaseStats.BonusManaGem);
                             if (projectMana - BaseStats.Mana > overflowBuffer)
                             {
+                                sequence[j].SuperGroup.UnavailableForMinManaCorrections = true;
                                 overflowBuffer = projectMana - BaseStats.Mana;
                             }
                         }
@@ -219,6 +220,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         // don't care if idle regen is placed at start if we have threat limitations
                         if (!(maxTps < 5000.0 && kitem.VariableType == VariableType.IdleRegen && kitem.Segment == 0) && projectMana - BaseStats.Mana > overflowBuffer)
                         {
+                            sequence[j].SuperGroup.UnavailableForMinManaCorrections = true;
                             overflowBuffer = projectMana - BaseStats.Mana;
                         }
                         // only buffer items that are above tps limit; if we're above limit from before start time
@@ -591,6 +593,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 // no high burn sequence is available yet
                 // take first super group with enough burn and place it as soon as possible
+                // TODO: this needs a complete redesign, need some logic to ensure the changes made actually result in increase of mana consumption
                 tt = T;
                 lastSuper = null;
                 for (a = i; a < sequence.Count; a++)
@@ -601,7 +604,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         lastSuper = sequence[a].SuperGroup;
                         double minLastSuper = MinTime(lastSuper, a - 1);
-                        if (tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > minLastSuper + eps)
+                        if (!lastSuper.UnavailableForMinManaCorrections && tt + lastSuper.Duration > targetTime && lastSuper.Mps > minMps && tt > T && tt > minLastSuper + eps && minLastSuper < targetTime - eps)
                         {
                             // compute buffer of items that can be moved way back
                             double buffer = 0;
@@ -615,12 +618,15 @@ namespace Rawr.Mage.SequenceReconstruction
                             int lastSafeInsert = a;
                             double t3 = tt;
                             bool updated = false;
+                            bool manaTest = false;
                             for (b = a - 1; b >= i; b--)
                             {
                                 if (b == 0 || sequence[b].SuperGroup != sequence[b - 1].SuperGroup) lastSafeInsert = b;
+                                if (lastSuper.Mps > sequence[b].SuperGroup.Mps) manaTest = true;
                                 t3 -= sequence[b].Duration;
                                 if (t3 <= minLastSuper + eps)
                                 {
+                                    if (!manaTest) break;
                                     // possible insert point
                                     if (sequence[b].Group.Count == 0)
                                     {
@@ -921,6 +927,14 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
+        private double ManaGemEffectDuration
+        {
+            get
+            {
+                return SequenceItem.Calculations.ManaGemEffectDuration;
+            }
+        }
+
         public List<SequenceGroup> GroupTrinket1()
         {
             List<SequenceItem> list = new List<SequenceItem>();
@@ -939,6 +953,16 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.Trinket2) list.Add(item);
             }
             return GroupCooldown(list, Trinket2Duration, SequenceItem.Calculations.Trinket2Cooldown, Cooldown.Trinket2);
+        }
+
+        public List<SequenceGroup> GroupManaGemEffect()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.ManaGemEffect) list.Add(item);
+            }
+            return GroupCooldown(list, ManaGemEffectDuration, 120f, Cooldown.ManaGemEffect);
         }
 
         public void ConstrainTrinkets(List<SequenceGroup> t1, List<SequenceGroup> t2)

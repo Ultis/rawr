@@ -89,7 +89,9 @@ namespace Rawr
         Mana,
         ManaSpringMp5Increase,
         ManaRestorePerCast,
-        ManaRestorePerCast_5_15,
+        ManaRestorePerCrit,
+        ManaRestoreOnCast_5_15,
+        ManaRestoreOnCast_10_45,
         ManaRestoreFromMaxManaPerHit,
         ManaRestoreFromMaxManaPerSecond,
         MangleCostReduction,
@@ -107,6 +109,7 @@ namespace Rawr
         NatureResistance,
         Parry,
         ParryRating,
+        PendulumOfTelluricCurrentsProc,
         PVPTrinket,
 		RangedAttackPower,
         Resilience,
@@ -121,6 +124,7 @@ namespace Rawr
         SpellCritRating,
         SpellPowerFor10SecOnCrit_20_45,
         SpellPowerFor10SecOnHit_10_45,
+        SpellPowerFor10SecOnCast_15_45,
         SpellDamageFor10SecOnHit_5,
         SpellPowerFor10SecOnResist,
         SpellPowerFor15SecOnCrit_20_45,
@@ -138,6 +142,7 @@ namespace Rawr
         HasteRatingFor20SecOnUse5Min,
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
+        SpellHasteFor10SecOnCast_10_45,
         SpellHasteFor6SecOnHit_10_45,
         SpellHasteRating,
         SpellHit,
@@ -1037,12 +1042,32 @@ namespace Rawr
         }
 
         // 5% proc rate, 15 sec internal cooldown
-        [DisplayName("Mana Restore Per Cast (5%)")]
+        [DisplayName("Mana Restore On Cast (5%)")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestorePerCast_5_15
+        public float ManaRestoreOnCast_5_15
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCast_5_15] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_5_15]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_5_15] = value; }
+        }
+
+        // 10% proc rate, 45 sec internal cooldown
+        [DisplayName("Mana Restore On Cast (10%)")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestoreOnCast_10_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45] = value; }
+        }
+
+        // 10% proc rate, 45 sec internal cooldown
+        [DisplayName("Mana Restore Per Crit")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRestorePerCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCrit] = value; }
         }
 
         [Percentage]
@@ -1143,7 +1168,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor5SecOnCrit_50] = value; }
         }
 
-        // 15% change, 45 sec internal cooldown
+        // 15% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (15% 6 sec/Cast)")]
         [Category("Equipment Procs")]
@@ -1153,7 +1178,17 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor6SecOnCast_15_45] = value; }
         }
 
-        // 10% change, 45 sec internal cooldown
+        // 10% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Haste (10% 10 sec/Cast)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor10SecOnCast_10_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnCast_10_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnCast_10_45] = value; }
+        }
+
+        // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (10% 6 sec/Hit)")]
         [Category("Equipment Procs")]
@@ -1265,6 +1300,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnHit_10_45] = value; }
+        }
+
+        // 15% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Power (10 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellPowerFor10SecOnCast_15_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCast_15_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor10SecOnCast_15_45] = value; }
         }
 
         // 20% chance, 45 sec internal cooldown
@@ -1594,6 +1639,15 @@ namespace Rawr
         { 
             get { return _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.ShatteredSunAcumenProc] = value; }
+        }
+
+        [DisplayName("Pendulum of Telluric Currents proc")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float PendulumOfTelluricCurrentsProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc] = value; }
         }
 
         [DisplayName("Timbal's Focusing Crystal proc")]

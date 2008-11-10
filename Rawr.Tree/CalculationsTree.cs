@@ -307,7 +307,7 @@ namespace Rawr.Tree
                 #region Trinkets
                 MementoProc = stats.MementoProc,
                 AverageHeal = stats.AverageHeal,
-                ManaRestorePerCast_5_15 = stats.ManaRestorePerCast_5_15,
+                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 BangleProc = stats.BangleProc,
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
                 ManacostReduceWithin15OnUse1Min = stats.ManacostReduceWithin15OnUse1Min,
@@ -349,7 +349,7 @@ namespace Rawr.Tree
         {
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
-                + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal + stats.ManaRestorePerCast_5_15 + stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
+                + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal + stats.ManaRestoreOnCast_5_15 + stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
                 + stats.ShatteredSunRestoProc
                 + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost + stats.HealingTouchFinalHealBonus
                 > 0)
