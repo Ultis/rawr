@@ -34,7 +34,7 @@ namespace Rawr
 		{
 			get
 			{
-				string shortName = Name.Replace("Glyph of the ", "").Replace("Glyph of ", "").Replace("Inscription of the ", "")
+				string shortName = Name.Replace("Arcanum of the ", "").Replace("Arcanum of ", "").Replace("Inscription of the ", "")
 					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
 					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "").Replace(" Spellthread", "");
 				return shortName.Substring(0, Math.Min(shortName.Length, 12));
@@ -277,7 +277,8 @@ namespace Rawr
         {
             List<Enchant> defaultEnchants = new List<Enchant>();
             defaultEnchants.Add(new Enchant(0, "No Enchant", Item.ItemSlot.None, new Stats()));
-            defaultEnchants.Add(new Enchant(2999, "Glyph of the Defender", Item.ItemSlot.Head, new Stats() { DefenseRating = 16, DodgeRating = 17 }));
+            defaultEnchants.Add(new Enchant(2999, "Arcanum of the Defender", Item.ItemSlot.Head, new Stats() { DefenseRating = 16, DodgeRating = 17 }));
+            defaultEnchants.Add(new Enchant(3818, "Arcanum of the Stalwart Protector", Item.ItemSlot.Head, new Stats() { Stamina = 37, DefenseRating = 20 }));
             defaultEnchants.Add(new Enchant(2991, "Greater Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats() { DefenseRating = 15, DodgeRating = 10 }));
             defaultEnchants.Add(new Enchant(2990, "Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats() { DefenseRating = 13 }));
             defaultEnchants.Add(new Enchant(2978, "Greater Inscription of Warding", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
@@ -320,8 +321,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1441, "Greater Shadow Resistance", Item.ItemSlot.Back, new Stats() { ShadowResistance = 15 }));
 
             defaultEnchants.Add(new Enchant(2543, "Arcanum of Rapidity", Item.ItemSlot.Head, new Stats() { HasteRating = 10 }));
-            defaultEnchants.Add(new Enchant(3003, "Glyph of Ferocity", Item.ItemSlot.Head, new Stats() { AttackPower = 34, HitRating = 16 }));
-            defaultEnchants.Add(new Enchant(3096, "Glyph of the Outcast", Item.ItemSlot.Head, new Stats() { Strength = 17 }));
+            defaultEnchants.Add(new Enchant(3003, "Arcanum of Ferocity", Item.ItemSlot.Head, new Stats() { AttackPower = 34, HitRating = 16 }));
+            defaultEnchants.Add(new Enchant(3817, "Arcanum of Torment", Item.ItemSlot.Head, new Stats() { AttackPower = 50, CritRating = 20 }));
+            defaultEnchants.Add(new Enchant(3096, "Arcanum of the Outcast", Item.ItemSlot.Head, new Stats() { Strength = 17, Intellect = 16 }));
             defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 26, CritRating = 14 }));
             defaultEnchants.Add(new Enchant(2583, "Presence of Might", Item.ItemSlot.Head, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 15 }));
@@ -364,7 +366,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2995, "Greater Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2981, "Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2994, "Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { CritRating = 13 }));
-            defaultEnchants.Add(new Enchant(3002, "Glyph of Power", Item.ItemSlot.Head, new Stats() { SpellPower = 22, HitRating = 14 }));
+            defaultEnchants.Add(new Enchant(3002, "Arcanum of Power", Item.ItemSlot.Head, new Stats() { SpellPower = 22, HitRating = 14 }));
+            defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", Item.ItemSlot.Head, new Stats() { SpellPower = 30, CritRating = 20 }));
+            defaultEnchants.Add(new Enchant(3797, "Arcanum of Dominance", Item.ItemSlot.Head, new Stats() { SpellPower = 29, Resilience = 20 }));
             defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.OneHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }));
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
             defaultEnchants.Add(new Enchant(2938, "Spell Penetration", Item.ItemSlot.Back, new Stats() { SpellPenetration = 20 }));
@@ -375,6 +379,7 @@ namespace Rawr
 
             // Healing enchants (add spell damage too)
 			defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
+            defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", Item.ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 8 }));
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
 
@@ -404,7 +409,9 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
 
             defaultEnchants.Add(new Enchant(2648, "Steelweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 12 }));
-            defaultEnchants.Add(new Enchant(3004, "Glyph of the Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 18, Resilience = 20 }));
+            defaultEnchants.Add(new Enchant(3004, "Arcanum of the Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 18, Resilience = 20 }));
+            defaultEnchants.Add(new Enchant(3842, "Arcanum of the Savage Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 30, Resilience = 25 }));
+            defaultEnchants.Add(new Enchant(3795, "Arcanum of Triumph", Item.ItemSlot.Head, new Stats() { AttackPower = 50, Resilience = 20 }));
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
@@ -429,11 +436,16 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Feet, new Stats() { ArcaneResistance = 8 }));
 			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Chest, new Stats() { ArcaneResistance = 8 }));
 			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Legs, new Stats() { ArcaneResistance = 8 }));
-			defaultEnchants.Add(new Enchant(3005, "Glyph of Nature Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3006, "Glyph of Arcane Warding", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3007, "Glyph of Fire Warding", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3008, "Glyph of Frost Warding", Item.ItemSlot.Head, new Stats() { FrostResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3009, "Glyph of Shadow Warding", Item.ItemSlot.Head, new Stats() { ShadowResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3005, "Arcanum of Nature Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3813, "Arcanum of Toxic Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 25, Stamina = 30 }));
+			defaultEnchants.Add(new Enchant(3006, "Arcanum of Arcane Warding", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3815, "Arcanum of the Eclipsed Moon", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 25, Stamina = 30 }));
+			defaultEnchants.Add(new Enchant(3007, "Arcanum of Fire Warding", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3816, "Arcanum of the Flame's Soul", Item.ItemSlot.Head, new Stats() { FireResistance = 25, Stamina = 30 }));
+			defaultEnchants.Add(new Enchant(3008, "Arcanum of Frost Warding", Item.ItemSlot.Head, new Stats() { FrostResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3812, "Arcanum of the Frosty Soul", Item.ItemSlot.Head, new Stats() { FrostResistance = 25, Stamina = 30 }));
+			defaultEnchants.Add(new Enchant(3009, "Arcanum of Shadow Warding", Item.ItemSlot.Head, new Stats() { ShadowResistance = 20 }));
+			defaultEnchants.Add(new Enchant(3814, "Arcanum of the Fleeing Shadow", Item.ItemSlot.Head, new Stats() { ShadowResistance = 25, Stamina = 30 }));
 			defaultEnchants.Add(new Enchant(2998, "Inscription of Endurance", Item.ItemSlot.Shoulders, new Stats() { NatureResistance = 4, ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4 }));
 			defaultEnchants.Add(new Enchant(2664, "Major Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 7, ArcaneResistance = 7, FireResistance = 7, FrostResistance = 7, ShadowResistance = 7 }));
 			defaultEnchants.Add(new Enchant(2619, "Greater Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 15 }));
