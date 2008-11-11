@@ -60,17 +60,20 @@ namespace Rawr
         ExpertiseRating,
         ExposeWeakness,
         FireResistance,
-        FoLHeal,
-        FoLCrit,
+        FlashOfLightSpellPower,
+        FlashOfLightMultiplier,
+        FlashOfLightCrit,
         FrostResistance,
         HasteRating,
         Healing,
         Health,
         PhysicalHit,
         HitRating,
-        HLCost,
-        HLHeal,
-        HLCrit,
+        HolyLightManaReduction,
+        HolyLightSpellPower,
+        HolyLightPercentManaReduction,
+        HolyLightCrit,
+        HolyShockCrit,
         Hp5,
         IdolCritRating,
         InnervateCooldownReduction,
@@ -237,7 +240,6 @@ namespace Rawr
 		BonusEnrageDamageMultiplier,
 		BonusShadowDamageMultiplier,
 		BonusHolyDamageMultiplier,
-        FoLMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
 		BonusRangedAttackPowerMultiplier,
@@ -1695,48 +1697,80 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("FoL Bonus Heal")]
+        [DisplayName("Flash of Light Spell Power")]
         [Category("Equipment Procs")]
-        public float FoLHeal
+        public float FlashOfLightSpellPower
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.FoLHeal]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FoLHeal] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightSpellPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("FoL Bonus Crit")]
+        [Percentage]
+        [DisplayName("% Flash of Light Healing")]
         [Category("Equipment Procs")]
-        public float FoLCrit
+        public float FlashOfLightMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.FoLCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FoLCrit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("HL Bonus Heal")]
+        [Percentage]
+        [DisplayName("% Flash of Light Crit")]
         [Category("Equipment Procs")]
-        public float HLHeal
+        public float FlashOfLightCrit
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.HLHeal]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HLHeal] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("HL Reduced Cost")]
+        [DisplayName("Holy Light Spell Power")]
         [Category("Equipment Procs")]
-        public float HLCost
+        public float HolyLightSpellPower
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.HLCost]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HLCost] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("HL Bonus Crit")]
+        [DisplayName("Holy Light Mana Cost Reduction")]
         [Category("Equipment Procs")]
-        public float HLCrit
+        public float HolyLightManaCostReduction
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.HLCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HLCrit] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Light Crit")]
+        [Category("Equipment Procs")]
+        public float HolyLightCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Shock Crit")]
+        [Category("Equipment Procs")]
+        public float HolyShockCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyShockCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyShockCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Holy Light Cost Reduction")]
+        [Category("Equipment Procs")]
+        public float HolyLightPercentManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2231,15 +2265,6 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("FoL Multiplier")]
-        [Category("Equipment Procs")]
-        public float FoLMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.FoLMultiplier] = value; }
         }
 		
 		[System.ComponentModel.DefaultValueAttribute(0f)]

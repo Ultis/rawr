@@ -637,19 +637,19 @@ namespace Rawr
             {
                 line = line.Replace(".", "");
                 line = line.Substring("Reduces the mana cost of Holy Light by ".Length);
-				stats.HLCost += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+				stats.HolyLightManaCostReduction += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
             else if (line.StartsWith("Increases spell power of Flash of Light by "))
             {
                 line = line.Replace(".", "");
                 line = line.Substring("Increases spell power of Flash of Light by ".Length);
-				stats.FoLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+				stats.FlashOfLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
             else if (line.StartsWith("Increases spell power of Holy Light by "))
             {
                 line = line.Replace(".", "");
                 line = line.Substring("Increases spell power of Holy Light by ".Length);
-				stats.HLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
+				stats.HolyLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
 			{
