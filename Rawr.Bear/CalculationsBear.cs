@@ -1305,21 +1305,7 @@ the Threat Scale defined on the Options tab.",
 			dictValues.Add("Avoidance PostDR", AvoidancePostDR.ToString() + "%");
 			dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
-			if (defToCap == 0 && resToCap == 0)
-			{
-				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
-					+ "%*Exactly enough defense rating/resilience to be uncrittable by bosses.");
-			}
-			else if (defToCap + resToCap > 0)
-			{
-				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
-					+ string.Format("%*CRITTABLE! Short by {0} defense rating or {1} resilience to be uncrittable by bosses.",
-					defToCap, resToCap));
-			}
-			else
-				dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
-					+ string.Format("%*Uncrittable by bosses. {0} defense rating or {1} resilience over the crit cap.",
-					-defToCap, -resToCap));
+			dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString());
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
 			dictValues.Add("Survival Points", SurvivalPoints.ToString());

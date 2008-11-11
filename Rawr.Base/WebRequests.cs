@@ -210,12 +210,12 @@ namespace Rawr
 
             public string RelativeItemImageCache
             {
-                get { return Rawr.Properties.CacheSettings.Default.RelativeItemImageCache; }
+				get { return Rawr.Properties.CacheSettings.Default.RelativeItemImageCache.Replace('/', System.IO.Path.DirectorySeparatorChar); }
             }
 
             public string RelativeTalentImageCache
             {
-                get { return Rawr.Properties.CacheSettings.Default.RelativeTalentImageCache; }
+				get { return Rawr.Properties.CacheSettings.Default.RelativeTalentImageCache.Replace('/', System.IO.Path.DirectorySeparatorChar); }
             }
 
             #endregion

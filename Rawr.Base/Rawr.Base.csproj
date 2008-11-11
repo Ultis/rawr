@@ -133,6 +133,7 @@
     <Compile Include="SavedVariablesParser.cs" />
     <Compile Include="SerializableDictionary.cs" />
     <Compile Include="SpecialEffects.cs" />
+    <Compile Include="StatConversion.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="StatusMessaging.cs" />
     <Compile Include="Utilities.cs" />
