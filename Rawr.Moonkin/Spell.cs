@@ -791,6 +791,9 @@ namespace Rawr.Moonkin
             // Add set bonuses
             SpellRotation.Moonfire.DoT.Duration += stats.MoonfireExtension;
             SpellRotation.Starfire.SpecialCriticalModifier += stats.StarfireCritChance;
+			SpellRotation.InsectSwarm.SpecialDamageModifier *= 1.0f + stats.BonusInsectSwarmDamage;
+			SpellRotation.Starfire.SpecialCriticalModifier += stats.BonusNukeCritChance;
+			SpellRotation.Wrath.SpecialCriticalModifier += stats.BonusNukeCritChance;
         }
 
         public static void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
@@ -884,6 +887,10 @@ namespace Rawr.Moonkin
                 SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
                 SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
             }
+			// Mana restore per crit trinket
+			SpellRotation.Starfire.ManaCost -= (spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
+			SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
+			SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
             // Generic mana restore per cast
             SpellRotation.Starfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             SpellRotation.Moonfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
@@ -924,6 +931,31 @@ namespace Rawr.Moonkin
                 {
                     SpellRotation.Starfire.SpecialCriticalModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                 }
+                // Haste trinket calculations
+                DoHasteProcCalcs(calcs, rotation, spellHitRate, ref tempHasteRating);
+                float tempHaste = tempHasteRating / CalculationsMoonkin.hasteRatingConversionFactor;
+				// Recalculate spell cast times (!)
+				float hasteDiff = tempHaste - spellHaste;
+				Spell.GlobalCooldown = 1.5f / (1 + hasteDiff) + calcs.Latency;
+				// Update spell cast times with new haste
+				foreach (Spell sp in SpellRotation.SpellData)
+				{
+					// Direct nukes, subject to Nature's Grace
+					if (sp.DoT == null)
+					{
+						float castTimeNoNG = Math.Max(sp.CastTime / (1 + hasteDiff), 1.0f) + calcs.Latency;
+						float castTimeNG = Math.Max((sp.CastTime - 0.5f) / (1 + hasteDiff), 1.0f) + calcs.Latency;
+						float NGProcChance = (spellCritRate + sp.SpecialCriticalModifier) * spellHitRate * naturesGrace / 3.0f;
+						sp.CastTime = castTimeNG * NGProcChance + castTimeNoNG * (1 - NGProcChance);
+					}
+					else
+					{
+						sp.CastTime = Math.Max(sp.CastTime / (1 + hasteDiff), 1.0f) + calcs.Latency;
+					}
+				}
+                // Recalculate all variables
+                rotation.CalculateRotationalVariables();
+
                 // Incorporate Nature's Grace with Moonfire into the rotational calculations
                 if (naturesGrace > 0 && rotation.HasMoonfire)
                 {
@@ -938,12 +970,6 @@ namespace Rawr.Moonkin
                     rotation.CalculateRotationalVariables();
                 }
 
-                // Haste trinket calculations
-                DoHasteProcCalcs(calcs, rotation, spellHitRate, ref tempHasteRating);
-                float tempHaste = tempHasteRating / CalculationsMoonkin.hasteRatingConversionFactor;
-
-                // Recalculate all variables
-                rotation.CalculateRotationalVariables();
                 DoProcTrinketCalcs(calcs, rotation, tempHit, tempCritRating, ref tempArcaneDamage, ref tempNatureDamage, ref trinketExtraDPS);
 
                 // Average cast time for main nuke, including non-nuke spells
@@ -1207,6 +1233,24 @@ namespace Rawr.Moonkin
                         SpellRotation.Wrath.CastTime += ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
                     }
                 }
+				// Undo haste trinkets (!)
+				Spell.GlobalCooldown = 1.5f / (1 - hasteDiff) + calcs.Latency;
+				// Update spell cast times with new haste
+				foreach (Spell sp in SpellRotation.SpellData)
+				{
+					// Direct nukes, subject to Nature's Grace
+					if (sp.DoT == null)
+					{
+						float castTimeNoNG = Math.Max(sp.CastTime / (1 - hasteDiff), 1.0f) + calcs.Latency;
+						float castTimeNG = Math.Max((sp.CastTime - 0.5f) / (1 - hasteDiff), 1.0f) + calcs.Latency;
+						float NGProcChance = (spellCritRate + sp.SpecialCriticalModifier) * spellHitRate * naturesGrace / 3.0f;
+						sp.CastTime = castTimeNG * NGProcChance + castTimeNoNG * (1 - NGProcChance);
+					}
+					else
+					{
+						sp.CastTime = Math.Max(sp.CastTime / (1 - hasteDiff), 1.0f) + calcs.Latency;
+					}
+				}
                 // All damage multiplier
                 currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
                 currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
@@ -1267,8 +1311,15 @@ namespace Rawr.Moonkin
                     }
                 }
                 manaFromTrinket /= 120.0f;
-                manaFromTrinket *= rotation.Duration;
+            	manaFromTrinket *= rotation.Duration;
             }
+			// Mp5 on cast for 10 sec, 45 sec cooldown
+			if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
+			{
+				float procsPerRotation = 0.1f * rotation.CastCount;
+				float timeBetweenProcs = rotation.Duration / procsPerRotation;
+				manaFromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / (45.0f + timeBetweenProcs) * rotation.Duration;
+			}
             return manaFromTrinket;
         }
         private static void DoHasteProcCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, ref float effectiveSpellHaste)
@@ -1287,6 +1338,13 @@ namespace Rawr.Moonkin
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
                 effectiveSpellHaste += calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6.0f / (45.0f + timeBetweenProcs);
             }
+			// 10% chance of spell haste on cast, 45s cooldown
+			if (calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 > 0)
+			{
+                float procsPerRotation = 0.1f * rotation.CastCount;
+                float timeBetweenProcs = rotation.Duration / procsPerRotation;
+                effectiveSpellHaste += calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10.0f / (45.0f + timeBetweenProcs);
+			}
         }
         private static void DoProcTrinketCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float effectiveSpellCrit, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float trinketExtraDPS)
         {
@@ -1355,9 +1413,17 @@ namespace Rawr.Moonkin
             {
                 float procsPerRotation = 0.2f * hitRate * (effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor) * rotation.CastCount;
                 float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 * 10.0f / (45.0f + timeBetweenProcs);
             }
+			// 15% chance of spell power for 10 seconds on cast, 45s cooldown.
+			if (calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 > 0)
+			{
+				float procsPerRotation = 0.15f * rotation.CastCount;
+                float timeBetweenProcs = rotation.Duration / procsPerRotation;
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 * 10.0f / (45.0f + timeBetweenProcs);
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 * 10.0f / (45.0f + timeBetweenProcs);
+			}
         }
         private static void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
         {

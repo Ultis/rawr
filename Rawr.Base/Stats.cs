@@ -196,7 +196,9 @@ namespace Rawr
 		MangleCooldownReduction,
 		BonusFerociousBiteCrit,
         BonusObliterateDamage,
-        BonusScourgeStrikeDamage
+        BonusScourgeStrikeDamage,
+		BonusInsectSwarmDamage,
+		BonusNukeCritChance
     }
 
     enum MultiplicativeStat : int
@@ -1410,6 +1412,22 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.StarfireCritChance]; }
             set { _rawAdditiveData[(int)AdditiveStat.StarfireCritChance] = value; }
         }
+
+		// Moonkin 2-piece T7 bonus
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float BonusInsectSwarmDamage
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage] = value; }
+		}
+
+		// Moonkin 4-piece T7 bonus
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float BonusNukeCritChance
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance] = value; }
+		}
 
         // Tree 2-piece T5
         [System.ComponentModel.DefaultValueAttribute(0f)]
