@@ -823,7 +823,7 @@ namespace Rawr.Moonkin
             // Casting trees?  Remove from effective mana
             if (character.DruidTalents.ForceOfNature > 0)
             {
-                int numTreeCasts = ((int)fightLength / 120) + 1;
+                int numTreeCasts = ((int)fightLength / 180) + 1;
                 effectiveMana -= numTreeCasts * CalculationsMoonkin.BaseMana * 0.12f;
             }
 
@@ -935,27 +935,22 @@ namespace Rawr.Moonkin
                 DoHasteProcCalcs(calcs, rotation, spellHitRate, ref tempHasteRating);
                 float tempHaste = tempHasteRating / CalculationsMoonkin.hasteRatingConversionFactor;
 				// Recalculate spell cast times (!)
-				float hasteDiff = tempHaste - spellHaste;
-				Spell.GlobalCooldown = 1.5f / (1 + hasteDiff) + calcs.Latency;
-				// Update spell cast times with new haste
-				foreach (Spell sp in SpellRotation.SpellData)
-				{
-					// Direct nukes, subject to Nature's Grace
-					if (sp.DoT == null)
-					{
-						float castTimeNoNG = Math.Max(sp.CastTime / (1 + hasteDiff), 1.0f) + calcs.Latency;
-						float castTimeNG = Math.Max((sp.CastTime - 0.5f) / (1 + hasteDiff), 1.0f) + calcs.Latency;
-						float NGProcChance = (spellCritRate + sp.SpecialCriticalModifier) * spellHitRate * naturesGrace / 3.0f;
-						sp.CastTime = castTimeNG * NGProcChance + castTimeNoNG * (1 - NGProcChance);
-					}
-					else
-					{
-						sp.CastTime = Math.Max(sp.CastTime / (1 + hasteDiff), 1.0f) + calcs.Latency;
-					}
-				}
+                float hasteDiff = tempHaste - spellHaste;
+                Dictionary<string, float> oldCastTimes = new Dictionary<string, float>();
+                if (hasteDiff > 0)
+                {
+                    oldCastTimes.Add("GlobalCooldown", Spell.GlobalCooldown);
+                    Spell.GlobalCooldown = Spell.GlobalCooldown / (1 + hasteDiff);
+                    // Update spell cast times with new haste
+                    foreach (Spell sp in SpellRotation.SpellData)
+                    {
+                        oldCastTimes.Add(sp.Name, sp.CastTime);
+                        sp.CastTime = Math.Max((sp.CastTime - calcs.Latency) / (1 + hasteDiff), 1.0f) + calcs.Latency;
+                    }
+                }
                 // Recalculate all variables
                 rotation.CalculateRotationalVariables();
-
+                
                 // Incorporate Nature's Grace with Moonfire into the rotational calculations
                 if (naturesGrace > 0 && rotation.HasMoonfire)
                 {
@@ -975,10 +970,10 @@ namespace Rawr.Moonkin
                 // Average cast time for main nuke, including non-nuke spells
                 float starfireAverageCastTime = 0.0f;
                 if (rotation.StarfireCount > 0)
-                    starfireAverageCastTime = rotation.Duration / (rotation.StarfireCount * SpellRotation.Starfire.CastTime);
+                    starfireAverageCastTime = (rotation.CastCount / rotation.StarfireCount) * SpellRotation.Starfire.CastTime;
                 float wrathAverageCastTime = 0.0f;
                 if (rotation.WrathCount > 0)
-                    wrathAverageCastTime = rotation.Duration / (rotation.WrathCount * SpellRotation.Wrath.CastTime);
+                    wrathAverageCastTime = (rotation.CastCount / rotation.WrathCount) * SpellRotation.Wrath.CastTime;
 
                 // Omen of Clarity
                 if (character.DruidTalents.OmenOfClarity > 0)
@@ -1233,24 +1228,16 @@ namespace Rawr.Moonkin
                         SpellRotation.Wrath.CastTime += ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
                     }
                 }
-				// Undo haste trinkets (!)
-				Spell.GlobalCooldown = 1.5f / (1 - hasteDiff) + calcs.Latency;
-				// Update spell cast times with new haste
-				foreach (Spell sp in SpellRotation.SpellData)
-				{
-					// Direct nukes, subject to Nature's Grace
-					if (sp.DoT == null)
-					{
-						float castTimeNoNG = Math.Max(sp.CastTime / (1 - hasteDiff), 1.0f) + calcs.Latency;
-						float castTimeNG = Math.Max((sp.CastTime - 0.5f) / (1 - hasteDiff), 1.0f) + calcs.Latency;
-						float NGProcChance = (spellCritRate + sp.SpecialCriticalModifier) * spellHitRate * naturesGrace / 3.0f;
-						sp.CastTime = castTimeNG * NGProcChance + castTimeNoNG * (1 - NGProcChance);
-					}
-					else
-					{
-						sp.CastTime = Math.Max(sp.CastTime / (1 - hasteDiff), 1.0f) + calcs.Latency;
-					}
-				}
+                // Undo haste trinkets (!)
+                if (hasteDiff > 0)
+                {
+                    Spell.GlobalCooldown = oldCastTimes["GlobalCooldown"];
+                    // Update spell cast times with new haste
+                    foreach (Spell sp in SpellRotation.SpellData)
+                    {
+                        sp.CastTime = oldCastTimes[sp.Name];
+                    }
+                }
                 // All damage multiplier
                 currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
                 currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
@@ -1284,8 +1271,8 @@ namespace Rawr.Moonkin
         // Let there be TREES.
         private static float DoTreeCalcs(float effectiveNatureDamage, float treantLifespan, int bramblesLevel)
         {
-            float damagePerHit = 176.0f + 0.075f * effectiveNatureDamage;
-            float attackSpeed = 1.6f;
+            float damagePerHit = (450.0f + 0.052f * effectiveNatureDamage) * (2.0f * 1.02f) * (1.0f);
+            float attackSpeed = 1.8f / (1 + 0f);
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
             return 3 * damagePerTree / 180.0f;
         }
@@ -1296,22 +1283,9 @@ namespace Rawr.Moonkin
             // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
             if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
             {
-                float currentTime = 0.0f;
-                float currentMp5 = 21.0f;
-                float timeSinceLastCast = 0.0f;
-                while (currentTime < 20.0f)
-                {
-                    manaFromTrinket += currentMp5 / 5.0f * 2.0f;
-                    currentTime += 2.0f;
-                    timeSinceLastCast += 2.0f;
-                    if (timeSinceLastCast >= rotation.Duration / rotation.CastCount)
-                    {
-                        timeSinceLastCast -= rotation.Duration / rotation.CastCount;
-                        currentMp5 += 21.0f;
-                    }
-                }
-                manaFromTrinket /= 120.0f;
-            	manaFromTrinket *= rotation.Duration;
+                float averageCastsIn20Sec = 20.0f / (rotation.CastCount / rotation.Duration);
+                float averageTrinketMp5 = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * (rotation.Duration / rotation.CastCount) / 20.0f;
+                manaFromTrinket += averageTrinketMp5 * 4.0f / 120.0f * rotation.Duration;
             }
 			// Mp5 on cast for 10 sec, 45 sec cooldown
 			if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)

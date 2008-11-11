@@ -356,6 +356,7 @@
             // 
             this.cmbGlyph3.FormattingEnabled = true;
             this.cmbGlyph3.Items.AddRange(new object[] {
+            "None",
             "Starfire",
             "Moonfire",
             "Insect Swarm"});
