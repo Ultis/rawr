@@ -260,7 +260,7 @@ namespace Rawr.Healadin
             calc.SSCasts = (float)Math.Ceiling(fight_length / 30f) * SSUptime;
             float ss_baseMana = (float)Math.Round(.12f * base_mana) * benediction;
             calc.SSUsage = calc.SSCasts * ss_baseMana;
-            calc.SSAbsorbed = (float)Math.Floor(fight_length / 12f) * calc.SSAvgAbsorb;
+            calc.SSAbsorbed = (float)Math.Floor(fight_length / 6f) * calc.SSAvgAbsorb;
             calc.SSHPM = calc.SSAbsorbed / calc.SSUsage;
             calc.SSHPS = calc.SSAbsorbed / (calc.SSCasts * calc.HSCastTime);
             #endregion

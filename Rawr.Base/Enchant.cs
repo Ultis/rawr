@@ -398,8 +398,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
             defaultEnchants.Add(new Enchant(2938, "Spell Penetration", Item.ItemSlot.Back, new Stats() { SpellPenetration = 20 }));
             defaultEnchants.Add(new Enchant(3243, "Spell Piercing", Item.ItemSlot.Back, new Stats() { SpellPenetration = 35 }));
-            defaultEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 6, Hp5 = 6 }));
-            defaultEnchants.Add(new Enchant(v, "Greater Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
+            defaultEnchants.Add(new Enchant(3244, "Greater Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 6, Hp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
             defaultEnchants.Add(new Enchant(369, "Major Intellect", Item.ItemSlot.Wrist, new Stats() { Intellect = 12 }));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", Item.ItemSlot.Chest, new Stats() { Spirit = 15 }));
             defaultEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));

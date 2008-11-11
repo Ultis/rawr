@@ -375,10 +375,12 @@ you are being killed by burst damage, focus on Survival Points.",
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
-            stats.Strength = (float)Math.Round(stats.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
+            Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
+            stats.Strength = (float)Math.Floor(statsOther.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
             stats.AttackPower = (float)Math.Round((stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
-            stats.Agility = (float)Math.Round(stats.Agility * (1 + stats.BonusAgilityMultiplier));
-            stats.Stamina = (float)Math.Round(stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .03f) * (1f + talents.CombatExpertise * .02f));
+            stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
+            stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .03f) * (1f + talents.CombatExpertise * .02f))
+                + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .03f) * (1f + talents.CombatExpertise * .02f));
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
             stats.Armor = (float)Math.Round((stats.Armor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
