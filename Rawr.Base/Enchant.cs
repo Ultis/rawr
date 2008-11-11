@@ -308,7 +308,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1886, "Superior Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 9 }));
             defaultEnchants.Add(new Enchant(2648, "Major Defense", Item.ItemSlot.Wrist, new Stats() { DefenseRating = 12 }));
             defaultEnchants.Add(new Enchant(1891, "Stats", Item.ItemSlot.Wrist, new Stats() { Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4 }));
+            defaultEnchants.Add(new Enchant(2661, "Greater Stats", Item.ItemSlot.Wrist, new Stats() { Agility = 6, Strength = 6, Stamina = 6, Intellect = 6, Spirit = 6 }));
             defaultEnchants.Add(new Enchant(2564, "Superior Agility", Item.ItemSlot.Hands, new Stats() { Agility = 15 }));
+            defaultEnchants.Add(new Enchant(3222, "Major Agility", Item.ItemSlot.Hands, new Stats() { Agility = 20 }));
             defaultEnchants.Add(new Enchant(3011, "Clefthide Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 10, Stamina = 30 }));
             defaultEnchants.Add(new Enchant(3013, "Nethercleft Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 12, Stamina = 40 }));
             defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", Item.ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 8 }));
@@ -321,6 +323,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2649, "Fortitude", Item.ItemSlot.Feet, new Stats() { Stamina = 12 }));
             defaultEnchants.Add(new Enchant(1075, "Greater Fortitude", Item.ItemSlot.Feet, new Stats() { Stamina = 22 }));
             defaultEnchants.Add(new Enchant(2931, "Stats", Item.ItemSlot.Finger, new Stats() { Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4 }));
+            defaultEnchants.Add(new Enchant(3791, "Stamina", Item.ItemSlot.Finger, new Stats() { Stamina = 24 }));
             defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.TwoHand, new Stats() { Agility = 35 }));
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Chest, new Stats() { Stamina = 8 }));
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 8 }));
@@ -362,11 +365,23 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { CritRating = 10, HitRating = 10 }));
             defaultEnchants.Add(new Enchant(3826, "Icewalker", Item.ItemSlot.Feet, new Stats() { CritRating = 12, HitRating = 12 }));
             defaultEnchants.Add(new Enchant(2929, "Striking", Item.ItemSlot.Finger, new Stats() { WeaponDamage = 2 }));
+            defaultEnchants.Add(new Enchant(3839, "Assault", Item.ItemSlot.Finger, new Stats() { AttackPower = 32 }));
             defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.TwoHand, new Stats() { AttackPower = 70 }));
+            defaultEnchants.Add(new Enchant(3828, "Greater Savagery", Item.ItemSlot.TwoHand, new Stats() { AttackPower = 85 }));
+            defaultEnchants.Add(new Enchant(3827, "Massacre", Item.ItemSlot.TwoHand, new Stats() { AttackPower = 110 }));
             defaultEnchants.Add(new Enchant(1593, "Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 24 }));
-            defaultEnchants.Add(new Enchant(1594, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
+            defaultEnchants.Add(new Enchant(1600, "Striking", Item.ItemSlot.Wrist, new Stats() { AttackPower = 38 }));
+            defaultEnchants.Add(new Enchant(3845, "Greater Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 50 }));
+            defaultEnchants.Add(new Enchant(3231, "Expertise", Item.ItemSlot.Wrist, new Stats() { ExpertiseRating = 15 }));
+            defaultEnchants.Add(new Enchant(3829, "Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 35 }));
+            defaultEnchants.Add(new Enchant(1594, "Greater Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
+            defaultEnchants.Add(new Enchant(1603, "Crusher", Item.ItemSlot.Hands, new Stats() { AttackPower = 44 }));
+            defaultEnchants.Add(new Enchant(3231, "Expertise", Item.ItemSlot.Hands, new Stats() { ExpertiseRating = 15 }));
 			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
+            defaultEnchants.Add(new Enchant(1103, "Exceptional Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 26 }));
 			defaultEnchants.Add(new Enchant(2668, "Potency", Item.ItemSlot.OneHand, new Stats() { Strength = 20 }));
+            defaultEnchants.Add(new Enchant(1606, "Greater Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 50 }));
+            defaultEnchants.Add(new Enchant(3833, "Superior Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 65 }));
 			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
             defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
@@ -374,15 +389,26 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
             defaultEnchants.Add(new Enchant(3296, "Wisdom", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }));
             defaultEnchants.Add(new Enchant(2613, "Threat", Item.ItemSlot.Hands, new Stats() { ThreatIncreaseMultiplier = 0.02f }));
+            defaultEnchants.Add(new Enchant(3253, "Armsman", Item.ItemSlot.Hands, new Stats() { ThreatIncreaseMultiplier = 0.02f, ParryRating = 10 }));
 
             //spell stuff
             defaultEnchants.Add(new Enchant(2650, "Spellpower", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
+            defaultEnchants.Add(new Enchant(2332, "Superior Spellpower", Item.ItemSlot.Wrist, new Stats() { SpellPower = 30 }));
+            defaultEnchants.Add(new Enchant(2326, "Greater Spellpower", Item.ItemSlot.Wrist, new Stats() { SpellPower = 23 }));
             defaultEnchants.Add(new Enchant(2937, "Major Spellpower", Item.ItemSlot.Hands, new Stats() { SpellPower = 20 }));
-            defaultEnchants.Add(new Enchant(2935, "Spell Strike", Item.ItemSlot.Hands, new Stats() { HitRating = 15 }));
+            defaultEnchants.Add(new Enchant(3246, "Exceptional Spellpower", Item.ItemSlot.Hands, new Stats() { SpellPower = 28 }));
+            defaultEnchants.Add(new Enchant(2935, "Precise Strikes", Item.ItemSlot.Hands, new Stats() { HitRating = 15 }));
+            defaultEnchants.Add(new Enchant(3234, "Precision", Item.ItemSlot.Hands, new Stats() { HitRating = 20 }));
             defaultEnchants.Add(new Enchant(2928, "Spellpower", Item.ItemSlot.Finger, new Stats() { SpellPower = 12 }));
+            defaultEnchants.Add(new Enchant(3840, "Greater Spellpower", Item.ItemSlot.Finger, new Stats() { SpellPower = 19 }));
             defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.OneHand, new Stats() { SpellPower = 40 }));
+            defaultEnchants.Add(new Enchant(3830, "Exceptional Spellpower", Item.ItemSlot.OneHand, new Stats() { SpellPower = 50 }));
+            defaultEnchants.Add(new Enchant(3834, "Mighty Spellpower", Item.ItemSlot.OneHand, new Stats() { SpellPower = 63 }));
+            defaultEnchants.Add(new Enchant(3788, "Accuracy", Item.ItemSlot.OneHand, new Stats() { CritRating = 25, HitRating = 25 }));
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.OneHand, new Stats() { Intellect = 30 }));
+            defaultEnchants.Add(new Enchant(3844, "Exceptional Spirit", Item.ItemSlot.OneHand, new Stats() { Spirit = 45 }));
             defaultEnchants.Add(new Enchant(2679, "Restore Mana Prime", Item.ItemSlot.Wrist, new Stats() { Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(1147, "Major Spirit", Item.ItemSlot.Wrist, new Stats() { Spirit = 18 }));
             defaultEnchants.Add(new Enchant(2748, "Runic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
             defaultEnchants.Add(new Enchant(2747, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
             defaultEnchants.Add(new Enchant(2982, "Greater Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
@@ -401,6 +427,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3244, "Greater Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 6, Hp5 = 6 }));
             defaultEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
             defaultEnchants.Add(new Enchant(369, "Major Intellect", Item.ItemSlot.Wrist, new Stats() { Intellect = 12 }));
+            defaultEnchants.Add(new Enchant(1119, "Exceptional Intellect", Item.ItemSlot.Wrist, new Stats() { Intellect = 16 }));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", Item.ItemSlot.Chest, new Stats() { Spirit = 15 }));
             defaultEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
             defaultEnchants.Add(new Enchant(1147, "Greater Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 18 }));
@@ -422,6 +449,7 @@ namespace Rawr
 
 			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
             defaultEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 10 }));
+            defaultEnchants.Add(new Enchant(3249, "Greater Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 16 }));
 
             defaultEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
 			defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
@@ -436,6 +464,7 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { SpellPower = 40 }));
 
             defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 12 }));
+            defaultEnchants.Add(new Enchant(1128, "Greater Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 25 }));
 
 			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
 
@@ -492,6 +521,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.OffHand, new Stats() { BlockRating = 15 }));
             defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.OffHand, new Stats() { BlockValue = 18 }));
+            defaultEnchants.Add(new Enchant(1952, "Defense", Item.ItemSlot.OffHand, new Stats() { DefenseRating = 20 }));
 
 			//scopes
 			defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
