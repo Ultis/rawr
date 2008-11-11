@@ -62,6 +62,14 @@ namespace Rawr.Healadin
         public float HSCastTime { get; set; }
         public float HSUsage { get; set; }
 
+        public float SSTime { get; set; }
+        public float SSAvgAbsorb { get; set; }
+        public float SSAbsorbed { get; set; }
+        public float SSHPS { get; set; }
+        public float SSHPM { get; set; }
+        public float SSCasts { get; set; }
+        public float SSUsage { get; set; }
+
         public float BoLUsage { get; set; }
         public float BoLCasts { get; set; }
         public float BoLHealed { get; set; }
@@ -132,6 +140,13 @@ namespace Rawr.Healadin
             dictValues.Add("HS Rotation Time", string.Format("{0} sec", HSTime.ToString("N02")));
             dictValues.Add("HS Healed",  string.Format("{0} healing", HSHealed.ToString("N00")));
             dictValues.Add("HS Mana Usage", string.Format("{0} mana", HSUsage.ToString("N00")));
+            // Sacred Shield
+            dictValues.Add("SS Average Absorb", string.Format("{0} absorbed", SSAvgAbsorb.ToString("N00")));
+            dictValues.Add("SS Casts", string.Format("{0} gcds", SSCasts.ToString("N00")));
+            dictValues.Add("SS Healing per sec", string.Format("{0} hps", SSHPS.ToString("N00")));
+            dictValues.Add("SS Healing per mana", string.Format("{0} hpm", SSHPM.ToString("N02")));
+            dictValues.Add("SS Absorbed", string.Format("{0} absorbed", SSAbsorbed.ToString("N00")));
+            dictValues.Add("SS Mana Usage", string.Format("{0} mana", SSUsage.ToString("N00")));
             // Beacon of Light
             dictValues.Add("BoL Healed",  string.Format("{0} healing", BoLHealed.ToString("N00")));
             dictValues.Add("BoL Casts", string.Format("{0} gcds", BoLCasts.ToString("N00")));
