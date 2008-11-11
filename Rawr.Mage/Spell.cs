@@ -885,7 +885,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             Cooldown -= 1.0f * castingState.MageTalents.ImprovedFireBlast;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
-            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CalculateDerivedStats(castingState);
         }
     }
@@ -931,7 +931,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
-            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1123,7 +1123,7 @@ namespace Rawr.Mage
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFireball;
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
-            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1249,6 +1249,8 @@ namespace Rawr.Mage
             SpammedDot = false;
             DotDuration = 12;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
+            SpellModifier /= (1 + 0.02f * castingState.MageTalents.FirePower); // Living Bomb dot does not benefit from Fire Power
+            DirectDamageModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1642,7 +1644,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             AoeDamageCap = 37500;
-            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             CalculateDerivedStats(castingState);
         }
