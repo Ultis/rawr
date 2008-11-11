@@ -106,12 +106,12 @@ namespace Rawr.Tankadin
             return xml.ToString();
         }
 
-        public int TargetLevel = 73;
-        public int PlayerLevel = 70;
-        public int AverageHit = 20000;
+        public int TargetLevel = 83;
+        public int PlayerLevel = 80;
+        public int AverageHit = 30000;
         public float AttackSpeed = 2;
         public int NumberAttackers = 1;
-        public int TargetArmor = 6600;
+        public int TargetArmor = 10000;
         public int ThreatScale = 30;
         public int MitigationScale = 7000;
     }

@@ -260,7 +260,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //Hammer of the Righteous
             if (talents.HammerOfTheRighteous > 0)
             {
-                cs.HotRDamage = bwd / ws * 4f * damageMulti * holyMulti;
+                cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti;
                 cs.HotRThreat = cs.HotRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
             }
 
@@ -342,21 +342,28 @@ you are being killed by burst damage, focus on Survival Points.",
             switch (character.Race)
             {
                 case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
+                    statsRace = new Stats() { Strength = 19f, Agility = 22f, Stamina = 20f, Intellect = 24f, Spirit = 20f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f, SpellHit = .01f };
+                    statsRace = new Stats() { Strength = 23f, Agility = 17f, Stamina = 21f, Intellect = 21f, Spirit = 20f, PhysicalHit = .01f, SpellHit = .01f };
                     break;
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
+                    statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f, BonusSpiritMultiplier = 0.1f, };
                     //Expertise for Humans
                     if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace || character.MainHand.Type == Item.ItemType.OneHandSword))
-                        statsRace.Expertise = 5f;
+                        statsRace.Expertise = 3f;
                     break;
                 default: //defaults to Dwarf stats
-                    statsRace = new Stats() { Strength = 128f, Agility = 73f, Stamina = 120f, Intellect = 83f, Spirit = 89f, };
+                    statsRace = new Stats() { Strength = 24f, Agility = 16f, Stamina = 25f, Intellect = 19f, Spirit = 20f, };
+                    if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandMace)
+                        statsRace.Expertise = 5f;
                     break;
             }
+            statsRace.Strength += 104f;
+            statsRace.Agility += 57f;
+            statsRace.Stamina += 98f;
+            statsRace.Intellect += 63f;
+            statsRace.Spirit += 68f;
             statsRace.Dodge = .032685f;
             statsRace.Parry = .05f;
             statsRace.AttackPower = 190f;
@@ -375,8 +382,8 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
             stats.Armor = (float)Math.Round((stats.Armor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
-            stats.PhysicalHit = ConvertHit(stats.HitRating, lvl);
-            stats.SpellHit = ConvertSpellHit(stats.HitRating, lvl) + stats.SpellHit; 
+            stats.PhysicalHit += ConvertHit(stats.HitRating, lvl);
+            stats.SpellHit += ConvertSpellHit(stats.HitRating, lvl) + stats.SpellHit; 
             stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2 + ConvertExpertise(stats.ExpertiseRating, lvl));
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
@@ -431,8 +438,10 @@ you are being killed by burst damage, focus on Survival Points.",
                 HitRating = stats.HitRating,
                 HasteRating = stats.HasteRating,
                 CritRating = stats.CritRating,
+                PhysicalCrit = stats.PhysicalCrit,
+                SpellCrit = stats.SpellCrit,
                 ArmorPenetration = stats.ArmorPenetration,
-               // BonusHolySpellPowerMultiplier = stats.BonusHolySpellPowerMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 WeaponDamage = stats.WeaponDamage
             };
         }
@@ -440,10 +449,10 @@ you are being killed by burst damage, focus on Survival Points.",
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + //stats.BonusHolySpellPowerMultiplier +
+                stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHolyDamageMultiplier +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue +
                 stats.SpellHitRating + stats.SpellPower + stats.HitRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
-                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating) > 0;
+                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit) > 0;
         }
     }
 
