@@ -71,7 +71,7 @@ namespace Rawr.HolyPriest
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
             dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
             //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
-            dictValues.Add("In FSR MP5", string.Format("{0}*{1} from MP5\r\n{2} from Meditation\r\n{3} Outside FSR\r\n{4} OFSR w/MP5 from Gear",
+            dictValues.Add("In FSR MP5", string.Format("{0}*{1} from MP5\r\n{2} from Meditation\r\n{3} Outside FSR\r\n{4} OFSR w/MP5",
                 (BasicStats.Mp5 + RegenInFSR).ToString("0"),
                 BasicStats.Mp5.ToString("0"),
                 RegenInFSR.ToString("0"),

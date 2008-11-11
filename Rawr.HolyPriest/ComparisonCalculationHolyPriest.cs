@@ -23,17 +23,28 @@ namespace Rawr.HolyPriest
             set { _name = value; }
         }
 
-        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get
+            {
+                float f = 0f;
+                foreach (float f2 in _subPoints)
+                    f += f2;
+                return f;
+            }
+            set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
-            get { return _subPoints; }
+            get
+            {
+                for (int x = 0; x < _subPoints.Length; x++)
+                    if (_subPoints[x] < 0f)
+                        _subPoints[x] = 0f;
+                return _subPoints;
+            }
             set { _subPoints = value; }
         }
 

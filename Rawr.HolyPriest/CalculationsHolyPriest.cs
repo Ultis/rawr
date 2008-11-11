@@ -116,13 +116,6 @@ namespace Rawr.HolyPriest
             }
         }
 
-        private float Calc_GreaterHeal_Burst(Stats stats, Char character)
-        {
-
-        
-            return 0;
-        }
-
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -472,8 +465,6 @@ namespace Rawr.HolyPriest
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
 
-            calculatedStats.OverallPoints = calculatedStats.HPSBurstPoints + calculatedStats.HPSSustainPoints + calculatedStats.SurvivabilityPoints;
-
             return calculatedStats;
         }
 
@@ -811,8 +802,8 @@ namespace Rawr.HolyPriest
         }
 
         public override bool HasRelevantStats(Stats stats)
-        {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Resilience + stats.Mp5 + stats.SpellPower + stats.CritRating
+        {   // stats.Stamina + stats.Resilience +
+            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.SpellHaste + stats.SpellCrit + stats.HealingReceivedMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min

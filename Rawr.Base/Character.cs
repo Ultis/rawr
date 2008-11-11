@@ -366,6 +366,19 @@ namespace Rawr //O O . .
         [XmlIgnore]
 		public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
 
+        [XmlIgnore]
+        private StatConversion _statConversion = null;
+        [XmlIgnore]
+        public StatConversion StatConversion
+        {
+            get
+            {
+                if (_statConversion == null)
+                    _statConversion = new StatConversion(this);
+                return _statConversion;
+            }
+        }
+
 		[XmlIgnore]
         private Dictionary<string, ICalculationOptionBase> _calculationOptions = new SerializableDictionary<string, ICalculationOptionBase>();
 		[XmlIgnore]
