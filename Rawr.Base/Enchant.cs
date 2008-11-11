@@ -313,6 +313,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3222, "Major Agility", Item.ItemSlot.Hands, new Stats() { Agility = 20 }));
             defaultEnchants.Add(new Enchant(3011, "Clefthide Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 10, Stamina = 30 }));
             defaultEnchants.Add(new Enchant(3013, "Nethercleft Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 12, Stamina = 40 }));
+            defaultEnchants.Add(new Enchant(3325, "Jormungar Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 15, Stamina = 45 }));
+            defaultEnchants.Add(new Enchant(3822, "Frosthide Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 22, Stamina = 55 }));
             defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", Item.ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 8 }));
             defaultEnchants.Add(new Enchant(2940, "Boar's Speed", Item.ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 8 }));
             defaultEnchants.Add(new Enchant(3232, "Tuskarr's Vitality", Item.ItemSlot.Feet, new Stats() { Stamina = 15, MovementSpeed = 8 }));
@@ -329,6 +331,14 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 8 }));
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 8 }));
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 8 }));
+            defaultEnchants.Add(new Enchant(3329, "Borean Armor Kit", Item.ItemSlot.Chest, new Stats() { Stamina = 12 }));
+            defaultEnchants.Add(new Enchant(3329, "Borean Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 12 }));
+            defaultEnchants.Add(new Enchant(3329, "Borean Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 12 }));
+            defaultEnchants.Add(new Enchant(3329, "Borean Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 12 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Chest, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Chest, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Hands, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Legs, new Stats() { DefenseRating = 8 }));
@@ -362,6 +372,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(931, "Minor Haste", Item.ItemSlot.Hands, new Stats() { HasteRating = 10 }));
             defaultEnchants.Add(new Enchant(3012, "Nethercobra Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 50, CritRating = 12 }));
             defaultEnchants.Add(new Enchant(3010, "Cobrahide Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 40, CritRating = 10 }));
+            defaultEnchants.Add(new Enchant(3823, "Icescale Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 75, CritRating = 22 }));
+            defaultEnchants.Add(new Enchant(3326, "Nerubian Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 55, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { CritRating = 10, HitRating = 10 }));
             defaultEnchants.Add(new Enchant(3826, "Icewalker", Item.ItemSlot.Feet, new Stats() { CritRating = 12, HitRating = 12 }));
             defaultEnchants.Add(new Enchant(2929, "Striking", Item.ItemSlot.Finger, new Stats() { WeaponDamage = 2 }));
@@ -382,9 +394,14 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2668, "Potency", Item.ItemSlot.OneHand, new Stats() { Strength = 20 }));
             defaultEnchants.Add(new Enchant(1606, "Greater Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 50 }));
             defaultEnchants.Add(new Enchant(3833, "Superior Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 65 }));
+            defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", Item.ItemSlot.OneHand, new Stats() { HitRating = 28 }));
+            defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", Item.ItemSlot.OneHand, new Stats() { ParryRating = 15 }));
 			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
+            defaultEnchants.Add(new Enchant(3843, "Diamond-cut Refractor Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 15 }));
+            defaultEnchants.Add(new Enchant(3608, "Heartseeker Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 40 }));
             defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
+            defaultEnchants.Add(new Enchant(3607, "Sun Scope", Item.ItemSlot.Ranged, new Stats() { HasteRating = 40 }));
 
             defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
             defaultEnchants.Add(new Enchant(3296, "Wisdom", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }));
@@ -411,6 +428,10 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1147, "Major Spirit", Item.ItemSlot.Wrist, new Stats() { Spirit = 18 }));
             defaultEnchants.Add(new Enchant(2748, "Runic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
             defaultEnchants.Add(new Enchant(2747, "Mystic Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
+            defaultEnchants.Add(new Enchant(3719, "Brilliant Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 50, Spirit = 20 }));
+            defaultEnchants.Add(new Enchant(3721, "Sapphire Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 50, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(3718, "Shining Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Spirit = 12 }));
+            defaultEnchants.Add(new Enchant(3720, "Azure Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
             defaultEnchants.Add(new Enchant(2982, "Greater Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2995, "Greater Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2981, "Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
