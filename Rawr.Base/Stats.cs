@@ -62,7 +62,6 @@ namespace Rawr
         FireResistance,
         FoLHeal,
         FoLCrit,
-        FoLBoL,
         FrostResistance,
         HasteRating,
         Healing,
@@ -71,7 +70,6 @@ namespace Rawr
         HitRating,
         HLCost,
         HLHeal,
-        HLBoL,
         HLCrit,
         Hp5,
         IdolCritRating,
@@ -94,6 +92,7 @@ namespace Rawr
         ManaRestoreOnCast_10_45,
         ManaRestoreFromMaxManaPerHit,
         ManaRestoreFromMaxManaPerSecond,
+        ManaRestoreOnCrit_25,
         MangleCostReduction,
 		RakeCostReduction,
 		ShredCostReduction,
@@ -1230,6 +1229,15 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana Restore on Crit (25%)")]
+        [Category("Equipment Procs")]
+        public float ManaRestoreOnCrit_25
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Power (15 sec/1.5 min)")]
         [Category("Equipment Procs")]
         public float SpellPowerFor15SecOnUse90Sec
@@ -1696,15 +1704,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("FoL BoL Bonus")]
-        [Category("Equipment Procs")]
-        public float FoLBoL
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.FoLBoL]; }
-            set { _rawAdditiveData[(int)AdditiveStat.FoLBoL] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("FoL Bonus Crit")]
         [Category("Equipment Procs")]
         public float FoLCrit
@@ -1738,15 +1737,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HLCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.HLCrit] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("HL BoL Bonus")]
-        [Category("Equipment Procs")]
-        public float HLBoL
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HLBoL]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HLBoL] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

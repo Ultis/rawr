@@ -633,25 +633,22 @@ namespace Rawr
 				stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture) / 100f;
 
 			}
-			else if (line.StartsWith("Increases the benefit your Flash of Light"))
-			{
-				stats.HLBoL = 120;
-				stats.FoLBoL = 60;
+            else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Reduces the mana cost of Holy Light by ".Length);
+				stats.HLCost += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
-			else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
-			{
-				stats.HLCost = 34;
-			}
-			else if (line.StartsWith("Increases healing done by Flash of Light by up to"))
-			{
-				line = line.Substring("Increases healing done by Flash of Light by up to ".Length);
-				line = line.Replace(".", "");
+            else if (line.StartsWith("Increases spell power of Flash of Light by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Flash of Light by ".Length);
 				stats.FoLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
-			else if (line.StartsWith("Increases healing done by Holy Light by up to"))
-			{
-				line = line.Substring("Increases healing done by Holy Light by up to ".Length);
-				line = line.Replace(".", "");
+            else if (line.StartsWith("Increases spell power of Holy Light by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Holy Light by ".Length);
 				stats.HLHeal = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
@@ -700,6 +697,10 @@ namespace Rawr
 			else if (line.StartsWith("Each healing spell you cast has a 2% chance to make your next heal cast within 15 sec cost 450 less mana."))
 			{
 				stats.ManacostReduceWithin15OnHealingCast += 450;
+            }
+            else if (line == "Your spell critical strikes have a chance to restore 900 mana.")
+            {
+                stats.ManaRestoreOnCrit_25 = 900;
 			}
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 512 for 10 sec."))
             {
