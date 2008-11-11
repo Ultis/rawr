@@ -283,13 +283,27 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2990, "Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats() { DefenseRating = 13 }));
             defaultEnchants.Add(new Enchant(2978, "Greater Inscription of Warding", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(2977, "Inscription of Warding", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 13 }));
+            defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(368, "Greater Agility", Item.ItemSlot.Back, new Stats() { Agility = 12 }));
+            defaultEnchants.Add(new Enchant(983, "Superior Agility", Item.ItemSlot.Back, new Stats() { Agility = 16 }));
+            defaultEnchants.Add(new Enchant(1099, "Major Agility", Item.ItemSlot.Back, new Stats() { Agility = 22 }));
+            defaultEnchants.Add(new Enchant(3256, "Shadow Armor", Item.ItemSlot.Back, new Stats() { Agility = 10 }));
+            defaultEnchants.Add(new Enchant(3825, "Speed", Item.ItemSlot.Back, new Stats() { HasteRating = 15 }));
+            defaultEnchants.Add(new Enchant(3831, "Greater Speed", Item.ItemSlot.Back, new Stats() { HasteRating = 23 }));
             defaultEnchants.Add(new Enchant(2662, "Major Armor", Item.ItemSlot.Back, new Stats() { Armor = 120 }));
+            defaultEnchants.Add(new Enchant(3294, "Mighty Armor", Item.ItemSlot.Back, new Stats() { Armor = 225 }));
             defaultEnchants.Add(new Enchant(2622, "Dodge", Item.ItemSlot.Back, new Stats() { DodgeRating = 12 }));
             defaultEnchants.Add(new Enchant(2659, "Exceptional Health", Item.ItemSlot.Chest, new Stats() { Health = 150 }));
+            defaultEnchants.Add(new Enchant(3236, "Mighty Health", Item.ItemSlot.Chest, new Stats() { Health = 200 }));
+            defaultEnchants.Add(new Enchant(3297, "Super Health", Item.ItemSlot.Chest, new Stats() { Health = 275 }));
             defaultEnchants.Add(new Enchant(2661, "Exceptional Stats", Item.ItemSlot.Chest, new Stats() { Agility = 6, Strength = 6, Stamina = 6, Intellect = 6, Spirit = 6 }));
-			defaultEnchants.Add(new Enchant(2933, "Major Resilience", Item.ItemSlot.Chest, new Stats() { Resilience = 15 }));
-			defaultEnchants.Add(new Enchant(1950, "Major Defense", Item.ItemSlot.Chest, new Stats() { DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(3252, "Super Stats", Item.ItemSlot.Chest, new Stats() { Agility = 8, Strength = 8, Stamina = 8, Intellect = 8, Spirit = 8 }));
+            defaultEnchants.Add(new Enchant(3832, "Powerful Stats", Item.ItemSlot.Chest, new Stats() { Agility = 10, Strength = 10, Stamina = 10, Intellect = 10, Spirit = 10 }));
+            defaultEnchants.Add(new Enchant(2933, "Major Resilience", Item.ItemSlot.Chest, new Stats() { Resilience = 15 }));
+            defaultEnchants.Add(new Enchant(3245, "Exceptional Resilience", Item.ItemSlot.Chest, new Stats() { Resilience = 20 }));
+            defaultEnchants.Add(new Enchant(1950, "Major Defense", Item.ItemSlot.Chest, new Stats() { DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(1953, "Greater Defense", Item.ItemSlot.Chest, new Stats() { DefenseRating = 22 }));
             defaultEnchants.Add(new Enchant(2649, "Fortitude", Item.ItemSlot.Wrist, new Stats() { Stamina = 12 }));
             defaultEnchants.Add(new Enchant(1886, "Superior Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 9 }));
             defaultEnchants.Add(new Enchant(2648, "Major Defense", Item.ItemSlot.Wrist, new Stats() { DefenseRating = 12 }));
@@ -299,8 +313,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3013, "Nethercleft Leg Armor", Item.ItemSlot.Legs, new Stats() { Agility = 12, Stamina = 40 }));
             defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", Item.ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 8 }));
             defaultEnchants.Add(new Enchant(2940, "Boar's Speed", Item.ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 8 }));
+            defaultEnchants.Add(new Enchant(3232, "Tuskarr's Vitality", Item.ItemSlot.Feet, new Stats() { Stamina = 15, MovementSpeed = 8 }));
             defaultEnchants.Add(new Enchant(2657, "Dexterity", Item.ItemSlot.Feet, new Stats() { Agility = 12 }));
+            defaultEnchants.Add(new Enchant(983, "Superior Agility", Item.ItemSlot.Feet, new Stats() { Agility = 16 }));
+            defaultEnchants.Add(new Enchant(3824, "Assault", Item.ItemSlot.Feet, new Stats() { AttackPower = 24 }));
+            defaultEnchants.Add(new Enchant(1597, "Greater Assault", Item.ItemSlot.Feet, new Stats() { AttackPower = 32 }));
             defaultEnchants.Add(new Enchant(2649, "Fortitude", Item.ItemSlot.Feet, new Stats() { Stamina = 12 }));
+            defaultEnchants.Add(new Enchant(1075, "Greater Fortitude", Item.ItemSlot.Feet, new Stats() { Stamina = 22 }));
             defaultEnchants.Add(new Enchant(2931, "Stats", Item.ItemSlot.Finger, new Stats() { Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4 }));
             defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.TwoHand, new Stats() { Agility = 35 }));
             defaultEnchants.Add(new Enchant(2792, "Knothide Armor Kit", Item.ItemSlot.Chest, new Stats() { Stamina = 8 }));
@@ -332,6 +351,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2986, "Greater Inscription of Vengeance", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2996, "Inscription of the Blade", Item.ItemSlot.Shoulders, new Stats() { CritRating = 13 }));
             defaultEnchants.Add(new Enchant(2983, "Inscription of Vengeance", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 26 }));
+            defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
+            defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2606, "Zandalar Signet of Might", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30 }));
             defaultEnchants.Add(new Enchant(2647, "Brawn", Item.ItemSlot.Wrist, new Stats() { Strength = 12 }));
             defaultEnchants.Add(new Enchant(684, "Major Strength", Item.ItemSlot.Hands, new Stats() { Strength = 15 }));
@@ -339,6 +360,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3012, "Nethercobra Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 50, CritRating = 12 }));
             defaultEnchants.Add(new Enchant(3010, "Cobrahide Leg Armor", Item.ItemSlot.Legs, new Stats() { AttackPower = 40, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2658, "Surefooted", Item.ItemSlot.Feet, new Stats() { CritRating = 10, HitRating = 10 }));
+            defaultEnchants.Add(new Enchant(3826, "Icewalker", Item.ItemSlot.Feet, new Stats() { CritRating = 12, HitRating = 12 }));
             defaultEnchants.Add(new Enchant(2929, "Striking", Item.ItemSlot.Finger, new Stats() { WeaponDamage = 2 }));
             defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.TwoHand, new Stats() { AttackPower = 70 }));
             defaultEnchants.Add(new Enchant(1593, "Assault", Item.ItemSlot.Wrist, new Stats() { AttackPower = 24 }));
@@ -350,6 +372,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
 
             defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
+            defaultEnchants.Add(new Enchant(3296, "Wisdom", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }));
             defaultEnchants.Add(new Enchant(2613, "Threat", Item.ItemSlot.Hands, new Stats() { ThreatIncreaseMultiplier = 0.02f }));
 
             //spell stuff
@@ -366,28 +389,36 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2995, "Greater Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2981, "Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2994, "Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { CritRating = 13 }));
+            defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
+            defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(3002, "Arcanum of Power", Item.ItemSlot.Head, new Stats() { SpellPower = 22, HitRating = 14 }));
             defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", Item.ItemSlot.Head, new Stats() { SpellPower = 30, CritRating = 20 }));
             defaultEnchants.Add(new Enchant(3797, "Arcanum of Dominance", Item.ItemSlot.Head, new Stats() { SpellPower = 29, Resilience = 20 }));
             defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.OneHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }));
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
             defaultEnchants.Add(new Enchant(2938, "Spell Penetration", Item.ItemSlot.Back, new Stats() { SpellPenetration = 20 }));
-            defaultEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
+            defaultEnchants.Add(new Enchant(3243, "Spell Piercing", Item.ItemSlot.Back, new Stats() { SpellPenetration = 35 }));
+            defaultEnchants.Add(new Enchant(2656, "Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 6, Hp5 = 6 }));
+            defaultEnchants.Add(new Enchant(v, "Greater Vitality", Item.ItemSlot.Feet, new Stats() { Mp5 = 4, Hp5 = 4 }));
             defaultEnchants.Add(new Enchant(369, "Major Intellect", Item.ItemSlot.Wrist, new Stats() { Intellect = 12 }));
             defaultEnchants.Add(new Enchant(1144, "Major Spirit", Item.ItemSlot.Chest, new Stats() { Spirit = 15 }));
             defaultEnchants.Add(new Enchant(851, "Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 5 }));
+            defaultEnchants.Add(new Enchant(1147, "Greater Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 18 }));
 
             // Healing enchants (add spell damage too)
 			defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", Item.ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 8 }));
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", Item.ItemSlot.Chest, new Stats() { Mp5 = 8 }));
 
             defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
 			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
 			defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
-			defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
+            defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
 
 			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
             defaultEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 10 }));
@@ -409,6 +440,7 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
 
             defaultEnchants.Add(new Enchant(2648, "Steelweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 12 }));
+            defaultEnchants.Add(new Enchant(1951, "Titanweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 16 }));
             defaultEnchants.Add(new Enchant(3004, "Arcanum of the Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 18, Resilience = 20 }));
             defaultEnchants.Add(new Enchant(3842, "Arcanum of the Savage Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 30, Resilience = 25 }));
             defaultEnchants.Add(new Enchant(3795, "Arcanum of Triumph", Item.ItemSlot.Head, new Stats() { AttackPower = 50, Resilience = 20 }));
@@ -449,7 +481,12 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2998, "Inscription of Endurance", Item.ItemSlot.Shoulders, new Stats() { NatureResistance = 4, ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4 }));
 			defaultEnchants.Add(new Enchant(2664, "Major Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 7, ArcaneResistance = 7, FireResistance = 7, FrostResistance = 7, ShadowResistance = 7 }));
 			defaultEnchants.Add(new Enchant(2619, "Greater Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 15 }));
-			defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1262, "Superior Arcane Resistance", Item.ItemSlot.Back, new Stats() { ArcaneResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1446, "Superior Shadow Resistance", Item.ItemSlot.Back, new Stats() { ShadowResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1354, "Superior Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3230, "Superior Frost Resistance", Item.ItemSlot.Back, new Stats() { FrostResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1400, "Superior Nature Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
 			defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Legs, new Stats() { FireResistance = 20 }));
 
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));
