@@ -129,7 +129,7 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5 * (0.001f + 0.0093271 * calculatedStats.BasicStats.Spirit * Math.Sqrt(calculatedStats.BasicStats.Intellect)));
+            calculatedStats.SpiritRegen = (float)Math.Floor(5 * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
@@ -177,9 +177,9 @@ namespace Rawr.HolyPriest
                 if (simstats.SpellPowerFor20SecOnUse2Min > 0)
                     UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
                 if (simstats.HasteRatingFor20SecOnUse5Min > 0)
-                    UseProcs.SpellHaste += simstats.HasteRatingFor20SecOnUse5Min * 20f / 300f / 15.77f / 100f;
+                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f / 100f;
                 if (simstats.HasteRatingFor20SecOnUse2Min > 0)
-                    UseProcs.SpellHaste += simstats.HasteRatingFor20SecOnUse2Min * 20f / 120f / 15.77f / 100f;
+                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f / 100f;
             }
 
             /*     
@@ -565,8 +565,10 @@ namespace Rawr.HolyPriest
 			statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += (statsTotal.Intellect / 80f / 100f) + (statsTotal.CritRating / 22.07692337F / 100f) + 0.0124f;
-            statsTotal.SpellHaste += (statsTotal.HasteRating / 15.76923275f / 100f);
+            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
+                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
+                + 0.0124f;
+            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
                  
             return statsTotal;
         }
@@ -802,8 +804,8 @@ namespace Rawr.HolyPriest
         }
 
         public override bool HasRelevantStats(Stats stats)
-        {   // stats.Stamina + stats.Resilience +
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
+        {   // stats.Stamina + 
+            return (stats.Resilience + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
                 + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
                 + stats.SpellHaste + stats.SpellCrit + stats.HealingReceivedMultiplier
                 + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min

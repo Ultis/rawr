@@ -78,6 +78,7 @@ namespace Rawr.ShadowPriest
 
         public SolverBase(Stats playerStats, Character _char) 
         {
+            character = _char;
             Name = "Base";
             Rotation = "None";
 
@@ -93,11 +94,10 @@ namespace Rawr.ShadowPriest
             if (playerStats.HasteRatingFor20SecOnUse5Min > 0.0f)
                 Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
             // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
-            Twinkets.SpellHaste += Twinkets.HasteRating / 15.76923275f / 100f;
+            Twinkets.SpellHaste += character.StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating) / 100f;
 
 
             PlayerStats = playerStats + Twinkets;
-            character = _char;
             CalculationOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
@@ -191,8 +191,6 @@ namespace Rawr.ShadowPriest
             SWD = GetSpellByName("Shadow Word: Death");
             MB = GetSpellByName("Mind Blast");
             DP = GetSpellByName("Devouring Plague");
-            if (SWP == null)
-                "".ToString();
 
             if (VE != null)
             {   // Functional yet abysmal method of moving VE to bottom of priority.
@@ -342,7 +340,7 @@ namespace Rawr.ShadowPriest
             float TimeInFSR = 1f;
             float ImpSTUptime = CPC * MB.CritChance * 8f;
             simStats.Spirit *= 1f + ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
-            float SpiritRegen = (float)Math.Floor((0.001f + 0.0093271 * simStats.Spirit * Math.Sqrt(simStats.Intellect)));
+            float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
             tmpregen = (SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR + SpiritRegen * (1f - TimeInFSR));
             ManaSources.Add(new ManaSource("Meditation", tmpregen));

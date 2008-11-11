@@ -28,36 +28,36 @@ namespace Rawr.ShadowPriest
             set { basicStats = value; }
         }
 
-        private float overallPoints;
+        private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get { return overallPoints; }
-            set { overallPoints = value; }
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
         }
 
-        private float[] subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
-            get { return subPoints; }
-            set { subPoints = value; }
+            get { return _subPoints; }
+            set { _subPoints = value; }
         }
 
         public float DpsPoints
         {
-            get { return subPoints[0]; }
-            set { subPoints[0] = value; }
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
         }
 
         public float SustainPoints
         {
-            get { return subPoints[1]; }
-            set { subPoints[1] = value; }
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
         public float SurvivalPoints
         {
-            get { return subPoints[2]; }
-            set { subPoints[2] = value; }
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
         }
 
         public SolverBase GetSolver(Character character, Stats stats)
@@ -86,15 +86,14 @@ namespace Rawr.ShadowPriest
 
             dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs\r\n{6}% on Mind Blast, Mind Flay and Mind Sear.\r\n{7}% on Smite, Holy Fire and Penance.",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"),
-                (BasicStats.CritRating / 22.07f).ToString("0.00"),
+                character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating).ToString("0.00"),
                 BasicStats.CritRating.ToString("0"),
-                (BasicStats.Intellect / 80f).ToString("0.00"),
+                (character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect)).ToString("0.00"),
                 "1,24",
-                (BasicStats.SpellCrit * 100f - BasicStats.CritRating / 22.07f - BasicStats.Intellect / 80f - 1.24f).ToString("0.00"),
+                (BasicStats.SpellCrit * 100f - character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating) - character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) - 1.24f).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.MindMelt * 2f).ToString("0.00"),
                 (BasicStats.SpellCrit * 100f + character.PriestTalents.HolySpecialization * 1f).ToString("0.00")));
 
-            float HitCoef = 12.61538506f;
             float Hit = calcOptions.TargetHit;
             float BonusHit = BasicStats.SpellHit * 100f;
             float RacialHit = 0;
@@ -113,6 +112,8 @@ namespace Rawr.ShadowPriest
                 if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
                     BonusHit += MiseryHit;
             }
+
+            float RHitRating = 1f / character.StatConversion.GetSpellHitFromRating(1);
             float ShadowFocusHit = character.PriestTalents.ShadowFocus * 1f;
             float HitShadow = Hit + BonusHit + ShadowFocusHit;
             float HitHoly = Hit + BonusHit;
@@ -120,16 +121,16 @@ namespace Rawr.ShadowPriest
                 HitShadow += character.PriestTalents.Misery * 1f;
             dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from {5} points in Misery\r\n{6}% from {7} points in Shadow Focus\r\n{8}{9}% Hit with Shadow spells, {10}\r\n{11}% Hit with Holy spells, {12}",
                 BonusHit.ToString("0.00"),
-                (BasicStats.HitRating / HitCoef).ToString("0.00"), BasicStats.HitRating,
-                (BonusHit - BasicStats.HitRating / HitCoef - RacialHit - MiseryHit).ToString("0.00"),
+                character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"), BasicStats.HitRating,
+                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit - MiseryHit).ToString("0.00"),
                 MiseryHit, character.PriestTalents.Misery,
                 ShadowFocusHit, character.PriestTalents.ShadowFocus,
                 RacialText,
-                HitShadow.ToString("0.00"), (HitShadow > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitShadow - 100f) * HitCoef)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitShadow) * HitCoef)),
-                HitHoly.ToString("0.00"),  (HitHoly > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitHoly - 100f) * HitCoef)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitHoly) * HitCoef))));
+                HitShadow.ToString("0.00"), (HitShadow > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitShadow - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitShadow) * RHitRating)),
+                HitHoly.ToString("0.00"),  (HitHoly > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitHoly - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitHoly) * RHitRating))));
 
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
-                (BasicStats.SpellHaste * 100f).ToString("0.00"), (BasicStats.HasteRating / 15.77).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - (BasicStats.HasteRating / 15.77f)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+                (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
             SolverBase solver = GetSolver(character, BasicStats);
             solver.Calculate(this);

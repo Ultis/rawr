@@ -260,7 +260,7 @@ namespace Rawr.ShadowPriest
             calculatedStats.Race = character.Race;
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
-            
+
             calculatedStats.SpiritRegen = (float)Math.Floor(5f * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
@@ -275,7 +275,6 @@ namespace Rawr.ShadowPriest
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
-            calculatedStats.OverallPoints = calculatedStats.DpsPoints + calculatedStats.SustainPoints + calculatedStats.SurvivalPoints;
 
             return calculatedStats;
         }
@@ -377,9 +376,11 @@ namespace Rawr.ShadowPriest
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += (statsTotal.Intellect / 80f / 100f) + (statsTotal.CritRating / 22.07692337F / 100f) + 0.0124f;
-            statsTotal.SpellHaste += (statsTotal.HasteRating / 15.76923275f / 100f);
-            statsTotal.SpellHit += (statsTotal.HitRating / 12.61538506f / 100f);
+            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
+                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritChanceReduction) / 100f
+                + 0.0124f;
+            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
+            statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
 
             return statsTotal;
         }
@@ -428,8 +429,8 @@ namespace Rawr.ShadowPriest
         public override bool HasRelevantStats(Stats stats)
         {
             return (
-                  stats.Stamina
-                + stats.Health
+//                  stats.Stamina
+                stats.Health
                 + stats.Resilience
                 + stats.Intellect
                 + stats.Mana

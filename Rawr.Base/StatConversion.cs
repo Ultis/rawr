@@ -65,13 +65,13 @@ namespace Rawr
         public float GetResilienceFromRating(float ResilienceRating) { return GetResilienceFromRating(ResilienceRating, _Level); }
 
         public float GetSpellCritFromRating(float SpellCritRating, int Level) { return SpellCritRating * RatingConversionTable[RatingType.SpellCrit][Level]; }
-        public float GetSpellCritFromRating(float SpellCritRating) { return GetSpellHasteFromRating(SpellCritRating, _Level); }
+        public float GetSpellCritFromRating(float SpellCritRating) { return GetSpellCritFromRating(SpellCritRating, _Level); }
 
         public float GetSpellHasteFromRating(float SpellHasteRating, int Level) { return SpellHasteRating * RatingConversionTable[RatingType.SpellHaste][Level]; }
         public float GetSpellHasteFromRating(float SpellHasteRating) { return GetSpellHasteFromRating(SpellHasteRating, _Level); }
 
         public float GetSpellHitFromRating(float SpellHitRating, int Level) { return SpellHitRating * RatingConversionTable[RatingType.SpellHit][Level]; }
-        public float GetSpellHitFromRating(float SpellHitRating) { return GetSpellCritFromRating(SpellHitRating, _Level); }
+        public float GetSpellHitFromRating(float SpellHitRating) { return GetSpellHitFromRating(SpellHitRating, _Level); }
         #endregion
 
         #region Stat Rating
@@ -83,8 +83,8 @@ namespace Rawr
         }
         private Dictionary<StatType, List<float>> StatConversionTable = new Dictionary<StatType, List<float>>();
 
-        public float GetCritFromIntellect(float Intellect, int Level) { return Intellect * StatConversionTable[StatType.IntellectToCrit][Level]; }
-        public float GetCritFromIntellect(float Intellect) { return GetCritFromIntellect(Intellect, _Level); }
+        public float GetSpellCritFromIntellect(float Intellect, int Level) { return Intellect * StatConversionTable[StatType.IntellectToCrit][Level]; }
+        public float GetSpellCritFromIntellect(float Intellect) { return GetSpellCritFromIntellect(Intellect, _Level); }
 
         public float GetCritFromAgility(float Agility, int Level) { return Agility * StatConversionTable[StatType.AgilityToCrit][Level]; }
         public float GetCritFromAgility(float Agility) { return GetCritFromAgility(Agility, _Level); }
@@ -148,7 +148,7 @@ namespace Rawr
                 else
                     RatingConversion = (float)Math.Pow((82f / 52f) * (131f / 63f), (x - 70f) / 10f);
                 foreach (RatingType rt in Enum.GetValues(typeof(RatingType)))
-                    RatingConversionTable[rt].Add(1f / RatingConversionBase60[rt] * RatingConversion);
+                    RatingConversionTable[rt].Add(1f / (RatingConversionBase60[rt] * RatingConversion));
             }
             #endregion
 
