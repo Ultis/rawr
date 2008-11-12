@@ -1295,7 +1295,7 @@ namespace Rawr
             {
                 Name = "Spell Power Food",
                 Group = "Food",
-                Stats = { Strength = 46, Stamina = 40 }
+                Stats = { SpellPower = 46, Stamina = 40 }
             });
             defaultBuffs.Add(new Buff()
             {
