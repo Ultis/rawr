@@ -59,6 +59,7 @@
             this.lblGlyph2 = new System.Windows.Forms.Label();
             this.cmbGlyph3 = new System.Windows.Forms.ComboBox();
             this.lblGlyph3 = new System.Windows.Forms.Label();
+            this.chkSmartSwitching = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -375,10 +376,22 @@
             this.lblGlyph3.TabIndex = 42;
             this.lblGlyph3.Text = "Major Glyph 3:";
             // 
+            // chkSmartSwitching
+            // 
+            this.chkSmartSwitching.AutoSize = true;
+            this.chkSmartSwitching.Location = new System.Drawing.Point(3, 458);
+            this.chkSmartSwitching.Name = "chkSmartSwitching";
+            this.chkSmartSwitching.Size = new System.Drawing.Size(186, 17);
+            this.chkSmartSwitching.TabIndex = 43;
+            this.chkSmartSwitching.Text = "Smart Spell Switching for Eclipse?";
+            this.chkSmartSwitching.UseVisualStyleBackColor = true;
+            this.chkSmartSwitching.CheckedChanged += new System.EventHandler(this.chkSmartSwitching_CheckedChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkSmartSwitching);
             this.Controls.Add(this.lblGlyph3);
             this.Controls.Add(this.cmbGlyph3);
             this.Controls.Add(this.lblGlyph2);
@@ -411,7 +424,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 459);
+            this.Size = new System.Drawing.Size(204, 504);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -452,6 +465,7 @@
         private System.Windows.Forms.Label lblGlyph2;
         private System.Windows.Forms.ComboBox cmbGlyph3;
         private System.Windows.Forms.Label lblGlyph3;
+        private System.Windows.Forms.CheckBox chkSmartSwitching;
 
     }
 }
