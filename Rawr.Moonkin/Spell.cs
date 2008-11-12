@@ -153,6 +153,19 @@ namespace Rawr.Moonkin
                 manaCost = value;
             }
         }
+		
+		protected int maxCasts = 0;
+		public int MaximumCasts
+		{
+			get
+			{
+				return maxCasts;
+			}
+			set
+			{
+				maxCasts = value;
+			}
+		}
 
         public float DPS(float spellDamage, float hitRate, float critRate)
         {
@@ -428,7 +441,7 @@ namespace Rawr.Moonkin
                         if (pair.Value > dotDuration)
                             dotDuration = pair.Value;
                     }
-                    while (timeSpentCasting < dotDuration)
+                    while ((sp.MaximumCasts == 0 ? true : numberOfCasts < sp.MaximumCasts) && timeSpentCasting < dotDuration)
                     {
                         // Nordrassil Regalia (4T5 bonus)
                         // This should handle the case where a DoT tick falls off before the last cast completes (I hope)
@@ -480,51 +493,49 @@ namespace Rawr.Moonkin
         public void CalculateRotationalVariables()
         {
             ResetRotationalVariables();
-            _castCount = (HasMoonfire ? 1 : 0);
-            _castCount += (HasInsectSwarm ? 1 : 0);
-            Spell iSw = spells.Find(delegate(Spell sp)
-            {
-                return sp.Name == "IS";
-            });
-            Spell mf = spells.Find(delegate(Spell sp)
-            {
-                return sp.Name == "MF";
-            });
-            _duration = 0.0f;
-            // Figure out which one lasts longer, MF or IS
-            // This will be used in calculations for nukes
-            if (iSw != null)
-            {
-                _duration = iSw.DoT.Duration;
-                _dotTicks += (int)iSw.DoT.NumberOfTicks;
-                _manaUsed += iSw.ManaCost;
-            }
-            if (mf != null)
-            {
-                if (mf.DoT.Duration >= _duration)
-                    _duration = mf.DoT.Duration;
-                _dotTicks += (int)mf.DoT.NumberOfTicks;
-                _avgCritChance += mf.SpecialCriticalModifier;
-                _manaUsed += mf.ManaCost;
-            }
+			System.Random randGen = new System.Random();
+            Dictionary<float, float> activeDots = new Dictionary<float,float>();
             foreach (Spell sp in spells)
             {
-                // We found our main nuke, do calculations
+				float timeSpentCasting = 0.0f;
+				int numberOfCasts = 0;
                 if (sp.DoT == null)
                 {
-                    if (iSw == null && mf == null)
+                    float dotDuration = sp.CastTime;
+                    foreach (KeyValuePair<float, float> pair in activeDots)
                     {
-                        _duration = sp.CastTime;
+                        if (pair.Value > dotDuration)
+                            dotDuration = pair.Value;
                     }
-                    float numCasts = _duration / sp.CastTime;
-                    _avgCritChance = (_avgCritChance + numCasts * sp.SpecialCriticalModifier) / (numCasts + _castCount);
-                    _castCount += numCasts;
-                    if (sp.Name == "SF")
-                        _starfireCount = numCasts;
-                    else
-                        _wrathCount = numCasts;
-                    _manaUsed += numCasts * sp.ManaCost;
+                    while ((sp.MaximumCasts == 0 ? true : numberOfCasts < sp.MaximumCasts) && timeSpentCasting < dotDuration)
+                    {
+                        timeSpentCasting += sp.CastTime;
+                        ++numberOfCasts;
+                    }
                 }
+                else
+                {
+                    ++numberOfCasts;
+                    timeSpentCasting = sp.CastTime;
+					_dotTicks += (int)sp.DoT.NumberOfTicks;
+                    activeDots.Add((float)randGen.NextDouble(), sp.DoT.Duration);
+                }
+                List<float> dotsToDecrement = new List<float>();
+                foreach (KeyValuePair<float, float> pair in activeDots)
+                {
+                    if (pair.Value > 0)
+                    {
+                        // Handle the case where the DoT tick may fall off
+                        dotsToDecrement.Add(pair.Key);
+                    }
+                }
+                foreach (float key in dotsToDecrement)
+                {
+                    activeDots[key] -= timeSpentCasting;
+                }
+                _manaUsed += sp.ManaCost * numberOfCasts;
+                _duration += sp.CastTime * numberOfCasts;
+				_castCount += numberOfCasts;
             }
         }
         private float _avgCritChance = 0.0f;
@@ -1033,8 +1044,8 @@ namespace Rawr.Moonkin
                             {
                                 Spells = new List<Spell>()
                                 {
-                                    SpellRotation.InsectSwarm,
                                     newMoonfire,
+                                    SpellRotation.InsectSwarm,
                                     SpellRotation.Starfire
                                 }
                             };
@@ -1060,7 +1071,7 @@ namespace Rawr.Moonkin
                     }
                     else
                     {
-                        Spell newMoonfireFirst = new Spell()
+                        Spell newMoonfire = new Spell()
                         {
                             Name = "MF",
                             School = SpellSchool.Arcane,
@@ -1073,7 +1084,7 @@ namespace Rawr.Moonkin
                             SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
                             DoT = new DotEffect()
                             {
-                                Duration = 3 * SpellRotation.Starfire.CastTime + SpellRotation.Moonfire.CastTime,
+                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f,
                                 TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
                                 DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
                                 SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
@@ -1081,26 +1092,20 @@ namespace Rawr.Moonkin
                             },
                             IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
                         };
-                        Spell newMoonfireSecond = new Spell()
+                        Spell newStarfire = new Spell()
                         {
-                            Name = "MF",
+                            Name = "SF",
                             School = SpellSchool.Arcane,
-                            CastTime = 0.0f,
-                            CriticalHitMultiplier = 0.0f,
-                            DamagePerHit = 0.0f,
-                            ManaCost = 0.0f,
-                            SpecialCriticalModifier = 0.0f,
-                            SpecialDamageModifier = 0.0f,
-                            SpellDamageModifier = 0.0f,
-                            DoT = new DotEffect()
-                            {
-                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f - 3 * SpellRotation.Starfire.CastTime - SpellRotation.Moonfire.CastTime,
-                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
-                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
-                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
-                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
-                            },
-                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
+                            CastTime = SpellRotation.Starfire.CastTime,
+                            CriticalHitMultiplier = SpellRotation.Starfire.CriticalHitMultiplier,
+                            DamagePerHit = SpellRotation.Starfire.DamagePerHit,
+                            ManaCost = SpellRotation.Starfire.ManaCost,
+                            SpecialCriticalModifier = SpellRotation.Starfire.SpecialCriticalModifier,
+                            SpecialDamageModifier = SpellRotation.Starfire.SpecialDamageModifier,
+                            SpellDamageModifier = SpellRotation.Starfire.SpellDamageModifier,
+                            DoT = null,
+                            IdolExtraSpellPower = SpellRotation.Starfire.IdolExtraSpellPower,
+							MaximumCasts = 3
                         };
                         SpellRotation newRotation = null;
                         if (rotation.HasInsectSwarm)
@@ -1109,9 +1114,8 @@ namespace Rawr.Moonkin
                             {
                                 Spells = new List<Spell>()
                                 {
-                                    newMoonfireFirst,
-                                    SpellRotation.Starfire,
-                                    newMoonfireSecond,
+                                    newMoonfire,
+                                    newStarfire,
                                     SpellRotation.InsectSwarm,
                                     SpellRotation.Wrath
                                 }
@@ -1123,9 +1127,8 @@ namespace Rawr.Moonkin
                             {
                                 Spells = new List<Spell>()
                                 {
-                                    newMoonfireFirst,
-                                    SpellRotation.Starfire,
-                                    newMoonfireSecond,
+                                    newMoonfire,
+									newStarfire,
                                     SpellRotation.Wrath
                                 }
                             };
@@ -1493,8 +1496,8 @@ namespace Rawr.Moonkin
                 Name = "IS/MF/SF",
                 Spells = new List<Spell>(new Spell[]
                 {
-                    SpellRotation.InsectSwarm,
                     SpellRotation.Moonfire,
+                    SpellRotation.InsectSwarm,
                     SpellRotation.Starfire
                 })
             },
@@ -1503,8 +1506,8 @@ namespace Rawr.Moonkin
                 Name = "IS/MF/W",
                 Spells = new List<Spell>(new Spell[]
                 {
-                    SpellRotation.InsectSwarm,
                     SpellRotation.Moonfire,
+                    SpellRotation.InsectSwarm,
                     SpellRotation.Wrath
                 })
             },
