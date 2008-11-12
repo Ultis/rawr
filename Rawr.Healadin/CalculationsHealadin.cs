@@ -405,7 +405,6 @@ namespace Rawr.Healadin
                 HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
-                Spirit = stats.Spirit,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCrit = stats.SpellCrit,
@@ -430,11 +429,16 @@ namespace Rawr.Healadin
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
-                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.Stamina + stats.HolyLightPercentManaReduction + stats.HolyShockCrit
+            bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
+                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.MementoProc + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusCritHealMultiplier) > 0;
+            bool survivalStats = (stats.Stamina + stats.Health) > 0;
+            bool ignoreStats = (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
+                + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit
+                + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue) > 0;
+            return (wantedStats || (survivalStats && !ignoreStats));
         }
     }
 }
