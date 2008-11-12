@@ -1933,19 +1933,19 @@ namespace Rawr
 
             defaultBuffs.Add(new Buff()
             {
-                Name = "Redemption's Regalia 2 Piece Bonus",
+                Name = "Redemption Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { HolyShockCrit = .1f },
-                SetName = "Redemption's Regalia",
+                SetName = "Redemption Regalia",
                 SetThreshold = 2
             });
 
             defaultBuffs.Add(new Buff() {
-                Name = "Redemption's Regalia 4 Piece Bonus",
+                Name = "Redemption Regalia 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { HolyLightPercentManaReduction = .05f },
-                SetName = "Redemption's Regalia",
+                SetName = "Redemption Regalia",
                 SetThreshold = 4
             });
 
