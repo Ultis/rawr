@@ -13,6 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr", "Rawr.csproj", "{A0F
 		{53627E83-015D-462C-BEF9-939443C37298} = {53627E83-015D-462C-BEF9-939443C37298}
 		{2C87A084-93E5-46C2-8ED7-8B863630D7AC} = {2C87A084-93E5-46C2-8ED7-8B863630D7AC}
 		{CE44F58E-AE57-4969-8819-0AD7F8362881} = {CE44F58E-AE57-4969-8819-0AD7F8362881}
+		{217438A2-51C6-46DC-B0F8-8EBC81BF2426} = {217438A2-51C6-46DC-B0F8-8EBC81BF2426}
 		{302132A5-40BA-46E4-A0E9-689763EA4E26} = {302132A5-40BA-46E4-A0E9-689763EA4E26}
 		{CB6E88BD-726A-4E0F-B265-6DE6F92669CE} = {CB6E88BD-726A-4E0F-B265-6DE6F92669CE}
 		{CB6873C5-563F-4305-9817-4477F498433C} = {CB6873C5-563F-4305-9817-4477F498433C}
@@ -58,9 +59,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "Rawr.DPSDK\Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest", "Rawr.ShadowPriest\Rawr.ShadowPriest.csproj", "{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance", "Rawr.Enhance\Rawr.Enhance.csproj", "{217438A2-51C6-46DC-B0F8-8EBC81BF2426}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 20
+		SccNumberOfProjects = 21
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -120,6 +123,9 @@ Global
 		SccProjectUniqueName19 = Rawr.ShadowPriest\\Rawr.ShadowPriest.csproj
 		SccProjectName19 = Rawr.ShadowPriest
 		SccLocalPath19 = Rawr.ShadowPriest
+		SccProjectUniqueName20 = Rawr.Enhance\\Rawr.Enhance.csproj
+		SccProjectName20 = Rawr.Enhance
+		SccLocalPath20 = Rawr.Enhance
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -276,6 +282,10 @@ Global
 		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|x86.ActiveCfg = Release|x86
 		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}.Release|x86.Build.0 = Release|x86
+		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
