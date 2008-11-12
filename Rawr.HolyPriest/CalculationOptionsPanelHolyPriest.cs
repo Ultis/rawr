@@ -26,10 +26,10 @@ namespace Rawr.HolyPriest
 
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
 
-            ckbManaPotion.Checked = calcOpts.ManaPotion;
-            
             cbRotation.SelectedIndex = calcOpts.Rotation;
 
+            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
+                     
             trkActivity.Value = (int)calcOpts.FSRRatio;
             lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
 
@@ -60,12 +60,12 @@ namespace Rawr.HolyPriest
         }
 
 
-        private void ckbManaPotion_CheckedChanged(object sender, EventArgs e)
+        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                calcOpts.ManaPotion = ckbManaPotion.Checked;
+                calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -180,8 +180,6 @@ namespace Rawr.HolyPriest
             }
         }
 
-
-
     }
 
     [Serializable]
@@ -197,7 +195,9 @@ namespace Rawr.HolyPriest
 			return xml.ToString();
 		}
 
-        public bool ManaPotion = true;
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
+        public int ManaPot = 4;
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public int Rotation = 0;
         public float FSRRatio = 85f;
         public float FightLength = 5f;

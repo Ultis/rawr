@@ -33,7 +33,7 @@ namespace Rawr.HolyPriest
 
         public float MinHeal { get; protected set; }
         public float MaxHeal { get; protected set; }
-        public int BaseMana { get; protected set; }
+        public float BaseMana { get; protected set; }
         public int ManaCost { get; protected set; }
         public float CastTime { get; protected set; }
         public float HotDuration { get; protected set; }
@@ -141,11 +141,7 @@ namespace Rawr.HolyPriest
             HotDuration = hotDuration;
             GraphColor = col;
             CritChance = stats.SpellCrit;
-
-            if (character.Level >= 70 && character.Level <= 80)
-                BaseMana = 2620 + (character.Level - 70) * (3863 - 2620) / 10;
-            else
-                BaseMana = 2620;
+            BaseMana = CalculationsHolyPriest.GetRaceStats(character).Mana;
         }
       
         public override string ToString()

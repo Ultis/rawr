@@ -85,6 +85,13 @@ namespace Rawr.HolyPriest
             dictValues.Add("Spell Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown", 
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
+            Solver solver = new Solver(BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+            solver.Calculate(this);
+
+            dictValues.Add("Role", string.Format("{0}*{1}", solver.Role, solver.ActionList));
+            dictValues.Add("Burst", string.Format("{0}", HPSBurstPoints.ToString("0")));
+            dictValues.Add("Sustained", string.Format("{0}", HPSSustainPoints.ToString("0")));
+
             dictValues.Add("Renew", new Renew(BasicStats, character).ToString());
             dictValues.Add("Flash Heal", new FlashHeal(BasicStats, character).ToString());
             dictValues.Add("Greater Heal", new Heal(BasicStats, character).ToString());

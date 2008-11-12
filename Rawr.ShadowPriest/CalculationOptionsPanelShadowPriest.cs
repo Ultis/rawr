@@ -159,13 +159,13 @@ namespace Rawr.ShadowPriest
         {
             TargetLevel = 3;
             FightLength = 5f;
-            Shadowfiend = 80f;
+            Shadowfiend = 100f;
             Replenishment = 100f;
             JoW = 100f;
             Survivability = 5f;
 
             SpellPriority = null;
-            ManaPot = 3;
+            ManaPot = 4;
             Lag = 100;
             WaitTime = 50;
         }

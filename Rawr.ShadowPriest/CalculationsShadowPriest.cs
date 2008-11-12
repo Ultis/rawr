@@ -268,14 +268,6 @@ namespace Rawr.ShadowPriest
             SolverBase solver = calculatedStats.GetSolver(character, stats);
             solver.Calculate(calculatedStats);
 
-            calculatedStats.DpsPoints = solver.DPS;
-            calculatedStats.SustainPoints = solver.SustainDPS;
-            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
-            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
-            // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
-            // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
-
             return calculatedStats;
         }
 
@@ -373,7 +365,13 @@ namespace Rawr.ShadowPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit));
+            float InnerFireSpellPowerBonus = 0;
+            if (character.Level >= 77)
+                InnerFireSpellPowerBonus = 120;
+            else if (character.Level >= 71)
+                InnerFireSpellPowerBonus = 95;
+            statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
+                + InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f

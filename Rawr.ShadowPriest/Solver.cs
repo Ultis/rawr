@@ -342,8 +342,11 @@ namespace Rawr.ShadowPriest
             simStats.Spirit *= 1f + ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
             float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
-            tmpregen = (SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR + SpiritRegen * (1f - TimeInFSR));
+            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR;
             ManaSources.Add(new ManaSource("Meditation", tmpregen));
+            regen += tmpregen;
+            tmpregen = SpiritRegen * (1f - TimeInFSR);
+            ManaSources.Add(new ManaSource("OutFSR", tmpregen));
             regen += tmpregen;
             tmpregen = simStats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
@@ -394,6 +397,13 @@ namespace Rawr.ShadowPriest
 
             SustainDPS = (MPS < regen) ? SustDPS : (SustDPS * regen / MPS);
 
+            calculatedStats.DpsPoints = DPS;
+            calculatedStats.SustainPoints = SustDPS;
+            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
+            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
+            // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
+            // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
         }
     }
    
