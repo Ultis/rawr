@@ -1944,7 +1944,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff() {
                 Name = "Redemption's Regalia 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { HolyLightManaCostReduction = .05f },
+                Stats = { HolyLightPercentManaReduction = .05f },
                 SetName = "Redemption's Regalia",
                 SetThreshold = 4
             });

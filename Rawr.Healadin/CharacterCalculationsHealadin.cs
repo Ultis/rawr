@@ -35,6 +35,7 @@ namespace Rawr.Healadin
         public float HLTime { get; set; }
         public float HLAvgHeal { get; set; }
         public float HLHealed { get; set; }
+        public float HLGlyph { get; set; }
         public float HLHPS { get; set; }
         public float HLHPM { get; set; }
         public float HLCrit { get; set; }
@@ -131,6 +132,7 @@ namespace Rawr.Healadin
             dictValues.Add("HL Rotation Time", string.Format("{0} sec", HLTime.ToString("N02")));
             dictValues.Add("HL Healed",  string.Format("{0} healing", HLHealed.ToString("N00")));
             dictValues.Add("HL Mana Usage", string.Format("{0} mana", HLUsage.ToString("N00")));
+            dictValues.Add("Glyph of HL Healed", string.Format("{0} healing", HLGlyph.ToString("N00")));
             // Holy Shock
             dictValues.Add("HS Average Heal", string.Format("{0} healing", HSAvgHeal.ToString("N00")));
             dictValues.Add("HS Crit", string.Format("{0}%", (HSCrit * 100).ToString("N02")));

@@ -28,6 +28,7 @@ namespace Rawr.Healadin
 
             nudSpiritual.Value = (decimal)calcOpts.Spiritual;
             nudDivinePlea.Value = (decimal)calcOpts.DivinePlea;
+            nudGHL.Value = (decimal)calcOpts.GHL_Targets;
 
 			trkActivity.Value = (int)(calcOpts.Activity * 100);
             lblActivity.Text = trkActivity.Value + "%";
@@ -250,7 +251,15 @@ namespace Rawr.Healadin
             }
         }
 
-
+        private void nudGHL_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.GHL_Targets = (float)nudGHL.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
     }
 
@@ -276,6 +285,7 @@ namespace Rawr.Healadin
         public float BoLUp = 1f;
         public float BoLEff = .3f;
         public float HolyShock = .2f;
+        public float GHL_Targets = 1f;
 
         public bool JotP = true;
         public bool LoHSelf = false;

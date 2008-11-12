@@ -55,6 +55,7 @@ namespace Rawr.Healadin
                     "Holy Light:HL Rotation Time",
                     "Holy Light:HL Healed",
                     "Holy Light:HL Mana Usage",
+                    "Holy Light:Glyph of HL Healed",
                     "Holy Shock:HS Average Heal*Average non crit heal",
                     "Holy Shock:HS Crit",
                     "Holy Shock:HS Cast Time",
@@ -287,8 +288,9 @@ namespace Rawr.Healadin
 
             calc.FoLHealed = calc.FoLTime * calc.FoLHPS;
             calc.HLHealed = calc.HLTime * calc.HLHPS;
-            
-            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed;
+            if (calcOpts.Glyph_HL) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f;
+
+            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed + calc.HLGlyph;
             if (talents.BeaconOfLight > 0) calc.TotalHealed += calc.BoLHealed = calcOpts.BoLEff * calcOpts.BoLUp * calc.TotalHealed;
             calc.TotalHealed += calc.SSAbsorbed;
 

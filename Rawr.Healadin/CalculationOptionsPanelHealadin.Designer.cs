@@ -31,7 +31,6 @@
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.chkLoHSelf = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -48,7 +47,6 @@
             this.trkActivity = new System.Windows.Forms.TrackBar();
             this.lblActivity = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.chkJotP = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
             this.lblBoLEff = new System.Windows.Forms.Label();
@@ -66,6 +64,9 @@
             this.chkGSoL = new System.Windows.Forms.CheckBox();
             this.chkGSoW = new System.Windows.Forms.CheckBox();
             this.chkGHL = new System.Windows.Forms.CheckBox();
+            this.chkJotP = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.nudGHL = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -78,6 +79,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkBoLUp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -88,7 +90,7 @@
             0,
             0,
             65536});
-            this.cmbLength.Location = new System.Drawing.Point(149, 7);
+            this.cmbLength.Location = new System.Drawing.Point(6, 22);
             this.cmbLength.Maximum = new decimal(new int[] {
             60,
             0,
@@ -112,7 +114,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(74, 9);
+            this.label3.Location = new System.Drawing.Point(3, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 21;
@@ -120,7 +122,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.chkLoHSelf);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.label10);
@@ -134,36 +135,28 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmbManaAmt);
-            this.groupBox2.Location = new System.Drawing.Point(3, 158);
+            this.groupBox2.Location = new System.Drawing.Point(3, 209);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(294, 173);
+            this.groupBox2.Size = new System.Drawing.Size(294, 123);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Mana Buffs";
             // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(41, 150);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(97, 13);
-            this.label12.TabIndex = 32;
-            this.label12.Text = "Lay on Hands Self:";
-            // 
             // chkLoHSelf
             // 
             this.chkLoHSelf.AutoSize = true;
-            this.chkLoHSelf.Location = new System.Drawing.Point(144, 150);
+            this.chkLoHSelf.Location = new System.Drawing.Point(150, 98);
             this.chkLoHSelf.Name = "chkLoHSelf";
-            this.chkLoHSelf.Size = new System.Drawing.Size(15, 14);
+            this.chkLoHSelf.Size = new System.Drawing.Size(106, 17);
             this.chkLoHSelf.TabIndex = 31;
+            this.chkLoHSelf.Text = "Lay on Hand self";
             this.chkLoHSelf.UseVisualStyleBackColor = true;
             this.chkLoHSelf.CheckedChanged += new System.EventHandler(this.chkLoHSelf_CheckedChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(244, 75);
+            this.label11.Location = new System.Drawing.Point(224, 74);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(41, 13);
             this.label11.TabIndex = 30;
@@ -172,7 +165,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(244, 22);
+            this.label10.Location = new System.Drawing.Point(92, 35);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(33, 13);
             this.label10.TabIndex = 29;
@@ -181,7 +174,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(245, 48);
+            this.label8.Location = new System.Drawing.Point(252, 35);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(33, 13);
             this.label8.TabIndex = 28;
@@ -189,9 +182,10 @@
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(4, 99);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 56);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 28);
+            this.label2.Size = new System.Drawing.Size(116, 13);
             this.label2.TabIndex = 27;
             this.label2.Text = "Replenishment Uptime:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -199,19 +193,19 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(147, 131);
+            this.lblReplenishment.Location = new System.Drawing.Point(110, 104);
             this.lblReplenishment.Name = "lblReplenishment";
-            this.lblReplenishment.Size = new System.Drawing.Size(27, 13);
+            this.lblReplenishment.Size = new System.Drawing.Size(33, 13);
             this.lblReplenishment.TabIndex = 26;
-            this.lblReplenishment.Text = "90%";
+            this.lblReplenishment.Text = "100%";
             // 
             // trkReplenishment
             // 
             this.trkReplenishment.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkReplenishment.Location = new System.Drawing.Point(144, 99);
+            this.trkReplenishment.Location = new System.Drawing.Point(6, 72);
             this.trkReplenishment.Maximum = 100;
             this.trkReplenishment.Name = "trkReplenishment";
-            this.trkReplenishment.Size = new System.Drawing.Size(142, 45);
+            this.trkReplenishment.Size = new System.Drawing.Size(137, 45);
             this.trkReplenishment.TabIndex = 25;
             this.trkReplenishment.TickFrequency = 10;
             this.trkReplenishment.Value = 90;
@@ -225,7 +219,7 @@
             0,
             0,
             65536});
-            this.nudDivinePlea.Location = new System.Drawing.Point(144, 73);
+            this.nudDivinePlea.Location = new System.Drawing.Point(151, 72);
             this.nudDivinePlea.Maximum = new decimal(new int[] {
             20,
             0,
@@ -237,7 +231,7 @@
             0,
             0});
             this.nudDivinePlea.Name = "nudDivinePlea";
-            this.nudDivinePlea.Size = new System.Drawing.Size(95, 20);
+            this.nudDivinePlea.Size = new System.Drawing.Size(71, 20);
             this.nudDivinePlea.TabIndex = 10;
             this.nudDivinePlea.Value = new decimal(new int[] {
             1,
@@ -249,7 +243,7 @@
             // lblDivinePlea
             // 
             this.lblDivinePlea.AutoSize = true;
-            this.lblDivinePlea.Location = new System.Drawing.Point(74, 75);
+            this.lblDivinePlea.Location = new System.Drawing.Point(148, 56);
             this.lblDivinePlea.Name = "lblDivinePlea";
             this.lblDivinePlea.Size = new System.Drawing.Size(64, 13);
             this.lblDivinePlea.TabIndex = 9;
@@ -262,7 +256,7 @@
             0,
             0,
             0});
-            this.nudSpiritual.Location = new System.Drawing.Point(144, 46);
+            this.nudSpiritual.Location = new System.Drawing.Point(151, 33);
             this.nudSpiritual.Maximum = new decimal(new int[] {
             20000,
             0,
@@ -281,7 +275,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(34, 48);
+            this.label1.Location = new System.Drawing.Point(148, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(104, 13);
             this.label1.TabIndex = 7;
@@ -290,7 +284,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(68, 22);
+            this.label4.Location = new System.Drawing.Point(6, 16);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(70, 13);
             this.label4.TabIndex = 2;
@@ -303,9 +297,9 @@
             "0",
             "4300",
             "5400"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(144, 19);
+            this.cmbManaAmt.Location = new System.Drawing.Point(6, 32);
             this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(95, 21);
+            this.cmbManaAmt.Size = new System.Drawing.Size(80, 21);
             this.cmbManaAmt.TabIndex = 0;
             this.cmbManaAmt.Text = "4300";
             this.cmbManaAmt.ValueMember = "4300";
@@ -315,11 +309,11 @@
             // trkActivity
             // 
             this.trkActivity.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkActivity.Location = new System.Drawing.Point(147, 33);
+            this.trkActivity.Location = new System.Drawing.Point(3, 61);
             this.trkActivity.Maximum = 100;
             this.trkActivity.Minimum = 10;
             this.trkActivity.Name = "trkActivity";
-            this.trkActivity.Size = new System.Drawing.Size(142, 45);
+            this.trkActivity.Size = new System.Drawing.Size(137, 45);
             this.trkActivity.TabIndex = 23;
             this.trkActivity.TickFrequency = 10;
             this.trkActivity.Value = 90;
@@ -328,31 +322,21 @@
             // lblActivity
             // 
             this.lblActivity.AutoSize = true;
-            this.lblActivity.Location = new System.Drawing.Point(150, 66);
+            this.lblActivity.Location = new System.Drawing.Point(107, 95);
             this.lblActivity.Name = "lblActivity";
-            this.lblActivity.Size = new System.Drawing.Size(27, 13);
+            this.lblActivity.Size = new System.Drawing.Size(33, 13);
             this.lblActivity.TabIndex = 24;
-            this.lblActivity.Text = "90%";
+            this.lblActivity.Text = "100%";
             // 
             // label9
             // 
-            this.label9.Location = new System.Drawing.Point(63, 33);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 45);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(78, 40);
+            this.label9.Size = new System.Drawing.Size(44, 13);
             this.label9.TabIndex = 25;
             this.label9.Text = "Activity:";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // chkJotP
-            // 
-            this.chkJotP.AutoSize = true;
-            this.chkJotP.Location = new System.Drawing.Point(147, 134);
-            this.chkJotP.Name = "chkJotP";
-            this.chkJotP.Size = new System.Drawing.Size(15, 14);
-            this.chkJotP.TabIndex = 26;
-            this.chkJotP.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkJotP.UseVisualStyleBackColor = true;
-            this.chkJotP.CheckedChanged += new System.EventHandler(this.chkJotP_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -362,18 +346,19 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.lblBoLUp);
             this.groupBox1.Controls.Add(this.trkBoLUp);
-            this.groupBox1.Location = new System.Drawing.Point(3, 337);
+            this.groupBox1.Location = new System.Drawing.Point(3, 338);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(294, 117);
+            this.groupBox1.Size = new System.Drawing.Size(294, 87);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Beacon of Light";
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(38, 66);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(148, 18);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(100, 28);
+            this.label6.Size = new System.Drawing.Size(74, 13);
             this.label6.TabIndex = 33;
             this.label6.Text = "Effectiveness:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -381,19 +366,19 @@
             // lblBoLEff
             // 
             this.lblBoLEff.AutoSize = true;
-            this.lblBoLEff.Location = new System.Drawing.Point(145, 98);
+            this.lblBoLEff.Location = new System.Drawing.Point(255, 64);
             this.lblBoLEff.Name = "lblBoLEff";
-            this.lblBoLEff.Size = new System.Drawing.Size(27, 13);
+            this.lblBoLEff.Size = new System.Drawing.Size(33, 13);
             this.lblBoLEff.TabIndex = 32;
-            this.lblBoLEff.Text = "90%";
+            this.lblBoLEff.Text = "100%";
             // 
             // trkBoLEff
             // 
             this.trkBoLEff.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBoLEff.Location = new System.Drawing.Point(144, 66);
+            this.trkBoLEff.Location = new System.Drawing.Point(151, 32);
             this.trkBoLEff.Maximum = 100;
             this.trkBoLEff.Name = "trkBoLEff";
-            this.trkBoLEff.Size = new System.Drawing.Size(145, 45);
+            this.trkBoLEff.Size = new System.Drawing.Size(137, 45);
             this.trkBoLEff.TabIndex = 31;
             this.trkBoLEff.TickFrequency = 10;
             this.trkBoLEff.Value = 90;
@@ -401,9 +386,10 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(38, 15);
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 16);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(100, 28);
+            this.label5.Size = new System.Drawing.Size(43, 13);
             this.label5.TabIndex = 30;
             this.label5.Text = "Uptime:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -411,19 +397,19 @@
             // lblBoLUp
             // 
             this.lblBoLUp.AutoSize = true;
-            this.lblBoLUp.Location = new System.Drawing.Point(145, 50);
+            this.lblBoLUp.Location = new System.Drawing.Point(110, 66);
             this.lblBoLUp.Name = "lblBoLUp";
-            this.lblBoLUp.Size = new System.Drawing.Size(27, 13);
+            this.lblBoLUp.Size = new System.Drawing.Size(33, 13);
             this.lblBoLUp.TabIndex = 29;
-            this.lblBoLUp.Text = "90%";
+            this.lblBoLUp.Text = "100%";
             // 
             // trkBoLUp
             // 
             this.trkBoLUp.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trkBoLUp.Location = new System.Drawing.Point(144, 15);
+            this.trkBoLUp.Location = new System.Drawing.Point(6, 32);
             this.trkBoLUp.Maximum = 100;
             this.trkBoLUp.Name = "trkBoLUp";
-            this.trkBoLUp.Size = new System.Drawing.Size(145, 45);
+            this.trkBoLUp.Size = new System.Drawing.Size(137, 45);
             this.trkBoLUp.TabIndex = 28;
             this.trkBoLUp.TickFrequency = 10;
             this.trkBoLUp.Value = 90;
@@ -433,10 +419,10 @@
             // 
             this.trkHS.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trkHS.LargeChange = 10;
-            this.trkHS.Location = new System.Drawing.Point(147, 84);
+            this.trkHS.Location = new System.Drawing.Point(3, 125);
             this.trkHS.Maximum = 100;
             this.trkHS.Name = "trkHS";
-            this.trkHS.Size = new System.Drawing.Size(143, 45);
+            this.trkHS.Size = new System.Drawing.Size(137, 45);
             this.trkHS.TabIndex = 29;
             this.trkHS.TickFrequency = 10;
             this.trkHS.Value = 20;
@@ -444,7 +430,7 @@
             // 
             // lblHS
             // 
-            this.lblHS.Location = new System.Drawing.Point(146, 116);
+            this.lblHS.Location = new System.Drawing.Point(107, 157);
             this.lblHS.Name = "lblHS";
             this.lblHS.Size = new System.Drawing.Size(33, 13);
             this.lblHS.TabIndex = 34;
@@ -453,9 +439,10 @@
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(63, 84);
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 109);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(78, 40);
+            this.label7.Size = new System.Drawing.Size(65, 13);
             this.label7.TabIndex = 35;
             this.label7.Text = "Holy Shock:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -468,9 +455,9 @@
             this.groupBox3.Controls.Add(this.chkGSoL);
             this.groupBox3.Controls.Add(this.chkGSoW);
             this.groupBox3.Controls.Add(this.chkGHL);
-            this.groupBox3.Location = new System.Drawing.Point(3, 460);
+            this.groupBox3.Location = new System.Drawing.Point(147, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(294, 90);
+            this.groupBox3.Size = new System.Drawing.Size(150, 161);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Glyphs";
@@ -479,7 +466,7 @@
             // 
             this.chkGFoL.AutoSize = true;
             this.chkGFoL.Enabled = false;
-            this.chkGFoL.Location = new System.Drawing.Point(146, 19);
+            this.chkGFoL.Location = new System.Drawing.Point(6, 88);
             this.chkGFoL.Name = "chkGFoL";
             this.chkGFoL.Size = new System.Drawing.Size(131, 17);
             this.chkGFoL.TabIndex = 5;
@@ -512,7 +499,7 @@
             // chkGSoL
             // 
             this.chkGSoL.AutoSize = true;
-            this.chkGSoL.Location = new System.Drawing.Point(146, 42);
+            this.chkGSoL.Location = new System.Drawing.Point(6, 111);
             this.chkGSoL.Name = "chkGSoL";
             this.chkGSoL.Size = new System.Drawing.Size(127, 17);
             this.chkGSoL.TabIndex = 2;
@@ -523,7 +510,7 @@
             // chkGSoW
             // 
             this.chkGSoW.AutoSize = true;
-            this.chkGSoW.Location = new System.Drawing.Point(146, 65);
+            this.chkGSoW.Location = new System.Drawing.Point(6, 134);
             this.chkGSoW.Name = "chkGSoW";
             this.chkGSoW.Size = new System.Drawing.Size(142, 17);
             this.chkGSoW.TabIndex = 1;
@@ -534,7 +521,6 @@
             // chkGHL
             // 
             this.chkGHL.AutoSize = true;
-            this.chkGHL.Enabled = false;
             this.chkGHL.Location = new System.Drawing.Point(6, 19);
             this.chkGHL.Name = "chkGHL";
             this.chkGHL.Size = new System.Drawing.Size(115, 17);
@@ -543,26 +529,67 @@
             this.chkGHL.UseVisualStyleBackColor = true;
             this.chkGHL.CheckedChanged += new System.EventHandler(this.chkGHL_CheckedChanged);
             // 
+            // chkJotP
+            // 
+            this.chkJotP.AutoSize = true;
+            this.chkJotP.Location = new System.Drawing.Point(3, 176);
+            this.chkJotP.Name = "chkJotP";
+            this.chkJotP.Size = new System.Drawing.Size(90, 17);
+            this.chkJotP.TabIndex = 37;
+            this.chkJotP.Text = "Maintain JotP";
+            this.chkJotP.UseVisualStyleBackColor = true;
+            this.chkJotP.CheckedChanged += new System.EventHandler(this.chkJotP_CheckedChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(151, 167);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(99, 13);
+            this.label12.TabIndex = 38;
+            this.label12.Text = "Glyph of Holy Light:";
+            // 
+            // nudGHL
+            // 
+            this.nudGHL.DecimalPlaces = 1;
+            this.nudGHL.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.nudGHL.Location = new System.Drawing.Point(154, 183);
+            this.nudGHL.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nudGHL.Name = "nudGHL";
+            this.nudGHL.Size = new System.Drawing.Size(37, 20);
+            this.nudGHL.TabIndex = 39;
+            this.nudGHL.ValueChanged += new System.EventHandler(this.nudGHL_ValueChanged);
+            // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(67, 135);
+            this.label13.Location = new System.Drawing.Point(197, 185);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(74, 13);
-            this.label13.TabIndex = 37;
-            this.label13.Text = "Maintain JotP:";
+            this.label13.Size = new System.Drawing.Size(39, 13);
+            this.label13.TabIndex = 40;
+            this.label13.Text = "targets";
             // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label13);
+            this.Controls.Add(this.nudGHL);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.chkJotP);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.lblHS);
             this.Controls.Add(this.trkHS);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.chkJotP);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.lblActivity);
@@ -585,6 +612,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -607,7 +635,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.TrackBar trkReplenishment;
-        private System.Windows.Forms.CheckBox chkJotP;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblBoLEff;
@@ -627,9 +654,11 @@
         private System.Windows.Forms.CheckBox chkGSoL;
         private System.Windows.Forms.CheckBox chkGSoW;
         private System.Windows.Forms.CheckBox chkGHL;
-        private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox chkLoHSelf;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox chkGFoL;
+        private System.Windows.Forms.CheckBox chkJotP;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown nudGHL;
+        private System.Windows.Forms.Label label13;
     }
 }
