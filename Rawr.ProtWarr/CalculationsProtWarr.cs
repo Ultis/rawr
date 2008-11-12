@@ -402,15 +402,15 @@ threat and limited threat scaled by the threat scale.",
 
             float shieldSlamTPS = (770f + defStanceThreatMod * reducedDamage *
                                   ((990f + 1040f) / 2f + calculatedStats.BlockValue) * averageDamage *
-                                  (1f + stats.BonusShieldSlamDamage)) * 0.207f; //This last number is a hardcoded number from a spreadsheet I made on ability useage based on sword&board
+                                  (1f + stats.BonusShieldSlamDamage)) * (47f / 225f); //This last number is a hardcoded number from a spreadsheet I made on ability useage based on sword&board
             calculatedStats.ShieldSlamThreat = (float)Math.Round(shieldSlamTPS, 2);
 
             float revengeTPS = (121f + defStanceThreatMod * reducedDamage *
-                               ((1454f + 1776f) / 2f + attackPower * 0.207f) * averageDamage) * 0.159f;
+                               ((1454f + 1776f) / 2f + attackPower * 0.207f) * averageDamage) * (36f / 225f);
             calculatedStats.RevengeThreat = (float)Math.Round(revengeTPS, 2);
 
             float devastateTPS = attackPower * 0.05f + (defStanceThreatMod * reducedDamage *
-                                 (0.5f * normalizedWeaponDamage + 101f * 5f) * averageDamage) * 0.301f;
+                                 (0.5f * normalizedWeaponDamage + 101f * 5f) * averageDamage) * (67f / 225f);
             calculatedStats.DevastateThreat = (float)Math.Round(devastateTPS, 2);
 
             float heroicStrikeTPS = (259f + whiteHitNoGlancePost + 495) * averageDamage / weaponSpeed;
