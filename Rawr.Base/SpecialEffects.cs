@@ -33,7 +33,7 @@ namespace Rawr
                 }
                 else if (gemBonus == "Chance to restore mana on spellcast")
                 {
-                    stats.ManaRestoreOnCast_5_15 = 300; // IED
+                    stats.ManaRestoreOnCast_5_15 = 600; // IED
                 }
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {
@@ -46,6 +46,14 @@ namespace Rawr
                 else if (gemBonus == "+2% Intellect")
                 {
                     stats.BonusIntellectMultiplier = 0.02f;
+                }
+                else if (gemBonus == "+2% Mana")
+                {
+                    stats.BonusManaMultiplier = 0.02f;
+                }
+                else if (gemBonus == "3% Increased Critical Healing Effect")
+                {
+                    stats.BonusCritHealMultiplier = 0.03f;
                 }
                 else if (gemBonus == "2% Reduced Threat")
                 {

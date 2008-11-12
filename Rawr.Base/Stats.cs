@@ -229,6 +229,8 @@ namespace Rawr
         BonusSpellPowerMultiplier,
         BonusSpiritMultiplier,
         BonusHealthMultiplier,
+        BonusManaMultiplier,
+        BonusCritHealMultiplier,
         BonusStaminaMultiplier,
 		BonusStrengthMultiplier,
 		BonusSwipeDamageMultiplier,
@@ -1953,6 +1955,24 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.ThreatIncreaseMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Mana")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusManaMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaMultiplier] = value; }
+        }
+
+        [Percentage]
+        [DisplayName("% Crit Heal")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusCritHealMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCritHealMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCritHealMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
