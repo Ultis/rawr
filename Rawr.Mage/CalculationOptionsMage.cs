@@ -111,6 +111,7 @@ namespace Rawr.Mage
         public float TargetDamage { get; set; }
         public bool FarmingMode { get; set; }
         public float FocusMagicTargetCritRate { get; set; }
+        public bool UnlimitedMana { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }
         public bool CustomSpellMixEnabled { get; set; }
@@ -225,8 +226,8 @@ namespace Rawr.Mage
 
         private CalculationOptionsMage()
         {
-            TargetLevel = 73;
-            AoeTargetLevel = 70;
+            TargetLevel = 83;
+            AoeTargetLevel = 80;
             Latency = 0.05f;
             AoeTargets = 9;
             ArcaneResist = 0;
@@ -263,7 +264,7 @@ namespace Rawr.Mage
             BurstWindow = 5f;
             BurstImpacts = 5f;
             //ChanceToLiveLimit = 99f;
-            PlayerLevel = 70;
+            PlayerLevel = 80;
             FocusMagicTargetCritRate = 0.2f;
         }
 

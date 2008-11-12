@@ -507,6 +507,11 @@ namespace Rawr.Mage
             if (minimizeTime) needsTimeExtension = true;
 
             if (segmentCooldowns && (flameCapAvailable || destructionPotionAvailable)) restrictManaUse = true;
+            if (calculationOptions.UnlimitedMana)
+            {
+                restrictManaUse = false;
+                integralMana = false;
+            }
             if (restrictManaUse) segmentNonCooldowns = true;
             if (restrictThreat) segmentNonCooldowns = true;
 
@@ -1530,7 +1535,7 @@ namespace Rawr.Mage
         {
             int rowCount = 0;
 
-            rowManaRegen = rowCount++;
+            if (!calculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
             if (calculationOptions.EvocationEnabled && (needsTimeExtension || restrictManaUse || integralMana)) rowEvocation = rowCount++;
             if (calculationOptions.ManaPotionEnabled || destructionPotionAvailable) rowPotion = rowCount++;

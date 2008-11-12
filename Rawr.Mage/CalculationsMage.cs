@@ -1068,9 +1068,9 @@ namespace Rawr.Mage
                         Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         int legendY = 2;
 
-                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.DrumsOfBattle, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
-                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Drums of Battle", "Combustion", "Water Elemental", "Mana Gem Effect" };
-                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.Brown, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
+                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
+                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect" };
+                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
                         Brush[] brushSubPoints = new Brush[cooldownColors.Length];
                         Color[] colorSubPointsA = new Color[cooldownColors.Length];
                         Color[] colorSubPointsB = new Color[cooldownColors.Length];
