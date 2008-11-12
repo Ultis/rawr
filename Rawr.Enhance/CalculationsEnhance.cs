@@ -226,7 +226,7 @@ namespace Rawr
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.09f - hitBonus - .02f * DWS) + chanceDodge;
 
-            float hitBonusSpell = stats.HitRating / 12.613f;
+            float hitBonusSpell = stats.HitRating / 1261.3f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 2208f + stats.Intellect / 8000f + .01f * TS);
             float spellDamage = stats.SpellPower;
