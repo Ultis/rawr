@@ -1157,10 +1157,10 @@ namespace Rawr.Moonkin
 
                             // This will be time spent trying to proc Eclipse
                             float timeToProc = expectedCastsToProc * SpellRotation.Wrath.CastTime;
-                            float procPeriodDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate);
+                            float procPeriodDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) + trinketExtraDPS + treeDPS;
 
                             float timeInEclipse = 15.0f - SpellRotation.Wrath.CastTime;
-                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f);
+                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f) + trinketExtraDPS + treeDPS;
 
                             float rotationLength = 30.0f;
                             float nonProcTime = rotationLength - timeInEclipse;
@@ -1180,10 +1180,10 @@ namespace Rawr.Moonkin
 
                             // This will be time spent trying to proc Eclipse
                             float timeToProc = expectedCastsToProc * SpellRotation.Starfire.CastTime;
-                            float procPeriodDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate);
+                            float procPeriodDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate) + trinketExtraDPS + treeDPS;
 
                             float timeInEclipse = 15.0f - SpellRotation.Starfire.CastTime;
-                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f;
+                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f + trinketExtraDPS + treeDPS;
 
                             float rotationLength = 30.0f;
                             float nonProcTime = rotationLength - timeInEclipse;
@@ -1212,7 +1212,7 @@ namespace Rawr.Moonkin
                             float normalLength = rotationLength - 15.0f + starfireAverageCastTime;
 
                             float timeInEclipse = 15.0f - starfireAverageCastTime;
-                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f;
+                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f + trinketExtraDPS + treeDPS;
 
                             float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
                             float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
@@ -1235,7 +1235,7 @@ namespace Rawr.Moonkin
                             float normalLength = rotationLength - 15.0f + wrathAverageCastTime;
 
                             float timeInEclipse = 15.0f - wrathAverageCastTime;
-                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f);
+                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f) + trinketExtraDPS + treeDPS;
 
                             float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
                             float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
