@@ -348,7 +348,7 @@ threat and limited threat scaled by the threat scale.",
             if((targetLevel - 80f) < 3)
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
 
-            float defStanceThreatMod = 1.45f *
+            float defStanceThreatMod = 2.0735f *
                                        //(1 + character.WarriorTalents.Defiance * 0.05f) * //TODO: Talent removed in WoW 3.0
                                        (1 + stats.ThreatIncreaseMultiplier);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
@@ -394,25 +394,26 @@ threat and limited threat scaled by the threat scale.",
 
             //Max threat cycle is shield slam -> revenge -> devastate -> devastate -> repeat
             //with as many herioc strikes as possible.
+            //For first wotlk rev I'm going to keep this cycle and model a flat percentage for Sword and Board
+            //First rev will only include full sword and board talent specs for the threat model.
+            //Later revs we'll want to do cycles and put in concussion and shockwave (which do large amounts of threat now)
             //In this basic model going to assume unlimited threat is heroic every swing, and
             //limited threat is zero heroic strikes.
 
-            float shieldSlamTPS = (307f + defStanceThreatMod * reducedDamage *
-                                  ((440f + 420f) / 2f + calculatedStats.BlockValue) * averageDamage *
-                                  (1f + stats.BonusShieldSlamDamage)) / 6f;
+            float shieldSlamTPS = (770f + defStanceThreatMod * reducedDamage *
+                                  ((990f + 1040f) / 2f + calculatedStats.BlockValue) * averageDamage *
+                                  (1f + stats.BonusShieldSlamDamage)) * 0.207f; //This last number is a hardcoded number from a spreadsheet I made on ability useage based on sword&board
             calculatedStats.ShieldSlamThreat = (float)Math.Round(shieldSlamTPS, 2);
 
-            float revengeTPS = (201f + defStanceThreatMod * reducedDamage *
-                               ((414f + 506f) / 2f) * averageDamage) / 6f;
+            float revengeTPS = (121f + defStanceThreatMod * reducedDamage *
+                               ((1454f + 1776f) / 2f + attackPower * 0.207f) * averageDamage) * 0.159f;
             calculatedStats.RevengeThreat = (float)Math.Round(revengeTPS, 2);
 
-            float devastateTPS = 2f * (106f + 14f * 5f + defStanceThreatMod * reducedDamage *
-                                 (0.5f * normalizedWeaponDamage + 35f * 5f) * averageDamage) / 6f;
+            float devastateTPS = attackPower * 0.05f + (defStanceThreatMod * reducedDamage *
+                                 (0.5f * normalizedWeaponDamage + 101f * 5f) * averageDamage) * 0.301f;
             calculatedStats.DevastateThreat = (float)Math.Round(devastateTPS, 2);
 
-            float heroicStrikeTPS = defStanceThreatMod * whiteHitNoGlancePost / attackSpeed + 
-                                    (6f / attackSpeed) * (196f + defStanceThreatMod * reducedDamage *
-                                    208f * averageDamage) / 6f;
+            float heroicStrikeTPS = (259f + whiteHitNoGlancePost + 495) * averageDamage / weaponSpeed;
             calculatedStats.HeroicStrikeThreat = (float)Math.Round(heroicStrikeTPS, 2);
 
 
@@ -615,6 +616,7 @@ threat and limited threat scaled by the threat scale.",
                     BonusStaminaMultiplier = tree.Vitality * 0.02f,
                     BonusStrengthMultiplier = tree.Vitality * 0.02f,
                     Expertise = tree.Vitality * 2f,
+                    BonusShieldSlamDamage = tree.GagOrder * 0.05f,
                 };
 
             float oneProcPerMinAveUptime = 0f;
