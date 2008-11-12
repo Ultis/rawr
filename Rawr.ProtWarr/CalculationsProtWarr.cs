@@ -229,7 +229,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Miss = missTotal;
             calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
             calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge, parryTotal);
-            calculatedStats.Defense = (float)Math.Floor(350f + stats.Defense + stats.DefenseRating *
+            calculatedStats.Defense = (float)Math.Floor(400f + stats.Defense + stats.DefenseRating *
                                       WarriorConversions.DefenseRatingToDefense);
 
             float block = 5f + stats.BlockRating * WarriorConversions.BlockRatingToBlock +
