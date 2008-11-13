@@ -104,7 +104,7 @@ namespace Rawr.Tankadin
             dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
 			dict.Add("Stamina", BasicStats.Stamina.ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
-            dict.Add("Defense", Math.Round(Defense + 350f).ToString());
+            dict.Add("Defense", Math.Round(Defense + 400f).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
             dict.Add("Spell Damage", BasicStats.SpellPower.ToString());
             dict.Add("Block Value", BlockValue.ToString());

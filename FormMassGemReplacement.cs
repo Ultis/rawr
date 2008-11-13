@@ -155,7 +155,7 @@ namespace Rawr
                             foreach (Gemming set in listOfGemmings){
                             
                                 string gemmedId = (item.Id.ToString()) + (set.gemmingID(item));
-                                Item thingHolder = ItemCache.FindItemById(gemmedId, true, true);
+                                Item thingHolder = ItemCache.FindItemById(gemmedId, true, false);
                            
                             }
 
@@ -176,7 +176,7 @@ namespace Rawr
                             foreach (Gemming set in listOfGemmings){
                             
                                 string gemmedId = (item.Id.ToString()) + (set.gemmingID(item));
-                                Item thingHolder = ItemCache.FindItemById(gemmedId, true, true);
+                                Item thingHolder = ItemCache.FindItemById(gemmedId, true, false);
                            
                             }
                         }
@@ -221,7 +221,7 @@ namespace Rawr
                                 continue;
 
                             else
-                                ItemCache.DeleteItem(exItem);
+                                ItemCache.DeleteItem(exItem, false);
                     }
 
 
@@ -229,7 +229,7 @@ namespace Rawr
                         //using the first item we added to the list (which matches all the rest)
                         //as a template for the gemmings
                         foreach (Gemming set in listOfGemmings)
-                            ItemCache.AddItem(set.gemIt(listGemmableItems[0]), true, true);
+                            ItemCache.AddItem(set.gemIt(listGemmableItems[0]), true, false);
 
                         //if the last item added to the list wasn't the last item in relevantItems
                         if (item.GemmedId != ItemCache.RelevantItems[ItemCache.RelevantItems.Length - 1].GemmedId)
@@ -250,6 +250,8 @@ namespace Rawr
                     }
                 }
             }
+
+			ItemCache.OnItemsChanged();
         }
 
 

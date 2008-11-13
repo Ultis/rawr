@@ -15,49 +15,40 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 7;
+		private const int INTRO_VERSION = 8;
 		private const string INTRO_TEXT =
-" Welcome to Rawr 2.0.3. This brand new version of Rawr is designed for use with WoW 3.0, " +
-"for characters up to level 70. You'll find many new features at the core level of Rawr, " +
-"and many in some of the models. Some important things to note: \r\n" +
-"   •We're not done. Many of the models haven't been updated yet for WoW 3.0\r\n" +
-"   •We're going to be updating Rawr quite often for a while. To help you stay " +
-"updated with the latest changes, Rawr will now check for new available updates, " +
-"notify you if there's a newer version, and offer to open Rawr's website for you.\r\n" +
-"\r\nRecent Changes:\r\n" +
-"  v2.0.3: Many fixes and additions to Hunter, added ShadowPriest model, implemented item " + 
-"filtering (!), significant changes and fixes to the Tree model, many fixes and rotation " +
-"updates for Mage, fixes for the Mass Gem Replacement feature, many updates and additional " +
-"features for Moonkin.\r\n" +
-"  v2.0.2: Fixes for Moonkin calculation, Human Spirit bonus in HolyPriest, armor values in Bear,\r\n" +  
-"and properly loading stats on items with armor penetration rating, and a number of trinkets.\r\n" +
-"  v2.0.1: Wide variety of bugfixes to several models, new armory item parsing, optimization.\r\n" +
-"\r\nHere's a quick rundown of the status of each model:\r\n" +
-"   •Rawr.Base: Still need to implement buffs for Glyphs, and fix bugs with many of the new features.\r\n" +
-"   •Rawr.Bear: Threat calculations not done. Otherwise, mostly complete.\r\n" +
-"   •Rawr.Cat: Not updated for 3.0.\r\n" +
-"   •Rawr.DPSWarr: Not updated for 3.0.\r\n" +
-"   •Rawr.Healadin: Mostly complete.\r\n" +
-"   •Rawr.HolyPriest: Mostly complete.\r\n" +
-"   •Rawr.Hunter: Mostly complete.\r\n" +
-"   •Rawr.Mage: Mostly complete.\r\n" +
-"   •Rawr.Moonkin: Mostly complete.\r\n" +
-"   •Rawr.ProtWarr: Partially updated for 3.0.\r\n" +
-"   •Rawr.RestoSham: Not updated for 3.0.\r\n" +
-"   •Rawr.Retribution: Mostly complete.\r\n" +
-"   •Rawr.Rogue: Not updated for 3.0.\r\n" +
-"   •Rawr.ShadowPriest: Mostly complete.\r\n" +
-"   •Rawr.Tankadin: Mostly complete.\r\n" +
-"   •Rawr.Tree: Partially updated for 3.0.\r\n" +
-"   •Rawr.Warlock: Not updated for 3.0.\r\n" +
-"\r\n As you can see, we still have alot of work ahead of us, but we're actively working on it. " +
-"If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, " +
-"especially with the models which we haven't begun updating for 3.0, please contact me at " +
-"cnervig@hotmail.com. Thanks, and look forward to frequent updates!";
+@" Welcome to Rawr 2.1. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+   •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
+   •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
+   •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
-		
+Recent Changes:
+v2.1: Updated for level 80 content. Removed models which haven't yet been updated for WoW 3.0. Added two brand new models: Enhance and DPSDK! Welcome to Rawr, Enhancement Shamans and DPS Death Knights!
 
-
+Here's a quick rundown of the status of each model:
+   •Rawr.Base: Fully functional. Still want to implement a global interface for glyphs, but they're left up to each model for now.
+   •Rawr.Bear: Fully functional for level 80.
+   •Rawr.Cat: Fully functional for level 80.
+   •Rawr.DPSDK: Fully functional for level 80.
+   •Rawr.DPSWarr: Not updated for 3.0.
+   •Rawr.Enhance: Fully functional for level 80.
+   •Rawr.Healadin: Fully functional for level 80.
+   •Rawr.HolyPriest: Fully functional for level 80.
+   •Rawr.Hunter: Fully functional for level 80.
+   •Rawr.Mage: Fully functional for level 80.
+   •Rawr.Moonkin: Fully functional for level 80.
+   •Rawr.ProtWarr: Partially updated for 3.0 & level 80.
+   •Rawr.RestoSham: Not updated for 3.0.
+   •Rawr.Retribution: Fully functional for level 80.
+   •Rawr.Rogue: Not updated for 3.0.
+   •Rawr.ShadowPriest: Fully functional for level 80.
+   •Rawr.Tankadin: Fully functional for level 80.
+   •Rawr.Tree: Fully functional for level 80.
+   •Rawr.Warlock: Not updated for 3.0.
+    
+    
+ As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!";
+	
 
         private string _storedCharacterPath;
         private bool _storedUnsavedChanged;
@@ -1419,7 +1410,7 @@ namespace Rawr
 
 		private void reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("This will take a while (~10min maybe?), and I don't have a progress bar for it yet. " +
+			if (MessageBox.Show("This will take a while (~15min maybe?), and I don't have a progress bar for it yet. " +
 				"Are you sure you'd like to do this?", "Reload WotLK items from Wowhead?", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				Wowhead.LoadKnownWotlkItems();
@@ -1433,20 +1424,11 @@ namespace Rawr
 			{
 				ToString(); //Breakpoint Here
 
-				Character charBase = Character.Clone();
-				Character charMark = Character.Clone();
-				Character charHost = Character.Clone();
-				charBase.Trinket1 = null;
-				charMark.Trinket1 = ItemCache.FindItemById(13966);
-				charHost.Trinket1 = ItemCache.FindItemById(42128);
+				//foreach (Item item in ItemCache.AllItems)
+				//    if (item.Sockets.Color1 != Item.ItemSlot.None && item.Gem1 == null)
+				//        ItemCache.DeleteItem(item, false);
 
-				Stats statsBase = Calculations.GetCharacterStats(charBase);
-				Stats statsMark = Calculations.GetCharacterStats(charMark);
-				Stats statsHost = Calculations.GetCharacterStats(charHost);
-
-				CharacterCalculationsBase calcBase = Calculations.GetCharacterCalculations(charBase);
-				CharacterCalculationsBase calcMark = Calculations.GetCharacterCalculations(charMark);
-				CharacterCalculationsBase calcHost = Calculations.GetCharacterCalculations(charHost);
+				//ItemCache.OnItemsChanged();
 
 				ToString();
 			}

@@ -149,6 +149,7 @@ namespace Rawr.Cat
 		{
 			//_cachedCharacter = character;
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
+			if (calcOpts == null) calcOpts = new CalculationOptionsCat();
 			int targetLevel = calcOpts.TargetLevel;
 			float targetArmor = calcOpts.TargetArmor;
 			Stats stats = GetCharacterStats(character, additionalItem);
