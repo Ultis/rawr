@@ -234,6 +234,7 @@ namespace Rawr.HolyPriest
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
                 + InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
@@ -459,21 +460,30 @@ namespace Rawr.HolyPriest
             {
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
-                Mp5 = stats.Mp5,
-                SpellPower = stats.SpellPower,
-                CritRating = stats.CritRating,
-                HasteRating = stats.HasteRating,
+                Spirit = stats.Spirit,
                 Health = stats.Health,
                 Mana = stats.Mana,
-                Spirit = stats.Spirit,
-                Resilience = stats.Resilience,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                Mp5 = stats.Mp5,
+                SpellPower = stats.SpellPower,
+
                 SpellHaste = stats.SpellHaste,
                 SpellCrit = stats.SpellCrit,
+
+                Resilience = stats.Resilience,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+
+                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
-                MementoProc = stats.MementoProc,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+
+                MementoProc = stats.MementoProc,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
@@ -487,23 +497,43 @@ namespace Rawr.HolyPriest
                 ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
                 ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
-                BangleProc = stats.BangleProc
+                BangleProc = stats.BangleProc,
+                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25
             };
         }
 
+        // Trinket Status:
+        // Correctly implemented:
+        // http://www.wowhead.com/?item=40382 - Soul of the Dead
+        
+        // Wrongly implemented:
+        // http://www.wowhead.com/?item=37835 - Je'Tze's Bell
+
+        // Not implemented:
+        // http://www.wowhead.com/?item=44253 - Darkmoon Card: Greatness (But for 90 spi/90 int versions, not yet known)
+        // http://www.wowhead.com/?item=42988 - Darkmoon Card: Illusion
+        // http://www.wowhead.com/?item=40258 - Forethought Talisman
+        // http://www.wowhead.com/?item=40432 - Illustration of the Dragon Soul
+        // http://www.wowhead.com/?item=40532 - Living Ice Crystals
+        // http://www.wowhead.com/?item=40430 - Majestic Dragon Figurine
+
         public override bool HasRelevantStats(Stats stats)
-        {   // stats.Stamina + 
-            return (stats.Resilience + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating
-                + stats.HasteRating + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage + stats.BonusIntellectMultiplier
-                + stats.SpellHaste + stats.SpellCrit + stats.HealingReceivedMultiplier
-                + stats.BonusManaPotion + stats.MementoProc + stats.ManaregenFor8SecOnUse5Min
-                + stats.BonusPoHManaCostReductionMultiplier + stats.SpellCombatManaRegeneration
-                + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
-                + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min
-                + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min
-                + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
+        {
+            return (
+                stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mana + stats.Mp5 + stats.SpellPower
+                + stats.SpellHaste + stats.SpellCrit
+                + stats.Resilience +  + stats.CritRating + stats.HasteRating 
+                + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
+                + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
+                
+                + stats.MementoProc + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier +
+                + stats.ManaregenFor8SecOnUse5Min + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
+                + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
+                + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
-                + stats.BangleProc) > 0;
+                + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25
+                ) > 0;
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

@@ -38,6 +38,7 @@ namespace Rawr.HolyPriest
         public float CastTime { get; protected set; }
         public float HotDuration { get; protected set; }
         public float CritChance { get; protected set; }
+        public float CritCoef { get; protected set; }
 
         public float HealingCoef { get; protected set; }
         public float RankCoef { get; protected set; }
@@ -100,7 +101,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return (MinHeal * 1.5f + MaxCrit)/2;
+                return (MinHeal * CritCoef + MaxCrit)/2;
             }
         }
 
@@ -108,7 +109,7 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return MaxHeal * 1.5f;
+                return MaxHeal * CritCoef;
             }
         }
 
@@ -141,6 +142,7 @@ namespace Rawr.HolyPriest
             HotDuration = hotDuration;
             GraphColor = col;
             CritChance = stats.SpellCrit;
+            CritCoef = 1.5f * (1f + stats.BonusCritHealMultiplier);
             BaseMana = CalculationsHolyPriest.GetRaceStats(character).Mana;
         }
       
@@ -196,6 +198,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
             CritChance = 0.0f;
+            CritCoef = 1.0f;
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
             if (stats.RenewDurationIncrease > 0)
@@ -262,7 +265,8 @@ namespace Rawr.HolyPriest
 
         public void SurgeOfLight()
         {
-            CritChance = 0;
+            CritChance = 0f;
+            CritCoef = 1.0f;
             ManaCost = 0;
             CastTime = 0;
        }
@@ -484,7 +488,10 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character)
         {
             if (character.PriestTalents.CircleOfHealing == 0)
+            {
+                MinHeal = MaxHeal = 0;
                 return;
+            }
             Range = 15;
             MinHeal = (MinHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
@@ -849,6 +856,9 @@ namespace Rawr.HolyPriest
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.MentalAgility * 0.02f));
 
+            CritChance = 0.0f;
+            CritCoef = 1.0f;
+
             Cooldown = 4.0f;
         }
 
@@ -894,7 +904,8 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
             MaxHeal = MinHeal;
 
-            CritChance = 0;
+            CritChance = 0f;
+            CritCoef = 1.0f;
 
             ManaCost =(int)Math.Floor(ManaCost / 100f * BaseMana);
 
@@ -931,6 +942,12 @@ namespace Rawr.HolyPriest
 
         protected void Calculate(Stats stats, Character character)
         {
+            if (character.PriestTalents.Penance == 0)
+            {
+                MinHeal = MaxHeal = 0;
+                return;
+            }
+
             MinHeal = (MinHeal +
                 stats.SpellPower * SP2HP * (1 - RankCoef) * HealingCoef)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
@@ -991,6 +1008,8 @@ namespace Rawr.HolyPriest
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
 
             CritChance = 0.0f;
+            CritCoef = 1.0f;
+
             Cooldown = 3.0f * 60.0f;
         }
 

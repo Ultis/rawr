@@ -93,18 +93,6 @@ namespace Rawr.HolyPriest
                     UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f / 100f;
             }
 
-            /*     
-                        + calculatedStats.BasicStats.MementoProc * 3f * 5f / (45f + 9.5f * 2f)
-                        + calculatedStats.BasicStats.ManaregenFor8SecOnUse5Min * 5f * (8f * (1 - calculatedStats.BasicStats.HasteRating / 15.7f / 100f)) / (60f * 5f)
-                        + (calculatedStats.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0 ? 588f * 5f / 120f : 0)
-                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse3Min * 5f / 180f)
-                        + (calculatedStats.BasicStats.ManaregenOver20SecOnUse5Min * 5f / 300f)
-                        + (calculatedStats.BasicStats.ManacostReduceWithin15OnHealingCast / (2.0f * 50f)) * 5f
-                        + (calculatedStats.BasicStats.FullManaRegenFor15SecOnSpellcast > 0?(((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 15f / 125f) * 5f: 0)
-                        + (calculatedStats.BasicStats.BangleProc > 0 ? (((calculatedStats.RegenOutFSR - calculatedStats.RegenInFSR) / 5f) * 0.25f * 15f / 125f) * 5f : 0);
-           */
-
-
             UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
             UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
 
@@ -132,7 +120,7 @@ namespace Rawr.HolyPriest
             //Spell spell;
             Heal gh = new Heal(simstats, character);
             FlashHeal fh = new FlashHeal(simstats, character);
-            CircleOfHealing coh = new CircleOfHealing(simstats, character, 5);
+            CircleOfHealing coh = new CircleOfHealing(simstats, character);
             Penance penance = new Penance(simstats, character);
             PowerWordShield pws = new PowerWordShield(simstats, character) as PowerWordShield;
             PrayerOfMending prom_1 = new PrayerOfMending(simstats, character, 1);
@@ -246,18 +234,7 @@ namespace Rawr.HolyPriest
             foreach (Spell s in sr)
                 ActionList += "\r\n- " + s.Name;
 
-            /*            float avgcastlen = 0;
-                        for (int x = 0; x < sr.Count; x++)
-                        {
-                            if (sr[x] == gh || sr[x] == gh_bt)
-                                avgcastlen += sr[x].CastTime * (1f - ihcastshasted) + gh_hc.CastTime * ihcastshasted;
-                            if (sr[x] == fh || sr[x] == fh_bt)
-                                avgcastlen += sr[x].CastTime * (1f - ihcastshasted) + fh_hc.CastTime * ihcastshasted;
-
-
-                        }
-                        */
-            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, rapturetot = 0, serendipitytot = 0, metareductiontot = 0;
+            float manacost = 0, cyclelen = 0, healamount = 0, solctr = 0, castctr = 0, crittable = 0, rapturetot = 0, serendipitytot = 0, metareductiontot = 0;
             for (int x = 0; x < sr.Count; x++)
             {
                 float mcost = 0, absorb = 0, heal = 0, rheal = 0, clen = 0;
@@ -272,6 +249,7 @@ namespace Rawr.HolyPriest
                     serendipitytot += mcost * serendipityconst;
                     mcost -= simstats.ManaGainOnGreaterHealOverheal * (1f - calculationOptions.Serendipity / 100f);
                     castctr++;
+                    crittable += sr[x].CritChance;
                 }
                 else if (sr[x] == fh || sr[x] == fh_bt)
                 {   // Flash Heal (Same applies to FH as GHeal with regards to borrowed time)
@@ -285,6 +263,7 @@ namespace Rawr.HolyPriest
                     solctr = 0;
                     serendipitytot += mcost * serendipityconst;
                     castctr++;
+                    crittable += sr[x].CritChance;
                 }
                 else if (sr[x] == penance || sr[x] == penance_bt)
                 {
@@ -292,7 +271,8 @@ namespace Rawr.HolyPriest
                     rheal = sr[x].AvgTotHeal * healmultiplier;
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
-                    castctr += 3; // Penance counts as 3 casts for some purposes.
+                    castctr += 3f; // Penance counts as 3 casts for some purposes.
+                    crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, 3f);
                 }
                 else if (sr[x] == coh)
                 {   // Circle of Healing
@@ -301,6 +281,7 @@ namespace Rawr.HolyPriest
                     solctr = 1f - (1f - solctr) * (1f - sol5chance);
                     mcost = coh.ManaCost;
                     castctr += sr[x].Targets;
+                    crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
                 else if (sr[x] == renew)
                 {   // Renew
@@ -323,6 +304,7 @@ namespace Rawr.HolyPriest
                     absorb = sr[x].AvgCrit * healmultiplier * sr[x].CritChance * character.PriestTalents.DivineAegis * 0.1f;
                     mcost = sr[x].ManaCost;
                     castctr += sr[x].Targets;
+                    crittable += 1f - (float)Math.Pow(1f - sr[x].CritChance, sr[x].Targets);
                 }
                 cyclelen += clen;
                 healamount += heal + rheal + absorb;
@@ -332,43 +314,24 @@ namespace Rawr.HolyPriest
             }
 
             float avgcastlen = cyclelen / castctr;
-            if (calculationOptions.ModelProcs)
-            {
-                if (simstats.BangleProc > 0)
-                    // 15% mana regen over 15 sec. Calculate this as 1 PPM. (45s cd, 15% proc chance.)
-                    //simstats.SpellCombatManaRegeneration += 0.15f * 15f / (45f + (100f / 15f * avgcastlen));
-                    simstats.SpellCombatManaRegeneration += 0.15f * 15f / 60f * (1f - (float)Math.Pow(1f - 0.15f, 15f / avgcastlen));
-                if (simstats.FullManaRegenFor15SecOnSpellcast > 0)
-                    // Blue Dragon. 2% chance to proc on cast, no known internal cooldown. calculate as the chance to have procced during its duration. 2% proc/cast.
-                    simstats.SpellCombatManaRegeneration += (1f - simstats.SpellCombatManaRegeneration) * (1f - (float)Math.Pow(1f - 0.02f, 15f / avgcastlen));
+            float avgcritcast = crittable / sr.Count;
 
-                if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
-                    simstats.Mp5 += (20f / avgcastlen) * 21f / 2f * 20f / 120f;
-                if (simstats.MementoProc > 0)
-                    simstats.Mp5 += simstats.MementoProc * 3f * 5f / (45f + 15f * (1f - (float)Math.Pow(1f - 0.1f, 15f / avgcastlen)));
-                if (simstats.ManacostReduceWithin15OnUse1Min > 0)
-                    manacost -= simstats.ManacostReduceWithin15OnUse1Min * (float)Math.Floor(15f / cyclelen * sr.Count) / 60f;
-                if (simstats.ManacostReduceWithin15OnHealingCast > 0)
-                    simstats.Mp5 += simstats.ManacostReduceWithin15OnHealingCast * (1f - (float)Math.Pow(1f - 0.02f, castctr)) * 5f / cyclelen;
-                if (simstats.ManaregenFor8SecOnUse5Min > 0)
-                    simstats.Mp5 += simstats.ManaregenFor8SecOnUse5Min * 8f / 300f * 5f;
-            }
+            float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);        
 
-            float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
-            float periodicRegenInFSR = periodicRegenOutFSR * simstats.SpellCombatManaRegeneration;
-            
             // Add up all mana gains.
             float regen = 0, tmpregen = 0;
-            tmpregen = periodicRegenInFSR * calculationOptions.FSRRatio / 100f;
-            if (tmpregen > 0f)
-            {
-                ManaSources.Add(new ManaSource("Meditation", tmpregen));
-                regen += tmpregen;
-            }
+
+            // Spirit/Intellect based Regeneration and MP5
             tmpregen = periodicRegenOutFSR * (1f - calculationOptions.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("OutFSR", tmpregen));
+                regen += tmpregen;
+            }
+            tmpregen = periodicRegenOutFSR * simstats.SpellCombatManaRegeneration * calculationOptions.FSRRatio / 100f;
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("Meditation", tmpregen));
                 regen += tmpregen;
             }
             tmpregen = simstats.Mp5 / 5;
@@ -377,6 +340,58 @@ namespace Rawr.HolyPriest
             tmpregen = simstats.Mana / (calculationOptions.FightLength * 60f);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
             regen += tmpregen;
+            if (calculationOptions.ModelProcs)
+            {
+                if (simstats.BangleProc > 0)
+                {
+                    float BangleLevelMod = 0.15f - (character.Level - 70f) / 200f;
+                    tmpregen = periodicRegenOutFSR * BangleLevelMod * 15f / 60f * (1f - (float)Math.Pow(1f - BangleLevelMod, 15f / avgcastlen));
+                    if (BangleLevelMod > 0f && tmpregen > 0f)
+                    {
+                        ManaSources.Add(new ManaSource("Bangle of Endless Blessings", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+                if (simstats.FullManaRegenFor15SecOnSpellcast > 0)
+                {
+                    // Blue Dragon. 2% chance to proc on cast, no known internal cooldown. calculate as the chance to have procced during its duration. 2% proc/cast.
+                    tmpregen = periodicRegenOutFSR * (1f - simstats.SpellCombatManaRegeneration) * (1f - (float)Math.Pow(1f - 0.02f, 15f / avgcastlen));
+                    if (tmpregen > 0f)
+                    {
+                        ManaSources.Add(new ManaSource("Darkmoon Card: Blue Dragon", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+                if (simstats.ManaRestoreOnCrit_25 > 0)
+                {
+                    tmpregen = simstats.ManaRestoreOnCrit_25 * 0.25f * avgcritcast / avgcastlen;
+                    if (tmpregen > 0f)
+                    {
+                        ManaSources.Add(new ManaSource("Soul of the Dead" , tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+
+                float trinketmp5 = 0;
+                if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
+                    trinketmp5 += (20f / avgcastlen) * 21f / 2f * 20f / 120f;
+                if (simstats.MementoProc > 0)
+                    trinketmp5 += simstats.MementoProc * 3f * 5f / (45f + 15f * (1f - (float)Math.Pow(1f - 0.1f, 15f / avgcastlen)));
+                if (simstats.ManacostReduceWithin15OnHealingCast > 0)
+                    trinketmp5 += simstats.ManacostReduceWithin15OnHealingCast * (1f - (float)Math.Pow(1f - 0.02f, castctr)) * 5f / cyclelen;
+                if (simstats.ManaregenFor8SecOnUse5Min > 0)
+                    trinketmp5 += simstats.ManaregenFor8SecOnUse5Min * 8f / 300f * 5f;
+                if (trinketmp5 > 0f)
+                {
+                    tmpregen = trinketmp5 / 5f;
+                    ManaSources.Add(new ManaSource("Trinkets", tmpregen));
+                    regen += tmpregen;
+                }
+                if (simstats.ManacostReduceWithin15OnUse1Min > 0)
+                    manacost -= simstats.ManacostReduceWithin15OnUse1Min * (float)Math.Floor(15f / cyclelen * sr.Count) / 60f;
+            }
+
+            // External and Other mana sources.
             tmpregen = simstats.Mana * 0.0025f * calculationOptions.Replenishment / 100f;
             if (tmpregen > 0f)
             {
