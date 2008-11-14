@@ -335,7 +335,7 @@ namespace Rawr.ShadowPriest
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * ShadowHitChance / 100f;
             }
 
-            float SustDPS = DPS;
+            SustainDPS = DPS;
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
             float ImpSTUptime = CPC * MB.CritChance * 8f;
@@ -343,17 +343,26 @@ namespace Rawr.ShadowPriest
             float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
             tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR;
-            ManaSources.Add(new ManaSource("Meditation", tmpregen));
-            regen += tmpregen;
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("Meditation", tmpregen));
+                regen += tmpregen;
+            }
             tmpregen = SpiritRegen * (1f - TimeInFSR);
-            ManaSources.Add(new ManaSource("OutFSR", tmpregen));
-            regen += tmpregen;
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("OutFSR", tmpregen));
+                regen += tmpregen;
+            }
             tmpregen = simStats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
             regen += tmpregen;
             tmpregen = SpiritRegen * character.PriestTalents.ImprovedSpiritTap * 0.1f * ImpSTUptime;
-            ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
-            regen += tmpregen;
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
+                regen += tmpregen;
+            }
             tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
             regen += tmpregen;
@@ -361,8 +370,11 @@ namespace Rawr.ShadowPriest
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
             tmpregen = simStats.Mana * simStats.ManaRestoreFromMaxManaPerHit * HPC * (CalculationOptions.JoW / 100f);
-            ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
-            regen += tmpregen;
+            if (tmpregen > 0)
+            {
+                ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
+                regen += tmpregen;
+            }
 
             if (MPS > regen && CalculationOptions.ManaAmt > 0)
             {   // Not enough mana, use Mana Potion
@@ -378,7 +390,7 @@ namespace Rawr.ShadowPriest
                 tmpregen = simStats.Mana * 0.4f * sf_rat;
                 ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
                 regen += tmpregen;
-                SustDPS -= MF.DpS * sf_rat;
+                SustainDPS -= MF.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";
             }
 
@@ -388,17 +400,17 @@ namespace Rawr.ShadowPriest
                 tmpregen = simStats.Mana * 0.06f * disp_rat;
                 ManaSources.Add(new ManaSource("Dispersion", tmpregen));
                 regen += tmpregen;
-                SustDPS -= MF.DpS * disp_rat;
+                SustainDPS -= MF.DpS * disp_rat;
                 Rotation += "\r\n- Used Dispersion";
             }
 
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
-            SustDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+            SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
-            SustainDPS = (MPS < regen) ? SustDPS : (SustDPS * regen / MPS);
+            SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
 
             calculatedStats.DpsPoints = DPS;
-            calculatedStats.SustainPoints = SustDPS;
+            calculatedStats.SustainPoints = SustainDPS;
             // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
             // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
@@ -536,7 +548,7 @@ namespace Rawr.ShadowPriest
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * HitChance / 100f;
             }
 
-            float SustDPS = DPS;
+            SustainDPS = DPS;
             float MPS = OverallMana / timer;
             float TimeInFSR = 1f;
             float regen = (calculatedStats.RegenInFSR * TimeInFSR + calculatedStats.RegenOutFSR * (1f - TimeInFSR)) / 5;
@@ -553,7 +565,7 @@ namespace Rawr.ShadowPriest
             {   // Not enough mana, use Shadowfiend
                 float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
                 regen += simStats.Mana * 0.4f * sf_rat;
-                SustDPS -= SM.DpS * sf_rat;
+                SustainDPS -= SM.DpS * sf_rat;
                 Rotation += "\r\n- Used Shadowfiend";
             }
 
@@ -561,15 +573,22 @@ namespace Rawr.ShadowPriest
             {   // Not enough still, use Hymn of Hope
                 float hh_rat = 8f / (60f * 5f);
                 regen += simStats.Mana * 0.02f * hh_rat;
-                SustDPS -= SM.DpS * hh_rat;
+                SustainDPS -= SM.DpS * hh_rat;
                 Rotation += "\r\n- Used Hymn of Hope";
             }
 
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
-            SustDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
+            SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);
 
-            SustainDPS = (MPS < regen) ? SustDPS : (SustDPS * regen / MPS);
+            SustainDPS = (MPS < regen) ? SustainDPS : (SustainDPS * regen / MPS);
 
+            calculatedStats.DpsPoints = DPS;
+            calculatedStats.SustainPoints = SustainDPS;
+            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
+            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
+            // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
+            // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
         }
     }
 

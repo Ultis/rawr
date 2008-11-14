@@ -407,7 +407,7 @@ namespace Rawr.HolyPriest
             ActionList += "\r\n\r\nMana Options:";
 
             float mp1use = manacost / cyclelen;
-            if (mp1use > regen)
+            if (mp1use > regen && calculationOptions.ManaAmt > 0f)
             {
                 float ManaPot = calculationOptions.ManaAmt * (1f + simstats.BonusManaPotion);
                 tmpregen = ManaPot / (calculationOptions.FightLength * 60f);

@@ -29,7 +29,8 @@ namespace Rawr.ShadowPriest
             {
                 float f = 0f;
                 foreach (float f2 in _subPoints)
-                    f += f2;
+                    if (f2 > 0)
+                        f += f2;
                 return f;
             }
             set { }
@@ -45,25 +46,31 @@ namespace Rawr.ShadowPriest
                         _subPoints[x] = 0f;
                 return _subPoints;
             }
-            set { _subPoints = value; }
+            set
+            {
+                for (int x = 0; x < _subPoints.Length; x++)
+                    if (value[x] < 0f)
+                        value[x] = 0f;
+                _subPoints = value;
+            }
         }
 
         public float DpsPoints
         {
             get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
+            set { _subPoints[0] = (value < 0f)?0f:value; }
         }
 
         public float SustainPoints
         {
-            get { return _subPoints[0]; }
-            set { _subPoints[1] = value; }
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = (value < 0f)?0f:value; }
         }
 
         public float SurvivalPoints
         {
             get { return _subPoints[2]; }
-            set { _subPoints[2] = value; }
+            set { _subPoints[2] = (value < 0f)?0f:value; }
         }
         
         private Item _item = null;

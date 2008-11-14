@@ -375,7 +375,7 @@ namespace Rawr.ShadowPriest
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritChanceReduction) / 100f
+                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
                 + 0.0124f;
             statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
             statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
