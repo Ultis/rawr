@@ -481,6 +481,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
 
@@ -500,6 +501,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -513,6 +515,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f + 1f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -526,6 +529,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -540,6 +544,7 @@ threat and limited threat scaled by the threat scale.",
                         AttackPower = 190f,
                         BonusHealthMultiplier = 0.05f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -553,6 +558,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -566,6 +572,7 @@ threat and limited threat scaled by the threat scale.",
 
                         AttackPower = 190f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
@@ -580,6 +587,7 @@ threat and limited threat scaled by the threat scale.",
                         AttackPower = 190f,
                         PhysicalHit = 1f,
                         Dodge = 0.75f,
+                        Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
