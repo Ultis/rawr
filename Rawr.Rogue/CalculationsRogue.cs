@@ -131,10 +131,10 @@ namespace Rawr.Rogue {
             whiteDPS = finisherDPS = wfDPS = ssDPS = poisonDPS = cpgDPS = 0f;
 
             missChance = 28f;
-            missChance -= calcOpts.Precision + stats.PhysicalHit + stats.HitRating * RogueConversions.HitRatingToHit;
+            missChance -= character.RogueTalents.Precision + stats.PhysicalHit + stats.HitRating * RogueConversions.HitRatingToHit;
             if (missChance < 0f) missChance = 0f;
 
-            mhExpertise = ohExpertise = calcOpts.WeaponExpertise * 5f + stats.Expertise + stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
+			mhExpertise = ohExpertise = character.RogueTalents.WeaponExpertise * 5f + stats.Expertise + stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
 
             if (character.Race == Character.CharacterRace.Human) {
                 if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandSword || character.MainHand.Type == Item.ItemType.OneHandMace))
@@ -161,16 +161,16 @@ namespace Rawr.Rogue {
 
             mhCrit = ohCrit = stats.PhysicalCrit + stats.CritRating * RogueConversions.CritRatingToCrit;
             if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger)
-                mhCrit += calcOpts.DaggerSpecialization;
+                mhCrit += character.RogueTalents.CloseQuartersCombat;
             if (character.OffHand != null && character.OffHand.Type == Item.ItemType.Dagger)
-                ohCrit += calcOpts.DaggerSpecialization;
+				ohCrit += character.RogueTalents.CloseQuartersCombat;
             if (character.MainHand != null && character.MainHand.Type == Item.ItemType.FistWeapon)
-                mhCrit += calcOpts.FistSpecialization;
+				mhCrit += character.RogueTalents.CloseQuartersCombat;
             if (character.OffHand != null && character.OffHand.Type == Item.ItemType.FistWeapon)
-                ohCrit += calcOpts.FistSpecialization;
+				ohCrit += character.RogueTalents.CloseQuartersCombat;
 
             // if we have mutilate and we're using two daggers, assume we use it to generate CPs
-            if (calcOpts.Mutilate > 0 &&
+			if (character.RogueTalents.Mutilate > 0 &&
                 character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger &&
                 character.OffHand != null && character.OffHand.Type == Item.ItemType.Dagger) {
                 cpg = "mutilate";
@@ -182,14 +182,16 @@ namespace Rawr.Rogue {
                 energyCPG = 60f;
             }
             // if we have hemo, assume we use it to generate CPs
-            else if (calcOpts.Hemorrhage > 0) {
+			else if (character.RogueTalents.Hemorrhage > 0)
+			{
                 cpg = "hemo";
                 energyCPG = 35f;
             }
             // otherwise use sinister strike
             else {
                 cpg = "ss";
-                switch (calcOpts.ImprovedSinisterStrike) {
+				switch (character.RogueTalents.ImprovedSinisterStrike)
+				{
                     case 2:
                         energyCPG = 40f;
                         break;
@@ -205,9 +207,9 @@ namespace Rawr.Rogue {
             // cycle stuff
             sndLength = 6f + 3f * calcOpts.DPSCycle['s'];
             sndLength += stats.BonusSnDDuration;
-            sndLength *= 1f + 0.15f * calcOpts.ImprovedSliceandDice;
+			sndLength *= 1f + 0.15f * character.RogueTalents.ImprovedSliceAndDice;
 
-            ruthlessnessCP = .2f * calcOpts.Ruthlessness;
+			ruthlessnessCP = .2f * character.RogueTalents.Ruthlessness;
 
             numCPG = calcOpts.DPSCycle.TotalComboPoints - 2f * ruthlessnessCP;
 
@@ -222,7 +224,7 @@ namespace Rawr.Rogue {
             }
 
             energyRegen = 10f;
-            if (calcOpts.AdrenalineRush > 0)
+			if (character.RogueTalents.AdrenalineRush > 0)
                 energyRegen += .5f;
 
             sndEnergy = (calcOpts.DPSCycle['s'] - ruthlessnessCP) * energyCPG + 25f;
@@ -237,7 +239,7 @@ namespace Rawr.Rogue {
 
             totalHaste = 1f;
             totalHaste *= (1f + sndHaste) * (1f + (stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-            totalHaste *= (1f + .2f * 15f / 120f * calcOpts.BladeFlurry);
+			totalHaste *= (1f + .2f * 15f / 120f * character.RogueTalents.BladeFlurry);
 
             bonusWhiteCritDmg = 1f + stats.BonusCritMultiplier;
 
@@ -263,12 +265,12 @@ namespace Rawr.Rogue {
             if (character.OffHand != null) {
                 avgOHDmg = (character.OffHand.MinDamage + character.OffHand.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
                 avgOHDmg += (stats.AttackPower / 14.0f) * character.OffHand.Speed;
-                avgOHDmg *= (0.25f + calcOpts.DualWieldSpecialization * 0.1f);
+				avgOHDmg *= (0.25f + character.RogueTalents.DualWieldSpecialization * 0.1f);
 
                 ohAttacks = totalHaste / character.OffHand.Speed;
                 ohHits = ohAttacks * probOHHit;
 
-                energyRegen += (.2f * 3f * calcOpts.CombatPotency) * ohHits;
+				energyRegen += (.2f * 3f * character.RogueTalents.CombatPotency) * ohHits;
 
                 ohWhite = avgOHDmg * ohHits;
                 ohWhite = (1f - ohCrit / 100f) * ohWhite + (ohCrit / 100f) * (ohWhite * (2f * bonusWhiteCritDmg));
@@ -287,9 +289,9 @@ namespace Rawr.Rogue {
                 bonusCPGCritDmgMult = 2f;
 
                 if (cpg == "mutilate" && character.OffHand != null) {
-                    bonusCPGCrit += 5f * calcOpts.PuncturingWounds;
-                    bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
-                    bonusCPGDmgMult *= (1f + 0.04f * calcOpts.Opportunity);
+					bonusCPGCrit += 5f * character.RogueTalents.PuncturingWounds;
+					bonusCPGCritDmgMult *= (1f + .06f * character.RogueTalents.Lethality);
+					bonusCPGDmgMult *= (1f + 0.04f * character.RogueTalents.Opportunity);
 
                     avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f + 121.5f;
                     avgCPGDmg += stats.AttackPower / 14f * 1.7f;
@@ -298,11 +300,11 @@ namespace Rawr.Rogue {
                     avgCPGDmg *= 1.5f;
                 }
                 else if (cpg == "backstab") {
-                    bonusCPGDmgMult *= (1f + .02f * calcOpts.Aggression);
-                    bonusCPGDmgMult *= (1f + .1f * calcOpts.SurpriseAttacks);
-                    bonusCPGDmgMult *= (1f + 0.04f * calcOpts.Opportunity);
-                    bonusCPGCrit += 10f * calcOpts.PuncturingWounds;
-                    bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
+					bonusCPGDmgMult *= (1f + .02f * character.RogueTalents.Aggression);
+					bonusCPGDmgMult *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
+					bonusCPGDmgMult *= (1f + 0.04f * character.RogueTalents.Opportunity);
+					bonusCPGCrit += 10f * character.RogueTalents.PuncturingWounds;
+					bonusCPGCritDmgMult *= (1f + .06f * character.RogueTalents.Lethality);
 
                     avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage) / 2f;
                     avgCPGDmg += stats.AttackPower / 14f * 1.7f;
@@ -310,9 +312,9 @@ namespace Rawr.Rogue {
                     avgCPGDmg += 255f;
                 }
                 else if (cpg == "hemo") {
-                    bonusCPGDmgMult *= (1f + .1f * calcOpts.SurpriseAttacks);
+					bonusCPGDmgMult *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
                     bonusCPGDmgMult *= (1f + stats.BonusCPGDamage);
-                    bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
+					bonusCPGCritDmgMult *= (1f + .06f * character.RogueTalents.Lethality);
 
                     avgCPGDmg = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage) / 2f;
                     avgCPGDmg += stats.AttackPower / 14f * 2.4f;
@@ -324,10 +326,10 @@ namespace Rawr.Rogue {
                     avgCPGDmg += stats.AttackPower / 14f * 2.4f;
                     avgCPGDmg += 98f; // TBC max rank
 
-                    bonusCPGDmgMult *= (1f + .02f * calcOpts.Aggression);
-                    bonusCPGDmgMult *= (1f + .1f * calcOpts.SurpriseAttacks);
+					bonusCPGDmgMult *= (1f + .02f * character.RogueTalents.Aggression);
+					bonusCPGDmgMult *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
                     bonusCPGDmgMult *= (1f + stats.BonusCPGDamage);
-                    bonusCPGCritDmgMult *= (1f + .06f * calcOpts.Lethality);
+					bonusCPGCritDmgMult *= (1f + .06f * character.RogueTalents.Lethality);
                 }
 
                 avgCPGDmg *= bonusCPGDmgMult;
@@ -363,9 +365,9 @@ namespace Rawr.Rogue {
                             break;
                     }
 
-                    finisherDmg *= (1f + .1f * calcOpts.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
+					finisherDmg *= (1f + .1f * character.RogueTalents.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
                     finisherDmg *= (1f - missChance / 100f);
-                    if (calcOpts.SurpriseAttacks < 1)
+					if (character.RogueTalents.SurpriseAttacks < 1)
                         finisherDmg *= (1f - mhDodgeChance / 100f);
                     finisherDPS = finisherDmg / cycleTime;
                 }
@@ -375,11 +377,11 @@ namespace Rawr.Rogue {
                     evisMax = 365f + (calcOpts.DPSCycle['e'] - 1f) * 185f + evisMod;
 
                     finisherDmg = (evisMin + evisMax) / 2f;
-                    finisherDmg *= (1f + 0.05f * calcOpts.ImprovedEviscerate);
-                    finisherDmg *= (1f + 0.02f * calcOpts.Aggression);
+					finisherDmg *= (1f + 0.05f * character.RogueTalents.ImprovedEviscerate);
+					finisherDmg *= (1f + 0.02f * character.RogueTalents.Aggression);
                     finisherDmg = finisherDmg * (1f - (mhCrit / 100f)) + (finisherDmg * 2f) * (mhCrit / 100f);
                     finisherDmg *= (1f - (missChance / 100f));
-                    if(calcOpts.SurpriseAttacks < 1)
+					if (character.RogueTalents.SurpriseAttacks < 1)
                         finisherDmg *= (1f - (mhDodgeChance / 100f));
                     finisherDmg *= damageReduction;
                     finisherDPS = finisherDmg / cycleTime;
@@ -395,18 +397,18 @@ namespace Rawr.Rogue {
 
             // main hand
             if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandSword) {
-                ssHits += mhAttacks * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+				ssHits += mhAttacks * 0.01f * character.RogueTalents.SwordSpecialization * probMHHit;
 
                 // CPG
-                ssHits += (numCPG / cycleTime) * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+				ssHits += (numCPG / cycleTime) * 0.01f * character.RogueTalents.SwordSpecialization * probMHHit;
 
                 // finishers
-                ssHits += 1f / cycleTime * 0.01f * calcOpts.SwordSpecialization * probMHHit;
+				ssHits += 1f / cycleTime * 0.01f * character.RogueTalents.SwordSpecialization * probMHHit;
             }
 
             // offhand
             if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandSword) {
-                ssHits += ohAttacks * 0.01f * calcOpts.SwordSpecialization * probOHHit;
+				ssHits += ohAttacks * 0.01f * character.RogueTalents.SwordSpecialization * probOHHit;
             }
 
             ssDPS = (ssHits * avgMHDmg) * (1 - mhCrit / 100f) + (ssHits * avgMHDmg * 2f * bonusWhiteCritDmg) * (mhCrit / 100f);
@@ -433,26 +435,26 @@ namespace Rawr.Rogue {
 
             #region Poison DPS
             poisonDPS = 0f;
-            probPoison = (.83f + .05f * calcOpts.MasterPoisoner) * (.2f + .02f * calcOpts.ImprovedPoisons);
+			probPoison = (.83f + .05f * character.RogueTalents.MasterPoisoner) * (.2f + .02f * character.RogueTalents.ImprovedPoisons);
             calcDeadly = true;
 
             if (character.MainHand != null && stats.WindfuryAPBonus == 0f) {
                 // no WF, consider the main hand poison
                 if (calcOpts.TempMainHandEnchant == "Deadly Poison" && calcDeadly) {
-                    poisonDPS += 180f * calcOpts.VilePoisons * .04f / 12f;
+					poisonDPS += 180f * character.RogueTalents.VilePoisons * .04f / 12f;
                     calcDeadly = false;
                 }
                 else if (calcOpts.TempMainHandEnchant == "Instant Poison") {
-                    poisonDPS += ohHits * probPoison * 170f * (1f + calcOpts.VilePoisons * 0.04f);
+					poisonDPS += ohHits * probPoison * 170f * (1f + character.RogueTalents.VilePoisons * 0.04f);
                 }
             }
             if (character.OffHand != null) {
                 if (calcOpts.TempOffHandEnchant == "Deadly Poison" && calcDeadly) {
-                    poisonDPS += 180f * (1f + calcOpts.VilePoisons * .04f) / 12f;
+					poisonDPS += 180f * (1f + character.RogueTalents.VilePoisons * .04f) / 12f;
                     calcDeadly = false;
                 }
                 else if (calcOpts.TempOffHandEnchant == "Instant Poison") {
-                    poisonDPS += ohHits * probPoison * 170f * (1f + calcOpts.VilePoisons * 0.04f);
+					poisonDPS += ohHits * probPoison * 170f * (1f + character.RogueTalents.VilePoisons * 0.04f);
                 }
             }
             #endregion
@@ -557,10 +559,10 @@ namespace Rawr.Rogue {
             float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
 
             Stats statsTotal = new Stats();
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) * (1 + calcOpts.Deadliness * 0.02f)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + calcOpts.Vitality * 0.01f) * (1 + calcOpts.SinisterCalling * 0.03f)) - 1;
+			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) * (1 + character.RogueTalents.Deadliness * 0.02f)) - 1;
+			statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (1 + character.RogueTalents.Vitality * 0.01f) * (1 + character.RogueTalents.SinisterCalling * 0.03f)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) * (1 + calcOpts.Vitality * 0.02f)) - 1;
+			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) * (1 + character.RogueTalents.Vitality * 0.02f)) - 1;
 
             statsTotal.Agility = (float)Math.Floor(agiBase * (1f + statsTotal.BonusAgilityMultiplier)) + (float)Math.Floor(agiBonus * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(strBase * (1f + statsTotal.BonusStrengthMultiplier)) + (float)Math.Floor(strBonus * (1 + statsTotal.BonusStrengthMultiplier));
@@ -571,16 +573,17 @@ namespace Rawr.Rogue {
             //statsTotal.AttackPower = statsRace.AttackPower + ((statsTotal.Agility - agiBase) + (statsTotal.Strength - strBase) + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier);
             //statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + ((statsTotal.Strength - strBase) * 1) + ((statsTotal.Agility - agiBase) * 1)) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
-            statsTotal.PhysicalHit = calcOpts.Precision;
+			statsTotal.PhysicalHit = character.RogueTalents.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
-            statsTotal.Expertise += calcOpts.WeaponExpertise * 5.0f;
+			statsTotal.Expertise += character.RogueTalents.WeaponExpertise * 5.0f;
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
 
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
-            switch (calcOpts.SerratedBlades) {
+			switch (character.RogueTalents.SerratedBlades)
+			{
                 case 3:
                     statsTotal.ArmorPenetration += 560;
                     break;
@@ -595,13 +598,13 @@ namespace Rawr.Rogue {
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
             statsTotal.PhysicalCrit += (statsTotal.Agility - (statsRace.Agility * (1f + statsTotal.BonusAgilityMultiplier))) * RogueConversions.AgilityToCrit;
-            statsTotal.PhysicalCrit += calcOpts.Malice * 1f;
+			statsTotal.PhysicalCrit += character.RogueTalents.Malice * 1f;
             //statsTotal.CritRating += statsBuffs.LotPCritRating;
 
             statsTotal.Dodge += statsTotal.Agility * RogueConversions.AgilityToDodge;
-            statsTotal.Dodge += calcOpts.LightningReflexes;
+			statsTotal.Dodge += character.RogueTalents.LightningReflexes;
 
-            statsTotal.Parry += calcOpts.Deflection;
+			statsTotal.Parry += character.RogueTalents.Deflection;
 
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
@@ -695,110 +698,110 @@ namespace Rawr.Rogue {
             };
         }
 
-        public static void LoadTalentSpec(Character c, string talentSpec) {
-            string talentCode = "";
+		/////// ** Don't think these are needed anymore, but not posative. 
+		//public static void LoadTalentSpec(Character c, string talentSpec) {
+		//    string talentCode = "";
 
-            switch (talentSpec) {
-                case "Combat Swords (20/41/0)":
-                    // http://www.worldofwarcraft.com/info/classes/rogue/talents.html?tal=0053201054000000000000233050020050150023211510000000000000000000000
-                    talentCode = "0053201054000000000000233050020050150023211510000000000000000000000";
-                    break;
-                case "Combat Fist/Sword (16/45/0)":
-                    talentCode = "0053201050000000000000233050020050155023210510000000000000000000000";
-                    break;
-                case "Combat Daggers (15/41/5)":
-                    talentCode = "0052031040000000000000233050020550100023211510500000000000000000000";
-                    break;
-                case "Trispec Hemo Swords (11/28/22)":
-                    talentCode = "0053201000000000000000053050020050150020000000502530002300110000000";
-                    break;
-                case "Trispec Hemo Deadliness (11/21/29)":
-                    talentCode = "0053201000000000000000053050020050100000000000502530030301210400000";
-                    break;
-                case "Mutilate (41/20/0)":
-                    talentCode = "0053231055021025010510053050020050000000000000000000000000000000000";
-                    break;
-                default:
-                    break;
-            }
+		//    switch (talentSpec) {
+		//        case "Combat Swords (20/41/0)":
+		//            // http://www.worldofwarcraft.com/info/classes/rogue/talents.html?tal=0053201054000000000000233050020050150023211510000000000000000000000
+		//            talentCode = "0053201054000000000000233050020050150023211510000000000000000000000";
+		//            break;
+		//        case "Combat Fist/Sword (16/45/0)":
+		//            talentCode = "0053201050000000000000233050020050155023210510000000000000000000000";
+		//            break;
+		//        case "Combat Daggers (15/41/5)":
+		//            talentCode = "0052031040000000000000233050020550100023211510500000000000000000000";
+		//            break;
+		//        case "Trispec Hemo Swords (11/28/22)":
+		//            talentCode = "0053201000000000000000053050020050150020000000502530002300110000000";
+		//            break;
+		//        case "Trispec Hemo Deadliness (11/21/29)":
+		//            talentCode = "0053201000000000000000053050020050100000000000502530030301210400000";
+		//            break;
+		//        case "Mutilate (41/20/0)":
+		//            talentCode = "0053231055021025010510053050020050000000000000000000000000000000000";
+		//            break;
+		//        default:
+		//            break;
+		//    }
 
-            LoadTalentCode(c, talentCode);
-        }
+		//    LoadTalentCode(c, talentCode);
+		//}
 
-        public static void LoadTalentCode(Character c, string talentCode) {
-            if (talentCode == null || talentCode.Length != 67) return;
-            CalculationOptionsRogue calcOpts = c.CalculationOptions as CalculationOptionsRogue;
+		//public static void LoadTalentCode(Character c, string talentCode) {
+		//    if (talentCode == null || talentCode.Length != 67) return;
 
-            calcOpts.ImprovedEviscerate = int.Parse(talentCode.Substring(0, 1));
-            calcOpts.RemorselessAttacks = int.Parse(talentCode.Substring(1, 1));
-            calcOpts.Malice = int.Parse(talentCode.Substring(2, 1));
-            calcOpts.Ruthlessness = int.Parse(talentCode.Substring(3, 1));
-            calcOpts.Murder = int.Parse(talentCode.Substring(4, 1));
-            calcOpts.PuncturingWounds = int.Parse(talentCode.Substring(5, 1));
-            calcOpts.RelentlessStrikes = int.Parse(talentCode.Substring(6, 1));
-            calcOpts.ImprovedExposeArmor = int.Parse(talentCode.Substring(7, 1));
-            calcOpts.Lethality = int.Parse(talentCode.Substring(8, 1));
-            calcOpts.VilePoisons = int.Parse(talentCode.Substring(9, 1));
-            calcOpts.ImprovedPoisons = int.Parse(talentCode.Substring(10, 1));
-            calcOpts.FleetFooted = int.Parse(talentCode.Substring(11, 1));
-            calcOpts.ColdBlood = int.Parse(talentCode.Substring(12, 1));
-            calcOpts.ImprovedKidneyShot = int.Parse(talentCode.Substring(13, 1));
-            calcOpts.QuickRecovery = int.Parse(talentCode.Substring(14, 1));
-            calcOpts.SealFate = int.Parse(talentCode.Substring(15, 1));
-            calcOpts.MasterPoisoner = int.Parse(talentCode.Substring(16, 1));
-            calcOpts.Vigor = int.Parse(talentCode.Substring(17, 1));
-            calcOpts.DeadenedNerves = int.Parse(talentCode.Substring(18, 1));
-            calcOpts.FindWeakness = int.Parse(talentCode.Substring(19, 1));
-            calcOpts.Mutilate = int.Parse(talentCode.Substring(20, 1));
+		//    c.RogueTalents.ImprovedEviscerate = int.Parse(talentCode.Substring(0, 1));
+		//    c.RogueTalents.RemorselessAttacks = int.Parse(talentCode.Substring(1, 1));
+		//    c.RogueTalents.Malice = int.Parse(talentCode.Substring(2, 1));
+		//    c.RogueTalents.Ruthlessness = int.Parse(talentCode.Substring(3, 1));
+		//    c.RogueTalents.Murder = int.Parse(talentCode.Substring(4, 1));
+		//    c.RogueTalents.PuncturingWounds = int.Parse(talentCode.Substring(5, 1));
+		//    c.RogueTalents.RelentlessStrikes = int.Parse(talentCode.Substring(6, 1));
+		//    c.RogueTalents.ImprovedExposeArmor = int.Parse(talentCode.Substring(7, 1));
+		//    c.RogueTalents.Lethality = int.Parse(talentCode.Substring(8, 1));
+		//    c.RogueTalents.VilePoisons = int.Parse(talentCode.Substring(9, 1));
+		//    c.RogueTalents.ImprovedPoisons = int.Parse(talentCode.Substring(10, 1));
+		//    c.RogueTalents.FleetFooted = int.Parse(talentCode.Substring(11, 1));
+		//    c.RogueTalents.ColdBlood = int.Parse(talentCode.Substring(12, 1));
+		//    c.RogueTalents.ImprovedKidneyShot = int.Parse(talentCode.Substring(13, 1));
+		//    c.RogueTalents.QuickRecovery = int.Parse(talentCode.Substring(14, 1));
+		//    c.RogueTalents.SealFate = int.Parse(talentCode.Substring(15, 1));
+		//    c.RogueTalents.MasterPoisoner = int.Parse(talentCode.Substring(16, 1));
+		//    c.RogueTalents.Vigor = int.Parse(talentCode.Substring(17, 1));
+		//    c.RogueTalents.DeadenedNerves = int.Parse(talentCode.Substring(18, 1));
+		//    c.RogueTalents.FindWeakness = int.Parse(talentCode.Substring(19, 1));
+		//    c.RogueTalents.Mutilate = int.Parse(talentCode.Substring(20, 1));
 
-            calcOpts.ImprovedGouge = int.Parse(talentCode.Substring(21, 1));
-            calcOpts.ImprovedSinisterStrike = int.Parse(talentCode.Substring(22, 1));
-            calcOpts.LightningReflexes = int.Parse(talentCode.Substring(23, 1));
-            calcOpts.ImprovedSliceandDice = int.Parse(talentCode.Substring(24, 1));
-            calcOpts.Deflection = int.Parse(talentCode.Substring(25, 1));
-            calcOpts.Precision = int.Parse(talentCode.Substring(26, 1));
-            calcOpts.Endurance = int.Parse(talentCode.Substring(27, 1));
-            calcOpts.Riposte = int.Parse(talentCode.Substring(28, 1));
-            calcOpts.ImprovedSprint = int.Parse(talentCode.Substring(29, 1));
-            calcOpts.ImprovedKick = int.Parse(talentCode.Substring(30, 1));
-            calcOpts.DaggerSpecialization = int.Parse(talentCode.Substring(31, 1));
-            calcOpts.DualWieldSpecialization = int.Parse(talentCode.Substring(32, 1));
-            calcOpts.MaceSpecialization = int.Parse(talentCode.Substring(33, 1));
-            calcOpts.BladeFlurry = int.Parse(talentCode.Substring(34, 1));
-            calcOpts.SwordSpecialization = int.Parse(talentCode.Substring(35, 1));
-            calcOpts.FistSpecialization = int.Parse(talentCode.Substring(36, 1));
-            calcOpts.BladeTwisting = int.Parse(talentCode.Substring(37, 1));
-            calcOpts.WeaponExpertise = int.Parse(talentCode.Substring(38, 1));
-            calcOpts.Aggression = int.Parse(talentCode.Substring(39, 1));
-            calcOpts.Vitality = int.Parse(talentCode.Substring(40, 1));
-            calcOpts.AdrenalineRush = int.Parse(talentCode.Substring(41, 1));
-            calcOpts.NervesOfSteel = int.Parse(talentCode.Substring(42, 1));
-            calcOpts.CombatPotency = int.Parse(talentCode.Substring(43, 1));
-            calcOpts.SurpriseAttacks = int.Parse(talentCode.Substring(44, 1));
+		//    c.RogueTalents.ImprovedGouge = int.Parse(talentCode.Substring(21, 1));
+		//    c.RogueTalents.ImprovedSinisterStrike = int.Parse(talentCode.Substring(22, 1));
+		//    c.RogueTalents.LightningReflexes = int.Parse(talentCode.Substring(23, 1));
+		//    c.RogueTalents.ImprovedSliceandDice = int.Parse(talentCode.Substring(24, 1));
+		//    c.RogueTalents.Deflection = int.Parse(talentCode.Substring(25, 1));
+		//    c.RogueTalents.Precision = int.Parse(talentCode.Substring(26, 1));
+		//    c.RogueTalents.Endurance = int.Parse(talentCode.Substring(27, 1));
+		//    c.RogueTalents.Riposte = int.Parse(talentCode.Substring(28, 1));
+		//    c.RogueTalents.ImprovedSprint = int.Parse(talentCode.Substring(29, 1));
+		//    c.RogueTalents.ImprovedKick = int.Parse(talentCode.Substring(30, 1));
+		//    c.RogueTalents.DaggerSpecialization = int.Parse(talentCode.Substring(31, 1));
+		//    c.RogueTalents.DualWieldSpecialization = int.Parse(talentCode.Substring(32, 1));
+		//    c.RogueTalents.MaceSpecialization = int.Parse(talentCode.Substring(33, 1));
+		//    c.RogueTalents.BladeFlurry = int.Parse(talentCode.Substring(34, 1));
+		//    c.RogueTalents.SwordSpecialization = int.Parse(talentCode.Substring(35, 1));
+		//    c.RogueTalents.FistSpecialization = int.Parse(talentCode.Substring(36, 1));
+		//    c.RogueTalents.BladeTwisting = int.Parse(talentCode.Substring(37, 1));
+		//    c.RogueTalents.WeaponExpertise = int.Parse(talentCode.Substring(38, 1));
+		//    c.RogueTalents.Aggression = int.Parse(talentCode.Substring(39, 1));
+		//    c.RogueTalents.Vitality = int.Parse(talentCode.Substring(40, 1));
+		//    c.RogueTalents.AdrenalineRush = int.Parse(talentCode.Substring(41, 1));
+		//    c.RogueTalents.NervesOfSteel = int.Parse(talentCode.Substring(42, 1));
+		//    c.RogueTalents.CombatPotency = int.Parse(talentCode.Substring(43, 1));
+		//    c.RogueTalents.SurpriseAttacks = int.Parse(talentCode.Substring(44, 1));
 
-            calcOpts.MasterOfDeception = int.Parse(talentCode.Substring(45, 1));
-            calcOpts.Opportunity = int.Parse(talentCode.Substring(46, 1));
-            calcOpts.SleightOfHand = int.Parse(talentCode.Substring(47, 1));
-            calcOpts.DirtyTricks = int.Parse(talentCode.Substring(48, 1));
-            calcOpts.Camouflage = int.Parse(talentCode.Substring(49, 1));
-            calcOpts.Initiative = int.Parse(talentCode.Substring(50, 1));
-            calcOpts.GhostlyStrike = int.Parse(talentCode.Substring(51, 1));
-            calcOpts.ImprovedAmbush = int.Parse(talentCode.Substring(52, 1));
-            calcOpts.Setup = int.Parse(talentCode.Substring(53, 1));
-            calcOpts.Elusiveness = int.Parse(talentCode.Substring(54, 1));
-            calcOpts.SerratedBlades = int.Parse(talentCode.Substring(55, 1));
-            calcOpts.HeightenedSenses = int.Parse(talentCode.Substring(56, 1));
-            calcOpts.Preparation = int.Parse(talentCode.Substring(57, 1));
-            calcOpts.DirtyDeeds = int.Parse(talentCode.Substring(58, 1));
-            calcOpts.Hemorrhage = int.Parse(talentCode.Substring(59, 1));
-            calcOpts.MasterOfSubtlety = int.Parse(talentCode.Substring(60, 1));
-            calcOpts.Deadliness = int.Parse(talentCode.Substring(61, 1));
-            calcOpts.EnvelopingShadows = int.Parse(talentCode.Substring(62, 1));
-            calcOpts.Premeditation = int.Parse(talentCode.Substring(63, 1));
-            calcOpts.CheatDeath = int.Parse(talentCode.Substring(64, 1));
-            calcOpts.SinisterCalling = int.Parse(talentCode.Substring(65, 1));
-            calcOpts.Shadowstep = int.Parse(talentCode.Substring(66, 1));
-        }
+		//    c.RogueTalents.MasterOfDeception = int.Parse(talentCode.Substring(45, 1));
+		//    c.RogueTalents.Opportunity = int.Parse(talentCode.Substring(46, 1));
+		//    c.RogueTalents.SleightOfHand = int.Parse(talentCode.Substring(47, 1));
+		//    c.RogueTalents.DirtyTricks = int.Parse(talentCode.Substring(48, 1));
+		//    c.RogueTalents.Camouflage = int.Parse(talentCode.Substring(49, 1));
+		//    c.RogueTalents.Initiative = int.Parse(talentCode.Substring(50, 1));
+		//    c.RogueTalents.GhostlyStrike = int.Parse(talentCode.Substring(51, 1));
+		//    c.RogueTalents.ImprovedAmbush = int.Parse(talentCode.Substring(52, 1));
+		//    c.RogueTalents.Setup = int.Parse(talentCode.Substring(53, 1));
+		//    c.RogueTalents.Elusiveness = int.Parse(talentCode.Substring(54, 1));
+		//    c.RogueTalents.SerratedBlades = int.Parse(talentCode.Substring(55, 1));
+		//    c.RogueTalents.HeightenedSenses = int.Parse(talentCode.Substring(56, 1));
+		//    c.RogueTalents.Preparation = int.Parse(talentCode.Substring(57, 1));
+		//    c.RogueTalents.DirtyDeeds = int.Parse(talentCode.Substring(58, 1));
+		//    c.RogueTalents.Hemorrhage = int.Parse(talentCode.Substring(59, 1));
+		//    c.RogueTalents.MasterOfSubtlety = int.Parse(talentCode.Substring(60, 1));
+		//    c.RogueTalents.Deadliness = int.Parse(talentCode.Substring(61, 1));
+		//    c.RogueTalents.EnvelopingShadows = int.Parse(talentCode.Substring(62, 1));
+		//    c.RogueTalents.Premeditation = int.Parse(talentCode.Substring(63, 1));
+		//    c.RogueTalents.CheatDeath = int.Parse(talentCode.Substring(64, 1));
+		//    c.RogueTalents.SinisterCalling = int.Parse(talentCode.Substring(65, 1));
+		//    c.RogueTalents.Shadowstep = int.Parse(talentCode.Substring(66, 1));
+		//}
 
         public override bool HasRelevantStats(Stats stats) {
             return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
