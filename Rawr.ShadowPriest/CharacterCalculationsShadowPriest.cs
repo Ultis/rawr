@@ -74,14 +74,16 @@ namespace Rawr.ShadowPriest
             CalculationOptionsShadowPriest calcOptions = character.CalculationOptions as CalculationOptionsShadowPriest;
 
             dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.", BasicStats.Resilience.ToString(), character.StatConversion.GetResilienceFromRating(BasicStats.Resilience).ToString("0.00"), (character.StatConversion.GetResilienceFromRating(BasicStats.Resilience) * 2f).ToString("0.00")));          
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
-            dictValues.Add("Spell Power", String.Format("{0}*Shadow: {1}\r\nHoly: {2}", 
+            dictValues.Add("Spell Power", String.Format("{0}*{1} Bonus Shadow\r\n{2} Bonus Holy\r\n{3} from Inner Fire", 
                 Math.Floor(BasicStats.SpellPower), 
                 Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating), 
-                Math.Floor(BasicStats.SpellPower /*+ BasicStats.SpellHolyDamageRating*/)));
+                Math.Floor(BasicStats.SpellPower /*+ BasicStats.SpellHolyDamageRating*/),
+                CalculationsShadowPriest.GetInnerFireSpellPowerBonus(character)));
             dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
 
             dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs\r\n{6}% on Mind Blast, Mind Flay and Mind Sear.\r\n{7}% on Smite, Holy Fire and Penance.",
@@ -130,7 +132,7 @@ namespace Rawr.ShadowPriest
                 HitHoly.ToString("0.00"),  (HitHoly > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitHoly - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitHoly) * RHitRating))));
 
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
-                (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating)).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+                (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
             SolverBase solver = GetSolver(character, BasicStats);
             solver.Calculate(this);

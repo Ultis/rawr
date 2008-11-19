@@ -49,6 +49,7 @@ namespace Rawr.ShadowPriest
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
 					"Basic Stats:Health",
+                    "Basic Stats:Resilience",
 					"Basic Stats:Mana",
 					"Basic Stats:Stamina",
 					"Basic Stats:Intellect",
@@ -365,13 +366,8 @@ namespace Rawr.ShadowPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            float InnerFireSpellPowerBonus = 0;
-            if (character.Level >= 77)
-                InnerFireSpellPowerBonus = 120;
-            else if (character.Level >= 71)
-                InnerFireSpellPowerBonus = 95;
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f));
+                + GetInnerFireSpellPowerBonus(character));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
@@ -381,6 +377,16 @@ namespace Rawr.ShadowPriest
             statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
 
             return statsTotal;
+        }
+
+        public static float GetInnerFireSpellPowerBonus(Character character)
+        {
+            float InnerFireSpellPowerBonus = 0;
+            if (character.Level >= 77)
+                InnerFireSpellPowerBonus = 120;
+            else if (character.Level >= 71)
+                InnerFireSpellPowerBonus = 95;
+            return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
         }
 
         public override Stats GetRelevantStats(Stats stats)

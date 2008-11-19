@@ -65,11 +65,13 @@ namespace Rawr.HolyPriest
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.", BasicStats.Resilience.ToString(), (BasicStats.Resilience / 39.42f).ToString("0.00"), (BasicStats.Resilience / 39.42f * 2f).ToString("0.00")));
+            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.", BasicStats.Resilience.ToString(), character.StatConversion.GetResilienceFromRating(BasicStats.Resilience).ToString("0.00"), (character.StatConversion.GetResilienceFromRating(BasicStats.Resilience) * 2f).ToString("0.00")));
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
-            dictValues.Add("Spell Power", Math.Floor(BasicStats.SpellPower).ToString("0"));
+            dictValues.Add("Spell Power", string.Format("{0}*{1} from Inner Fire",
+                Math.Floor(BasicStats.SpellPower).ToString("0"),
+                CalculationsHolyPriest.GetInnerFireSpellPowerBonus(character)));
             //dictValues.Add("Healing", Math.Floor(BasicStats.SpellPower * 1.88f).ToString("0"));
             dictValues.Add("In FSR MP5", string.Format("{0}*{1} from MP5\r\n{2} from Meditation\r\n{3} Outside FSR\r\n{4} OFSR w/MP5",
                 (BasicStats.Mp5 + RegenInFSR).ToString("0"),

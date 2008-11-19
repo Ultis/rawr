@@ -123,4 +123,7 @@
   <data name="trkShadowfiend.ToolTip" xml:space="preserve">
     <value>Tells Rawr how effective your Shadowfiend is expected to be. Against a boss, your Shadowfiend has a 9% chance to miss, and 6.5% chance to be dodged, a total of 15.5% miss. Some haste effects like Windfury Totem and Heroism will affect the Shadowfiend, for up to a maximum effect of 150%.</value>
   </data>
+  <data name="trkFSR.ToolTip" xml:space="preserve">
+    <value>Time of fight spent in FSR. FSR is the "Five Second Rule". Whenever you cast a spell that eats mana, you regenerate no mana from spirit until 5 seconds has passed. This slider lets you tell Rawr how much time in a fight you spend inside the FSR.</value>
+  </data>
 </root>

@@ -453,11 +453,11 @@ namespace Rawr.HolyPriest
                 calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints;
             else
                 calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * regen / mp1use;
-            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
-            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
+            // If opponent has 25% 1% of resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
+            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap, 12.5%
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
+            calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * calculationOptions.Survivability / 100f * (1 + 0.3f * character.StatConversion.GetResilienceFromRating(calculatedStats.BasicStats.Resilience) / 12.5f);
 
         }
 

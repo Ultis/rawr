@@ -199,8 +199,9 @@ namespace Rawr.ShadowPriest
             }
 
             // With Pain and Suffering, Mind Flay has a 33/66/100% chance to refresh SW:P.
-            // This mean we cast SW:P once, and reap the benefits later.
-            if (bPnS = character.PriestTalents.PainAndSuffering > 0)
+            // This mean we cast SW:P once, and reap the benefits later. Only use PnS if SWP is in the prio list.
+            bPnS = (SWP != null) && (character.PriestTalents.PainAndSuffering > 0);
+            if (bPnS)
             {   // Move SW:Pain to the end of the list in a very non-fashionable and hacky way.
                 SpellPriority.Remove(SWP);
                 SpellPriority.Add(SWP);
@@ -242,6 +243,7 @@ namespace Rawr.ShadowPriest
                 }
 
                 CastList.Add(spell);
+                timer += CalculationOptions.Delay / 1000f;
                 spell.SpellStatistics.HitCount++;
 
                 if (bPnS && spell == MF)
@@ -269,6 +271,7 @@ namespace Rawr.ShadowPriest
             foreach (Spell spell in CastList)
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
+                timer += CalculationOptions.Delay / 1000f;
                 HPC++;
                 //if (spell == MF)
                 //    HPC += 2;   // MF can hit 3 times / cast
@@ -337,18 +340,17 @@ namespace Rawr.ShadowPriest
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;
-            float TimeInFSR = 1f;
             float ImpSTUptime = CPC * MB.CritChance * 8f;
             simStats.Spirit *= 1f + ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
             float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
-            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * TimeInFSR;
+            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalculationOptions.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("Meditation", tmpregen));
                 regen += tmpregen;
             }
-            tmpregen = SpiritRegen * (1f - TimeInFSR);
+            tmpregen = SpiritRegen * (1f - CalculationOptions.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
                 ManaSources.Add(new ManaSource("OutFSR", tmpregen));
@@ -411,11 +413,11 @@ namespace Rawr.ShadowPriest
 
             calculatedStats.DpsPoints = DPS;
             calculatedStats.SustainPoints = SustainDPS;
-            // If opponent has 25% crit, each 39.42308044 resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
-            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap (492.5 (39.42308044*12.5))
+            // If opponent has 25% 1% of resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
+            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap, 12.5%
             // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
             // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * calculatedStats.BasicStats.Resilience / 492.7885f);
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * character.StatConversion.GetResilienceFromRating(calculatedStats.BasicStats.Resilience) / 12.5f);
         }
     }
    

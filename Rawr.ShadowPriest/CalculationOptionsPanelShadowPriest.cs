@@ -29,6 +29,12 @@ namespace Rawr.ShadowPriest
             trkFightLength.Value = (int)calcOpts.FightLength;
             lblFightLength.Text = trkFightLength.Value + " minute fight.";
 
+            trkFSR.Value = (int)calcOpts.FSRRatio;
+            lblFSR.Text = trkFSR.Value + "% time spent in FSR";
+
+            trkDelay.Value = (int)calcOpts.Delay;
+            lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
+
             trkShadowfiend.Value = (int)calcOpts.Shadowfiend;
             lblShadowfiend.Text = trkShadowfiend.Value + "% effect from Shadowfiend.";
 
@@ -89,6 +95,28 @@ namespace Rawr.ShadowPriest
             }
         }
 
+        private void trkFSR_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.FSRRatio = trkFSR.Value;
+                lblFSR.Text = trkFSR.Value + "% time spent in FSR";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkDelay_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsShadowPriest calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
+                calcOpts.Delay = trkDelay.Value;
+                lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void trkShadowfiend_Scroll(object sender, EventArgs e)
         {
             if (!loading)
@@ -138,6 +166,8 @@ namespace Rawr.ShadowPriest
 	{
         public int TargetLevel { get; set; }
         public float FightLength { get; set; }
+        public float FSRRatio { get; set; }
+        public float Delay { get; set; }
         public float Shadowfiend { get; set; }
         public float Replenishment { get; set; }
         public float JoW { get; set; }
@@ -151,14 +181,13 @@ namespace Rawr.ShadowPriest
         private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
         public int ManaPot { get; set; }
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
-        public float Spriest { get; set; }
-        public float Lag { get; set; }
-        public float WaitTime { get; set; }
 
         public CalculationOptionsShadowPriest()
         {
             TargetLevel = 3;
             FightLength = 5f;
+            FSRRatio = 100f;
+            Delay = 100f;
             Shadowfiend = 100f;
             Replenishment = 100f;
             JoW = 100f;
@@ -166,8 +195,6 @@ namespace Rawr.ShadowPriest
 
             SpellPriority = null;
             ManaPot = 4;
-            Lag = 100;
-            WaitTime = 50;
         }
 
         public string GetXml()

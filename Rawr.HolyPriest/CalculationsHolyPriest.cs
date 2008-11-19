@@ -153,6 +153,16 @@ namespace Rawr.HolyPriest
             return 0.01035f - (0.005175f * (character.Level - 70) / 10f);
         }
 
+        public static float GetInnerFireSpellPowerBonus(Character character)
+        {
+            float InnerFireSpellPowerBonus = 0;
+            if (character.Level >= 77)
+                InnerFireSpellPowerBonus = 120;
+            else if (character.Level >= 71)
+                InnerFireSpellPowerBonus = 95;
+            return InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f);
+        }
+
         public static Stats GetRaceStats(Character character)
         {
             Stats stats = new Stats();
@@ -226,13 +236,8 @@ namespace Rawr.HolyPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            float InnerFireSpellPowerBonus = 0;
-            if (character.Level >= 77)
-                InnerFireSpellPowerBonus = 120;
-            else if (character.Level >= 71)
-                InnerFireSpellPowerBonus = 95;
             statsTotal.SpellPower += (float)Math.Round(statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + InnerFireSpellPowerBonus * (1f + character.PriestTalents.ImprovedInnerFire * 0.15f));
+                + GetInnerFireSpellPowerBonus(character));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += statsTotal.Stamina * 10f;
