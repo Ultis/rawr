@@ -210,7 +210,7 @@ namespace Rawr.Moonkin
             Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
                 new Stats()
                 {
-                    Health = 4703f,
+                    Health = 7416f,
                     Mana = 3496f,
                     Stamina = 97f,
                     Agility = 87f,
@@ -219,7 +219,7 @@ namespace Rawr.Moonkin
                 } :
                 new Stats()
                 {
-                    Health = 4703f,
+                    Health = 7416f,
                     Mana = 3496f,
                     Stamina = 100f,
                     Agility = 77f,
@@ -262,8 +262,8 @@ namespace Rawr.Moonkin
             statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
 
             // Derived stats: Health, mana pool, armor
-            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f)));
-            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 380;
+            statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
+            statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
 			if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
 			{
 				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor + statsEnchants.Armor) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
