@@ -498,6 +498,10 @@ namespace Rawr.Mage
             {
                 LightningBolt = (LightningBolt)GetSpell(SpellId.LightningBolt);
             }
+            if (BaseStats.ThunderCapacitorProc > 0)
+            {
+                ThunderBolt = (ThunderBolt)GetSpell(SpellId.ThunderBolt);
+            }
             if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
             {
                 ArcaneBolt = (ArcaneBolt)GetSpell(SpellId.ArcaneBolt);
@@ -510,6 +514,7 @@ namespace Rawr.Mage
 
         public ArcaneBolt ArcaneBolt { get; set; }
         public LightningBolt LightningBolt { get; set; }
+        public ThunderBolt ThunderBolt { get; set; }
         public PendulumOfTelluricCurrents PendulumOfTelluricCurrents { get; set; }
 
         private static int SpellIdCount;
@@ -539,6 +544,9 @@ namespace Rawr.Mage
             {
                 case SpellId.ArcaneBolt:
                     s = new ArcaneBolt(this);
+                    break;
+                case SpellId.ThunderBolt:
+                    s = new ThunderBolt(this);
                     break;
                 case SpellId.PendulumOfTelluricCurrents:
                     s = new PendulumOfTelluricCurrents(this);

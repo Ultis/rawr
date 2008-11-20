@@ -20,6 +20,7 @@ namespace Rawr.Mage
         None,
         Wand,
         LightningBolt,
+        ThunderBolt,
         [Description("Arcane Barrage")]
         ArcaneBarrage,
         ArcaneBolt,
@@ -658,6 +659,20 @@ namespace Rawr.Mage
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
+            if (!ForceMiss && !EffectProc && castingState.BaseStats.ThunderCapacitorProc > 0)
+            {
+                BaseSpell ThunderBolt = castingState.ThunderBolt;
+                //discrete model
+                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                float avgHitsToDischarge = 4f / avgCritsPerHit;
+                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                float boltDps = ThunderBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                DamagePerSecond += boltDps;
+                ThreatPerSecond += boltDps * castingState.NatureThreatMultiplier;
+                //continuous model
+                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
+            }
             if (!ForceMiss && !EffectProc && castingState.BaseStats.ShatteredSunAcumenProc > 0 && !castingState.CalculationOptions.Aldor)
             {
                 BaseSpell ArcaneBolt = castingState.ArcaneBolt;
@@ -742,6 +757,23 @@ namespace Rawr.Mage
                 float avgHitsToDischarge = 3f / avgCritsPerHit;
                 if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
                 float boltDps = LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                contrib.Hits += duration / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                contrib.Damage += boltDps * duration;
+            }
+            if (!EffectProc && castingState.BaseStats.ThunderCapacitorProc > 0)
+            {
+                BaseSpell ThunderBolt = castingState.ThunderBolt;
+                if (!dict.TryGetValue(ThunderBolt.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = ThunderBolt.Name };
+                    dict[ThunderBolt.Name] = contrib;
+                }
+                //discrete model
+                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                float avgHitsToDischarge = 4f / avgCritsPerHit;
+                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                float boltDps = ThunderBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Hits += duration / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
                 contrib.Damage += boltDps * duration;
             }
@@ -1724,6 +1756,24 @@ namespace Rawr.Mage
     {
         public LightningBolt(CastingState castingState)
             : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 694, 806, 0, 0, 0, 0, 0, 0, false)
+        {
+            EffectProc = true;
+            Calculate(castingState);
+        }
+
+        public override void Calculate(CastingState castingState)
+        {
+            base.Calculate(castingState);
+            CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
+            CalculateDerivedStats(castingState);
+        }
+    }
+
+    // lightning capacitor
+    public class ThunderBolt : BaseSpell
+    {
+        public ThunderBolt(CastingState castingState)
+            : base("Lightning Bolt", false, false, true, false, 0, 30, 0, 0, MagicSchool.Nature, 1181, 1371, 0, 0, 0, 0, 0, 0, false)
         {
             EffectProc = true;
             Calculate(castingState);

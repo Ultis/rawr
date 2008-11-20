@@ -82,6 +82,7 @@ namespace Rawr
         JudgementOfCommandAttackPowerBonus,
         LHWManaReduction,
         LightningCapacitorProc,
+        ThunderCapacitorProc,
         LotPCritRating,
         MageAllResist,
         MageIceArmor,
@@ -1535,6 +1536,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningCapacitorProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Procs")]
+        public float ThunderCapacitorProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ThunderCapacitorProc] = value; }
         }
         
         [System.ComponentModel.DefaultValueAttribute(0f)]

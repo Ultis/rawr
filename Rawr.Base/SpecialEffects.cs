@@ -459,7 +459,11 @@ namespace Rawr
 			{
 				stats.LightningCapacitorProc = 1;
 			}
-			else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
+            else if (line.StartsWith("You gain an Thunder Charge each time you cause a damaging spell critical strike.  When you reach 4 Thunder Charges, they will release, firing a Lightning Bolt for 1181 to 1371 damage.  Thunder Charge cannot be gained more often than once every 2.5 sec."))
+            {
+                stats.ThunderCapacitorProc = 1;
+            }
+            else if (line.StartsWith("You gain 25% more mana when you use a mana gem.  In addition, using a mana gem grants you 225 spell power for 15 sec."))
 			{
 				// Serpent-Coil Braid
 				stats.BonusManaGem += 0.25f;
