@@ -516,12 +516,15 @@ namespace Rawr //O O . .
         { 
                 //int tempint = slot.GetHashCode();
                 string ID = itemToBeChecked.GemmedId;
-               
-                if (this[slot].GemmedId == ID)
+                
+            if (this[slot] == null)
+                return false;
+                
+            else if (this[slot].GemmedId == ID)
                     return true;
             
-           
-            return false;
+            else    
+                return false;
         }
 
         public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)

@@ -52,11 +52,11 @@
             this.checkBoxOneHandedAxe = new System.Windows.Forms.CheckBox();
             this.checkBoxOneHandedMace = new System.Windows.Forms.CheckBox();
             this.checkBoxOneHandedSword = new System.Windows.Forms.CheckBox();
-            this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.checkBoxMisc = new System.Windows.Forms.CheckBox();
             this.checkBoxShield = new System.Windows.Forms.CheckBox();
+            this.CancellButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -344,17 +344,6 @@
             this.checkBoxOneHandedSword.Text = "1 Handed Sword";
             this.checkBoxOneHandedSword.UseVisualStyleBackColor = true;
             // 
-            // CancelButton
-            // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(197, 245);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 25);
-            this.CancelButton.TabIndex = 2;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
             // OKButton
             // 
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -399,19 +388,31 @@
             this.checkBoxShield.Text = "Shield";
             this.checkBoxShield.UseVisualStyleBackColor = true;
             // 
+            // CancellButton
+            // 
+            this.CancellButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancellButton.Location = new System.Drawing.Point(186, 247);
+            this.CancellButton.Name = "CancellButton";
+            this.CancellButton.Size = new System.Drawing.Size(75, 23);
+            this.CancellButton.TabIndex = 16;
+            this.CancellButton.Text = "Cancel";
+            this.CancellButton.UseVisualStyleBackColor = true;
+            this.CancellButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
             // FormRelevantItemRefinement
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.CancellButton;
             this.ClientSize = new System.Drawing.Size(365, 282);
             this.ControlBox = false;
+            this.Controls.Add(this.CancellButton);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FormRelevantItemRefinement";
@@ -437,7 +438,6 @@
         private System.Windows.Forms.CheckBox checkBoxMailArmor;
         private System.Windows.Forms.CheckBox checkBoxLeatherArmor;
         private System.Windows.Forms.CheckBox checkBoxClothArmor;
-        private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.CheckBox checkBoxThrown;
         private System.Windows.Forms.CheckBox checkBoxWand;
@@ -461,6 +461,7 @@
         private System.Windows.Forms.CheckBox checkBoxShield;
         private System.Windows.Forms.CheckBox checkBoxMisc;
         private System.Windows.Forms.CheckBox checkBoxRelic;
+        private System.Windows.Forms.Button CancellButton;
 
         
     }

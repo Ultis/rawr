@@ -9,13 +9,6 @@ using System.Windows.Forms;
 namespace Rawr
 {
 
-    /*things to do: 
-                 
-     * Find better default image for sockets
-     * Add scroll bar when >4 gemmings are used
-        
-     */
-
     
 
     public partial class FormMassGemReplacement : Form, IFormItemSelectionProvider
@@ -210,16 +203,18 @@ namespace Rawr
                                 ItemCache.AddItem(set.gemIt(item), true, false);
                         }
 
-                        //delete all socketed items
+                        //delete all socketed items that are not available or equipped on a character
                         foreach (Item exItem in listGemmableItems){
 
                             if (currCharacter.GetItemAvailability(exItem) != Character.ItemAvailability.NotAvailabe)
                             
                                 continue;
                             
+                            //checks to make sure that items which are equipped are not deleted due to undesirable
+                            //gemmings
                             else if (currCharacter.IsEquipped(exItem))
-                                continue;
-
+                                   continue;
+                        
                             else
                                 ItemCache.DeleteItem(exItem, false);
                     }
@@ -301,7 +296,7 @@ namespace Rawr
                                 break;
                             default:
                                 throw new IndexOutOfRangeException("rawr.itembutton.backcolor is used for parsing buttons. make sure they're set correctly");
-                                break;
+                                
 
                         }
                         
