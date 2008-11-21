@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 
 namespace Rawr.Tree
 {
     public partial class CalculationOptionsPanelTree : CalculationOptionsPanelBase
     {
-        private bool loading = false; 
+        private bool loading = false;
+        private SpellRotationEditor rotaeditor = null;
 
         public CalculationOptionsPanelTree()
         {
@@ -20,20 +17,29 @@ namespace Rawr.Tree
         protected override void LoadCalculationOptions()
         {
             loading = true;
-    
+
+            CalculationOptionsTree calcOpts;
+
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = new CalculationOptionsTree();
+            {
+                calcOpts = new CalculationOptionsTree();
+                Character.CalculationOptions = calcOpts;
+            }
+            else
+                calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
 
-            CalculationOptionsTree calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
+            calcOpts.Spellrotations.Clear();
+            Spellrotation rotation = new Spellrotation();
+            rotation.addSpell(new Spellcast("Healing Touch", "1"));
+            calcOpts.Spellrotations.Add(rotation);
+            
 
-            cbLevel.SelectedIndex = calcOpts.level == 70 ? 0 : 1;
             cbSchattrathFaction.SelectedIndex = calcOpts.ShattrathFaction == "Aldor" ? 1 : calcOpts.ShattrathFaction == "None" ? 0 : 2;
-            cbSpellRotation.SelectedIndex = calcOpts.spellRotationPlaceholder == "Healing Touch" ? 0 : 1;
             tbSurvScale.Text = calcOpts.SurvScaleBelowTarget.ToString();
             tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
             tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
             tbMP5Scale.Text = calcOpts.mP5Scale.ToString();
-            tbFightDuration.Text = calcOpts.fightDuration.ToString();
+            tbFightDuration.Text = new TimeSpan(0,0,calcOpts.fightDuration).ToString();
             tbWildGrowthTargets.Text = calcOpts.wildGrowthTargets.ToString();
             tbWildGrowthAverageTicks.Text = calcOpts.wildGrowthTicks.ToString();
             tbReplenishmentActive.Text = calcOpts.averageReplenishActiveTime.ToString();
@@ -52,15 +58,6 @@ namespace Rawr.Tree
 
             //Enable/Disable Glyph Checkboxes
             chbSomeGlyph_CheckedChanged(null, null);
-        }
-
-        private void cbLevel_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).level = int.Parse((string)cbLevel.Items[cbLevel.SelectedIndex]);
-                Character.OnCalculationsInvalidated();
-            }
         }
 
         private void cbSchattrathFaction_SelectedIndexChanged(object sender, EventArgs e)
@@ -131,15 +128,6 @@ namespace Rawr.Tree
             }
         }
 
-        private void cbSpellRotation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).spellRotationPlaceholder = (string)cbSpellRotation.Items[cbSpellRotation.SelectedIndex];
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void tbMP5Scale_TextChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -158,7 +146,7 @@ namespace Rawr.Tree
 
                 if (tmp.TotalMinutes > 0)
                 {
-                    ((CalculationOptionsTree)Character.CalculationOptions).fightDuration = tmp;
+                    ((CalculationOptionsTree)Character.CalculationOptions).fightDuration = (int)tmp.TotalSeconds;
                     Character.OnCalculationsInvalidated();
                 }
             }
@@ -208,7 +196,7 @@ namespace Rawr.Tree
                 calcOpts.glyphOfSwiftmend = chbGlyphSwiftmend.Checked;
 
                 //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
-                int maxGlyphs = calcOpts.level == 70 ? 2 : 3;
+                int maxGlyphs = 3;
                 if ((chbGlyphSwiftmend.Checked ? 1 : 0) + (chbGlyphRejuvenation.Checked ? 1 : 0) + (chbGlyphRegrowth.Checked ? 1 : 0) + (chbGlyphLifebloom.Checked ? 1 : 0) + (chbGlyphInnervate.Checked ? 1 : 0) + (chbGlyphHT.Checked ? 1 : 0) >= maxGlyphs)
                 {
                     chbGlyphHT.Enabled = chbGlyphHT.Checked;
@@ -243,33 +231,39 @@ namespace Rawr.Tree
             return 0;
         }
 
-
-
+        private void bEditRotation_Click(object sender, EventArgs e)
+        {
+            if (rotaeditor == null)
+            {
+                rotaeditor = new SpellRotationEditor();
+            }
+            rotaeditor.generateEditorContent(Character);
+            rotaeditor.Show();
+        }
     }
 
     [Serializable]
-
     public class CalculationOptionsTree : ICalculationOptionBase
     {
-        public int level = 70;
+        //I want the calculated Stats in the SpellrotationsEditor .. so I trade them over the Options
+        [System.Xml.Serialization.XmlIgnore]
+        public CharacterCalculationsTree calculatedStats = null;
+
         public string ShattrathFaction = "Aldor";
         public bool useLivingSeedAsCritMultiplicator = true;
 
         public float SurvTargetLife = 8500f;
         public float SurvScaleBelowTarget = 100f;
 
-        public float mP5Scale = 150f; //150% more Value if you don't get the whole fightduration
+        public float mP5Scale = 100f; //Scale the importance of MP5
 
         //Add Average Spellpower to Calculation = 0.0f (% used)
         public float averageSpellpowerUsage = 0.0f;
 
-        public TimeSpan fightDuration = new TimeSpan(0, 5, 0); //5 Minutes
+        public int fightDuration = 300; //5 Minutes
 
         public bool haveReplenishSupport = true;
-        public float averageReplenishActiveTime = 0.8f;
-
-        //Spellrotations
-        public string spellRotationPlaceholder = "Healing Touch";
+        public float averageReplenishActiveTime = 80f;
 
         public int wildGrowthTargets = 4; //0-5 Targets
         public int wildGrowthTicks = 4; //0-7 Ticks
@@ -281,6 +275,8 @@ namespace Rawr.Tree
         public bool glyphOfLifebloom = false;
         public bool glyphOfInnervate = false;
         public bool glyphOfSwiftmend = false;
+
+        public List<Spellrotation> Spellrotations = new List<Spellrotation>();
 
         public string GetXml()
         {

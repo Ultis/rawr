@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rawr.Tree
 {
@@ -64,17 +63,31 @@ namespace Rawr.Tree
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f  + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power");
+            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power");
 
             dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + BasicStats.Mana * 0.0025f * 5 * (((CalculationOptionsTree)LocalCharacter.CalculationOptions).haveReplenishSupport ? 1 : 0) + " Replenish");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
-            dictValues.Add("Spell Haste", Math.Round(BasicStats.SpellHaste / 15.7f, 2) + "%");
+            dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / 15.7f, 2) + "%");
             dictValues.Add("Global CD", Math.Round((1.5f * 1570f) / (1570f + BasicStats.HasteRating), 2) + "sec");
 
             dictValues.Add("HpS", HpSPoints.ToString());
             dictValues.Add("Mp5", Mp5Points.ToString());
             dictValues.Add("Survival", SurvivalPoints.ToString());
             dictValues.Add("Overall", OverallPoints.ToString());
+
+            Spellrotation rota = ((CalculationOptionsTree)LocalCharacter.CalculationOptions).Spellrotations[0]; //Primary Rotation is in the Slot 0
+            if (rota == null)
+            {
+                dictValues.Add("Rota HPS", "null" + "*" + "no Rotation");
+                dictValues.Add("Rota Mana", "null");
+                dictValues.Add("Rota Time2OOM", "null");
+            }
+            else
+            {
+                dictValues.Add("Rota HPS", rota.HPS + "*" + rota.cycletime + "sec Duration");
+                dictValues.Add("Rota Mana", rota.cyclemana.ToString());
+                dictValues.Add("Rota Time2OOM", Math.Round(BasicStats.Mana * 5 / (rota.manaPerSecond * 5 - ManaRegInFSR), 2) + "sec");
+            }
 
             Spell spell = new Regrowth(this, true);
             dictValues.Add("RG Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit" + (((CalculationOptionsTree)LocalCharacter.CalculationOptions).glyphOfRegrowth ? "\nGlyphed" : ""));
@@ -103,6 +116,28 @@ namespace Rawr.Tree
             dictValues.Add("HT HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime" + (spell.castTime < spell.CastTime ? ", GCD capped" : ""));
             dictValues.Add("HT HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.AverageHealing + (spell.PeriodicTick * spell.PeriodicTicks), 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
 
+            spell = new WildGrowth(this);
+            {
+                WildGrowth wg = (WildGrowth)spell;
+                string tmp = "";
+                for (int i = 0; i <= 6; i++)
+                    tmp += (i + 1) + ".Tick - " + Math.Round(wg.getTick(1, i), 2) + "\n";
+
+                dictValues.Add("WG first Tick", Math.Round(wg.getTick(1, 0), 2) + "*" + tmp);
+                dictValues.Add("WG HPS(single)", Math.Round(wg.PeriodicTick, 2).ToString());
+                dictValues.Add("WG HPM(single)", Math.Round(wg.HPM, 2) + "*" + Math.Round(wg.PeriodicTick * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
+                dictValues.Add("WG HPS(max)", Math.Round(wg.PeriodicTick * 5, 2).ToString());
+                dictValues.Add("WG HPM(max)", Math.Round(wg.HPM * 5, 2) + "*" + Math.Round(wg.PeriodicTick * 5 * wg.PeriodicTicks, 2) + " Health\n" + Math.Round(wg.manaCost, 2) + " Manacost");
+            }
+
+            spell = new Nourish(this);
+            dictValues.Add("N Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
+            dictValues.Add("N HPM", Math.Round(spell.HPM,2).ToString());
+            dictValues.Add("N HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
+            spell = new Nourish(this, true);
+            dictValues.Add("N (HoT) Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + Math.Round(spell.CritPercent, 2) + "% Crit");
+            dictValues.Add("N (HoT) HPM", Math.Round(spell.HPM, 2).ToString());
+            dictValues.Add("N (HoT) HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + " Casttime");
             return dictValues;
         }
     }

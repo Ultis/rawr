@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbLevel = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbSchattrathFaction = new System.Windows.Forms.ComboBox();
             this.tbSurvScale = new System.Windows.Forms.TextBox();
@@ -40,7 +39,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel12 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tbMP5Scale = new System.Windows.Forms.TextBox();
@@ -57,8 +55,8 @@
             this.extendedToolTipLabel5 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tbFightDuration = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.bEditRotation = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
-            this.cbSpellRotation = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -72,6 +70,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.chbReplenishment = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.chbGlyphSwiftmend = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
@@ -86,7 +85,6 @@
             this.extendedToolTipLabel8 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel7 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -104,26 +102,14 @@
             this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cbLevel
-            // 
-            this.cbLevel.FormattingEnabled = true;
-            this.cbLevel.Items.AddRange(new object[] {
-            "70",
-            "80"});
-            this.cbLevel.Location = new System.Drawing.Point(188, 13);
-            this.cbLevel.Name = "cbLevel";
-            this.cbLevel.Size = new System.Drawing.Size(83, 21);
-            this.cbLevel.TabIndex = 0;
-            this.cbLevel.SelectedIndexChanged += new System.EventHandler(this.cbLevel_SelectedIndexChanged);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 43);
+            this.label2.Location = new System.Drawing.Point(6, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(94, 13);
+            this.label2.Size = new System.Drawing.Size(64, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Schattrath Faction";
+            this.label2.Text = "Exalted with";
             // 
             // cbSchattrathFaction
             // 
@@ -132,7 +118,7 @@
             "None",
             "Aldor",
             "Scryers"});
-            this.cbSchattrathFaction.Location = new System.Drawing.Point(188, 40);
+            this.cbSchattrathFaction.Location = new System.Drawing.Point(188, 13);
             this.cbSchattrathFaction.Name = "cbSchattrathFaction";
             this.cbSchattrathFaction.Size = new System.Drawing.Size(83, 21);
             this.cbSchattrathFaction.TabIndex = 3;
@@ -140,17 +126,17 @@
             // 
             // tbSurvScale
             // 
-            this.tbSurvScale.Location = new System.Drawing.Point(209, 45);
+            this.tbSurvScale.Location = new System.Drawing.Point(220, 45);
             this.tbSurvScale.Name = "tbSurvScale";
-            this.tbSurvScale.Size = new System.Drawing.Size(46, 20);
+            this.tbSurvScale.Size = new System.Drawing.Size(35, 20);
             this.tbSurvScale.TabIndex = 9;
             this.tbSurvScale.TextChanged += new System.EventHandler(this.tbSurvScale_TextChanged);
             // 
             // tbSurvTargetH
             // 
-            this.tbSurvTargetH.Location = new System.Drawing.Point(174, 19);
+            this.tbSurvTargetH.Location = new System.Drawing.Point(209, 19);
             this.tbSurvTargetH.Name = "tbSurvTargetH";
-            this.tbSurvTargetH.Size = new System.Drawing.Size(97, 20);
+            this.tbSurvTargetH.Size = new System.Drawing.Size(62, 20);
             this.tbSurvTargetH.TabIndex = 10;
             this.tbSurvTargetH.TextChanged += new System.EventHandler(this.tbSurvTargetH_TextChanged);
             // 
@@ -210,7 +196,7 @@
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.tbAverageProcUsage);
             this.groupBox6.Controls.Add(this.label9);
-            this.groupBox6.Location = new System.Drawing.Point(6, 203);
+            this.groupBox6.Location = new System.Drawing.Point(6, 130);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(277, 39);
             this.groupBox6.TabIndex = 26;
@@ -219,32 +205,21 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.extendedToolTipLabel12);
-            this.groupBox5.Controls.Add(this.cbLevel);
             this.groupBox5.Controls.Add(this.cbSchattrathFaction);
             this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Location = new System.Drawing.Point(6, 6);
+            this.groupBox5.Location = new System.Drawing.Point(6, 175);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(277, 67);
+            this.groupBox5.Size = new System.Drawing.Size(277, 40);
             this.groupBox5.TabIndex = 25;
             this.groupBox5.TabStop = false;
-            // 
-            // extendedToolTipLabel12
-            // 
-            this.extendedToolTipLabel12.AutoSize = true;
-            this.extendedToolTipLabel12.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel12.Name = "extendedToolTipLabel12";
-            this.extendedToolTipLabel12.Size = new System.Drawing.Size(89, 13);
-            this.extendedToolTipLabel12.TabIndex = 27;
-            this.extendedToolTipLabel12.Text = "Character Level *";
-            this.extendedToolTipLabel12.ToolTipText = "lvl 70 have only 2 Glyphs and no Nourish";
+            this.groupBox5.Text = "Schattrath Faction";
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.extendedToolTipLabel3);
             this.groupBox4.Controls.Add(this.tbMP5Scale);
             this.groupBox4.Controls.Add(this.label15);
-            this.groupBox4.Location = new System.Drawing.Point(6, 156);
+            this.groupBox4.Location = new System.Drawing.Point(6, 83);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(277, 41);
             this.groupBox4.TabIndex = 24;
@@ -259,13 +234,13 @@
             this.extendedToolTipLabel3.Size = new System.Drawing.Size(98, 13);
             this.extendedToolTipLabel3.TabIndex = 25;
             this.extendedToolTipLabel3.Text = "Scale MP5 Points *";
-            this.extendedToolTipLabel3.ToolTipText = "Scale MP5 Points if you don\'t have enough Mana for the given Fightduration by X%";
+            this.extendedToolTipLabel3.ToolTipText = "Scale the mp5 Points to meet your priorities";
             // 
             // tbMP5Scale
             // 
-            this.tbMP5Scale.Location = new System.Drawing.Point(209, 13);
+            this.tbMP5Scale.Location = new System.Drawing.Point(220, 13);
             this.tbMP5Scale.Name = "tbMP5Scale";
-            this.tbMP5Scale.Size = new System.Drawing.Size(46, 20);
+            this.tbMP5Scale.Size = new System.Drawing.Size(35, 20);
             this.tbMP5Scale.TabIndex = 3;
             this.tbMP5Scale.TextChanged += new System.EventHandler(this.tbMP5Scale_TextChanged);
             // 
@@ -285,7 +260,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.tbSurvScale);
             this.groupBox1.Controls.Add(this.tbSurvTargetH);
-            this.groupBox1.Location = new System.Drawing.Point(6, 79);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(277, 71);
             this.groupBox1.TabIndex = 23;
@@ -395,15 +370,25 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.bEditRotation);
             this.groupBox7.Controls.Add(this.label10);
-            this.groupBox7.Controls.Add(this.cbSpellRotation);
             this.groupBox7.Controls.Add(this.label11);
             this.groupBox7.Location = new System.Drawing.Point(6, 232);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 112);
+            this.groupBox7.Size = new System.Drawing.Size(277, 50);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Spellrotation";
+            // 
+            // bEditRotation
+            // 
+            this.bEditRotation.Location = new System.Drawing.Point(245, 11);
+            this.bEditRotation.Name = "bEditRotation";
+            this.bEditRotation.Size = new System.Drawing.Size(26, 23);
+            this.bEditRotation.TabIndex = 33;
+            this.bEditRotation.Text = "...";
+            this.bEditRotation.UseVisualStyleBackColor = true;
+            this.bEditRotation.Click += new System.EventHandler(this.bEditRotation_Click);
             // 
             // label10
             // 
@@ -413,17 +398,6 @@
             this.label10.Size = new System.Drawing.Size(73, 13);
             this.label10.TabIndex = 30;
             this.label10.Text = "Spell-Rotation";
-            // 
-            // cbSpellRotation
-            // 
-            this.cbSpellRotation.FormattingEnabled = true;
-            this.cbSpellRotation.Items.AddRange(new object[] {
-            "Healing Touch",
-            "Regrowth"});
-            this.cbSpellRotation.Location = new System.Drawing.Point(171, 13);
-            this.cbSpellRotation.Name = "cbSpellRotation";
-            this.cbSpellRotation.Size = new System.Drawing.Size(100, 21);
-            this.cbSpellRotation.TabIndex = 31;
             // 
             // label11
             // 
@@ -554,6 +528,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Glyphes";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 177);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(240, 26);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Note: The 375+ Glyphes are only available when \r\n          Wrath of the Lich King" +
+                " starts";
             // 
             // groupBox11
             // 
@@ -711,16 +695,6 @@
             this.extendedToolTipLabel6.Text = "Glyph of Healing Touch";
             this.extendedToolTipLabel6.ToolTipText = "-50% Healing -1.5sec Casttime -25% Manacost";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 177);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(240, 26);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Note: The 375+ Glyphes are only available when \r\n          Wrath of the Lich King" +
-                " starts";
-            // 
             // CalculationOptionsPanelTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -762,7 +736,6 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox cbLevel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbSchattrathFaction;
         private System.Windows.Forms.TextBox tbSurvScale;
@@ -792,7 +765,6 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ComboBox cbSpellRotation;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chbLivingSeed;
         private System.Windows.Forms.TextBox tbWildGrowthAverageTicks;
@@ -818,8 +790,8 @@
         private System.Windows.Forms.CheckBox chbGlyphRejuvenation;
         private System.Windows.Forms.CheckBox chbGlyphRegrowth;
         private System.Windows.Forms.CheckBox chbGlyphHT;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel12;
         private Rawr.CustomControls.ExtendedToolTipCheckBox chbGlyphSwiftmend;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button bEditRotation;
     }
 }
