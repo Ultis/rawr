@@ -363,8 +363,9 @@ namespace Rawr.HolyPriest
                     }
                 }
                 if (simstats.ManaRestoreOnCrit_25 > 0)
-                {
-                    tmpregen = simstats.ManaRestoreOnCrit_25 * 0.25f * avgcritcast / avgcastlen;
+                {   // X mana back every 25%*critchance spell every 45seconds.
+                    float proc_50 = (float)Math.Log(0.5f) / (float)Math.Log(1f - avgcritcast * 0.25f);
+                    tmpregen = simstats.ManaRestoreOnCrit_25 * 0.5f / (45f + proc_50 * avgcastlen);
                     if (tmpregen > 0f)
                     {
                         ManaSources.Add(new ManaSource("Soul of the Dead" , tmpregen));
