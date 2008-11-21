@@ -481,7 +481,8 @@ namespace Rawr //O O . .
                      
             CharacterSlot Loc = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
            
-            if ((Loc == CharacterSlot.Finger1)||(itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand))
+            if ((Loc == CharacterSlot.Finger1)||(Loc == CharacterSlot.Trinket1)||
+                (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand))
             {
                 CharacterSlot tempLoc;
                 
@@ -489,8 +490,12 @@ namespace Rawr //O O . .
                 {
                    tempLoc = CharacterSlot.Finger2;
                 }
-                else
+                else if (Loc == CharacterSlot.Trinket1)
                 {
+                    tempLoc = CharacterSlot.Trinket2;
+                }
+                
+                else{
                    tempLoc = CharacterSlot.OffHand;
                     Loc = CharacterSlot.MainHand;
                 }
