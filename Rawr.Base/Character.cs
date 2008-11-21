@@ -478,58 +478,25 @@ namespace Rawr //O O . .
 
         public bool IsEquipped(Item itemToBeChecked)
         {
-                     
-            CharacterSlot Loc = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
-           
-            if ((Loc == CharacterSlot.Finger1)||(Loc == CharacterSlot.Trinket1)||
-                (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand))
+            CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
+            if (slot == CharacterSlot.Finger1)
             {
-                CharacterSlot tempLoc;
-                
-                if (Loc == CharacterSlot.Finger1)
-                {
-                   tempLoc = CharacterSlot.Finger2;
-                }
-                else if (Loc == CharacterSlot.Trinket1)
-                {
-                    tempLoc = CharacterSlot.Trinket2;
-                }
-                
-                else{
-                   tempLoc = CharacterSlot.OffHand;
-                    Loc = CharacterSlot.MainHand;
-                }
-               
-                bool multiSlotToggle; 
-                bool A;
-                bool B;
-                
-                A=(IsEquipped(itemToBeChecked,Loc));
-                B=(IsEquipped(itemToBeChecked,tempLoc));
-                 
-                multiSlotToggle = (A || B);
-                return multiSlotToggle;
-            }
-            
-            else
-
-                return (IsEquipped(itemToBeChecked, Loc));
-           
-
+                return IsEquipped(itemToBeChecked, CharacterSlot.Finger1) || IsEquipped(itemToBeChecked, CharacterSlot.Finger2);
+			}
+			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand)
+			{
+				return IsEquipped(itemToBeChecked, CharacterSlot.MainHand) || IsEquipped(itemToBeChecked, CharacterSlot.OffHand);
+			}
+			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.Trinket)
+			{
+				return IsEquipped(itemToBeChecked, CharacterSlot.Trinket1) || IsEquipped(itemToBeChecked, CharacterSlot.Trinket2);
+			}
+			else
+				return IsEquipped(itemToBeChecked, slot);
         }
         public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
         { 
-                //int tempint = slot.GetHashCode();
-                string ID = itemToBeChecked.GemmedId;
-                
-            if (this[slot] == null)
-                return false;
-                
-            else if (this[slot].GemmedId == ID)
-                    return true;
-            
-            else    
-                return false;
+			return itemToBeChecked != null && this[slot] != null && itemToBeChecked.GemmedId == this[slot].GemmedId;
         }
 
         public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)
