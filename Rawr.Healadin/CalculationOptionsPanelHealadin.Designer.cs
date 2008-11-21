@@ -68,6 +68,17 @@
             this.label12 = new System.Windows.Forms.Label();
             this.nudGHL = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.nudInt = new System.Windows.Forms.NumericUpDown();
+            this.nudSP = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.nudCrit = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.nudHaste = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.nudMp5 = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -80,6 +91,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkHS)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).BeginInit();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMp5)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -145,7 +162,7 @@
             // chkLoHSelf
             // 
             this.chkLoHSelf.AutoSize = true;
-            this.chkLoHSelf.Location = new System.Drawing.Point(150, 98);
+            this.chkLoHSelf.Location = new System.Drawing.Point(151, 98);
             this.chkLoHSelf.Name = "chkLoHSelf";
             this.chkLoHSelf.Size = new System.Drawing.Size(106, 17);
             this.chkLoHSelf.TabIndex = 31;
@@ -577,10 +594,115 @@
             this.label13.TabIndex = 40;
             this.label13.Text = "targets";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.nudMp5);
+            this.groupBox4.Controls.Add(this.label18);
+            this.groupBox4.Controls.Add(this.nudHaste);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.nudCrit);
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Controls.Add(this.nudSP);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Controls.Add(this.nudInt);
+            this.groupBox4.Controls.Add(this.label14);
+            this.groupBox4.Location = new System.Drawing.Point(3, 431);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(294, 100);
+            this.groupBox4.TabIndex = 41;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Profession Benefits";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(34, 21);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(47, 13);
+            this.label14.TabIndex = 0;
+            this.label14.Text = "Intellect:";
+            // 
+            // nudInt
+            // 
+            this.nudInt.Location = new System.Drawing.Point(87, 19);
+            this.nudInt.Name = "nudInt";
+            this.nudInt.Size = new System.Drawing.Size(56, 20);
+            this.nudInt.TabIndex = 1;
+            this.nudInt.ValueChanged += new System.EventHandler(this.nudInt_ValueChanged);
+            // 
+            // nudSP
+            // 
+            this.nudSP.Location = new System.Drawing.Point(232, 19);
+            this.nudSP.Name = "nudSP";
+            this.nudSP.Size = new System.Drawing.Size(56, 20);
+            this.nudSP.TabIndex = 3;
+            this.nudSP.ValueChanged += new System.EventHandler(this.nudSP_ValueChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(160, 21);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(66, 13);
+            this.label15.TabIndex = 2;
+            this.label15.Text = "Spell Power:";
+            // 
+            // nudCrit
+            // 
+            this.nudCrit.Location = new System.Drawing.Point(87, 45);
+            this.nudCrit.Name = "nudCrit";
+            this.nudCrit.Size = new System.Drawing.Size(56, 20);
+            this.nudCrit.TabIndex = 5;
+            this.nudCrit.ValueChanged += new System.EventHandler(this.nudCrit_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(50, 73);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(31, 13);
+            this.label16.TabIndex = 4;
+            this.label16.Text = "Mp5:";
+            // 
+            // nudHaste
+            // 
+            this.nudHaste.Location = new System.Drawing.Point(232, 45);
+            this.nudHaste.Name = "nudHaste";
+            this.nudHaste.Size = new System.Drawing.Size(56, 20);
+            this.nudHaste.TabIndex = 7;
+            this.nudHaste.ValueChanged += new System.EventHandler(this.nudHaste_ValueChanged);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(188, 47);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(38, 13);
+            this.label17.TabIndex = 6;
+            this.label17.Text = "Haste:";
+            // 
+            // nudMp5
+            // 
+            this.nudMp5.Location = new System.Drawing.Point(87, 71);
+            this.nudMp5.Name = "nudMp5";
+            this.nudMp5.Size = new System.Drawing.Size(56, 20);
+            this.nudMp5.TabIndex = 43;
+            this.nudMp5.ValueChanged += new System.EventHandler(this.nudMp5_ValueChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(56, 47);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(25, 13);
+            this.label18.TabIndex = 42;
+            this.label18.Text = "Crit:";
+            // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.nudGHL);
             this.Controls.Add(this.label12);
@@ -613,6 +735,13 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMp5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -660,5 +789,16 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown nudGHL;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.NumericUpDown nudCrit;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown nudSP;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown nudInt;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown nudMp5;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown nudHaste;
+        private System.Windows.Forms.Label label17;
     }
 }

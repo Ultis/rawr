@@ -29,6 +29,11 @@ namespace Rawr.Healadin
             nudSpiritual.Value = (decimal)calcOpts.Spiritual;
             nudDivinePlea.Value = (decimal)calcOpts.DivinePlea;
             nudGHL.Value = (decimal)calcOpts.GHL_Targets;
+            nudInt.Value = (decimal)calcOpts.Prof_Int;
+            nudSP.Value = (decimal)calcOpts.Prof_SP;
+            nudCrit.Value = (decimal)calcOpts.Prof_Crit;
+            nudHaste.Value = (decimal)calcOpts.Prof_Haste;
+            nudMp5.Value = (decimal)calcOpts.Prof_Mp5;
 
 			trkActivity.Value = (int)(calcOpts.Activity * 100);
             lblActivity.Text = trkActivity.Value + "%";
@@ -261,6 +266,56 @@ namespace Rawr.Healadin
             }
         }
 
+        private void nudInt_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Prof_Int = (float)nudInt.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudSP_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Prof_SP = (float)nudSP.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudCrit_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Prof_Crit = (float)nudCrit.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudHaste_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Prof_Haste = (float)nudHaste.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void nudMp5_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.Prof_Mp5 = (float)nudMp5.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -295,5 +350,12 @@ namespace Rawr.Healadin
         public bool Glyph_LoH = true;
         public bool Glyph_SoW = true;
         public bool Glyph_SoL = false;
+
+        public float Prof_Int = 0f;
+        public float Prof_SP = 0f;
+        public float Prof_Haste = 0f;
+        public float Prof_Crit = 0f;
+        public float Prof_Mp5 = 0f;
+
 	}
 }

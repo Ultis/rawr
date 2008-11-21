@@ -217,8 +217,7 @@ namespace Rawr.Healadin
 
             #region Flash of Light
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
-            // TODO: Update to level 80 value (from 79)!!!
-            calc.FoLAvgHeal = (832f + (stats.SpellPower + stats.FlashOfLightSpellPower) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FlashOfLightMultiplier) * heal_multi;
+            calc.FoLAvgHeal = (835.5f + (stats.SpellPower + stats.FlashOfLightSpellPower) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FlashOfLightMultiplier) * heal_multi;
             float fol_baseMana = (int)(base_mana * .07f);
             calc.FoLCrit = stats.SpellCrit + stats.FlashOfLightCrit + talents.HolyPower * .01f;
             calc.FoLCost = fol_baseMana * glyph_sow - fol_baseMana * .12f * talents.Illumination * calc.FoLCrit - ied;
@@ -302,23 +301,24 @@ namespace Rawr.Healadin
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             PaladinTalents talents = character.PaladinTalents;
+            CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
 
             Stats statsRace;
             if (character.Race == Character.CharacterRace.Draenei)
             {
-                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 145, Intellect = 99, Spirit = 107 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 146, Intellect = 99, Spirit = 107 };
             }
             else if (character.Race == Character.CharacterRace.Dwarf)
             {
-                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 151, Intellect = 97, Spirit = 104 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 152, Intellect = 97, Spirit = 104 };
             }
             else if (character.Race == Character.CharacterRace.Human)
             {
-                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 148, Intellect = 98, Spirit = 106, BonusSpiritMultiplier = 1.03f };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 149, Intellect = 98, Spirit = 106, BonusSpiritMultiplier = .03f };
             }
             else
             {
-                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 140, Intellect = 102, Spirit = 104 };
+                statsRace = new Stats() { Health = 4224, Mana = 4114, Stamina = 141, Intellect = 102, Spirit = 104 };
             }
 
 
@@ -327,6 +327,12 @@ namespace Rawr.Healadin
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
+            statsTotal.Intellect += calcOpts.Prof_Int;
+            statsTotal.HasteRating += calcOpts.Prof_Haste;
+            statsTotal.CritRating += calcOpts.Prof_Crit;
+            statsTotal.Mp5 += calcOpts.Prof_Mp5;
+            statsTotal.SpellPower += calcOpts.Prof_SP;
+
             statsTotal.Stamina = (float)Math.Round(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Round(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f));
             statsTotal.Spirit = (float)Math.Round(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));

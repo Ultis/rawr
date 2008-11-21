@@ -397,7 +397,8 @@ namespace Rawr
 			{
 				Name = "Arcane Intellect",
 				Group = "Intellect",
-				Stats = { Intellect = 60 }
+				Stats = { Intellect = 60 },
+                ConflictingBuffs = new List<string>(new string[] { "Intellect" }),
 			});
 			defaultBuffs.Add(new Buff
 			{
@@ -406,7 +407,8 @@ namespace Rawr
 				Stats = { Intellect = 48 },
 				Improvements = { 
 					new Buff { Name = "Improved Felhunter", Stats = { Intellect = (float)Math.Floor(48f * 0.1f) } }
-                }
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Intellect" }),
 			});
 			#endregion
 
@@ -551,14 +553,16 @@ namespace Rawr
 				Group = "Spirit",
                 Stats = { Spirit = 64f },
                 Improvements = { 
-					new Buff { Name = "Improved Felhunter", Stats = { Intellect = (float)Math.Floor(64f * 0.1f) } }
-                }
+					new Buff { Name = "Improved Felhunter", Stats = { Spirit = (float)Math.Floor(64f * 0.1f) } }
+                },
+                ConflictingBuffs = new List<string>(new string[] { "Spirit" }),
 			});
 			defaultBuffs.Add(new Buff
 			{
 				Name = "Divinie Spirit",
 				Group = "Spirit",
-				Stats = { Spirit = 80f }
+				Stats = { Spirit = 80f },
+                ConflictingBuffs = new List<string>(new string[] { "Spirit" }),
 			});
 			#endregion
 
@@ -570,7 +574,8 @@ namespace Rawr
 				Stats = { Stamina = 165f },
 				Improvements = { 
 					new Buff { Name = "Improved Power Word: Fortitude", Stats = { Stamina = (float)Math.Floor(165f * 0.3f) } } 
-				}
+				},
+                ConflictingBuffs = new List<string>(new string[] { "Stamina" }),
 			});
 			#endregion
 
@@ -1354,21 +1359,21 @@ namespace Rawr
             {
                 Name = "Scroll of Intellect VIII",
 				Group = "Scrolls",
-                ConflictingBuffs = new List<string>( new string[] { "Scroll of Intellect" }),
+                ConflictingBuffs = new List<string>( new string[] { "Scroll of Intellect", "Intellect" }),
                 Stats = { Intellect = 48 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Stamina VIII",
 				Group = "Scrolls",
-                ConflictingBuffs = new List<string>( new string[] { "Scroll of Stamina" }),
+                ConflictingBuffs = new List<string>( new string[] { "Scroll of Stamina", "Stamina" }),
                 Stats = { Stamina = 132 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Spirit VIII",
 				Group = "Scrolls",
-                ConflictingBuffs = new List<string>( new string[] { "Scroll of Spirit" }),
+                ConflictingBuffs = new List<string>( new string[] { "Scroll of Spirit", "Spirit" }),
                 Stats = { Spirit = 64 }
             });
             defaultBuffs.Add(new Buff()
