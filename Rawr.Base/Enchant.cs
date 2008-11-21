@@ -36,7 +36,8 @@ namespace Rawr
 			{
 				string shortName = Name.Replace("Arcanum of the ", "").Replace("Arcanum of ", "").Replace("Inscription of the ", "")
 					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
-					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "").Replace(" Spellthread", "");
+					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "")
+					.Replace(" Spellthread", "").Replace("Lining - ", "");
 				return shortName.Substring(0, Math.Min(shortName.Length, 12));
 			}
 		}
@@ -555,6 +556,25 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
 			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
+
+			//Inscriber enchants
+			defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axre", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
+			defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));
+			defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 52, DefenseRating = 15 }));
+			defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 61 }));
+			
+			//Leatherworking enchants
+			defaultEnchants.Add(new Enchant(3756, "Fur Lining - Attack Power", Item.ItemSlot.Wrist, new Stats() { AttackPower = 114 }));
+			defaultEnchants.Add(new Enchant(3757, "Fur Lining - Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 90 }));
+			defaultEnchants.Add(new Enchant(3758, "Fur Lining - Spell Power", Item.ItemSlot.Wrist, new Stats() { SpellPower = 67 }));
+			defaultEnchants.Add(new Enchant(3759, "Fur Lining - Fire Resist", Item.ItemSlot.Wrist, new Stats() { FireResistance = 60 }));
+			defaultEnchants.Add(new Enchant(3760, "Fur Lining - Frost Resist", Item.ItemSlot.Wrist, new Stats() { FrostResistance = 60 }));
+			defaultEnchants.Add(new Enchant(3761, "Fur Lining - Shadow Resist", Item.ItemSlot.Wrist, new Stats() { ShadowResistance = 60 }));
+			defaultEnchants.Add(new Enchant(3762, "Fur Lining - Nature Resist", Item.ItemSlot.Wrist, new Stats() { NatureResistance = 60 }));
+			defaultEnchants.Add(new Enchant(3763, "Fur Lining - Arcane Resist", Item.ItemSlot.Wrist, new Stats() { ArcaneResistance = 60 }));
+			defaultEnchants.Add(new Enchant(3327, "Jormungar Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { Stamina = 55, Agility = 22 }));
+			defaultEnchants.Add(new Enchant(3328, "Nerubian Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { AttackPower = 75, CritRating = 22 }));
+			
 
             //Death Knight Rune Enchants
             defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.MainHand, new Stats() { BonusStrengthMultiplier = 7.5f } ));
