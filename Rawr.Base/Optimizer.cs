@@ -1472,6 +1472,19 @@ namespace Rawr
 			best = -10000000;
             bestCalculations = null;
             injected = false;
+            // verify inject character
+            if (injectCharacter != null)
+            {
+                foreach (int slot in pairSlotList)
+                {
+                    int pairSlot = pairSlotMap[slot];
+                    if (injectCharacter[(Character.CharacterSlot)slot] != null && injectCharacter[(Character.CharacterSlot)pairSlot] != null && injectCharacter[(Character.CharacterSlot)slot].Id == injectCharacter[(Character.CharacterSlot)pairSlot].Id && injectCharacter[(Character.CharacterSlot)slot].Unique)
+                    {
+                        injectCharacter = null;
+                        break;
+                    }
+                }
+            }
 
 			int popSize = _thoroughness;
             int islandSize = 20;
