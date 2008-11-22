@@ -1475,6 +1475,20 @@ namespace Rawr
             // verify inject character
             if (injectCharacter != null)
             {
+                for (int slot = 0; slot < slotCount; slot++)
+                {
+                    if (injectCharacter[(Character.CharacterSlot)slot] != null && slotEnchants[slot] != null)
+                    {
+                        if (!ItemEnchantValid((Character.CharacterSlot)slot, injectCharacter[(Character.CharacterSlot)slot], injectCharacter.GetEnchantBySlot((Character.CharacterSlot)slot)))
+                        {
+                            injectCharacter = null;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (injectCharacter != null)
+            {
                 foreach (int slot in pairSlotList)
                 {
                     int pairSlot = pairSlotMap[slot];
