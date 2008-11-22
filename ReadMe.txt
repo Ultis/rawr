@@ -1,11 +1,12 @@
-Rawr v2.1
+Rawr v2.1.1
 ------------
- Welcome to Rawr 2.1. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+ Welcome to Rawr 2.1.1. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
 Recent Changes:
+v2.1.1: Improved calculations for level 80 combat for several models (Cat, Bear, HolyPriest, ShadowPriest, Mage, Moonkin, Tree, Healadin). Added Leatherworking and Inscription self-enchants. Fixed some bugs with mass gem replacement and the optimizer.
 v2.1: Updated for level 80 content. Removed models which haven't yet been updated for WoW 3.0. Added two brand new models: Enhance and DPSDK! Welcome to Rawr, Enhancement Shamans and DPS Death Knights!
 
 Here's a quick rundown of the status of each model:
