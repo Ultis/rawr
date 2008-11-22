@@ -14,6 +14,7 @@ namespace Rawr.Cat
 		public float RipDuration { get; set; }
 		public float AttackSpeed { get; set; }
 		public bool OmenOfClarity { get; set; }
+		public float AvoidedAttacks { get; set; }
 
 		public float MeleeDamage { get; set; }
 		public float MangleDamage { get; set; }
@@ -30,7 +31,7 @@ namespace Rawr.Cat
 		public float RoarEnergy { get; set; }
 
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
-			float ripDuration, float attackSpeed, bool omenOfClarity, float meleeDamage, float mangleDamage, float shredDamage, 
+			float ripDuration, float attackSpeed, bool omenOfClarity, float avoidedAttacks, float meleeDamage, float mangleDamage, float shredDamage, 
 			float rakeDamage, float ripDamage, float biteDamage, float mangleEnergy, float shredEnergy, float rakeEnergy, 
 			float ripEnergy, float biteEnergy, float roarEnergy)
 		{
@@ -42,6 +43,7 @@ namespace Rawr.Cat
 			RipDuration = ripDuration;
 			AttackSpeed = attackSpeed;
 			OmenOfClarity = omenOfClarity;
+			AvoidedAttacks = avoidedAttacks;
 
 			MeleeDamage = meleeDamage;
 			MangleDamage = mangleDamage;
@@ -63,7 +65,7 @@ namespace Rawr.Cat
 			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / 30f) * Stats.BonusEnergyOnTigersFury);
 			if (OmenOfClarity)
 			{
-				float oocProcs = (3.5f * (Duration / 60f)) / AttackSpeed; //Counts all OOCs as being used on the CPG. Should be made mor accurate than that, but that's close at least
+				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made mor accurate than that, but that's close at least
 				totalEnergyAvailable += oocProcs * (useShred ? ShredEnergy : MangleEnergy);
 			}
 			
@@ -115,6 +117,7 @@ namespace Rawr.Cat
 				totalCPAvailable += cpToGenerate;
 			}
 			totalCPAvailable -= roarCPRequired;
+			totalEnergyAvailable -= roarTotalEnergy;
 			#endregion
 
 			#region Damage Finishers

@@ -480,17 +480,11 @@ namespace Rawr //O O . .
         {
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
             if (slot == CharacterSlot.Finger1)
-            {
                 return IsEquipped(itemToBeChecked, CharacterSlot.Finger1) || IsEquipped(itemToBeChecked, CharacterSlot.Finger2);
-			}
 			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand)
-			{
 				return IsEquipped(itemToBeChecked, CharacterSlot.MainHand) || IsEquipped(itemToBeChecked, CharacterSlot.OffHand);
-			}
 			else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.Trinket)
-			{
 				return IsEquipped(itemToBeChecked, CharacterSlot.Trinket1) || IsEquipped(itemToBeChecked, CharacterSlot.Trinket2);
-			}
 			else
 				return IsEquipped(itemToBeChecked, slot);
         }
@@ -520,9 +514,9 @@ namespace Rawr //O O . .
                 case Rawr.Item.ItemSlot.Wrist: return Character.CharacterSlot.Wrist;
                 case Rawr.Item.ItemSlot.Hands: return Character.CharacterSlot.Hands;
                 case Rawr.Item.ItemSlot.Finger: return Character.CharacterSlot.Finger1;
-            //    case Item.ItemSlot.Finger: return Character.CharacterSlot.Finger2;
+				//case Rawr.Item.ItemSlot.Finger: return Character.CharacterSlot.Finger2;
                 case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket1;
-            //    case Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
+				//case Rawr.Item.ItemSlot.Trinket: return Character.CharacterSlot.Trinket2;
                 case Rawr.Item.ItemSlot.Back: return Character.CharacterSlot.Back;
                 case Rawr.Item.ItemSlot.OneHand: return Character.CharacterSlot.MainHand;
                 case Rawr.Item.ItemSlot.TwoHand: return Character.CharacterSlot.MainHand;

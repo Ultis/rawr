@@ -1424,12 +1424,15 @@ Here's a quick rundown of the status of each model:
 			{
 				ToString(); //Breakpoint Here
 
-				//foreach (Item item in ItemCache.AllItems)
-				//    if (item.Sockets.Color1 != Item.ItemSlot.None && item.Gem1 == null)
-				//        ItemCache.DeleteItem(item, false);
 
-				//ItemCache.OnItemsChanged();
+				Character charEmpty = Character.Clone();
+				charEmpty.Trinket2 = null;
+				
 
+				CharacterCalculationsBase calcEmpty = Calculations.GetCharacterCalculations(charEmpty);
+				CharacterCalculationsBase calcBonus = Calculations.Instance.GetCharacterCalculations(charEmpty, new Item() { Stats = new Stats() { HitRating = 800 } });
+
+				
 				ToString();
 			}
 		}

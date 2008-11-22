@@ -260,7 +260,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
 			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
-			calculatedStats.MitigationPoints = (1000000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			calculatedStats.MitigationPoints = (2000000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
@@ -289,9 +289,10 @@ the Threat Scale defined on the Options tab.",
 
 			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
             float attackSpeed = (2.5f) / (1f + hasteBonus);
+			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
 			float hitBonus = stats.HitRating / 32.78998947f / 100f;
-			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f;
+			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
             float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
             float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
@@ -565,12 +566,12 @@ the Threat Scale defined on the Options tab.",
 		{
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
 				new Stats() { 
-                    Health = 3434, 
-                    Agility = 75, 
-                    Stamina = 82, 
-					Strength = 73f, 
-					AttackPower = 120,
-                    NatureResistance = 10,
+                    Health = 7237f, 
+                    Strength = 86f, 
+					Agility = 87f,
+                    Stamina = 96f,
+					AttackPower = 120f,
+                    NatureResistance = 10f,
                     Dodge = 0.04951f,
 					Miss = 0.07f,
 					PhysicalCrit = 0.05f,
@@ -581,11 +582,11 @@ the Threat Scale defined on the Options tab.",
 					//BonusStrengthMultiplier = 0.03f,
 					BonusStaminaMultiplier = 0.25f
                 } :
-				new Stats() { 
-                    Health = 3434, 
-                    Agility = 65, 
-                    Stamina = 85,
-					Strength = 81, 
+				new Stats() {
+					Health = 7599f,
+					Strength = 95f,
+					Agility = 75f,
+					Stamina = 100f,
 					AttackPower = 190,
                     NatureResistance = 10,
 					Dodge = 0.04951f,
@@ -632,13 +633,29 @@ the Threat Scale defined on the Options tab.",
 			 * 
 			*/
 
+			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+			DruidTalents talents = character.DruidTalents;
+			
 			Stats statsItems = GetItemStats(character, additionalItem);
+			float thickHideMultiplier = new float[] { 1f, 1.04f, 1.07f, 1.1f }[character.DruidTalents.ThickHide];
+			if (calcOpts.Use304ArmorMode)
+			{
+				Character charBaseArmorItems = character.Clone();
+				charBaseArmorItems.Finger1 = charBaseArmorItems.Finger2 = charBaseArmorItems.MainHand =
+					charBaseArmorItems.Neck = charBaseArmorItems.OffHand = charBaseArmorItems.Projectile =
+					charBaseArmorItems.ProjectileBag = charBaseArmorItems.Ranged = charBaseArmorItems.Shirt =
+					charBaseArmorItems.Tabard = charBaseArmorItems.Trinket1 = charBaseArmorItems.Trinket2 = null;
+				Stats statsBaseItems = GetItemStats(charBaseArmorItems, null);
+				statsItems.Armor += statsBaseItems.Armor * 4.7f * (1f + 0.22f * talents.SurvivalOfTheFittest) * thickHideMultiplier;
+			}
+			else
+			{
+				statsItems.Armor *= 4.7f * thickHideMultiplier;
+			}
+			
+
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-			float[] thickHideMultipliers = new float[] {0f, 0.04f, 0.07f, 0.1f};
-			statsItems.Armor *= (4.7f * (1f + thickHideMultipliers[character.DruidTalents.ThickHide]));
-
-			DruidTalents talents = character.DruidTalents;
 			Stats statsTalents = new Stats()
 			{
 				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
@@ -676,9 +693,9 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.AttackPower += statsTotal.Strength * 2;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
 			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
-			statsTotal.Health += (statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
+			statsTotal.Health += statsTotal.Stamina * 10f;
 			statsTotal.Armor += 2 * statsTotal.Agility;
-			statsTotal.Armor *= (1 + statsTotal.BonusArmorMultiplier);
+			statsTotal.Armor *= 1 + statsTotal.BonusArmorMultiplier;
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -1110,6 +1127,7 @@ the Threat Scale defined on the Options tab.",
                 CritRating = stats.CritRating,
                 HitRating = stats.HitRating,
                 HasteRating = stats.HasteRating,
+				PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 WeaponDamage = stats.WeaponDamage,
@@ -1134,7 +1152,8 @@ the Threat Scale defined on the Options tab.",
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff +
-				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction
+				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
+				stats.ArmorPenetrationRating + stats.PhysicalHaste
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamage + stats.BonusSwipeDamageMultiplier

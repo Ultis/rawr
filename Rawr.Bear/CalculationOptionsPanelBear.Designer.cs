@@ -43,6 +43,7 @@
 			this.radioButtonMaul = new System.Windows.Forms.RadioButton();
 			this.radioButtonMelee = new System.Windows.Forms.RadioButton();
 			this.radioButtonNoAuto = new System.Windows.Forms.RadioButton();
+			this.checkBox304Armor = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -251,12 +252,24 @@
 			this.radioButtonNoAuto.UseVisualStyleBackColor = true;
 			this.radioButtonNoAuto.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// checkBox304Armor
+			// 
+			this.checkBox304Armor.AutoSize = true;
+			this.checkBox304Armor.Location = new System.Drawing.Point(7, 204);
+			this.checkBox304Armor.Name = "checkBox304Armor";
+			this.checkBox304Armor.Size = new System.Drawing.Size(141, 17);
+			this.checkBox304Armor.TabIndex = 1;
+			this.checkBox304Armor.Text = "WoW 3.0.4 Armor Mode";
+			this.checkBox304Armor.UseVisualStyleBackColor = true;
+			this.checkBox304Armor.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// CalculationOptionsPanelBear
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.numericUpDownTargetArmor);
+			this.Controls.Add(this.checkBox304Armor);
 			this.Controls.Add(this.numericUpDownThreatValue);
 			this.Controls.Add(this.comboBoxThreatValue);
 			this.Controls.Add(this.comboBoxTargetLevel);
@@ -291,5 +304,6 @@
 		private System.Windows.Forms.RadioButton radioButtonMaul;
 		private System.Windows.Forms.RadioButton radioButtonMelee;
 		private System.Windows.Forms.RadioButton radioButtonNoAuto;
+		private System.Windows.Forms.CheckBox checkBox304Armor;
 	}
 }

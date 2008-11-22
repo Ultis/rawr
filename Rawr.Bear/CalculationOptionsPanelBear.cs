@@ -31,6 +31,7 @@ namespace Rawr
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
             numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
 			numericUpDownTargetArmor.Value = (decimal)calcOpts.TargetArmor;
+			checkBox304Armor.Checked = calcOpts.Use304ArmorMode;
 
 			radioButtonNoAuto.Checked = !calcOpts.CustomUseMaul.HasValue;
 			radioButtonMelee.Checked = calcOpts.CustomUseMaul.HasValue && !calcOpts.CustomUseMaul.Value;
@@ -75,6 +76,7 @@ namespace Rawr
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
 				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
+				calcOpts.Use304ArmorMode = checkBox304Armor.Checked;
 
 				if (radioButtonNoAuto.Checked) calcOpts.CustomUseMaul = null;
 				else if (radioButtonMelee.Checked) calcOpts.CustomUseMaul = false;
@@ -111,6 +113,7 @@ namespace Rawr
 		public int TargetLevel = 83;
 		public float ThreatScale = 10f;
 		public int TargetArmor = 11000;
+		public bool Use304ArmorMode = false;
 
 		public bool? CustomUseMaul = null;
 		public bool CustomUseMangle = false;
