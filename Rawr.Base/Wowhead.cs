@@ -255,7 +255,7 @@ namespace Rawr
 				else if (line.StartsWith("Use: ")) useLines.Add(line.Substring("Use: ".Length));
 				htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
 			}
-			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false);
+			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
 			foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false);
 
 			if (item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens

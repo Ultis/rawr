@@ -291,7 +291,7 @@ namespace Rawr
 					}
 
 					//parse Use/Equip lines
-					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true);
+					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, int.Parse(id));
 					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true);
 				}
 

@@ -139,7 +139,7 @@ namespace Rawr.Mage
         private static bool IsItemActivatable(Item item)
         {
             if (item == null) return false;
-            return (item.Stats.SpellPowerFor15SecOnUse2Min + item.Stats.SpellPowerFor20SecOnUse2Min + item.Stats.HasteRatingFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellPowerFor15SecOnUse90Sec + item.Stats.HasteRatingFor20SecOnUse5Min > 0);
+            return (item.Stats.SpellPowerFor15SecOnUse2Min + item.Stats.SpellPowerFor20SecOnUse2Min + item.Stats.HasteRatingFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellPowerFor15SecOnUse90Sec + item.Stats.HasteRatingFor20SecOnUse5Min + item.Stats.SpellPowerFor20SecOnUse5Min > 0);
         }
 
         private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
@@ -324,7 +324,7 @@ namespace Rawr.Mage
                         trinket1Duration = 15;
                         trinket1Cooldown = 90;
                     }
-                    if (s.HasteRatingFor20SecOnUse5Min > 0)
+                    if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
                     {
                         trinket1Duration = 20;
                         trinket1Cooldown = 300;
@@ -351,7 +351,7 @@ namespace Rawr.Mage
                         trinket2Duration = 15;
                         trinket2Cooldown = 90;
                     }
-                    if (s.HasteRatingFor20SecOnUse5Min > 0)
+                    if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
                     {
                         trinket2Duration = 20;
                         trinket2Cooldown = 300;

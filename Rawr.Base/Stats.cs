@@ -135,6 +135,7 @@ namespace Rawr
         SpellPowerFor15SecOnUse90Sec,
         SpellPowerFor15SecOnUse2Min,
         SpellPowerFor20SecOnUse2Min,
+        SpellPowerFor20SecOnUse5Min,
         SpellPowerFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
@@ -1221,6 +1222,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Power (20 sec/5 min)")]
+        [Category("Equipment Procs")]
+        public float SpellPowerFor20SecOnUse5Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor20SecOnUse5Min] = value; }
         }
 
         // not used by any item

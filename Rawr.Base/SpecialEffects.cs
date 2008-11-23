@@ -449,7 +449,7 @@ namespace Rawr
 			// Restores 7 mana per 5 sec.
 			// Check to see if the desc contains the token 'mana'.  Items like Frostwolf Insignia
 			// and Essense Infused Shroom Restore health.
-			else if (isArmory && line.StartsWith("Restores ") && line.Contains("mana"))
+			else if (isArmory && line.StartsWith("Restores ") && line.Contains("mana") && !line.Contains("when you kill a target that gives experience"))
 			{
 				line = line.Substring("Restores ".Length);
 				line = line.Substring(0, line.IndexOf(" mana"));
@@ -765,7 +765,7 @@ namespace Rawr
             }
         }
 
-		public static void ProcessUseLine(string line, Stats stats, bool isArmory)
+		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)
 		{
 			if (line.StartsWith("Increases attack power by 320 for 12 sec."))
 				stats.AttackPower += 21f; //Nightseye Panther
@@ -820,7 +820,15 @@ namespace Rawr
 					switch (duration)
 					{
 						case 20:
-							stats.SpellPowerFor20SecOnUse2Min += damageIncrease;
+                            switch (id)
+                            {
+                                case 42395:
+                                    stats.SpellPowerFor20SecOnUse5Min += damageIncrease;
+                                    break;
+                                default:
+                                    stats.SpellPowerFor20SecOnUse2Min += damageIncrease;
+                                    break;
+                            }
 							break;
 						case 15:
 							stats.SpellPowerFor15SecOnUse90Sec += damageIncrease;
