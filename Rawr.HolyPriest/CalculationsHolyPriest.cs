@@ -166,49 +166,117 @@ namespace Rawr.HolyPriest
         public static Stats GetRaceStats(Character character)
         {
             Stats stats = new Stats();
-            stats.Health = 3211f;
             if (character.Level >= 70 && character.Level <= 80)
+            {
+                stats.Health = 3211f + (character.Level - 70) * (6960 - 3211) / 10;
                 stats.Mana = 2620 + (character.Level - 70) * (3863 - 2620) / 10;
+            }
             else
+            {
                 stats.Mana = 2620;
+                stats.Health = 3211f;
+            }
 
             switch (character.Race)
             {
                 case Character.CharacterRace.NightElf:
-                    stats.Stamina = 57f;
-                    stats.Intellect = 145f;
-                    stats.Spirit = 151f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 66f;
+                        stats.Intellect = 174f;
+                        stats.Spirit = 181f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 57f;
+                        stats.Intellect = 145f;
+                        stats.Spirit = 151f;
+                    }
                     break;
                 case Character.CharacterRace.Dwarf:
-                    stats.Stamina = 61f;
-                    stats.Intellect = 144f;
-                    stats.Spirit = 150f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 70f;
+                        stats.Intellect = 173f;
+                        stats.Spirit = 180f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 61f;
+                        stats.Intellect = 144f;
+                        stats.Spirit = 150f;
+                    }
                     break;
                 case Character.CharacterRace.Draenei:
-                    stats.Stamina = 57f;
-                    stats.Intellect = 146f;
-                    stats.Spirit = 153f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 66f;
+                        stats.Intellect = 175f;
+                        stats.Spirit = 183f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 57f;
+                        stats.Intellect = 146f;
+                        stats.Spirit = 153f;
+                    }
                     break;
                 case Character.CharacterRace.Human:
-                    stats.Stamina = 58f;
-                    stats.Intellect = 145f;
-                    stats.Spirit = 152f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 67f;
+                        stats.Intellect = 174f;
+                        stats.Spirit = 181f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 58f;
+                        stats.Intellect = 145f;
+                        stats.Spirit = 152f;
+                    }
                     stats.BonusSpiritMultiplier = 0.03f;
                     break;
                 case Character.CharacterRace.BloodElf:
-                    stats.Stamina = 56f;
-                    stats.Intellect = 149f;
-                    stats.Spirit = 150f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 65f;
+                        stats.Intellect = 178f;
+                        stats.Spirit = 180f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 56f;
+                        stats.Intellect = 149f;
+                        stats.Spirit = 150f;
+                    }
                     break;
                 case Character.CharacterRace.Troll:
-                    stats.Stamina = 59f;
-                    stats.Intellect = 141f;
-                    stats.Spirit = 152f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 68f;
+                        stats.Intellect = 170f;
+                        stats.Spirit = 182f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 59f;
+                        stats.Intellect = 141f;
+                        stats.Spirit = 152f;
+                    }
                     break;
                 case Character.CharacterRace.Undead:
-                    stats.Stamina = 59f;
-                    stats.Intellect = 143f;
-                    stats.Spirit = 156f;
+                    if (character.Level == 80)
+                    {
+                        stats.Stamina = 68f;
+                        stats.Intellect = 172f;
+                        stats.Spirit = 186f;
+                    }
+                    else
+                    {
+                        stats.Stamina = 59f;
+                        stats.Intellect = 143f;
+                        stats.Spirit = 156f;
+                    }
                     break;
             }
             return stats;
