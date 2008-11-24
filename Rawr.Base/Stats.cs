@@ -90,6 +90,7 @@ namespace Rawr
         MageMoltenArmor,
         Mana,
         ManaSpringMp5Increase,
+        ManaRestore5min,
         ManaRestorePerCast,
         ManaRestorePerCrit,
         ManaRestoreOnCast_5_15,
@@ -1716,6 +1717,16 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket]; }
             set { _rawAdditiveData[(int)AdditiveStat.DruidAshtongueTrinket] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mana every 5 min")]
+        [Category("Equipment Procs")]
+        public float ManaRestore5min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestore5min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestore5min] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Flash of Light Spell Power")]

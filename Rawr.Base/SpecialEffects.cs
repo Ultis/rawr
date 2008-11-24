@@ -912,6 +912,10 @@ namespace Rawr
                 stats.BonusObliterateDamage += 420;
                 stats.BonusScourgeStrikeDamage += 420;
             }
+            else if (line == "Restores 2340 mana over 12 sec. (5 Min Cooldown)")
+            {
+                stats.ManaRestore5min = 2340;
+            }
 		}
 	}
 }

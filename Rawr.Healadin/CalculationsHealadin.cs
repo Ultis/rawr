@@ -178,9 +178,17 @@ namespace Rawr.Healadin
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
             calc.ManaReplenishment = stats.ManaRestoreFromMaxManaPerSecond * stats.Mana * fight_length * calcOpts.Replenishment;
             calc.ManaSpiritual = calcOpts.Spiritual;
-            if (stats.MementoProc > 0)
+            if (stats.ManaRestoreOnCast_10_45 > 0)
             {
-                calc.ManaOther+= (float)Math.Ceiling(fight_length / 60f - .25f) * stats.MementoProc * 3f;
+                calc.ManaOther += (float)Math.Ceiling(fight_length / 60f - .25f) * stats.ManaRestoreOnCast_10_45;
+            }
+            if (stats.ManaRestoreOnCrit_25 > 0)
+            {
+                calc.ManaOther += (float)Math.Ceiling(fight_length / (60f + 6f / stats.SpellCrit)) * stats.ManaRestoreOnCrit_25;
+            }
+            if (stats.ManaRestore5min > 0)
+            {
+                calc.ManaOther += (float)Math.Ceiling((fight_length - 30f) / 300f) * stats.ManaRestore5min;
             }
             calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + 
                 calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
@@ -423,13 +431,14 @@ namespace Rawr.Healadin
                 HolyLightCrit = stats.HolyLightCrit,
                 HolyLightManaCostReduction = stats.HolyLightManaCostReduction,
                 HolyLightPercentManaReduction = stats.HolyLightPercentManaReduction,
-                MementoProc = stats.MementoProc,
+                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 // Gear Procs
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+                ManaRestore5min = stats.ManaRestore5min
             };
         }
 
@@ -438,8 +447,8 @@ namespace Rawr.Healadin
             bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
                 + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
-                + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.MementoProc + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
-                + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusCritHealMultiplier) > 0;
+                + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
+                + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusCritHealMultiplier + stats.ManaRestore5min) > 0;
             bool survivalStats = (stats.Stamina + stats.Health) > 0;
             bool ignoreStats = (stats.Agility + stats.Strength + stats.AttackPower + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                 + stats.HitRating + stats.ArmorPenetrationRating + stats.Spirit
