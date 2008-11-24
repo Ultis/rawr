@@ -11,7 +11,8 @@ namespace Rawr
     public class StatConversion
     {
         // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
-        private int _Level = 80;
+        static int MaxLevel = 80;
+        private int _Level = MaxLevel;
 
         #region Combat Rating
         public enum RatingType
@@ -31,46 +32,46 @@ namespace Rawr
             SpellHit
         }
 
-        private float[] RatingConversionBase60 = null;
-        private float[][] RatingConversionTable = null;
+        private float[] RatingConversionBase60 = new float[Enum.GetValues(typeof(RatingType)).Length];
+        private float[,] RatingConversionTable = new float[Enum.GetValues(typeof(RatingType)).Length, MaxLevel + 1];
 
-        public float GetArmorPenetrationFromRating(float ARRating, int Level) { return ARRating * RatingConversionTable[(int)RatingType.ArmorPenetration][Level]; }
+        public float GetArmorPenetrationFromRating(float ARRating, int Level) { return ARRating * RatingConversionTable[(int)RatingType.ArmorPenetration, Level]; }
         public float GetArmorPenetrationFromRating(float ARRating) { return GetArmorPenetrationFromRating(ARRating, _Level); }
 
-        public float GetBlockFromRating(float BlockRating, int Level) { return BlockRating * RatingConversionTable[(int)RatingType.Block][Level]; }
+        public float GetBlockFromRating(float BlockRating, int Level) { return BlockRating * RatingConversionTable[(int)RatingType.Block, Level]; }
         public float GetBlockFromRating(float BlockRating) { return GetBlockFromRating(BlockRating, _Level); }
 
-        public float GetCritFromRating(float CritRating, int Level) { return CritRating * RatingConversionTable[(int)RatingType.Crit][Level]; }
+        public float GetCritFromRating(float CritRating, int Level) { return CritRating * RatingConversionTable[(int)RatingType.Crit, Level]; }
         public float GetCritFromRating(float CritRating) { return GetCritFromRating(CritRating, _Level); }
 
-        public float GetDefenseFromRating(float DefenseRating, int Level) { return DefenseRating * RatingConversionTable[(int)RatingType.Defense][Level]; }
+        public float GetDefenseFromRating(float DefenseRating, int Level) { return DefenseRating * RatingConversionTable[(int)RatingType.Defense, Level]; }
         public float GetDefenseFromRating(float DefenseRating) { return GetDefenseFromRating(DefenseRating, _Level); }
 
-        public float GetDodgeFromRating(float DodgeRating, int Level) { return DodgeRating * RatingConversionTable[(int)RatingType.Dodge][Level]; }
+        public float GetDodgeFromRating(float DodgeRating, int Level) { return DodgeRating * RatingConversionTable[(int)RatingType.Dodge, Level]; }
         public float GetDodgeFromRating(float DodgeRating) { return GetDodgeFromRating(DodgeRating, _Level); }
 
-        public float GetExpertiseFromRating(float ExpertiseRating, int Level) { return ExpertiseRating * RatingConversionTable[(int)RatingType.Expertise][Level]; }
+        public float GetExpertiseFromRating(float ExpertiseRating, int Level) { return ExpertiseRating * RatingConversionTable[(int)RatingType.Expertise, Level]; }
         public float GetExpertiseFromRating(float ExpertiseRating) { return GetExpertiseFromRating(ExpertiseRating, _Level); }
 
-        public float GetHasteFromRating(float HasteRating, int Level) { return HasteRating * RatingConversionTable[(int)RatingType.Haste][Level]; }
+        public float GetHasteFromRating(float HasteRating, int Level) { return HasteRating * RatingConversionTable[(int)RatingType.Haste, Level]; }
         public float GetHasteFromRating(float HasteRating) { return GetHasteFromRating(HasteRating, _Level); }
 
-        public float GetHitFromRating(float HitRating, int Level) { return HitRating * RatingConversionTable[(int)RatingType.Hit][Level]; }
+        public float GetHitFromRating(float HitRating, int Level) { return HitRating * RatingConversionTable[(int)RatingType.Hit, Level]; }
         public float GetHitFromRating(float HitRating) { return GetHitFromRating(HitRating, _Level); }
 
-        public float GetParryFromRating(float ParryRating, int Level) { return ParryRating * RatingConversionTable[(int)RatingType.Parry][Level]; }
+        public float GetParryFromRating(float ParryRating, int Level) { return ParryRating * RatingConversionTable[(int)RatingType.Parry, Level]; }
         public float GetParryFromRating(float ParryRating) { return GetParryFromRating(ParryRating, _Level); }
 
-        public float GetResilienceFromRating(float ResilienceRating, int Level) { return ResilienceRating * RatingConversionTable[(int)RatingType.Resilience][Level]; }
+        public float GetResilienceFromRating(float ResilienceRating, int Level) { return ResilienceRating * RatingConversionTable[(int)RatingType.Resilience, Level]; }
         public float GetResilienceFromRating(float ResilienceRating) { return GetResilienceFromRating(ResilienceRating, _Level); }
 
-        public float GetSpellCritFromRating(float SpellCritRating, int Level) { return SpellCritRating * RatingConversionTable[(int)RatingType.SpellCrit][Level]; }
+        public float GetSpellCritFromRating(float SpellCritRating, int Level) { return SpellCritRating * RatingConversionTable[(int)RatingType.SpellCrit, Level]; }
         public float GetSpellCritFromRating(float SpellCritRating) { return GetSpellCritFromRating(SpellCritRating, _Level); }
 
-        public float GetSpellHasteFromRating(float SpellHasteRating, int Level) { return SpellHasteRating * RatingConversionTable[(int)RatingType.SpellHaste][Level]; }
+        public float GetSpellHasteFromRating(float SpellHasteRating, int Level) { return SpellHasteRating * RatingConversionTable[(int)RatingType.SpellHaste, Level]; }
         public float GetSpellHasteFromRating(float SpellHasteRating) { return GetSpellHasteFromRating(SpellHasteRating, _Level); }
 
-        public float GetSpellHitFromRating(float SpellHitRating, int Level) { return SpellHitRating * RatingConversionTable[(int)RatingType.SpellHit][Level]; }
+        public float GetSpellHitFromRating(float SpellHitRating, int Level) { return SpellHitRating * RatingConversionTable[(int)RatingType.SpellHit, Level]; }
         public float GetSpellHitFromRating(float SpellHitRating) { return GetSpellHitFromRating(SpellHitRating, _Level); }
         #endregion
 
@@ -81,7 +82,7 @@ namespace Rawr
             AgilityToDodge,
             IntellectToCrit,
         }
-        private float[][] StatConversionTable = null;
+        private float[][] StatConversionTable = new float[Enum.GetValues(typeof(RatingType)).Length][];
 //        private Dictionary<StatType, List<float>> StatConversionTable = new Dictionary<StatType, List<float>>();
 
         public float GetSpellCritFromIntellect(float Intellect, int Level) { return Intellect * StatConversionTable[(int)StatType.IntellectToCrit][Level]; }
@@ -146,7 +147,7 @@ namespace Rawr
                 else
                     RatingConversion = (float)Math.Pow((82f / 52f) * (131f / 63f), (x - 70f) / 10f);
                 foreach (RatingType rt in Enum.GetValues(typeof(RatingType)))
-                    RatingConversionTable[(int)rt][x] = 1f / (RatingConversionBase60[(int)rt] * RatingConversion);
+                    RatingConversionTable[(int)rt, x] = 1f / (RatingConversionBase60[(int)rt] * RatingConversion);
             }
             #endregion
 
