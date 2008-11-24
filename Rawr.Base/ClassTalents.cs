@@ -1997,11 +1997,9 @@ The enemy target is swarmed by insects, decreasing their chance to hit by 3% and
 @"Regenerate mana equal to 10% of your Intellect every 5 sec. even while casting.",})]
         public int Dreamstate { get { return _data[14]; } set { _data[14] = value; } }
 
-        [TalentData(15, "Moonfury", 5, 0, 2, 6, -1, new string[] {
-@"Increases the damage done by your Starfire, Moonfire and Wrath spells by 2%.",
-@"Increases the damage done by your Starfire, Moonfire and Wrath spells by 4%.",
+        [TalentData(15, "Moonfury", 3, 0, 2, 6, -1, new string[] {
+@"Increases the damage done by your Starfire, Moonfire and Wrath spells by 3%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 6%.",
-@"Increases the damage done by your Starfire, Moonfire and Wrath spells by 8%.",
 @"Increases the damage done by your Starfire, Moonfire and Wrath spells by 10%.",})]
         public int Moonfury { get { return _data[15]; } set { _data[15] = value; } }
 
@@ -2067,12 +2065,10 @@ Summons 3 treants to attack the enemy target for 30 sec.",})]
 @"Increases damage done by your Hurricane and Typhoon spells by 30%, and increases the range of your Cyclone spell by 4 yards.",})]
         public int GaleWinds { get { return _data[25]; } set { _data[25] = value; } }
 
-        [TalentData(26, "Earth and Moon", 5, 0, 2, 10, -1, new string[] {
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 3% for 12 sec. Also increases your spell damage by 1%.",
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 5% for 12 sec. Also increases your spell damage by 2%.",
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 8% for 12 sec. Also increases your spell damage by 3%.",
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 10% for 12 sec. Also increases your spell damage by 4%.",
-@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 13% for 12 sec. Also increases your spell damage by 5%.",})]
+        [TalentData(26, "Earth and Moon", 3, 0, 2, 10, -1, new string[] {
+@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 4% for 12 sec. Also increases your spell damage by 1%.",
+@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 9% for 12 sec. Also increases your spell damage by 2%.",
+@"Your Wrath and Starfire spells have a 100% chance to apply the Earth and Moon effect, which increases Arcane, Fire, Frost, Nature and Shadow damage done to the target by 13% for 12 sec. Also increases your spell damage by 3%.",})]
         public int EarthAndMoon { get { return _data[26]; } set { _data[26] = value; } }
 
         [TalentData(27, "Starfall", 1, 0, 2, 11, -1, new string[] {
