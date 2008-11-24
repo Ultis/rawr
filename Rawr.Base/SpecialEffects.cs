@@ -611,9 +611,10 @@ namespace Rawr
 				line = line.Replace(".", "");
 				stats.RejuvenationHealBonus += (float)int.Parse(line);
 			}
-			else if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+			else //if (line.StartsWith("Increases the periodic healing of your Lifebloom by up to "))
+                if (line.StartsWith("Increases the spell power on the periodic portion of your Lifebloom by "))
 			{
-				line = line.Substring("Increases the periodic healing of your Lifebloom by up to ".Length);
+                line = line.Substring("Increases the spell power on the periodic portion of your Lifebloom by ".Length);
 				line = line.Replace(".", "");
 				stats.LifebloomTickHealBonus += (float)int.Parse(line);
 			}

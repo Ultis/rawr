@@ -97,7 +97,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round((castTime * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
 
             //guessed that it doesnt work with talents
             //z.B.: Idol of the Avian Heart (+136 Healing)
@@ -204,7 +204,7 @@ namespace Rawr.Tree
             //z.B.: Idol of the Crescent Goddess (-65 Mana)
             manaCost -= calculatedStats.ReduceRegrowthCost;
 
-            castTime = (float)Math.Round((castTime * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -288,7 +288,7 @@ namespace Rawr.Tree
             //z.B.: Idol of Budding Life (-36 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
 
-            gcd = (float)Math.Round((gcd * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -368,7 +368,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            gcd = (float)Math.Round((gcd * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            gcd = (float)Math.Round(gcd  / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
 
             //z.B.: Gladiator's Idol of Tenacity (87 on final heal), haven't one myself, will correct it when i've one
             idolDHModifier += calculatedStats.LifebloomFinalHealBonus;
@@ -481,7 +481,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            gcd = (float)Math.Round((gcd * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -564,7 +564,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round((castTime * 1570f) / (1570f + calculatedStats.HasteRating), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)

@@ -68,7 +68,7 @@ namespace Rawr.Tree
             dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + BasicStats.Mana * 0.0025f * 5 * (((CalculationOptionsTree)LocalCharacter.CalculationOptions).haveReplenishSupport ? 1 : 0) + " Replenish");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
             dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / 15.7f, 2) + "%");
-            dictValues.Add("Global CD", Math.Round((1.5f * 1570f) / (1570f + BasicStats.HasteRating), 2) + "sec");
+            dictValues.Add("Global CD", Math.Round(1.5f / (1 + BasicStats.HasteRating / TreeConstants.hasteDivider), 2) + "sec");
 
             dictValues.Add("HpS", HpSPoints.ToString());
             dictValues.Add("Mp5", Mp5Points.ToString());

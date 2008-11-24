@@ -429,5 +429,7 @@ namespace Rawr.Tree
             }
             return 5361f;
         }
+
+        public static float hasteDivider = 1576f;
     }
 }
