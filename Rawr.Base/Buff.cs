@@ -1636,6 +1636,24 @@ namespace Rawr
                 SetName = "Frostfire Garb",
                 SetThreshold = 4
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Duskweaver 2 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { SpellPower = 18f },
+                SetName = "Duskweaver",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Duskweaver 4 Piece",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Stamina = 25f },
+                SetName = "Duskweaver",
+                SetThreshold = 4
+            });
             
 
             // Windhawk (epic leather caster) set
