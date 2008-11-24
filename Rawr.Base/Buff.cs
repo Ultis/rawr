@@ -7,6 +7,10 @@ using System.Xml.Serialization;
 
 namespace Rawr
 {
+    public class BuffList : List<Buff>
+    {
+    }
+
 	public class Buff
 	{
 		//early morning
@@ -69,7 +73,7 @@ namespace Rawr
 					{
 						using (StreamReader reader = new StreamReader(_savedFilePath, Encoding.UTF8))
 						{
-							XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
+							XmlSerializer serializer = new XmlSerializer(typeof(BuffList));
 							loadedBuffs = (List<Buff>)serializer.Deserialize(reader);
 							reader.Close();
 						}

@@ -5,8 +5,12 @@ using System.ComponentModel;
 
 namespace Rawr
 {
+    public class ItemList : List<Item>
+    {
+    }
+
     [Serializable]
-	public class Item :IComparable<Item>
+	public class Item : IComparable<Item>
 	{
 		[XmlElement("Name")]
 		public string _name;

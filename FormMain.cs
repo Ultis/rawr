@@ -150,12 +150,13 @@ Here's a quick rundown of the status of each model:
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-			Calculations_ModelChanged(null, null);
+			Calculations_ModelChanged(null, null); // this will trigger items changed event which triggers loading of item cache
 
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 
-            ItemCache.Load(); // make sure item filters are loaded before creating drop down
+            // items are already loaded on model change, see above
+            //ItemCache.Load(); // make sure item filters are loaded before creating drop down
             UpdateItemFilterDropDown();
 		}
 

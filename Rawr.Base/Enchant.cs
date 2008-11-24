@@ -6,6 +6,10 @@ using System.IO;
 
 namespace Rawr
 {
+    public class EnchantList : List<Enchant>
+    {
+    }
+
 	/// <summary>
 	/// An object representing an Enchantment to be placed on a slot on a character.
 	/// </summary>
@@ -225,7 +229,7 @@ namespace Rawr
                 {
                     string xml = System.IO.File.ReadAllText(_SaveFilePath);
                     xml = xml.Replace("<Slot>Weapon</Slot", "<Slot>MainHand</Slot>");
-                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<Enchant>));
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnchantList));
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
                     _allEnchants = (List<Enchant>)serializer.Deserialize(reader);
                     reader.Close();
