@@ -40,7 +40,9 @@ namespace Rawr.Mage
         private bool trinket1Available;
         private bool trinket2Available;
         private bool coldsnapAvailable;
-        private bool destructionPotionAvailable;
+        private bool potionOfWildMagicAvailable;
+        private bool potionOfSpeedAvailable;
+        private bool effectPotionAvailable;
         private bool drumsOfBattleAvailable;
         private bool flameCapAvailable;
         private bool waterElementalAvailable;
@@ -66,13 +68,13 @@ namespace Rawr.Mage
         private int rowIcyVeins = -1;
         private int rowWaterElemental = -1;
         private int rowMoltenFury = -1;
-        private int rowMoltenFuryDestructionPotion = -1;
+        //private int rowMoltenFuryDestructionPotion = -1;
         private int rowMoltenFuryIcyVeins = -1;
-        private int rowHeroismDestructionPotion = -1;
-        private int rowIcyVeinsDestructionPotion = -1;
+        //private int rowHeroismDestructionPotion = -1;
+        //private int rowIcyVeinsDestructionPotion = -1;
         private int rowManaGemFlameCap = -1;
         private int rowMoltenFuryFlameCap = -1;
-        private int rowFlameCapDestructionPotion = -1;
+        //private int rowFlameCapDestructionPotion = -1;
         private int rowTrinket1 = -1;
         private int rowTrinket2 = -1;
         private int rowManaGemEffect = -1;
@@ -116,7 +118,7 @@ namespace Rawr.Mage
         private int rowSegmentDrumsOfBattleActivation = -1;
         private int rowSegmentFlameCap = -1;
         private int rowSegmentManaGem = -1;
-        private int rowSegmentPotion = -1;
+        //private int rowSegmentPotion = -1;
         private int rowSegmentTrinket1 = -1;
         private int rowSegmentTrinket2 = -1;
         private int rowSegmentManaGemEffect = -1;
@@ -278,7 +280,9 @@ namespace Rawr.Mage
                 trinket1Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket1);
                 trinket2Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket2);
                 coldsnapAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.ColdSnap == 1);
-                destructionPotionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DestructionPotion;
+                potionOfWildMagicAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfWildMagic;
+                potionOfSpeedAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfSpeed;
+                effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
                 flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
@@ -506,7 +510,7 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
-            if (segmentCooldowns && (flameCapAvailable || destructionPotionAvailable)) restrictManaUse = true;
+            if (segmentCooldowns && (flameCapAvailable || potionOfWildMagicAvailable)) restrictManaUse = true;
             if (calculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
@@ -714,7 +718,7 @@ namespace Rawr.Mage
                 calculationResult.MaxManaPotion = 1;
                 if (calculationOptions.ManaPotionEnabled)
                 {
-                    int manaPotionSegments = (segmentCooldowns && (destructionPotionAvailable || restrictManaUse)) ? segments : 1;
+                    int manaPotionSegments = (segmentCooldowns && (potionOfWildMagicAvailable || restrictManaUse)) ? segments : 1;
                     manaRegen = -(1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue;
                     for (int segment = 0; segment < manaPotionSegments; segment++)
                     {
@@ -732,7 +736,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowManaPotionManaGem, column, 40.0);
                         lp.SetCostUnsafe(column, 0.0);
                         tpsList.Add(tps);
-                        if (segmentCooldowns && destructionPotionAvailable)
+                        /*if (segmentCooldowns && effectPotionAvailable)
                         {
                             for (int ss = 0; ss < segments; ss++)
                             {
@@ -742,7 +746,7 @@ namespace Rawr.Mage
                                 if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 15.0);
                                 if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                             }
-                        }
+                        }*/
                         if (restrictManaUse)
                         {
                             for (int ss = segment; ss < segments - 1; ss++)
@@ -824,7 +828,7 @@ namespace Rawr.Mage
                     bool found = false;
                     for (int i = 0; i < stateList.Count; i++)
                     {
-                        if (stateList[i].IncrementalSetIndex == 4 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                        if (stateList[i].Cooldown == Cooldown.DrumsOfBattle)
                         {                            
                             drumsStates.Add(stateList[i]);
                             found = true;
@@ -833,14 +837,14 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, true, false, false, 4));
+                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false));
                     }
                     if (flameCapAvailable)
                     {
                         found = false;
                         for (int i = 0; i < stateList.Count; i++)
                         {
-                            if (stateList[i].IncrementalSetIndex == 6 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                            if (stateList[i].Cooldown == (Cooldown.DrumsOfBattle | Cooldown.FlameCap))
                             {
                                 drumsStates.Add(stateList[i]);
                                 found = true;
@@ -849,7 +853,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, true, false, false, false, true, false, false, 6));
+                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false));
                         }
                     }
                     if (moltenFuryAvailable)
@@ -857,7 +861,7 @@ namespace Rawr.Mage
                         found = false;
                         for (int i = 0; i < stateList.Count; i++)
                         {
-                            if (stateList[i].IncrementalSetIndex == 132 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                            if (stateList[i].Cooldown == (Cooldown.MoltenFury | Cooldown.DrumsOfBattle))
                             {
                                 mfDrumsStates.Add(stateList[i]);
                                 found = true;
@@ -866,14 +870,14 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, true, false, false, 132));
+                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false));
                         }
                         if (flameCapAvailable)
                         {
                             found = false;
                             for (int i = 0; i < stateList.Count; i++)
                             {
-                                if (stateList[i].IncrementalSetIndex == 134 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                                if (stateList[i].Cooldown == (Cooldown.MoltenFury | Cooldown.DrumsOfBattle | Cooldown.FlameCap))
                                 {
                                     mfDrumsStates.Add(stateList[i]);
                                     found = true;
@@ -882,7 +886,7 @@ namespace Rawr.Mage
                             }
                             if (!found)
                             {
-                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, true, false, false, false, true, false, false, 134));
+                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false));
                             }
                         }
                     }
@@ -967,7 +971,7 @@ namespace Rawr.Mage
                     // WE = 0x100
                     for (int i = 0; i < stateList.Count; i++)
                     {
-                        if (stateList[i].IncrementalSetIndex == 0x100 && !stateList[i].Trinket1 && !stateList[i].Trinket2)
+                        if (stateList[i].Cooldown == Cooldown.WaterElemental)
                         {
                             states.Add(stateList[i]);
                             found = true;
@@ -976,7 +980,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, 0x100));
+                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
@@ -1112,7 +1116,7 @@ namespace Rawr.Mage
                     {
                         for (int buffset = 0; buffset < stateList.Count; buffset++)
                         {
-                            if (calculationOptions.IncrementalSetStateIndexes[index] == stateList[buffset].IncrementalSetIndex)
+                            if ((calculationOptions.IncrementalSetStateIndexes[index] & stateList[buffset].Cooldown) == calculationOptions.IncrementalSetStateIndexes[index])
                             {
                                 column = lp.AddColumnUnsafe();
                                 Spell s = stateList[buffset].GetSpell(calculationOptions.IncrementalSetSpells[index]);
@@ -1311,9 +1315,9 @@ namespace Rawr.Mage
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
-            if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
+            //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
             if (moltenFuryAvailable && icyVeinsAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, coldsnapAvailable ? 40 : 20);
-            if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
+            //if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
             //if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeinsDestructionPotion, dpivlength);
             if (segmentCooldowns)
             {
@@ -1469,8 +1473,8 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
-                // destruction
-                if (destructionPotionAvailable)
+                // effect potion
+                /*if (effectPotionAvailable)
                 {
                     for (int seg = 0; seg < segments; seg++)
                     {
@@ -1478,7 +1482,7 @@ namespace Rawr.Mage
                         double cool = 120;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
-                }
+                }*/
                 // t1
                 if (trinket1Available)
                 {
@@ -1538,7 +1542,7 @@ namespace Rawr.Mage
             if (!calculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
             if (calculationOptions.EvocationEnabled && (needsTimeExtension || restrictManaUse || integralMana)) rowEvocation = rowCount++;
-            if (calculationOptions.ManaPotionEnabled || destructionPotionAvailable) rowPotion = rowCount++;
+            if (calculationOptions.ManaPotionEnabled || effectPotionAvailable) rowPotion = rowCount++;
             if (calculationOptions.ManaPotionEnabled && integralMana) rowManaPotion = rowCount++;
             if (calculationOptions.ManaGemEnabled)
             {
@@ -1550,10 +1554,10 @@ namespace Rawr.Mage
             if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
             if (icyVeinsAvailable) rowIcyVeins = rowCount++;
             if (moltenFuryAvailable) rowMoltenFury = rowCount++;
-            if (moltenFuryAvailable && destructionPotionAvailable) rowMoltenFuryDestructionPotion = rowCount++;
+            //if (moltenFuryAvailable && potionOfWildMagicAvailable) rowMoltenFuryDestructionPotion = rowCount++;
             if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
-            if (heroismAvailable && destructionPotionAvailable) rowHeroismDestructionPotion = rowCount++;
-            //if (icyVeinsAvailable && destructionPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
+            //if (heroismAvailable && effectPotionAvailable) rowHeroismDestructionPotion = rowCount++;
+            //if (icyVeinsAvailable && effectPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
             if (flameCapAvailable) rowManaGemFlameCap = rowCount++;
             if (moltenFuryAvailable && flameCapAvailable) rowMoltenFuryFlameCap = rowCount++;
             //if (flameCapAvailable && destructionPotionAvailable) rowFlameCapDestructionPotion = rowCount++;
@@ -1706,8 +1710,8 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
-                // destruction
-                if (destructionPotionAvailable)
+                // effect potion
+                /*if (effectPotionAvailable)
                 {
                     rowSegmentPotion = rowCount;
                     for (int seg = 0; seg < segments; seg++)
@@ -1716,7 +1720,7 @@ namespace Rawr.Mage
                         double cool = 120;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
-                }
+                }*/
                 // t1
                 if (trinket1Available)
                 {
@@ -1778,7 +1782,7 @@ namespace Rawr.Mage
             lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
             lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-            if (state.DestructionPotion)
+            if (state.PotionOfWildMagic || state.PotionOfSpeed)
             {
                 lp.SetElementUnsafe(rowPotion, column, 1.0 / 15.0);
             }
@@ -1788,13 +1792,13 @@ namespace Rawr.Mage
             if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
             if (state.IcyVeins) lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
-            if (state.MoltenFury && state.DestructionPotion) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);
+            //if (state.MoltenFury && state.PotionOfWildMagic) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);
             if (state.MoltenFury && state.IcyVeins) lp.SetElementUnsafe(rowMoltenFuryIcyVeins, column, 1.0);
-            if (state.DestructionPotion && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
-            if (state.DestructionPotion && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
+            //if (state.PotionOfWildMagic && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
+            //if (state.PotionOfWildMagic && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
             if (state.FlameCap) lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0 / 40.0);
             if (state.MoltenFury && state.FlameCap) lp.SetElementUnsafe(rowMoltenFuryFlameCap, column, 1.0);
-            if (state.DestructionPotion && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
+            //if (state.PotionOfWildMagic && state.FlameCap) lp.SetElementUnsafe(rowFlameCapDestructionPotion, column, 1.0);
             if (state.Trinket1) lp.SetElementUnsafe(rowTrinket1, column, 1.0);
             if (state.Trinket2) lp.SetElementUnsafe(rowTrinket2, column, 1.0);
             if (state.ManaGemEffect) lp.SetElementUnsafe(rowManaGemEffect, column, 1.0);
@@ -1943,17 +1947,17 @@ namespace Rawr.Mage
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
-                if (state.DestructionPotion)
+                if (state.PotionOfWildMagic || state.PotionOfSpeed)
                 {
                     bound = Math.Min(bound, 15.0); 
-                    for (int ss = 0; ss < segments; ss++)
+                    /*for (int ss = 0; ss < segments; ss++)
                     {
                         double cool = 120;
                         int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
                         if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentPotion + ss, column, 1.0);
                         if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
-                    }
+                    }*/
                 }
                 if (state.Trinket1)
                 {
@@ -2246,49 +2250,54 @@ namespace Rawr.Mage
         {
             List<CastingState> list = new List<CastingState>();
 
-            int availableMask = 0;
+            Cooldown availableMask = 0;
             bool canDoubleTrinket = false;
-            int mask = 0x3FF;
-            if (manaGemEffectAvailable) availableMask |= 0x200;
-            if (waterElementalAvailable) availableMask |= 0x100;
-            if (moltenFuryAvailable) availableMask |= 0x80;
-            if (heroismAvailable) availableMask |= 0x40;
-            if (arcanePowerAvailable) availableMask |= 0x20;
-            if (icyVeinsAvailable) availableMask |= 0x10;
-            if (combustionAvailable) availableMask |= 0x8;
-            if (drumsOfBattleAvailable) availableMask |= 0x4;
-            if (flameCapAvailable) availableMask |= 0x2;
-            if (destructionPotionAvailable) availableMask |= 0x1;
+            if (waterElementalAvailable) availableMask |= Cooldown.WaterElemental;
+            if (moltenFuryAvailable) availableMask |= Cooldown.MoltenFury;
+            if (heroismAvailable) availableMask |= Cooldown.Heroism;
+            if (arcanePowerAvailable) availableMask |= Cooldown.ArcanePower;
+            if (icyVeinsAvailable) availableMask |= Cooldown.IcyVeins;
+            if (combustionAvailable) availableMask |= Cooldown.Combustion;
+            if (drumsOfBattleAvailable) availableMask |= Cooldown.DrumsOfBattle;
+            if (flameCapAvailable) availableMask |= Cooldown.FlameCap;
+            if (potionOfWildMagicAvailable) availableMask |= Cooldown.PotionOfWildMagic;
+            if (potionOfSpeedAvailable) availableMask |= Cooldown.PotionOfSpeed;
+            if (trinket1Available) availableMask |= Cooldown.Trinket1;
+            if (trinket2Available) availableMask |= Cooldown.Trinket2;
+            if (manaGemEffectAvailable) availableMask |= Cooldown.ManaGemEffect;
             if (calculationOptions.IncrementalOptimizations)
             {
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
                 {
-                    int incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];
-                    bool mg = (incrementalSetIndex & 0x200) == 0;
-                    bool we = (incrementalSetIndex & 0x100) == 0;
-                    bool mf = (incrementalSetIndex & 0x80) == 0;
-                    bool heroism = (incrementalSetIndex & 0x40) == 0;
-                    bool ap = (incrementalSetIndex & 0x20) == 0;
-                    bool iv = (incrementalSetIndex & 0x10) == 0;
-                    bool combustion = (incrementalSetIndex & 0x8) == 0;
-                    bool drums = (incrementalSetIndex & 0x4) == 0;
-                    bool flameCap = (incrementalSetIndex & 0x2) == 0;
-                    bool destructionPotion = (incrementalSetIndex & 0x1) == 0;
-                    for (int t1 = 0; t1 < 2; t1++)
-                        for (int t2 = 0; t2 < 2; t2++)
+                    // incremental index is filtered by non-item based cooldowns
+                    Cooldown incrementalSetIndex = calculationOptions.IncrementalSetSortedStates[incrementalSortedIndex];                    
+                    bool pos = (incrementalSetIndex & Cooldown.PotionOfSpeed) != 0;
+                    bool we = (incrementalSetIndex & Cooldown.WaterElemental) != 0;
+                    bool mf = (incrementalSetIndex & Cooldown.MoltenFury) != 0;
+                    bool heroism = (incrementalSetIndex & Cooldown.Heroism) != 0;
+                    bool ap = (incrementalSetIndex & Cooldown.ArcanePower) != 0;
+                    bool iv = (incrementalSetIndex & Cooldown.IcyVeins) != 0;
+                    bool combustion = (incrementalSetIndex & Cooldown.Combustion) != 0;
+                    bool drums = (incrementalSetIndex & Cooldown.DrumsOfBattle) != 0;
+                    bool flameCap = (incrementalSetIndex & Cooldown.FlameCap) != 0;
+                    bool powm = (incrementalSetIndex & Cooldown.PotionOfWildMagic) != 0;
+                    for (Cooldown index = 0; index <= Cooldown.ItemBasedMask; index++)
+                    {
+                        bool trinket1 = (index & Cooldown.Trinket1) != 0;
+                        bool trinket2 = (index & Cooldown.Trinket2) != 0;
+                        bool mg = (index & Cooldown.ManaGemEffect) != 0;
+                        if (((incrementalSetIndex | index) & availableMask) == (incrementalSetIndex | index)) // make sure all are available
                         {
-                            bool trinket1 = t1 == 0;
-                            bool trinket2 = t2 == 0;
-                            if ((availableMask | incrementalSetIndex) == mask && (trinket1Available || !trinket1) && (trinket2Available || !trinket2))
+                            if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                             {
-                                if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
+                                if (!mg || !flameCap) // do not allow mana gem together with flame cap
                                 {
-                                    if (!mg || !flameCap) // do not allow mana gem together with flame cap
+                                    if (!pos || !powm) // do not allow different potions at the same time
                                     {
-                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == mask && !trinket1 && !trinket2)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
+                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0 && index == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
-                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, destructionPotion, flameCap, trinket1, trinket2, combustion, drums, we, mg, incrementalSetIndex));
-                                            if (incrementalSetIndex == mask && !trinket1 && !trinket2)
+                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg));
+                                            if (incrementalSetIndex == 0 && index == 0)
                                             {
                                                 calculationResult.BaseState = list[list.Count - 1];
                                             }
@@ -2297,46 +2306,47 @@ namespace Rawr.Mage
                                 }
                             }
                         }
+                    }
                 }
-                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, 0xFF);
+                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false);
             }
             else
             {
-                for (int incrementalSetIndex = 0; incrementalSetIndex < 0x400; incrementalSetIndex++)
+                for (Cooldown incrementalSetIndex = 0; incrementalSetIndex <= Cooldown.Mask; incrementalSetIndex++)
                 {
-                    bool mg = (incrementalSetIndex & 0x200) == 0;
-                    bool we = (incrementalSetIndex & 0x100) == 0;
-                    bool mf = (incrementalSetIndex & 0x80) == 0;
-                    bool heroism = (incrementalSetIndex & 0x40) == 0;
-                    bool ap = (incrementalSetIndex & 0x20) == 0;
-                    bool iv = (incrementalSetIndex & 0x10) == 0;
-                    bool combustion = (incrementalSetIndex & 0x8) == 0;
-                    bool drums = (incrementalSetIndex & 0x4) == 0;
-                    bool flameCap = (incrementalSetIndex & 0x2) == 0;
-                    bool destructionPotion = (incrementalSetIndex & 0x1) == 0;
-                    for (int t1 = 0; t1 < 2; t1++)
-                        for (int t2 = 0; t2 < 2; t2++)
+                    bool pos = (incrementalSetIndex & Cooldown.PotionOfSpeed) != 0;
+                    bool we = (incrementalSetIndex & Cooldown.WaterElemental) != 0;
+                    bool mf = (incrementalSetIndex & Cooldown.MoltenFury) != 0;
+                    bool heroism = (incrementalSetIndex & Cooldown.Heroism) != 0;
+                    bool ap = (incrementalSetIndex & Cooldown.ArcanePower) != 0;
+                    bool iv = (incrementalSetIndex & Cooldown.IcyVeins) != 0;
+                    bool combustion = (incrementalSetIndex & Cooldown.Combustion) != 0;
+                    bool drums = (incrementalSetIndex & Cooldown.DrumsOfBattle) != 0;
+                    bool flameCap = (incrementalSetIndex & Cooldown.FlameCap) != 0;
+                    bool powm = (incrementalSetIndex & Cooldown.PotionOfWildMagic) != 0;
+                    bool trinket1 = (incrementalSetIndex & Cooldown.Trinket1) != 0;
+                    bool trinket2 = (incrementalSetIndex & Cooldown.Trinket2) != 0;
+                    bool mg = (incrementalSetIndex & Cooldown.ManaGemEffect) != 0;
+                    if (((incrementalSetIndex) & availableMask) == (incrementalSetIndex)) // make sure all are available
+                    {
+                        if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                         {
-                            bool trinket1 = t1 == 0;
-                            bool trinket2 = t2 == 0;
-                            if ((availableMask | incrementalSetIndex) == mask && (trinket1Available || !trinket1) && (trinket2Available || !trinket2))
+                            if (!mg || !flameCap) // do not allow mana gem together with flame cap
                             {
-                                if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
+                                if (!pos || !powm) // do not allow different potions at the same time
                                 {
-                                    if (!mg || !flameCap) // do not allow mana gem together with flame cap
+                                    if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                     {
-                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == mask && !trinket1 && !trinket2)))
+                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg));
+                                        if (incrementalSetIndex == 0)
                                         {
-                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, destructionPotion, flameCap, trinket1, trinket2, combustion, drums, we, mg, incrementalSetIndex));
-                                            if (incrementalSetIndex == mask && !trinket1 && !trinket2)
-                                            {
-                                                calculationResult.BaseState = list[list.Count - 1];
-                                            }
+                                            calculationResult.BaseState = list[list.Count - 1];
                                         }
                                     }
                                 }
                             }
                         }
+                    }
                 }
             }
             return list;

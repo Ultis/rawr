@@ -185,7 +185,8 @@ namespace Rawr.Mage
             }
             sequence.GroupCombustion();
             sequence.GroupArcanePower();
-            sequence.GroupDestructionPotion();
+            sequence.GroupPotionOfWildMagic();
+            sequence.GroupPotionOfSpeed();
             sequence.GroupTrinket1();
             sequence.GroupTrinket2();
             List<SequenceGroup> list = sequence.GroupManaGemEffect();

@@ -25,7 +25,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 lastindex--;
             }
             if (lastindex >= 0) lastState = sequence[lastindex].CastingState;
-            if (lastState == null || !((lastState.ArcanePower && state.ArcanePower) || (lastState.IcyVeins && state.IcyVeins) || (lastState.Heroism && state.Heroism) || (lastState.MoltenFury && state.MoltenFury) || (lastState.DestructionPotion && state.DestructionPotion) || (lastState.FlameCap && state.FlameCap) || (lastState.DrumsOfBattle && state.DrumsOfBattle)))
+            if (lastState == null || !((lastState.ArcanePower && state.ArcanePower) || (lastState.IcyVeins && state.IcyVeins) || (lastState.Heroism && state.Heroism) || (lastState.MoltenFury && state.MoltenFury) || (lastState.PotionOfWildMagic && state.PotionOfWildMagic) || (lastState.PotionOfSpeed && state.PotionOfSpeed) || (lastState.FlameCap && state.FlameCap) || (lastState.DrumsOfBattle && state.DrumsOfBattle)))
             {
                 return true;
             }
@@ -1028,14 +1028,24 @@ namespace Rawr.Mage.SequenceReconstruction
             return GroupCooldown(list, 60, 180, Cooldown.FlameCap);
         }
 
-        public void GroupDestructionPotion()
+        public void GroupPotionOfWildMagic()
         {
             List<SequenceItem> list = new List<SequenceItem>();
             foreach (SequenceItem item in sequence)
             {
-                if (item.CastingState.DestructionPotion) list.Add(item);
+                if (item.CastingState.PotionOfWildMagic) list.Add(item);
             }
-            GroupCooldown(list, 15, 120, Cooldown.DestructionPotion);
+            GroupCooldown(list, 15, 120, Cooldown.PotionOfWildMagic);
+        }
+
+        public void GroupPotionOfSpeed()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.PotionOfSpeed) list.Add(item);
+            }
+            GroupCooldown(list, 15, 120, Cooldown.PotionOfSpeed);
         }
 
         public void GroupDrumsOfBattle()
@@ -1392,7 +1402,7 @@ namespace Rawr.Mage.SequenceReconstruction
         List<double> compactTime;
         double compactTotalTime;
         int compactGroupSplits;
-        double compactLastDestro;
+        //double compactLastDestro;
 
         public void SortGroups()
         {
@@ -1407,7 +1417,7 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             compactTotalTime = double.PositiveInfinity;
             compactGroupSplits = int.MaxValue;
-            compactLastDestro = double.NegativeInfinity;
+            //compactLastDestro = double.NegativeInfinity;
             //SortGroups_AddRemainingItems(new List<SequenceItem>(), new List<double>(), groupedItems);
             groupedItems.Sort((x, y) => x.Segment.CompareTo(y.Segment));
             SortGroups_Compute(groupedItems);
@@ -1572,10 +1582,10 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[N - 1]].Duration;
                     // compute group splits
                     int groupSplits = 0;
-                    double lastDestro = double.NegativeInfinity;
+                    //double lastDestro = double.NegativeInfinity;
                     foreach (SequenceGroup group in groupList)
                     {
-                        if (group.Item.Count > 0 && group.Item[0].CastingState.DestructionPotion)
+                        /*if (group.Item.Count > 0 && group.Item[0].CastingState.PotionOfWildMagic)
                         {
                             double min = double.PositiveInfinity;
                             foreach (SequenceItem item in group.Item)
@@ -1583,7 +1593,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 min = Math.Min(min, constructionTime[item.OrderIndex]);
                             }
                             if (min > lastDestro) lastDestro = min;
-                        }
+                        }*/
                         int minIndex = N - 1;
                         int maxIndex = 0;
                         foreach (SequenceItem item in group.Item)
@@ -1593,12 +1603,12 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                         groupSplits += (maxIndex - minIndex + 1) - group.Item.Count;
                     }
-                    if (lastDestro < FightDuration - 120.0) lastDestro = double.NegativeInfinity;
-                    if (groupSplits < compactGroupSplits || (groupSplits == compactGroupSplits && time < compactTotalTime) || (groupSplits == compactGroupSplits && time == compactTotalTime && lastDestro > compactLastDestro))
+                    //if (lastDestro < FightDuration - 120.0) lastDestro = double.NegativeInfinity;
+                    if (groupSplits < compactGroupSplits || (groupSplits == compactGroupSplits && time < compactTotalTime) /*|| (groupSplits == compactGroupSplits && time == compactTotalTime && lastDestro > compactLastDestro)*/)
                     {
                         compactGroupSplits = groupSplits;
                         compactTotalTime = time;
-                        compactLastDestro = lastDestro;
+                        //compactLastDestro = lastDestro;
                         compactTime = new List<double>(constructionTime);
                         compactItems = new List<SequenceItem>();
                         for (int j = 0; j < N; j++)
@@ -2400,8 +2410,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 t = 0;
                 double nextFlameCap = double.PositiveInfinity;
                 double nextFlameCapMin = double.PositiveInfinity;
-                double nextDestructionPotion = double.PositiveInfinity;
-                double nextDestructionPotionMin = double.PositiveInfinity;
+                double nextEffectPotion = double.PositiveInfinity;
+                double nextEffectPotionMin = double.PositiveInfinity;
                 for (i = 0; i < sequence.Count; i++)
                 {
                     double d = sequence[i].Duration;
@@ -2416,10 +2426,10 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     if (d > 0 && t >= pot)
                     {
-                        if (sequence[i].CastingState != null && sequence[i].CastingState.DestructionPotion)
+                        if (sequence[i].CastingState != null && (sequence[i].CastingState.PotionOfWildMagic || sequence[i].CastingState.PotionOfSpeed))
                         {
-                            nextDestructionPotion = Math.Min(nextDestructionPotion, sequence[i].MaxTime);
-                            nextDestructionPotionMin = Math.Min(nextDestructionPotionMin, sequence[i].MinTime);
+                            nextEffectPotion = Math.Min(nextEffectPotion, sequence[i].MaxTime);
+                            nextEffectPotionMin = Math.Min(nextEffectPotionMin, sequence[i].MinTime);
                         }
                     }
                     t += d;
@@ -2437,11 +2447,11 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-                if (potTime > 0 && !double.IsPositiveInfinity(nextDestructionPotion))
+                if (potTime > 0 && !double.IsPositiveInfinity(nextEffectPotion))
                 {
-                    if (pot > nextDestructionPotion - 120.0 + eps && pot < nextDestructionPotion)
+                    if (pot > nextEffectPotion - 120.0 + eps && pot < nextEffectPotion)
                     {
-                        nextPot = nextDestructionPotionMin + 120.0;
+                        nextPot = nextEffectPotionMin + 120.0;
                         pot = Evaluate(null, EvaluationMode.ManaBelow, BaseStats.Mana - (1 + BaseStats.BonusManaPotion) * potMaxValue, Math.Max(time, nextPot), 3);
                         if (nextPot > fight)
                         {
@@ -2455,11 +2465,11 @@ namespace Rawr.Mage.SequenceReconstruction
                     // very special case for now, revisit later
                     if (!double.IsPositiveInfinity(nextFlameCap))
                     {
-                        if (gem <= nextFlameCap - 120.0 + eps && pot > gem - 30.0 && double.IsPositiveInfinity(nextDestructionPotion)) forceGem = true;
+                        if (gem <= nextFlameCap - 120.0 + eps && pot > gem - 30.0 && double.IsPositiveInfinity(nextEffectPotion)) forceGem = true;
                     }
-                    if (!double.IsPositiveInfinity(nextDestructionPotion))
+                    if (!double.IsPositiveInfinity(nextEffectPotion))
                     {
-                        if (pot <= nextDestructionPotion - 120.0 + eps && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
+                        if (pot <= nextEffectPotion - 120.0 + eps && gem > pot - 30.0 && double.IsPositiveInfinity(nextFlameCap)) forcePot = true;
                     }
                 }
                 // if gem is activated then check for activations
@@ -2644,7 +2654,8 @@ namespace Rawr.Mage.SequenceReconstruction
             double trinket2time = double.NegativeInfinity;
             double flameCapTime = double.NegativeInfinity;
             double drumsTime = double.NegativeInfinity;
-            double destructionTime = double.NegativeInfinity;
+            double potionOfWildMagicTime = double.NegativeInfinity;
+            double potionOfSpeedTime = double.NegativeInfinity;
             double combustionTime = double.NegativeInfinity;
             double moltenFuryTime = double.NegativeInfinity;
             double heroismTime = double.NegativeInfinity;
@@ -2656,7 +2667,8 @@ namespace Rawr.Mage.SequenceReconstruction
             bool trinket2Active = false;
             bool flameCapActive = false;
             bool drumsActive = false;
-            bool destructionActive = false;
+            bool potionOfWildMagicActive = false;
+            bool potionOfSpeedActive = false;
             bool combustionActive = false;
             bool moltenFuryActive = false;
             bool heroismActive = false;
@@ -2697,7 +2709,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (drumsActive || flameCapActive || destructionActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive)
+                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive)
                 {
                     cooldownContinuation = true;
                 }
@@ -2914,40 +2926,77 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
-                // Destruction Potion
-                if (destructionActive)
+                // Potion of Wild Magic
+                if (potionOfWildMagicActive)
                 {
-                    if (state != null && state.DestructionPotion)
+                    if (state != null && state.PotionOfWildMagic)
                     {
-                        if (time + duration > destructionTime + 15 + eps)
+                        if (time + duration > potionOfWildMagicTime + 15 + eps)
                         {
-                            unexplained += time + duration - destructionTime - 15;
-                            if (timing != null) timing.AppendLine("WARNING: Destruction Potion duration too long!");
+                            unexplained += time + duration - potionOfWildMagicTime - 15;
+                            if (timing != null) timing.AppendLine("WARNING: Potion of Wild Magic duration too long!");
                         }
                     }
-                    else if (duration > 0 && 15 - (time - destructionTime) > eps)
+                    else if (duration > 0 && 15 - (time - potionOfWildMagicTime) > eps)
                     {
                         //unexplained += Math.Min(duration, 15 - (time - apTime));
-                        if (timing != null) timing.AppendLine("INFO: Destruction Potion is still up!");
+                        if (timing != null) timing.AppendLine("INFO: Potion of Wild Magic is still up!");
                     }
                 }
                 else
                 {
-                    if (state != null && state.DestructionPotion)
+                    if (state != null && state.PotionOfWildMagic)
                     {
                         if (potionCooldown > eps)
                         {
                             unexplained += duration;
-                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Destruction Potion cooldown not ready!");
+                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Potion of Wild Magic cooldown not ready!");
                             potionWarning = true;
                         }
                         else
                         {
-                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Destruction Potion (" + Math.Round(manabefore).ToString() + " mana)");
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Potion of Wild Magic (" + Math.Round(manabefore).ToString() + " mana)");
                             potionCooldown = 120;
-                            destructionTime = time;
+                            potionOfWildMagicTime = time;
                             potionWarning = false;
-                            destructionActive = true;
+                            potionOfWildMagicActive = true;
+                        }
+                    }
+                }
+                // Potion of Speed
+                if (potionOfSpeedActive)
+                {
+                    if (state != null && state.PotionOfSpeed)
+                    {
+                        if (time + duration > potionOfSpeedTime + 15 + eps)
+                        {
+                            unexplained += time + duration - potionOfSpeedTime - 15;
+                            if (timing != null) timing.AppendLine("WARNING: Potion of Speed duration too long!");
+                        }
+                    }
+                    else if (duration > 0 && 15 - (time - potionOfSpeedTime) > eps)
+                    {
+                        //unexplained += Math.Min(duration, 15 - (time - apTime));
+                        if (timing != null) timing.AppendLine("INFO: Potion of Speed is still up!");
+                    }
+                }
+                else
+                {
+                    if (state != null && state.PotionOfSpeed)
+                    {
+                        if (potionCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null && !potionWarning) timing.AppendLine("WARNING: Potion of Speed cooldown not ready!");
+                            potionWarning = true;
+                        }
+                        else
+                        {
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Potion of Speed (" + Math.Round(manabefore).ToString() + " mana)");
+                            potionCooldown = 120;
+                            potionOfSpeedTime = time;
+                            potionWarning = false;
+                            potionOfSpeedActive = true;
                         }
                     }
                 }
@@ -3332,7 +3381,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double aftertime = data[0];
                     if (aftertime >= time && aftertime <= time + duration)
                     {
-                        if (!drumsActive && !flameCapActive && !destructionActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive)
+                        if (!drumsActive && !flameCapActive && !potionOfWildMagicActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive)
                         {
                             return aftertime;
                         }
@@ -3401,7 +3450,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
                 if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
-                if (destructionActive && 15 - (time - destructionTime) <= eps) destructionActive = false;
+                if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
                 if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;
                 if (trinket1Active && Trinket1Duration - (time - trinket1time) <= eps) trinket1Active = false;
                 if (trinket2Active && Trinket2Duration - (time - trinket2time) <= eps) trinket2Active = false;

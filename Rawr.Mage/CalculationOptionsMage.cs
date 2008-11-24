@@ -29,7 +29,8 @@ namespace Rawr.Mage
         public float FightDuration { get; set; }
         public float TpsLimit { get; set; }
         public bool HeroismAvailable { get; set; }
-        public bool DestructionPotion { get; set; }
+        public bool PotionOfWildMagic { get; set; }
+        public bool PotionOfSpeed { get; set; }
         public bool FlameCap { get; set; }
         public float MoltenFuryPercentage { get; set; }
         public bool MaintainScorch { get; set; }
@@ -46,9 +47,9 @@ namespace Rawr.Mage
         public float SnaredTime { get; set; }
 
         [XmlIgnore]
-        public int[] IncrementalSetStateIndexes;
+        public Cooldown[] IncrementalSetStateIndexes;
         [XmlIgnore]
-        public int[] IncrementalSetSortedStates;
+        public Cooldown[] IncrementalSetSortedStates;
         [XmlIgnore]
         public int[] IncrementalSetSegments;
         [XmlIgnore]
@@ -238,8 +239,9 @@ namespace Rawr.Mage
             FightDuration = 300;
             HeroismAvailable = true;
             MoltenFuryPercentage = 0.3f;
-            DestructionPotion = true;
-            FlameCap = true;
+            PotionOfWildMagic = true;
+            PotionOfSpeed = true;
+            FlameCap = false;
             DpsTime = 1;
             InterruptFrequency = 0;
             EvocationWeapon = 0;

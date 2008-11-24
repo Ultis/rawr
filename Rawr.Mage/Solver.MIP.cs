@@ -438,10 +438,15 @@ namespace Rawr.Mage
                 {
                     valid = ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0);
                 }
-                // destruction
-                if (valid && destructionPotionAvailable)
+                // potion of wild magic
+                if (valid && potionOfWildMagicAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.DestructionPotion, 15, 120);
+                    valid = ValidateCooldown(Cooldown.PotionOfWildMagic, 15, 120);
+                }
+                // potion of speed
+                if (valid && potionOfWildMagicAvailable)
+                {
+                    valid = ValidateCooldown(Cooldown.PotionOfSpeed, 15, 120);
                 }
                 // t1
                 if (valid && trinket1Available)
@@ -564,7 +569,7 @@ namespace Rawr.Mage
                     int iseg = calculationResult.SolutionVariable[index].Segment;
                     if (state != null && solution[index] > 0 && iseg == seg)
                     {
-                        int h = state.GetHex();
+                        int h = (int)state.Cooldown;
                         if (h != 0)
                         {
                             hexMask[seg] |= h;
@@ -644,7 +649,7 @@ namespace Rawr.Mage
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
                                         int iseg = calculationResult.SolutionVariable[index].Segment;
-                                        if (state != null && iseg == seg - 1 && (state.GetHex() & ind1) != 0) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg - 1 && ((int)state.Cooldown & ind1) != 0) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // eliminate right
@@ -654,7 +659,7 @@ namespace Rawr.Mage
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
                                         int iseg = calculationResult.SolutionVariable[index].Segment;
-                                        if (state != null && iseg == seg + 1 && (state.GetHex() & ind2) != 0) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg + 1 && ((int)state.Cooldown & ind2) != 0) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // eliminate middle
@@ -665,7 +670,7 @@ namespace Rawr.Mage
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
                                         int iseg = calculationResult.SolutionVariable[index].Segment;
-                                        if (state != null && iseg == seg && (state.GetHex() & ind) == ind) hexRemovedLP.EraseColumn(index);
+                                        if (state != null && iseg == seg && ((int)state.Cooldown & ind) == ind) hexRemovedLP.EraseColumn(index);
                                     }
                                     HeapPush(hexRemovedLP);
                                     // force to full
@@ -678,8 +683,8 @@ namespace Rawr.Mage
                                         int iseg = calculationResult.SolutionVariable[index].Segment;
                                         if (state != null && iseg == seg)
                                         {
-                                            int hex = state.GetHex();
-                                            if ((state.GetHex() & (ind1 | ind2)) == 0) lp.EraseColumn(index);
+                                            int hex = (int)state.Cooldown;
+                                            if (((int)state.Cooldown & (ind1 | ind2)) == 0) lp.EraseColumn(index);
                                             //if ((state.GetHex() & (ind1 | ind2)) != 0) lp.SetConstraintElement(row, index, -1.0);
                                         }
                                     }
@@ -762,7 +767,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
                                                     int iseg = calculationResult.SolutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg2 && (state.GetHex() & c) != 0) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg2 && ((int)state.Cooldown & c) != 0) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -775,7 +780,7 @@ namespace Rawr.Mage
                                                     {
                                                         CastingState state = calculationResult.SolutionVariable[index].State;
                                                         int iseg = calculationResult.SolutionVariable[index].Segment;
-                                                        if (state != null && iseg == seg2 && (state.GetHex() & d) != 0) hexRemovedLP.EraseColumn(index);
+                                                        if (state != null && iseg == seg2 && ((int)state.Cooldown & d) != 0) hexRemovedLP.EraseColumn(index);
                                                     }
                                                     HeapPush(hexRemovedLP);
                                                 }
@@ -788,7 +793,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
                                                     int iseg = calculationResult.SolutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && (state.GetHex() & bridge) == bridge) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Cooldown & bridge) == bridge) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -799,7 +804,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
                                                     int iseg = calculationResult.SolutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && (state.GetHex() & (v | z)) == v) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Cooldown & (v | z)) == v) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
 
@@ -810,7 +815,7 @@ namespace Rawr.Mage
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
                                                     int iseg = calculationResult.SolutionVariable[index].Segment;
-                                                    if (state != null && iseg == seg && (state.GetHex() & (v | z)) == z) hexRemovedLP.EraseColumn(index);
+                                                    if (state != null && iseg == seg && ((int)state.Cooldown & (v | z)) == z) hexRemovedLP.EraseColumn(index);
                                                 }
                                                 HeapPush(hexRemovedLP);
                                                 return false;
@@ -962,7 +967,7 @@ namespace Rawr.Mage
                             {
                                 CastingState state = calculationResult.SolutionVariable[index].State;
                                 int iseg = calculationResult.SolutionVariable[index].Segment;
-                                if (state != null && iseg >= seg - 1 && iseg <= seg + 1 && state.GetHex() == minHexChain[i]) hexRemovedLP.EraseColumn(index);
+                                if (state != null && iseg >= seg - 1 && iseg <= seg + 1 && (int)state.Cooldown == minHexChain[i]) hexRemovedLP.EraseColumn(index);
                             }
                             HeapPush(hexRemovedLP);
                         }
@@ -972,7 +977,7 @@ namespace Rawr.Mage
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
                             int iseg = calculationResult.SolutionVariable[index].Segment;
-                            if (state != null && iseg == seg && state.GetHex() == 0) lp.EraseColumn(index);
+                            if (state != null && iseg == seg && (int)state.Cooldown == 0) lp.EraseColumn(index);
                             //if (state != null && iseg == seg && state.GetHex() != 0) lp.SetConstraintElement(row, index, -1.0);
                         }
                         lp.SetLHS(rowSegment + seg, segmentDuration);
@@ -1295,7 +1300,7 @@ namespace Rawr.Mage
                             int iseg = calculationResult.SolutionVariable[index].Segment;
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
-                                int h = state.GetHex();
+                                int h = (int)state.Cooldown;
                                 bool isindicated = (h & indicator[i]) != 0 && (h & indicator[j]) != 0;
                                 if (isindicated)
                                 {
@@ -1329,7 +1334,7 @@ namespace Rawr.Mage
                         int iseg = calculationResult.SolutionVariable[index].Segment;
                         if (state != null && (iseg == seg || iseg == seg + 1))
                         {
-                            int h = state.GetHex();
+                            int h = (int)state.Cooldown;
                             bool isindicated = (h & mask) == (core & mask);
                             if (isindicated) hexRemovedLP.EraseColumn(index);
                         }
@@ -1345,7 +1350,7 @@ namespace Rawr.Mage
                             int iseg = calculationResult.SolutionVariable[index].Segment;
                             if (state != null && (iseg == seg || iseg == seg + 1))
                             {
-                                int h = state.GetHex();
+                                int h = (int)state.Cooldown;
                                 bool isindicated = (h & mask) == (threeTail[i + 1] & mask);
                                 if (isindicated) hexRemovedLP.EraseColumn(index);
                             }
@@ -1445,7 +1450,7 @@ namespace Rawr.Mage
                         int iseg = calculationResult.SolutionVariable[index].Segment;
                         if (state != null && iseg == seg1)
                         {
-                            int h = state.GetHex();
+                            int h = (int)state.Cooldown;
                             if ((h & c1) != 0 && (h & c2) == 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -1459,7 +1464,7 @@ namespace Rawr.Mage
                         int iseg = calculationResult.SolutionVariable[index].Segment;
                         if (state != null && iseg == seg1)
                         {
-                            int h = state.GetHex();
+                            int h = (int)state.Cooldown;
                             if ((h & c2) != 0 && (h & c1) == 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -1473,7 +1478,7 @@ namespace Rawr.Mage
                         int iseg = calculationResult.SolutionVariable[index].Segment;
                         if (state != null && iseg == seg2)
                         {
-                            int h = state.GetHex();
+                            int h = (int)state.Cooldown;
                             if ((h & c1) != 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -1487,7 +1492,7 @@ namespace Rawr.Mage
                         int iseg = calculationResult.SolutionVariable[index].Segment;
                         if (state != null && iseg == seg2)
                         {
-                            int h = state.GetHex();
+                            int h = (int)state.Cooldown;
                             if ((h & c2) != 0) elimLP.EraseColumn(index);
                         }
                     }
@@ -2386,7 +2391,7 @@ namespace Rawr.Mage
                 if (calculationResult.SolutionVariable[i].Type == activation && solution[i] > eps)
                 {
                     int seg = calculationResult.SolutionVariable[i].Segment;
-                    int seghex = calculationResult.SolutionVariable[i].State.GetHex();
+                    int seghex = (int)calculationResult.SolutionVariable[i].State.Cooldown;
                     // check all cooldowns that link to this drums activation
                     // if any of them is also before this segment we have a cycle if it's not present at activation
                     int linkedHex = 0;
@@ -2399,7 +2404,7 @@ namespace Rawr.Mage
                                 CastingState state = calculationResult.SolutionVariable[index].State;
                                 if (state != null && state.GetCooldown(cooldown) && solution[index] > eps)
                                 {
-                                    linkedHex |= state.GetHex();
+                                    linkedHex |= (int)state.Cooldown;
                                 }
                             }
                         }
@@ -2409,7 +2414,7 @@ namespace Rawr.Mage
                         CastingState state = calculationResult.SolutionVariable[index].State;
                         if (Math.Abs(seg - calculationResult.SolutionVariable[index].Segment) <= mindist && state != null && state.GetCooldown(cooldown) && solution[index] > eps)
                         {
-                            linkedHex |= state.GetHex();
+                            linkedHex |= (int)state.Cooldown;
                         }
                     }
 
@@ -2423,7 +2428,7 @@ namespace Rawr.Mage
                                 CastingState state = calculationResult.SolutionVariable[index].State;
                                 if (state != null && solution[index] > eps)
                                 {
-                                    int h = state.GetHex() & linkedHex & ~seghex;
+                                    int h = (int)state.Cooldown & linkedHex & ~seghex;
                                     if (h != 0) brokenHex = h;
                                 }
                             }
@@ -2437,7 +2442,7 @@ namespace Rawr.Mage
                             int outseg = calculationResult.SolutionVariable[index].Segment;
                             if (outseg == seg - 1)
                             {
-                                int h = state.GetHex() & linkedHex & ~seghex;
+                                int h = (int)state.Cooldown & linkedHex & ~seghex;
                                 if (h != 0) brokenHex = h;
                             }
                         }
@@ -2454,7 +2459,7 @@ namespace Rawr.Mage
                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                 {
                                     CastingState state = calculationResult.SolutionVariable[index].State;
-                                    if (state != null && state.GetCooldown(cooldown) && (state.GetHex() & brokenHex) != 0) drumsnohex.EraseColumn(index);
+                                    if (state != null && state.GetCooldown(cooldown) && ((int)state.Cooldown & brokenHex) != 0) drumsnohex.EraseColumn(index);
                                 }
                             }
                         }
@@ -2469,7 +2474,7 @@ namespace Rawr.Mage
                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                 {
                                     CastingState state = calculationResult.SolutionVariable[index].State;
-                                    if (state != null && (state.GetHex() & brokenHex) != 0) nohex.EraseColumn(index);
+                                    if (state != null && ((int)state.Cooldown & brokenHex) != 0) nohex.EraseColumn(index);
                                 }
                             }
                         }
@@ -2478,7 +2483,7 @@ namespace Rawr.Mage
                         if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
                         for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                         {
-                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && (calculationResult.SolutionVariable[index].State.GetHex() & brokenHex) != brokenHex) lp.EraseColumn(index);
+                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && ((int)calculationResult.SolutionVariable[index].State.Cooldown & brokenHex) != brokenHex) lp.EraseColumn(index);
                         }
                         HeapPush(lp);
                         return false;
@@ -2530,7 +2535,7 @@ namespace Rawr.Mage
                                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
-                                                    if (state != null && !state.GetCooldown(cooldown) && (state.GetHex() & ind) != 0) drumsnohex.EraseColumn(index);
+                                                    if (state != null && !state.GetCooldown(cooldown) && ((int)state.Cooldown & ind) != 0) drumsnohex.EraseColumn(index);
                                                 }
                                             }
                                         }
@@ -2546,7 +2551,7 @@ namespace Rawr.Mage
                                                 for (int index = segmentColumn[s]; index < segmentColumn[s + 1]; index++)
                                                 {
                                                     CastingState state = calculationResult.SolutionVariable[index].State;
-                                                    if (state != null && state.GetCooldown(cooldown) && (state.GetHex() & ind) != 0) drumsnohex.EraseColumn(index);
+                                                    if (state != null && state.GetCooldown(cooldown) && ((int)state.Cooldown & ind) != 0) drumsnohex.EraseColumn(index);
                                                 }
                                             }
                                         }
@@ -2572,7 +2577,7 @@ namespace Rawr.Mage
                                         if (lp.Log != null) lp.Log.AppendLine("Disable activation of " + activation.ToString() + " at " + seg + " without hex");
                                         for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
                                         {
-                                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && (calculationResult.SolutionVariable[index].State.GetHex() & ind) == 0) lp.EraseColumn(index);
+                                            if (calculationResult.SolutionVariable[index].Type == activation && calculationResult.SolutionVariable[index].Segment == seg && ((int)calculationResult.SolutionVariable[index].State.Cooldown & ind) == 0) lp.EraseColumn(index);
                                         }
                                         HeapPush(lp);
                                         return false;

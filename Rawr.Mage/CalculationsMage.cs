@@ -345,14 +345,14 @@ namespace Rawr.Mage
         private void StoreIncrementalSet(Character character, CharacterCalculationsMage calculations)
         {
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            List<int> cooldownList = new List<int>();
+            List<Cooldown> cooldownList = new List<Cooldown>();
             List<SpellId> spellList = new List<SpellId>();
             List<int> segmentList = new List<int>();
             for (int i = 0; i < calculations.SolutionVariable.Count; i++)
             {
                 if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Type == VariableType.Spell)
                 {
-                    cooldownList.Add(calculations.SolutionVariable[i].State.IncrementalSetIndex);
+                    cooldownList.Add(calculations.SolutionVariable[i].State.Cooldown & Cooldown.NonItemBasedMask);
                     spellList.Add(calculations.SolutionVariable[i].Spell.SpellId);
                     segmentList.Add(calculations.SolutionVariable[i].Segment);
                 }
@@ -362,7 +362,7 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSegments = segmentList.ToArray();
             calculationOptions.IncrementalSetArmor = calculations.MageArmor;
 
-            List<int> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
+            List<Cooldown> filteredCooldowns = ListUtils.RemoveDuplicates(cooldownList);
             filteredCooldowns.Sort();
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
@@ -1068,9 +1068,9 @@ namespace Rawr.Mage
                         Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         int legendY = 2;
 
-                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.DestructionPotion, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
-                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Destruction Potion", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect" };
-                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
+                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
+                        string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect" };
+                        Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.LemonChiffon, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
                         Brush[] brushSubPoints = new Brush[cooldownColors.Length];
                         Color[] colorSubPointsA = new Color[cooldownColors.Length];
                         Color[] colorSubPointsB = new Color[cooldownColors.Length];

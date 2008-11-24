@@ -7,19 +7,23 @@ namespace Rawr.Mage
     [Flags]
     public enum Cooldown
     {
+        PotionOfSpeed = 0x1000,
         ArcanePower = 0x800,
         Combustion = 0x400,
-        DestructionPotion = 0x200,
+        PotionOfWildMagic = 0x200,
         DrumsOfBattle = 0x100,
         FlameCap = 0x80,
         Heroism = 0x40,
         IcyVeins = 0x20,
         MoltenFury = 0x10,
-        Trinket1 = 0x8,
-        Trinket2 = 0x4,
-        WaterElemental = 0x2,
-        ManaGemEffect = 0x1,
-        None = 0x0
+        WaterElemental = 0x8,
+        ManaGemEffect = 0x4,
+        Trinket1 = 0x2,
+        Trinket2 = 0x1,
+        None = 0x0,
+        NonItemBasedMask = 0x1FF8,
+        ItemBasedMask = 0x7,
+        Mask = ItemBasedMask | NonItemBasedMask
     }
 
     public sealed class CastingState
@@ -97,69 +101,19 @@ namespace Rawr.Mage
         public float Latency { get; set; }
         public float ClearcastingChance { get; set; }
 
-        public int IncrementalSetIndex { get; set; }
-
         public float SnaredTime { get; set; }
-
-        public int GetHex()
-        {
-            unchecked
-            {
-                int hex = 0;
-                hex = (hex << 1) + (ArcanePower ? 1 : 0);
-                hex = (hex << 1) + (Combustion ? 1 : 0);
-                hex = (hex << 1) + (DestructionPotion ? 1 : 0);
-                hex = (hex << 1) + (DrumsOfBattle ? 1 : 0);
-                hex = (hex << 1) + (FlameCap ? 1 : 0);
-                hex = (hex << 1) + (Heroism ? 1 : 0);
-                hex = (hex << 1) + (IcyVeins ? 1 : 0);
-                hex = (hex << 1) + (MoltenFury ? 1 : 0);
-                hex = (hex << 1) + (Trinket1 ? 1 : 0);
-                hex = (hex << 1) + (Trinket2 ? 1 : 0);
-                hex = (hex << 1) + (WaterElemental ? 1 : 0);
-                hex = (hex << 1) + (ManaGemEffect ? 1 : 0);
-                return hex;
-            }
-        }
 
         public bool GetCooldown(Cooldown cooldown)
         {
-            switch (cooldown)
-            {
-                case Cooldown.ArcanePower:
-                    return ArcanePower;
-                case Cooldown.Combustion:
-                    return Combustion;
-                case Cooldown.DestructionPotion:
-                    return DestructionPotion;
-                case Cooldown.DrumsOfBattle:
-                    return DrumsOfBattle;
-                case Cooldown.FlameCap:
-                    return FlameCap;
-                case Cooldown.Heroism:
-                    return Heroism;
-                case Cooldown.IcyVeins:
-                    return IcyVeins;
-                case Cooldown.MoltenFury:
-                    return MoltenFury;
-                case Cooldown.Trinket1:
-                    return Trinket1;
-                case Cooldown.Trinket2:
-                    return Trinket2;
-                case Cooldown.WaterElemental:
-                    return WaterElemental;
-                case Cooldown.ManaGemEffect:
-                    return ManaGemEffect;
-                default:
-                    return false;
-            }
+            return (cooldown & Cooldown) == cooldown;
         }
 
         public bool ArcanePower { get; set; }
         public bool IcyVeins { get; set; }
         public bool MoltenFury { get; set; }
         public bool Heroism { get; set; }
-        public bool DestructionPotion { get; set; }
+        public bool PotionOfWildMagic { get; set; }
+        public bool PotionOfSpeed { get; set; }
         public bool FlameCap { get; set; }
         public bool Trinket1 { get; set; }
         public bool Trinket2 { get; set; }
@@ -173,6 +127,7 @@ namespace Rawr.Mage
 
         public float CombustionDuration { get; set; }
         public float SpellDamageRating { get; set; }
+        public float SpellCritRating { get; set; }
         public float SpellHasteRating { get; set; }
         public float Mp5OnCastFor20Sec { get; set; }
 
@@ -193,7 +148,8 @@ namespace Rawr.Mage
                     if (FlameCap) buffList.Add("Flame Cap");
                     if (Trinket1) buffList.Add(calculations.Trinket1Name);
                     if (Trinket2) buffList.Add(calculations.Trinket2Name);
-                    if (DestructionPotion) buffList.Add("Destruction Potion");
+                    if (PotionOfWildMagic) buffList.Add("Potion of Wild Magic");
+                    if (PotionOfSpeed) buffList.Add("Potion of Speed");
                     if (WaterElemental) buffList.Add("Water Elemental");
                     if (ManaGemEffect) buffList.Add("Mana Gem Effect");
 
@@ -243,13 +199,12 @@ namespace Rawr.Mage
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool destructionPotion, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, int incrementalSetIndex)
+        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect)
         {
             MageTalents = calculations.Character.MageTalents;
             BaseStats = calculations.BaseStats; // == characterStats
             CalculationOptions = calculations.CalculationOptions;
             this.calculations = calculations;
-            IncrementalSetIndex = incrementalSetIndex;
 
             float levelScalingFactor;
             levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
@@ -258,9 +213,18 @@ namespace Rawr.Mage
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
             SpellDamageRating = characterStats.SpellPower;
+            SpellCritRating = characterStats.CritRating;
             SpellHasteRating = characterStats.HasteRating;
 
-            if (destructionPotion) SpellDamageRating += 120;
+            if (potionOfWildMagic)
+            {
+                SpellDamageRating += 180;
+                SpellCritRating += 60;
+            }
+            if (potionOfSpeed)
+            {
+                SpellHasteRating += 500;
+            }
 
             if (trinket1)
             {
@@ -355,8 +319,7 @@ namespace Rawr.Mage
                     baseRegen = 0.005575f;
                     break;
             }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + characterStats.CritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
-            if (destructionPotion) SpellCrit += 0.02f;
+            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
             SpellHit = characterStats.HitRating * levelScalingFactor / 800f + characterStats.SpellHit;
 
             int targetLevel = calculationOptions.TargetLevel;
@@ -403,7 +366,8 @@ namespace Rawr.Mage
             MoltenFury = moltenFury;
             IcyVeins = icyVeins;
             Heroism = heroism;
-            DestructionPotion = destructionPotion;
+            PotionOfWildMagic = potionOfWildMagic;
+            PotionOfSpeed = potionOfSpeed;
             FlameCap = flameCap;
             Trinket1 = trinket1;
             Trinket2 = trinket2;
@@ -417,7 +381,8 @@ namespace Rawr.Mage
             if (moltenFury) c |= Cooldown.MoltenFury;
             if (icyVeins) c |= Cooldown.IcyVeins;
             if (heroism) c |= Cooldown.Heroism;
-            if (destructionPotion) c |= Cooldown.DestructionPotion;
+            if (potionOfWildMagic) c |= Cooldown.PotionOfWildMagic;
+            if (potionOfSpeed) c |= Cooldown.PotionOfSpeed;
             if (flameCap) c |= Cooldown.FlameCap;
             if (trinket1) c |= Cooldown.Trinket1;
             if (trinket2) c |= Cooldown.Trinket2;
@@ -425,6 +390,7 @@ namespace Rawr.Mage
             if (drums) c |= Cooldown.DrumsOfBattle;
             if (waterElemental) c |= Cooldown.WaterElemental;
             if (manaGemEffect) c |= Cooldown.ManaGemEffect;
+            Cooldown = c;
 
             if (icyVeins)
             {
