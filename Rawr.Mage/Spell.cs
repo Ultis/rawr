@@ -1201,6 +1201,7 @@ namespace Rawr.Mage
             }
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
+            HitRate += 0.01f * castingState.MageTalents.ElementalPrecision; // ghost hit
             SpammedDot = true;
             DotDuration = 9;
             if (averageFingersOfFrost)
