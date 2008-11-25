@@ -789,10 +789,6 @@ namespace Rawr
         }
     }
 
-    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation>
-    {
-    }
-
     public static class LocationFactory
     {
         static LocationFactory()
@@ -850,7 +846,7 @@ namespace Rawr
                 {
                     string xml = System.IO.File.ReadAllText(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fileName));
                     
-                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(ItemLocationDictionary));
+                    System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(_allLocations.GetType());
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
                     sourceInfo = (SerializableDictionary<string, ItemLocation>) serializer.Deserialize(reader);
                     reader.Close();
