@@ -524,8 +524,8 @@ namespace Rawr.ShadowPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinDamage = MaxDamage = (MinDamage * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
-                + stats.SpellPower * 1.88f
-                * (DamageCoef + character.PriestTalents.BorrowedTime * 0.04f))
+                + stats.SpellPower * 1.88f * DamageCoef
+                + stats.SpellPower * character.PriestTalents.BorrowedTime * 0.04f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);

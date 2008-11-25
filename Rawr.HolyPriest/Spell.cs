@@ -848,7 +848,8 @@ namespace Rawr.HolyPriest
         protected void Calculate(Stats stats, Character character)
         {
             MinHeal = MaxHeal = (MinHeal * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f)
-                + stats.SpellPower * SP2HP * (HealingCoef + character.PriestTalents.BorrowedTime * 0.08f) * (1 - RankCoef))
+                + stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef)
+                + stats.SpellPower * character.PriestTalents.BorrowedTime * 0.08f)
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.ImprovedPowerWordShield * 0.05f);
