@@ -889,7 +889,7 @@ namespace Rawr.DPSDK
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath),
                 BonusArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath),
-                Expertise = (float)(talents.TundraStalker * 2 + talents.BloodGorged + talents.RageOfRivendare),
+                Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare),
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker)
             };

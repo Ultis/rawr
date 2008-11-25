@@ -581,7 +581,7 @@ namespace Rawr
 			
 
             //Death Knight Rune Enchants
-            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.MainHand, new Stats() { BonusStrengthMultiplier = 7.5f } ));
+            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, new Stats() { BonusStrengthMultiplier = .075f } ));
 
             #region Enchants to Delete
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));

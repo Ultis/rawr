@@ -229,7 +229,7 @@ namespace Rawr.Retribution
             
             #region Attack Speed
             {
-                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 1576f));
+                hastedSpeed = baseSpeed / ( 1f + ( stats.HasteRating / 3278f ) );
 
                 if (calcOpts.SwiftRetribution > 0)
                     hastedSpeed /= 1f + (0.01f * (float)calcOpts.SwiftRetribution);
@@ -263,15 +263,16 @@ namespace Rawr.Retribution
             #region Mitigation
             {
                 float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
-                float ratingReduction = stats.ArmorPenetrationRating / 740f;
-                targetArmor *= 1f - ratingReduction;
 
                 // Effective armor after ArP
                 targetArmor -= totalArP;
-                if (targetArmor < 0) targetArmor = 0f;
+                float ratingCoeff = stats.ArmorPenetrationRating / 15.4f;
+                targetArmor *= ( 1 - ratingCoeff );
+                if ( targetArmor < 0 ) targetArmor = 0f;
 
                 // Convert armor to mitigation
-                mitigation = 1f - (targetArmor / (targetArmor + 10557.5f));
+                //mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
+                mitigation = 1f - targetArmor / ( targetArmor + 400f + 85f * ( 5.5f * (float)calcOpts.TargetLevel - 265.5f ) );
             }
             #endregion
 
@@ -279,8 +280,8 @@ namespace Rawr.Retribution
             {
                 // Crit: Base .65%
                 physCrits = .0065f;
-                physCrits += stats.CritRating / 2208f;
-                physCrits += stats.Agility / 2500f;
+                physCrits += stats.CritRating / 4591f;
+                physCrits += stats.Agility / 6250f;
                 physCrits += stats.PhysicalCrit;
 
                 // Dodge: Base 6.5%, Minimum 0%
@@ -292,19 +293,19 @@ namespace Rawr.Retribution
 
                 // Miss: Base 9%, Minimum 0%
                 float chanceMiss = .09f;
-                chanceMiss -= stats.HitRating / 1576f;
+                chanceMiss -= stats.HitRating / 3279f;
                 chanceMiss -= stats.PhysicalHit;
                 if (chanceMiss < 0f) chanceMiss = 0f;
                 calcs.MissedAttacks = chanceMiss;
 
                 // Spell Crit: Base 3.26%  **TODO: include intellect
                 spellCrits = .0326f;
-                spellCrits += stats.CritRating / 2208f;
+                spellCrits += stats.CritRating / 4591;
                 spellCrits += stats.SpellCrit;
 
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
-                spellResist -= stats.HitRating / 1262f;
+                chanceMiss -= stats.HitRating / 3279f;
                 spellResist -= stats.PhysicalHit;
                 if (spellResist < .01f) spellResist = .01f;
 
@@ -496,16 +497,7 @@ namespace Rawr.Retribution
                 float consCD = 12f, consCoeff = 0.952f, consAvgDam = 0f;
                 int consRank = calcOpts.ConsecRank;
 
-                // Consecration damage pre-resists
-                switch (consRank) // Rank damage + coeff * level reduction * spelldamage
-                {
-                    case 1: consAvgDam = 64f + consCoeff * (35f / 70f) * stats.SpellPower; break;
-                    case 2: consAvgDam = 120f + consCoeff * (45f / 70f) * stats.SpellPower; break;
-                    case 3: consAvgDam = 184f + consCoeff * (55f / 70f) * stats.SpellPower; break;
-                    case 4: consAvgDam = 280f + consCoeff * (65f / 70f) * stats.SpellPower; break;
-                    case 5: consAvgDam = 384f + consCoeff * stats.SpellPower; break;
-                    case 6: consAvgDam = 512f + consCoeff * stats.SpellPower; break;
-                }
+                consAvgDam = 113f * 8f + consCoeff * stats.SpellPower;
                 consAvgDam = consAvgDam * holyDamMult + consCoeff * jotc;
 
                 // Consecration average damage post-resists.
@@ -528,7 +520,7 @@ namespace Rawr.Retribution
                 float exorCD = 18f, exorCoeff = 0.429f, exorAvgDmg = 0f;
 
                 // Exorcism damage per spell hit
-                exorAvgDmg = 665f + exorCoeff * stats.SpellPower;
+                exorAvgDmg = 1087f + exorCoeff * stats.SpellPower;
                 exorAvgDmg = exorAvgDmg * holyDamMult + exorCoeff * jotc;
 
                 // Exorcism average damage per cast
@@ -600,38 +592,41 @@ namespace Rawr.Retribution
         private Stats GetRaceStats(Character character)
         {
             Stats statsRace;
-            switch (character.Race)
-            {
-                case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats()
-                    { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
-                    break;
-                case Character.CharacterRace.Draenei: // Relevant racials: +1% hit
-                    statsRace = new Stats()
-                    { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f, SpellHit = .01f };
-                    break;
-                case Character.CharacterRace.Human: // Relevant racials: +10% spirit, +5 expertise when wielding mace or sword
-                    statsRace = new Stats()
-                    { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
-                    //Expertise for Humans
-                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
-                        statsRace.Expertise = 3f;
-                    break;
-                case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats()
-                    { Strength = 128f, Agility = 73f, Stamina = 120f, Intellect = 83f, Spirit = 89f, };
-                    if (character.MainHand != null && ( character.MainHand.Type == Item.ItemType.TwoHandMace) )
-                        statsRace.Expertise = 5f;
-                    break;
-                    break;
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
+            //switch (character.Race)
+            //{
+            //    case Character.CharacterRace.BloodElf:
+            //        statsRace = new Stats()
+            //        { Strength = 123f, Agility = 79f, Stamina = 118f, Intellect = 87f, Spirit = 88f };
+            //        break;
+            //    case Character.CharacterRace.Draenei: // Relevant racials: +1% hit
+            //        statsRace = new Stats()
+            //        { Strength = 127f, Agility = 74f, Stamina = 119f, Intellect = 84f, Spirit = 89f, PhysicalHit = .01f, SpellHit = .01f };
+            //        break;
+            //    case Character.CharacterRace.Human: // Relevant racials: +10% spirit, +5 expertise when wielding mace or sword
+            //        statsRace = new Stats()
+            //        { Strength = 126f, Agility = 77f, Stamina = 120f, Intellect = 83f, Spirit = 89f, BonusSpiritMultiplier = 0.1f, };
+            //        //Expertise for Humans
+            //        if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
+            //            statsRace.Expertise = 3f;
+            //        break;
+            //    case Character.CharacterRace.Dwarf:
+            //        statsRace = new Stats()
+            //        { Strength = 128f, Agility = 73f, Stamina = 120f, Intellect = 83f, Spirit = 89f, };
+            //        if (character.MainHand != null && ( character.MainHand.Type == Item.ItemType.TwoHandMace) )
+            //            statsRace.Expertise = 5f;
+            //        break;
+            //        break;
+            //    default:
+            //        statsRace = new Stats();
+            //        break;
+            //}
+            
+            //for now, just using dwarf stats for everyone, until I get more data.  health/ap/spirit not yet known.
+            statsRace = new Stats() { Strength = 153f, Agility = 86f, Stamina = 146f, Intellect = 97f, Spirit = 100f };
             // Derived stats base amount, common to all races
             statsRace.AttackPower = 190f;
             statsRace.Health = 3197f;
-            statsRace.Mana = 2673f;
+            statsRace.Mana = 4394f;
 
             return statsRace;
         }
