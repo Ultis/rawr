@@ -510,7 +510,7 @@ namespace Rawr.Mage
             }
             if (minimizeTime) needsTimeExtension = true;
 
-            if (segmentCooldowns && (flameCapAvailable || potionOfWildMagicAvailable)) restrictManaUse = true;
+            if (segmentCooldowns && (flameCapAvailable || manaGemEffectAvailable)) restrictManaUse = true;
             if (calculationOptions.UnlimitedMana)
             {
                 restrictManaUse = false;
@@ -1285,7 +1285,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ABABar);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             if (icyVeinsAvailable)

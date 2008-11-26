@@ -210,16 +210,8 @@ namespace Rawr.Mage
                 }
                 else if (Character.MageTalents.SpellPower > 0)
                 {
-                    Spell s = BaseState.GetSpell(SpellId.ArcaneBlast33);
+                    Spell s = BaseState.GetSpell(SpellId.ABABar);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                if (Character.MageTalents.IcyVeins > 0)
-                {
-                    manaBurn *= 1.1f;
-                }
-                if (Character.MageTalents.ArcanePower > 0)
-                {
-                    manaBurn *= 1.1f;
                 }
 
                 double overflow = Solution[ColumnManaOverflow];

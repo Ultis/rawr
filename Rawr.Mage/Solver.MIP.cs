@@ -3118,7 +3118,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ABABar);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             if (icyVeinsAvailable)
@@ -3378,16 +3378,8 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneBlast33);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.ABABar);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            if (icyVeinsAvailable)
-            {
-                manaBurn *= 1.1f;
-            }
-            if (arcanePowerAvailable)
-            {
-                manaBurn *= 1.1f;
             }
 
             // check border case if we have mana gem in first or last segment
