@@ -554,7 +554,7 @@ namespace Rawr //O O . .
             }
             else
             {
-                return ItemAvailability.NotAvailabe;
+                return ItemAvailability.NotAvailable;
             }
         }
 
@@ -666,7 +666,7 @@ namespace Rawr //O O . .
                         _availableItems.Add(id);
                     }
                     break;
-                case ItemAvailability.NotAvailabe:
+                case ItemAvailability.NotAvailable:
                     if (enchant != null)
                     {
                         _availableItems.Add(anyGem + "." + enchant.Id.ToString());
@@ -1274,16 +1274,16 @@ namespace Rawr //O O . .
             Hunter = 3,
             Rogue = 4,
             Priest = 5,
+            DeathKnight = 6,
             Shaman = 7,
             Mage = 8,
             Warlock = 9,
             Druid = 11,
-            DeathKnight = 12
         }
 
         public enum ItemAvailability
         {
-            NotAvailabe,
+            NotAvailable,
             Available,
             AvailableWithEnchantRestrictions,
             RegemmingAllowed,

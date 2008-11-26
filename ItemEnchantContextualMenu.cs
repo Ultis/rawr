@@ -71,7 +71,7 @@ namespace Rawr
                 case Character.ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
                     gemmedId = item.Id.ToString() + ".*.*.*";
                     break;
-                case Character.ItemAvailability.NotAvailabe:
+                case Character.ItemAvailability.NotAvailable:
                     gemmedId = item.Id.ToString() + ".*.*.*";
                     break;
             }

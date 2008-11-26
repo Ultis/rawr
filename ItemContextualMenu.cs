@@ -309,8 +309,8 @@ namespace Rawr
 			foreach (Form form in Application.OpenForms) if (form is FormItemEditor) editor = form as FormItemEditor;
 			if (editor == null)
 			{
-				FormItemEditor itemEditor = new FormItemEditor(Character);
-				itemEditor.SelectItem(_item, true);
+				FormItemEditor itemEditor = new FormItemEditor(Character, _item);
+				//itemEditor.SelectItem(_item, true);
 				itemEditor.ShowDialog(FormMain.Instance);
                 itemEditor.Dispose();
 				ItemCache.OnItemsChanged();

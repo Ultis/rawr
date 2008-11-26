@@ -646,7 +646,7 @@ the Threat Scale defined on the Options tab.",
 					charBaseArmorItems.ProjectileBag = charBaseArmorItems.Ranged = charBaseArmorItems.Shirt =
 					charBaseArmorItems.Tabard = charBaseArmorItems.Trinket1 = charBaseArmorItems.Trinket2 = null;
 				Stats statsBaseItems = GetItemStats(charBaseArmorItems, null);
-				statsItems.Armor += statsBaseItems.Armor * 4.7f * (1f + 0.22f * talents.SurvivalOfTheFittest) * thickHideMultiplier;
+				statsItems.Armor += statsBaseItems.Armor * 3.7f * (1f + 0.22f * talents.SurvivalOfTheFittest) * thickHideMultiplier;
 			}
 			else
 			{

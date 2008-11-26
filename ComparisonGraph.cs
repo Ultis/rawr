@@ -424,7 +424,7 @@ namespace Rawr
                                         case Character.ItemAvailability.AvailableWithEnchantRestrictions:
                                             g.DrawImageUnscaled(bmpDiamond4, 0, 55 + (i * 36));
                                             break;
-                                        case Character.ItemAvailability.NotAvailabe:
+                                        case Character.ItemAvailability.NotAvailable:
                                             g.DrawImageUnscaled(bmpDiamondOutline, 0, 55 + (i * 36));
                                             break;
                                     }

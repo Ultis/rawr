@@ -47,7 +47,7 @@ namespace Rawr
 						 || oldItem.Slot == Item.ItemSlot.Green || oldItem.Slot == Item.ItemSlot.Blue || oldItem.Slot == Item.ItemSlot.Purple
 						 || oldItem.Slot == Item.ItemSlot.Prismatic || oldItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
 					_selectedItem.Group = listViewItems.Groups["listViewGroup" + slot];
-					_selectedItem.ImageKey = oldItem.IconPath;
+					//_selectedItem.ImageKey = oldItem.IconPath;
 					listViewItems.Sort();
 				}
 
@@ -178,7 +178,7 @@ namespace Rawr
 		{
 			InitializeComponent();
 			_character = character;
-			listViewItems.SmallImageList = ItemIcons.SmallIcons;
+			//listViewItems.SmallImageList = ItemIcons.SmallIcons;
             LoadItems();
 
 
@@ -193,6 +193,33 @@ namespace Rawr
             comboBoxBonus2.Items.Add("None");
             comboBoxBonus2.Items.AddRange(Stats.StatNames);
 */
+
+			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
+		}
+
+		public FormItemEditor(Character character, Item initialSelection)
+		{
+			InitializeComponent();
+			_character = character;
+			//listViewItems.SmallImageList = ItemIcons.SmallIcons;
+			_loadingItem = true;
+			textBoxFilter.Text = initialSelection.Name;
+			_loadingItem = false;
+			LoadItems();
+			SelectItem(initialSelection, true);
+
+
+			comboBoxBonus1.Tag = numericUpDownBonus1;
+			comboBoxBonus1.Items.Add("None");
+			comboBoxBonus1.Items.AddRange(Stats.StatNames);
+
+
+			/*
+					  comboBoxBonus2.Tag = numericUpDownBonus2;
+					   comboBoxBonus2.Items.Add("None");
+					   comboBoxBonus2.Items.AddRange(Stats.StatNames);
+		   */
 
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 			this.FormClosing += new FormClosingEventHandler(FormItemEditor_FormClosing);
@@ -242,7 +269,7 @@ namespace Rawr
 						 || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Meta) slot = "Gems";
 					ListViewItem lvi = new ListViewItem(item.Name, listViewItems.Groups["listViewGroup" + slot]);
 					lvi.Tag = item;
-					lvi.ImageKey = EnsureIconPath(item.IconPath);
+					//lvi.ImageKey = EnsureIconPath(item.IconPath);
 					itemsToAdd.Add(lvi);
 				}
 			}
@@ -340,7 +367,7 @@ namespace Rawr
 				{
 					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
 					newLvi.Tag = newItem;
-					newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
+					//newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
 					string slot = newItem.Slot.ToString();
 					if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
 						 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
@@ -464,7 +491,7 @@ namespace Rawr
 
 			ListViewItem newLvi = new ListViewItem(copy.Name, 0, listViewItems.Groups["listViewGroup" + copy.Slot.ToString()]);
 			newLvi.Tag = copy;
-			newLvi.ImageKey = EnsureIconPath(copy.IconPath);
+			//newLvi.ImageKey = EnsureIconPath(copy.IconPath);
 			string slot = copy.Slot.ToString();
 			if (copy.Slot == Item.ItemSlot.Red || copy.Slot == Item.ItemSlot.Orange || copy.Slot == Item.ItemSlot.Yellow
 				 || copy.Slot == Item.ItemSlot.Green || copy.Slot == Item.ItemSlot.Blue || copy.Slot == Item.ItemSlot.Purple
@@ -477,7 +504,7 @@ namespace Rawr
 			newLvi.EnsureVisible();
 		}
 
-		internal void SelectItem(Item item, bool force)
+		internal void SelectItem(Item item, bool force) 
 		{
 			bool found = false;
 			foreach (ListViewItem lvi in listViewItems.Items)
@@ -507,9 +534,12 @@ namespace Rawr
 
 		private void textBoxFilter_TextChanged(object sender, EventArgs e)
 		{
-			Item selectedItem = SelectedItem.Tag as Item;
-			LoadItems();
-			SelectItem(selectedItem, false);
+			if (!_loadingItem)
+			{
+				Item selectedItem = SelectedItem.Tag as Item;
+				LoadItems();
+				SelectItem(selectedItem, false);
+			}
 		}
 
         private void comboBoxBonus_SelectedIndexChanged(object sender, EventArgs e)

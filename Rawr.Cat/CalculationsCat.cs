@@ -193,7 +193,7 @@ namespace Rawr.Cat
 			float chanceCritBite = Math.Min(1f - chanceAvoided, chanceCrit + stats.BonusFerociousBiteCrit);
 			float chanceHitBite = 1f - chanceCritBite - chanceAvoided;
 
-			float cpPerCPG = (chanceHit + chanceCrit * 2) / chanceNonAvoided;
+			float cpPerCPG = (chanceHit + chanceCrit * (1 + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100;
 			calculatedStats.MissedAttacks = chanceMiss * 100;
 			#endregion

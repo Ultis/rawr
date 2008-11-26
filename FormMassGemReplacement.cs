@@ -206,7 +206,7 @@ namespace Rawr
                         //delete all socketed items that are not available or equipped on a character
                         foreach (Item exItem in listGemmableItems){
 
-                            if (currCharacter.GetItemAvailability(exItem) != Character.ItemAvailability.NotAvailabe)
+                            if (currCharacter.GetItemAvailability(exItem) != Character.ItemAvailability.NotAvailable)
                             
                                 continue;
                             

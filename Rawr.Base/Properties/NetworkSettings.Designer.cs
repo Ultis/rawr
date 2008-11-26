@@ -204,8 +204,7 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.worldofwarcraft.com/shared/global/talents//wrath/{0}/images/{1}/{2}.jp" +
-            "g")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg")]
         public string TalentIconURI {
             get {
                 return ((string)(this["TalentIconURI"]));
