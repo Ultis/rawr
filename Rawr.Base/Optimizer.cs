@@ -378,13 +378,13 @@ namespace Rawr
                 optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, injectCharacter, out injected, out error);
                 if (optimizedCharacter != null)
                 {
-                    optimizedCharacterValue = GetCalculationsValue(model.GetCharacterCalculations(optimizedCharacter));
+                    optimizedCharacterValue = GetCalculationsValue(optimizedCharacter, model.GetCharacterCalculations(optimizedCharacter));
                 }
                 else
                 {
                     if (error == null) error = new NullReferenceException();
                 }
-				currentCharacterValue =	GetCalculationsValue(model.GetCharacterCalculations(character));
+                currentCharacterValue = GetCalculationsValue(character, model.GetCharacterCalculations(character));
             }
             catch (Exception ex)
             {
@@ -591,7 +591,7 @@ namespace Rawr
                     upgrades[slot] = new List<ComparisonCalculationBase>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetCalculationsValue(baseCalculations);
+                float baseValue = GetCalculationsValue(_character, baseCalculations);
                 Dictionary<int, Item> itemById = new Dictionary<int, Item>();
                 foreach (Item item in items)
                 {
@@ -720,7 +720,7 @@ namespace Rawr
 
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetCalculationsValue(baseCalculations);
+                float baseValue = GetCalculationsValue(_character, baseCalculations);
 
                 Item item = upgrade;                
                 foreach (Character.CharacterSlot slot in slots)
@@ -1378,7 +1378,7 @@ namespace Rawr
             injected = false;
 
             Character currentChar = BuildRandomCharacter();
-            double currentValue = GetCalculationsValue(model.GetCharacterCalculations(currentChar));
+            double currentValue = GetCalculationsValue(currentChar, model.GetCharacterCalculations(currentChar));
 
             Character bestChar = currentChar;
             double bestValue = currentValue;
@@ -1399,7 +1399,7 @@ namespace Rawr
                 // Generate new character
                 Character nextChar = GeneratorBuildSACharacter(currentChar);
 
-                double nextValue = GetCalculationsValue(model.GetCharacterCalculations(nextChar));
+                double nextValue = GetCalculationsValue(nextChar, model.GetCharacterCalculations(nextChar));
 
 
                 // Save best character
@@ -1538,7 +1538,7 @@ namespace Rawr
                 // currently available
                 MarkEquippedItemsAsValid(_character);
 				bestCharacter = _character;
-                best = GetCalculationsValue(model.GetCharacterCalculations(_character));
+                best = GetCalculationsValue(_character, model.GetCharacterCalculations(_character));
 			}
 
 			noImprove = 0;
@@ -1561,7 +1561,7 @@ namespace Rawr
 				    {
                         int island = i / islandSize;
                         CharacterCalculationsBase calculations;
-                        values[i] = GetCalculationsValue(calculations = model.GetCharacterCalculations(population[i]));
+                        values[i] = GetCalculationsValue(population[i], calculations = model.GetCharacterCalculations(population[i]));
                         if (values[i] < minIsland[island]) minIsland[island] = values[i];
                         if (values[i] > maxIsland[island]) maxIsland[island] = values[i];
                         if (values[i] > bestIsland[island])
@@ -1785,7 +1785,7 @@ namespace Rawr
                     }
                     charSwap = BuildSingleItemEnchantSwapCharacter(bestCharacter, slot, item, enchant);
                     CharacterCalculationsBase calculations;
-                    value = GetCalculationsValue(calculations = model.GetCharacterCalculations(charSwap));
+                    value = GetCalculationsValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));
                     if (value > best)
                     {
                         best = value;
@@ -1816,7 +1816,7 @@ namespace Rawr
                     {
                         charSwap = BuildSingleEnchantSwapCharacter(bestCharacter, slot, enchant);
                         CharacterCalculationsBase calculations;
-                        value = GetCalculationsValue(calculations = model.GetCharacterCalculations(charSwap));
+                        value = GetCalculationsValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));
                         if (value > newBest)
                         {
                             newBest = value;
@@ -1833,16 +1833,19 @@ namespace Rawr
 
         public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
-            return GetCalculationsValue(model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
+            return GetCalculationsValue(character, model.GetCharacterCalculations(character), character.CalculationToOptimize, character.OptimizationRequirements.ToArray());
         }
 
-        private float GetCalculationsValue(CharacterCalculationsBase calcs)
+        private float GetCalculationsValue(Character character, CharacterCalculationsBase calcs)
         {
-            return Optimizer.GetCalculationsValue(calcs, _calculationToOptimize, _requirements);
+            return Optimizer.GetCalculationsValue(character, calcs, _calculationToOptimize, _requirements);
         }
 
-        private static float GetCalculationsValue(CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
+        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, OptimizationRequirement[] requirements)
 		{
+            int jewelersGems = character.JewelersGemCount;
+            float jewelersValue = 0f;
+            if (jewelersGems > 3) jewelersValue = -10000 * (jewelersGems - 3);
 			float ret = 0;
 			foreach (OptimizationRequirement requirement in requirements)
 			{
@@ -1859,8 +1862,8 @@ namespace Rawr
 				}
 			}
 
-			if (ret < 0) return ret;
-			else return GetCalculationValue(calcs, calculation);
+            if (ret < 0) return ret + jewelersValue;
+            else return GetCalculationValue(calcs, calculation) + jewelersValue;
 		}
 
 		private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)

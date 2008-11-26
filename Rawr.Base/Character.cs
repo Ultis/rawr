@@ -903,6 +903,7 @@ namespace Rawr //O O . .
         private int redGemCount;
         private int yellowGemCount;
         private int blueGemCount;
+        private int jewelersGemCount;
 
         public int RedGemCount
         {
@@ -931,6 +932,15 @@ namespace Rawr //O O . .
             }
         }
 
+        public int JewelersGemCount
+        {
+            get
+            {
+                ComputeGemCount();
+                return jewelersGemCount;
+            }
+        }
+
         private void ComputeGemCount()
         {
             if (!gemCountValid)
@@ -938,8 +948,32 @@ namespace Rawr //O O . .
                 redGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Red);
                 yellowGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Yellow);
                 blueGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Blue);
+                jewelersGemCount = GetJewelersGemCount();
+
                 gemCountValid = true;
             }
+        }
+
+        private int GetItemJewelersGemCount(Item item)
+        {
+            int count = 0;
+            if (item != null)
+            {
+                if (item.Gem1 != null && item.Gem1.IsJewelersGem) count++;
+                if (item.Gem2 != null && item.Gem2.IsJewelersGem) count++;
+                if (item.Gem3 != null && item.Gem3.IsJewelersGem) count++;
+            }
+            return count;
+        }
+
+        private int GetJewelersGemCount()
+        {
+            int count = 0;
+            foreach (CharacterSlot slot in CharacterSlots)
+			{
+                count += GetItemJewelersGemCount(this[slot]);
+			}
+            return count;
         }
 
         private int GetItemGemColorCount(Rawr.Item item, Rawr.Item.ItemSlot slotColor)

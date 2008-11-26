@@ -608,6 +608,15 @@ namespace Rawr
             }
         }
 
+        public bool IsJewelersGem
+        {
+            get
+            {
+                if (Slot != ItemSlot.Prismatic) return false;
+                return Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157;
+            }
+        }
+
 		public Item() { }
 		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
