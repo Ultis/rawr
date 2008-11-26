@@ -866,6 +866,7 @@ namespace Rawr
 				case 44078:
 				case 44089:
 				case 41382:
+                case 41398:
 					volatileRequirements = true; //1 of each
 					meetsRequirements = redGems >= 1 && yellowGems >= 1 && blueGems >= 1;
 					break;
@@ -893,7 +894,6 @@ namespace Rawr
 					break;
                 case 25896:
 				case 44087:
-				case 41398:
                     volatileRequirements = true; //3 blues
                     meetsRequirements = blueGems >= 3;
                     break;
