@@ -1439,6 +1439,134 @@ Here's a quick rundown of the status of each model:
 			}
 		}
 
+        public class LoadCharacterProfileArguments
+        {
+            public Character character;
+            public CharacterProfilerCharacter characterProfilerCharacter;
+        }
+
+        private void reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Character.CharacterRegion region = (Character.CharacterRegion)Enum.Parse(typeof(Character.CharacterRegion), comboBoxRegion.SelectedItem.ToString());
+            if (String.IsNullOrEmpty(Character.Name) || String.IsNullOrEmpty(Character.Realm))
+            {
+                MessageBox.Show("A valid character has not been loaded, unable to reload.", "No Character Loaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.DefaultExt = ".lua";
+                dialog.Filter = "Character Profiler Saved Variables Files | *.lua";
+                dialog.Multiselect = false;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        CharacterProfilerData characterList = new CharacterProfilerData(dialog.FileName);
+
+                        for (int r=0; r<characterList.Realms.Count; r++)
+                        {
+                            if (characterList.Realms[r].Name == this.Character._realm)
+                            {
+                                for (int c=0; c<characterList.Realms[r].Characters.Count; c++)
+                                {
+                                    if (characterList.Realms[r].Characters[c].Name == this.Character._name)
+                                    {
+                                        StartProcessing();
+                                        BackgroundWorker bw = new BackgroundWorker();
+                                        bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ReloadCharacterProfilerComplete);
+                                        bw.DoWork += new DoWorkEventHandler(bw_ReloadCharacterProfiler);
+                                        LoadCharacterProfileArguments args = new LoadCharacterProfileArguments();
+                                        args.character = Character;
+                                        args.characterProfilerCharacter = characterList.Realms[r].Characters[c];
+                                        bw.RunWorkerAsync(args);
+                                    }
+                                    else
+                                    {
+                                        string error_msg = string.Format("{0} of {1} was not found in the Character Profiler Data.", this.Character._name, this.Character._realm);
+                                        MessageBox.Show(error_msg, "Character Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (InvalidDataException ex)
+                    {
+                        MessageBox.Show("Unable to parse saved variable file: " + ex.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error reading saved variable file: " + ex.Message);
+                    }
+                }
+                dialog.Dispose();
+            }
+        }
+
+        void bw_ReloadCharacterProfiler(object sender, DoWorkEventArgs e)
+        {
+            LoadCharacterProfileArguments args = e.Argument as LoadCharacterProfileArguments;
+            e.Result = this.ReloadCharacterFromCharacterProfiler(args.character, args.characterProfilerCharacter);
+        }
+
+        void bw_ReloadCharacterProfilerComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: log this to the status screen.
+                MessageBox.Show(e.Error.Message);
+            }
+            else
+            {
+                Character character = e.Result as Character;
+                this.Character = character;
+                _unsavedChanges = true;
+            }
+            FinishedProcessing();
+        }
+
+        public Character ReloadCharacterFromCharacterProfiler(Character character, CharacterProfilerCharacter characterProfilerCharacter)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            Character reload = GetCharacterFromCharacterProfiler(characterProfilerCharacter);
+            if (reload != null)
+            {
+                //load values for gear from armory into original character
+                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+                {
+                    character[slot] = reload[slot];
+                }
+                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+                {
+                    character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+                }
+                character.AvailableItems = reload.AvailableItems;
+            }
+            return character;
+        }
+
+        public Character GetCharacterFromCharacterProfiler(CharacterProfilerCharacter characterProfilerCharacter)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("Load Character", " Loading Character");
+            StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
+            Character character = characterProfilerCharacter.Character;
+            StatusMessaging.UpdateStatusFinished("Load Character");
+            if (characterProfilerCharacter.Character != null)
+            {
+                EnsureItemsLoaded(characterProfilerCharacter.Character.GetAllEquipedAndAvailableGearIds());
+            }
+            else
+            {
+                StatusMessaging.UpdateStatusFinished("Update Item Cache");
+                StatusMessaging.UpdateStatusFinished("Cache Item Icons");
+
+            }
+            return character;
+        }
+
+
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
 		//    FormItemEditor itemEditor = new FormItemEditor(Character);
