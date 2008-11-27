@@ -562,7 +562,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
 
 			//Inscriber enchants
-			defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axre", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
+			defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
 			defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));
 			defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 52, DefenseRating = 15 }));
 			defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 61 }));

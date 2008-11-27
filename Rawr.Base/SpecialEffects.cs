@@ -185,7 +185,7 @@ namespace Rawr
 		{
 			if (line.StartsWith("Increases initial and per application periodic damage done by Lacerate by "))
 			{
-				stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
+				//stats.BonusLacerateDamage = float.Parse(line.Substring("Increases initial and per application periodic damage done by Lacerate by ".Length));
 			}
 			else if (line.StartsWith("Your melee and ranged attacks have a chance to call on the power"))
 			{ //Shattered Sun Pendant of Might

@@ -258,6 +258,27 @@ namespace Rawr
 			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
 			foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false);
 
+			if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";
+			else if (htmlTooltip.Contains("Scourgeborne Plate")) item.SetName = "Scourgeborne Plate";
+			else if (htmlTooltip.Contains("Dreamwalker Battlegear")) item.SetName = "Dreamwalker Battlegear";
+			else if (htmlTooltip.Contains("Dreamwalker Garb")) item.SetName = "Dreamwalker Garb";
+			else if (htmlTooltip.Contains("Dreamwalker Regalia")) item.SetName = "Dreamwalker Regalia";
+			else if (htmlTooltip.Contains("Cryptstalker Battlegear")) item.SetName = "Cryptstalker Battlegear";
+			else if (htmlTooltip.Contains("Frostfire Garb")) item.SetName = "Frostfire Garb";
+			else if (htmlTooltip.Contains("Redemption Battlegear")) item.SetName = "Redemption Battlegear";
+			else if (htmlTooltip.Contains("Redemption Plate")) item.SetName = "Redemption Plate";
+			else if (htmlTooltip.Contains("Redemption Regalia")) item.SetName = "Redemption Regalia";
+			else if (htmlTooltip.Contains("Garb of Faith")) item.SetName = "Garb of Faith";
+			else if (htmlTooltip.Contains("Regalia of Faith")) item.SetName = "Regalia of Faith";
+			else if (htmlTooltip.Contains("Bonescythe Battlegear")) item.SetName = "Bonescythe Battlegear";
+			else if (htmlTooltip.Contains("Earthshatter Battlegear")) item.SetName = "Earthshatter Battlegear";
+			else if (htmlTooltip.Contains("Earthshatter Garb")) item.SetName = "Earthshatter Garb";
+			else if (htmlTooltip.Contains("Earthshatter Regalia")) item.SetName = "Earthshatter Regalia";
+			else if (htmlTooltip.Contains("Plagueheart Garb")) item.SetName = "Plagueheart Garb";
+			else if (htmlTooltip.Contains("Dreadnaught Battlegear")) item.SetName = "Dreadnaught Battlegear";
+			else if (htmlTooltip.Contains("Dreadnaught Plate")) item.SetName = "Dreadnaught Plate";
+
+
 			if (item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
 			return item;
 		}

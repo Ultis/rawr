@@ -249,6 +249,9 @@ namespace Rawr.Cat
 				ShredDamageTotal = shredDamageTotal,
 				RipDamageTotal = ripDamageTotal,
 				BiteDamageTotal = biteDamageTotal,
+				DamageTotal = damageTotal,
+
+				RoarCP = roarCP,
 			};
 		}
 
@@ -286,6 +289,8 @@ namespace Rawr.Cat
 			public float ShredDamageTotal { get; set; }
 			public float RipDamageTotal { get; set; }
 			public float BiteDamageTotal { get; set; }
+			public float DamageTotal { get; set; }
+			public int RoarCP { get; set; }
 		}
 	}
 }

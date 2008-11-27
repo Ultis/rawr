@@ -205,7 +205,7 @@ namespace Rawr.Cat
 			float shredDamageRaw = (baseDamage * 2.25f + 742.5f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * modArmor;
 			float rakeDamageRaw = (190 + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float rakeDamageDot = (1161 + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (calcOpts.GlyphOfRip ? 4f/3f : 1f);
+			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((12f + stats.BonusRipDuration) / 12f);
 			float biteDamageRaw = (1640 + stats.AttackPower * 0.24f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
@@ -238,7 +238,7 @@ namespace Rawr.Cat
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
 				(!character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma")),
-				calcOpts.GlyphOfMangle ? 18f : 12f, calcOpts.GlyphOfRip ? 16f : 12f, attackSpeed, 
+				calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration, attackSpeed, 
 				character.DruidTalents.OmenOfClarity > 0, chanceAvoided, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
@@ -278,7 +278,7 @@ namespace Rawr.Cat
 			calculatedStats.MangleDamagePerSwing = mangleDamageAverage * chanceNonAvoided;
 			calculatedStats.ShredDamagePerHit = shredDamageRaw;
 			calculatedStats.ShredDamagePerSwing = shredDamageAverage * chanceNonAvoided;
-			calculatedStats.RakeDamagePerHit = rakeDamageRaw;
+			calculatedStats.RakeDamagePerHit = rakeDamageRaw + rakeDamageDot;
 			calculatedStats.RakeDamagePerSwing = rakeDamageAverage * chanceNonAvoided;
 			calculatedStats.RipDamagePerHit = ripDamageRaw;
 			calculatedStats.RipDamagePerSwing = ripDamageAverage * chanceNonAvoided;
@@ -561,6 +561,7 @@ namespace Rawr.Cat
 				BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f), 
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle),
 				BonusFerociousBiteDamageMultiplier = 0.03f * talents.FeralAggression,
+				BonusRipDuration = (character.CalculationOptions as CalculationOptionsCat).GlyphOfRip ? 4f : 0f,
 			};
 
 			Stats statsGearEnchantsBuffs = statsItems + statsEnchants + statsBuffs;
@@ -897,7 +898,8 @@ namespace Rawr.Cat
 					NatureResistanceBuff = stats.NatureResistanceBuff,
 					FireResistanceBuff = stats.FireResistanceBuff,
 					FrostResistanceBuff = stats.FrostResistanceBuff,
-					ShadowResistanceBuff = stats.ShadowResistanceBuff
+					ShadowResistanceBuff = stats.ShadowResistanceBuff,
+					BonusRipDuration = stats.BonusRipDuration
 				};
 		}
 
@@ -910,7 +912,7 @@ namespace Rawr.Cat
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-				stats.PhysicalHaste + stats.ArmorPenetrationRating +
+				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration +
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
@@ -999,14 +1001,21 @@ namespace Rawr.Cat
 			dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
 			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
 
-			string attackFormat = "{0}*Damage Per Hit: {1}, Damage Per Swing: {2}";
-			dictValues.Add("Melee Damage", string.Format(attackFormat, HighestDPSRotation.MeleeDamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing));
-			dictValues.Add("Mangle Damage", string.Format(attackFormat, HighestDPSRotation.MangleDamageTotal, MangleDamagePerHit, MangleDamagePerSwing));
-			dictValues.Add("Shred Damage", string.Format(attackFormat, HighestDPSRotation.ShredDamageTotal, ShredDamagePerHit, ShredDamagePerSwing));
-			dictValues.Add("Rake Damage", string.Format(attackFormat, HighestDPSRotation.RakeDamageTotal, RakeDamagePerHit, RakeDamagePerSwing));
-			dictValues.Add("Rip Damage", string.Format(attackFormat, HighestDPSRotation.RipDamageTotal, RipDamagePerHit, RipDamagePerSwing));
-			dictValues.Add("Bite Damage", string.Format(attackFormat, HighestDPSRotation.BiteDamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
-			dictValues.Add("Optimal Rotation", HighestDPSRotation.Name.Replace(" + ", "+") + "*" + HighestDPSRotation.Name);
+			string attackFormat = "{0}%*Damage Per Hit: {1}, Damage Per Swing: {2}";
+			dictValues.Add("Melee Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MeleeDamageTotal / HighestDPSRotation.DamageTotal, MeleeDamagePerHit, MeleeDamagePerSwing));
+			dictValues.Add("Mangle Damage", string.Format(attackFormat, 100f * HighestDPSRotation.MangleDamageTotal / HighestDPSRotation.DamageTotal, MangleDamagePerHit, MangleDamagePerSwing));
+			dictValues.Add("Shred Damage", string.Format(attackFormat, 100f * HighestDPSRotation.ShredDamageTotal / HighestDPSRotation.DamageTotal, ShredDamagePerHit, ShredDamagePerSwing));
+			dictValues.Add("Rake Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RakeDamageTotal / HighestDPSRotation.DamageTotal, RakeDamagePerHit, RakeDamagePerSwing));
+			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing));
+			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
+
+			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\nKeep Rake up.\r\nKeep Mangle up.\r\n{2}{3}Use {4} for combo points.",
+				HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,
+				HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
+				HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",
+				HighestDPSRotation.Name.Contains("Shred") ? "Shred" : "Mangle");
+
+			dictValues.Add("Optimal Rotation", rotationDescription);
 			dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
 			dictValues.Add("Custom Rotation DPS", CustomRotation.DPS.ToString());
 			

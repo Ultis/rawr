@@ -1427,13 +1427,25 @@ Here's a quick rundown of the status of each model:
 				ToString(); //Breakpoint Here
 
 
-				Character charEmpty = Character.Clone();
-				charEmpty.Trinket2 = null;
-				
+				foreach (Item item in ItemCache.AllItems)
+				{
+					if (item.Name.Contains("Valorous ") || item.Name.Contains("Heroes' "))
+					{
+						ItemCache.DeleteItem(item, false);
+						Item newItem = Wowhead.GetItem(item.GemmedId);
+						if (newItem == null)
+						{
+							MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
+							ItemCache.AddItem(item, true, false);
+						}
+						else
+						{
+							ItemCache.AddItem(newItem, true, false);
+						}
+					}
+				}
 
-				CharacterCalculationsBase calcEmpty = Calculations.GetCharacterCalculations(charEmpty);
-				CharacterCalculationsBase calcBonus = Calculations.Instance.GetCharacterCalculations(charEmpty, new Item() { Stats = new Stats() { HitRating = 800 } });
-
+				ItemCache.OnItemsChanged();
 				
 				ToString();
 			}

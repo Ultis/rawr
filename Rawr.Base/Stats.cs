@@ -31,11 +31,12 @@ namespace Rawr
         BonusCPGDamage,
         BonusEvisEnvenomDamage,
         BonusFreeFinisher,
-        BonusLacerateDamage,
+        BonusLacerateDamageMultiplier,
         BonusManaGem,
         BonusMangleBearDamage,
         BonusMangleCatDamage,
         BonusRipDamagePerCPPerTick,
+		BonusRipDuration,
         BonusShredDamage,
         BonusSnDDuration,
         BonusSnDHaste,
@@ -997,10 +998,10 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BonusLacerateDamage
+        public float BonusLacerateDamageMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamage] = value; }
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusLacerateDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1017,15 +1018,23 @@ namespace Rawr
         }
 
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
-        public float BonusRipDamagePerCPPerTick
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick] = value; }
-        }
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
+		public float BonusRipDamagePerCPPerTick
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusRipDamagePerCPPerTick] = value; }
+		}
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Rip Duration")]
+		public float BonusRipDuration
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDuration]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusRipDuration] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Windfury")]
         public float WindfuryAPBonus
         {

@@ -536,9 +536,10 @@ namespace Rawr
 		{
 			if (!_loadingItem)
 			{
-				Item selectedItem = SelectedItem.Tag as Item;
+				Item selectedItem = null;
+				if (SelectedItem != null) selectedItem = SelectedItem.Tag as Item;
 				LoadItems();
-				SelectItem(selectedItem, false);
+				if (selectedItem != null) SelectItem(selectedItem, false);
 			}
 		}
 

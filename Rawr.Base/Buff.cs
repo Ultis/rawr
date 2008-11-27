@@ -1457,7 +1457,7 @@ namespace Rawr
             {
                 Name = "Nordrassil Harness 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { BonusShredDamage = 75, BonusLacerateDamage = 15/5},
+                Stats = { BonusShredDamage = 75/*, BonusLacerateDamage = 15/5*/},
                 SetName = "Nordrassil Harness",
                 SetThreshold = 4
             });
@@ -1710,7 +1710,26 @@ namespace Rawr
                 Stats = { StarfireCritChance = 0.05f },
                 SetName = "Thunderheart Regalia",
                 SetThreshold = 4
-            });
+			});
+			// Feral Tier 7 set bonuses
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Dreamwalker Battlegear 2 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { BonusRipDuration = 4f, BonusLacerateDamageMultiplier = 0.05f },
+				SetName = "Dreamwalker Battlegear",
+				SetThreshold = 2
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Dreamwalker Battlegear 4 Piece Bonus",
+				Group = "Set Bonuses",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { /*Increased Barkskin Duration*/ },
+				SetName = "Dreamwalker Battlegear",
+				SetThreshold = 4
+			});
 			// Moonkin Tier 7 set bonuses
 			defaultBuffs.Add(new Buff()
 			{
@@ -1979,8 +1998,25 @@ namespace Rawr
             
 			#endregion
 
+			#region Profession Buffs
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Toughness",
+				Group = "Profession Buffs",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { Health = 500f }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Master of Anatomy",
+				Group = "Profession Buffs",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { CritRating = 25f }
+			});
+			#endregion
+
 			#region Temporary Buffs
-            defaultBuffs.Add(new Buff()
+			defaultBuffs.Add(new Buff()
             {
                 Name = "Bloodlust",
                 Group = "Temporary Buffs",
