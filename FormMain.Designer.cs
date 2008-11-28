@@ -139,12 +139,12 @@ namespace Rawr
             this.copyCharacterStatsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculationDisplay1 = new Rawr.CalculationDisplay();
             this.talentPicker1 = new Rawr.TalentPicker();
             this.buffSelector1 = new Rawr.BuffSelector();
@@ -170,6 +170,7 @@ namespace Rawr
             this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
             this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
             this.itemComparison1 = new Rawr.ItemComparison();
+            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -1047,6 +1048,7 @@ namespace Rawr
             // 
             // loadFromCharacterProfilerToolStripMenuItem
             // 
+            this.loadFromCharacterProfilerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromCharacterProfilerToolStripMenuItem.Image")));
             this.loadFromCharacterProfilerToolStripMenuItem.Name = "loadFromCharacterProfilerToolStripMenuItem";
             this.loadFromCharacterProfilerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
             this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
@@ -1177,6 +1179,7 @@ namespace Rawr
             this.toolStripSeparator11,
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
             this.reloadInvetoryFromCharacterProfilerToolStripMenuItem,
+            this.toolStripSeparator12,
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem,
             this.updateItemCacheToolStripMenuItem,
             this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem,
@@ -1247,6 +1250,13 @@ namespace Rawr
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Text = "Reload Current Character from Armory";
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.reloadCurrentCharacterFromArmoryToolStripMenuItem_Click);
             // 
+            // reloadInvetoryFromCharacterProfilerToolStripMenuItem
+            // 
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Name = "reloadInvetoryFromCharacterProfilerToolStripMenuItem";
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(311, 22);
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Text = "Reload Current Character from Character Profiler";
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click);
+            // 
             // loadPossibleUpgradesFromArmoryToolStripMenuItem
             // 
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Name = "loadPossibleUpgradesFromArmoryToolStripMenuItem";
@@ -1279,13 +1289,6 @@ namespace Rawr
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(311, 22);
             this.optionsToolStripMenuItem.Text = "Options...";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // reloadInvetoryFromCharacterProfilerToolStripMenuItem
-            // 
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Name = "reloadInvetoryFromCharacterProfilerToolStripMenuItem";
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(311, 22);
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Text = "Reload Current Character from Character Profiler";
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click);
             // 
             // calculationDisplay1
             // 
@@ -1645,6 +1648,11 @@ namespace Rawr
             this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.itemComparison1.TabIndex = 3;
             // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(308, 6);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1823,6 +1831,7 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFilterOther;
 		private System.Windows.Forms.ToolStripMenuItem reloadKnownWotLKItemsFromWowheadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadInvetoryFromCharacterProfilerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         
     }
 }

@@ -1554,6 +1554,7 @@ Here's a quick rundown of the status of each model:
                     character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
                 }
                 character.AvailableItems = reload.AvailableItems;
+                character.AssignAllTalentsFromCharacter(reload);
             }
             return character;
         }

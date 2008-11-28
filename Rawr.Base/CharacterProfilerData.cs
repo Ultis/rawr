@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using System.IO;
+using System.Reflection;
+
 namespace Rawr
 {
     /**
@@ -51,34 +53,8 @@ namespace Rawr
             "<br>Projectile",
         };
 
-        static readonly Dictionary<string, Character.CharacterRace> s_stringToRace;
-        static readonly Dictionary<string, Character.CharacterClass> s_stringToClass;
-
         static CharacterProfilerCharacter()
         {
-            s_stringToRace = new Dictionary<string, Character.CharacterRace>();
-            s_stringToRace.Add("Human", Character.CharacterRace.Human);
-            s_stringToRace.Add("Orc", Character.CharacterRace.Orc);
-            s_stringToRace.Add("Dwarf", Character.CharacterRace.Dwarf);
-            s_stringToRace.Add("Night Elf", Character.CharacterRace.NightElf);
-            s_stringToRace.Add("Undead", Character.CharacterRace.Undead);
-            s_stringToRace.Add("Tauren", Character.CharacterRace.Tauren);
-            s_stringToRace.Add("Gnome", Character.CharacterRace.Gnome);
-            s_stringToRace.Add("Troll", Character.CharacterRace.Troll);
-            s_stringToRace.Add("Blood Elf", Character.CharacterRace.BloodElf);
-            s_stringToRace.Add("Draenei", Character.CharacterRace.Draenei);
-
-            s_stringToClass = new Dictionary<string, Character.CharacterClass>();
-            s_stringToClass.Add("Warrior", Character.CharacterClass.Warrior);
-            s_stringToClass.Add("Paladin", Character.CharacterClass.Paladin);
-            s_stringToClass.Add("Hunter", Character.CharacterClass.Hunter);
-            s_stringToClass.Add("Rogue", Character.CharacterClass.Rogue);
-            s_stringToClass.Add("Priest", Character.CharacterClass.Priest);
-            s_stringToClass.Add("DeathKnight", Character.CharacterClass.DeathKnight);
-            s_stringToClass.Add("Shaman", Character.CharacterClass.Shaman);
-            s_stringToClass.Add("Mage", Character.CharacterClass.Mage);
-            s_stringToClass.Add("Warlock", Character.CharacterClass.Warlock);
-            s_stringToClass.Add("Druid", Character.CharacterClass.Druid);           
         }
 
         static int getEnchant(SavedVariablesDictionary item)
@@ -222,6 +198,52 @@ namespace Rawr
             }
         }
 
+        static int getTalentPointsFromTree(SavedVariablesDictionary talent_tree, string spec, string talent)
+        {
+            int points = 0;
+
+            SavedVariablesDictionary spec_tree = talent_tree[spec] as SavedVariablesDictionary;
+            if (spec_tree != null)
+            {
+                SavedVariablesDictionary talent_info = spec_tree[talent] as SavedVariablesDictionary;
+                if (talent_info != null)
+                {
+                    string rank_info = talent_info["Rank"] as string;
+
+                    int split_pos = rank_info.IndexOf(':');
+                    string points_str = rank_info.Remove(split_pos);
+
+                    points = (int)Int32.Parse(points_str);
+                }
+            }
+
+            return points;
+        }
+
+        void setTalentsFromTree(SavedVariablesDictionary characterInfo)
+        {
+            SavedVariablesDictionary talent_tree = characterInfo["Talents"] as SavedVariablesDictionary;
+
+            TalentsBase Talents = m_character.CurrentTalents;
+
+            if (Talents != null)
+            {
+                List<string> treeNames = new List<string>((string[])Talents.GetType().GetField("TreeNames").GetValue(Talents));
+
+                //TalentTree currentTree;
+                foreach (PropertyInfo pi in Talents.GetType().GetProperties())
+                {
+                    TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];
+                    if (talentDatas.Length > 0)
+                    {
+                        TalentDataAttribute talentData = talentDatas[0];
+
+                        int points = getTalentPointsFromTree(talent_tree, treeNames[talentData.Tree], talentData.Name);
+                        m_character.CurrentTalents.Data[talentData.Index] = points;
+                    }
+                }
+            }
+        }
 
         /*
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,
@@ -287,6 +309,44 @@ namespace Rawr
 
             // set the character class
             Character.Class = charClass;
+            // create an empty talent tree
+            switch (charClass)
+            {
+                case Character.CharacterClass.Warrior:
+                    m_character.WarriorTalents = new WarriorTalents();
+                    break;
+                case Character.CharacterClass.Paladin:
+                    m_character.PaladinTalents = new PaladinTalents();
+                    break;
+                case Character.CharacterClass.Hunter:
+                    m_character.HunterTalents = new HunterTalents();
+                    break;
+                case Character.CharacterClass.Rogue:
+                    m_character.RogueTalents = new RogueTalents();
+                    break;
+                case Character.CharacterClass.Priest:
+                    m_character.PriestTalents = new PriestTalents();
+                    break;
+                case Character.CharacterClass.Shaman:
+                    m_character.ShamanTalents = new ShamanTalents();
+                    break;
+                case Character.CharacterClass.Mage:
+                    m_character.MageTalents = new MageTalents();
+                    break;
+                case Character.CharacterClass.Warlock:
+                    m_character.WarlockTalents = new WarlockTalents();
+                    break;
+                case Character.CharacterClass.Druid:
+                    m_character.DruidTalents = new DruidTalents();
+                    break;
+                case Character.CharacterClass.DeathKnight:
+                    m_character.DeathKnightTalents = new DeathKnightTalents();
+                    break;
+                default:
+                    break;
+            }
+            // load up the talents
+            setTalentsFromTree(characterInfo);
 
             // Populate available items
             // Note that some of these items cannot be enchanted
