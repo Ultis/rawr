@@ -160,13 +160,16 @@ namespace Rawr
 		public static Item GetItem(string gemmedId)
 		{
 			string[] idsplit = gemmedId.Split('.');
-			string id = idsplit[0];
+			string wowhead_id = idsplit[0];
 			WebRequestWrapper wrw = new WebRequestWrapper();
-			XmlDocument docItem = wrw.DownloadItemWowhead(id);
+            XmlDocument docItem = wrw.DownloadItemWowhead(wowhead_id);
 			int idGem1 = idsplit.Length > 1 ? int.Parse(idsplit[1]) : 0;
 			int idGem2 = idsplit.Length > 2 ? int.Parse(idsplit[2]) : 0;
 			int idGem3 = idsplit.Length > 3 ? int.Parse(idsplit[3]) : 0;
-			Item item = new Item() { _id = int.Parse(id), Stats = new Stats(), Sockets = new Sockets(),
+            // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
+            int id = 0;
+            foreach (XmlNode node in docItem.SelectNodes("wowhead/item")) { id = int.Parse(node.Attributes["id"].Value); }
+			Item item = new Item() { _id = id, Stats = new Stats(), Sockets = new Sockets(),
 				_gem1Id = idGem1, _gem2Id = idGem2, _gem3Id = idGem3 };
 			string htmlTooltip = string.Empty;
 			string json1 = string.Empty;

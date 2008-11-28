@@ -40,13 +40,20 @@ namespace Rawr
             }
         }
 
+        public string Name
+        {
+            get { return textItemId.Text; }
+        }
+
 		public bool UseArmory
 		{
-			get
-			{
-				return radioButtonArmory.Checked;
-			}
+			get { return cbArmory.Checked; }
 		}
+
+        public bool UseWowhead
+        {
+            get { return cbWowhead.Checked; }
+        }
 
         public FormEnterId()
         {

@@ -331,7 +331,11 @@ namespace Rawr
 				try
 				{
 					WebRequestWrapper.ResetFatalErrorIndicator();
-					AddItemById(form.Value, form.UseArmory);
+                    int itemId = form.Value;
+                    if (itemId > 0)
+					    AddItemById(form.Value, form.UseArmory, form.UseWowhead);
+                    else
+                        AddItemByName(form.Name, form.UseArmory, form.UseWowhead);
 				}
 				finally
 				{
@@ -341,48 +345,96 @@ namespace Rawr
             form.Dispose();
 		}
 
-		private void AddItemById(int id, bool useArmory) { AddItemsById(new int[] { id }, useArmory); }
-		private void AddItemsById(int[] ids, bool useArmory)
+        private void AddItemByName(string name, bool useArmory, bool useWowhead)
+        {
+            Item newItem = null;
+
+            // try the armory (if requested)
+            if (useArmory && !useWowhead)
+            {
+                MessageBox.Show("Unable to load from the Armory by name.  Please try Wowhead.", "Item not found.", MessageBoxButtons.OK);                
+            }
+
+            // try wowhead (if requested)
+            if ((newItem == null) && useWowhead)
+            {
+                // make sure we don't get some bad input that is going to mess with our gem info passing
+                if (!name.Contains("."))
+                {
+                    // need to add + where the spaces are
+                    string wowhead_name = name.Replace(' ', '+');
+                    // we can now pass it through the normal URI
+                    newItem = Wowhead.GetItem(wowhead_name + ".0.0.0");
+                    if (newItem != null) ItemCache.AddItem(newItem, true, true);
+                }
+            }
+
+            if (newItem == null)
+            {
+                MessageBox.Show("Unable to load item: " + name + ".", "Item not found.", MessageBoxButtons.OK);
+            }
+            else
+            {
+                AddNewItemToListView(newItem);
+            }
+        }
+
+		private void AddItemById(int id, bool useArmory, bool useWowhead) { AddItemsById(new int[] { id }, useArmory, useWowhead); }
+        private void AddItemsById(int[] ids, bool useArmory, bool useWowhead)
 		{
 			foreach (int id in ids)
-			{
-				Item newItem;
+            {
+                Item newItem = null;
+
+                // try the armory (if requested)
                 if (useArmory)
+                {
                     newItem = Item.LoadFromId(id, true, "Manually Added", true);
-                else
+                }
+
+                // try wowhead (if requested)
+                if ((newItem == null) && useWowhead)
                 {
                     newItem = Wowhead.GetItem(id.ToString() + ".0.0.0");
                     if (newItem != null) ItemCache.AddItem(newItem, true, true);
                 }
-				if (newItem == null)
-				{
-					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-					{
-						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
-						ItemCache.AddItem(newItem);
-					}
-				}
-                //Not an else, because we might have just created new Item manually.
-                if (newItem != null)
-				{
-					ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
-					newLvi.Tag = newItem;
-					//newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
-					string slot = newItem.Slot.ToString();
-					if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
-						 || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
-						 || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
-					newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
 
-                    listViewItems.Items.Add(newLvi);
-                    listViewItems.Sort();
-                    listViewItems.SelectedIndices.Clear();
-                    newLvi.Selected = true;
-					newLvi.EnsureVisible();
-                
+                if (newItem == null)
+                {
+                    if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
+                        ItemCache.AddItem(newItem);
+                    }
                 }
-			}
+                {
+                    AddNewItemToListView(newItem);
+                }
+            }
 		}
+
+        private void AddNewItemToListView(Item newItem)
+        {
+            // show the item we just added (if we added one)
+            if (newItem != null)
+            {
+                ListViewItem newLvi = new ListViewItem(newItem.Name, 0, listViewItems.Groups["listViewGroup" + newItem.Slot.ToString()]);
+                newLvi.Tag = newItem;
+                //newLvi.ImageKey = EnsureIconPath(newItem.IconPath);
+                string slot = newItem.Slot.ToString();
+                if (newItem.Slot == Item.ItemSlot.Red || newItem.Slot == Item.ItemSlot.Orange || newItem.Slot == Item.ItemSlot.Yellow
+                     || newItem.Slot == Item.ItemSlot.Green || newItem.Slot == Item.ItemSlot.Blue || newItem.Slot == Item.ItemSlot.Purple
+                     || newItem.Slot == Item.ItemSlot.Prismatic || newItem.Slot == Item.ItemSlot.Meta) slot = "Gems";
+                newLvi.Group = listViewItems.Groups["listViewGroup" + slot];
+
+                listViewItems.Items.Add(newLvi);
+                listViewItems.Sort();
+                listViewItems.SelectedIndices.Clear();
+                newLvi.Selected = true;
+                newLvi.EnsureVisible();
+
+            }
+        }
 
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{

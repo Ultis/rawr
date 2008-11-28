@@ -28,92 +28,105 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
-			this.buttonOK = new System.Windows.Forms.Button();
-			this.buttonCancel = new System.Windows.Forms.Button();
-			this.textItemId = new System.Windows.Forms.TextBox();
-			this.lblTextAddItemID = new System.Windows.Forms.Label();
-			this.radioButtonWowhead = new System.Windows.Forms.RadioButton();
-			this.radioButtonArmory = new System.Windows.Forms.RadioButton();
-			this.SuspendLayout();
-			// 
-			// buttonOK
-			// 
-			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonOK.Location = new System.Drawing.Point(163, 51);
-			this.buttonOK.Name = "buttonOK";
-			this.buttonOK.Size = new System.Drawing.Size(75, 23);
-			this.buttonOK.TabIndex = 0;
-			this.buttonOK.Text = "OK";
-			this.buttonOK.UseVisualStyleBackColor = true;
-			// 
-			// buttonCancel
-			// 
-			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(82, 51);
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-			this.buttonCancel.TabIndex = 1;
-			this.buttonCancel.Text = "Cancel";
-			this.buttonCancel.UseVisualStyleBackColor = true;
-			// 
-			// textItemId
-			// 
-			this.textItemId.Location = new System.Drawing.Point(12, 25);
-			this.textItemId.Name = "textItemId";
-			this.textItemId.Size = new System.Drawing.Size(154, 20);
-			this.textItemId.TabIndex = 3;
-			// 
-			// lblTextAddItemID
-			// 
-			this.lblTextAddItemID.AutoSize = true;
-			this.lblTextAddItemID.Location = new System.Drawing.Point(12, 9);
-			this.lblTextAddItemID.Name = "lblTextAddItemID";
-			this.lblTextAddItemID.Size = new System.Drawing.Size(207, 13);
-			this.lblTextAddItemID.TabIndex = 4;
-			this.lblTextAddItemID.Text = "Enter Item ID or link (Wowhead, Thottbot):";
-			// 
-			// radioButtonWowhead
-			// 
-			this.radioButtonWowhead.AutoSize = true;
-			this.radioButtonWowhead.Location = new System.Drawing.Point(172, 26);
-			this.radioButtonWowhead.Name = "radioButtonWowhead";
-			this.radioButtonWowhead.Size = new System.Drawing.Size(74, 17);
-			this.radioButtonWowhead.TabIndex = 5;
-			this.radioButtonWowhead.Text = "Wowhead";
-			this.radioButtonWowhead.UseVisualStyleBackColor = true;
-			// 
-			// radioButtonArmory
-			// 
-			this.radioButtonArmory.AutoSize = true;
-			this.radioButtonArmory.Checked = true;
-			this.radioButtonArmory.Location = new System.Drawing.Point(252, 26);
-			this.radioButtonArmory.Name = "radioButtonArmory";
-			this.radioButtonArmory.Size = new System.Drawing.Size(57, 17);
-			this.radioButtonArmory.TabIndex = 5;
-			this.radioButtonArmory.TabStop = true;
-			this.radioButtonArmory.Text = "Armory";
-			this.radioButtonArmory.UseVisualStyleBackColor = true;
-			// 
-			// FormEnterId
-			// 
-			this.AcceptButton = this.buttonOK;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(321, 82);
-			this.ControlBox = false;
-			this.Controls.Add(this.radioButtonArmory);
-			this.Controls.Add(this.radioButtonWowhead);
-			this.Controls.Add(this.lblTextAddItemID);
-			this.Controls.Add(this.textItemId);
-			this.Controls.Add(this.buttonCancel);
-			this.Controls.Add(this.buttonOK);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Name = "FormEnterId";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Add item";
-			this.Load += new System.EventHandler(this.FormEnterId_Load);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.textItemId = new System.Windows.Forms.TextBox();
+            this.lblTextAddItemID = new System.Windows.Forms.Label();
+            this.cbArmory = new System.Windows.Forms.CheckBox();
+            this.cbWowhead = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(165, 83);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 0;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(84, 83);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // textItemId
+            // 
+            this.textItemId.Location = new System.Drawing.Point(12, 36);
+            this.textItemId.Name = "textItemId";
+            this.textItemId.Size = new System.Drawing.Size(235, 19);
+            this.textItemId.TabIndex = 3;
+            // 
+            // lblTextAddItemID
+            // 
+            this.lblTextAddItemID.AutoSize = true;
+            this.lblTextAddItemID.Location = new System.Drawing.Point(12, 9);
+            this.lblTextAddItemID.Name = "lblTextAddItemID";
+            this.lblTextAddItemID.Size = new System.Drawing.Size(156, 12);
+            this.lblTextAddItemID.TabIndex = 4;
+            this.lblTextAddItemID.Text = "Enter the Item ID, Item Name,";
+            // 
+            // cbArmory
+            // 
+            this.cbArmory.AutoSize = true;
+            this.cbArmory.Checked = true;
+            this.cbArmory.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbArmory.Location = new System.Drawing.Point(12, 61);
+            this.cbArmory.Name = "cbArmory";
+            this.cbArmory.Size = new System.Drawing.Size(61, 16);
+            this.cbArmory.TabIndex = 5;
+            this.cbArmory.Text = "Armory";
+            this.cbArmory.UseVisualStyleBackColor = true;
+            // 
+            // cbWowhead
+            // 
+            this.cbWowhead.AutoSize = true;
+            this.cbWowhead.Checked = true;
+            this.cbWowhead.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbWowhead.Location = new System.Drawing.Point(98, 61);
+            this.cbWowhead.Name = "cbWowhead";
+            this.cbWowhead.Size = new System.Drawing.Size(71, 16);
+            this.cbWowhead.TabIndex = 6;
+            this.cbWowhead.Text = "Wowhead";
+            this.cbWowhead.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(202, 12);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "or Database Link (Wowhead, Thottbot):";
+            // 
+            // FormEnterId
+            // 
+            this.AcceptButton = this.buttonOK;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(257, 116);
+            this.ControlBox = false;
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbWowhead);
+            this.Controls.Add(this.cbArmory);
+            this.Controls.Add(this.lblTextAddItemID);
+            this.Controls.Add(this.textItemId);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            //this.Name = "FormEnterId";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Add item";
+            this.Load += new System.EventHandler(this.FormEnterId_Load);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -123,7 +136,8 @@ namespace Rawr
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TextBox textItemId;
         private System.Windows.Forms.Label lblTextAddItemID;
-		private System.Windows.Forms.RadioButton radioButtonWowhead;
-		private System.Windows.Forms.RadioButton radioButtonArmory;
+        private System.Windows.Forms.CheckBox cbArmory;
+        private System.Windows.Forms.CheckBox cbWowhead;
+        private System.Windows.Forms.Label label1;
     }
 }
