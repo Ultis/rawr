@@ -52,6 +52,7 @@ namespace Rawr
         };
 
         static readonly Dictionary<string, Character.CharacterRace> s_stringToRace;
+        static readonly Dictionary<string, Character.CharacterClass> s_stringToClass;
 
         static CharacterProfilerCharacter()
         {
@@ -66,6 +67,18 @@ namespace Rawr
             s_stringToRace.Add("Troll", Character.CharacterRace.Troll);
             s_stringToRace.Add("Blood Elf", Character.CharacterRace.BloodElf);
             s_stringToRace.Add("Draenei", Character.CharacterRace.Draenei);
+
+            s_stringToClass = new Dictionary<string, Character.CharacterClass>();
+            s_stringToClass.Add("Warrior", Character.CharacterClass.Warrior);
+            s_stringToClass.Add("Paladin", Character.CharacterClass.Paladin);
+            s_stringToClass.Add("Hunter", Character.CharacterClass.Hunter);
+            s_stringToClass.Add("Rogue", Character.CharacterClass.Rogue);
+            s_stringToClass.Add("Priest", Character.CharacterClass.Priest);
+            s_stringToClass.Add("DeathKnight", Character.CharacterClass.DeathKnight);
+            s_stringToClass.Add("Shaman", Character.CharacterClass.Shaman);
+            s_stringToClass.Add("Mage", Character.CharacterClass.Mage);
+            s_stringToClass.Add("Warlock", Character.CharacterClass.Warlock);
+            s_stringToClass.Add("Druid", Character.CharacterClass.Druid);           
         }
 
         static int getEnchant(SavedVariablesDictionary item)
@@ -223,13 +236,20 @@ namespace Rawr
         {
             m_characterInfo = characterInfo;
             m_sName = sName;
-            m_iLevel = (int) (characterInfo["Level"] as long?);
+            m_iLevel = (int)(characterInfo["Level"] as long?);
+            
             m_sRace = (string)characterInfo["Race"];
             m_sClass = (string)characterInfo["Class"];
 
+            Character.CharacterRace race = (Character.CharacterRace)(characterInfo["RaceId"] as long?);
+            Character.CharacterClass charClass = (Character.CharacterClass)(characterInfo["ClassId"] as long?);
+
+            // it might be possible to get this from the Locale field, but I'd need data from the other regions
+            Character.CharacterRegion charRegion = Character.CharacterRegion.US;
+
             m_character = new Character(sName, sRealm, 
-            Character.CharacterRegion.US, // Have to figure out if I know the region
-            s_stringToRace[characterInfo["Race"] as string],
+            charRegion,
+            race,
             getGearStringBySlot(characterInfo, "Head"),
             getGearStringBySlot(characterInfo, "Neck"),
             getGearStringBySlot(characterInfo, "Shoulder"),
@@ -264,6 +284,9 @@ namespace Rawr
             getEnchantBySlot(characterInfo, "MainHand"),
             getEnchantBySlot(characterInfo, "SecondaryHand"),
             getEnchantBySlot(characterInfo, "Ranged"));
+
+            // set the character class
+            Character.Class = charClass;
 
             // Populate available items
             // Note that some of these items cannot be enchanted
@@ -336,6 +359,8 @@ namespace Rawr
         public CharacterProfilerData(string sFileName)
         {
             SavedVariablesDictionary savedVariables = SavedVariablesParser.parse(sFileName);
+
+            // TODO: check the version
 
             if (!savedVariables.ContainsKey("myProfile"))
             {
