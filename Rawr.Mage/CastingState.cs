@@ -432,12 +432,12 @@ namespace Rawr.Mage
             ResilienceCritDamageReduction = 1;
             ResilienceCritRateReduction = 0;
 
-            ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
-            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
-            NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
-            ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower)) * ResilienceCritDamageReduction;
+            ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
+            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
+            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
+            NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
+            ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
 
             ArcaneCritRate = SpellCrit;
             FireCritRate = SpellCrit + 0.02f * character.MageTalents.CriticalMass + 0.01f * character.MageTalents.Pyromaniac;

@@ -48,7 +48,8 @@ namespace Rawr
         PhysicalCrit,
         CritRating,
         CritMeleeRating,
-		CritChanceReduction,
+        CritBonusDamage,
+        CritChanceReduction,
 		Defense,
         DefenseRating,
         Dodge,
@@ -716,6 +717,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritMeleeRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crit Bonus Damage")]
+        public float CritBonusDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritBonusDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritBonusDamage] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

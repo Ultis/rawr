@@ -208,7 +208,12 @@ namespace Rawr
 				stats.AttackPower += 120; //Crusade = 120ap
 				stats.SpellPower += 80;
 			}
-			else if (line.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
+            else if (line.StartsWith("Each time you cast a spell you gain 26 spell power for the next 10 sec, stacking up to 10 times."))
+            {
+                // Illustration of the Dragon Soul
+                stats.SpellPower += 260;
+            }
+            else if (line.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
 				stats.WeaponDamage += 2f; //Romulo's = 4dmg
 			else if (line.StartsWith("Mangle has a 40% chance to grant 140 Strength for 8 sec"))
 			{

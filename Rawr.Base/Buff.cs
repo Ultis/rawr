@@ -1636,7 +1636,7 @@ namespace Rawr
                 Name = "Frostfire Garb 4 Piece",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusSpellCritMultiplier = 0.05f },
+                Stats = { CritBonusDamage = 0.05f },
                 SetName = "Frostfire Garb",
                 SetThreshold = 4
             });
