@@ -1487,6 +1487,15 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Gladiator's Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Resilience = 35 },
+                SetName = "Gladiator's Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Aldor Regalia 2 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { AldorRegaliaInterruptProtection = 1 },
