@@ -1477,6 +1477,7 @@ Here's a quick rundown of the status of each model:
                     {
                         CharacterProfilerData characterList = new CharacterProfilerData(dialog.FileName);
 
+                        bool found_character = false;
                         for (int r=0; r<characterList.Realms.Count; r++)
                         {
                             if (characterList.Realms[r].Name == this.Character._realm)
@@ -1493,14 +1494,18 @@ Here's a quick rundown of the status of each model:
                                         args.character = Character;
                                         args.characterProfilerCharacter = characterList.Realms[r].Characters[c];
                                         bw.RunWorkerAsync(args);
-                                    }
-                                    else
-                                    {
-                                        string error_msg = string.Format("{0} of {1} was not found in the Character Profiler Data.", this.Character._name, this.Character._realm);
-                                        MessageBox.Show(error_msg, "Character Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                        // we found the character stop searching
+                                        found_character = true;
+                                        break;
                                     }
                                 }
                             }
+                        }
+
+                        if (!found_character)
+                        {
+                            string error_msg = string.Format("{0} of {1} was not found in the Character Profiler Data.", this.Character._name, this.Character._realm);
+                            MessageBox.Show(error_msg, "Character Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     catch (InvalidDataException ex)
@@ -1532,7 +1537,7 @@ Here's a quick rundown of the status of each model:
             else
             {
                 Character character = e.Result as Character;
-                this.Character = character;
+                LoadCharacterIntoForm(character);
                 _unsavedChanges = true;
             }
             FinishedProcessing();

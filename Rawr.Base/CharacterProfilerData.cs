@@ -440,10 +440,17 @@ namespace Rawr
 
                 foreach (string sCharacter in characters.Keys)
                 {
-                    SavedVariablesDictionary characterInfo = (SavedVariablesDictionary)characters[sCharacter];
-                    CharacterProfilerCharacter character = new CharacterProfilerCharacter(sCharacter, sRealm, characterInfo);
-                    realm.Characters.Add(character);
-                    bHaveCharacters = true;
+                    try
+                    {
+                        SavedVariablesDictionary characterInfo = (SavedVariablesDictionary)characters[sCharacter];
+                        CharacterProfilerCharacter character = new CharacterProfilerCharacter(sCharacter, sRealm, characterInfo);
+                        realm.Characters.Add(character);
+                        bHaveCharacters = true;
+                    }
+                    catch
+                    {
+                        // just ignore characters that give errors
+                    }
                 }
 
                 if (bHaveCharacters)
