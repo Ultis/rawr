@@ -38,26 +38,12 @@ namespace Rawr.Retribution
             rbSoC.Checked = calcOpts.Seal == 0;
             rbSoB.Checked = calcOpts.Seal == 1;
 
-            rbDrumsWar.Checked = calcOpts.DrumsOfWar;
-            rbDrumsBattle.Checked = calcOpts.DrumsOfBattle;
-            rbDrumsNone.Checked = !calcOpts.DrumsOfBattle && !calcOpts.DrumsOfWar;
-
-            chkBloodLust.Checked = calcOpts.Bloodlust;
-            chkHoW.Checked = calcOpts.HammerOfWrath;
-            cbWindfuryEffect.Checked = calcOpts.Windfury;
-
             cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			tbFightLength.Value = calcOpts.FightLength;
 			lblFightLengthNum.Text = tbFightLength.Value.ToString();
 
             checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
             checkBoxExorcism.Checked = calcOpts.Exorcism;
-
-            rbAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
-            rbScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
-
-            tbFerociousInspiration.Value = calcOpts.FerociousInspiration;
-            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
 
             nudTargetArmor.Value = calcOpts.BossArmor;
         }
@@ -243,81 +229,10 @@ namespace Rawr.Retribution
             graph.Show();
         }
 
-        private void rbAldor_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void rbScryer_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-			calcOpts.ShattrathFaction = rbAldor.Checked ? "Aldor" : "Scryer";
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void tbFerociousInspiration_ValueChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.FerociousInspiration = tbFerociousInspiration.Value;
-            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
-            Character.OnCalculationsInvalidated();
-        }
-
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
             calcOpts.BossArmor = (int)nudTargetArmor.Value;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void rbDrumsNone_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsNone.Checked)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.DrumsOfBattle = false;
-                calcOpts.DrumsOfWar = false;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void rbDrumsWar_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsWar.Checked)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.DrumsOfBattle = false;
-                calcOpts.DrumsOfWar = true;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void rbDrumsBattle_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsBattle.Checked)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.DrumsOfBattle = true;
-                calcOpts.DrumsOfWar = false;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkBloodLust_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            if (chkBloodLust.Checked) { calcOpts.Bloodlust = true; }
-            else { calcOpts.Bloodlust = false; }
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void cbWindfuryEffect_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            if (cbWindfuryEffect.Checked) { calcOpts.Windfury = true; }
-            else { calcOpts.Windfury = false; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -376,14 +291,6 @@ namespace Rawr.Retribution
             else { calcOpts.GlyphOfSenseUD = false; }
             Character.OnCalculationsInvalidated();
         }
-
-        private void chkHitAura_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            if (chkHitAura.Checked) { calcOpts.HeroicPresence = true; }
-            else { calcOpts.HeroicPresence = false; }
-            Character.OnCalculationsInvalidated();
-        }
     }
 
 	[Serializable]
@@ -399,7 +306,7 @@ namespace Rawr.Retribution
 			return xml.ToString();
 		}
 
-		public int TargetLevel = 73;
+		public int TargetLevel = 83;
 		public int BossArmor = 7700;
 		public int FightLength = 10;
 		public bool Exorcism = false;
@@ -414,25 +321,7 @@ namespace Rawr.Retribution
         public bool HeroicPresence = false;
         public bool HammerOfWrath = false;
 
-		public int TwoHandedSpec = 0;
-		public int Conviction = 0;
-		public int Crusade = 0;
-		public int DivineStrength = 0;
-		public int Fanaticism = 0;
-		public int ImprovedRetributionAura = 0;
-		public int SanctifiedSeals = 0;
-		public int Vengeance = 0;
-        public int CrusaderStrike = 0;
-	    public int ImprovedJudgements = 0;
-
-        // new talents in 3.0
-	    public int TheArtOfWar = 0;
-	    public int SanctifiedRetribution = 0;
-	    public int SanctifiedWrath = 0;
-	    public int SheathOfLight = 0;
-	    public int SwiftRetribution = 0;
-	    public int RighteousVengeance = 0;
-	    public int DivineStorm = 0;
+	    public PaladinTalents talents = new PaladinTalents();
 
         // glyphs
         public bool GlyphOfSoC = false;

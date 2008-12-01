@@ -167,7 +167,7 @@ namespace Rawr.Retribution
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-            GetTalents(character);
+            calcOpts.talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsRetribution calcs = new CharacterCalculationsRetribution();
@@ -175,11 +175,11 @@ namespace Rawr.Retribution
             calcs.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
             //damage multipliers
-            float twoHandedSpec = 1f + (0.02f*(float) calcOpts.TwoHandedSpec);
-            float impretriAura = 1f + 0.01f*(float) calcOpts.ImprovedRetributionAura;
-            float crusade = 1f + 0.02f*(float) calcOpts.Crusade;
-            float vengeance = 1f + 0.03f*(float) calcOpts.Vengeance;
-            float retriAura = 1f + 0.1f*(float) calcOpts.SanctifiedRetribution;
+            float twoHandedSpec = 1f + ( 0.02f * (float)calcOpts.talents.TwoHandedWeaponSpecialization );
+            float impretriAura = 1f + 0.01f * (float)calcOpts.talents.ImprovedRetributionAura;
+            float crusade = 1f + 0.02f * (float)calcOpts.talents.Crusade;
+            float vengeance = 1f + 0.03f * (float)calcOpts.talents.Vengeance;
+            float retriAura = 1f + 0.1f * (float)calcOpts.talents.SanctifiedRetribution;
             float spellPowerMult = 1f + stats.BonusSpellPowerMultiplier;
                 // Covers all % spell damage increases.  Misery, FI.
             float physPowerMult = 1f + stats.BonusDamageMultiplier;
@@ -200,7 +200,7 @@ namespace Rawr.Retribution
             // Avenging Wrath -- Calculating uptime
             float fightDuration = calcOpts.FightLength * 60;
             int remainder = 0, noOfFullAW = 0;
-            int awCooldownInSeconds = 180 - (calcOpts.SanctifiedWrath * 30);
+            int awCooldownInSeconds = 180 - ( calcOpts.talents.SanctifiedWrath * 30 );
             int div = Math.DivRem(Convert.ToInt32(fightDuration), awCooldownInSeconds, out remainder);
             if (remainder == 0)
                 noOfFullAW = div;
@@ -231,8 +231,8 @@ namespace Rawr.Retribution
             {
                 hastedSpeed = baseSpeed / ( 1f + ( stats.HasteRating / 3278f ) );
 
-                if (calcOpts.SwiftRetribution > 0)
-                    hastedSpeed /= 1f + (0.01f * (float)calcOpts.SwiftRetribution);
+                if ( calcOpts.talents.SwiftRetribution > 0 )
+                    hastedSpeed /= 1f + ( 0.01f * (float)calcOpts.talents.SwiftRetribution );
                 // Mongoose Enchant grants 2% haste
                 if (stats.MongooseProc > 0)
                     hastedSpeed /= 1f + (0.02f * 0.4f);  // ASSUMPTION: Mongoose has a 40% uptime
@@ -316,10 +316,7 @@ namespace Rawr.Retribution
 
             #region Windfury Application
             {
-                if (calcOpts.Windfury)
-                {
-                    hastedSpeed /= 1.2f;
-                }
+                hastedSpeed /= 1f + stats.PhysicalHaste;
             }
             #endregion
 
@@ -399,7 +396,7 @@ namespace Rawr.Retribution
 
             #region Crusader Strike
             {
-                if (calcOpts.CrusaderStrike > 0)
+                if ( calcOpts.talents.CrusaderStrike > 0 )
                 {
                     float crusCD = 6.5f, crusCoeff = 1.1f, crusAvgDam = 0f;
 
@@ -417,7 +414,7 @@ namespace Rawr.Retribution
 
                     // Total Crusader Strike DPS
                     dpsCrusader = crusAvgDam/crusCD;
-                    dpsCrusader *= 1f + (.4f * (float)calcOpts.TheArtOfWar);
+                    dpsCrusader *= 1f + ( .4f * (float)calcOpts.talents.TheArtOfWar );
 
                     dpsSoC += ( socAvgDmg / crusCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / crusCD;
@@ -427,7 +424,7 @@ namespace Rawr.Retribution
 
             #region Divine Storm
             {
-                if (calcOpts.DivineStorm > 0)
+                if ( calcOpts.talents.DivineStorm > 0 )
                 {
                     float dsCD = 10.5f, dsHit = 0f, dsAvgDam = 0f;
 
@@ -440,7 +437,7 @@ namespace Rawr.Retribution
                     dpsDivineStorm = dsAvgDam/dsCD;
                     dpsDivineStorm += dpsDivineStorm * physCrits;
                     dpsDivineStorm *= mitigation;
-                    dpsDivineStorm *= 1f + ( .4f * (float)calcOpts.TheArtOfWar );
+                    dpsDivineStorm *= 1f + ( .4f * (float)calcOpts.talents.TheArtOfWar );
 
                     dpsSoC += ( socAvgDmg / dsCD ) * socProcChanceCoeff;
                     dpsSoB += sobAvgDmg / dsCD;
@@ -451,15 +448,15 @@ namespace Rawr.Retribution
             #region Judgement
             {
                 float judgeCD = 8.5f, judgeAvgDam = 0f;
-                float judgeCrit = physCrits + (0.05f * (float)calcOpts.Fanaticism);
+                float judgeCrit = physCrits + ( 0.05f * (float)calcOpts.talents.Fanaticism );
                 float socDamMult = 0.24f, socAPMult = 0.16f, socSpdmgMult = 0.25f; 
                 float sobDamMult = .45f, sobAPMult = 0.2f, sobSpdmgMult = 0.32f;
 
-                if (calcOpts.ImprovedJudgements == 0)
+                if ( calcOpts.talents.ImprovedJudgements == 0 )
                 {
                     judgeCD = 9.5f;
                 }
-                else if (calcOpts.ImprovedJudgements == 1)
+                else if ( calcOpts.talents.ImprovedJudgements == 1 )
                 {
                     judgeCD = 10.5f;
                 }
@@ -483,8 +480,8 @@ namespace Rawr.Retribution
                 }
 
                 dpsJudgement = judgeAvgDam / judgeCD;
-                dpsJudgement *= 1f + (.04f * (float)calcOpts.TheArtOfWar);
-                dpsJudgement *= 1f + (.08f * (float)calcOpts.RighteousVengeance);  // i make the assumption that since judgement is used more and hits harder, only judgement damage is used for this
+                dpsJudgement *= 1f + ( .04f * (float)calcOpts.talents.TheArtOfWar );
+                dpsJudgement *= 1f + ( .08f * (float)calcOpts.talents.RighteousVengeance );  // i make the assumption that since judgement is used more and hits harder, only judgement damage is used for this
 
                 dpsSoC += (socAvgDmg / judgeCD) * socProcChanceCoeff;
                 dpsSoB += sobAvgDmg / judgeCD;
@@ -653,10 +650,10 @@ namespace Rawr.Retribution
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                PhysicalCrit = .01f * ((float)calcOpts.Conviction + (float)calcOpts.SanctifiedSeals),
+                PhysicalCrit = .01f * ( (float)calcOpts.talents.Conviction + (float)calcOpts.talents.SanctifiedSeals ),
                 PhysicalHit = 0f,
-                SpellCrit = .01f * (float)calcOpts.SanctifiedSeals,
-                BonusStrengthMultiplier = .03f * (float)calcOpts.DivineStrength
+                SpellCrit = .01f * (float)calcOpts.talents.SanctifiedSeals,
+                BonusStrengthMultiplier = .03f * (float)calcOpts.talents.DivineStrength
             };
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs;
@@ -724,6 +721,7 @@ namespace Rawr.Retribution
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
+            statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
 
             statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
             statsTotal.SpellHit = statsGearEnchantsBuffs.SpellHit;
@@ -731,7 +729,7 @@ namespace Rawr.Retribution
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.SpellPower = statsGearEnchantsBuffs.SpellPower;
             statsTotal.SpellPower += statsGearEnchantsBuffs.SpellDamageFromSpiritPercentage * statsGearEnchantsBuffs.Spirit;
-            statsTotal.SpellPower += statsTotal.AttackPower * (calcOpts.SheathOfLight * .1f);
+            statsTotal.SpellPower += statsTotal.AttackPower * ( calcOpts.talents.SheathOfLight * .1f );
 
             if (calcOpts.HeroicPresence && character.Race != Character.CharacterRace.Draenei)
             {
@@ -838,6 +836,7 @@ namespace Rawr.Retribution
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
                 PhysicalCrit = stats.PhysicalCrit,
+                PhysicalHaste = stats.PhysicalHaste,
 
                 //CritRating = stats.CritRating,
                 //HitRating = stats.HitRating,
@@ -870,43 +869,13 @@ namespace Rawr.Retribution
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage + 
-                stats.CritRating + stats.HitRating + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
+                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
+                stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +
                 stats.DrumsOfBattle + stats.DrumsOfWar + stats.ShatteredSunMightProc + stats.ExecutionerProc + stats.MongooseProc +
                 stats.BonusCrusaderStrikeDamageMultiplier) != 0;
-        }
-
-
-        /// <summary>
-        /// Saves the talents for the character
-        /// </summary>
-        /// <param name="character">The character for whom the talents should be saved</param>
-        public void GetTalents(Character character)
-        {
-            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-
-			//calcOpts.Precision = character.PaladinTalents.Precision; //TODO: Talent Removed in 3.0
-			calcOpts.Crusade = character.PaladinTalents.Crusade;
-			calcOpts.TwoHandedSpec = character.PaladinTalents.TwoHandedWeaponSpecialization;
-			calcOpts.ImprovedRetributionAura = character.PaladinTalents.ImprovedRetributionAura; 
-			calcOpts.SanctifiedSeals = character.PaladinTalents.SanctifiedSeals;
-			calcOpts.Fanaticism = character.PaladinTalents.Fanaticism;
-			calcOpts.Vengeance = character.PaladinTalents.Vengeance;
-			calcOpts.Conviction = character.PaladinTalents.Conviction;
-			calcOpts.DivineStrength = character.PaladinTalents.DivineStrength;
-            calcOpts.CrusaderStrike = character.PaladinTalents.CrusaderStrike;
-            calcOpts.ImprovedJudgements = character.PaladinTalents.ImprovedJudgements;
-
-            calcOpts.TheArtOfWar = character.PaladinTalents.TheArtOfWar;
-            calcOpts.SanctifiedRetribution = character.PaladinTalents.SanctifiedRetribution;
-            calcOpts.SanctifiedWrath = character.PaladinTalents.SanctifiedWrath;
-            calcOpts.SheathOfLight = character.PaladinTalents.SheathOfLight;
-            calcOpts.SwiftRetribution = character.PaladinTalents.SwiftRetribution;
-            calcOpts.RighteousVengeance = character.PaladinTalents.RighteousVengeance;
-            calcOpts.DivineStorm = character.PaladinTalents.DivineStorm;
         }
     }
 }
