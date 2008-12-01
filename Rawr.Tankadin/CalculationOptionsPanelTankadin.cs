@@ -25,7 +25,6 @@ namespace Rawr.Tankadin
                 Character.CalculationOptions = new CalculationOptionsTankadin();
 
             CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-            nudPlayerLevel.Value = (decimal)calcOpts.PlayerLevel;
             nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
             trackBarBossAttackValue.Value = calcOpts.AverageHit;
             lblBossAttackValue.Text = calcOpts.AverageHit.ToString();
@@ -35,16 +34,6 @@ namespace Rawr.Tankadin
             lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
 
-        }
-
-        private void nudPlayerLevel_ValueChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.PlayerLevel = (int)nudPlayerLevel.Value;
-                Character.OnCalculationsInvalidated();
-            }
         }
 
         private void nudTargetLevel_ValueChanged(object sender, EventArgs e)
@@ -107,12 +96,11 @@ namespace Rawr.Tankadin
         }
 
         public int TargetLevel = 83;
-        public int PlayerLevel = 80;
         public int AverageHit = 30000;
         public float AttackSpeed = 2;
         public int NumberAttackers = 1;
         public int TargetArmor = 10000;
-        public int ThreatScale = 30;
+        public int ThreatScale = 10;
         public int MitigationScale = 7000;
     }
 
