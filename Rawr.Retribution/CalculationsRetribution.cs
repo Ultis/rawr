@@ -266,7 +266,7 @@ namespace Rawr.Retribution
 
                 // Effective armor after ArP
                 targetArmor -= totalArP;
-                float ratingCoeff = stats.ArmorPenetrationRating / 15.4f;
+                float ratingCoeff = stats.ArmorPenetrationRating / 1539.529991f;
                 targetArmor *= ( 1 - ratingCoeff );
                 if ( targetArmor < 0 ) targetArmor = 0f;
 

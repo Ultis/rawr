@@ -169,7 +169,7 @@ namespace Rawr.Cat
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
-			float hitBonus = stats.HitRating / 32.78998947f / 100f;
+			float hitBonus = stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
 			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
@@ -887,6 +887,7 @@ namespace Rawr.Cat
 					ShatteredSunMightProc = stats.ShatteredSunMightProc,
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 					PhysicalHaste = stats.PhysicalHaste,
+					PhysicalHit = stats.PhysicalHit,
 
 					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,
@@ -911,7 +912,7 @@ namespace Rawr.Cat
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
+				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration +
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +

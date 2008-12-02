@@ -326,7 +326,7 @@ namespace Rawr
 			{
 				Name = "Sanctified Retribution",
 				Group = "Damage (%)",
-				Stats = { BonusDamageMultiplier = 0.02f }
+				Stats = { BonusDamageMultiplier = 0.03f }
 			});
 			#endregion
 
@@ -1292,7 +1292,7 @@ namespace Rawr
             {
                 Name = "Expertise Food",
                 Group = "Food",
-                Stats = { Expertise = 40, Stamina = 40 }
+                Stats = { ExpertiseRating = 40, Stamina = 40 }
             });
             defaultBuffs.Add(new Buff()
             {
