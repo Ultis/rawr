@@ -791,12 +791,19 @@ namespace Rawr
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
 				stats.AttackPower += ((float)int.Parse(line)) / 6f;
 			}
-			else if (line.StartsWith("Increases haste rating by "))
+			else if (Regex.IsMatch(line, "Increases (.*?)haste rating by "))
 			{
-				line = line.Substring("Increases haste rating by ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.HasteRating += ((float)int.Parse(line)) / 12f;
+                // There are two styles of tooltip currently in use:
+                // Increases haste rating by 208 for 20 sec. (2 Min Cooldown)
+                // Ex: Abacus of Violent Odds (TBC), Rune of Finite Variation (WotLK)
+                // Increases your haste rating by 256 for 20 sec. (2 Min Cooldown)
+                // Ex: Tome of Arcane Phenomena (WotLK)
+                string[] inputs = Regex.Split(line, "Increases (.*?)haste rating by (\\d{3}) for (\\d{2}) sec.");
+                float haste_rating = float.Parse(inputs[2]);
+                float uptime = float.Parse(inputs[3]);
+                // the Use line in the tooltip doesn't always contain the cooldown, so for now we assume it is 2 minutes
+                float average_haste_rating = haste_rating / (120.0f / uptime);
+				stats.HasteRating += average_haste_rating;
 			}
 			else if (line.StartsWith("Increases armor penetration rating by "))
 			{
