@@ -672,7 +672,7 @@ namespace Rawr
 				case "2817": return "Crystalsong Forest";
 				case "2917": return "Hall of Legends";
 				case "2918": return "Champion's Hall";
-                case "3456": return "Naxxramaxx";
+                case "3456": return "Naxxramas";
 				case "3477": return "Azjol-Nerub";
 				case "3537": return "Borean Tundra";
 				case "3711": return "Sholazar Basin";
