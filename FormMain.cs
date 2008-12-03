@@ -15,14 +15,15 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 10;
+		private const int INTRO_VERSION = 11;
 		private const string INTRO_TEXT =
-@" Welcome to Rawr 2.1.2. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+@" Welcome to Rawr 2.1.3. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
 Recent Changes:
+v2.1.3: Improvements to CharacterProfiler support. Can now load items by exact name, as well as load from Armory and fail over to Wowhead if not found. Support for several new set bonuses and proc/use effects. Fixed base stat calculations in Retribution and Tankadin, and a few more calculation fixes in Retribution. Fixes for a few buff/enchant stats.
 v2.1.2: Improvements to launch time, and item editor performance. Support for more set bonuses and abnormal item stats. Fix for crash in Priest models. Updates to base stats and rating conversions for several models. Fixes for requirements and optimization of several gems. Added ghost hit for Frostfire bolt in Mage. Fixed the formula for PW: Shield in HolyPriest. Improved calculations for Cat and Bear, and made Cat results more descriptive.
 v2.1.1: Improved calculations for level 80 combat for several models (Cat, Bear, HolyPriest, ShadowPriest, Mage, Moonkin, Tree, Healadin). Added Leatherworking and Inscription self-enchants. Fixed some bugs with mass gem replacement and the optimizer.
 v2.1: Updated for level 80 content. Removed models which haven't yet been updated for WoW 3.0. Added two brand new models: Enhance and DPSDK! Welcome to Rawr, Enhancement Shamans and DPS Death Knights!
