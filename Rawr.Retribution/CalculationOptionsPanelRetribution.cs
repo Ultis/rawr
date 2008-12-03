@@ -307,7 +307,7 @@ namespace Rawr.Retribution
 		}
 
 		public int TargetLevel = 83;
-		public int BossArmor = 7700;
+		public int BossArmor = 13083;
 		public int FightLength = 10;
 		public bool Exorcism = false;
 		public int ConsecRank = 0;

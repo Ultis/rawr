@@ -66,6 +66,7 @@ namespace Rawr.Retribution
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
 					    "Basic Stats:Armor Penetration",
+					    "Basic Stats:Armor Penetration Rating",
 					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
 					    "Advanced Stats:Attack Speed",
 					    "Advanced Stats:Crit Chance",
@@ -286,7 +287,7 @@ namespace Rawr.Retribution
 
                 // Dodge: Base 6.5%, Minimum 0%
                 float chanceDodged = .065f;
-                //chanceDodged -= stats.ExpertiseRating / 1576f;
+                //chanceDodged -= stats.ExpertiseRating / 3279f; //ExpertiseRating has been folded into Expertise by this point
                 chanceDodged -= stats.Expertise * .0025f;
                 if (chanceDodged < 0f) chanceDodged = 0f;
                 calcs.DodgedAttacks = chanceDodged;
@@ -305,8 +306,8 @@ namespace Rawr.Retribution
 
                 // Resists: Base 17%, Minimum 1%
                 spellResist = .17f;
-                chanceMiss -= stats.HitRating / 3279f;
-                spellResist -= stats.PhysicalHit;
+                spellResist -= stats.HitRating / 2623f;
+                spellResist -= stats.SpellHit;
                 if (spellResist < .01f) spellResist = .01f;
 
                 // Total physical misses
@@ -717,7 +718,7 @@ namespace Rawr.Retribution
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
-            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 3.94);
+            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8.197497f);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
@@ -831,12 +832,15 @@ namespace Rawr.Retribution
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-                ArmorPenetration = stats.ArmorPenetration,
+				ArmorPenetration = stats.ArmorPenetration,
+				ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 WeaponDamage = stats.WeaponDamage,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
+				PhysicalHit = stats.PhysicalHit,
+				SpellHit = stats.SpellHit,
 
                 //CritRating = stats.CritRating,
                 //HitRating = stats.HitRating,
@@ -869,8 +873,8 @@ namespace Rawr.Retribution
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
-                stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
+                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
+                stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower + stats.SpellDamageFromSpiritPercentage +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust + stats.ExposeWeakness +
