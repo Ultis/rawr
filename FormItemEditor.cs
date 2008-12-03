@@ -349,6 +349,9 @@ namespace Rawr
         {
             Item newItem = null;
 
+            // ignore empty strings
+            if (name.Length <= 0) return;
+
             // try the armory (if requested)
             if (useArmory && !useWowhead)
             {
