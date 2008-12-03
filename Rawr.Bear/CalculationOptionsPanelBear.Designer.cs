@@ -139,7 +139,7 @@
 			this.numericUpDownTargetArmor.TabIndex = 3;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
-            11000,
+            13083,
             0,
             0,
             0});

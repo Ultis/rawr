@@ -73,7 +73,7 @@ namespace Rawr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 11000;
+		public int TargetArmor = 13083;
 		public bool CustomUseShred = false;
 		public bool CustomUseRip = false;
 		public bool CustomUseFerociousBite = false;

@@ -288,8 +288,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2990, "Inscription of the Knight", Item.ItemSlot.Shoulders, new Stats() { DefenseRating = 13 }));
             defaultEnchants.Add(new Enchant(2978, "Greater Inscription of Warding", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(2977, "Inscription of Warding", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 13 }));
-            defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
-            defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
             defaultEnchants.Add(new Enchant(368, "Greater Agility", Item.ItemSlot.Back, new Stats() { Agility = 12 }));
             defaultEnchants.Add(new Enchant(983, "Superior Agility", Item.ItemSlot.Back, new Stats() { Agility = 16 }));
             defaultEnchants.Add(new Enchant(1099, "Major Agility", Item.ItemSlot.Back, new Stats() { Agility = 22 }));
@@ -369,8 +367,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2986, "Greater Inscription of Vengeance", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2996, "Inscription of the Blade", Item.ItemSlot.Shoulders, new Stats() { CritRating = 13 }));
             defaultEnchants.Add(new Enchant(2983, "Inscription of Vengeance", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 26 }));
-            defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
-            defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(2606, "Zandalar Signet of Might", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30 }));
             defaultEnchants.Add(new Enchant(2647, "Brawn", Item.ItemSlot.Wrist, new Stats() { Strength = 12 }));
             defaultEnchants.Add(new Enchant(684, "Major Strength", Item.ItemSlot.Hands, new Stats() { Strength = 15 }));
@@ -441,8 +437,6 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2995, "Greater Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, CritRating = 15 }));
             defaultEnchants.Add(new Enchant(2981, "Inscription of Discipline", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2994, "Inscription of the Orb", Item.ItemSlot.Shoulders, new Stats() { CritRating = 13 }));
-            defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
-            defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
             defaultEnchants.Add(new Enchant(3002, "Arcanum of Power", Item.ItemSlot.Head, new Stats() { SpellPower = 22, HitRating = 14 }));
             defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", Item.ItemSlot.Head, new Stats() { SpellPower = 30, CritRating = 20 }));
             defaultEnchants.Add(new Enchant(3797, "Arcanum of Dominance", Item.ItemSlot.Head, new Stats() { SpellPower = 29, Resilience = 20 }));
@@ -469,8 +463,6 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
 			defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
-            defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
-            defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
             defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
 
 			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
@@ -561,6 +553,16 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
 
+			//Hodir Enchants
+			defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
+			defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
+			defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
+			defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
+			defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
+			defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
+			defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
+			defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
+			
 			//Inscriber enchants
 			defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
 			defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));

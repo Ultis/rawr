@@ -112,7 +112,7 @@ namespace Rawr
 
 		public int TargetLevel = 83;
 		public float ThreatScale = 10f;
-		public int TargetArmor = 11000;
+		public int TargetArmor = 13083;
 		public bool Use304ArmorMode = false;
 
 		public bool? CustomUseMaul = null;
