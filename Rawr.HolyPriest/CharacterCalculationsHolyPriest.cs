@@ -29,7 +29,13 @@ namespace Rawr.HolyPriest
         private float overallPoints;
         public override float OverallPoints
         {
-            get { return overallPoints; }
+            get
+            {
+                float f = 0f;
+                foreach (float f2 in subPoints)
+                    f += f2;
+                return f;
+            }
             set { overallPoints = value; }
         }
 

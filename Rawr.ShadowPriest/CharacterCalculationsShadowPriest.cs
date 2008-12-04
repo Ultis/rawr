@@ -31,7 +31,13 @@ namespace Rawr.ShadowPriest
         private float _overallPoints = 0f;
         public override float OverallPoints
         {
-            get { return _overallPoints; }
+            get
+            {
+                float f = 0f;
+                foreach (float f2 in _subPoints)
+                    f += f2;
+                return f;
+            }
             set { _overallPoints = value; }
         }
 

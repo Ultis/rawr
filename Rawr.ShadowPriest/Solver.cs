@@ -307,7 +307,7 @@ namespace Rawr.ShadowPriest
                 }
                 if (bTwistedFaith && (spell == MF || spell == MB))
                     Damage *= (1f + character.PriestTalents.TwistedFaith * 0.02f);
-                Damage *= (1f + simStats.BonusShadowDamageMultiplier);
+                Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;
                 OverallDamage += Damage;
@@ -322,12 +322,12 @@ namespace Rawr.ShadowPriest
                 spell.SpellStatistics.MissCount = spell.SpellStatistics.HitCount * (1 - ShadowHitChance / 100f);
                 spell.SpellStatistics.ManaUsed /= timer;
                 if (bPnS && spell == SWP)
-                    spell.SpellStatistics.DamageDone = spell.DpS * (1f + simStats.BonusShadowDamageMultiplier);
+                    spell.SpellStatistics.DamageDone = spell.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier);
                 else
                     spell.SpellStatistics.DamageDone /= timer;
             }
 
-            DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) : 0);
+            DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
             if (simStats.TimbalsProc > 0.0f)
             {
                 int dots = (MF != null)?3:0;
@@ -335,7 +335,7 @@ namespace Rawr.ShadowPriest
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Timbal = new Timbal(simStats, character);
 
-                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * ShadowHitChance / 100f;
+                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
 
             SustainDPS = DPS;
@@ -532,7 +532,7 @@ namespace Rawr.ShadowPriest
                     default:
                         break;
                 }
-                Damage *= (1f + simStats.BonusShadowDamageMultiplier); // If there is shadow bonus damage there is holy bonus damage.
+                Damage *= (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier); // If there is shadow bonus damage there is holy bonus damage.
                 spell.SpellStatistics.DamageDone += Damage;
                 spell.SpellStatistics.ManaUsed += Cost;
                 OverallDamage += Damage;
@@ -547,7 +547,7 @@ namespace Rawr.ShadowPriest
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Timbal = new Timbal(simStats, character);
 
-                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * HitChance / 100f;
+                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }
 
             SustainDPS = DPS;

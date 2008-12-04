@@ -463,6 +463,7 @@ namespace Rawr.ShadowPriest
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusManaPotion = stats.BonusManaPotion,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
@@ -503,6 +504,7 @@ namespace Rawr.ShadowPriest
                 + stats.BonusIntellectMultiplier
                 + stats.BonusManaPotion
                 + stats.ThreatReductionMultiplier
+                + stats.BonusDamageMultiplier
                 + stats.BonusShadowDamageMultiplier
                 + stats.BonusHolyDamageMultiplier
                 + stats.ManaRestoreOnCast_5_15
