@@ -1389,6 +1389,14 @@ namespace Rawr
             });
 			#endregion
 
+			#region Spell Critical Strike Chance (From Mage: Focus Magic)
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Focus Magic",
+				Group = "Spell Critical Strike Chance (Mage)",
+				Stats = { SpellCrit = 0.03f }
+			});
+			#endregion
             //#region Temporary Weapon Enchantment
             //defaultBuffs.Add(new Buff()
             //{
