@@ -185,8 +185,11 @@ namespace Rawr.Moonkin
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
             stats.SpellDamageFromIntellectPercentage += 0.04f * character.DruidTalents.LunarGuidance;
 
-            calcs.ArcaneDamage = stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
-            calcs.NatureDamage = stats.SpellPower + stats.SpellNatureDamageRating + stats.SpellDamageFromIntellectPercentage * stats.Intellect + stats.SpellDamageFromSpiritPercentage * stats.Spirit;
+            // Fix for rounding error in converting partial points of int/spirit to spell power
+            float spellPowerFromStats = (float)Math.Floor(stats.SpellDamageFromIntellectPercentage * stats.Intellect) +
+                (float)Math.Floor(stats.SpellDamageFromSpiritPercentage * stats.Spirit);
+            calcs.ArcaneDamage = stats.SpellPower + stats.SpellArcaneDamageRating + spellPowerFromStats;
+            calcs.NatureDamage = stats.SpellPower + stats.SpellNatureDamageRating + spellPowerFromStats;
 
 			calcs.Latency = calcOpts.Latency;
 			calcs.FightLength = calcOpts.FightLength;
@@ -245,22 +248,19 @@ namespace Rawr.Moonkin
             statsTotal.Spirit = (float)Math.Floor((Math.Floor(statsRace.Spirit * (1 + statsRace.BonusSpiritMultiplier)) + statsGearEnchantsBuffs.Spirit * (1 + statsRace.BonusSpiritMultiplier)) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             // Bonus multipliers
-            statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
+            statsTotal.BonusStaminaMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
             statsTotal.BonusIntellectMultiplier += 0.04f * character.DruidTalents.HeartOfTheWild;
             statsTotal.BonusIntellectMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
             if (character.ActiveBuffsContains("Moonkin Form"))
                 statsTotal.BonusIntellectMultiplier += 0.02f * character.DruidTalents.Furor;
-            statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
             statsTotal.BonusSpiritMultiplier += 0.05f * character.DruidTalents.LivingSpirit;
 
-            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
-            statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
-            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
-            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
             // Derived stats: Health, mana pool, armor
             statsTotal.Health = (float)Math.Round(((statsRace.Health * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f) + statsGearEnchantsBuffs.Health + statsTotal.Stamina * 10f))) - 180;
@@ -719,12 +719,13 @@ namespace Rawr.Moonkin
                 Bloodlust = stats.Bloodlust,
                 DrumsOfBattle = stats.DrumsOfBattle,
                 DrumsOfWar = stats.DrumsOfWar,
+                ThunderCapacitorProc = stats.ThunderCapacitorProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromMaxManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestorePerCrit) > 0;
+			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromMaxManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestorePerCrit + stats.ThunderCapacitorProc) > 0;
         }
     }
 }

@@ -1405,6 +1405,17 @@ namespace Rawr.Moonkin
                 else timeBetweenProcs *= 3.0f;
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
+            // The Thunder Capacitor
+            if (calcs.BasicStats.ThunderCapacitorProc > 0)
+            {
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
+                float baseDamage = (1181 + 1371) / 2.0f;
+                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
+                float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
+                if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 4.0f + 2.5f;
+                else timeBetweenProcs *= 4.0f;
+                trinketExtraDPS += averageDamage / timeBetweenProcs;
+            }
             // Timbal's Focusing Crystal (10% proc on a DoT tick, 15s internal cooldown)
             if (calcs.BasicStats.TimbalsProc > 0 && rotation.TotalDotTicks > 0)
             {
