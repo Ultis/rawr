@@ -1063,7 +1063,7 @@ namespace Rawr.Moonkin
                     {
                         Spell newMoonfireFirst = new Spell()
                         {
-                            Name = "MF",
+                            Name = "MF1",
                             School = SpellSchool.Arcane,
                             CastTime = SpellRotation.Moonfire.CastTime,
                             CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
@@ -1084,7 +1084,7 @@ namespace Rawr.Moonkin
                         };
                         Spell newMoonfireSecond = new Spell()
                         {
-                            Name = "MF",
+                            Name = "MF2",
                             School = SpellSchool.Arcane,
                             CastTime = 0.0f,
                             CriticalHitMultiplier = 0.0f,
@@ -1103,6 +1103,28 @@ namespace Rawr.Moonkin
                             },
                             IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
                         };
+                        // The above two spells actually do damage.  This spell is a placeholder for calculating rotation duration and the like.
+                        Spell newMoonfire = new Spell()
+                        {
+                            Name = "MF",
+                            School = SpellSchool.Arcane,
+                            CastTime = 0.0f,
+                            CriticalHitMultiplier = 0.0f,
+                            DamagePerHit = 0.0f,
+                            ManaCost = 0.0f,
+                            SpecialCriticalModifier = 0.0f,
+                            SpecialDamageModifier = 0.0f,
+                            SpellDamageModifier = 0.0f,
+                            DoT = new DotEffect()
+                            {
+                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f,
+                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
+                                DamagePerTick = 0.0f,
+                                SpellDamageMultiplier = 0.0f,
+                                SpecialDamageMultiplier = 0.0f
+                            },
+                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
+                        };
                         SpellRotation newRotation = null;
                         if (rotation.HasInsectSwarm)
                         {
@@ -1110,6 +1132,7 @@ namespace Rawr.Moonkin
                             {
                                 Spells = new List<Spell>()
                                 {
+                                    newMoonfire,
                                     newMoonfireFirst,
                                     SpellRotation.Starfire,
                                     newMoonfireSecond,
@@ -1124,6 +1147,7 @@ namespace Rawr.Moonkin
                             {
                                 Spells = new List<Spell>()
                                 {
+                                    newMoonfire,
                                     newMoonfireFirst,
                                     SpellRotation.Starfire,
                                     newMoonfireSecond,
