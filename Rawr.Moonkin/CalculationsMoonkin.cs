@@ -135,6 +135,7 @@ namespace Rawr.Moonkin
                             Item.ItemType.Leather,
                             Item.ItemType.Dagger,
                             Item.ItemType.Staff,
+                            Item.ItemType.FistWeapon,
                             Item.ItemType.OneHandMace,
                             Item.ItemType.TwoHandMace,
                             Item.ItemType.Idol,
