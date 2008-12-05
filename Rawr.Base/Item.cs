@@ -16,7 +16,9 @@ namespace Rawr
 		public string _name;
 		[XmlElement("Id")]
 		public int _id;
-		[XmlElement("IconPath")]
+        [XmlElement("ItemLevel")]
+        public int _itemLevel;
+        [XmlElement("IconPath")]
 		public string _iconPath;
 		[XmlElement("Slot")]
 		public ItemSlot _slot;
@@ -84,7 +86,16 @@ namespace Rawr
 				OnIdsChanged();
 			}
 		}
-		[XmlIgnore]
+        [XmlIgnore]
+        public int ItemLevel
+        {
+            get { return _itemLevel; }
+            set
+            {
+                _itemLevel = value;
+            }
+        }
+        [XmlIgnore]
 		public string IconPath
 		{
 			get { return _iconPath; }

@@ -61,6 +61,7 @@ namespace Rawr
 					
 				textBoxName.DataBindings.Clear();
                 textBoxSetName.DataBindings.Clear();
+                textBoxItemLevel.DataBindings.Clear();
                 textBoxIcon.DataBindings.Clear();
                 textBoxNote.DataBindings.Clear();
 
@@ -86,6 +87,7 @@ namespace Rawr
 				{
                     _loadingItem = true;
                     textBoxName.DataBindings.Add("Text", selectedItem, "Name");
+                    textBoxItemLevel.DataBindings.Add("Text", selectedItem, "ItemLevel");
                     textBoxSetName.DataBindings.Add("Text", selectedItem, "SetName");
                     textBoxIcon.DataBindings.Add("Text", selectedItem, "IconPath");
 					numericUpDownId.DataBindings.Add("Value", selectedItem, "Id");

@@ -294,7 +294,6 @@ namespace Rawr
 			{
 				case "id": //ID's are parsed out of the main data, not the json
 				case "name": //Item names are parsed out of the main data, not the json
-				case "level": //Rawr doesn't handle item levels
 				case "slotbak": //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
 				case "subclass": //subclass is combined with class
 				case "subsubclass": //Only used for Battle vs Guardian Elixirs
@@ -313,7 +312,9 @@ namespace Rawr
 				case "avgmoney": //For containers, average amount of money inside
 				case "glyph": //1=Major, 2=Minor
 					break;
-
+                case "level": //Rawr now handles item levels
+                    item.ItemLevel = int.Parse(value);
+                    break;
 					//TODO:
 				case "cooldown": //Not handled yet
 				case "skill": //Related to skill requirements

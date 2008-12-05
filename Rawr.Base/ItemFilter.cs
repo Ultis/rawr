@@ -21,6 +21,11 @@ namespace Rawr
         {
             Name = "New Filter";
             Enabled = true;
+            MinItemLevel = 0;
+            MaxItemLevel = 1000;
+            MinItemQuality = Item.ItemQuality.Temp;
+            MaxItemQuality = Item.ItemQuality.Heirloom;
+            AdditiveFilter = true;
         }
 
         public string Name { get; set; }
@@ -40,6 +45,12 @@ namespace Rawr
             }
         }
 
+        public int MinItemLevel { get; set; }
+        public int MaxItemLevel { get; set; }
+        public Item.ItemQuality MinItemQuality { get; set; }
+        public Item.ItemQuality MaxItemQuality { get; set; }
+        public bool AdditiveFilter { get; set; }
+
         public bool Enabled { get; set; }
 
         [XmlIgnore]
@@ -57,6 +68,21 @@ namespace Rawr
                 }
                 return _regex;
             }
+        }
+
+        public bool IsMatch(Item item)
+        {
+            if ((!string.IsNullOrEmpty(item.LocationInfo.Description) && Regex.IsMatch(item.LocationInfo.Description)) || (!string.IsNullOrEmpty(item.LocationInfo.Note) && Regex.IsMatch(item.LocationInfo.Note)))
+            {
+                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
+                {
+                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 
@@ -111,11 +137,12 @@ namespace Rawr
         {
             if (GetRelevantItemTypesList(model).Contains(item.Type))
             {
+                bool added = false;
                 bool anyMatch = false;
                 bool enabledMatch = false;
                 foreach (ItemFilterRegex regex in data.RegexList)
                 {
-                    if ((!string.IsNullOrEmpty(item.LocationInfo.Description) && regex.Regex.IsMatch(item.LocationInfo.Description)) || (!string.IsNullOrEmpty(item.LocationInfo.Note) && regex.Regex.IsMatch(item.LocationInfo.Note)))
+                    if (regex.AdditiveFilter && regex.IsMatch(item))
                     {
                         anyMatch = true;
                         if (regex.Enabled)
@@ -127,11 +154,22 @@ namespace Rawr
                 }
                 if (anyMatch)
                 {
-                    return enabledMatch;
+                    added = enabledMatch;
                 }
                 else
                 {
-                    return OtherRegexEnabled;
+                    added = OtherRegexEnabled;
+                }
+                if (added)
+                {
+                    foreach (ItemFilterRegex regex in data.RegexList)
+                    {
+                        if (!regex.AdditiveFilter && regex.Enabled && regex.IsMatch(item))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             }
             return false;
