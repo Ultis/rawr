@@ -502,6 +502,15 @@ namespace Rawr
             });
 			#endregion
 
+            #region Focus Magic, Spell Critical Strike Chance
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Focus Magic",
+                Group = "Focus Magic, Spell Critical Strike Chance",
+                Stats = { SpellCrit = 0.03f }
+            });
+            #endregion
+
 			#region Spell Haste
 			defaultBuffs.Add(new Buff
 			{
@@ -913,6 +922,16 @@ namespace Rawr
 					BonusArcaneDamageMultiplier = 0.13f, BonusShadowDamageMultiplier = 0.13f,
 					BonusHolyDamageMultiplier = 0.13f, BonusNatureDamageMultiplier = 0.13f},
 			});
+
+            #endregion
+
+            #region Disease Damage Taken
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Crypt Fever",
+                Group = "Disease Damage Taken",
+                Stats = { BonusDiseaseDamageMultiplier = 0.3f }
+            });
 			#endregion
 
 			#region Spell Hit Chance Taken
@@ -1389,14 +1408,6 @@ namespace Rawr
             });
 			#endregion
 
-			#region Spell Critical Strike Chance (From Mage: Focus Magic)
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Focus Magic",
-				Group = "Spell Critical Strike Chance (Mage)",
-				Stats = { SpellCrit = 0.03f }
-			});
-			#endregion
             //#region Temporary Weapon Enchantment
             //defaultBuffs.Add(new Buff()
             //{

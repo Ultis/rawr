@@ -26,7 +26,6 @@ namespace Rawr.HolyPriest
             set { basicStats = value; }
         }
 
-        private float overallPoints;
         public override float OverallPoints
         {
             get
@@ -36,7 +35,7 @@ namespace Rawr.HolyPriest
                     f += f2;
                 return f;
             }
-            set { overallPoints = value; }
+            set { }
         }
 
         private float[] subPoints = new float[] { 0f, 0f, 0f };

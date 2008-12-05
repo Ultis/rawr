@@ -297,10 +297,13 @@ namespace Rawr.ShadowPriest
                         Cost *= (2f - ShadowHitChance / 100f);
                         break;
                     case "Mind Blast":
-                    case "Devouring Plague":
                     case "Shadow Word: Death":
                         // Spells that have cooldowns, a resist means full loss of damage.
                         Damage *= ShadowHitChance / 100f;
+                        break;
+                    case "Devouring Plague":
+                        Damage *= ShadowHitChance / 100f;
+                        Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
                         break;
                     default:
                         break;
@@ -523,11 +526,14 @@ namespace Rawr.ShadowPriest
                         break;
                     case "Holy Fire":
                     case "Mind Blast":
-                    case "Devouring Plague":
                     case "Shadow Word: Death":
                     case "Penance":
                         // Spells that have cooldowns, a resist means full loss of damage.
                         Damage *= HitChance / 100f;
+                        break;
+                    case "Devouring Plague":
+                        Damage *= HitChance / 100f;
+                        Damage *= (1f + simStats.BonusDiseaseDamageMultiplier);
                         break;
                     default:
                         break;

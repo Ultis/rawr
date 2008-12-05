@@ -28,7 +28,6 @@ namespace Rawr.ShadowPriest
             set { basicStats = value; }
         }
 
-        private float _overallPoints = 0f;
         public override float OverallPoints
         {
             get
@@ -38,7 +37,7 @@ namespace Rawr.ShadowPriest
                     f += f2;
                 return f;
             }
-            set { _overallPoints = value; }
+            set { }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };

@@ -247,6 +247,7 @@ namespace Rawr
 		BonusEnrageDamageMultiplier,
 		BonusShadowDamageMultiplier,
 		BonusHolyDamageMultiplier,
+        BonusDiseaseDamageMultiplier,
         ThreatIncreaseMultiplier,
         BonusWarlockDotDamageMultiplier,
 		BonusRangedAttackPowerMultiplier,
@@ -2217,6 +2218,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusFrostDamageMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Disease Damage")]
+        public float BonusDiseaseDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDiseaseDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDiseaseDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
