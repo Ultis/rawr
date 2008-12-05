@@ -1,0 +1,524 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+namespace Rawr.TankDK
+{
+    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
+    class CalculationsTankDK : CalculationsBase
+    {
+        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
+        /// <summary>
+        /// Dictionary<string, Color> that includes the names of each rating which your model will use,
+        /// and a color for each. These colors will be used in the charts.
+        /// 
+        /// EXAMPLE: 
+        /// subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+        /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
+        /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
+        /// </summary>
+        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
+        {
+            get
+            {
+                if (_subPointNameColors == null)
+                {
+                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
+                    _subPointNameColors.Add("Avoidance", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Yellow);
+                }
+                return _subPointNameColors;
+            }
+        }
+
+        private string[] _characterDisplayCalculationLabels = null;
+        /// <summary>
+        /// An array of strings which will be used to build the calculation display.
+        /// Each string must be in the format of "Heading:Label". Heading will be used as the
+        /// text of the group box containing all labels that have the same Heading.
+        /// Label will be the label of that calculation, and may be appended with '*' followed by
+        /// a description of that calculation which will be displayed in a tooltip for that label.
+        /// Label (without the tooltip string) must be unique.
+        /// 
+        /// EXAMPLE:
+        /// characterDisplayCalculationLabels = new string[]
+        /// {
+        ///		"Basic Stats:Health",
+        ///		"Basic Stats:Armor",
+        ///		"Advanced Stats:Dodge",
+        ///		"Advanced Stats:Miss*Chance to be missed"
+        /// };
+        /// </summary>
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (_characterDisplayCalculationLabels == null)
+                {
+                    List<string> labels = new List<string>(new string[]
+                    {
+                        "Basic Stats:Health",
+/*
+                        "Basic Stats:Strength",
+					    "Basic Stats:Agility",
+					    "Basic Stats:Attack Power",
+					    "Basic Stats:Crit Rating",
+					    "Basic Stats:Hit Rating",
+					    "Basic Stats:Expertise",
+					    "Basic Stats:Haste Rating",
+					    "Basic Stats:Armor Penetration",*/
+                        "Basic Stats:Armor",
+                        "Advanced Stats:Miss",
+                        "Advanced Stats:Dodge",
+                        "Advanced Stats:Parry",
+                    });
+                    _characterDisplayCalculationLabels = labels.ToArray();
+                }
+                return _characterDisplayCalculationLabels;
+            }
+        }
+
+
+        private string[] _customChartNames = null;
+        /// <summary>
+        /// The names of all custom charts provided by the model, if any.
+        /// </summary>
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                {
+                    //_customChartNames = new string[] { "Item Budget" };
+                    _customChartNames = new string[0];
+                }
+                return _customChartNames;
+            }
+        }
+
+
+        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
+        /// <summary>
+        /// A custom panel inheriting from CalculationOptionsPanelBase which contains controls for
+        /// setting CalculationOptions for the model. CalculationOptions are stored in the Character,
+        /// and can be used by multiple models. See comments on CalculationOptionsPanelBase for more details.
+        /// </summary>
+        public override CalculationOptionsPanelBase CalculationOptionsPanel
+        {
+            get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
+        }
+
+
+        private List<Item.ItemType> _relevantItemTypes = null;
+        /// <summary>
+        /// List<Item.ItemType> containing all of the ItemTypes relevant to this model. Typically this
+        /// means all types of armor/weapons that the intended class is able to use, but may also
+        /// be trimmed down further if some aren't typically used. Item.ItemType.None should almost
+        /// always be included, because that type includes items with no proficiancy requirement, such
+        /// as rings, necklaces, cloaks, held in off hand items, etc.
+        /// 
+        /// EXAMPLE:
+        /// relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+        /// {
+        ///     Item.ItemType.None,
+        ///     Item.ItemType.Leather,
+        ///     Item.ItemType.Idol,
+        ///     Item.ItemType.Staff,
+        ///     Item.ItemType.TwoHandMace
+        /// });
+        /// </summary>
+        public override List<Item.ItemType> RelevantItemTypes
+        {
+            get
+            {
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[]
+					{
+						Item.ItemType.None,
+                        Item.ItemType.Leather,
+                        Item.ItemType.Mail,
+                        Item.ItemType.Plate,
+                        Item.ItemType.Sigil,
+                        Item.ItemType.Polearm,
+                        Item.ItemType.TwoHandAxe,
+                        Item.ItemType.TwoHandMace,
+                        Item.ItemType.TwoHandSword,
+                        Item.ItemType.OneHandAxe,
+                        Item.ItemType.OneHandMace,
+                        Item.ItemType.OneHandSword
+					}));
+            }
+        }
+
+
+        /// <summary>
+        /// Character class that this model is for.
+        /// </summary>
+        public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.DeathKnight; } }
+
+        /// <summary>
+        /// Method to get a new instance of the model's custom ComparisonCalculation class.
+        /// </summary>
+        /// <returns>A new instance of the model's custom ComparisonCalculation class, 
+        /// which inherits from ComparisonCalculationBase</returns>
+        public override ComparisonCalculationBase CreateNewComparisonCalculation()
+        {
+            return new ComparisonCalculationTankDK();
+        }
+
+        /// <summary>
+        /// Method to get a new instance of the model's custom CharacterCalculations class.
+        /// </summary>
+        /// <returns>A new instance of the model's custom CharacterCalculations class, 
+        /// which inherits from CharacterCalculationsBase</returns>
+        public override CharacterCalculationsBase CreateNewCharacterCalculations()
+        {
+            return new CharacterCalculationsTankDK();
+        }
+
+        /// <summary>
+        /// An array of strings which define what calculations (in addition to the subpoint ratings)
+        /// will be available to the optimizer
+        /// </summary>
+        //public virtual string[] OptimizableCalculationLabels { get { return new string[0]; } }
+
+        /// <summary>
+        /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
+        /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
+        /// those total stats for the character, and any calculationoptions on the character, perform all the 
+        /// calculations required to come up with the final calculations defined in 
+        /// CharacterDisplayCalculationLabels, including an Overall rating, and all Sub ratings defined in 
+        /// SubPointNameColors.
+        /// </summary>
+        /// <param name="character">The character to perform calculations for.</param>
+        /// <param name="additionalItem">An additional item to treat the character as wearing.
+        /// This is used for gems, which don't have a slot on the character to fit in, so are just
+        /// added onto the character, in order to get gem calculations.</param>
+        /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
+        /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
+        /// CharacterCalculationsBase comments for more details.</returns>
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        {
+            CalculationOptionsTankDK opts = character.CalculationOptions as CalculationOptionsTankDK;
+
+            int targetLevel = opts.TargetLevel;
+            int characterLevel = character.Level;
+            Stats stats = GetCharacterStats(character, additionalItem);
+            Stats raceStats = GetRaceStats(character);
+
+            float levelDifference = (targetLevel - characterLevel) * 0.2f;
+
+
+            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
+            calcs.BasicStats = stats;
+            calcs.TargetLevel = targetLevel;
+
+            float baseAgi = raceStats.Agility;
+            float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
+
+            float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * (1.0f / 73.52941176f);
+            float missNonDR = stats.Miss * 100f - levelDifference;
+            float parryNonDR = stats.Parry * 100f - levelDifference;
+
+            float dodgePreDR = (stats.Agility - baseAgi) * (1.0f/73.52941176f) + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); 
+            float missPreDR = (defSkill * 0.04f);
+            float parryPreDr = (defSkill * 0.04f) + (stats.ParryRating + stats.Strength * 0.25f) / 49.18498611f;
+
+            float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
+            float missPostDR = 1f / (1f / 47.003525f + 0.9560f / missPreDR); //TODO: Search for correct value
+            float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDr);
+
+            float dodgeTotal = dodgeNonDR + dodgePostDR;
+            float missTotal = missNonDR + missPostDR;
+            float parryTotal = parryNonDR + parryPostDR;
+
+            float currentAvoidance = 100.0f;
+
+            calcs.Miss = missTotal; currentAvoidance -= missTotal;
+            calcs.Dodge = Math.Min(currentAvoidance, dodgeTotal); currentAvoidance -= Math.Min(currentAvoidance, dodgeTotal);
+            calcs.Parry = Math.Min(currentAvoidance, parryTotal); currentAvoidance -= Math.Min(currentAvoidance, parryTotal);
+
+            float dps = 1000.0f;
+
+            float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - defSkill * 0.04f);
+
+            float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * 4.0f;
+            float critHitAvoidance = currentAvoidance + attackerCrit * 4.0f;
+
+            float armor = stats.Armor;
+            // Damage Reduction is capped at 75%
+            float dr = Math.Min(0.75f, armor / (armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
+            calcs.Mitigation = 1.0f / (1.0f - dr) * calcs.BasicStats.Health / (dps * critHitBare / 100.0f);
+            calcs.Avoidance = 1.0f / (1.0f - dr) * calcs.BasicStats.Health / (dps * critHitAvoidance / 100.0f) - calcs.Mitigation;
+
+            return calcs;
+        }
+
+        /// <summary>
+        /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
+        /// combine all of the information about the character, including race, gear, enchants, buffs,
+        /// calculationoptions, etc., to form a single combined Stats object. Three of the methods below
+        /// can be called from this method to help total up stats: GetItemStats(character, additionalItem),
+        /// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
+        /// </summary>
+        /// <param name="character">The character whose stats should be totaled.</param>
+        /// <param name="additionalItem">An additional item to treat the character as wearing.
+        /// This is used for gems, which don't have a slot on the character to fit in, so are just
+        /// added onto the character, in order to get gem calculations.</param>
+        /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
+            DeathKnightTalents talents = character.DeathKnightTalents;
+
+            Stats statsRace = GetRaceStats(character);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            Stats statsEnchants = GetEnchantsStats(character);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsTalents = new Stats()
+            {
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath),
+                BonusArmorMultiplier = .03f * (float)(talents.Toughness),
+                BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath),
+                Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare),
+                BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
+                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker)
+            };
+            Stats statsTotal = new Stats();
+            Stats statsGearEnchantsBuffs = new Stats();
+
+            /*
+            //calculate drums uptime...if it lands on an even minute mark ignore it, as it will have a duration of 0
+            float drumsEffectiveFightDuration = (float)calcOpts.FightLength - 1f;
+            float numDrums = drumsEffectiveFightDuration % 2;
+            float drumsUptime = (numDrums * .5f) / (float)calcOpts.FightLength;
+
+            // Drums of War - 60 AP/30 SD
+            if (calcOpts.DrumsOfWar)
+            {
+                statsBuffs.AttackPower += drumsUptime * 60f;
+            }
+
+            // Drums of Battle - 80 Haste
+            if (calcOpts.DrumsOfBattle)
+            {
+                statsBuffs.HasteRating += drumsUptime * 80f;
+            }
+            */
+
+            // Ferocious Inspiriation  **Temp fix - FI increases all damage, not just physical damage
+            /*
+            if (character.ActiveBuffsContains("Ferocious Inspiration"))
+            {
+                statsBuffs.BonusPhysicalDamageMultiplier = ((1f + statsBuffs.BonusPhysicalDamageMultiplier) *
+                    (float)Math.Pow(1.03f, calcOpts.FerociousInspiration - 1f)) - 1f;
+            }
+            */
+
+            statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+
+            statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
+            statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
+            statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
+            statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
+
+            statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier));
+            statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
+
+            statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier));
+            statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
+            statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
+
+            if (talents.BladedArmor > 0)
+            {
+                statsTotal.AttackPower += (statsGearEnchantsBuffs.Armor / 180f) * (float)talents.BladedArmor;
+            }
+
+            statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
+
+            statsTotal.DefenseRating = statsGearEnchantsBuffs.DefenseRating;
+            statsTotal.DodgeRating = statsGearEnchantsBuffs.DodgeRating;
+            statsTotal.ParryRating = statsGearEnchantsBuffs.ParryRating;
+
+            statsTotal.Defense = statsGearEnchantsBuffs.Defense;
+            statsTotal.Dodge = 0.03463600f + statsGearEnchantsBuffs.Dodge;
+            statsTotal.Parry = 0.050f + statsGearEnchantsBuffs.Parry;
+            statsTotal.Miss = 0.050f;
+            
+
+            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
+            statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
+            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
+            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
+            statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+            statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
+
+            statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
+            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
+            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+
+            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
+
+            statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
+
+            return (statsTotal);
+        }
+
+        /// <summary>
+        /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
+        /// </summary>
+        /// <param name="character">The character to build the chart for.</param>
+        /// <param name="chartName">The name of the custom chart to get data for.</param>
+        /// <returns>The data for the custom chart.</returns>
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            return new ComparisonCalculationBase[0];
+        }
+
+
+        private Stats GetRaceStats(Character character)
+        {
+            Stats statsRace;
+            switch (character.Race)
+            {
+                case Character.CharacterRace.Human:
+                    statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 146f, Health = 2169f };
+                    break;
+                case Character.CharacterRace.Dwarf:
+                    statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 138f, Health = 2199f };
+                    break;
+                case Character.CharacterRace.NightElf:
+                    statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 156f, Health = 2159f };
+                    break;
+                case Character.CharacterRace.Gnome:
+                    statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 152f, Health = 2159f };
+                    break;
+                case Character.CharacterRace.Draenei:
+                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 140f, Health = 2159f };
+                    break;
+                case Character.CharacterRace.Orc:
+                    statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 140f, Health = 2189f };
+                    break;
+                case Character.CharacterRace.Troll:
+                    statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 150f, Health = 2179f };
+                    break;
+                case Character.CharacterRace.Undead:
+                    statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 142f, Health = 2179f };
+                    break;
+                case Character.CharacterRace.BloodElf:
+                    statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 150f, Health = 2149f };
+                    break;
+                case Character.CharacterRace.Tauren:
+                    statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 136f, Health = 2298f };
+                    break;
+
+                default:
+                    statsRace = new Stats();
+                    break;
+            }
+            // Derived stats base amount, common to all races
+            statsRace.Strength += 67f;
+            statsRace.Agility += 39f;
+            statsRace.Stamina += 61f;
+            statsRace.Intellect += 6f;
+            statsRace.Spirit += 17f;
+            // armor doesn't matter, its always 2x agility + items, then modifiers
+            statsRace.Health += 8328f;
+            statsRace.AttackPower = 202f + (67f * 2);
+
+            return statsRace;
+        }
+
+
+        /// <summary>
+        /// Filters a Stats object to just the stats relevant to the model.
+        /// </summary>
+        /// <param name="stats">A complete Stats object containing all stats.</param>
+        /// <returns>A filtered Stats object containing only the stats relevant to the model.</returns>
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            return new Stats()
+            {
+                Health = stats.Health,
+                Strength = stats.Strength,
+                Agility = stats.Agility,
+                Stamina = stats.Stamina,
+                Intellect = stats.Intellect,
+                Spirit = stats.Spirit,
+                Armor = stats.Armor,
+
+                DefenseRating = stats.DefenseRating,
+                ParryRating = stats.ParryRating,
+                DodgeRating = stats.DodgeRating,
+
+                //AttackPower = stats.AttackPower,
+                //HitRating = stats.HitRating,
+                //CritRating = stats.CritRating,
+                //ArmorPenetration = stats.ArmorPenetration,
+                //ExpertiseRating = stats.ExpertiseRating,
+                //HasteRating = stats.HasteRating,
+                //WeaponDamage = stats.WeaponDamage,
+                //PhysicalCrit = stats.PhysicalCrit,
+                //PhysicalHaste = stats.PhysicalHaste,
+                //PhysicalHit = stats.PhysicalHit,
+
+                //HitRating = stats.HitRating,
+                //SpellPower = stats.SpellPower,
+                //SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                //SpellHit = stats.SpellHit,
+
+                BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+                BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+
+                LotPCritRating = stats.LotPCritRating,
+                CritMeleeRating = stats.CritMeleeRating,
+                WindfuryAPBonus = stats.WindfuryAPBonus,
+                Bloodlust = stats.Bloodlust
+            };
+        }
+
+
+        /// <summary>
+        /// Tests whether there are positive relevant stats in the Stats object.
+        /// </summary>
+        /// <param name="stats">The complete Stats object containing all stats.</param>
+        /// <returns>True if any of the positive stats in the Stats are relevant.</returns>
+        public override bool HasRelevantStats(Stats stats)
+        {
+            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
+                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
+                stats.CritRating + stats.HitRating + 
+                stats.DodgeRating + stats.DefenseRating + stats.ParryRating +
+                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
+                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
+                stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust) != 0;
+        }
+
+
+        /// <summary>
+        /// Deserializes the model's CalculationOptions data object from xml
+        /// </summary>
+        /// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
+        /// <returns>The model's CalculationOptions data object.</returns>
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsTankDK));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsTankDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsTankDK;
+            return calcOpts;
+        }
+
+    }
+}

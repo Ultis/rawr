@@ -61,9 +61,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest", "Rawr.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance", "Rawr.Enhance\Rawr.Enhance.csproj", "{217438A2-51C6-46DC-B0F8-8EBC81BF2426}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\Rawr.TankDK.csproj", "{55A0C445-3E1A-4BB4-A0ED-9056366C8333}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 21
+		SccNumberOfProjects = 22
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -126,6 +128,9 @@ Global
 		SccProjectUniqueName20 = Rawr.Enhance\\Rawr.Enhance.csproj
 		SccProjectName20 = Rawr.Enhance
 		SccLocalPath20 = Rawr.Enhance
+		SccProjectUniqueName21 = Rawr.TankDK\\Rawr.TankDK.csproj
+		SccProjectName21 = Rawr.TankDK
+		SccLocalPath21 = Rawr.TankDK
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -292,6 +297,12 @@ Global
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.Build.0 = Release|Any CPU
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|x86.ActiveCfg = Release|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
