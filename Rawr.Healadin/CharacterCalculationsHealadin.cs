@@ -14,17 +14,23 @@ namespace Rawr.Healadin
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f }; //, 0f };
+        private float[] _subPoints = new float[] { 0f , 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
 
-        public float ThroughputPoints
+        public float FightPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
+        }
+
+        public float BurstPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
         public float AvgHPS { get; set; }

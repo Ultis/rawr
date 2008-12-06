@@ -69,16 +69,19 @@
             this.nudGHL = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.nudInt = new System.Windows.Forms.NumericUpDown();
-            this.nudSP = new System.Windows.Forms.NumericUpDown();
-            this.label15 = new System.Windows.Forms.Label();
-            this.nudCrit = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
-            this.nudHaste = new System.Windows.Forms.NumericUpDown();
-            this.label17 = new System.Windows.Forms.Label();
             this.nudMp5 = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
+            this.nudHaste = new System.Windows.Forms.NumericUpDown();
+            this.label17 = new System.Windows.Forms.Label();
+            this.nudCrit = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.nudSP = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.nudInt = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.lblBurstScale = new System.Windows.Forms.Label();
+            this.trkBurstScale = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
@@ -92,11 +95,12 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).BeginInit();
             this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMp5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).BeginInit();
             this.SuspendLayout();
             // 
             // cmbLength
@@ -613,56 +617,22 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Profession Benefits";
             // 
-            // label14
+            // nudMp5
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(34, 21);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(47, 13);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "Intellect:";
+            this.nudMp5.Location = new System.Drawing.Point(87, 71);
+            this.nudMp5.Name = "nudMp5";
+            this.nudMp5.Size = new System.Drawing.Size(56, 20);
+            this.nudMp5.TabIndex = 43;
+            this.nudMp5.ValueChanged += new System.EventHandler(this.nudMp5_ValueChanged);
             // 
-            // nudInt
+            // label18
             // 
-            this.nudInt.Location = new System.Drawing.Point(87, 19);
-            this.nudInt.Name = "nudInt";
-            this.nudInt.Size = new System.Drawing.Size(56, 20);
-            this.nudInt.TabIndex = 1;
-            this.nudInt.ValueChanged += new System.EventHandler(this.nudInt_ValueChanged);
-            // 
-            // nudSP
-            // 
-            this.nudSP.Location = new System.Drawing.Point(232, 19);
-            this.nudSP.Name = "nudSP";
-            this.nudSP.Size = new System.Drawing.Size(56, 20);
-            this.nudSP.TabIndex = 3;
-            this.nudSP.ValueChanged += new System.EventHandler(this.nudSP_ValueChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(160, 21);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(66, 13);
-            this.label15.TabIndex = 2;
-            this.label15.Text = "Spell Power:";
-            // 
-            // nudCrit
-            // 
-            this.nudCrit.Location = new System.Drawing.Point(87, 45);
-            this.nudCrit.Name = "nudCrit";
-            this.nudCrit.Size = new System.Drawing.Size(56, 20);
-            this.nudCrit.TabIndex = 5;
-            this.nudCrit.ValueChanged += new System.EventHandler(this.nudCrit_ValueChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(50, 73);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(31, 13);
-            this.label16.TabIndex = 4;
-            this.label16.Text = "Mp5:";
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(56, 47);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(25, 13);
+            this.label18.TabIndex = 42;
+            this.label18.Text = "Crit:";
             // 
             // nudHaste
             // 
@@ -681,27 +651,95 @@
             this.label17.TabIndex = 6;
             this.label17.Text = "Haste:";
             // 
-            // nudMp5
+            // nudCrit
             // 
-            this.nudMp5.Location = new System.Drawing.Point(87, 71);
-            this.nudMp5.Name = "nudMp5";
-            this.nudMp5.Size = new System.Drawing.Size(56, 20);
-            this.nudMp5.TabIndex = 43;
-            this.nudMp5.ValueChanged += new System.EventHandler(this.nudMp5_ValueChanged);
+            this.nudCrit.Location = new System.Drawing.Point(87, 45);
+            this.nudCrit.Name = "nudCrit";
+            this.nudCrit.Size = new System.Drawing.Size(56, 20);
+            this.nudCrit.TabIndex = 5;
+            this.nudCrit.ValueChanged += new System.EventHandler(this.nudCrit_ValueChanged);
             // 
-            // label18
+            // label16
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(56, 47);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(25, 13);
-            this.label18.TabIndex = 42;
-            this.label18.Text = "Crit:";
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(50, 73);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(31, 13);
+            this.label16.TabIndex = 4;
+            this.label16.Text = "Mp5:";
+            // 
+            // nudSP
+            // 
+            this.nudSP.Location = new System.Drawing.Point(232, 19);
+            this.nudSP.Name = "nudSP";
+            this.nudSP.Size = new System.Drawing.Size(56, 20);
+            this.nudSP.TabIndex = 3;
+            this.nudSP.ValueChanged += new System.EventHandler(this.nudSP_ValueChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(160, 21);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(66, 13);
+            this.label15.TabIndex = 2;
+            this.label15.Text = "Spell Power:";
+            // 
+            // nudInt
+            // 
+            this.nudInt.Location = new System.Drawing.Point(87, 19);
+            this.nudInt.Name = "nudInt";
+            this.nudInt.Size = new System.Drawing.Size(56, 20);
+            this.nudInt.TabIndex = 1;
+            this.nudInt.ValueChanged += new System.EventHandler(this.nudInt_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(34, 21);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(47, 13);
+            this.label14.TabIndex = 0;
+            this.label14.Text = "Intellect:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(84, 546);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(64, 13);
+            this.label19.TabIndex = 44;
+            this.label19.Text = "Burst Scale:";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblBurstScale
+            // 
+            this.lblBurstScale.AutoSize = true;
+            this.lblBurstScale.Location = new System.Drawing.Point(258, 569);
+            this.lblBurstScale.Name = "lblBurstScale";
+            this.lblBurstScale.Size = new System.Drawing.Size(33, 13);
+            this.lblBurstScale.TabIndex = 43;
+            this.lblBurstScale.Text = "100%";
+            // 
+            // trkBurstScale
+            // 
+            this.trkBurstScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trkBurstScale.Location = new System.Drawing.Point(154, 537);
+            this.trkBurstScale.Maximum = 100;
+            this.trkBurstScale.Name = "trkBurstScale";
+            this.trkBurstScale.Size = new System.Drawing.Size(137, 45);
+            this.trkBurstScale.TabIndex = 42;
+            this.trkBurstScale.TickFrequency = 10;
+            this.trkBurstScale.Value = 90;
+            this.trkBurstScale.Scroll += new System.EventHandler(this.trkBurstScale_Scroll);
             // 
             // CalculationOptionsPanelHealadin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label19);
+            this.Controls.Add(this.lblBurstScale);
+            this.Controls.Add(this.trkBurstScale);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.nudGHL);
@@ -719,7 +757,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbLength);
             this.Name = "CalculationOptionsPanelHealadin";
-            this.Size = new System.Drawing.Size(300, 556);
+            this.Size = new System.Drawing.Size(300, 593);
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -737,11 +775,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudGHL)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMp5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudHaste)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudCrit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSP)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudInt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkBurstScale)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -800,5 +839,8 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown nudHaste;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label lblBurstScale;
+        private System.Windows.Forms.TrackBar trkBurstScale;
     }
 }

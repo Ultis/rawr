@@ -57,6 +57,9 @@ namespace Rawr.Healadin
             trkBoLEff.Value = (int)(calcOpts.BoLEff * 100);
             lblBoLEff.Text = trkBoLEff.Value + "%";
 
+            trkBurstScale.Value = (int)(calcOpts.BurstScale * 100);
+            lblBurstScale.Text = trkBurstScale.Value + "%";
+
             trkHS.Value = (int)(calcOpts.HolyShock * 100);
             lblHS.Text = trkHS.Value + "%";
 
@@ -316,6 +319,17 @@ namespace Rawr.Healadin
             }
         }
 
+        private void trkBurstScale_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
+                calcOpts.BurstScale = trkBurstScale.Value / 100f;
+                lblBurstScale.Text = trkBurstScale.Value + "%";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
     }
 
 	[Serializable]
@@ -340,6 +354,7 @@ namespace Rawr.Healadin
         public float BoLUp = 1f;
         public float BoLEff = .3f;
         public float HolyShock = .2f;
+        public float BurstScale = .2f;
         public float GHL_Targets = 1f;
 
         public bool JotP = true;
