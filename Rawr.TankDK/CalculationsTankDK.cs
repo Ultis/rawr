@@ -59,19 +59,28 @@ namespace Rawr.TankDK
                     List<string> labels = new List<string>(new string[]
                     {
                         "Basic Stats:Health",
-/*
+
                         "Basic Stats:Strength",
 					    "Basic Stats:Agility",
-					    "Basic Stats:Attack Power",
+/*					    "Basic Stats:Attack Power",
 					    "Basic Stats:Crit Rating",
 					    "Basic Stats:Hit Rating",
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
 					    "Basic Stats:Armor Penetration",*/
                         "Basic Stats:Armor",
+
+                        "Defense:Crit*Enemy's crit chance on you",
+                        "Defense:Defense Rating",
+                        "Defense:Defense",
+                        "Defense:Defense Rating needed",
+
                         "Advanced Stats:Miss",
                         "Advanced Stats:Dodge",
                         "Advanced Stats:Parry",
+                        "Advanced Stats:TTL Mitigation*Time to Life based on armor and health",
+                        "Advanced Stats:TTL Avoidance*TTL increase by avoidance",
+                        "Advanced Stats:TTL*Time to Life",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -214,7 +223,8 @@ namespace Rawr.TankDK
             calcs.TargetLevel = targetLevel;
 
             float baseAgi = raceStats.Agility;
-            float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
+            //float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
+            float defSkill = stats.DefenseRating / 4.918498039f;
 
             float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * (1.0f / 73.52941176f);
             float missNonDR = stats.Miss * 100f - levelDifference;
@@ -241,6 +251,10 @@ namespace Rawr.TankDK
             float dps = 1000.0f;
 
             float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - defSkill * 0.04f);
+            calcs.Crit = 5.0f + levelDifference - defSkill * 0.04f;
+            calcs.Defense = defSkill;
+            calcs.DefenseRating = stats.DefenseRating;
+            calcs.DefenseRatingNeeded = (attackerCrit / 0.04f) * 4.918498039f;
 
             float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * 4.0f;
             float critHitAvoidance = currentAvoidance + attackerCrit * 4.0f;
@@ -329,6 +343,7 @@ namespace Rawr.TankDK
             statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier));
+            statsTotal.Armor *= 1.60f; // Frost Presence
             statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);

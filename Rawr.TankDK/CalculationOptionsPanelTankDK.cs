@@ -19,13 +19,33 @@ namespace Rawr.TankDK
         {
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = new CalculationOptionsTankDK();
+                Character.CalculationOptions = options = new CalculationOptionsTankDK();
+
+            for (int i = 0; i < cmbAttackerLevel.Items.Count; i++)
+            {
+                if (cmbAttackerLevel.Items[i] as string == options.TargetLevel.ToString())
+                {
+                    cmbAttackerLevel.SelectedItem = cmbAttackerLevel.Items[i];
+                    break;
+                }
+            }
+
 
             _loadingCalculationOptions = false;
         }
 
 
         private bool _loadingCalculationOptions = false;
+        private CalculationOptionsTankDK options;
+
+        private void cmbAttackerLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.TargetLevel = int.Parse(cmbAttackerLevel.SelectedItem.ToString());
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
