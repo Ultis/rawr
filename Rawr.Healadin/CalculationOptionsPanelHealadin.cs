@@ -350,11 +350,11 @@ namespace Rawr.Healadin
 		public float Activity = .85f;
 		public float Spiritual = 3600;
         public float Replenishment = .9f;
-        public float DivinePlea = 1.5f;
+        public float DivinePlea = 1.25f;
         public float BoLUp = 1f;
-        public float BoLEff = .3f;
-        public float HolyShock = .2f;
-        public float BurstScale = .2f;
+        public float BoLEff = .2f;
+        public float HolyShock = .15f;
+        public float BurstScale = .3f;
         public float GHL_Targets = 1f;
 
         public bool JotP = true;

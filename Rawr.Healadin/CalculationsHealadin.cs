@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 
 namespace Rawr.Healadin
@@ -104,7 +104,7 @@ namespace Rawr.Healadin
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Fight Healing", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Burst Healing", System.Drawing.Color.LightSlateGray);
+                    _subPointNameColors.Add("Burst Healing", System.Drawing.Color.CornflowerBlue);
                 }
                 return _subPointNameColors;
             }
@@ -204,11 +204,11 @@ namespace Rawr.Healadin
 
                 float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
                 calc.JotPCasts += seals_cast;
-                calc.JotPUsage += ((float)Math.Round(base_mana * .14f) * glyph_sow - ied) * seals_cast;
+                calc.JotPUsage += ((float)Math.Round(base_mana * .14f) - ied) * seals_cast;
 
                 float judgements_cast = (float)Math.Ceiling(fight_length / 60f);
                 calc.JotPCasts += judgements_cast;
-                calc.JotPUsage += ((float)Math.Round(base_mana * .05f) * glyph_sow - ied) * judgements_cast;
+                calc.JotPUsage += ((float)Math.Round(base_mana * .05f) - ied) * judgements_cast;
 
                 float newhaste = fight_length * (1f + stats.SpellHaste) - (float)Math.Max(1f, 1.5f / (1f + stats.SpellHaste)) * calc.JotPCasts;
                 calc.JotPHaste = 1f - oldhaste / newhaste;
@@ -219,7 +219,7 @@ namespace Rawr.Healadin
             if (talents.BeaconOfLight > 0)
             {
                 calc.BoLCasts = (float)Math.Ceiling(fight_length * calcOpts.BoLUp / 60f);
-                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) * glyph_sow - ied);
+                calc.BoLUsage = calc.BoLCasts * ((float)Math.Round(base_mana * .35f * benediction) - ied);
             }
             #endregion
 
@@ -243,10 +243,13 @@ namespace Rawr.Healadin
             calc.HLCrit = stats.SpellCrit + stats.HolyLightCrit + talents.HolyPower * .01f + talents.SanctifiedLight * .02f;
             calc.HLCost = hl_baseMana * glyph_sow * (1f - stats.HolyLightPercentManaReduction)
                 - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction - ied;
+            float hl_dimana = hl_baseMana * glyph_sow * (1f - stats.HolyLightPercentManaReduction) * 0.5f
+                - hl_baseMana * .12f * talents.Illumination * calc.HLCrit - stats.HolyLightManaCostReduction - ied;
             float hl_heal = calc.HLAvgHeal * ((1 - calc.HLCrit) + 1.5f * (1f + stats.BonusCritHealMultiplier) * calc.HLCrit);
             calc.HLCastTime = (2.5f - .5f / 3 * talents.LightsGrace) / (1f + stats.SpellHaste);
             calc.HLHPS = hl_heal / calc.HLCastTime;
             float hl_mps = calc.HLCost / calc.HLCastTime;
+            float hl_dimps = hl_dimana / calc.HLCastTime;
             calc.HLHPM = hl_heal / calc.HLCost;
             #endregion
 
@@ -280,17 +283,24 @@ namespace Rawr.Healadin
                 calc.HSHealed = calc.HSTime * calc.HSHPS;
                 calc.HSUsage = calc.HSTime * hs_mps;
             }
+            float df_casts = 0, df_manaCost = 0, df_manaSaved = 0, df_healing = 0;
             if (talents.DivineFavor > 0)
             {
-
+                df_casts = (float)Math.Ceiling((fight_length - .5f) / 120f);
+                df_manaCost = (float)Math.Round(base_mana * .03f) * df_casts;
+                df_manaSaved = hl_baseMana * .6f * df_casts * (1f - calc.HLCrit);
+                df_healing = calc.HLAvgHeal * (1f - calc.HLCrit) * (1.5f * (1f + stats.BonusCritHealMultiplier) - 1f);
             }
+            float di_time = 0, di_manausage = 0, di_healing = 0;
             if (talents.DivineIllumination > 0)
             {
-
+                di_time = (float)Math.Ceiling((fight_length - 1f) / 180f) * 15f * calcOpts.Activity;
+                di_manausage = di_time * hl_dimps;
+                di_healing = di_time * calc.HLHPS;
             }
 
-            float healing_mana = calc.TotalMana - calc.BoLUsage - calc.JotPUsage - calc.HSUsage - calc.SSUsage;
-            float healing_time = active_length - (calc.HSCastTime * (calc.BoLCasts + calc.JotPCasts + calc.SSCasts)) - calc.HSTime;
+            float healing_mana = calc.TotalMana - calc.BoLUsage - calc.JotPUsage - calc.HSUsage - calc.SSUsage - df_manaCost + df_manaSaved - di_manausage;
+            float healing_time = active_length - (calc.HSCastTime * (calc.BoLCasts + calc.JotPCasts + calc.SSCasts)) - calc.HSTime - di_time;
             calc.HLTime = Math.Min(active_length, Math.Max(0, (healing_mana - (healing_time * fol_mps)) / (hl_mps - fol_mps)));
             calc.FoLTime = healing_time - calc.HLTime;
             if (calc.HLTime == 0)
@@ -302,7 +312,8 @@ namespace Rawr.Healadin
             calc.HLUsage = calc.HLTime * hl_mps;
 
             calc.FoLHealed = calc.FoLTime * calc.FoLHPS;
-            calc.HLHealed = calc.HLTime * calc.HLHPS;
+            calc.HLHealed = calc.HLTime * calc.HLHPS + di_healing + df_healing;
+            calc.HLTime += di_time;
             if (calcOpts.Glyph_HL) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f;
 
             calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed + calc.HLGlyph;
@@ -310,8 +321,9 @@ namespace Rawr.Healadin
             calc.TotalHealed += calc.SSAbsorbed;
 
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
+            calc.AvgHPS = calc.TotalHealed / fight_length;
 
-            calc.FightPoints = calc.AvgHPS = calc.TotalHealed / fight_length;
+            calc.FightPoints = calc.AvgHPS * (1f - calcOpts.BurstScale);
             calc.BurstPoints = calc.HLHPS * calcOpts.BurstScale;
             calc.OverallPoints = calc.FightPoints + calc.BurstPoints; 
 
