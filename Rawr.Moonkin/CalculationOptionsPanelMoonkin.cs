@@ -45,6 +45,7 @@ namespace Rawr.Moonkin
             cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
             cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();
             chkSmartSwitching.Checked = calcOpts.SmartSwitching;
+            cmbUserRotation.SelectedItem = calcOpts.SmartSwitching;
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -169,6 +170,13 @@ namespace Rawr.Moonkin
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.SmartSwitching = chkSmartSwitching.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbUserRotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.userRotation = cmbUserRotation.SelectedItem.ToString();
             Character.OnCalculationsInvalidated();
         }
     }
@@ -312,5 +320,6 @@ namespace Rawr.Moonkin
         public string glyph2 = "Moonfire";
         public string glyph3 = "Insect Swarm";
         public bool SmartSwitching = false;
+        public string userRotation = "None";
 	}
 }

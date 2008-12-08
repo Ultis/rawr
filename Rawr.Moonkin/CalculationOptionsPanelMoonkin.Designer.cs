@@ -60,6 +60,8 @@
             this.cmbGlyph3 = new System.Windows.Forms.ComboBox();
             this.lblGlyph3 = new System.Windows.Forms.Label();
             this.chkSmartSwitching = new System.Windows.Forms.CheckBox();
+            this.lblUserRotation = new System.Windows.Forms.Label();
+            this.cmbUserRotation = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -387,10 +389,40 @@
             this.chkSmartSwitching.UseVisualStyleBackColor = true;
             this.chkSmartSwitching.CheckedChanged += new System.EventHandler(this.chkSmartSwitching_CheckedChanged);
             // 
+            // lblUserRotation
+            // 
+            this.lblUserRotation.AutoSize = true;
+            this.lblUserRotation.Location = new System.Drawing.Point(6, 482);
+            this.lblUserRotation.Name = "lblUserRotation";
+            this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
+            this.lblUserRotation.TabIndex = 44;
+            this.lblUserRotation.Text = "User Rotation:";
+            // 
+            // cmbUserRotation
+            // 
+            this.cmbUserRotation.FormattingEnabled = true;
+            this.cmbUserRotation.Items.AddRange(new object[] {
+            "None",
+            "IS/W",
+            "MF/W",
+            "IS/SF",
+            "MF/SF",
+            "IS/MF/W",
+            "IS/MF/SF",
+            "SF Spam",
+            "W Spam"});
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 479);
+            this.cmbUserRotation.Name = "cmbUserRotation";
+            this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
+            this.cmbUserRotation.TabIndex = 45;
+            this.cmbUserRotation.SelectedIndexChanged += new System.EventHandler(this.cmbUserRotation_SelectedIndexChanged);
+            // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cmbUserRotation);
+            this.Controls.Add(this.lblUserRotation);
             this.Controls.Add(this.chkSmartSwitching);
             this.Controls.Add(this.lblGlyph3);
             this.Controls.Add(this.cmbGlyph3);
@@ -424,7 +456,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 504);
+            this.Size = new System.Drawing.Size(204, 518);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -466,6 +498,8 @@
         private System.Windows.Forms.ComboBox cmbGlyph3;
         private System.Windows.Forms.Label lblGlyph3;
         private System.Windows.Forms.CheckBox chkSmartSwitching;
+        private System.Windows.Forms.Label lblUserRotation;
+        private System.Windows.Forms.ComboBox cmbUserRotation;
 
     }
 }

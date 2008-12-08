@@ -1323,7 +1323,12 @@ namespace Rawr.Moonkin
                 currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
 
                 // Save maximum mana-limited and non-mana limited DPS rotations
-                if (currentDPS > maxDPS)
+                if (calcOpts.userRotation == "None" && currentDPS > maxDPS)
+                {
+                    calcs.SelectedRotation = rotation;
+                    maxDPS = currentDPS;
+                }
+                else if (calcOpts.userRotation != "None" && rotation.Name == calcOpts.userRotation)
                 {
                     calcs.SelectedRotation = rotation;
                     maxDPS = currentDPS;
