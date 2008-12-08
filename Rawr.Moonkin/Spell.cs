@@ -1440,6 +1440,15 @@ namespace Rawr.Moonkin
                 else timeBetweenProcs *= 4.0f;
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
+			// Pendulum of Telluric Currents (15% proc, 45s internal cooldown)
+			if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
+			{
+				float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusShadowDamageMultiplier);
+				float baseDamage = (1168 + 1752) / 2.0f;
+				float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
+				float timeBetweenProcs = rotation.Duration / (hitRate * rotation.CastCount * 0.15f) + 45f;
+				trinketExtraDPS += averageDamage / timeBetweenProcs;
+			}
             // Timbal's Focusing Crystal (10% proc on a DoT tick, 15s internal cooldown)
             if (calcs.BasicStats.TimbalsProc > 0 && rotation.TotalDotTicks > 0)
             {
