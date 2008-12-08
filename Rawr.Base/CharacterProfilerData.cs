@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Rawr
 {
@@ -202,12 +203,14 @@ namespace Rawr
         {
             int points = 0;
 
-            SavedVariablesDictionary spec_tree = talent_tree[spec] as SavedVariablesDictionary;
-            if (spec_tree != null)
+            if (talent_tree.ContainsKey(spec))
             {
-                SavedVariablesDictionary talent_info = spec_tree[talent] as SavedVariablesDictionary;
-                if (talent_info != null)
+                SavedVariablesDictionary spec_tree = talent_tree[spec] as SavedVariablesDictionary;
+
+                if (spec_tree.ContainsKey(talent))
                 {
+                    SavedVariablesDictionary talent_info = spec_tree[talent] as SavedVariablesDictionary;
+
                     string rank_info = talent_info["Rank"] as string;
 
                     int split_pos = rank_info.IndexOf(':');
@@ -215,6 +218,14 @@ namespace Rawr
 
                     points = (int)Int32.Parse(points_str);
                 }
+                else
+                {
+                    Debug.WriteLine("Talent Not Found: " + talent);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Talent Tree Not Found: " + spec);
             }
 
             return points;
@@ -309,44 +320,50 @@ namespace Rawr
 
             // set the character class
             Character.Class = charClass;
-            // create an empty talent tree
-            switch (charClass)
+
+            // only try and load the talents if they actually have them
+            if (m_iLevel >= 10)
             {
-                case Character.CharacterClass.Warrior:
-                    m_character.WarriorTalents = new WarriorTalents();
-                    break;
-                case Character.CharacterClass.Paladin:
-                    m_character.PaladinTalents = new PaladinTalents();
-                    break;
-                case Character.CharacterClass.Hunter:
-                    m_character.HunterTalents = new HunterTalents();
-                    break;
-                case Character.CharacterClass.Rogue:
-                    m_character.RogueTalents = new RogueTalents();
-                    break;
-                case Character.CharacterClass.Priest:
-                    m_character.PriestTalents = new PriestTalents();
-                    break;
-                case Character.CharacterClass.Shaman:
-                    m_character.ShamanTalents = new ShamanTalents();
-                    break;
-                case Character.CharacterClass.Mage:
-                    m_character.MageTalents = new MageTalents();
-                    break;
-                case Character.CharacterClass.Warlock:
-                    m_character.WarlockTalents = new WarlockTalents();
-                    break;
-                case Character.CharacterClass.Druid:
-                    m_character.DruidTalents = new DruidTalents();
-                    break;
-                case Character.CharacterClass.DeathKnight:
-                    m_character.DeathKnightTalents = new DeathKnightTalents();
-                    break;
-                default:
-                    break;
+                // create an empty talent tree
+                switch (charClass)
+                {
+                    case Character.CharacterClass.Warrior:
+                        m_character.WarriorTalents = new WarriorTalents();
+                        break;
+                    case Character.CharacterClass.Paladin:
+                        m_character.PaladinTalents = new PaladinTalents();
+                        break;
+                    case Character.CharacterClass.Hunter:
+                        m_character.HunterTalents = new HunterTalents();
+                        break;
+                    case Character.CharacterClass.Rogue:
+                        m_character.RogueTalents = new RogueTalents();
+                        break;
+                    case Character.CharacterClass.Priest:
+                        m_character.PriestTalents = new PriestTalents();
+                        break;
+                    case Character.CharacterClass.Shaman:
+                        m_character.ShamanTalents = new ShamanTalents();
+                        break;
+                    case Character.CharacterClass.Mage:
+                        m_character.MageTalents = new MageTalents();
+                        break;
+                    case Character.CharacterClass.Warlock:
+                        m_character.WarlockTalents = new WarlockTalents();
+                        break;
+                    case Character.CharacterClass.Druid:
+                        m_character.DruidTalents = new DruidTalents();
+                        break;
+                    case Character.CharacterClass.DeathKnight:
+                        m_character.DeathKnightTalents = new DeathKnightTalents();
+                        break;
+                    default:
+                        break;
+                }
+
+                // load up the talents
+                setTalentsFromTree(characterInfo);
             }
-            // load up the talents
-            setTalentsFromTree(characterInfo);
 
             // Populate available items
             // Note that some of these items cannot be enchanted
