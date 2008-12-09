@@ -238,18 +238,24 @@ namespace Rawr.Moonkin
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
-            // Create the total stats object
-            Stats statsTotal = statsGearEnchantsBuffs + statsRace;
-
             // Bonus multipliers
-            statsTotal.BonusAgilityMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.BonusStaminaMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.BonusIntellectMultiplier += 0.04f * character.DruidTalents.HeartOfTheWild;
-            statsTotal.BonusIntellectMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            if (character.ActiveBuffsContains("Moonkin Form"))
-                statsTotal.BonusIntellectMultiplier += 0.02f * character.DruidTalents.Furor;
-            statsTotal.BonusSpiritMultiplier += 0.01f * character.DruidTalents.SurvivalOfTheFittest;
-            statsTotal.BonusSpiritMultiplier += 0.05f * character.DruidTalents.LivingSpirit;
+			Stats statsTalents = new Stats()
+			{
+				BonusStaminaMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.02f * character.DruidTalents.SurvivalOfTheFittest) - 1,
+				BonusAgilityMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
+				BonusStrengthMultiplier = 0.02f * character.DruidTalents.SurvivalOfTheFittest,
+				BonusIntellectMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.01f * character.DruidTalents.SurvivalOfTheFittest) - 1,
+				BonusSpiritMultiplier = (1 + 0.04f * character.DruidTalents.HeartOfTheWild) * (1 + 0.05f * character.DruidTalents.LivingSpirit) - 1
+			};
+			if (character.ActiveBuffsContains("Moonkin Form"))
+			{
+				statsTalents.BonusIntellectMultiplier += 1;
+				statsTalents.BonusIntellectMultiplier *= 1 + 0.02f * character.DruidTalents.Furor;
+				statsTalents.BonusIntellectMultiplier -= 1;
+			}
+
+            // Create the total stats object
+            Stats statsTotal = statsGearEnchantsBuffs + statsRace + statsTalents;
 
             // Base stats: Intellect, Stamina, Spirit, Agility
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
