@@ -1,59 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Rawr.Rogue {
-    class CharacterCalculationsRogue : CharacterCalculationsBase {
+namespace Rawr.Rogue
+{
+    public class CharacterCalculationsRogue : CharacterCalculationsBase
+    {
         #region Points
         private float _overallPoints = 0f;
-        public override float OverallPoints {
+        public override float OverallPoints
+        {
             get { return _overallPoints; }
             set { _overallPoints = value; }
         }
 
         private float[] _subPoints = new float[] { 0f };
-        public override float[] SubPoints {
+        public override float[] SubPoints
+        {
             get { return _subPoints; }
             set { _subPoints = value; }
         }
 
-        public float DPSPoints {
+        public float DPSPoints
+        {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
         private float _whiteDPS = 0f;
-        public float WhiteDPS {
+        public float WhiteDPS
+        {
             get { return _whiteDPS; }
             set { _whiteDPS = value; }
         }
 
         private float _cpgDPS = 0f;
-        public float CPGDPS {
+        public float CPGDPS
+        {
             get { return _cpgDPS; }
             set { _cpgDPS = value; }
         }
 
         private float _finisherDPS = 0f;
-        public float FinisherDPS {
+        public float FinisherDPS
+        {
             get { return _finisherDPS; }
             set { _finisherDPS = value; }
         }
 
         private float _windfuryDPS = 0f;
-        public float WindfuryDPS {
+        public float WindfuryDPS
+        {
             get { return _windfuryDPS; }
             set { _windfuryDPS = value; }
         }
 
         private float _swordspecDPS = 0f;
-        public float SwordSpecDPS {
+        public float SwordSpecDPS
+        {
             get { return _swordspecDPS; }
             set { _swordspecDPS = value; }
         }
 
         private float _poisonDPS = 0f;
-        public float PoisonDPS {
+        public float PoisonDPS
+        {
             get { return _poisonDPS; }
             set { _poisonDPS = value; }
         }
@@ -61,13 +71,15 @@ namespace Rawr.Rogue {
 
         #region Basic Stats
         private Stats _basicStats;
-        public Stats BasicStats {
+        public Stats BasicStats
+        {
             get { return _basicStats; }
             set { _basicStats = value; }
         }
 
         private int _targetLevel;
-        public int TargetLevel {
+        public int TargetLevel
+        {
             get { return _targetLevel; }
             set { _targetLevel = value; }
         }
@@ -75,13 +87,20 @@ namespace Rawr.Rogue {
 
         #region Offensive Stats
         private float _crit;
-        public float Crit {
+        public float Crit
+        {
             get { return _crit; }
             set { _crit = value; }
         }
         #endregion
+        
+        #region Temporary Testing Members
+        private Dictionary<string, float> _misc = new Dictionary<string, float>();
+        public Dictionary<string, float> Misc { get { return _misc; } }
+        #endregion
 
-        public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
             float levelDifference = TargetLevel - 70;
@@ -108,7 +127,8 @@ namespace Rawr.Rogue {
             return dictValues;
         }
 
-        public override float GetOptimizableCalculationValue(string calculation) {
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
             /* "Health",
              * "Haste Rating",
              * "Expertise Rating",
@@ -116,7 +136,8 @@ namespace Rawr.Rogue {
              * "Agility",
              * "Attack Power"
              */
-            switch (calculation) {
+            switch (calculation)
+            {
                 case "Health": return BasicStats.Health;
                 case "Haste Rating": return BasicStats.HasteRating;
                 case "Expertise Rating": return BasicStats.ExpertiseRating;

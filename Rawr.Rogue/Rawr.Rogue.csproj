@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{45C4E515-FDF5-4829-9C48-236ED0C83215}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -93,21 +93,23 @@
     </Compile>
     <Compile Include="CalculationsRogue.cs" />
     <Compile Include="CharacterCalculationsRogue.cs" />
+    <Compile Include="ComboPointGenerator.cs" />
     <Compile Include="ComparisonCalculationsRogue.cs" />
     <Compile Include="Cycle.cs" />
+    <Compile Include="Finishers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
-      <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
-      <Name>Rawr.Base</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelRogue.resx">
       <DependentUpon>CalculationOptionsPanelRogue.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
+      <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
+      <Name>Rawr.Base</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
