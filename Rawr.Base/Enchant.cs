@@ -585,6 +585,9 @@ namespace Rawr
             //Death Knight Rune Enchants
             defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, new Stats() { BonusStrengthMultiplier = .075f } ));
 
+            // Engineering enchant
+            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (22 + 2.0f / 3.0f) } ));
+
             #region Enchants to Delete
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));

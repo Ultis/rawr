@@ -544,24 +544,66 @@ namespace Rawr.Moonkin
                     return manaGainsList.ToArray();
                 case "Relative Stat Values":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsMoonkin;
-                    CharacterCalculationsMoonkin calcsSpirit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 1 } }) as CharacterCalculationsMoonkin;
+                    //CharacterCalculationsMoonkin calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 1 } }) as CharacterCalculationsMoonkin;
+                    //CharacterCalculationsMoonkin calcsSpirit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 1 } }) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 1 } }) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsHit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }) as CharacterCalculationsMoonkin;
                     CharacterCalculationsMoonkin calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }) as CharacterCalculationsMoonkin;
 
+                    // Intellect calculations
+                    CharacterCalculationsMoonkin calcAtAdd = calcsBase;
+                    float intToAdd = 0.0f;
+                    while (calcsBase.OverallPoints == calcAtAdd.OverallPoints && intToAdd < 2)
+                    {
+                        intToAdd += 0.01f;
+                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMoonkin;
+                    }
+                    CharacterCalculationsMoonkin calcAtSubtract = calcsBase;
+                    float intToSubtract = 0.0f;
+                    while (calcsBase.OverallPoints == calcAtSubtract.OverallPoints && intToSubtract > -2)
+                    {
+                        intToSubtract -= 0.01f;
+                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } }) as CharacterCalculationsMoonkin;
+                    }
+                    intToSubtract += 0.01f;
+
+                    ComparisonCalculationMoonkin comparisonInt = new ComparisonCalculationMoonkin()
+                    {
+                        Name = "Intellect",
+                        OverallPoints = (calcAtAdd.OverallPoints - calcsBase.OverallPoints) / (intToAdd - intToSubtract),
+                        DamagePoints = (calcAtAdd.SubPoints[0] - calcsBase.SubPoints[0]) / (intToAdd - intToSubtract),
+                        RawDamagePoints = (calcAtAdd.SubPoints[1] - calcsBase.SubPoints[1]) / (intToAdd - intToSubtract)
+                    };
+
+                    // Spirit calculations
+                    calcAtAdd = calcsBase;
+                    float spiToAdd = 0.0f;
+                    while (calcsBase.OverallPoints == calcAtAdd.OverallPoints && spiToAdd < 10)
+                    {
+                        spiToAdd += 0.01f;
+                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMoonkin;
+                    }
+                    calcAtSubtract = calcsBase;
+                    float spiToSubtract = 0.0f;
+                    while (calcsBase.OverallPoints == calcAtSubtract.OverallPoints && spiToSubtract > -10)
+                    {
+                        spiToSubtract -= 0.01f;
+                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } }) as CharacterCalculationsMoonkin;
+                    }
+                    spiToSubtract += 0.01f;
+
+                    ComparisonCalculationMoonkin comparisonSpi = new ComparisonCalculationMoonkin()
+                    {
+                        Name = "Spirit",
+                        OverallPoints = (calcAtAdd.OverallPoints - calcsBase.OverallPoints) / (spiToAdd - spiToSubtract),
+                        DamagePoints = (calcAtAdd.SubPoints[0] - calcsBase.SubPoints[0]) / (spiToAdd - spiToSubtract),
+                        RawDamagePoints = (calcAtAdd.SubPoints[1] - calcsBase.SubPoints[1]) / (spiToAdd - spiToSubtract)
+                    };
+
                     return new ComparisonCalculationBase[] {
-                        new ComparisonCalculationMoonkin() { Name = "Intellect",
-                            OverallPoints = calcsIntellect.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsIntellect.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]
-                        },
-                        new ComparisonCalculationMoonkin() { Name = "Spirit",
-                            OverallPoints = calcsSpirit.OverallPoints - calcsBase.OverallPoints,
-                            DamagePoints = calcsSpirit.SubPoints[0] - calcsBase.SubPoints[0],
-                            RawDamagePoints = calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]
-                        },
+                        comparisonInt,
+                        comparisonSpi,
                         new ComparisonCalculationMoonkin() { Name = "Spell Power",
                             OverallPoints = calcsSpellPower.OverallPoints - calcsBase.OverallPoints,
                             DamagePoints = calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0],
