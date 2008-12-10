@@ -1556,6 +1556,11 @@ namespace Rawr.Moonkin
                 effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
                 effectiveNatureDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
             }
+            if (calcs.BasicStats.SpellPowerFor20SecOnUse5Min > 0)
+            {
+                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
+                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
+            }
         }
 
         private static void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
