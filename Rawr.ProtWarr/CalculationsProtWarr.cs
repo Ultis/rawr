@@ -433,16 +433,16 @@ threat and limited threat scaled by the threat scale.",
         private static float[,] BaseWarriorRaceStats = new float[,] 
 		{
 							//	Strength,	Agility,	Stamina
-            /*Human*/		{	144f,	    96f,	    132f,   },
-            /*Orc*/			{	148f,		93f,		135f,	},
-            /*Dwarf*/		{	146f,	    92f,	    135f,   },
+            /*Human*/		{	174f,	    113f,	    159f,   },
+            /*Orc*/			{	178f,		110f,		162f,	},
+            /*Dwarf*/		{	176f,	    109f,	    162f,   },
 			/*Night Elf*/	{	142f,	    101f,	    132f,   },
-	        /*Undead*/		{	144f,	    94f,	    133f,   },
-			/*Tauren*/		{	150f,		91f,		135f,	},
-	        /*Gnome*/		{	140f,	    99f,	    132f,   },
-			/*Troll*/		{	145f,	    98f,	    133f,   },	
+	        /*Undead*/		{	174f,	    111f,	    160f,   },
+			/*Tauren*/		{	180f,		108f,		162f,	},
+	        /*Gnome*/		{	170f,	    116f,	    159f,   },
+			/*Troll*/		{	175f,	    115f,	    160f,   },	
 			/*BloodElf*/	{	0f,		    0f,		    0f,	    },
-			/*Draenei*/		{	146f,		93f,		132f,	},
+			/*Draenei*/		{	176f,		110f,		159f,	},
 		};
 
         private Stats GetRaceStats(Character character)
@@ -453,12 +453,12 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Human:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[0, 0],
                         Agility = (float)BaseWarriorRaceStats[0, 1],
                         Stamina = (float)BaseWarriorRaceStats[0, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Miss = 0.05f,
                         Parry = 5f,
@@ -474,14 +474,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Orc:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[1, 0],
                         Agility = (float)BaseWarriorRaceStats[1, 1],
                         Stamina = (float)BaseWarriorRaceStats[1, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
 
@@ -494,27 +495,29 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Dwarf:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[2, 0],
                         Agility = (float)BaseWarriorRaceStats[2, 1],
                         Stamina = (float)BaseWarriorRaceStats[2, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.NightElf:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[3, 0],
                         Agility = (float)BaseWarriorRaceStats[3, 1],
                         Stamina = (float)BaseWarriorRaceStats[3, 2],
 
-                        AttackPower = 190f,
-                        Dodge = 0.75f + 1f,
+                        AttackPower = 220f,
+                        Dodge = 0.75f,
+                        Miss = 0.05f + 0.02f,
                         Parry = 5f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
@@ -522,72 +525,77 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Undead:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[4, 0],
                         Agility = (float)BaseWarriorRaceStats[4, 1],
                         Stamina = (float)BaseWarriorRaceStats[4, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Tauren:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[5, 0],
                         Agility = (float)BaseWarriorRaceStats[5, 1],
                         Stamina = (float)BaseWarriorRaceStats[5, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         BonusHealthMultiplier = 0.05f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Gnome:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[6, 0],
                         Agility = (float)BaseWarriorRaceStats[6, 1],
                         Stamina = (float)BaseWarriorRaceStats[6, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Troll:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[7, 0],
                         Agility = (float)BaseWarriorRaceStats[7, 1],
                         Stamina = (float)BaseWarriorRaceStats[7, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
                 case Character.CharacterRace.Draenei:
                     statsRace = new Stats()
                     {
-                        Health = 4264f,
+                        Health = 7941f,
                         Strength = (float)BaseWarriorRaceStats[9, 0],
                         Agility = (float)BaseWarriorRaceStats[9, 1],
                         Stamina = (float)BaseWarriorRaceStats[9, 2],
 
-                        AttackPower = 190f,
+                        AttackPower = 220f,
                         PhysicalHit = 1f,
                         Dodge = 0.75f,
                         Parry = 5f,
+                        Miss = 0.05f,
                         PhysicalCrit = 3.9f - (91f / 33f),
                     };
                     break;
