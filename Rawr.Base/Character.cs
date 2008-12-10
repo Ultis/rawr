@@ -835,6 +835,14 @@ namespace Rawr //O O . .
 			OnCalculationsInvalidated();
 		}
 
+        public void SetEnchantBySlot_ThreadSafe(Character.CharacterSlot slot, Enchant enchant)
+        {
+            int i = (int)slot;
+            if (i < 0 || i > 20) return;
+            _itemEnchant[i] = enchant == null ? 0 : enchant.Id;
+            _itemEnchantCached[i] = enchant;
+        }
+
         private static CharacterSlot[] _characterSlots;
         public static CharacterSlot[] CharacterSlots
         {

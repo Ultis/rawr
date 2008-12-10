@@ -1208,7 +1208,7 @@ Here's a quick rundown of the status of each model:
 				}
                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
 				{
-					character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+                    character.SetEnchantBySlot_ThreadSafe(slot, reload.GetEnchantBySlot(slot));
 				}
                 character.AssignAllTalentsFromCharacter(reload);
 			}
@@ -1557,7 +1557,7 @@ Here's a quick rundown of the status of each model:
                 }
                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
                 {
-                    character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+                    character.SetEnchantBySlot_ThreadSafe(slot, reload.GetEnchantBySlot(slot));
                 }
                 character.AvailableItems = reload.AvailableItems;
                 character.AssignAllTalentsFromCharacter(reload);
