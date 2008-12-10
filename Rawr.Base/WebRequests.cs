@@ -354,6 +354,7 @@ namespace Rawr
 			//foreach (string illegalCharacter in new string[] { " ", "'" })
 			talentTree = talentTree.Replace(" ", "");
 			talentName = talentName.Replace(" ", "");
+            talentName = talentName.Replace(":", "");
 			string imageName = talentName + ".jpg";
 			string fullPathToSave = Path.Combine(TalentImageCachePath, charClass.ToString().ToLower() + System.IO.Path.DirectorySeparatorChar + talentTree + System.IO.Path.DirectorySeparatorChar + imageName);
 
@@ -363,7 +364,7 @@ namespace Rawr
 				//@"http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
 				//http://www.worldofwarcraft.com/shared/global/talents//wrath/druid/images/balance/brambles.jpg
 				string uri = string.Format(NetworkSettingsProvider.TalentIconURI, charClass.ToString().ToLower(),
-												talentTree.ToLower(), talentName.ToLower());
+                                                talentTree.ToLower(), talentName.ToLower());
 				DownloadFile(uri, fullPathToSave, CONTENT_JPG);
 			}
 			if (!File.Exists(fullPathToSave))
