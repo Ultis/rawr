@@ -424,13 +424,48 @@ namespace Rawr
         }
     }
 
+    public class CharacterProfilerFailedImport
+    {
+        string m_sRealm;
+        string m_sCharacter;
+        string m_sError;
+
+        public CharacterProfilerFailedImport(string sRealm, string sCharacter, string sError)
+        {
+            m_sRealm = sRealm;
+            m_sCharacter = sCharacter;
+            m_sError = sError;
+        }
+
+        public string Realm
+        {
+            get { return m_sRealm; }
+        }
+
+        public string Character
+        {
+            get { return m_sCharacter; }
+        }
+
+        public string Error
+        {
+            get { return m_sError; }
+        }
+    }
+
     public class CharacterProfilerData
     {
         List<CharacterProfilerRealm> m_realms = new List<CharacterProfilerRealm>();
+        List<CharacterProfilerFailedImport> m_errors = new List<CharacterProfilerFailedImport>();
 
         public List<CharacterProfilerRealm> Realms
         {
             get { return m_realms; }
+        }
+
+        public List<CharacterProfilerFailedImport> Errors
+        {
+            get { return m_errors; }
         }
 
         public CharacterProfilerData(string sFileName)
@@ -464,9 +499,9 @@ namespace Rawr
                         realm.Characters.Add(character);
                         bHaveCharacters = true;
                     }
-                    catch
+                    catch (Exception error)
                     {
-                        // just ignore characters that give errors
+                        m_errors.Add(new CharacterProfilerFailedImport(sRealm, sCharacter, error.ToString()));
                     }
                 }
 

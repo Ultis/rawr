@@ -29,6 +29,12 @@ namespace Rawr
 
             m_characterList = characterList;
 
+            foreach (CharacterProfilerFailedImport error in m_characterList.Errors)
+            {
+                object[] asRowData = { error.Realm, error.Character, error.Error };
+                dataGridFailedImport.Rows.Add(asRowData);
+            }
+
             foreach (CharacterProfilerRealm realm in m_characterList.Realms)
             {
                 comboBoxRealm.Items.Add(realm.Name);
