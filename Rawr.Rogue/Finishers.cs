@@ -3,7 +3,7 @@
     public interface IFinisher
     {
         float EnergyCost { get; }
-        float CalcFinisherDamage(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors);
+        float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime);
     }
 
     public static class Finishers
@@ -27,7 +27,7 @@
     public class Rupture : IFinisher
     {
         public float EnergyCost { get { return 25f; } }
-        public float CalcFinisherDamage(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors)
+        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             float finisherDmg;
             switch (calcOpts.DPSCycle['r'])
@@ -53,7 +53,7 @@
             finisherDmg *= (1f - combatFactors.MissChance / 100f);
             if (character.RogueTalents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - combatFactors.MhDodgeChance / 100f);
-            return finisherDmg;
+            return finisherDmg / cycleTime;
         }
     }
 
@@ -61,7 +61,7 @@
     {
         public float EnergyCost { get { return 35f; } }
 
-        public float CalcFinisherDamage(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors)
+        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             var evisMod = stats.AttackPower*calcOpts.DPSCycle['e']*.03f;
             var evisMin = 245f + (calcOpts.DPSCycle['e'] - 1f)*185f + evisMod;
@@ -76,14 +76,14 @@
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));
 
             finisherDmg *= combatFactors.DamageReduction;
-            return finisherDmg;
+            return finisherDmg / cycleTime;
         }
     }
 
     public class NoFinisher : IFinisher
     {
         public float EnergyCost { get { return 0f; } }
-        public float CalcFinisherDamage(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors)
+        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             return 0f;
         }

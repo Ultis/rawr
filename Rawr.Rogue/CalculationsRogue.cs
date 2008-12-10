@@ -79,6 +79,12 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
+            //TODO:  Can we get away with this???  e.g. unless they have both, we won't model it
+            //if ( character.MainHand == null || character.OffHand == null)
+            //{
+            //    return new CharacterCalculationsRogue();
+            //}
+
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var stats = GetCharacterStats(character, additionalItem);
             var calculatedStats = new CharacterCalculationsRogue {BasicStats = stats};
@@ -94,14 +100,68 @@ namespace Rawr.Rogue
             //sndLength *= 1f + 0.15f*character.RogueTalents.ImprovedSliceAndDice;
             #endregion
 
-            #region OH White Damage
+            var ohHits = character.OffHand == null ? 0f : (combatFactors.TotalHaste/character.OffHand.Speed)*combatFactors.ProbOHHit;
+            var ohWhiteDPS = GetOhWhiteDPS(character, stats, combatFactors, ohHits);
 
-            var ohHits = 0f;
+            var mhHits = character.MainHand == null ? 0f : (combatFactors.TotalHaste / character.MainHand.Speed) * combatFactors.ProbMHHit;
+            var avgMHDmg = character.MainHand == null ? 0f : combatFactors.AvgMhWeaponDmg + (stats.AttackPower/14.0f)*character.MainHand.Speed;
+            var mhWhiteDPS = CalcMhWhiteDPS(character, combatFactors, avgMHDmg, mhHits);
+
+            var cycleTime = CalcCycleTime(character, combatFactors, ohHits, numCPG, cpg, finisher);
+
+            var cpgDPS = character.MainHand == null ? 0f : CalcCpgDPS(character, stats, combatFactors, numCPG, cpg, cycleTime);
+            var finisherDPS = character.MainHand == null ? 0f : finisher.CalcFinisherDPS(character, stats, calcOpts, combatFactors, cycleTime) ;
+            var swordSpecDPS = CalcSwordSpecDPS(character, combatFactors, ohHits, avgMHDmg, mhHits, numCPG, cycleTime);
+            var poisonDPS = CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits, mhHits);
+            
+            calculatedStats.WhiteDPS = mhWhiteDPS + ohWhiteDPS + swordSpecDPS;
+            calculatedStats.CPGDPS = cpgDPS;
+            calculatedStats.FinisherDPS = finisherDPS;
+            calculatedStats.SwordSpecDPS = swordSpecDPS;
+            calculatedStats.PoisonDPS = poisonDPS;
+            calculatedStats.DPSPoints = mhWhiteDPS + ohWhiteDPS + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
+            calculatedStats.OverallPoints = calculatedStats.DPSPoints;
+
+            return calculatedStats;
+        }
+
+        private static float CalcCpgDPS(Character character, Stats stats, CombatFactors combatFactors, float numCPG, IComboPointGenerator cpg, float cycleTime)
+        {
+            var attackValues = cpg.CalcAttackValues(character, stats, combatFactors);
+            var cpgCrit = combatFactors.MhCrit + attackValues.BonusCrit;
+
+            var avgCPGDmg = attackValues.AttackDamage * attackValues.BonusDamageMultiplier;
+            avgCPGDmg = (1f - cpgCrit / 100f) * avgCPGDmg + (cpgCrit / 100f) * (avgCPGDmg * attackValues.BonusCritDamageMultiplier);
+
+            var cpgDPS = avgCPGDmg*numCPG/cycleTime;
+            cpgDPS *= combatFactors.DamageReduction;
+            return cpgDPS;
+        }
+
+        private static float CalcCycleTime(Character character, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg, IFinisher finisher)
+        {
+            var energyRegen = combatFactors.BaseEnergyRegen;
+            energyRegen += (.2f * 3f * character.RogueTalents.CombatPotency) * ohHits;
+            return (numCPG * cpg.EnergyCost + 25f + finisher.EnergyCost) / energyRegen;
+        }
+
+        private static float CalcMhWhiteDPS(Character character, CombatFactors combatFactors, float avgMHDmg, float mhHits)
+        {
+            var mhWhiteDPS = 0f;
+            if (character.MainHand != null)
+            {
+                mhWhiteDPS = avgMHDmg*mhHits;
+                mhWhiteDPS = (1f - combatFactors.MhCrit / 100f) * mhWhiteDPS + (combatFactors.MhCrit / 100f) * (mhWhiteDPS * (2f * combatFactors.BonusWhiteCritDmg));
+                mhWhiteDPS *= combatFactors.DamageReduction;
+            }
+            return mhWhiteDPS;
+        }
+
+        private static float GetOhWhiteDPS(Character character, Stats stats, CombatFactors combatFactors, float ohHits)
+        {
             var ohWhite = 0f;
             if (character.OffHand != null)
             {
-                ohHits = (combatFactors.TotalHaste / character.OffHand.Speed) * combatFactors.ProbOHHit;
-                
                 var avgOHDmg = combatFactors.AvgOhWeaponDmg + (stats.AttackPower / 14.0f) * character.OffHand.Speed;
                 avgOHDmg *= (0.25f + character.RogueTalents.DualWieldSpecialization * 0.1f);
 
@@ -109,73 +169,7 @@ namespace Rawr.Rogue
                 ohWhite = (1f - combatFactors.OhCrit / 100f) * ohWhite + (combatFactors.OhCrit / 100f) * (ohWhite * (2f * combatFactors.BonusWhiteCritDmg));
                 ohWhite *= combatFactors.DamageReduction;
             }
-
-            #endregion
-
-            #region MH White Damage
-
-            var mhWhite = 0f;
-            var mhHits = 0f;
-            var avgMHDmg = 0f;
-            if (character.MainHand != null)
-            {
-                mhHits = (combatFactors.TotalHaste / character.MainHand.Speed) * combatFactors.ProbMHHit;
-                
-                avgMHDmg = combatFactors.AvgMhWeaponDmg;
-                avgMHDmg += (stats.AttackPower/14.0f)*character.MainHand.Speed;
-
-                mhWhite = avgMHDmg*mhHits;
-                mhWhite = (1f - combatFactors.MhCrit / 100f) * mhWhite + (combatFactors.MhCrit / 100f) * (mhWhite * (2f * combatFactors.BonusWhiteCritDmg));
-                mhWhite *= combatFactors.DamageReduction;
-            }
-            #endregion
-
-            #region Cycle Time
-
-            var energyRegen = combatFactors.BaseEnergyRegen;
-            energyRegen += (.2f * 3f * character.RogueTalents.CombatPotency) * ohHits;
-            var cycleTime = (numCPG * cpg.EnergyCost + 25f + finisher.EnergyCost) / energyRegen;
-
-            #endregion
-
-            #region CPG Damage
-
-            var cpgDPS = 0f;
-            if (character.MainHand != null)
-            {
-                var attackValues = cpg.CalcAttackValues(character, stats, combatFactors);
-                var cpgCrit = combatFactors.MhCrit + attackValues.BonusCrit;
-
-                var avgCPGDmg = attackValues.AttackDamage * attackValues.BonusDamageMultiplier;
-                avgCPGDmg = (1f - cpgCrit / 100f) * avgCPGDmg + (cpgCrit / 100f) * (avgCPGDmg * attackValues.BonusCritDamageMultiplier);
-
-                cpgDPS = avgCPGDmg*numCPG/cycleTime;
-                cpgDPS *= combatFactors.DamageReduction;
-            }
-
-            #endregion
-
-            #region Finisher Damage
-            var finisherDPS = 0f;
-            if (character.MainHand != null)
-            {
-                finisherDPS = finisher.CalcFinisherDamage(character, stats, calcOpts, combatFactors) / cycleTime;
-            }
-            #endregion
-
-            
-            var swordSpecDPS = CalcSwordSpecDPS(character, combatFactors, ohHits, avgMHDmg, mhHits, numCPG, cycleTime);
-            var poisonDPS = CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits, mhHits);
-            
-            calculatedStats.WhiteDPS = mhWhite + ohWhite + swordSpecDPS;
-            calculatedStats.CPGDPS = cpgDPS;
-            calculatedStats.FinisherDPS = finisherDPS;
-            calculatedStats.SwordSpecDPS = swordSpecDPS;
-            calculatedStats.PoisonDPS = poisonDPS;
-            calculatedStats.DPSPoints = mhWhite + ohWhite + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
-            calculatedStats.OverallPoints = calculatedStats.DPSPoints;
-
-            return calculatedStats;
+            return ohWhite;
         }
 
         private static float CalcSwordSpecDPS(Character character, CombatFactors combatFactors, float ohHits, float avgMHDmg, float mhHits, float numCPG, float cycleTime)
@@ -200,32 +194,22 @@ namespace Rawr.Rogue
 
         private static float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float mhHits)
         {
+            //TODO:  most poisons scale with AP, so we need to add that into the calculations.
             var poisonDPS = 0f;
-            var calcDeadly = true;
 
-            if (character.MainHand != null && stats.WindfuryAPBonus == 0f)
+            if ((character.MainHand != null && calcOpts.TempMainHandEnchant == "Deadly Poison") || (character.OffHand != null && calcOpts.TempOffHandEnchant == "Deadly Poison"))
             {
-                // no WF, consider the main hand poison
-                if (calcOpts.TempMainHandEnchant == "Deadly Poison")
-                {
-                    poisonDPS += 180f * (1f + character.RogueTalents.VilePoisons * .04f) / 12f;
-                    calcDeadly = false;
-                }
-                else if (calcOpts.TempMainHandEnchant == "Instant Poison")
-                {
-                    poisonDPS += mhHits * combatFactors.ProbPoison * 170f * (1f + character.RogueTalents.VilePoisons * 0.04f);
-                }
+                poisonDPS += 180f*(1f + character.RogueTalents.VilePoisons*.04f)/12f;
             }
-            if (character.OffHand != null)
+
+            if (character.MainHand != null && calcOpts.TempMainHandEnchant == "Instant Poison")
             {
-                if (calcOpts.TempOffHandEnchant == "Deadly Poison" && calcDeadly)
-                {
-                    poisonDPS += 180f * (1f + character.RogueTalents.VilePoisons * .04f) / 12f;
-                }
-                else if (calcOpts.TempOffHandEnchant == "Instant Poison")
-                {
-                    poisonDPS += ohHits * combatFactors.ProbPoison * 170f * (1f + character.RogueTalents.VilePoisons * 0.04f);
-                }
+                poisonDPS += mhHits*combatFactors.ProbPoison*170f*(1f + character.RogueTalents.VilePoisons*0.04f);
+            }
+
+            if (character.OffHand != null && calcOpts.TempOffHandEnchant == "Instant Poison")
+            {
+                poisonDPS += ohHits*combatFactors.ProbPoison*170f*(1f + character.RogueTalents.VilePoisons*0.04f);
             }
             return poisonDPS;
         }
@@ -458,25 +442,23 @@ namespace Rawr.Rogue
                                                              });
         }
 
-        #region Rogue Racial Stats
 
-        private static readonly float[,] BaseRogueRaceStats = new[,]
+        private static readonly Dictionary<Character.CharacterRace, float[]> BaseRogueRaceStats = new Dictionary<Character.CharacterRace, float[]>
                                                                   {
-                                                                      //	Agility,	Strength,	Stamina
-                                                                      /*Empty*/     {0f, 0f, 0f,},
-                                                                                    /*Human*/		{158f, 95f, 89f,},
-                                                                                    /*Orc*/		{155f, 98f, 91f,},
-                                                                                    /*Dwarf*/		{154f, 97f, 92f,},
-                                                                                    /*Night Elf*/	{163f, 92f, 88f,},
-                                                                                    /*Undead*/	{156f, 94f, 90f,},
-                                                                                    /*Tauren*/	{0f, 0f, 0f,},
-                                                                                    /*Gnome*/		{161f, 90f, 88f,},
-                                                                                    /*Troll*/		{160f, 96f, 90f,},
-                                                                                    /*BloodElf*/	{160f, 92f, 87f,},
-                                                                                    /*Draenei*/	{0f, 0f, 0f,}
+                                                                    // Agility,Strength,Stamina
+                                                                    { Character.CharacterRace.Human, new [] {158f, 95f, 89f}},
+                                                                    { Character.CharacterRace.Orc, new [] {155f, 98f, 91f}},
+                                                                    { Character.CharacterRace.Dwarf, new [] {154f, 97f, 92f,}},
+                                                                    { Character.CharacterRace.NightElf, new [] {163f, 92f, 88f,}},
+                                                                    { Character.CharacterRace.Undead, new [] {156f, 94f, 90f,}},
+                                                                    { Character.CharacterRace.Tauren, new [] {0f, 0f, 0f,}},
+                                                                    { Character.CharacterRace.Gnome, new [] {161f, 90f, 88f}},
+                                                                    { Character.CharacterRace.Troll, new [] {160f, 96f, 90f}},
+                                                                    { Character.CharacterRace.BloodElf, new [] {160f, 92f, 87f}},
+                                                                    { Character.CharacterRace.Draenei, new [] {0f, 0f, 0f}}
                                                                   };
 
-        private Stats GetRaceStats(Character.CharacterRace race)
+        private static Stats GetRaceStats(Character.CharacterRace race)
         {
             if (race == Character.CharacterRace.Tauren || race == Character.CharacterRace.Draenei)
                 return new Stats();
@@ -484,9 +466,9 @@ namespace Rawr.Rogue
             var statsRace = new Stats
                                 {
                                     Health = 3524f,
-                                    Agility = BaseRogueRaceStats[(int) race, 0],
-                                    Strength = BaseRogueRaceStats[(int) race, 1],
-                                    Stamina = BaseRogueRaceStats[(int) race, 2],
+                                    Agility = BaseRogueRaceStats[race][0],
+                                    Strength = BaseRogueRaceStats[race][1],
+                                    Stamina = BaseRogueRaceStats[race][2],
                                     AttackPower = 120f,
                                     PhysicalCrit = 3.73f,
                                     DodgeRating = (float) (-0.59*18.92f),
@@ -499,9 +481,5 @@ namespace Rawr.Rogue
 
             return statsRace;
         }
-
-        #endregion
     }
-
-
 }
