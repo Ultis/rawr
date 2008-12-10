@@ -774,6 +774,11 @@ namespace Rawr
                 // Extract of Necromantic Power
                 stats.ExtractOfNecromanticPowerProc += 1;
             }
+            else if (line.StartsWith("Each time you deal damage, you have a chance to do an additional 744 to 956 Shadow damage."))
+            {
+                // Darkmoon Card: Death
+                stats.DarkmoonCardDeathProc += 1;
+            }
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)

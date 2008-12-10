@@ -1472,6 +1472,15 @@ namespace Rawr.Moonkin
                 float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
+            // Darkmoon Card: Death (35% proc, 45s internal cooldown)
+            if (calcs.BasicStats.DarkmoonCardDeathProc > 0)
+            {
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusShadowDamageMultiplier);
+                float baseDamage = (744 + 956) / 2.0f;
+                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
+                float timeBetweenProcs = rotation.Duration / (hitRate * rotation.CastCount * 0.35f) + 45f;
+                trinketExtraDPS += averageDamage / timeBetweenProcs;
+            }
             // Spell damage for 10 seconds on resist
             if (calcs.BasicStats.SpellPowerFor10SecOnResist > 0)
             {

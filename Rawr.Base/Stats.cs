@@ -117,6 +117,7 @@ namespace Rawr
         ParryRating,
         PendulumOfTelluricCurrentsProc,
         ExtractOfNecromanticPowerProc,
+        DarkmoonCardDeathProc,
         PVPTrinket,
 		RangedAttackPower,
         Resilience,
@@ -1728,6 +1729,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc] = value; }
+        }
+
+        [DisplayName("Darkmoon Card: Death proc")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float DarkmoonCardDeathProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DarkmoonCardDeathProc] = value; }
         }
 
         [DisplayName("Timbal's Focusing Crystal proc")]
