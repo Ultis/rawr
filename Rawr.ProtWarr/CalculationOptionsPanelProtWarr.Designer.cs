@@ -99,7 +99,7 @@ namespace Rawr.ProtWarr
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.LargeChange = 1000;
             this.trackBarTargetArmor.Location = new System.Drawing.Point(75, 183);
-            this.trackBarTargetArmor.Maximum = 9000;
+            this.trackBarTargetArmor.Maximum = 15000;
             this.trackBarTargetArmor.Minimum = 3000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
             this.trackBarTargetArmor.Size = new System.Drawing.Size(131, 45);

@@ -119,9 +119,9 @@ namespace Rawr.ProtWarr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 7700;
-		public int BossAttackValue = 20000;
-		public float ThreatScale = 20;
+		public int TargetArmor = 13083;
+		public int BossAttackValue = 24000;
+		public float ThreatScale = 10;
 		public int MitigationScale = 3750;
 		public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
