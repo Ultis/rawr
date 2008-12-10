@@ -682,6 +682,10 @@ namespace Rawr
 			{
 				stats.MementoProc = 76;
 			}
+            else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 176 mana per 5 for 15 sec."))
+            {
+                stats.MementoProc = 176;
+            }
 			else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
 			{
 				line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
@@ -743,11 +747,6 @@ namespace Rawr
             {
                 // Sundial of the Exiled
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
-            }
-            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
-            {
-                // Spark of Life
-                stats.ManaRestoreOnCast_10_45 += 176 * 3;
             }
             else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
             {

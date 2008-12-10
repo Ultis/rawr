@@ -150,7 +150,7 @@ namespace Rawr.HolyPriest
         {
             if (character.Level < 70)
                 return 0.01035f; // Dunno
-            return 0.01035f - (0.005175f * (character.Level - 70) / 10f);
+            return 0.01035f - (0.00845f * (character.Level - 70) / 10f);
         }
 
         public static float GetInnerFireSpellPowerBonus(Character character)

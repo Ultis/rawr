@@ -35,6 +35,7 @@ namespace Rawr.HolyPriest
         public float MaxHeal { get; protected set; }
         public float BaseMana { get; protected set; }
         public int ManaCost { get; protected set; }
+        public float BaseCastTime { get; protected set; }
         public float CastTime { get; protected set; }
         public float HotDuration { get; protected set; }
         public float CritChance { get; protected set; }
@@ -127,15 +128,15 @@ namespace Rawr.HolyPriest
                     Rank = sd.Rank;
                     MinHeal = sd.MinHeal;
                     MaxHeal = sd.MaxHeal;
-                    CastTime = sd.CastTime;
+                    BaseCastTime = sd.CastTime;
                 }
 //            Name = string.Format("{0}, Rank {1}", name, Rank);
             Name = name;
             GlobalCooldown = Math.Max(1.5f / (1 + stats.SpellHaste), 1.0f);
-            if (CastTime == 0)
+            if (BaseCastTime == 0)
                 CastTime = GlobalCooldown;
             else
-                CastTime = Math.Max(CastTime / (1 + stats.SpellHaste), 1.0f);
+                CastTime = Math.Max(BaseCastTime / (1 + stats.SpellHaste), 1.0f);
             Cooldown = CastTime;
             ManaCost = manaCost;
             HealingCoef = coef;
@@ -257,7 +258,7 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
 
-            CastTime = Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
@@ -324,7 +325,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
-            CastTime = Math.Max(1.0f, (CastTime - character.PriestTalents.DivineFury * 0.1f) 
+            CastTime = Math.Max(1.0f, (BaseCastTime - character.PriestTalents.DivineFury * 0.1f) 
                 / (1 + stats.SpellHaste));
         }
     }
@@ -404,6 +405,7 @@ namespace Rawr.HolyPriest
                 * (1 - character.PriestTalents.HealingPrayers * 0.1f) 
                 * (1 - stats.BonusPoHManaCostReductionMultiplier));
 
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             Range = (int)Math.Round(Range * (1 + character.PriestTalents.HolyReach * 0.1f));
         }
@@ -697,7 +699,7 @@ namespace Rawr.HolyPriest
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
-            CastTime = Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
         }
 
         public override string ToString()
@@ -792,7 +794,7 @@ namespace Rawr.HolyPriest
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             CastTime = 0;
-            Cooldown = 10.0f;
+            Cooldown = 10.0f - (character.PriestTalents.DivineProvidence * 0.6f);
         }
 
         public override string ToString()
@@ -861,6 +863,7 @@ namespace Rawr.HolyPriest
             CritCoef = 1.0f;
 
             Cooldown = 4.0f;
+            CastTime = 0.0f;
         }
 
         public override string ToString()
@@ -964,7 +967,7 @@ namespace Rawr.HolyPriest
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
                 * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
 
-            CastTime = Math.Max(1.0f, CastTime / (1 + stats.SpellHaste));
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             Cooldown = 8.0f - character.PriestTalents.Aspiration * 1.0f;
@@ -1010,6 +1013,8 @@ namespace Rawr.HolyPriest
 
             CritChance = 0.0f;
             CritCoef = 1.0f;
+
+            CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             Cooldown = 3.0f * 60.0f;
         }

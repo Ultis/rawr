@@ -183,7 +183,6 @@ namespace Rawr.ShadowPriest
             Rotation = "Priority Based:";
             foreach (Spell spell in SpellPriority)
                 Rotation += "\r\n- " + spell.Name;
-            Rotation += "\r\n\r\nMana Buffs:";
             ShadowHitChance = (float)Math.Min(100f, HitChance + character.PriestTalents.ShadowFocus * 1f);
             SWP = GetSpellByName("Shadow Word: Pain");
             MF = GetSpellByName("Mind Flay");
@@ -233,7 +232,9 @@ namespace Rawr.ShadowPriest
                 VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost; 
             }
 
-            while (timer < (CalculationOptions.FightLength * 60f))
+            bool CleanBreak = false;
+
+            while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
             {
                 Spell spell = GetCastSpell(timer);
                 if (spell == null)
@@ -261,10 +262,10 @@ namespace Rawr.ShadowPriest
                 {   // Spell sequence just reset, lets take advantage of that.
                     int i = SpellPriority.IndexOf(MF);
                     CastList.RemoveRange(CastList.Count - i, i);
+                    CleanBreak = true;
                     break;
                 }
             }
-
 
             timer = 0;
             float HPC = 0, CPC = 0; // Hits Pr Cycle, Crits Pr Cycle
@@ -316,6 +317,12 @@ namespace Rawr.ShadowPriest
                 OverallDamage += Damage;
                 OverallMana += Cost;
             }
+
+            if (!CleanBreak)
+                Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
+            Rotation += string.Format("\r\nRotation reset after {0} seconds.", Math.Round(timer, 2));
+
+            
             CPC = CPC / timer;
             HPC = HPC / timer;
             foreach (Spell spell in SpellPriority)
@@ -340,6 +347,8 @@ namespace Rawr.ShadowPriest
 
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
+
+            Rotation += "\r\n\r\nMana Buffs:";
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;

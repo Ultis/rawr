@@ -30,6 +30,10 @@ namespace Rawr.ShadowPriest
                     case "Mana Usage":
                         _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
                         break;
+                    case "Haste Rating Gain":
+                        _subPointNameColors.Add(string.Format("DPS-Burst"), System.Drawing.Color.Red);
+                        _subPointNameColors.Add(string.Format("DPS-Sustained"), System.Drawing.Color.Blue);
+                        break;
                     default:
                         _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
                         _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
@@ -96,7 +100,7 @@ namespace Rawr.ShadowPriest
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stat Values", "Mana Sources", "DPS Sources", "Mana Usage" };
+                    _customChartNames = new string[] { "Stat Values", "Mana Sources", "DPS Sources", "Mana Usage", "Haste Rating Gain" };
                 return _customChartNames;
             }
         }
@@ -173,6 +177,19 @@ namespace Rawr.ShadowPriest
                         comparison.SubPoints[0] = spell.SpellStatistics.ManaUsed * 5;
                         _currentChartTotal += comparison.SubPoints[0];
                         comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                case "Haste Rating Gain":
+                    CharacterCalculationsShadowPriest hrbase = GetCharacterCalculations(character) as CharacterCalculationsShadowPriest;
+                    for (int x = 0; x < 100; x++)
+                    {
+                        CharacterCalculationsShadowPriest hrnew = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = x } }) as CharacterCalculationsShadowPriest;
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = string.Format("{0} Haste Rating", x);
+                        comparison.SubPoints[0] = hrnew.DpsPoints - hrbase.DpsPoints;
+                        comparison.SubPoints[1] = hrnew.SustainPoints - hrbase.SustainPoints;
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }

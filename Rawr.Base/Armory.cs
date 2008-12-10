@@ -482,6 +482,10 @@ namespace Rawr
                         {
                             stats.ThreatReductionMultiplier = 0.02f;
                         }
+                        else if (gemBonus == "3% Increased Critical Healing Effect")
+                        {
+                            stats.BonusCritHealMultiplier = 0.03f;
+                        }
                         else
                         {
                             try
@@ -490,12 +494,12 @@ namespace Rawr
                                 switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
                                 {
                                     case "Resist All":
-										stats.ArcaneResistance = gemBonusValue;
-										stats.FireResistance = gemBonusValue;
-										stats.FrostResistance = gemBonusValue;
-										stats.NatureResistance = gemBonusValue;
-										stats.ShadowResistance = gemBonusValue;
-										break;
+                                        stats.ArcaneResistance = gemBonusValue;
+                                        stats.FireResistance = gemBonusValue;
+                                        stats.FrostResistance = gemBonusValue;
+                                        stats.NatureResistance = gemBonusValue;
+                                        stats.ShadowResistance = gemBonusValue;
+                                        break;
                                     case "Increased Critical Damage":
                                         stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
                                         stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
