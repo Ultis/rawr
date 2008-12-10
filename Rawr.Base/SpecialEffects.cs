@@ -518,7 +518,7 @@ namespace Rawr
 				//}
 			}
 			// Timbal's Focusing Crystal
-			else if (line.StartsWith("Each time one of your spells deals periodic damage"))
+            else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 285 to 475 additional damage will be dealt."))
 			{
 				stats.TimbalsProc = 1.0f;
 			}
@@ -682,10 +682,6 @@ namespace Rawr
 			{
 				stats.MementoProc = 76;
 			}
-            else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 176 mana per 5 for 15 sec."))
-            {
-                stats.MementoProc = 176;
-            }
 			else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
 			{
 				line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
@@ -748,6 +744,11 @@ namespace Rawr
                 // Sundial of the Exiled
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
             }
+            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
+            {
+                // Spark of Life
+                stats.ManaRestoreOnCast_10_45 += 176 * 3;
+            }
             else if (line.StartsWith("Each time you cast a spell, there is a chance you will gain up to 100 mana per 5 for 15 sec."))
             {
                 // Je'Tze's Bell
@@ -767,6 +768,11 @@ namespace Rawr
             {
                 // Pendulum of Telluric Currents
                 stats.PendulumOfTelluricCurrentsProc += 1;
+            }
+            else if (line.StartsWith("Each time one of your spells deals periodic damage, there is a chance 788 to 1312 additional damage will be dealt."))
+            {
+                // Extract of Necromantic Power
+                stats.ExtractOfNecromanticPowerProc += 1;
             }
         }
 

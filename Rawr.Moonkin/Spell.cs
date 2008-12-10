@@ -1463,6 +1463,15 @@ namespace Rawr.Moonkin
                 float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
                 trinketExtraDPS += averageDamage / timeBetweenProcs;
             }
+            // Extract of Necromantic Power (10% proc on a DoT tick, 15s internal cooldown)
+            if (calcs.BasicStats.ExtractOfNecromanticPowerProc > 0 && rotation.TotalDotTicks > 0)
+            {
+                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
+                float baseDamage = (788 + 1312) / 2.0f;
+                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
+                float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
+                trinketExtraDPS += averageDamage / timeBetweenProcs;
+            }
             // Spell damage for 10 seconds on resist
             if (calcs.BasicStats.SpellPowerFor10SecOnResist > 0)
             {

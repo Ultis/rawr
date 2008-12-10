@@ -116,6 +116,7 @@ namespace Rawr
         Parry,
         ParryRating,
         PendulumOfTelluricCurrentsProc,
+        ExtractOfNecromanticPowerProc,
         PVPTrinket,
 		RangedAttackPower,
         Resilience,
@@ -1718,6 +1719,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.PendulumOfTelluricCurrentsProc] = value; }
+        }
+
+        [DisplayName("Extract of Necromantic Power proc")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ExtractOfNecromanticPowerProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExtractOfNecromanticPowerProc] = value; }
         }
 
         [DisplayName("Timbal's Focusing Crystal proc")]
