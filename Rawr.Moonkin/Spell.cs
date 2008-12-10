@@ -405,7 +405,7 @@ namespace Rawr.Moonkin
             float accumulatedDamage = 0.0f;
             float accumulatedManaUsed = 0.0f;
             float accumulatedDuration = 0.0f;
-            Dictionary<float, float> activeDots = new Dictionary<float,float>();
+            Dictionary<string, KeyValuePair<float, float>> activeDots = new Dictionary<string, KeyValuePair<float, float>>();
             foreach (Spell sp in spells)
             {
                 float currentSpellDPS = 0.0f;
@@ -423,10 +423,10 @@ namespace Rawr.Moonkin
                 if (sp.DoT == null)
                 {
                     float dotDuration = sp.CastTime;
-                    foreach (KeyValuePair<float, float> pair in activeDots)
+                    foreach (KeyValuePair<string, KeyValuePair<float, float>> pair in activeDots)
                     {
-                        if (pair.Value > dotDuration)
-                            dotDuration = pair.Value;
+                        if (pair.Value.Value > dotDuration)
+                            dotDuration = pair.Value.Value;
                     }
                     while (timeSpentCasting < dotDuration)
                     {
@@ -444,21 +444,21 @@ namespace Rawr.Moonkin
                 {
                     ++numberOfCasts;
                     timeSpentCasting = sp.CastTime;
-                    activeDots.Add(currentSpellDPS, sp.DoT.Duration);
+                    activeDots.Add(sp.Name, new KeyValuePair<float,float>(currentSpellDPS, sp.DoT.Duration));
                 }
-                List<float> dotsToDecrement = new List<float>();
-                foreach (KeyValuePair<float, float> pair in activeDots)
+                Dictionary<string, float> dotsToDecrement = new Dictionary<string,float>();
+                foreach (KeyValuePair<string, KeyValuePair<float, float>> pair in activeDots)
                 {
-                    if (pair.Value > 0)
+                    if (pair.Value.Value > 0)
                     {
                         // Handle the case where the DoT tick may fall off
-                        accumulatedDamage += pair.Key * (timeSpentCasting > pair.Value ? pair.Value : timeSpentCasting);
-                        dotsToDecrement.Add(pair.Key);
+                        accumulatedDamage += pair.Value.Key * (timeSpentCasting > pair.Value.Value ? pair.Value.Value : timeSpentCasting);
+                        dotsToDecrement.Add(pair.Key, pair.Value.Key);
                     }
                 }
-                foreach (float key in dotsToDecrement)
+                foreach (KeyValuePair<string, float> pair in dotsToDecrement)
                 {
-                    activeDots[key] -= timeSpentCasting;
+                    activeDots[pair.Key] = new KeyValuePair<float,float>(activeDots[pair.Key].Key, activeDots[pair.Key].Value - timeSpentCasting);
                 }
                 // Prevent double-counting of DoT spells
                 if (sp.DoT == null)
