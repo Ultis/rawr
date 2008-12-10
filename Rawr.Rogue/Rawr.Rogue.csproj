@@ -93,11 +93,13 @@
     </Compile>
     <Compile Include="CalculationsRogue.cs" />
     <Compile Include="CharacterCalculationsRogue.cs" />
+    <Compile Include="CombatFactors.cs" />
     <Compile Include="ComboPointGenerator.cs" />
     <Compile Include="ComparisonCalculationsRogue.cs" />
     <Compile Include="Cycle.cs" />
     <Compile Include="Finishers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RogueConversions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelRogue.resx">

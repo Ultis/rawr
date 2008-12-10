@@ -94,11 +94,7 @@ namespace Rawr.Rogue
         }
         #endregion
         
-        #region Temporary Testing Members
-        private Dictionary<string, float> _misc = new Dictionary<string, float>();
-        public Dictionary<string, float> Misc { get { return _misc; } }
-        #endregion
-
+        
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
