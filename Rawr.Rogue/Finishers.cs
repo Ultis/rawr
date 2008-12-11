@@ -2,6 +2,7 @@
 {
     public interface IFinisher
     {
+        char Id { get; }
         float EnergyCost { get; }
         float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime);
     }
@@ -22,11 +23,34 @@
 
             return new NoFinisher();
         }
+
+        public static IFinisher Get(char id)
+        {
+            if (id == 'r')
+            {
+                return new Rupture();
+            }
+
+            if (id == 'e')
+            {
+                return new Evis();
+            }
+
+            if (id == 's')
+            {
+                return new SnD();
+            }
+
+            return new NoFinisher();
+        }
     }
 
     public class Rupture : IFinisher
     {
+        public char Id { get { return 'r'; } }
+
         public float EnergyCost { get { return 25f; } }
+
         public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             float finisherDmg;
@@ -59,6 +83,8 @@
 
     public class Evis : IFinisher
     {
+        public char Id { get { return 'e'; } }
+
         public float EnergyCost { get { return 35f; } }
 
         public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
@@ -80,8 +106,19 @@
         }
     }
 
+    public class SnD : IFinisher
+    {
+        public char Id { get { return 's'; } }
+        public float EnergyCost { get { return 25f; } }
+        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
+        {
+            return 0f;
+        }
+    }
+
     public class NoFinisher : IFinisher
     {
+        public char Id { get { return 'z'; } }
         public float EnergyCost { get { return 0f; } }
         public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {

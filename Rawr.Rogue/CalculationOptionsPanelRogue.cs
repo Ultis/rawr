@@ -13,18 +13,19 @@ namespace Rawr.Rogue
         {
             InitializeComponent();
 
-            armorBosses.Add(3800, ": Shade of Aran");
-            armorBosses.Add(4700, ": Roar");
-            armorBosses.Add(5500, ": Netherspite");
-            armorBosses.Add(6100, ": Julianne, Curator");
-            armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
-            armorBosses.Add(6700, ": Maiden, Illhoof");
-            armorBosses.Add(7300, ": Strawman");
-            armorBosses.Add(7500, ": Attumen");
-            armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
-            armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
-            armorBosses.Add(8200, ": Midnight");
-            armorBosses.Add(8800, ": Void Reaver");
+            armorBosses.Add(10000, "Patchwerk");
+            armorBosses.Add(11000, "Grobbulus");
+
+            comboBoxArmorBosses.DataSource = new BindingSource(armorBosses, null);
+            comboBoxArmorBosses.DisplayMember = "Key";
+
+            comboBoxTargetLevel.DataSource = new[] {83, 82, 81, 80};
+
+            comboBoxMHPoison.DataSource = new PoisonList();
+            comboBoxMHPoison.DisplayMember = "Name";
+
+            comboBoxOHPoison.DataSource = new PoisonList();
+            comboBoxOHPoison.DisplayMember = "Name";
         }
 
         private bool _loadingCalculationOptions = false;
@@ -36,32 +37,12 @@ namespace Rawr.Rogue
             if (Character.CalculationOptions == null)
                 Character.CalculationOptions = new CalculationOptionsRogue(Character);
 
-            CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+            var calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
             comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 
             _loadingCalculationOptions = false;
         }
 
-
-        private void trackBarTargetArmor_Scroll(object sender, EventArgs e)
-        {
-
-        }
-
-        private void trackBarTargetArmor_ValueChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
-                trackBarTargetArmor.Value = 100 * (trackBarTargetArmor.Value / 100);
-                labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
-
-                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
-                calcOpts.TargetArmor = trackBarTargetArmor.Value;
-
-                Character.OnCalculationsInvalidated();
-            }
-        }
 
         private void OnCheckedChanged(object sender, EventArgs e)
         {
@@ -71,8 +52,9 @@ namespace Rawr.Rogue
         {
             if (Character != null && Character.CalculationOptions != null)
             {
-                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
-                calcOpts.TempMainHandEnchant = ((ComboBox)sender).SelectedItem.ToString();
+                var calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TempMainHandEnchant = ((ComboBox)sender).Text;
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -80,8 +62,32 @@ namespace Rawr.Rogue
         {
             if (Character != null && Character.CalculationOptions != null)
             {
-                CalculationOptionsRogue calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
-                calcOpts.TempOffHandEnchant = ((ComboBox)sender).SelectedItem.ToString();
+                var calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TempOffHandEnchant = ((ComboBox)sender).Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var targetArmor = int.Parse(comboBoxArmorBosses.Text);
+            labelTargetArmorDescription.Text = "Bosses: " + armorBosses[targetArmor];
+
+            if (Character != null && Character.CalculationOptions != null)
+            {
+                var calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TargetArmor = targetArmor;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Character != null && Character.CalculationOptions != null)
+            {
+                var calcOpts = Character.CalculationOptions as CalculationOptionsRogue;
+                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.Text);
+                Character.OnCalculationsInvalidated();
             }
         }
     }
@@ -91,9 +97,9 @@ namespace Rawr.Rogue
     {
         public string GetXml()
         {
-            System.Xml.Serialization.XmlSerializer s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
-            StringBuilder xml = new StringBuilder();
-            System.IO.StringWriter sw = new System.IO.StringWriter(xml);
+            var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
+            var xml = new StringBuilder();
+            var sw = new System.IO.StringWriter(xml);
             s.Serialize(sw, this);
             return xml.ToString();
         }
@@ -104,8 +110,8 @@ namespace Rawr.Rogue
             DPSCycle = new Cycle("4s5r");
         }
 
-        public int TargetLevel = 73;
-        public int TargetArmor = 7700;
+        public int TargetLevel = 83;
+        public int TargetArmor = 10000;
         public Cycle DPSCycle;
         public string TempMainHandEnchant;
         public string TempOffHandEnchant;

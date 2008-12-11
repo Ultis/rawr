@@ -99,6 +99,7 @@
     <Compile Include="Cycle.cs" />
     <Compile Include="DisplayValue.cs" />
     <Compile Include="Finishers.cs" />
+    <Compile Include="Poisons.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RogueConversions.cs" />
   </ItemGroup>

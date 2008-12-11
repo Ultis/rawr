@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Rawr.Rogue
@@ -33,9 +34,9 @@ namespace Rawr.Rogue
         {
             get
             {
-                for (int i = 0; i < components.Count; i++)
-                    if ((components[i]).Finisher == finisher)
-                        return (components[i]).Rank;
+                for (var i = 0; i < components.Count; i++)
+                    if (components[i].Finisher.Id == finisher)
+                        return components[i].Rank;
                 return 0;
             }
         }
@@ -44,8 +45,8 @@ namespace Rawr.Rogue
         {
             get
             {
-                int ret = 0;
-                for (int i = 0; i < components.Count; i++)
+                var ret = 0;
+                for (var i = 0; i < components.Count; i++)
                     ret += (components[i]).Rank;
                 return ret;
             }
@@ -57,61 +58,67 @@ namespace Rawr.Rogue
 
             for (i = 0; i < (c.Length - 1); i += 2)
             {
-                if ((c[i] < '1' || c[i] > '5') || (c[i + 1] != 's' && c[i + 1] != 'r' && c[i + 1] != 'e'))
+                if ((c[i] < '1' || c[i] > '5') || Finishers.Get(c[i + 1]).Id == 'z' )
                 {
                     i--;
                     continue;
                 }
 
-                components.Add(new CycleComponent(c[i] - '0', c[i + 1]));
+                components.Add(new CycleComponent(c[i] - '0', Finishers.Get(c[i + 1])));
             }
         }
 
         public override string ToString()
         {
-            string ret;
-
-            ret = "";
-            for (int i = 0; i < components.Count; i++)
+            var ret = "";
+            for (var i = 0; i < components.Count; i++)
                 ret += (components[i]).ToString();
 
             return ret;
+        }
+
+        public List<CycleComponent> Components
+        {
+            get
+            {
+                return components;   
+            }
         }
     }
 
     [Serializable]
     public class CycleComponent
     {
-        private char finisher;
-        private int rank;
+        private IFinisher _finisher;
+        private int _rank;
 
         public CycleComponent()
         {
-            rank = 0;
-            finisher = 's';
+            _rank = 0;
+            _finisher = new SnD();
         }
 
-        public CycleComponent(int r, char f)
+        public CycleComponent(int r, IFinisher f)
         {
-            rank = r;
-            finisher = f;
+            _rank = r;
+            _finisher = f;
         }
 
         public int Rank
         {
-            get { return rank; }
-            set { rank = value; }
+            get { return _rank; }
+            set { _rank = value; }
         }
 
-        public char Finisher
+        public IFinisher Finisher
         {
-            get { return finisher; }
-            set { finisher = value; }
+            get { return _finisher; }
+            set { _finisher = value; }
         }
 
         public override string ToString()
         {
-            return rank + finisher.ToString();
+            return _rank + _finisher.Id.ToString();
         }
     }
 }

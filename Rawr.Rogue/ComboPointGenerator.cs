@@ -10,7 +10,7 @@
     public class CpgAttackValues
     {
         public float AttackDamage;
-        public float BonusCrit;
+        public float Crit;
         public float BonusDamageMultiplier = 1f;
         public float BonusCritDamageMultiplier = 2f;
     }
@@ -26,11 +26,13 @@
             {
                 return new Mutilate();
             }
+
             // if we're main handing a dagger, assume we're using backstab it to generate CPs
             if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger)
             {
                 return new Backstab();
             }
+
             // if we have hemo, assume we use it to generate CPs
             if (character.RogueTalents.Hemorrhage > 0)
             {
@@ -57,7 +59,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 1.7f;
             attackValues.AttackDamage *= 1.5f;
 
-            attackValues.BonusCrit += 5f * character.RogueTalents.PuncturingWounds;
+            attackValues.Crit += combatFactors.MhCrit + 5f * character.RogueTalents.PuncturingWounds;
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
             attackValues.BonusDamageMultiplier *= (1f + 0.04f * character.RogueTalents.Opportunity);
             return attackValues;
@@ -79,7 +81,7 @@
             attackValues.BonusDamageMultiplier *= (1f + .02f * character.RogueTalents.Aggression);
             attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + 0.04f * character.RogueTalents.Opportunity);
-            attackValues.BonusCrit += 10f * character.RogueTalents.PuncturingWounds;
+            attackValues.Crit += combatFactors.MhCrit + 10f * character.RogueTalents.PuncturingWounds;
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
 
             return attackValues;
@@ -97,6 +99,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 2.4f;
             attackValues.AttackDamage *= 1.1f;
 
+            attackValues.Crit += combatFactors.MhCrit;
             attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
@@ -134,6 +137,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 2.4f;
             attackValues.AttackDamage += 98f;
 
+            attackValues.Crit = combatFactors.MhCrit;
             attackValues.BonusDamageMultiplier *= (1f + .02f * character.RogueTalents.Aggression);
             attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);

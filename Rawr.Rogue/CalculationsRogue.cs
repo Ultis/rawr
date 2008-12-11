@@ -90,7 +90,6 @@ namespace Rawr.Rogue
             var ruthlessnessCP = .2f * character.RogueTalents.Ruthlessness;
             var numCPG = calcOpts.DPSCycle.TotalComboPoints - 2f * ruthlessnessCP;
             var cpg = ComboPointGenerator.Get(character);
-            var finisher = Finishers.Get(calcOpts);
 
             #region SnD - Doesn't appear to affect calculations.  TODO: Remove or fix??
             //float sndLength = 6f + 3f*calcOpts.DPSCycle['s'];
@@ -105,22 +104,32 @@ namespace Rawr.Rogue
             var avgMHDmg = character.MainHand == null ? 0f : combatFactors.AvgMhWeaponDmg + (stats.AttackPower/14.0f)*character.MainHand.Speed;
             var mhWhiteDPS = CalcMhWhiteDPS(character, combatFactors, avgMHDmg, mhHits);
 
-            var cycleTime = CalcCycleTime(character, combatFactors, ohHits, numCPG, cpg, finisher);
+            var cycleTime = CalcCycleTime(character, calcOpts, combatFactors, ohHits, numCPG, cpg);
 
-            var cpgDPS = character.MainHand == null ? 0f : CalcCpgDPS(character, stats, combatFactors, numCPG, cpg, cycleTime);
-            var finisherDPS = character.MainHand == null ? 0f : finisher.CalcFinisherDPS(character, stats, calcOpts, combatFactors, cycleTime) ;
+            var cpgAttackValues = character.MainHand == null ? new CpgAttackValues() : cpg.CalcAttackValues(character, stats, combatFactors);
+            var cpgDPS = CalcCpgDPS(cpgAttackValues, combatFactors, numCPG, cycleTime);
+
+            var finisherDPS = 0f;
+            if( character.MainHand != null)
+            {
+                foreach(var component in calcOpts.DPSCycle.Components)
+                {
+                    finisherDPS += component.Finisher.CalcFinisherDPS(character, stats, calcOpts, combatFactors, cycleTime);
+                }
+            }
+
             var swordSpecDPS = CalcSwordSpecDPS(character, combatFactors, ohHits, avgMHDmg, mhHits, numCPG, cycleTime);
             var poisonDPS = CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits, mhHits);
 
-
+            calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, combatFactors.OhExpertise);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, combatFactors.TotalHaste);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhCrit, combatFactors.MhCrit);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhCrit, combatFactors.OhCrit); 
-
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseMhCrit, combatFactors.MhCrit);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseOhCrit, combatFactors.OhCrit);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, mhWhiteDPS + ohWhiteDPS + swordSpecDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, finisherDPS);
@@ -133,24 +142,28 @@ namespace Rawr.Rogue
             return calculatedStats;
         }
 
-        private static float CalcCpgDPS(Character character, Stats stats, CombatFactors combatFactors, float numCPG, IComboPointGenerator cpg, float cycleTime)
+        private static float CalcCpgDPS(CpgAttackValues attackValues, CombatFactors combatFactors, float numCPG, float cycleTime)
         {
-            var attackValues = cpg.CalcAttackValues(character, stats, combatFactors);
-            var cpgCrit = combatFactors.MhCrit + attackValues.BonusCrit;
-
             var avgCPGDmg = attackValues.AttackDamage * attackValues.BonusDamageMultiplier;
-            avgCPGDmg = (1f - cpgCrit / 100f) * avgCPGDmg + (cpgCrit / 100f) * (avgCPGDmg * attackValues.BonusCritDamageMultiplier);
+            avgCPGDmg = (1f - attackValues.Crit / 100f) * avgCPGDmg + (attackValues.Crit / 100f) * (avgCPGDmg * attackValues.BonusCritDamageMultiplier);
 
             var cpgDPS = avgCPGDmg*numCPG/cycleTime;
             cpgDPS *= combatFactors.DamageReduction;
             return cpgDPS;
         }
 
-        private static float CalcCycleTime(Character character, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg, IFinisher finisher)
+        private static float CalcCycleTime(Character character, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg)
         {
             var energyRegen = combatFactors.BaseEnergyRegen;
             energyRegen += (.2f * 3f * character.RogueTalents.CombatPotency) * ohHits;
-            return (numCPG * cpg.EnergyCost + 25f + finisher.EnergyCost) / energyRegen;
+
+            var energyCost = numCPG*cpg.EnergyCost;
+            foreach(var component in calcOpts.DPSCycle.Components)
+            {
+                energyCost += component.Finisher.EnergyCost;
+            }
+
+            return energyCost / energyRegen;
         }
 
         private static float CalcMhWhiteDPS(Character character, CombatFactors combatFactors, float avgMHDmg, float mhHits)
@@ -222,12 +235,9 @@ namespace Rawr.Rogue
             return poisonDPS;
         }
 
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        public Stats GetBuffsStats(Character character)
         {
-            Stats statsRace = GetRaceStats(character.Race);
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            var statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             // buffs from DPSWarr
             //Add Expose Weakness since it's not listed as an AP buff
@@ -236,21 +246,30 @@ namespace Rawr.Rogue
             //Mongoose
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
             {
-                statsBuffs.Agility += 120f*((40f*(1f/(60f/character.MainHand.Speed))/6f));
-                statsBuffs.HasteRating += (15.76f*2f)*((40f*(1f/(60f/character.MainHand.Speed))/6f));
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
             }
             if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
             {
-                statsBuffs.Agility += 120f*((40f*(1f/(60f/character.OffHand.Speed))/6f));
-                statsBuffs.HasteRating += (15.76f*2f)*((40f*(1f/(60f/character.OffHand.Speed))/6f));
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
             }
 
             //Executioner
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
             {
-                statsBuffs.ArmorPenetration += 840f*((40f*(1f/(60f/character.MainHand.Speed))/6f));
+                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
             }
 
+            return statsBuffs;
+        }
+
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            Stats statsRace = GetRaceStats(character.Race);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
+            Stats statsEnchants = GetEnchantsStats(character);
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
 
             //TalentTree tree = character.AllTalents;
@@ -274,8 +293,6 @@ namespace Rawr.Rogue
             statsTotal.Health = (float) Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - staBase)*10f))));
 
             statsTotal.AttackPower = (statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
-            //statsTotal.AttackPower = statsRace.AttackPower + ((statsTotal.Agility - agiBase) + (statsTotal.Strength - strBase) + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier);
-            //statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + ((statsTotal.Strength - strBase) * 1) + ((statsTotal.Agility - agiBase) * 1)) * (1f + statsTotal.BonusAttackPowerMultiplier));
 
             statsTotal.PhysicalHit = character.RogueTalents.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
@@ -303,7 +320,6 @@ namespace Rawr.Rogue
             statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
             statsTotal.PhysicalCrit += (statsTotal.Agility - (statsRace.Agility*(1f + statsTotal.BonusAgilityMultiplier)))*RogueConversions.AgilityToCrit;
             statsTotal.PhysicalCrit += character.RogueTalents.Malice*1f;
-            //statsTotal.CritRating += statsBuffs.LotPCritRating;
 
             statsTotal.Dodge += statsTotal.Agility*RogueConversions.AgilityToDodge;
             statsTotal.Dodge += character.RogueTalents.LightningReflexes;

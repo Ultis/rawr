@@ -48,12 +48,12 @@ namespace Rawr.Rogue
 
         public void AddDisplayValue(DisplayValue key, string value)
         {
-            _dictValues.Add(key, value);
+            _dictValues[key] = value;
         }
 
         public void AddRoundedDisplayValue(DisplayValue key, float value)
         {
-            _dictValues.Add(key, Round(value));
+            AddDisplayValue(key, Round(value));
         }
 
         private static string Round(float value)
