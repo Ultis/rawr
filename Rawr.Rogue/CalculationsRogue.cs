@@ -11,14 +11,12 @@ namespace Rawr.Rogue
     {
         public CalculationsRogue()
         {
-            SetupDisplayCalculationLabels();
             SetupRelevantItemTypes();
         }
         
         private readonly CalculationOptionsPanelBase _calculationOptionsPanel = new CalculationOptionsPanelRogue();
         private readonly string[] _customChartNames = new[] {"Combat Table"};
         private readonly Dictionary<string, Color> _subPointNameColors = new Dictionary<string, Color> {{"DPS", Color.Red}};
-        private string[] _characterDisplayCalculationLabels;
         private List<Item.ItemType> _relevantItemTypes;
 
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -28,7 +26,7 @@ namespace Rawr.Rogue
 
         public override string[] CharacterDisplayCalculationLabels
         {
-            get { return _characterDisplayCalculationLabels; }
+            get { return DisplayValue.GroupedList(); }
         }
 
         public override Dictionary<string, Color> SubPointNameColors
@@ -87,7 +85,7 @@ namespace Rawr.Rogue
 
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var stats = GetCharacterStats(character, additionalItem);
-            var calculatedStats = new CharacterCalculationsRogue {BasicStats = stats};
+            var calculatedStats = new CharacterCalculationsRogue(stats);
             var combatFactors = new CombatFactors(character, stats);
             var ruthlessnessCP = .2f * character.RogueTalents.Ruthlessness;
             var numCPG = calcOpts.DPSCycle.TotalComboPoints - 2f * ruthlessnessCP;
@@ -113,14 +111,24 @@ namespace Rawr.Rogue
             var finisherDPS = character.MainHand == null ? 0f : finisher.CalcFinisherDPS(character, stats, calcOpts, combatFactors, cycleTime) ;
             var swordSpecDPS = CalcSwordSpecDPS(character, combatFactors, ohHits, avgMHDmg, mhHits, numCPG, cycleTime);
             var poisonDPS = CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits, mhHits);
-            
-            calculatedStats.WhiteDPS = mhWhiteDPS + ohWhiteDPS + swordSpecDPS;
-            calculatedStats.CPGDPS = cpgDPS;
-            calculatedStats.FinisherDPS = finisherDPS;
-            calculatedStats.SwordSpecDPS = swordSpecDPS;
-            calculatedStats.PoisonDPS = poisonDPS;
-            calculatedStats.DPSPoints = mhWhiteDPS + ohWhiteDPS + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
-            calculatedStats.OverallPoints = calculatedStats.DPSPoints;
+
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, combatFactors.OhExpertise);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, combatFactors.TotalHaste);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhCrit, combatFactors.MhCrit);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhCrit, combatFactors.OhCrit); 
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, mhWhiteDPS + ohWhiteDPS + swordSpecDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, finisherDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDPS);
+
+            calculatedStats.TotalDPS = mhWhiteDPS + ohWhiteDPS + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
+            calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
         }
@@ -400,30 +408,7 @@ namespace Rawr.Rogue
             return (stats.Agility + stats.Strength + stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.AttackPower + stats.BonusAttackPowerMultiplier + stats.CritRating + stats.HitRating + stats.HasteRating + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier + stats.WindfuryAPBonus + stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant + stats.ExecutionerProc + stats.BonusSnDDuration + stats.CPOnFinisher + stats.BonusEvisEnvenomDamage + stats.BonusFreeFinisher + stats.BonusCPGDamage + stats.BonusSnDHaste + stats.BonusBleedDamageMultiplier) != 0;
         }
 
-        private void SetupDisplayCalculationLabels()
-        {
-            _characterDisplayCalculationLabels = new[]
-                                                     {
-                                                         "Base Stats:Health",
-                                                         "Base Stats:Stamina",
-                                                         "Base Stats:Strength",
-                                                         "Base Stats:Agility",
-                                                         "Base Stats:Attack Power",
-                                                         "Base Stats:Hit",
-                                                         "Base Stats:Expertise",
-                                                         "Base Stats:Haste",
-                                                         "Base Stats:Armor Penetration",
-                                                         "Base Stats:Crit",
-                                                         "Base Stats:Weapon Damage",
-                                                         "DPS Breakdown:White DPS",
-                                                         "DPS Breakdown:CPG DPS",
-                                                         "DPS Breakdown:Finisher DPS",
-                                                         "DPS Breakdown:Sword Spec DPS",
-                                                         "DPS Breakdown:Windfury DPS",
-                                                         "DPS Breakdown:Poison DPS",
-                                                         "DPS Breakdown:Total DPS"
-                                                     };
-        }
+
 
         private void SetupRelevantItemTypes()
         {
