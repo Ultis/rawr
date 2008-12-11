@@ -1,6 +1,6 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+# Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr", "Rawr.csproj", "{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B3F2FA07-25F8-4AD1-B942-2D4E00EFE044} = {B3F2FA07-25F8-4AD1-B942-2D4E00EFE044}
@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr", "Rawr.csproj", "{A0F
 		{BB4394D2-6FEC-4610-BFFE-B6A95DE54142} = {BB4394D2-6FEC-4610-BFFE-B6A95DE54142}
 		{20DCE3DB-4074-449C-BC62-DDF7AEBF81A3} = {20DCE3DB-4074-449C-BC62-DDF7AEBF81A3}
 		{95E3AFED-1207-45FB-9B22-64DCFD1279B3} = {95E3AFED-1207-45FB-9B22-64DCFD1279B3}
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0} = {40E699F1-71A5-4BD5-A918-EC4F7634FDD0}
+		{842B74C7-EE94-44D9-A02F-4074166EF506} = {842B74C7-EE94-44D9-A02F-4074166EF506}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "Rawr.Base\Rawr.Base.csproj", "{842B74C7-EE94-44D9-A02F-4074166EF506}"
@@ -61,11 +63,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest", "Rawr.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Enhance", "Rawr.Enhance\Rawr.Enhance.csproj", "{217438A2-51C6-46DC-B0F8-8EBC81BF2426}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Elemental", "Rawr.Elemental\Rawr.Elemental.csproj", "{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\Rawr.TankDK.csproj", "{55A0C445-3E1A-4BB4-A0ED-9056366C8333}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
+		SccNumberOfProjects = 23
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -131,6 +135,9 @@ Global
 		SccProjectUniqueName21 = Rawr.TankDK\\Rawr.TankDK.csproj
 		SccProjectName21 = Rawr.TankDK
 		SccLocalPath21 = Rawr.TankDK
+		SccProjectUniqueName22 = Rawr.Elemental\\Rawr.Elemental.csproj
+		SccProjectName22 = Rawr.Elemental
+		SccLocalPath22 = Rawr.Elemental
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -297,6 +304,12 @@ Global
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|Any CPU.Build.0 = Release|Any CPU
 		{217438A2-51C6-46DC-B0F8-8EBC81BF2426}.Release|x86.ActiveCfg = Release|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40E699F1-71A5-4BD5-A918-EC4F7634FDD0}.Release|x86.ActiveCfg = Release|Any CPU
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55A0C445-3E1A-4BB4-A0ED-9056366C8333}.Debug|x86.ActiveCfg = Debug|Any CPU

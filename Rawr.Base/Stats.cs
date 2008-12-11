@@ -207,7 +207,17 @@ namespace Rawr
         BonusObliterateDamage,
         BonusScourgeStrikeDamage,
 		BonusInsectSwarmDamage,
-		BonusNukeCritChance
+		BonusNukeCritChance,
+        BonusThunderCritChance,
+        BonusShamanHit,
+        ManaRegenIntPer5,
+        ShamanCastTimeReduction,
+        LightningOverloadProc,
+        BonusLavaBurstCritDamage,
+        ChainLightningCooldownReduction,
+        BonusFlameShockDoTDamage,
+        BonusFlametongueDamage,
+        ShockManaCostReduction
     }
 
     enum MultiplicativeStat : int
@@ -261,7 +271,8 @@ namespace Rawr
 		PhysicalHaste,
 		SpellHaste,
 		HealingReceivedMultiplier,
-		DamageTakenMultiplier
+		DamageTakenMultiplier,
+        BonusLavaBurstDamage
     }
 
     enum InverseMultiplicativeStat : int
@@ -2014,6 +2025,76 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast]; }
             set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusThunderCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusThunderCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusThunderCritChance] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusShamanHit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusShamanHit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusShamanHit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ManaRegenIntPer5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRegenIntPer5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRegenIntPer5] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ShamanCastTimeReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShamanCastTimeReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShamanCastTimeReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LightningOverloadProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningOverloadProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningOverloadProc] = value; }
+        }
+     
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusLavaBurstCritDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusLavaBurstCritDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusLavaBurstCritDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ChainLightningCooldownReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ChainLightningCooldownReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ChainLightningCooldownReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusFlameShockDoTDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDoTDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFlameShockDoTDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusFlametongueDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusFlametongueDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusFlametongueDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float ShockManaCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction] = value; }
+        }
 #endregion
 
         #region MultiplicativeStats
@@ -2504,6 +2585,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float BonusLavaBurstDamage
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
         }
 
         #endregion
