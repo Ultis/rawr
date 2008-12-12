@@ -355,9 +355,10 @@ namespace Rawr
             if (name.Length <= 0) return;
 
             // try the armory (if requested)
-            if (useArmory && !useWowhead)
+            if (useArmory)
             {
-                MessageBox.Show("Unable to load from the Armory by name.  Please try Wowhead.", "Item not found.", MessageBoxButtons.OK);                
+                Int32 item_id = Armory.GetItemIdByName(name);
+                AddItemById(item_id, useArmory, useWowhead);
             }
 
             // try wowhead (if requested)

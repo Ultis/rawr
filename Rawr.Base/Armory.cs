@@ -19,7 +19,7 @@ namespace Rawr
 		public static Character GetCharacter(Character.CharacterRegion region, string realm, string name, out string[] itemsOnCharacter)
 		{
 			XmlDocument docCharacter = null;
-            XmlDocument docTalents = null;
+            //XmlDocument docTalents = null;
             try
 			{
 				WebRequestWrapper wrw = new WebRequestWrapper();
@@ -151,6 +151,31 @@ namespace Rawr
 				return null;
 			}
 		}
+
+        public static Int32 GetItemIdByName(string item_name)
+        {
+            try
+            {
+                WebRequestWrapper wrw = new WebRequestWrapper();
+                XmlDocument docItem = wrw.DownloadItemSearch(item_name);
+                if (docItem != null)
+                {
+                    XmlNodeList items_nodes = docItem.SelectNodes("/page/armorySearch/searchResults/items/item");
+                    // we only want a single match, even if its not exact
+                    if (items_nodes.Count == 1)
+                    {
+                        Int32 id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
+                        return id;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error searching the Armory for item: " + item_name);
+            }
+
+            return -1;
+        }
 
 		public static Item GetItem(string gemmedId, string logReason)
 		{

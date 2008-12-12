@@ -69,6 +69,7 @@ namespace Rawr
 			string ItemWowheadURI { get; }
 			string TalentIconURI { get; }
 			string ItemInfoURI { get; }
+            string ItemSearchURI { get; }
         }
 
         public interface ICacheSettingsProvider
@@ -201,6 +202,11 @@ namespace Rawr
                 get { return Rawr.Properties.NetworkSettings.Default.ItemInfoURI; }
             }
 
+            public string ItemSearchURI
+            {
+                get { return Rawr.Properties.NetworkSettings.Default.ItemSearchURI; }
+            }
+
             #endregion
         }
 
@@ -313,6 +319,17 @@ namespace Rawr
             }
 			return doc;
 		}
+
+        public XmlDocument DownloadItemSearch(string item)
+        {
+            XmlDocument doc = null;
+            if (item.Length > 0)
+            {
+                // http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemSearchURI, "www", item));
+            }
+            return doc;
+        }
 
 		public XmlDocument DownloadItemWowhead(string id)
 		{

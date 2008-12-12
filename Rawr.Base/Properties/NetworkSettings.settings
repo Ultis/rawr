@@ -74,5 +74,8 @@
     <Setting Name="ItemWowheadURI" Type="System.String" Scope="Application">
       <Value Profile="(Default)">http://wotlk.wowhead.com/?item={0}&amp;xml</Value>
     </Setting>
+    <Setting Name="ItemSearchURI" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://{0}.wowarmory.com/search.xml?searchQuery={1}&amp;searchType=items</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
