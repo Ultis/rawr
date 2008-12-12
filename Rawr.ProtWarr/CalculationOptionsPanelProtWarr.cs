@@ -28,6 +28,7 @@ namespace Rawr.ProtWarr
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
 			armorBosses.Add(8800, ": Void Reaver");            
+			armorBosses.Add(13083, ":Wrath Bosses");
 		}
 
 		protected override void LoadCalculationOptions()

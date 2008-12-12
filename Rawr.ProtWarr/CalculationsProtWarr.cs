@@ -626,7 +626,6 @@ threat and limited threat scaled by the threat scale.",
                     PhysicalCrit = tree.Cruelty * 1.0f,
                     Dodge = tree.Anticipation * 1.0f,
                     Block = tree.ShieldSpecialization * 1.0f,
-                    BonusArmorMultiplier = tree.Toughness * 0.02f,
                     BonusBlockValueMultiplier = tree.ShieldMastery * 0.15f,
                     BonusDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
                     BonusStaminaMultiplier = tree.Vitality * 0.02f,
@@ -651,6 +650,10 @@ threat and limited threat scaled by the threat scale.",
                 // Assumes the default threat cycle (SS, Revenge, Devastate x2)
                 // Only 3 of those special attacks per 6 second cycle can proc weapon enchants
             }
+
+            Stats statsItems = GetItemStats(character, additionalItem);
+            float toughnessMultiplier = new float[] { 1f, 1.02f, 1.04f, 1.06f, 1.08f, 1.1f }[character.WarriorTalents.Toughness];
+            statsItems.Armor *= toughnessMultiplier;
 
             //Mongoose
             if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcAverage > 0)
@@ -683,100 +686,26 @@ threat and limited threat scaled by the threat scale.",
             }
 
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+            Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;		
 			
-			statsBaseGear.Agility += statsEnchants.Agility;
-			statsBaseGear.DefenseRating += statsEnchants.DefenseRating;
-			statsBaseGear.DodgeRating += statsEnchants.DodgeRating;
-            statsBaseGear.ParryRating += statsEnchants.ParryRating;
-            statsBaseGear.BlockRating += statsEnchants.BlockRating;
-            statsBaseGear.BlockValue += statsEnchants.BlockValue;
-			statsBaseGear.Resilience += statsEnchants.Resilience;
-			statsBaseGear.Stamina += statsEnchants.Stamina;
-
-			statsBuffs.Health += statsEnchants.Health;
-			statsBuffs.Armor += statsEnchants.Armor;
-
-            float staBase = (float)Math.Floor((statsRace.Stamina) *
-                             (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
-                             (1 + statsRace.BonusStaminaMultiplier) *
-                             (1 + statsTalents.BonusStaminaMultiplier));
-            float stamina = (float)Math.Floor(staBase + (statsBaseGear.Stamina + statsBuffs.Stamina) *
-                             (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
-                             (1 + statsRace.BonusStaminaMultiplier) *
-                             (1 + statsTalents.BonusStaminaMultiplier));
-
-            float health = (float)Math.Floor((statsRace.Health + statsBaseGear.Health + statsBuffs.Health +
-                            stamina * WarriorConversions.StaminaToHP) *
-                             (1 + statsGearEnchantsBuffs.BonusHealthMultiplier) *
-                             (1 + statsRace.BonusHealthMultiplier) *
-                             (1 + statsTalents.BonusHealthMultiplier));
-
-            float strBase = (float)Math.Floor((statsRace.Strength) *
-                             (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
-                             (1 + statsRace.BonusStrengthMultiplier) *
-                             (1 + statsTalents.BonusStrengthMultiplier));
-            float strength = (float)Math.Floor(strBase + (statsBaseGear.Strength + statsBuffs.Strength) *
-                              (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
-                              (1 + statsRace.BonusStrengthMultiplier) *
-                              (1 + statsTalents.BonusStrengthMultiplier));
-            
-			Stats statsTotal = new Stats();
-			statsTotal.Stamina = stamina;
-			statsTotal.DefenseRating = statsRace.DefenseRating + statsBaseGear.DefenseRating + statsBuffs.DefenseRating;
-			statsTotal.DodgeRating = statsRace.DodgeRating + statsBaseGear.DodgeRating + statsBuffs.DodgeRating;
-            statsTotal.ParryRating = statsRace.ParryRating + statsBaseGear.ParryRating + statsBuffs.ParryRating;
-            statsTotal.BlockRating = statsRace.BlockRating + statsBaseGear.BlockRating + statsBuffs.BlockRating;
-            statsTotal.BlockValue = statsRace.BlockValue + statsBaseGear.BlockValue + statsBuffs.BlockValue;
-			statsTotal.Resilience = statsRace.Resilience + statsBaseGear.Resilience + statsBuffs.Resilience;
-            statsTotal.AverageArmor = statsRace.AverageArmor + statsBaseGear.AverageArmor + statsBuffs.AverageArmor;
-            statsTotal.BonusShieldSlamDamage = statsRace.BonusShieldSlamDamage + statsBaseGear.BonusShieldSlamDamage + statsBuffs.BonusShieldSlamDamage;
-            statsTotal.LotPCritRating = statsBuffs.LotPCritRating;
-            statsTotal.Health = health;
-			statsTotal.Miss = statsRace.Miss + statsBaseGear.Miss + statsBuffs.Miss;
-            statsTotal.CritChanceReduction = statsGearEnchantsBuffs.CritChanceReduction + statsRace.CritChanceReduction;
-            statsTotal.NatureResistance = statsGearEnchantsBuffs.NatureResistance + statsRace.NatureResistance + statsGearEnchantsBuffs.NatureResistanceBuff;
-			statsTotal.FireResistance = statsGearEnchantsBuffs.FireResistance + statsRace.FireResistance + statsGearEnchantsBuffs.FireResistanceBuff;
-			statsTotal.FrostResistance = statsGearEnchantsBuffs.FrostResistance + statsRace.FrostResistance + statsGearEnchantsBuffs.FrostResistanceBuff;
-			statsTotal.ShadowResistance = statsGearEnchantsBuffs.ShadowResistance + statsRace.ShadowResistance + statsGearEnchantsBuffs.ShadowResistanceBuff;
-			statsTotal.ArcaneResistance = statsGearEnchantsBuffs.ArcaneResistance + statsRace.ArcaneResistance + statsGearEnchantsBuffs.ArcaneResistanceBuff;
-            statsTotal.AllResist = statsGearEnchantsBuffs.AllResist + statsRace.AllResist;
-            statsTotal.Defense = statsRace.Defense + statsTalents.Defense;
-            statsTotal.Dodge = statsRace.Dodge + statsTalents.Dodge;
-            statsTotal.Parry = statsRace.Parry + statsTalents.Parry;
-            statsTotal.Block = statsRace.Block + statsTalents.Block;
-            statsTotal.PhysicalHit = statsRace.PhysicalHit + statsTalents.PhysicalHit;
-            statsTotal.PhysicalCrit = statsRace.PhysicalCrit + statsTalents.PhysicalCrit;
-            statsTotal.Expertise = statsRace.Expertise + statsTalents.Expertise;
+            statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
+            statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
+            statsTotal.Agility *= (1 + statsTotal.BonusAgilityMultiplier);
+            statsTotal.AttackPower += statsTotal.Strength * 2;
+            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.Armor += 2 * statsTotal.Agility;
+            statsTotal.Armor *= 1 + statsTotal.BonusArmorMultiplier;
+            statsTotal.BlockValue *= 1 + statsTotal.BonusBlockValueMultiplier;
+            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
+            statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
+            statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
+            statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
+            statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
             statsTotal.Block += (calcOpts.UseShieldBlock ? 75f : 0f);
 
-            statsTotal.BonusArmorMultiplier = ((1 + statsRace.BonusArmorMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusArmorMultiplier) *
-                                                  (1 + statsTalents.BonusArmorMultiplier)) - 1;
-            statsTotal.BonusBlockValueMultiplier = ((1 + statsRace.BonusBlockValueMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusBlockValueMultiplier) *
-                                                  (1 + statsTalents.BonusBlockValueMultiplier)) - 1;
-            statsTotal.BonusDamageMultiplier = ((1 + statsRace.BonusDamageMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusDamageMultiplier) *
-                                                  (1 + statsTalents.BonusDamageMultiplier)) - 1;
-            statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier) *
-                                                  (1 + statsTalents.BonusStaminaMultiplier)) - 1;
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) *
-                                                     (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) *
-                                                     (1 + statsTalents.BonusAttackPowerMultiplier)) - 1;
-            statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) *
-                                                  (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier) *
-                                                  (1 + statsTalents.BonusStrengthMultiplier)) - 1;
-            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) *
-                                                    (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) *
-                                                    (1 + statsTalents.BonusAttackPowerMultiplier)) - 1;
-            statsTotal.ThreatIncreaseMultiplier = ((1 + statsRace.ThreatIncreaseMultiplier) *
-                                                   (1 + statsGearEnchantsBuffs.ThreatIncreaseMultiplier) *
-                                                   (1 + statsTalents.ThreatIncreaseMultiplier)) - 1;
-            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsBaseGear.Agility + statsBuffs.Agility + statsGearEnchantsBuffs.Agility + statsTalents.Agility) * (1 + statsBuffs.BonusAgilityMultiplier));
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Strength = strength;
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength * 2)) * (1f + statsTotal.BonusAttackPowerMultiplier));
@@ -789,10 +718,6 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
             statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
             statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
-
-            statsTotal.Armor = (float)Math.Floor(((statsBaseGear.Armor * (1 + statsTalents.BonusArmorMultiplier)) +
-                                statsRace.Armor + statsBuffs.Armor + statsTotal.AverageArmor +
-                                (statsTotal.Agility * 2f)) * (1 + statsBuffs.BonusArmorMultiplier));
 
 			return statsTotal;
 		}
