@@ -358,7 +358,10 @@ namespace Rawr
             if (useArmory)
             {
                 Int32 item_id = Armory.GetItemIdByName(name);
-                AddItemById(item_id, useArmory, useWowhead);
+                if (item_id > 0)
+                {
+                    AddItemById(item_id, useArmory, useWowhead);
+                }
             }
 
             // try wowhead (if requested)
