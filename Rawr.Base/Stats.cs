@@ -208,6 +208,8 @@ namespace Rawr
         BonusScourgeStrikeDamage,
 		BonusInsectSwarmDamage,
 		BonusNukeCritChance,
+        #region Added by Rawr.Elemental
+        BonusCritChance,
         BonusThunderCritChance,
         BonusShamanHit,
         ManaRegenIntPer5,
@@ -218,6 +220,7 @@ namespace Rawr
         BonusFlameShockDoTDamage,
         BonusFlametongueDamage,
         ShockManaCostReduction
+        #endregion
     }
 
     enum MultiplicativeStat : int
@@ -272,7 +275,9 @@ namespace Rawr
 		SpellHaste,
 		HealingReceivedMultiplier,
 		DamageTakenMultiplier,
+        #region Added by Rawr.Elemental
         BonusLavaBurstDamage
+        #endregion
     }
 
     enum InverseMultiplicativeStat : int
@@ -2026,6 +2031,15 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
         }
 
+        #region Added by Rawr.Elemental
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusCritChance] = value; }
+        }
+
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusThunderCritChance
         {
@@ -2095,6 +2109,7 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction] = value; }
         }
+        #endregion
 #endregion
 
         #region MultiplicativeStats
@@ -2587,6 +2602,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal] = value; }
         }
 
+        #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         public float BonusLavaBurstDamage
@@ -2594,6 +2610,7 @@ namespace Rawr
             get { return _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
             set { _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
         }
+        #endregion
 
         #endregion
 

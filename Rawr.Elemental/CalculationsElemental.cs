@@ -43,6 +43,7 @@ namespace Rawr.Elemental
 					"Basic Stats:Mana Regen",
 					
 					"Complex Stats:Crit Chance",
+                    "Complex Stats:Miss Chance",
 					
 					"Attacks:Lightning Bolt*Avg Dmg/Avg Crit",
 					"Attacks:Chain Lightning*Avg Dmg/Avg Crit",
@@ -168,7 +169,6 @@ namespace Rawr.Elemental
 
             #endregion
 
-
             #region Basic Chances and Constants
 
             float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
@@ -219,8 +219,8 @@ namespace Rawr.Elemental
 			#endregion
 
 
-			calculatedStats.MissedAttacks = chanceMiss * 100f;
-			calculatedStats.CritChance = chanceCrit * 100f;
+			calculatedStats.CritChance = (chanceCrit * 100f) + stats.BonusCritChance;
+            calculatedStats.MissChance = (chanceMiss - stats.BonusShamanHit) * 100f;
 
 			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS;
 			calculatedStats.SustainabilityPoints = stats.Health / 100f;
@@ -280,7 +280,7 @@ namespace Rawr.Elemental
                 #endregion
                 #region Enhancement
                 BonusIntellectMultiplier = 0.02f * talents.AncestralKnowledge,
-                BonusCritMultiplier = 1.00f * talents.ThunderingStrikes,
+                BonusCritChance = 1.00f * talents.ThunderingStrikes,
                 BonusFlametongueDamage = 0.10f * talents.ElementalWeapons,
                 ShockManaCostReduction = 0.45f * talents.ShamanisticFocus,
                 #endregion
@@ -301,8 +301,7 @@ namespace Rawr.Elemental
             {
                 statsTotal.Mana += ((statsTotal.Intellect - 20) * 15f) + 20;
             }
-			
-                       
+                    
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -476,67 +475,116 @@ namespace Rawr.Elemental
 		{
 			return new Stats()
 				{
-					Intellect = stats.Intellect,
-					SpellPower = stats.SpellPower,
-					CritRating = stats.CritRating,
-					HitRating = stats.HitRating,
-					Stamina = stats.Stamina,
-					HasteRating = stats.HasteRating,
-					BloodlustProc = stats.BloodlustProc,
-					BonusCritMultiplier = stats.BonusCritMultiplier,
-					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                    AllResist = stats.AllResist,
+                    MageAllResist = stats.MageAllResist,
+                    ArcaneResistance = stats.ArcaneResistance,
+                    FireResistance = stats.FireResistance,
+                    FrostResistance = stats.FrostResistance,
+                    NatureResistance = stats.NatureResistance,
+                    ShadowResistance = stats.ShadowResistance,
+                    Stamina = stats.Stamina,
+                    Intellect = stats.Intellect,
+                    Spirit = stats.Spirit,
+                    DefenseRating = stats.DefenseRating,
+                    DodgeRating = stats.DodgeRating,
+                    Health = stats.Health,
+                    Mp5 = stats.Mp5,
+                    Resilience = stats.Resilience,
+                    CritRating = stats.CritRating,
+                    SpellPower = stats.SpellPower,
+                    SpellFireDamageRating = stats.SpellFireDamageRating,
+                    HasteRating = stats.HasteRating,
+                    HitRating = stats.HitRating,
+                    BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                    BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-					Health = stats.Health,
-					DrumsOfBattle = stats.DrumsOfBattle,
-					DrumsOfWar = stats.DrumsOfWar,
-					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                    BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
+                    BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                    Mana = stats.Mana,
+                    SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
+                    SpellPenetration = stats.SpellPenetration,
+                    SpellFrostDamageRating = stats.SpellFrostDamageRating,
+                    Armor = stats.Armor,
+                    Hp5 = stats.Hp5,
+                    SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+                    BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                    BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                    BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                    ArcaneBlastBonus = stats.ArcaneBlastBonus,
+                    SpellPowerFor6SecOnCrit = stats.SpellPowerFor6SecOnCrit,
+                    LightningCapacitorProc = stats.LightningCapacitorProc,
+                    SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                    HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
+                    Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
+                    ManaRestorePerCast = stats.ManaRestorePerCast,
+                    ManaRestoreFromMaxManaPerHit = stats.ManaRestoreFromMaxManaPerHit,
+                    SpellPowerFor15SecOnManaGem = stats.SpellPowerFor15SecOnManaGem,
+                    SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
+                    SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
+                    SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                    SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
+                    SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
+                    SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
+                    SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50,
+                    SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
+                    SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
+                    SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
+                    SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
+                    BonusManaPotion = stats.BonusManaPotion,
+                    ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
+                    ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                    HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
+                    SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
+                    ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
+                    ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
+                    InterruptProtection = stats.InterruptProtection,
+                    ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                    FireResistanceBuff = stats.FireResistanceBuff,
+                    FrostResistanceBuff = stats.FrostResistanceBuff,
+                    ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                    NatureResistanceBuff = stats.NatureResistanceBuff,
+                    PVPTrinket = stats.PVPTrinket,
+                    MovementSpeed = stats.MovementSpeed,
+                    ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                    SpellHit = stats.SpellHit,
+                    SpellCrit = stats.SpellCrit,
+                    SpellHaste = stats.SpellHaste,
+                    SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                    ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
+                    SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                    ManaRestorePerCrit = stats.ManaRestorePerCrit,
+                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                    ThunderCapacitorProc = stats.ThunderCapacitorProc,
+                    SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
+                    CritBonusDamage = stats.CritBonusDamage,
 
-					AllResist = stats.AllResist,
-					ArcaneResistance = stats.ArcaneResistance,
-					NatureResistance = stats.NatureResistance,
-					FireResistance = stats.FireResistance,
-					FrostResistance = stats.FrostResistance,
-					ShadowResistance = stats.ShadowResistance,
-					ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
-					NatureResistanceBuff = stats.NatureResistanceBuff,
-					FireResistanceBuff = stats.FireResistanceBuff,
-					FrostResistanceBuff = stats.FrostResistanceBuff,
-					ShadowResistanceBuff = stats.ShadowResistanceBuff,
 				};
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
 
-            return (stats.Intellect + stats.SpellPower + stats.SpellHitRating + stats.SpellCritRating + 
-                    stats.SpellHasteRating +stats.SpellCrit + stats.CritRating + stats.HitRating + 
-                    stats.HasteRating + stats.Mana + stats.Health > 0 )
-                    || (stats.Stamina > 0 && stats.AttackPower == 0);
-                
-                #region Old Relevancy
-                /*
-                (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc +
-				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
-				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + stats.HitRating + stats.MangleCatCostReduction + 
-				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration +
-				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
-				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-				stats.NatureResistanceBuff + stats.FireResistanceBuff +
-				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
-               */
-                #endregion
-
+            float elementalStats = stats.Intellect + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.SpellFrostDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.SpellPowerFor6SecOnCrit +  stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromMaxManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor15SecOnManaGem + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellDamageFor10SecOnHit_5 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.ManaRestoreOnCast_5_15 + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.SpellPowerFor10SecOnCast_15_45 + stats.ManaRestoreOnCast_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestorePerCrit + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.SpellPowerFor20SecOnUse5Min + stats.CritBonusDamage;
+            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + +stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
+            return (elementalStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
 
 		}
 	}
 
     public class CharacterCalculationsElemental : CharacterCalculationsBase
     {
+
+        #region Variable Declarations and Definitions
+
+        public Stats BasicStats { get; set; }
+        public int TargetLevel { get; set; }
+        public float CritChance { get; set; }
+        public float MissChance { get; set; }
+        public string Rotations { get; set; }
+
+        public ElementalRotationCalculator.ElementalRotationCalculation HighestDPSRotation { get; set; }
+        public ElementalRotationCalculator.ElementalRotationCalculation CustomRotation { get; set; }
+
 		private float _overallPoints = 0f;
 		public override float OverallPoints
 		{
@@ -563,18 +611,8 @@ namespace Rawr.Elemental
 			set { _subPoints[1] = value; }
 		}
 
-		public Stats BasicStats { get; set; }
-		public int TargetLevel { get; set; }
-
-		public float MissedAttacks { get; set; }
-		public float CritChance { get; set; }
-
-
-		public ElementalRotationCalculator.ElementalRotationCalculation HighestDPSRotation { get; set; }
-		public ElementalRotationCalculator.ElementalRotationCalculation CustomRotation { get; set; }
+        #endregion
 		
-		public string Rotations { get; set; }
-
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -594,6 +632,7 @@ namespace Rawr.Elemental
 			
 
 			dictValues.Add("Crit Chance", CritChance.ToString() + "%");
+            dictValues.Add("Miss Chance", MissChance.ToString() + "%");
 
 			
 			dictValues.Add("Lightning Bolt", "TODO");
