@@ -97,10 +97,10 @@ namespace Rawr.Rogue
             //sndLength *= 1f + 0.15f*character.RogueTalents.ImprovedSliceAndDice;
             #endregion
 
-            var ohHits = character.OffHand == null ? 0f : (combatFactors.TotalHaste/character.OffHand.Speed)*combatFactors.ProbOHHit;
+            var ohHits = character.OffHand == null ? 0f : (combatFactors.TotalHaste/character.OffHand.Speed)*combatFactors.ProbOhWhiteHit;
             var ohWhiteDPS = GetOhWhiteDPS(character, stats, combatFactors, ohHits);
 
-            var mhHits = character.MainHand == null ? 0f : (combatFactors.TotalHaste / character.MainHand.Speed) * combatFactors.ProbMHHit;
+            var mhHits = character.MainHand == null ? 0f : (combatFactors.TotalHaste / character.MainHand.Speed) * combatFactors.ProbMhWhiteHit;
             var avgMHDmg = character.MainHand == null ? 0f : combatFactors.AvgMhWeaponDmg + (stats.AttackPower/14.0f)*character.MainHand.Speed;
             var mhWhiteDPS = CalcMhWhiteDPS(character, combatFactors, avgMHDmg, mhHits);
 
@@ -200,8 +200,8 @@ namespace Rawr.Rogue
             {
                 //MH hits + CPG + finisher
                 ssHits += mhHits * 0.01f * character.RogueTalents.SwordSpecialization;
-                ssHits += (numCPG / cycleTime) * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMHHit;
-                ssHits += 1f / cycleTime * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMHHit;
+                ssHits += (numCPG / cycleTime) * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
+                ssHits += 1f / cycleTime * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
             }
             if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandSword)
             {
@@ -215,24 +215,13 @@ namespace Rawr.Rogue
 
         private static float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float mhHits)
         {
-            //TODO:  most poisons scale with AP, so we need to add that into the calculations.
-            var poisonDPS = 0f;
-
-            if ((character.MainHand != null && calcOpts.TempMainHandEnchant == "Deadly Poison") || (character.OffHand != null && calcOpts.TempOffHandEnchant == "Deadly Poison"))
+            if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
-                poisonDPS += 180f*(1f + character.RogueTalents.VilePoisons*.04f)/12f;
+                return calcOpts.TempMainHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, mhHits + ohHits);
             }
 
-            if (character.MainHand != null && calcOpts.TempMainHandEnchant == "Instant Poison")
-            {
-                poisonDPS += mhHits*combatFactors.ProbPoison*170f*(1f + character.RogueTalents.VilePoisons*0.04f);
-            }
-
-            if (character.OffHand != null && calcOpts.TempOffHandEnchant == "Instant Poison")
-            {
-                poisonDPS += ohHits*combatFactors.ProbPoison*170f*(1f + character.RogueTalents.VilePoisons*0.04f);
-            }
-            return poisonDPS;
+            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, mhHits)
+                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits);
         }
 
         public Stats GetBuffsStats(Character character)

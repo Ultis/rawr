@@ -91,6 +91,7 @@
     <Compile Include="CalculationOptionsPanelRogue.Designer.cs">
       <DependentUpon>CalculationOptionsPanelRogue.cs</DependentUpon>
     </Compile>
+    <Compile Include="CalculationOptionsRogue.cs" />
     <Compile Include="CalculationsRogue.cs" />
     <Compile Include="CharacterCalculationsRogue.cs" />
     <Compile Include="CombatFactors.cs" />

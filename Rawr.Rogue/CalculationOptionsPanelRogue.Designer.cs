@@ -35,6 +35,7 @@
             this.comboBoxMHPoison = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxArmorBosses = new System.Windows.Forms.ComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBoxCycles.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -68,15 +69,15 @@
             // 
             // labelTargetArmorDescription
             // 
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(15, 89);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(26, 87);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(183, 57);
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(157, 55);
             this.labelTargetArmorDescription.TabIndex = 5;
             // 
             // groupBoxCycles
             // 
             this.groupBoxCycles.Controls.Add(this.radioButton4s5r);
-            this.groupBoxCycles.Location = new System.Drawing.Point(15, 146);
+            this.groupBoxCycles.Location = new System.Drawing.Point(15, 151);
             this.groupBoxCycles.Name = "groupBoxCycles";
             this.groupBoxCycles.Size = new System.Drawing.Size(182, 112);
             this.groupBoxCycles.TabIndex = 6;
@@ -94,7 +95,6 @@
             this.radioButton4s5r.TabStop = true;
             this.radioButton4s5r.Text = "4s5r";
             this.radioButton4s5r.UseVisualStyleBackColor = true;
-            this.radioButton4s5r.CheckedChanged += new System.EventHandler(this.OnCheckedChanged);
             // 
             // groupBox1
             // 
@@ -102,7 +102,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.comboBoxMHPoison);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(15, 264);
+            this.groupBox1.Location = new System.Drawing.Point(15, 270);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(181, 77);
             this.groupBox1.TabIndex = 7;
@@ -164,6 +164,15 @@
             this.comboBoxArmorBosses.TabIndex = 8;
             this.comboBoxArmorBosses.SelectedIndexChanged += new System.EventHandler(this.comboBoxArmorBosses_SelectedIndexChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Location = new System.Drawing.Point(15, 71);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(181, 74);
+            this.groupBox3.TabIndex = 9;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Bosses";
+            // 
             // CalculationOptionsPanelRogue
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -171,10 +180,11 @@
             this.Controls.Add(this.comboBoxArmorBosses);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxCycles);
-            this.Controls.Add(this.labelTargetArmorDescription);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxTargetLevel);
+            this.Controls.Add(this.labelTargetArmorDescription);
+            this.Controls.Add(this.groupBox3);
             this.Name = "CalculationOptionsPanelRogue";
             this.Size = new System.Drawing.Size(209, 432);
             this.groupBoxCycles.ResumeLayout(false);
@@ -200,5 +210,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBoxMHPoison;
         private System.Windows.Forms.ComboBox comboBoxArmorBosses;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }

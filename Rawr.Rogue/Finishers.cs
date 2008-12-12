@@ -74,7 +74,7 @@
             }
 
             finisherDmg *= (1f + .1f * character.RogueTalents.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
-            finisherDmg *= (1f - combatFactors.MissChance / 100f);
+            finisherDmg *= (1f - combatFactors.WhiteMissChance / 100f);
             if (character.RogueTalents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - combatFactors.MhDodgeChance / 100f);
             return finisherDmg / cycleTime;
@@ -97,7 +97,7 @@
             finisherDmg *= (1f + 0.05f*character.RogueTalents.ImprovedEviscerate);
             finisherDmg *= (1f + 0.02f*character.RogueTalents.Aggression);
             finisherDmg = finisherDmg * (1f - (combatFactors.MhCrit / 100f)) + (finisherDmg * 2f) * (combatFactors.MhCrit / 100f);
-            finisherDmg *= (1f - (combatFactors.MissChance / 100f));
+            finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
             if (character.RogueTalents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));
 

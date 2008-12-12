@@ -29,8 +29,17 @@ namespace Rawr.Rogue
         {
             get { return CalcAverageWeaponDamage(_character.OffHand, _stats); }
         }
-        
-        public float MissChance
+
+        public float YellowMissChance
+        {
+            get
+            {
+                var missChance = 5f - HitPercent;
+                return missChance < 0f ? 0f : missChance;
+            }
+        }
+
+        public float WhiteMissChance
         {
             get
             {
@@ -69,14 +78,14 @@ namespace Rawr.Rogue
             get { return CalcCrit(_character.OffHand); }
         }
 
-        public float ProbMHHit
+        public float ProbMhWhiteHit
         {
-            get { return 1f - MissChance / 100f - MhDodgeChance / 100f; }
+            get { return 1f - WhiteMissChance / 100f - MhDodgeChance / 100f; }
         }
 
-        public float ProbOHHit
+        public float ProbOhWhiteHit
         {
-            get { return 1f - MissChance / 100f - OhDodgeChance / 100f; }
+            get { return 1f - WhiteMissChance / 100f - OhDodgeChance / 100f; }
         }
         
         public float TotalHaste
@@ -99,9 +108,13 @@ namespace Rawr.Rogue
             get { return 1f + _stats.BonusCritMultiplier; }
         }
 
-        public float ProbPoison
+        public float ProbPoisonHit
         {
-            get { return (.83f + .05f * _character.RogueTalents.MasterPoisoner) * (.2f + .02f * _character.RogueTalents.ImprovedPoisons); }
+            get
+            {
+                var missChance = 17f - HitPercent;
+                return missChance < 0f ? 0f : 1f - missChance / 100f;
+            }
         }
 
         public float BaseEnergyRegen
