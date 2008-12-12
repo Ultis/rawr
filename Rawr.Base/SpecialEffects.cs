@@ -830,38 +830,61 @@ namespace Rawr
 				stats.CritRating += ((((float)int.Parse(line)) / 6f) / 25f) * 22.08f;
 				stats.AttackPower += (((float)int.Parse(line)) / 6f) * 1.03f;
 			}
-			// Increases damage and healing done by magical spells and effects by up to 211 for 20 sec.
-			// some pre-tbc have passive spell damage as on use
-			else if (line.StartsWith("Increases spell power by "))
-			{
-				line = line.Substring("Increases spell power by ".Length);
-				string[] tokens = line.Split(' ', '.');
-				int damageIncrease = int.Parse(tokens[0]);
-				if (tokens.Length > 2)
+            // Wrath: Eye of the Night
+            else if (Regex.IsMatch(line, "Increases spell power by (\\d{2}) for all nearby party members."))
+            {
+                string[] inputs = Regex.Split(line, "Increases spell power by (\\d{2}) for all nearby party members.");
+                // the full text reads: "Use: Increases spell power by 34 for all nearby party members.  Lasts 30 min. (1 Hour Cooldown)"
+                // So in general you get the 34 spell power for 100% of a given boss fight.  Like most trinkets it is up to the player to
+                // use it correctly, so we are going to give them the full power instead of half.
+                float spell_power = float.Parse(inputs[1]);
+                stats.SpellPower += spell_power;
+            }
+            // Increases spell power by 183 for 20 sec.
+			else if (Regex.IsMatch(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec."))
+            {
+                string[] inputs = Regex.Split(line, "Increases spell power by (\\d{3}) for (\\d{2}) sec.");
+                float spell_power = float.Parse(inputs[1]);
+                float uptime = float.Parse(inputs[2]);
+                int integral_uptime = int.Parse(inputs[2]);
+                // unfortunately for us the cooldown is on the next line
+                int cooldown_min = 2;
+                float cooldown_sec = 2.0f * 60.0f;
+                // Twilight Serpent
+                if (id == 42395) { cooldown_min = 5; cooldown_sec = 5.0f * 60.0f; }
+                // Vengeance of the Illidari (tooltip lies!)
+                if (id == 28040) { cooldown_min = 1; cooldown_sec = 90.0f; }
+                // try to add it to the normal rawr stats
+                bool added_to_special_stats = false;
+				switch (integral_uptime)
 				{
-					int duration = int.Parse(tokens[2]);
-					switch (duration)
-					{
-						case 20:
-                            switch (id)
-                            {
-                                case 42395:
-                                    stats.SpellPowerFor20SecOnUse5Min += damageIncrease;
-                                    break;
-                                default:
-                                    stats.SpellPowerFor20SecOnUse2Min += damageIncrease;
-                                    break;
-                            }
-							break;
-						case 15:
-							stats.SpellPowerFor15SecOnUse90Sec += damageIncrease;
-							break;
-					}
+					case 20:
+                        switch (cooldown_min)
+                        {
+                            case 5:
+                                stats.SpellPowerFor20SecOnUse5Min += spell_power;
+                                added_to_special_stats = true;
+                                break;
+                            case 2:
+                                stats.SpellPowerFor20SecOnUse2Min += spell_power;
+                                added_to_special_stats = true;
+                                break;
+                        }
+						break;
+					case 15:
+                        // Vengeance of the Illidari
+                        if (id == 28040)
+                        {
+                            stats.SpellPowerFor15SecOnUse90Sec += spell_power;
+                            added_to_special_stats = true;
+                        }
+						break;
 				}
-				else
+                // we don't have a stat for this case so do the average
+                if (!added_to_special_stats)
 				{
-					stats.SpellPower += damageIncrease;
-					//stats.SpellPower * 1.88f += damageIncrease;
+                    float average_spell_power = spell_power / (cooldown_sec / uptime);
+					stats.SpellPower += average_spell_power;
 				}
 			}
 			else if (line.StartsWith("Increases your Spirit by "))
