@@ -77,49 +77,33 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            //TODO:  Can we get away with this???  e.g. unless they have both, we won't model it
-            //if ( character.MainHand == null || character.OffHand == null)
-            //{
-            //    return new CharacterCalculationsRogue();
-            //}
-
-            var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var stats = GetCharacterStats(character, additionalItem);
-            var calculatedStats = new CharacterCalculationsRogue(stats);
+            var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var combatFactors = new CombatFactors(character, stats);
-            var ruthlessnessCP = .2f * character.RogueTalents.Ruthlessness;
+            return GetCalculations(combatFactors, stats, calcOpts, character.RogueTalents);
+        }
+
+        private static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsRogue calcOpts, RogueTalents talents)
+        {
+            var calculatedStats = new CharacterCalculationsRogue(stats);
+           
+            var ruthlessnessCP = .2f * talents.Ruthlessness;
             var numCPG = calcOpts.DPSCycle.TotalComboPoints - 2f * ruthlessnessCP;
-            var cpg = ComboPointGenerator.Get(character);
+            var cpg = ComboPointGenerator.Get(talents, combatFactors);
 
-            #region SnD - Doesn't appear to affect calculations.  TODO: Remove or fix??
-            //float sndLength = 6f + 3f*calcOpts.DPSCycle['s'];
-            //sndLength += stats.BonusSnDDuration;
-            //sndLength *= 1f + 0.15f*character.RogueTalents.ImprovedSliceAndDice;
-            #endregion
-
-            var ohHits = character.OffHand == null ? 0f : (combatFactors.TotalHaste/character.OffHand.Speed)*combatFactors.ProbOhWhiteHit;
-            var ohWhiteDPS = GetOhWhiteDPS(character, stats, combatFactors, ohHits);
-
-            var mhHits = character.MainHand == null ? 0f : (combatFactors.TotalHaste / character.MainHand.Speed) * combatFactors.ProbMhWhiteHit;
-            var avgMHDmg = character.MainHand == null ? 0f : combatFactors.AvgMhWeaponDmg + (stats.AttackPower/14.0f)*character.MainHand.Speed;
-            var mhWhiteDPS = CalcMhWhiteDPS(character, combatFactors, avgMHDmg, mhHits);
-
-            var cycleTime = CalcCycleTime(character, calcOpts, combatFactors, ohHits, numCPG, cpg);
-
-            var cpgAttackValues = character.MainHand == null ? new CpgAttackValues() : cpg.CalcAttackValues(character, stats, combatFactors);
+            var whiteAttacks = new WhiteAttacks(talents, stats, combatFactors);
+            var cycleTime = CalcCycleTime(talents, calcOpts, combatFactors, whiteAttacks.OhHits(), numCPG, cpg);
+            var cpgAttackValues = cpg.CalcAttackValues(stats, combatFactors);
             var cpgDPS = CalcCpgDPS(cpgAttackValues, combatFactors, numCPG, cycleTime);
 
             var finisherDPS = 0f;
-            if( character.MainHand != null)
+            foreach (var component in calcOpts.DPSCycle.Components)
             {
-                foreach(var component in calcOpts.DPSCycle.Components)
-                {
-                    finisherDPS += component.Finisher.CalcFinisherDPS(character, stats, calcOpts, combatFactors, cycleTime);
-                }
+                finisherDPS += component.Finisher.CalcFinisherDPS(talents, stats, calcOpts, combatFactors, cycleTime);
             }
 
-            var swordSpecDPS = CalcSwordSpecDPS(character, combatFactors, ohHits, avgMHDmg, mhHits, numCPG, cycleTime);
-            var poisonDPS = CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits, mhHits);
+            var swordSpecDPS = CalcSwordSpecDPS(talents, combatFactors, whiteAttacks, numCPG, cycleTime);
+            var poisonDPS = CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks);
 
             calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
@@ -130,13 +114,13 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseMhCrit, combatFactors.MhCrit);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseOhCrit, combatFactors.OhCrit);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, mhWhiteDPS + ohWhiteDPS + swordSpecDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, finisherDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDPS);
 
-            calculatedStats.TotalDPS = mhWhiteDPS + ohWhiteDPS + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
+            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
@@ -152,10 +136,10 @@ namespace Rawr.Rogue
             return cpgDPS;
         }
 
-        private static float CalcCycleTime(Character character, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg)
+        private static float CalcCycleTime(RogueTalents talents, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg)
         {
             var energyRegen = combatFactors.BaseEnergyRegen;
-            energyRegen += (.2f * 3f * character.RogueTalents.CombatPotency) * ohHits;
+            energyRegen += (.2f * 3f * talents.CombatPotency) * ohHits;
 
             var energyCost = numCPG*cpg.EnergyCost;
             foreach(var component in calcOpts.DPSCycle.Components)
@@ -166,62 +150,35 @@ namespace Rawr.Rogue
             return energyCost / energyRegen;
         }
 
-        private static float CalcMhWhiteDPS(Character character, CombatFactors combatFactors, float avgMHDmg, float mhHits)
-        {
-            var mhWhiteDPS = 0f;
-            if (character.MainHand != null)
-            {
-                mhWhiteDPS = avgMHDmg*mhHits;
-                mhWhiteDPS = (1f - combatFactors.MhCrit / 100f) * mhWhiteDPS + (combatFactors.MhCrit / 100f) * (mhWhiteDPS * (2f * combatFactors.BonusWhiteCritDmg));
-                mhWhiteDPS *= combatFactors.DamageReduction;
-            }
-            return mhWhiteDPS;
-        }
-
-        private static float GetOhWhiteDPS(Character character, Stats stats, CombatFactors combatFactors, float ohHits)
-        {
-            var ohWhite = 0f;
-            if (character.OffHand != null)
-            {
-                var avgOHDmg = combatFactors.AvgOhWeaponDmg + (stats.AttackPower / 14.0f) * character.OffHand.Speed;
-                avgOHDmg *= (0.25f + character.RogueTalents.DualWieldSpecialization * 0.1f);
-
-                ohWhite = avgOHDmg * ohHits;
-                ohWhite = (1f - combatFactors.OhCrit / 100f) * ohWhite + (combatFactors.OhCrit / 100f) * (ohWhite * (2f * combatFactors.BonusWhiteCritDmg));
-                ohWhite *= combatFactors.DamageReduction;
-            }
-            return ohWhite;
-        }
-
-        private static float CalcSwordSpecDPS(Character character, CombatFactors combatFactors, float ohHits, float avgMHDmg, float mhHits, float numCPG, float cycleTime)
+        private static float CalcSwordSpecDPS(RogueTalents talents, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCPG, float cycleTime)
         {
             var ssHits = 0f;
-            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandSword)
+            if (combatFactors.MainHand.Type == Item.ItemType.OneHandSword)
             {
                 //MH hits + CPG + finisher
-                ssHits += mhHits * 0.01f * character.RogueTalents.SwordSpecialization;
-                ssHits += (numCPG / cycleTime) * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
-                ssHits += 1f / cycleTime * 0.01f * character.RogueTalents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
+                ssHits += whiteAttacks.MhHits() * 0.01f * talents.SwordSpecialization;
+                ssHits += (numCPG / cycleTime) * 0.01f * talents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
+                ssHits += 1f / cycleTime * 0.01f * talents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
             }
-            if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandSword)
+            if (combatFactors.OffHand.Type == Item.ItemType.OneHandSword)
             {
-                ssHits += ohHits * 0.01f * character.RogueTalents.SwordSpecialization;
+                ssHits += whiteAttacks.OhHits() * 0.01f * talents.SwordSpecialization;
             }
 
-            var ssDPS = (ssHits * avgMHDmg) * (1 - combatFactors.MhCrit / 100f) + (ssHits * avgMHDmg * 2f * combatFactors.BonusWhiteCritDmg) * (combatFactors.MhCrit / 100f);
+            var ssDPS = (ssHits * whiteAttacks.MhAvgDamage()) * (1 - combatFactors.MhCrit / 100f) + (ssHits * whiteAttacks.MhAvgDamage() * 2f * combatFactors.BonusWhiteCritDmg) * (combatFactors.MhCrit / 100f);
             ssDPS *= combatFactors.DamageReduction;
             return ssDPS;
         }
 
-        private static float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float mhHits)
+        private static float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
         {
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
-                return calcOpts.TempMainHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, mhHits + ohHits);
+                return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, 0f);
             }
 
-            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, mhHits)
-                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(character, stats, calcOpts, combatFactors, ohHits);
+            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.MhHits())
+                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.OhHits());
         }
 
         public Stats GetBuffsStats(Character character)

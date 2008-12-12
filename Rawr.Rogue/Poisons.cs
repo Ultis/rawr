@@ -29,7 +29,7 @@ namespace Rawr.Rogue
     {
         string Name { get; }
         bool IsDeadlyPoison { get; }
-        float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits);
+        float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits);
     }
 
     public class NoPoison : IPoison
@@ -38,7 +38,7 @@ namespace Rawr.Rogue
 
         public bool IsDeadlyPoison { get { return false; } }
 
-        public float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
             return 0f;
         }
@@ -50,9 +50,10 @@ namespace Rawr.Rogue
 
         public bool IsDeadlyPoison { get { return true; } }
 
-        public float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return 180f * VilePoison.DamageMultiplier(character) / 12f;
+            //stack size * damage divided by duration
+            return 5f * (296f + .08f * stats.AttackPower) * VilePoison.DamageMultiplier(talents) / 12f;
         }
     }
 
@@ -62,26 +63,26 @@ namespace Rawr.Rogue
 
         public bool IsDeadlyPoison { get { return false; } }
 
-        public float CalcPoisonDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits*combatFactors.ProbPoisonHit*(300f + .1f*stats.AttackPower)*VilePoison.DamageMultiplier(character)*(.2f + ImprovedPoisons.IncreasedApplicationChance(character));
+            return hits*combatFactors.ProbPoisonHit*(300f + .1f*stats.AttackPower)*VilePoison.DamageMultiplier(talents)*(.2f + ImprovedPoisons.IncreasedApplicationChance(talents));
         }
     }
 
     public static class VilePoison
     {
         private static readonly float[] _multipliers = new[] { 1f, 1.07f, 1.14f, 1.2f };
-        public static float DamageMultiplier(Character character)
+        public static float DamageMultiplier(RogueTalents talents)
         {
-            return _multipliers[character.RogueTalents.VilePoisons];
+            return _multipliers[talents.VilePoisons];
         }
     }
 
     public static class ImprovedPoisons
     {
-        public static float IncreasedApplicationChance(Character character)
+        public static float IncreasedApplicationChance(RogueTalents talents)
         {
-            return character.RogueTalents.ImprovedPoisons*.02f;
+            return talents.ImprovedPoisons*.02f;
         }
     }
 }

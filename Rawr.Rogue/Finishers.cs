@@ -4,7 +4,7 @@
     {
         char Id { get; }
         float EnergyCost { get; }
-        float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime);
+        float CalcFinisherDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime);
     }
 
     public static class Finishers
@@ -51,7 +51,7 @@
 
         public float EnergyCost { get { return 25f; } }
 
-        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
+        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             float finisherDmg;
             switch (calcOpts.DPSCycle['r'])
@@ -73,9 +73,9 @@
                     break;
             }
 
-            finisherDmg *= (1f + .1f * character.RogueTalents.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
+            finisherDmg *= (1f + .1f * talents.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
             finisherDmg *= (1f - combatFactors.WhiteMissChance / 100f);
-            if (character.RogueTalents.SurpriseAttacks < 1)
+            if (talents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - combatFactors.MhDodgeChance / 100f);
             return finisherDmg / cycleTime;
         }
@@ -87,18 +87,18 @@
 
         public float EnergyCost { get { return 35f; } }
 
-        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
+        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             var evisMod = stats.AttackPower*calcOpts.DPSCycle['e']*.03f;
             var evisMin = 245f + (calcOpts.DPSCycle['e'] - 1f)*185f + evisMod;
             var evisMax = 365f + (calcOpts.DPSCycle['e'] - 1f)*185f + evisMod;
 
             var finisherDmg = (evisMin + evisMax)/2f;
-            finisherDmg *= (1f + 0.05f*character.RogueTalents.ImprovedEviscerate);
-            finisherDmg *= (1f + 0.02f*character.RogueTalents.Aggression);
+            finisherDmg *= (1f + 0.05f*talents.ImprovedEviscerate);
+            finisherDmg *= (1f + 0.02f*talents.Aggression);
             finisherDmg = finisherDmg * (1f - (combatFactors.MhCrit / 100f)) + (finisherDmg * 2f) * (combatFactors.MhCrit / 100f);
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
-            if (character.RogueTalents.SurpriseAttacks < 1)
+            if (talents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));
 
             finisherDmg *= combatFactors.DamageReduction;
@@ -110,7 +110,7 @@
     {
         public char Id { get { return 's'; } }
         public float EnergyCost { get { return 25f; } }
-        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
+        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             return 0f;
         }
@@ -120,7 +120,7 @@
     {
         public char Id { get { return 'z'; } }
         public float EnergyCost { get { return 0f; } }
-        public float CalcFinisherDPS(Character character, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
+        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float cycleTime)
         {
             return 0f;
         }

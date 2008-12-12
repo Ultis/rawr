@@ -4,7 +4,7 @@
     {
         string Name { get; }
         float EnergyCost { get; }
-        CpgAttackValues CalcAttackValues(Character character, Stats stats, CombatFactors combatFactors);
+        CpgAttackValues CalcAttackValues(Stats stats, CombatFactors combatFactors);
     }
 
     public class CpgAttackValues
@@ -17,60 +17,74 @@
 
     public static class ComboPointGenerator
     {
-        public static IComboPointGenerator Get(Character character)
+        public static IComboPointGenerator Get(RogueTalents talents, CombatFactors combatFactors)
         {
             // if we have mutilate and we're using two daggers, assume we use it to generate CPs
-            if (character.RogueTalents.Mutilate > 0 &&
-                character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger &&
-                character.OffHand != null && character.OffHand.Type == Item.ItemType.Dagger)
+            if (talents.Mutilate > 0 &&
+                combatFactors.MainHand.Type == Item.ItemType.Dagger &&
+                combatFactors.OffHand.Type == Item.ItemType.Dagger)
             {
-                return new Mutilate();
+                return new Mutilate(talents);
             }
 
             // if we're main handing a dagger, assume we're using backstab it to generate CPs
-            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Dagger)
+            if (combatFactors.MainHand.Type == Item.ItemType.Dagger)
             {
-                return new Backstab();
+                return new Backstab(talents);
             }
 
             // if we have hemo, assume we use it to generate CPs
-            if (character.RogueTalents.Hemorrhage > 0)
+            if (talents.Hemorrhage > 0)
             {
-                return new Hemo();
+                return new Hemo(talents);
             }
 
             // otherwise use sinister strike
-            return new SinisterStrike(character);
+            return new SinisterStrike(talents);
         }
     }
 
     public class Mutilate : IComboPointGenerator
     {
+        public Mutilate(RogueTalents talents)
+        {
+            _talents = talents;
+        }
+
+        private readonly RogueTalents _talents;
+
         public string Name { get { return "mutilate"; } }
         public float EnergyCost{ get { return 60f; } }
-        public CpgAttackValues CalcAttackValues(Character character, Stats stats, CombatFactors combatFactors)
+        public CpgAttackValues CalcAttackValues(Stats stats, CombatFactors combatFactors)
         {
             //TODO:  Figure out why stats.WeaponDamage was not included in the Mutilate Calculation
 
             var attackValues = new CpgAttackValues();
-            attackValues.AttackDamage = (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f + 121.5f;
+            attackValues.AttackDamage = (combatFactors.MainHand.MinDamage + combatFactors.MainHand.MaxDamage) / 2f + 121.5f;
             attackValues.AttackDamage += stats.AttackPower / 14f * 1.7f;
-            attackValues.AttackDamage += (character.OffHand.MinDamage + character.OffHand.MaxDamage) / 2f + 121.5f;
+            attackValues.AttackDamage += (combatFactors.OffHand.MinDamage + combatFactors.OffHand.MaxDamage) / 2f + 121.5f;
             attackValues.AttackDamage += stats.AttackPower / 14f * 1.7f;
             attackValues.AttackDamage *= 1.5f;
 
-            attackValues.Crit += combatFactors.MhCrit + 5f * character.RogueTalents.PuncturingWounds;
-            attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
-            attackValues.BonusDamageMultiplier *= (1f + 0.04f * character.RogueTalents.Opportunity);
+            attackValues.Crit += combatFactors.MhCrit + 5f * _talents.PuncturingWounds;
+            attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
+            attackValues.BonusDamageMultiplier *= (1f + 0.04f * _talents.Opportunity);
             return attackValues;
         }
     }
 
     public class Backstab : IComboPointGenerator
     {
+        public Backstab(RogueTalents talents)
+        {
+            _talents = talents;
+        }
+
+        private readonly RogueTalents _talents;
+
         public string Name { get { return "backstab"; } }
         public float EnergyCost { get { return 60f; } }
-        public CpgAttackValues CalcAttackValues(Character character, Stats stats, CombatFactors combatFactors)
+        public CpgAttackValues CalcAttackValues(Stats stats, CombatFactors combatFactors)
         {
             var attackValues = new CpgAttackValues();
             attackValues.AttackDamage = combatFactors.AvgMhWeaponDmg;
@@ -78,11 +92,11 @@
             attackValues.AttackDamage *= 1.5f;
             attackValues.AttackDamage += 255f;
 
-            attackValues.BonusDamageMultiplier *= (1f + .02f * character.RogueTalents.Aggression);
-            attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
-            attackValues.BonusDamageMultiplier *= (1f + 0.04f * character.RogueTalents.Opportunity);
-            attackValues.Crit += combatFactors.MhCrit + 10f * character.RogueTalents.PuncturingWounds;
-            attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
+            attackValues.BonusDamageMultiplier *= (1f + .02f * _talents.Aggression);
+            attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
+            attackValues.BonusDamageMultiplier *= (1f + 0.04f * _talents.Opportunity);
+            attackValues.Crit += combatFactors.MhCrit + 10f * _talents.PuncturingWounds;
+            attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
 
             return attackValues;
         }
@@ -90,9 +104,16 @@
 
     public class Hemo : IComboPointGenerator
     {
+        public Hemo(RogueTalents talents)
+        {
+            _talents = talents;
+        }
+
+        private readonly RogueTalents _talents;
+
         public string Name { get { return "hemo"; } }
         public float EnergyCost { get { return 35; } }
-        public CpgAttackValues CalcAttackValues(Character character, Stats stats, CombatFactors combatFactors)
+        public CpgAttackValues CalcAttackValues(Stats stats, CombatFactors combatFactors)
         {
             var attackValues = new CpgAttackValues();
             attackValues.AttackDamage = combatFactors.AvgMhWeaponDmg;
@@ -100,28 +121,28 @@
             attackValues.AttackDamage *= 1.1f;
 
             attackValues.Crit += combatFactors.MhCrit;
-            attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
+            attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);
-            attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
+            attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
             return attackValues;
         }
     }
 
     public class SinisterStrike : IComboPointGenerator
     {
-        public SinisterStrike(Character character)
+        public SinisterStrike(RogueTalents talents)
         {
-            _character = character;
+            _talents = talents;
         }
 
-        private readonly Character _character;
+        private readonly RogueTalents _talents;
         
         public string Name { get { return "ss"; } }
         public float EnergyCost
         {
             get
             {
-                switch (_character.RogueTalents.ImprovedSinisterStrike)
+                switch (_talents.ImprovedSinisterStrike)
                 {
                     case 2: return 40f;
                     case 1: return 42f;
@@ -130,7 +151,7 @@
             }
         }
 
-        public CpgAttackValues CalcAttackValues(Character character, Stats stats, CombatFactors combatFactors)
+        public CpgAttackValues CalcAttackValues(Stats stats, CombatFactors combatFactors)
         {
             var attackValues = new CpgAttackValues();
             attackValues.AttackDamage = combatFactors.AvgMhWeaponDmg;
@@ -138,10 +159,10 @@
             attackValues.AttackDamage += 98f;
 
             attackValues.Crit = combatFactors.MhCrit;
-            attackValues.BonusDamageMultiplier *= (1f + .02f * character.RogueTalents.Aggression);
-            attackValues.BonusDamageMultiplier *= (1f + .1f * character.RogueTalents.SurpriseAttacks);
+            attackValues.BonusDamageMultiplier *= (1f + .02f * _talents.Aggression);
+            attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);
-            attackValues.BonusCritDamageMultiplier *= (1f + .06f * character.RogueTalents.Lethality);
+            attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
             return attackValues;
         }
     }
