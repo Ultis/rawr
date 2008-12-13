@@ -122,6 +122,7 @@ namespace Rawr.Tree
                         Item.ItemType.Cloth,
                         Item.ItemType.Leather,
                         Item.ItemType.Dagger,
+                        Item.ItemType.FistWeapon,
                         Item.ItemType.Idol,
                         Item.ItemType.OneHandMace,
                         Item.ItemType.TwoHandMace,

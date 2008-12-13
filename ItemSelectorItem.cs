@@ -245,26 +245,26 @@ namespace Rawr
 							(_itemCalculation.Item.Sockets.Color3 == Item.ItemSlot.None ? 0 : 1);
 					if (IsEnchant)
 						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
-							new RectangleF(4, 0, this.Width - 14 - (gemCount * 31), this.Height - 3), StringFormatItemName);
+							new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
 					else
 						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
-							new RectangleF(41, 0, this.Width - 49 - (gemCount * 31), this.Height - 3), StringFormatItemName);
+							new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
 					
 					if (_itemCalculation.Item.Sockets.Color1 != Item.ItemSlot.None)
 					{
 						switch (_itemCalculation.Item.Sockets.Color1)
 						{
 							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
 						if (_itemCalculation.Item.Gem1 != null)
@@ -278,16 +278,16 @@ namespace Rawr
 						switch (_itemCalculation.Item.Sockets.Color2)
 						{
 							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
 						if (_itemCalculation.Item.Gem2 != null)
@@ -301,16 +301,16 @@ namespace Rawr
 						switch (_itemCalculation.Item.Sockets.Color3)
 						{
 							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(this.Width - 3 - (gemCount * 31), 8, 26, 26));
+								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
 						if (_itemCalculation.Item.Gem3 != null)
@@ -330,7 +330,7 @@ namespace Rawr
 						if (sort == i || sort < 0)
 						{
 							subPointWidth = (int)Math.Floor((float)maxWidth * (_itemCalculation.SubPoints[i] / _maxRating));
-								g.FillRectangle(new SolidBrush(subPointColors[i]), new Rectangle(startX, this.Height - 5, subPointWidth, 2));
+								g.FillRectangle(new SolidBrush(subPointColors[i]), new Rectangle(Math.Max(0, startX), Math.Max(0, this.Height - 5), Math.Max(0, subPointWidth), 2));
 							startX += subPointWidth;
 						}
 					}

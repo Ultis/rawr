@@ -296,6 +296,7 @@ namespace Rawr
 
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
+				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
                 
 
                 if (name.StartsWith("Ashtongue Talisman"))
@@ -483,6 +484,10 @@ namespace Rawr
                         {
                             stats.SpellPower = 6.0f;
                         }
+						else if (gemBonus == "2% Increased Armor Value from Items")
+						{
+							stats.BonusArmorMultiplier = 0.02f;
+						}
                         else if (gemBonus == "Stamina +6")
                         {
                             stats.Stamina = 6.0f;

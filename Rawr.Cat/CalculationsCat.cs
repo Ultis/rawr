@@ -173,7 +173,7 @@ namespace Rawr.Cat
 			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
-			float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
 			if ((targetLevel - 80f) < 3)
 			{
 				chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
@@ -185,7 +185,7 @@ namespace Rawr.Cat
 
 			float glanceMultiplier = .7f;
 			float chanceAvoided = chanceMiss + chanceDodge;
-			float chanceGlance = 0.2335774f;
+			float chanceGlance = 0.24f;
 			float chanceCrit = (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
 			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
@@ -200,13 +200,13 @@ namespace Rawr.Cat
 
 			#region Attack Damages
 			float baseDamage = 55f + (stats.AttackPower / 14f) + stats.WeaponDamage;
-			float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor;
-			float mangleDamageRaw = (baseDamage * 2f + 634 + stats.BonusMangleCatDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
-			float shredDamageRaw = (baseDamage * 2.25f + 742.5f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * modArmor;
-			float rakeDamageRaw = (190 + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-			float rakeDamageDot = (1161 + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((12f + stats.BonusRipDuration) / 12f);
-			float biteDamageRaw = (1640 + stats.AttackPower * 0.24f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
+			float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+			float mangleDamageRaw = (baseDamage * 2f + 634 + stats.BonusMangleCatDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
+			float shredDamageRaw = (baseDamage * 2.25f + 742.5f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
+			float rakeDamageRaw = (190 + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
+			float rakeDamageDot = (1161 + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
+			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((12f + stats.BonusRipDuration) / 12f);
+			float biteDamageRaw = (1640 + stats.AttackPower * 0.24f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
 										chanceCrit * meleeDamageRaw * critMultiplier +
@@ -917,7 +917,7 @@ namespace Rawr.Cat
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-				stats.NatureResistanceBuff + stats.FireResistanceBuff +
+				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 		}
 	}

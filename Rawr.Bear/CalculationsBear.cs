@@ -228,12 +228,12 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
 
-			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 75 : 65; //TODO: Find correct base agi values at 80
+			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 75; //TODO: Find correct base agi values at 80
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
 			float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * 0.024f; //TODO: Find correct Agi->Dodge ratio
 			float missNonDR = stats.Miss * 100f - levelDifference;
-			float dodgePreDR = (stats.Agility - baseAgi) * 0.024f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
+			float dodgePreDR = (stats.Agility + (stats.TerrorProc * 0.55f) - baseAgi) * 0.024f + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); //TODO: Find correct Agi->Dodge ratio
 			float missPreDR = (defSkill * 0.04f);
 			float dodgePostDR = 1f / (1f / 116.890707f + 0.972f / dodgePreDR);
 			float missPostDR = 1f / (1f / 116.890707f + 0.972f / missPreDR);
@@ -317,14 +317,14 @@ the Threat Scale defined on the Options tab.",
 
 			float baseDamage = 137f + (stats.AttackPower / 14f) * 2.5f;
 			float bearThreatMultiplier = 29f / 14f;
-			
-			float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor;
-			float maulDamageRaw = (baseDamage + 578) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusMaulDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
-			float mangleDamageRaw = (baseDamage * 1.15f + 299) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
-			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * modArmor;
-			float faerieFireDamageRaw = (stats.AttackPower * 0.05f + 1f);
-			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
-			float lacerateDotDamage = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
+
+			float meleeDamageRaw = baseDamage * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+			float maulDamageRaw = (baseDamage + 578) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMaulDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
+			float mangleDamageRaw = (baseDamage * 1.15f + 299) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
+			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * modArmor;
+			float faerieFireDamageRaw = (stats.AttackPower * 0.05f + 1f) * (1f + stats.BonusDamageMultiplier);
+			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
+			float lacerateDotDamage = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
 
 			float meleeDamageAverage = (chanceCrit * (meleeDamageRaw * critMultiplier)) + //Damage from crits
 							(chanceGlance * (meleeDamageRaw * glanceMultiplier)) + //Damage from glances
@@ -1324,7 +1324,7 @@ the Threat Scale defined on the Options tab.",
 			dictValues.Add("Avoidance PostDR", AvoidancePostDR.ToString() + "%");
 			dictValues.Add("Total Mitigation", TotalMitigation.ToString() + "%");
 			dictValues.Add("Damage Taken", DamageTaken.ToString() + "%");
-			dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString());
+			dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString() + "%");
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
 			dictValues.Add("Survival Points", SurvivalPoints.ToString());

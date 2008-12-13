@@ -342,7 +342,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 18 }));
-            defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Chest, new Stats() { DefenseRating = 8 }));
+			defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Head, new Stats() { Stamina = 18 }));
+			defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Shoulders, new Stats() { Stamina = 18 }));
+			defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Chest, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Hands, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Legs, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Feet, new Stats() { DefenseRating = 8 }));
@@ -552,7 +554,7 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
 			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
-
+			
 			//Hodir Enchants
 			defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
 			defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));

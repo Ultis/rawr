@@ -372,7 +372,7 @@ namespace Rawr
 					break;
 
 				case "armor":
-				case "armorbonus":
+				//case "armorbonus":
 					item.Stats.Armor += int.Parse(value);
 					break;
 
@@ -414,11 +414,13 @@ namespace Rawr
 					item.Stats.HasteRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
+				case "splpwr":
 				case "splheal":
 				case "spldmg":
 					item.Stats.SpellPower = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
+				case "critstrkrtng":
 				case "mlecritstrkrtng":
 				case "rgdcritstrkrtng":
 				case "splcritstrkrtng":
@@ -454,6 +456,7 @@ namespace Rawr
 					item.Stats.HitRating = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
+				case "atkpwr":
 				case "mleatkpwr":
 				case "feratkpwr":
 					item.Stats.AttackPower += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);

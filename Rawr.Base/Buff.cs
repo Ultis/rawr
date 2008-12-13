@@ -1409,12 +1409,12 @@ namespace Rawr
 			#endregion
 
             //#region Temporary Weapon Enchantment
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Adamantite Weightstone",
-            //    Group = "Temporary Weapon Enchantment",
-            //    Stats = { WeaponDamage = 12, CritRating = 14 }
-            //});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Adamantite Weightstone",
+				Group = "Temporary Weapon Enchantment",
+				Stats = { WeaponDamage = 12, CritRating = 14 }
+			});
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Righteous Weapon Coating",
@@ -2040,6 +2040,13 @@ namespace Rawr
 				Group = "Profession Buffs",
 				ConflictingBuffs = new List<string>(new string[] { }),
 				Stats = { CritRating = 25f }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Toughness",
+				Group = "Profession Buffs",
+				ConflictingBuffs = new List<string>(new string[] { }),
+				Stats = { Health = 500f }
 			});
 			#endregion
 
