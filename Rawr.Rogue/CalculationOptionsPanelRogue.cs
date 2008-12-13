@@ -29,13 +29,13 @@ namespace Rawr.Rogue
             comboBoxFinisher1.ValueMember = "Id";
             comboBoxFinisher1.DataSource = new Finishers();
             comboBoxComboPoints1.SelectedIndex = 4;
-            comboBoxFinisher1.SelectedItem = comboBoxFinisher1.FindString(new SnD().Name);
+            comboBoxFinisher1.SelectedIndex = comboBoxFinisher1.FindString(new SnD().Name);
 
             comboBoxFinisher2.DisplayMember = "Name";
             comboBoxFinisher2.ValueMember = "Id";
             comboBoxFinisher2.DataSource = new Finishers();
             comboBoxComboPoints2.SelectedIndex = 5;
-            comboBoxFinisher2.SelectedItem = comboBoxFinisher2.FindString(new Rupture().Name);
+            comboBoxFinisher2.SelectedIndex = comboBoxFinisher2.FindString(new Rupture().Name);
 
             comboBoxFinisher3.DisplayMember = "Name";
             comboBoxFinisher3.ValueMember = "Id";
