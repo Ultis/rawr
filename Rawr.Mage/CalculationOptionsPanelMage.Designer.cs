@@ -42,6 +42,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label91 = new System.Windows.Forms.Label();
+            this.checkBoxPotionOfSpeed = new System.Windows.Forms.CheckBox();
             this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.textBoxSlowedTime = new System.Windows.Forms.TextBox();
@@ -238,8 +240,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label91 = new System.Windows.Forms.Label();
-            this.checkBoxPotionOfSpeed = new System.Windows.Forms.CheckBox();
+            this.label92 = new System.Windows.Forms.Label();
+            this.checkBoxMode308 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -284,7 +286,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 40);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(206, 507);
+            this.tabPage1.Size = new System.Drawing.Size(252, 507);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Character";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -436,6 +438,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label91
+            // 
+            this.label91.AutoSize = true;
+            this.label91.Location = new System.Drawing.Point(0, 89);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(93, 13);
+            this.label91.TabIndex = 196;
+            this.label91.Text = "Potion of Speed: *";
+            this.toolTipMage.SetToolTip(this.label91, "Enable use of Potion of Speed.");
+            // 
+            // checkBoxPotionOfSpeed
+            // 
+            this.checkBoxPotionOfSpeed.AutoSize = true;
+            this.checkBoxPotionOfSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "PotionOfSpeed", true));
+            this.checkBoxPotionOfSpeed.Location = new System.Drawing.Point(142, 89);
+            this.checkBoxPotionOfSpeed.Name = "checkBoxPotionOfSpeed";
+            this.checkBoxPotionOfSpeed.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPotionOfSpeed.TabIndex = 195;
+            this.checkBoxPotionOfSpeed.UseVisualStyleBackColor = true;
             // 
             // textBoxFocusMagicRate
             // 
@@ -870,7 +892,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 40);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(206, 507);
+            this.tabPage3.Size = new System.Drawing.Size(252, 507);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1295,7 +1317,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 40);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(206, 507);
+            this.tabPage6.Size = new System.Drawing.Size(252, 507);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Effects";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1617,7 +1639,7 @@
             this.tabPage5.Controls.Add(this.label34);
             this.tabPage5.Location = new System.Drawing.Point(4, 40);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(206, 507);
+            this.tabPage5.Size = new System.Drawing.Size(252, 507);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Survivability";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -2018,7 +2040,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 40);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(206, 507);
+            this.tabPage7.Size = new System.Drawing.Size(252, 507);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "Glyphs";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -2245,6 +2267,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label92);
+            this.tabPage4.Controls.Add(this.checkBoxMode308);
             this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
             this.tabPage4.Controls.Add(this.label78);
             this.tabPage4.Controls.Add(this.label77);
@@ -2265,7 +2289,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 40);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(206, 507);
+            this.tabPage4.Size = new System.Drawing.Size(252, 507);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -2452,25 +2476,25 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label91
+            // label92
             // 
-            this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(0, 89);
-            this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(93, 13);
-            this.label91.TabIndex = 196;
-            this.label91.Text = "Potion of Speed: *";
-            this.toolTipMage.SetToolTip(this.label91, "Enable use of Potion of Speed.");
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(0, 67);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(71, 13);
+            this.label92.TabIndex = 176;
+            this.label92.Text = "3.0.8 Mode: *";
+            this.toolTipMage.SetToolTip(this.label92, "Change calculations to reflect changes in 3.0.8 patch.");
             // 
-            // checkBoxPotionOfSpeed
+            // checkBoxMode308
             // 
-            this.checkBoxPotionOfSpeed.AutoSize = true;
-            this.checkBoxPotionOfSpeed.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "PotionOfSpeed", true));
-            this.checkBoxPotionOfSpeed.Location = new System.Drawing.Point(142, 89);
-            this.checkBoxPotionOfSpeed.Name = "checkBoxPotionOfSpeed";
-            this.checkBoxPotionOfSpeed.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPotionOfSpeed.TabIndex = 195;
-            this.checkBoxPotionOfSpeed.UseVisualStyleBackColor = true;
+            this.checkBoxMode308.AutoSize = true;
+            this.checkBoxMode308.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "Mode308", true));
+            this.checkBoxMode308.Location = new System.Drawing.Point(185, 67);
+            this.checkBoxMode308.Name = "checkBoxMode308";
+            this.checkBoxMode308.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMode308.TabIndex = 175;
+            this.checkBoxMode308.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2712,6 +2736,8 @@
         private System.Windows.Forms.CheckBox checkBoxUnlimitedMana;
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.CheckBox checkBoxPotionOfSpeed;
+        private System.Windows.Forms.Label label92;
+        private System.Windows.Forms.CheckBox checkBoxMode308;
 
     }
 }

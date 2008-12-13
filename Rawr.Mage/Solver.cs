@@ -287,6 +287,7 @@ namespace Rawr.Mage
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
                 manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
+                calculationResult.EvocationCooldown = calculationOptions.Mode308 ? (240.0 - 60.0 * character.MageTalents.ArcaneFlows) : 300.0;
                 calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
                 calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
@@ -680,7 +681,7 @@ namespace Rawr.Mage
                         evocationDuration = characterStats.Mana / calculationResult.EvocationRegen;
                         calculationResult.EvocationDuration = evocationDuration;
                     }
-                    calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 200f) / 300f)));
+                    calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 120f) / calculationResult.EvocationCooldown)));
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = calculationResult.BaseState });
@@ -1062,7 +1063,7 @@ namespace Rawr.Mage
                     lp.SetColumnUpperBound(column, calculationOptions.FightDuration);
                     lp.SetElementUnsafe(rowFightDuration, column, 1.0);
                     lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
-                    lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / 300.0);
+                    lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / calculationResult.EvocationCooldown);
                     //lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
@@ -2171,7 +2172,7 @@ namespace Rawr.Mage
                             }
                             if (character.MageTalents.ArcaneEmpowerment > 0)
                             {
-                                list.Add(SpellId.ABP);
+                                if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
                                 list.Add(SpellId.AB2ABar);
                             }
@@ -2179,7 +2180,7 @@ namespace Rawr.Mage
                             {
                                 list.Add(SpellId.FrBABar);
                                 list.Add(SpellId.FBABar);
-                                list.Add(SpellId.ABP);
+                                if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
                                 list.Add(SpellId.AB2ABar);
                                 list.Add(SpellId.FB2ABar);
@@ -2192,7 +2193,7 @@ namespace Rawr.Mage
                             list.Add(SpellId.Fireball);
                             list.Add(SpellId.FrostboltFOF);
                             if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
-                            list.Add(SpellId.ABP);
+                            if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                         }
                     }
                     else
@@ -2220,7 +2221,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
                         list.Add(SpellId.ArcaneBlastSpam);
                         list.Add(SpellId.ABAM);
-                        list.Add(SpellId.ABP);
+                        if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.AB2ABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
@@ -2230,6 +2231,10 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
                         if (calculationOptions.PlayerLevel >= 75 && character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarX);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarY);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarX);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

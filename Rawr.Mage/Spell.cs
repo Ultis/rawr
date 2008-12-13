@@ -23,12 +23,19 @@ namespace Rawr.Mage
         ThunderBolt,
         [Description("Arcane Barrage")]
         ArcaneBarrage,
+        ArcaneBarrage1,
+        ArcaneBarrage2,
+        ArcaneBarrage3,
         ArcaneBolt,
         PendulumOfTelluricCurrents,
         [Description("Arcane Missiles")]
         ArcaneMissiles,
+        ArcaneMissiles1,
         [Description("MBAM")]
         ArcaneMissilesMB,
+        ArcaneMissilesMB1,
+        ArcaneMissilesMB2,
+        ArcaneMissilesMB3,
         ArcaneMissilesCC,
         ArcaneMissilesNoProc,
         //ArcaneMissilesFTF,
@@ -90,7 +97,13 @@ namespace Rawr.Mage
         ABAM,
         ABMBAM,
         ABABar,
+        ABABarX,
+        ABABarY,
         AB2ABar,
+        AB2ABarMBAM,
+        AB3ABar,
+        AB3ABarX,
+        AB3ABarY,
         FBABar,
         FrBABar,
         FFBABar,
@@ -359,7 +372,7 @@ namespace Rawr.Mage
             CostModifier = 1;
             CostAmplifier = 1;
             DirectDamageModifier = 1;
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.Pyromaniac);
+            if (!castingState.CalculationOptions.Mode308 && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.Pyromaniac);
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.Frost || MagicSchool == MagicSchool.FrostFire) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ElementalPrecision);
             if (castingState.MageTalents.FrostChanneling > 0) CostAmplifier *= (1.0f - 0.01f - 0.03f * castingState.MageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ArcaneFocus);
@@ -1382,11 +1395,11 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ArcaneBarrage(CastingState castingState)
+        public ArcaneBarrage(CastingState castingState, int arcaneBlastDebuff)
             : base("Arcane Barrage", false, false, true, false, 30, 0, 3, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
-            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
+            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.15f * arcaneBlastDebuff);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1465,6 +1478,7 @@ namespace Rawr.Mage
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
             SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + 0.15f * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact); // TODO verify how spell impact stacks
+            if (castingState.CalculationOptions.Mode308) SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             CalculateDerivedStats(castingState);
@@ -1565,6 +1579,7 @@ namespace Rawr.Mage
     public class ArcaneMissiles : BaseSpell
     {
         private bool barrage;
+        private int arcaneBlastDebuff;
 
         public static SpellData[] SpellData = new SpellData[11];
         static ArcaneMissiles()
@@ -1586,7 +1601,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing)
+        public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff)
             : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             ManualClearcasting = true;
@@ -1594,13 +1609,15 @@ namespace Rawr.Mage
             ClearcastingAveraged = clearcastingAveraged;
             ClearcastingProccing = clearcastingProccing;
             this.barrage = barrage;
+            this.arcaneBlastDebuff = arcaneBlastDebuff;
             Calculate(castingState);
         }
 
-        public ArcaneMissiles(CastingState castingState, bool barrage)
+        public ArcaneMissiles(CastingState castingState, bool barrage, int arcaneBlastDebuff)
             : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             this.barrage = barrage;
+            this.arcaneBlastDebuff = arcaneBlastDebuff;
             Calculate(castingState);
         }
 
@@ -1609,7 +1626,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             if (barrage) BaseCastTime -= 2.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.15f * arcaneBlastDebuff);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CalculateDerivedStats(castingState);
         }
@@ -1930,9 +1947,9 @@ namespace Rawr.Mage
 
             CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
-            AMc1 = new ArcaneMissiles(castingState, false, true, false, true);
-            AM10 = new ArcaneMissiles(castingState, false, false, true, false);
-            AM11 = new ArcaneMissiles(castingState, false, false, true, true);
+            AMc1 = new ArcaneMissiles(castingState, false, true, false, true, 0);
+            AM10 = new ArcaneMissiles(castingState, false, false, true, false, 0);
+            AM11 = new ArcaneMissiles(castingState, false, false, true, true, 0);
 
             CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
             CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
@@ -1996,8 +2013,8 @@ namespace Rawr.Mage
             Name = "ABAM";
 
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
-            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
-            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell AM = castingState.GetSpell(castingState.CalculationOptions.Mode308 ? SpellId.ArcaneMissiles1 : SpellId.ArcaneMissiles);
+            Spell MBAM = castingState.GetSpell(castingState.CalculationOptions.Mode308 ? SpellId.ArcaneMissilesMB1 : SpellId.ArcaneMissilesMB);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
@@ -2131,6 +2148,7 @@ namespace Rawr.Mage
 
         public ABABarSlow(CastingState castingState)
         {
+            // TODO not updated for 3.0.8 mode, consider deprecated?
             Name = "ABABarSlow";
 
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
@@ -2418,6 +2436,7 @@ namespace Rawr.Mage
 
             Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
@@ -2428,10 +2447,15 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(2);
                 chain1.AddSpell(AB, castingState);
                 if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
-                chain1.AddSpell(ABar, castingState);
+                if (castingState.CalculationOptions.Mode308)
+                {
+                    chain1.AddSpell(ABar1, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
                 chain1.Calculate(castingState);
-
-                commonChain = chain1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -2441,16 +2465,47 @@ namespace Rawr.Mage
             }
             else
             {
+                // S0: AB0, MB0
+                // ABar-MBAM => S0                MB
+                // ABar-AB => S2                  (1-MB)*(1-MB)
+                // ABar-AB-ABar1-MBAM => S0       (1-MB)*MB
+
+                // S2: AB1, MB0
+                // ABar1-MBAM => S0               MB
+                // ABar1-AB => S2                 (1-MB)*(1-MB)
+                // ABar1-AB-ABar1-MBAM => S0      (1-MB)*MB
+
+                // S0 + S2 = 1
+                // S0 = MB * (2 - MB)
+                // S2 = (1-MB)*(1-MB)
+
+                // value = MB * (2 - MB) * [value(ABar) + MB * value(MBAM) + (1-MB) * value(AB) + (1-MB)*MB * value(ABar1) + (1-MB)*MB * value(MBAM)] + (1-MB)*(1-MB) * [value(ABar1) + (MB * value(MBAM) + (1-MB) * value(AB) + (1-MB)*MB * value(ABar1) + (1-MB)*MB * value(MBAM)]
+                //       = MB * (2 - MB) * value(ABar) + (1-MB)*(1-MB) * value(ABar1) + MB * value(MBAM) + (1-MB) * value(AB) + (1-MB)*MB * value(ABar1) + (1-MB)*MB * value(MBAM)
+                //       = MB * (2 - MB) * value(ABar) + (1 - MB) * value(ABar1) + (1-MB) * value(AB) + (2 - MB) * MB * value(MBAM)
+
+                // this is equivalent to
+
+                // MBAM-ABar (2-MB)*MB
+                // AB-ABar1 (1-MB)
+
+                // pre 3.0.8
                 // ABar-MBAM         0.2
                 // ABar-AB           0.8*0.8
                 // ABar-AB-ABar-MBAM 0.8*0.2
 
                 // ABar-MBAM         (2-MB)*MB
                 // ABar-AB           (1-MB)
-                
+
                 //AB-ABar 0.8 * 0.8
                 chain1 = new SpellCycle(2);
-                chain1.AddSpell(ABar, castingState);
+                if (castingState.CalculationOptions.Mode308)
+                {
+                    chain1.AddSpell(ABar1, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
                 chain1.AddSpell(AB, castingState);
                 if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
                 chain1.Calculate(castingState);
@@ -2462,8 +2517,6 @@ namespace Rawr.Mage
                 if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
-                commonChain = chain1;
-
                 CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
                 CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
                 DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
@@ -2472,13 +2525,11 @@ namespace Rawr.Mage
             }
         }
 
-        private SpellCycle commonChain;
-
         public override string Sequence
         {
             get
             {
-                return commonChain.Sequence;
+                return chain1.Sequence;
             }
         }
 
@@ -2496,6 +2547,584 @@ namespace Rawr.Mage
         }
     }
 
+    class ABABarX : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+        float S0, S1;
+
+        public ABABarX(CastingState castingState)
+        {
+            Name = "ABABarX";
+
+            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
+
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            // S0
+            // AB-ABar1 => S0                  (1-MB)*(1-MB)
+            //          => S1                  1 - (1-MB)*(1-MB)
+
+            // S1
+            // AB-MBAM1-ABar => S0             (1-MB)
+            //               => S1             MB
+
+            // S0 + S1 = 1
+            // S0 = S0 * (1-MB)*(1-MB) + S1 * (1-MB)
+            // S1 = S0 * (1 - (1-MB)*(1-MB)) + S1 * MB
+
+            // S1 * (1 - MB) = S0 * (1 - (1-MB)*(1-MB))
+            // 1 - MB = S0 * (1 + MB - MB * MB)
+            // 1 - MB = S0 * (1 + MB * (1 - MB))
+            // S0 = (1 - MB) / (1 + MB * (1 - MB))
+            // S1 = MB * (2 - MB) / (1 + MB * (1 - MB))
+
+            // value = S0 * value(AB-ABar1) + S1 * value(AB-MBAM1-ABar)
+
+            S0 = (1 - MB) / (1 + MB * (1 - MB));
+            S1 = MB * (2 - MB) / (1 + MB * (1 - MB));
+
+            //AB-ABar1
+            chain1 = new SpellCycle(2);
+            chain1.AddSpell(AB, castingState);
+            if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
+            chain1.AddSpell(ABar1, castingState);
+            chain1.Calculate(castingState);
+
+            //AB-MBAM1-ABar
+            chain2 = new SpellCycle(3);
+            chain2.AddSpell(AB, castingState);
+            chain2.AddSpell(MBAM1, castingState);
+            if (AB.CastTime + MBAM1.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM1.CastTime - AB.CastTime - ABar.CastTime);
+            chain2.AddSpell(ABar, castingState);
+            chain2.Calculate(castingState);
+
+            CastTime = S0 * chain1.CastTime + S1 * chain2.CastTime;
+            CostPerSecond = (S0 * chain1.CastTime * chain1.CostPerSecond + S1 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+            DamagePerSecond = (S0 * chain1.CastTime * chain1.DamagePerSecond + S1 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (S0 * chain1.CastTime * chain1.ThreatPerSecond + S1 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (S0 * chain1.CastTime * chain1.ManaRegenPerSecond + S1 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+        }
+
+        public override string Sequence
+        {
+            get
+            {
+                return chain1.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, S0 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, S1 * chain2.CastTime / CastTime * duration);
+        }
+    }
+
+    class ABABarY : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB;
+        float S0, S1;
+
+        public ABABarY(CastingState castingState)
+        {
+            Name = "ABABarY";
+
+            Spell AB = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
+
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            // S0
+            // AB-ABar1 => S0             (1-MB)*(1-MB)
+            //          => S1             1 - (1-MB)*(1-MB)
+
+            // S1
+            // AB-MBAM1 => S0             1
+
+            // S0 + S1 = 1
+            // S0 = S0 * (1-MB)*(1-MB) + S1
+            // S1 = S0 * (1 - (1-MB)*(1-MB))
+
+            // 1 = S0 * (2 - (1-MB)*(1-MB))
+            // S0 = 1 / (2 - (1-MB)*(1-MB))
+            // S1 = (1 - (1-MB)*(1-MB)) / (2 - (1-MB)*(1-MB))
+
+            // value = S0 * value(AB-ABar1) + S1 * value(AB-MBAM1-ABar)
+
+            S0 = 1 / (2 - (1 - MB) * (1 - MB));
+            S1 = 1 - S0;
+
+            //AB-ABar1
+            chain1 = new SpellCycle(2);
+            chain1.AddSpell(AB, castingState);
+            if (AB.CastTime + ABar1.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar1.CastTime); // this might not actually be needed if we're transitioning from S1, but we're assuming this cycle is used under low haste conditions only
+            chain1.AddSpell(ABar1, castingState);
+            chain1.Calculate(castingState);
+
+            //AB-MBAM1
+            chain2 = new SpellCycle(3);
+            chain2.AddSpell(AB, castingState);
+            chain2.AddSpell(MBAM1, castingState);
+            chain2.Calculate(castingState);
+
+            CastTime = S0 * chain1.CastTime + S1 * chain2.CastTime;
+            CostPerSecond = (S0 * chain1.CastTime * chain1.CostPerSecond + S1 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+            DamagePerSecond = (S0 * chain1.CastTime * chain1.DamagePerSecond + S1 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (S0 * chain1.CastTime * chain1.ThreatPerSecond + S1 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (S0 * chain1.CastTime * chain1.ManaRegenPerSecond + S1 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+        }
+
+        public override string Sequence
+        {
+            get
+            {
+                return chain1.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, S0 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, S1 * chain2.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB2ABarMBAM : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        float K1, K2, K3, K4;
+
+        public AB2ABarMBAM(CastingState castingState)
+        {
+            Name = "AB2ABarMBAM";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            //S0:
+            //AB0-AB1-ABar2            (1 - MB) * (1 - MB) * (1 - MB)
+            //AB0-AB1-ABar2-MBAM       (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            //AB0-AB1-MBAM2-ABar       MB * (1 - MB)
+            //AB0-AB1-MBAM2-ABar-MBAM  MB * MB
+
+
+            K1 = (1 - MB) * (1 - MB) * (1 - MB);
+            K2 = (1 - MB) * (1 - (1 - MB) * (1 - MB));
+            K3 = MB * (1 - MB);
+            K4 = MB * MB;
+
+            //AB0-AB1-ABar2
+            chain1 = new SpellCycle(3);
+            chain1.AddSpell(AB0, castingState);
+            chain1.AddSpell(AB1, castingState);
+            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar2.CastTime);
+            chain1.AddSpell(ABar2, castingState);
+            chain1.Calculate(castingState);
+
+            //AB0-AB1-ABar2-MBAM
+            chain2 = new SpellCycle(3);
+            chain2.AddSpell(AB0, castingState);
+            chain2.AddSpell(AB1, castingState);
+            if (AB0.CastTime + AB1.CastTime + ABar2.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar2.CastTime);
+            chain2.AddSpell(ABar2, castingState);
+            chain2.AddSpell(MBAM, castingState);
+            chain2.Calculate(castingState);
+
+            //AB0-AB1-MBAM2-ABar
+            chain3 = new SpellCycle(3);
+            chain3.AddSpell(AB0, castingState);
+            chain3.AddSpell(AB1, castingState);
+            chain3.AddSpell(MBAM2, castingState);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime);
+            chain3.AddSpell(ABar, castingState);
+            chain3.Calculate(castingState);
+
+            //AB0-AB1-MBAM2-ABar
+            chain4 = new SpellCycle(3);
+            chain4.AddSpell(AB0, castingState);
+            chain4.AddSpell(AB1, castingState);
+            chain4.AddSpell(MBAM2, castingState);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime - MBAM2.CastTime);
+            chain4.AddSpell(ABar, castingState);
+            chain4.AddSpell(MBAM, castingState);
+            chain4.Calculate(castingState);
+
+            commonChain = chain1;
+
+            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime;
+            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
+            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3ABar : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        SpellCycle chain5;
+        SpellCycle chain6;
+        float K1, K2, K3, K4, K5, K6;
+
+        public AB3ABar(CastingState castingState)
+        {
+            Name = "AB3ABar";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            //S0:
+            //AB0-AB1-AB2-ABar3                  (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+            //AB0-AB1-AB2-ABar3-MBAM             (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            //AB0-AB1-AB2-MBAM3-ABar             (1 - MB) * MB * (1 - MB)
+            //AB0-AB1-AB2-MBAM3-ABar-MBAM        (1 - MB) * MB * MB
+            //AB0-AB1-MBAM2-ABar                 MB * (1 - MB)
+            //AB0-AB1-MBAM2-ABar-MBAM            MB * MB
+
+            K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+            K2 = (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+            K3 = (1 - MB) * MB * (1 - MB);
+            K4 = (1 - MB) * MB * MB;
+            K5 = MB * (1 - MB);
+            K6 = MB * MB;
+
+            //AB0-AB1-AB2-ABar3
+            chain1 = new SpellCycle(4);
+            chain1.AddSpell(AB0, castingState);
+            chain1.AddSpell(AB1, castingState);
+            chain1.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain1.AddSpell(ABar3, castingState);
+            chain1.Calculate(castingState);
+
+            //AB0-AB1-AB2-ABar3-MBAM
+            chain2 = new SpellCycle(5);
+            chain2.AddSpell(AB0, castingState);
+            chain2.AddSpell(AB1, castingState);
+            chain2.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain2.AddSpell(ABar3, castingState);
+            chain2.AddSpell(MBAM, castingState);
+            chain2.Calculate(castingState);
+
+            //AB0-AB1-AB2-MBAM3-ABar
+            chain3 = new SpellCycle(5);
+            chain3.AddSpell(AB0, castingState);
+            chain3.AddSpell(AB1, castingState);
+            chain3.AddSpell(AB2, castingState);
+            chain3.AddSpell(MBAM3, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            chain3.AddSpell(ABar, castingState);
+            chain3.Calculate(castingState);
+
+            //AB0-AB1-AB2-MBAM3-ABar-MBAM
+            chain4 = new SpellCycle(6);
+            chain4.AddSpell(AB0, castingState);
+            chain4.AddSpell(AB1, castingState);
+            chain4.AddSpell(AB2, castingState);
+            chain4.AddSpell(MBAM3, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            chain4.AddSpell(ABar, castingState);
+            chain4.AddSpell(MBAM, castingState);
+            chain4.Calculate(castingState);
+
+            //AB0-AB1-MBAM2-ABar
+            chain5 = new SpellCycle(4);
+            chain5.AddSpell(AB0, castingState);
+            chain5.AddSpell(AB1, castingState);
+            chain5.AddSpell(MBAM2, castingState);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain5.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
+            chain5.AddSpell(ABar, castingState);
+            chain5.Calculate(castingState);
+
+            //AB0-AB1-MBAM2-ABar-MBAM
+            chain6 = new SpellCycle(4);
+            chain6.AddSpell(AB0, castingState);
+            chain6.AddSpell(AB1, castingState);
+            chain6.AddSpell(MBAM2, castingState);
+            if (AB0.CastTime + AB1.CastTime + MBAM2.CastTime + ABar.CastTime < 3.0) chain6.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - MBAM2.CastTime - ABar.CastTime);
+            chain6.AddSpell(ABar, castingState);
+            chain6.AddSpell(MBAM, castingState);
+            chain6.Calculate(castingState);
+
+            commonChain = chain1;
+
+            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime + K5 * chain5.CastTime + K6 * chain6.CastTime;
+            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond + K5 * chain5.CastTime * chain5.CostPerSecond + K6 * chain6.CastTime * chain6.CostPerSecond) / CastTime;
+            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond + K5 * chain5.CastTime * chain5.DamagePerSecond + K6 * chain6.CastTime * chain6.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond + K5 * chain5.CastTime * chain5.ThreatPerSecond + K6 * chain6.CastTime * chain6.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond + K5 * chain5.CastTime * chain5.ManaRegenPerSecond + K6 * chain6.CastTime * chain6.ManaRegenPerSecond) / CastTime;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
+            chain5.AddSpellContribution(dict, K5 * chain5.CastTime / CastTime * duration);
+            chain6.AddSpellContribution(dict, K6 * chain6.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3ABarX : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        SpellCycle chain5;
+        SpellCycle chain6;
+        float K1, K2, K3, K4, K5, K6;
+
+        public AB3ABarX(CastingState castingState)
+        {
+            Name = "AB3ABarX";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            //S0:
+            //AB0-AB1-AB2-ABar3                  (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+            //AB0-AB1-AB2-ABar3-MBAM             (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            //AB0-AB1-AB2-MBAM3-ABar             (1 - (1 - MB) * (1 - MB)) * (1 - MB)
+            //AB0-AB1-AB2-MBAM3-ABar-MBAM        (1 - (1 - MB) * (1 - MB)) * MB
+
+            K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+            K2 = (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+            K3 = (1 - (1 - MB) * (1 - MB)) * (1 - MB);
+            K4 = (1 - (1 - MB) * (1 - MB)) * MB;
+
+            //AB0-AB1-AB2-ABar3
+            chain1 = new SpellCycle(4);
+            chain1.AddSpell(AB0, castingState);
+            chain1.AddSpell(AB1, castingState);
+            chain1.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain1.AddSpell(ABar3, castingState);
+            chain1.Calculate(castingState);
+
+            //AB0-AB1-AB2-ABar3-MBAM
+            chain2 = new SpellCycle(5);
+            chain2.AddSpell(AB0, castingState);
+            chain2.AddSpell(AB1, castingState);
+            chain2.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain2.AddSpell(ABar3, castingState);
+            chain2.AddSpell(MBAM, castingState);
+            chain2.Calculate(castingState);
+
+            //AB0-AB1-AB2-MBAM3-ABar
+            chain3 = new SpellCycle(5);
+            chain3.AddSpell(AB0, castingState);
+            chain3.AddSpell(AB1, castingState);
+            chain3.AddSpell(AB2, castingState);
+            chain3.AddSpell(MBAM3, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            chain3.AddSpell(ABar, castingState);
+            chain3.Calculate(castingState);
+
+            //AB0-AB1-AB2-MBAM3-ABar-MBAM
+            chain4 = new SpellCycle(6);
+            chain4.AddSpell(AB0, castingState);
+            chain4.AddSpell(AB1, castingState);
+            chain4.AddSpell(AB2, castingState);
+            chain4.AddSpell(MBAM3, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + MBAM3.CastTime + ABar.CastTime < 3.0) chain4.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - MBAM3.CastTime - ABar.CastTime);
+            chain4.AddSpell(ABar, castingState);
+            chain4.AddSpell(MBAM, castingState);
+            chain4.Calculate(castingState);
+
+            commonChain = chain1;
+
+            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime;
+            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
+            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3ABarY : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        SpellCycle chain3;
+        SpellCycle chain4;
+        SpellCycle chain5;
+        SpellCycle chain6;
+        float K1, K2, K3, K4, K5, K6;
+
+        public AB3ABarY(CastingState castingState)
+        {
+            Name = "AB3ABarY";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+
+            float MB = 0.04f * castingState.MageTalents.MissileBarrage;
+
+            //S0:
+            //AB0-AB1-AB2-ABar3                  (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+            //AB0-AB1-AB2-ABar3-MBAM             (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            //AB0-AB1-AB2-MBAM3                  (1 - MB) * MB
+            //AB0-AB1-MBAM2                      MB
+
+            K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
+            K2 = (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB));
+            K3 = (1 - MB) * MB;
+            K5 = MB;
+
+            //AB0-AB1-AB2-ABar3
+            chain1 = new SpellCycle(4);
+            chain1.AddSpell(AB0, castingState);
+            chain1.AddSpell(AB1, castingState);
+            chain1.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain1.AddSpell(ABar3, castingState);
+            chain1.Calculate(castingState);
+
+            //AB0-AB1-AB2-ABar3-MBAM
+            chain2 = new SpellCycle(5);
+            chain2.AddSpell(AB0, castingState);
+            chain2.AddSpell(AB1, castingState);
+            chain2.AddSpell(AB2, castingState);
+            if (AB0.CastTime + AB1.CastTime + AB2.CastTime + ABar3.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - AB2.CastTime - ABar3.CastTime);
+            chain2.AddSpell(ABar3, castingState);
+            chain2.AddSpell(MBAM, castingState);
+            chain2.Calculate(castingState);
+
+            //AB0-AB1-AB2-MBAM3-ABar
+            chain3 = new SpellCycle(5);
+            chain3.AddSpell(AB0, castingState);
+            chain3.AddSpell(AB1, castingState);
+            chain3.AddSpell(AB2, castingState);
+            chain3.AddSpell(MBAM3, castingState);
+            chain3.Calculate(castingState);
+
+            //AB0-AB1-MBAM2-ABar
+            chain5 = new SpellCycle(4);
+            chain5.AddSpell(AB0, castingState);
+            chain5.AddSpell(AB1, castingState);
+            chain5.AddSpell(MBAM2, castingState);
+            chain5.Calculate(castingState);
+
+            commonChain = chain1;
+
+            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K5 * chain5.CastTime;
+            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K5 * chain5.CastTime * chain5.CostPerSecond) / CastTime;
+            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K5 * chain5.CastTime * chain5.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K5 * chain5.CastTime * chain5.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K5 * chain5.CastTime * chain5.ManaRegenPerSecond) / CastTime;
+        }
+
+        private SpellCycle commonChain;
+
+        public override string Sequence
+        {
+            get
+            {
+                return commonChain.Sequence;
+            }
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
+            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            chain5.AddSpellContribution(dict, K5 * chain5.CastTime / CastTime * duration);
+        }
+    }
+
     class AB2ABar : Spell
     {
         SpellCycle chain1;
@@ -2510,21 +3139,34 @@ namespace Rawr.Mage
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
 
             float MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
-            if (AB1.CastTime + ABar.CastTime < 3.0)
+
+            if (castingState.CalculationOptions.Mode308)
             {
                 if (MB == 0.0f)
                 {
                     Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
                     // if we don't have barrage then this degenerates to AB-AB-ABar
-                    chain1 = new SpellCycle(2);
-                    chain1.AddSpell(AB3, castingState);
-                    chain1.AddSpell(AB3, castingState);
-                    if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
-                    chain1.AddSpell(ABar, castingState);
+                    chain1 = new SpellCycle(3);
+                    if (castingState.CalculationOptions.Mode308)
+                    {
+                        chain1.AddSpell(AB0, castingState);
+                        chain1.AddSpell(AB1, castingState);
+                        if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
+                        chain1.AddSpell(ABar2, castingState);
+                    }
+                    else
+                    {
+                        chain1.AddSpell(AB3, castingState);
+                        chain1.AddSpell(AB3, castingState);
+                        if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
+                        chain1.AddSpell(ABar, castingState);
+                    }
                     chain1.Calculate(castingState);
 
                     commonChain = chain1;
@@ -2537,143 +3179,214 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
-                    Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
-                    //AB0:
-                    //AB0-AB1-ABar => AB2 1 - MB3
-                    //             => MB  MB3
-                     
-                    //AB1:
-                    //AB1-AB2-ABar => AB3 1 - MB3
-                    //             => MB  MB3
-                     
-                    //AB2:
-                    //AB2-AB3-ABar => AB3 1 - MB3
-                    //             => MB  MB3
-                     
-                    //AB3:
-                    //AB3-AB3-ABar => AB3 1 - MB3
-                    //             => MB  MB3
-                     
-                    //MB:
-                    //MBAM-AB0-ABar => AB1 1 - MB2
-                    //              => MB  MB2
-                     
-                     
-                    //AB0 + AB1 + AB2 + AB3 + MB = 1
-                    //AB0 = 0
-                    //AB1 = MB * (1 - MB2)
-                    //AB2 = AB0 * (1 - MB3) = 0
-                    //AB3 = (AB1 + AB2 + AB3) * (1 - MB3)
-                    //MB = (AB0 + AB1 + AB2 + AB3) * MB3 + MB * MB2
-                     
-                    //AB1 = MB * (1 - MB2)
-                    //AB3 = (AB1 + AB3) * (1 - MB3)
-                    //MB = (AB1 + AB3) * MB3 + MB * MB2
-                     
-                     
-                    //(AB1 + AB3) = MB * (1 - MB2) / MB3
-                     
-                    //AB1 + AB3 + MB = 1
-                     
-                    // K := MB = 1 / (1 + (1 - MB2) / MB3)
-                    // K1 := AB1 = MB * (1 - MB2)
-                    // K2 := AB3 = AB1 * (1 - MB3) / MB3
+                    //S0:
+                    //AB0-AB1-ABar2 => S0 1 - MB3
+                    //              => S1  MB3
 
-                    K = 1.0f / (1.0f + (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB)));
-                    K1 = K * (1 - MB) * (1 - MB);
-                    K2 = K1 * (1 - MB) * (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB));
-                     
-                    //AB1-AB2-ABar
+                    //S1:
+                    //MBAM-AB0-ABar1 => S0 1 - MB2
+                    //               => S1  MB2
+
+
+                    // S0 + S1 = 1
+                    // S0 = S0 * (1 - MB3) + S1 * (1 - MB2)
+                    // S1 = S0 * MB3 + S1 * MB2
+                    // S1 * (1 - MB2) = S0 * MB3
+                    // S1 * (1 - MB2) = MB3 - S1 * MB3
+                    // S1 * (1 - MB2 + MB3) = MB3
+                    // K2 := S1 = MB3 / (1 - MB2 + MB3)
+                    // K1 := S0 = 1 - S1
+
+                    K = (1 - MB) * (1 - MB) * (1 - MB) / (1 - (1 - MB) * (1 - MB) + (1 - MB) * (1 - MB) * (1 - MB));
+
+                    //AB0-AB1-ABar2
                     chain1 = new SpellCycle(3);
-                    chain1.AddSpell(ABar, castingState);
-                    chain1.AddSpell(AB1, castingState);
-                    chain1.AddSpell(AB2, castingState);
-                    if (AB1.CastTime + AB2.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB1.CastTime - AB2.CastTime - ABar.CastTime);
-                    chain1.Calculate(castingState);
-
-                    //AB3-AB3-ABar
-                    chain2 = new SpellCycle(3);
-                    chain2.AddSpell(ABar, castingState);
-                    chain2.AddSpell(AB3, castingState);
-                    chain2.AddSpell(AB3, castingState);
-                    if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                    chain2.Calculate(castingState);
-
-                    //MBAM-AB0-ABar
-                    chain3 = new SpellCycle(3);
-                    chain3.AddSpell(ABar, castingState);
-                    chain3.AddSpell(MBAM, castingState);
-                    chain3.AddSpell(AB0, castingState);
-                    if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                    chain3.Calculate(castingState);
-
-                    commonChain = chain1;
-
-                    CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K * chain3.CastTime;
-                    CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-                    DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-                    ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-                    ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
-                }
-            }
-            else
-            {
-                if (MB == 0.0f)
-                {
-                    // if we don't have barrage then this degenerates to AB-AB-ABar
-                    chain1 = new SpellCycle(2);
                     chain1.AddSpell(AB0, castingState);
                     chain1.AddSpell(AB1, castingState);
                     if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                    chain1.AddSpell(ABar, castingState);
+                    chain1.AddSpell(ABar2, castingState);
                     chain1.Calculate(castingState);
 
-                    commonChain = chain1;
-
-                    CastTime = chain1.CastTime;
-                    CostPerSecond = chain1.CostPerSecond;
-                    DamagePerSecond = chain1.DamagePerSecond;
-                    ThreatPerSecond = chain1.ThreatPerSecond;
-                    ManaRegenPerSecond = chain1.ManaRegenPerSecond;
-                }
-                else
-                {
-                    // A: MBAM-AB-ABar  (1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB) => A
-                    // B: AB-AB-ABar    (1-MB)*(1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB)*(1-MB) => A
-
-                    // A + B = 1
-                    // A = (1 - (1-MB)*(1-MB)) * A + (1 - (1-MB)*(1-MB)*(1-MB)) * B
-                    // B = (1-MB)*(1-MB) * A + (1-MB)*(1-MB)*(1-MB) * B
-
-                    // B * (1 + (1-MB)*(1-MB) - (1-MB)*(1-MB)*(1-MB)) = (1-MB)*(1-MB)
-                    // B = (1-MB)*(1-MB) / [1 + (1-MB)*(1-MB)*MB]
-
-                    //AB-ABar 0.8 * 0.8
-                    chain1 = new SpellCycle(3);
-                    chain1.AddSpell(ABar, castingState);
-                    chain1.AddSpell(AB0, castingState);
-                    chain1.AddSpell(AB1, castingState);
-                    if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                    chain1.Calculate(castingState);
-
-                    //ABar-MBAM
+                    //MBAM-AB0-ABar1
                     chain2 = new SpellCycle(3);
-                    chain2.AddSpell(ABar, castingState);
                     chain2.AddSpell(MBAM, castingState);
                     chain2.AddSpell(AB0, castingState);
-                    if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                    if (MBAM.CastTime + AB0.CastTime + ABar1.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - AB0.CastTime - ABar1.CastTime);
+                    chain2.AddSpell(ABar1, castingState);
                     chain2.Calculate(castingState);
 
                     commonChain = chain1;
-
-                    K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
 
                     CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
                     CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
                     DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
                     ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
                     ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                }
+            }
+            else
+            {
+                if (AB1.CastTime + ABar.CastTime < 3.0)
+                {
+                    if (MB == 0.0f)
+                    {
+                        Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
+                        // if we don't have barrage then this degenerates to AB-AB-ABar
+                        chain1 = new SpellCycle(3);
+                        chain1.AddSpell(AB3, castingState);
+                        chain1.AddSpell(AB3, castingState);
+                        if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
+                        chain1.AddSpell(ABar, castingState);
+                        chain1.Calculate(castingState);
+
+                        commonChain = chain1;
+
+                        CastTime = chain1.CastTime;
+                        CostPerSecond = chain1.CostPerSecond;
+                        DamagePerSecond = chain1.DamagePerSecond;
+                        ThreatPerSecond = chain1.ThreatPerSecond;
+                        ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+                    }
+                    else
+                    {
+                        Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
+                        Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
+                        //AB0:
+                        //AB0-AB1-ABar => AB2 1 - MB3
+                        //             => MB  MB3
+
+                        //AB1:
+                        //AB1-AB2-ABar => AB3 1 - MB3
+                        //             => MB  MB3
+
+                        //AB2:
+                        //AB2-AB3-ABar => AB3 1 - MB3
+                        //             => MB  MB3
+
+                        //AB3:
+                        //AB3-AB3-ABar => AB3 1 - MB3
+                        //             => MB  MB3
+
+                        //MB:
+                        //MBAM-AB0-ABar => AB1 1 - MB2
+                        //              => MB  MB2
+
+
+                        //AB0 + AB1 + AB2 + AB3 + MB = 1
+                        //AB0 = 0
+                        //AB1 = MB * (1 - MB2)
+                        //AB2 = AB0 * (1 - MB3) = 0
+                        //AB3 = (AB1 + AB2 + AB3) * (1 - MB3)
+                        //MB = (AB0 + AB1 + AB2 + AB3) * MB3 + MB * MB2
+
+                        //AB1 = MB * (1 - MB2)
+                        //AB3 = (AB1 + AB3) * (1 - MB3)
+                        //MB = (AB1 + AB3) * MB3 + MB * MB2
+
+
+                        //(AB1 + AB3) = MB * (1 - MB2) / MB3
+
+                        //AB1 + AB3 + MB = 1
+
+                        // K := MB = 1 / (1 + (1 - MB2) / MB3)
+                        // K1 := AB1 = MB * (1 - MB2)
+                        // K2 := AB3 = AB1 * (1 - MB3) / MB3
+
+                        K = 1.0f / (1.0f + (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB)));
+                        K1 = K * (1 - MB) * (1 - MB);
+                        K2 = K1 * (1 - MB) * (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB));
+
+                        //AB1-AB2-ABar
+                        chain1 = new SpellCycle(3);
+                        chain1.AddSpell(ABar, castingState);
+                        chain1.AddSpell(AB1, castingState);
+                        chain1.AddSpell(AB2, castingState);
+                        if (AB1.CastTime + AB2.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB1.CastTime - AB2.CastTime - ABar.CastTime);
+                        chain1.Calculate(castingState);
+
+                        //AB3-AB3-ABar
+                        chain2 = new SpellCycle(3);
+                        chain2.AddSpell(ABar, castingState);
+                        chain2.AddSpell(AB3, castingState);
+                        chain2.AddSpell(AB3, castingState);
+                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                        chain2.Calculate(castingState);
+
+                        //MBAM-AB0-ABar
+                        chain3 = new SpellCycle(3);
+                        chain3.AddSpell(ABar, castingState);
+                        chain3.AddSpell(MBAM, castingState);
+                        chain3.AddSpell(AB0, castingState);
+                        if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                        chain3.Calculate(castingState);
+
+                        commonChain = chain1;
+
+                        CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K * chain3.CastTime;
+                        CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K * chain3.CastTime * chain3.CostPerSecond) / CastTime;
+                        DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
+                        ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
+                        ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
+                    }
+                }
+                else
+                {
+                    if (MB == 0.0f)
+                    {
+                        // if we don't have barrage then this degenerates to AB-AB-ABar
+                        chain1 = new SpellCycle(3);
+                        chain1.AddSpell(AB0, castingState);
+                        chain1.AddSpell(AB1, castingState);
+                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                        chain1.AddSpell(ABar, castingState);
+                        chain1.Calculate(castingState);
+
+                        commonChain = chain1;
+
+                        CastTime = chain1.CastTime;
+                        CostPerSecond = chain1.CostPerSecond;
+                        DamagePerSecond = chain1.DamagePerSecond;
+                        ThreatPerSecond = chain1.ThreatPerSecond;
+                        ManaRegenPerSecond = chain1.ManaRegenPerSecond;
+                    }
+                    else
+                    {
+                        // A: MBAM-AB-ABar  (1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB) => A
+                        // B: AB-AB-ABar    (1-MB)*(1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB)*(1-MB) => A
+
+                        // A + B = 1
+                        // A = (1 - (1-MB)*(1-MB)) * A + (1 - (1-MB)*(1-MB)*(1-MB)) * B
+                        // B = (1-MB)*(1-MB) * A + (1-MB)*(1-MB)*(1-MB) * B
+
+                        // B * (1 + (1-MB)*(1-MB) - (1-MB)*(1-MB)*(1-MB)) = (1-MB)*(1-MB)
+                        // B = (1-MB)*(1-MB) / [1 + (1-MB)*(1-MB)*MB]
+
+                        //AB-ABar 0.8 * 0.8
+                        chain1 = new SpellCycle(3);
+                        chain1.AddSpell(ABar, castingState);
+                        chain1.AddSpell(AB0, castingState);
+                        chain1.AddSpell(AB1, castingState);
+                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                        chain1.Calculate(castingState);
+
+                        //ABar-MBAM
+                        chain2 = new SpellCycle(3);
+                        chain2.AddSpell(ABar, castingState);
+                        chain2.AddSpell(MBAM, castingState);
+                        chain2.AddSpell(AB0, castingState);
+                        if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
+                        chain2.Calculate(castingState);
+
+                        commonChain = chain1;
+
+                        K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
+
+                        CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
+                        CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+                        DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+                        ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+                        ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                    }
                 }
             }
         }
@@ -3301,6 +4014,13 @@ namespace Rawr.Mage
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
             AB3 = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM = castingState.GetSpell(SpellId.ArcaneMissilesMB);
+            Spell MBAM2 = MBAM;
+            Spell MBAM3 = MBAM;
+            if (castingState.CalculationOptions.Mode308)
+            {
+                MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+                MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            }
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             hit = AB3.HitRate;
@@ -3316,7 +4036,7 @@ namespace Rawr.Mage
                 ThreatPerSecond = AB3.ThreatPerSecond;
                 ManaRegenPerSecond = AB3.ManaRegenPerSecond;
             }
-            else if (AB3.CastTime + MBAM.CastTime < 3.0)
+            else if (AB3.CastTime + MBAM.CastTime < 3.0 && !castingState.CalculationOptions.Mode308)
             {
                 // TODO take hit rate into account
                 //AB3 0.85
@@ -3333,7 +4053,7 @@ namespace Rawr.Mage
                 ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * chain1.ThreatPerSecond * chain1.CastTime) / CastTime;
                 ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * chain1.ManaRegenPerSecond * chain1.CastTime) / CastTime;
             }
-            else if (AB3.HitRate >= 1.0f)
+            else if (AB3.HitRate >= 1.0f || castingState.CalculationOptions.Mode308)
             {
                 //AB3 0.85
 
@@ -3341,7 +4061,7 @@ namespace Rawr.Mage
                 chain1 = new SpellCycle(6);
                 chain1.AddSpell(AB3, castingState);
                 chain1.AddSpell(AB3, castingState); // account for latency
-                chain1.AddSpell(MBAM, castingState);
+                chain1.AddSpell(MBAM3, castingState);
                 chain1.AddSpell(AB0, castingState);
                 chain1.AddSpell(AB1, castingState);
                 chain1.AddSpell(AB2, castingState);
@@ -3352,20 +4072,20 @@ namespace Rawr.Mage
                 chain3.AddSpell(AB1, castingState);
                 chain3.AddSpell(AB2, castingState);
                 chain3.AddSpell(AB3, castingState); // account for latency
-                chain3.AddSpell(MBAM, castingState);
+                chain3.AddSpell(MBAM3, castingState);
                 chain3.Calculate(castingState);
 
                 chain4 = new SpellCycle(4);
                 chain4.AddSpell(AB0, castingState);
                 chain4.AddSpell(AB1, castingState);
                 chain4.AddSpell(AB2, castingState); // account for latency
-                chain4.AddSpell(MBAM, castingState);
+                chain4.AddSpell(MBAM3, castingState);
                 chain4.Calculate(castingState);
 
                 chain5 = new SpellCycle(3);
                 chain5.AddSpell(AB0, castingState);
                 chain5.AddSpell(AB1, castingState); // account for latency
-                chain5.AddSpell(MBAM, castingState);
+                chain5.AddSpell(MBAM2, castingState);
                 chain5.Calculate(castingState);
 
                 MB3 = MB / (1 - MB);

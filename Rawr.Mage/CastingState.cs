@@ -325,11 +325,11 @@ namespace Rawr.Mage
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
             float maxHitRate = 1.00f;
-            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ArcaneFocus);
+            ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ArcaneFocus + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
             FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
             FrostHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
-            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
+            NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
+            ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
             FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
 
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
@@ -521,16 +521,28 @@ namespace Rawr.Mage
                     s = new LightningBolt(this);
                     break;
                 case SpellId.ArcaneMissiles:
-                    s = new ArcaneMissiles(this, false);
+                    s = new ArcaneMissiles(this, false, 0);
+                    break;
+                case SpellId.ArcaneMissiles1:
+                    s = new ArcaneMissiles(this, false, 1);
                     break;
                 case SpellId.ArcaneMissilesMB:
-                    s = new ArcaneMissiles(this, true);
+                    s = new ArcaneMissiles(this, true, 0);
+                    break;
+                case SpellId.ArcaneMissilesMB1:
+                    s = new ArcaneMissiles(this, true, 1);
+                    break;
+                case SpellId.ArcaneMissilesMB2:
+                    s = new ArcaneMissiles(this, true, 2);
+                    break;
+                case SpellId.ArcaneMissilesMB3:
+                    s = new ArcaneMissiles(this, true, 3);
                     break;
                 case SpellId.ArcaneMissilesCC:
                     s = new ArcaneMissilesCC(this);
                     break;
                 case SpellId.ArcaneMissilesNoProc:
-                    s = new ArcaneMissiles(this, false, true, false, false);
+                    s = new ArcaneMissiles(this, false, true, false, false, 0);
                     break;
                 /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(this);
@@ -593,7 +605,16 @@ namespace Rawr.Mage
                     s = new Scorch(this, false);
                     break;
                 case SpellId.ArcaneBarrage:
-                    s = new ArcaneBarrage(this);
+                    s = new ArcaneBarrage(this, 0);
+                    break;
+                case SpellId.ArcaneBarrage1:
+                    s = new ArcaneBarrage(this, 1);
+                    break;
+                case SpellId.ArcaneBarrage2:
+                    s = new ArcaneBarrage(this, 2);
+                    break;
+                case SpellId.ArcaneBarrage3:
+                    s = new ArcaneBarrage(this, 3);
                     break;
                 case SpellId.ArcaneBlast33:
                     s = new ArcaneBlast(this, 3, 3);
@@ -676,8 +697,26 @@ namespace Rawr.Mage
                 case SpellId.ABABar:
                     s = new ABABar(this);
                     break;
+                case SpellId.ABABarX:
+                    s = new ABABarX(this);
+                    break;
+                case SpellId.ABABarY:
+                    s = new ABABarY(this);
+                    break;
                 case SpellId.AB2ABar:
                     s = new AB2ABar(this);
+                    break;
+                case SpellId.AB2ABarMBAM:
+                    s = new AB2ABarMBAM(this);
+                    break;
+                case SpellId.AB3ABar:
+                    s = new AB3ABar(this);
+                    break;
+                case SpellId.AB3ABarX:
+                    s = new AB3ABarX(this);
+                    break;
+                case SpellId.AB3ABarY:
+                    s = new AB3ABarY(this);
                     break;
                 case SpellId.FBABar:
                     s = new FBABar(this);

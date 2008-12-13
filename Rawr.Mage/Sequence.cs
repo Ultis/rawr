@@ -2501,7 +2501,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         t += d;
                     }
                 }
-                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && ((pot <= evo && nextEvo > 300.0) || evoTime <= 0))
+                if (potTime > 0 && (((forcePot && !forceGem) || gemActivated || pot <= gem || gemTime <= 0 || (nextPot == 0 && pot < gem + 30 && potTime >= gemTime)) && (forcePot || !forceGem)) && ((pot <= evo && nextEvo > SequenceItem.Calculations.EvocationCooldown) || evoTime <= 0))
                 {
                     if (pot > targetTime + 0.00001)
                     {
