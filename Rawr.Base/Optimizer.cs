@@ -2571,20 +2571,23 @@ namespace Rawr
 					filteredList.Add(gemmedItem);
 					continue;
 				}
-				int meta = 0, red = 0, yellow = 0, blue = 0;
+				int meta = 0, red = 0, yellow = 0, blue = 0, jeweler = 0;
                 foreach (Item gem in new Item[] { gemmedItem.Gem1, gemmedItem.Gem2, gemmedItem.Gem3 })
-					if (gem != null)
-						switch (gem.Slot)
-						{
-							case Item.ItemSlot.Meta:		meta++;						break;
-							case Item.ItemSlot.Red:			red++;						break;
-							case Item.ItemSlot.Orange:		red++; yellow++;			break;
-							case Item.ItemSlot.Yellow:		yellow++;					break;
-							case Item.ItemSlot.Green:		yellow++; blue++;			break;
-							case Item.ItemSlot.Blue:		blue++;						break;
-							case Item.ItemSlot.Purple:		blue++; red++;				break;
-							case Item.ItemSlot.Prismatic:	red++; yellow++; blue++;	break;
-						}
+                    if (gem != null)
+                    {
+                        switch (gem.Slot)
+                        {
+                            case Item.ItemSlot.Meta: meta++; break;
+                            case Item.ItemSlot.Red: red++; break;
+                            case Item.ItemSlot.Orange: red++; yellow++; break;
+                            case Item.ItemSlot.Yellow: yellow++; break;
+                            case Item.ItemSlot.Green: yellow++; blue++; break;
+                            case Item.ItemSlot.Blue: blue++; break;
+                            case Item.ItemSlot.Purple: blue++; red++; break;
+                            case Item.ItemSlot.Prismatic: red++; yellow++; blue++; break;
+                        }
+                        if (gem.IsJewelersGem) jeweler++;
+                    }
 
 				StatsColors statsColorsA = new StatsColors()
 				{
@@ -2594,7 +2597,8 @@ namespace Rawr
 					Meta = meta,
 					Red = red,
 					Yellow = yellow,
-					Blue = blue
+					Blue = blue,
+                    Jeweler = jeweler
 				};
 				bool addItem = true;
 				List<StatsColors> removeItems = new List<StatsColors>();
@@ -2630,10 +2634,14 @@ namespace Rawr
 			public int Red;
 			public int Yellow;
 			public int Blue;
+            public int Jeweler;
 			public string SetName;
 
 			public ArrayUtils.CompareResult CompareTo(StatsColors other)
 			{
+                if (GemmedItem.IsJewelersGem != other.GemmedItem.IsJewelersGem) return ArrayUtils.CompareResult.Unequal;
+                if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
+
 				if (this.SetName != other.SetName) return ArrayUtils.CompareResult.Unequal;
 
 				int compare = Meta.CompareTo(other.Meta);
@@ -2669,7 +2677,7 @@ namespace Rawr
 			{
 				if (ReferenceEquals(x, null) || ReferenceEquals(y, null)) return false;
 				return x.Meta == y.Meta && x.Red == y.Red && x.Yellow == y.Yellow 
-					&& x.Blue == y.Blue && x.Stats == y.Stats;
+					&& x.Blue == y.Blue && x.Jeweler == y.Jeweler && x.Stats == y.Stats;
 			}
             public override int GetHashCode()
             {
