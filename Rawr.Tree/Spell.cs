@@ -12,7 +12,17 @@ namespace Rawr.Tree
         { get { return maxHeal + healingBonus * coefDH; } }
         public float castTime = 0f;
         public float CastTime
-        { get { return castTime > gcd ? castTime : gcd; } }
+        { 
+            get 
+            {
+                if (castTime > gcd)
+                    return castTime;
+                else if (gcd > 1)
+                    return gcd;
+                else
+                    return 1;
+            }
+        }
         public float gcd = 1.5f;
         public float manaCost = 0f;
         public float coefDH = 0f; //coef for DirectHeal
@@ -67,6 +77,11 @@ namespace Rawr.Tree
 
         public float Duration
         { get { return periodicTicks * periodicTickTime; } }
+
+        public void Initialize(float hasteRating)
+        {
+            gcd = 1.5f / (1 + hasteRating / TreeConstants.hasteconversation);
+        }
     }
 
     public class HealingTouch : Spell
@@ -75,6 +90,8 @@ namespace Rawr.Tree
         {
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
+
+            base.Initialize(calculatedStats.HasteRating);
 
             castTime = 3f;
             coefDH = castTime / 3.5f;
@@ -97,7 +114,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
 
             //guessed that it doesnt work with talents
             //z.B.: Idol of the Avian Heart (+136 Healing)
@@ -175,6 +192,8 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
+            base.Initialize(calculatedStats.HasteRating);
+
             castTime = 2f;
             coefDH = 0.3f; //0.289f; It seems the DH coef got Buffed a bit
             coefHoT = 0.7f / 7f;
@@ -204,7 +223,7 @@ namespace Rawr.Tree
             //z.B.: Idol of the Crescent Goddess (-65 Mana)
             manaCost -= calculatedStats.ReduceRegrowthCost;
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -260,6 +279,8 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
+            base.Initialize(calculatedStats.HasteRating);
+
             castTime = 0f;
             coefHoT = 0.8f / 4f;
             manaCost = 0.18f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
@@ -288,7 +309,7 @@ namespace Rawr.Tree
             //z.B.: Idol of Budding Life (-36 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
 
-            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -337,6 +358,8 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
+            base.Initialize(calculatedStats.HasteRating);
+
             castTime = 0f;
             periodicTickTime = 1f;
             coefDH = 0.3434f; //0.342 doesn't seem accurate too
@@ -368,7 +391,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            gcd = (float)Math.Round(gcd  / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            gcd = (float)Math.Round(gcd  / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
 
             //z.B.: Gladiator's Idol of Tenacity (87 on final heal), haven't one myself, will correct it when i've one
             idolDHModifier += calculatedStats.LifebloomFinalHealBonus;
@@ -460,6 +483,8 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
+            base.Initialize(calculatedStats.HasteRating);
+
             castTime = 0f;
             coefHoT = 0.96f / 7f; // Haven't fully tested yet, 1,88 coef included. (w/o Empowered Rejuvenation it would be 0.8)
             periodicTickTime = 1f;
@@ -481,7 +506,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -543,6 +568,8 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
+            base.Initialize(calculatedStats.HasteRating);
+
             castTime = 1.5f;
             coefDH = castTime / 3.5f;
             manaCost = 0.18f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
@@ -564,7 +591,7 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteDivider), 4);
+            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)

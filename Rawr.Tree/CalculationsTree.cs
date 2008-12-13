@@ -155,7 +155,7 @@ namespace Rawr.Tree
 
             calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 
-            calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect / 80) + (calculatedStats.BasicStats.CritRating / 22.08) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
+            calculatedStats.BasicStats.SpellCrit = (float)Math.Round((calculatedStats.BasicStats.Intellect * 0.006f) + (calculatedStats.BasicStats.CritRating / 45.906f) + 1.85 + character.DruidTalents.NaturalPerfection, 2);
 
             calculatedStats.BasicStats.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
 
@@ -284,7 +284,7 @@ namespace Rawr.Tree
             }
             else
             {
-                statsRace.Health = 5799f;
+                statsRace.Health = 7599f;
                 //statsRace.Strength = 94f;
                 statsRace.Agility = 77f;
                 statsRace.Stamina = 100f;
@@ -360,8 +360,8 @@ namespace Rawr.Tree
 
         public override bool HasRelevantStats(Stats stats)
         {
-            //remove DST ... has accourding to Item Editor fixed 81,5 Haste ..
-            if (stats.HasteRating == 81.5)
+            //remove DST ... has accourding to Item Editor fixed 81.25 Haste ..
+            if (stats.HasteRating == 81.25)
                 return false;
 
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana
@@ -423,13 +423,13 @@ namespace Rawr.Tree
                 //if (level == 70)
                 //    return 2370f;
                 //else if (level == 80)
-                return 2370f;//5286f;
+                return 5286f;
                 //else
                 //    return 2370f;
             }
             return 5361f;
         }
 
-        public static float hasteDivider = 1576f;
+        public static float hasteconversation = 3279f;
     }
 }

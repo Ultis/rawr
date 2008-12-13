@@ -55,8 +55,11 @@
             this.extendedToolTipLabel5 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tbFightDuration = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.bEditRotation = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -70,19 +73,17 @@
             this.label13 = new System.Windows.Forms.Label();
             this.chbReplenishment = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox11 = new System.Windows.Forms.GroupBox();
-            this.chbGlyphSwiftmend = new Rawr.CustomControls.ExtendedToolTipCheckBox();
-            this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLifebloom = new System.Windows.Forms.CheckBox();
-            this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel9 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel10 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.chbGlyphInnervate = new System.Windows.Forms.CheckBox();
+            this.extendedToolTipLabel10 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.chbGlyphSwiftmend = new Rawr.CustomControls.ExtendedToolTipCheckBox();
             this.chbGlyphRejuvenation = new System.Windows.Forms.CheckBox();
             this.chbGlyphRegrowth = new System.Windows.Forms.CheckBox();
+            this.chbGlyphLifebloom = new System.Windows.Forms.CheckBox();
             this.chbGlyphHT = new System.Windows.Forms.CheckBox();
             this.extendedToolTipLabel8 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipLabel9 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel7 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tabControl1.SuspendLayout();
@@ -98,7 +99,6 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -358,7 +358,7 @@
             this.extendedToolTipLabel5.Size = new System.Drawing.Size(75, 13);
             this.extendedToolTipLabel5.TabIndex = 2;
             this.extendedToolTipLabel5.Text = "Fightduration *";
-            this.extendedToolTipLabel5.ToolTipText = "Usage: HH:MM:SS";
+            this.extendedToolTipLabel5.ToolTipText = "Usage: HH:MM:SS. *not yet implemented*";
             // 
             // tbFightDuration
             // 
@@ -370,15 +370,63 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Controls.Add(this.radioButton3);
+            this.groupBox7.Controls.Add(this.radioButton2);
+            this.groupBox7.Controls.Add(this.radioButton1);
             this.groupBox7.Controls.Add(this.bEditRotation);
-            this.groupBox7.Controls.Add(this.label10);
             this.groupBox7.Controls.Add(this.label11);
             this.groupBox7.Location = new System.Drawing.Point(6, 232);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 50);
+            this.groupBox7.Size = new System.Drawing.Size(277, 105);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Spellrotation";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(85, 13);
+            this.label1.TabIndex = 37;
+            this.label1.Text = "Custom Rotation";
+            // 
+            // radioButton3
+            // 
+            this.radioButton3.AutoSize = true;
+            this.radioButton3.Location = new System.Drawing.Point(9, 65);
+            this.radioButton3.Name = "radioButton3";
+            this.radioButton3.Size = new System.Drawing.Size(107, 17);
+            this.radioButton3.TabIndex = 36;
+            this.radioButton3.TabStop = true;
+            this.radioButton3.Text = "custom Rotations";
+            this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.Visible = false;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(9, 42);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(72, 17);
+            this.radioButton2.TabIndex = 35;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "LB RJ HT";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.Visible = false;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(125, 42);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(125, 17);
+            this.radioButton1.TabIndex = 34;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Healing Touch Spam";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.Visible = false;
             // 
             // bEditRotation
             // 
@@ -390,19 +438,10 @@
             this.bEditRotation.UseVisualStyleBackColor = true;
             this.bEditRotation.Click += new System.EventHandler(this.bEditRotation_Click);
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 16);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(73, 13);
-            this.label10.TabIndex = 30;
-            this.label10.Text = "Spell-Rotation";
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(19, 29);
+            this.label11.Location = new System.Drawing.Point(25, 29);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(109, 13);
             this.label11.TabIndex = 32;
@@ -518,8 +557,6 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label1);
-            this.tabPage3.Controls.Add(this.groupBox11);
             this.tabPage3.Controls.Add(this.groupBox10);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
@@ -529,46 +566,41 @@
             this.tabPage3.Text = "Glyphes";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // groupBox10
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 177);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(240, 26);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Note: The 375+ Glyphes are only available when \r\n          Wrath of the Lich King" +
-                " starts";
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel11);
+            this.groupBox10.Controls.Add(this.chbGlyphInnervate);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel10);
+            this.groupBox10.Controls.Add(this.chbGlyphSwiftmend);
+            this.groupBox10.Controls.Add(this.chbGlyphRejuvenation);
+            this.groupBox10.Controls.Add(this.chbGlyphRegrowth);
+            this.groupBox10.Controls.Add(this.chbGlyphLifebloom);
+            this.groupBox10.Controls.Add(this.chbGlyphHT);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel8);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel9);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel7);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel6);
+            this.groupBox10.Location = new System.Drawing.Point(6, 6);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(277, 135);
+            this.groupBox10.TabIndex = 0;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Glyphes";
             // 
-            // groupBox11
+            // extendedToolTipLabel11
             // 
-            this.groupBox11.Controls.Add(this.chbGlyphSwiftmend);
-            this.groupBox11.Controls.Add(this.chbGlyphInnervate);
-            this.groupBox11.Controls.Add(this.chbGlyphLifebloom);
-            this.groupBox11.Controls.Add(this.extendedToolTipLabel11);
-            this.groupBox11.Controls.Add(this.extendedToolTipLabel9);
-            this.groupBox11.Controls.Add(this.extendedToolTipLabel10);
-            this.groupBox11.Location = new System.Drawing.Point(6, 87);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(277, 75);
-            this.groupBox11.TabIndex = 1;
-            this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Glyphes from Inscription 375+";
-            // 
-            // chbGlyphSwiftmend
-            // 
-            this.chbGlyphSwiftmend.AutoSize = true;
-            this.chbGlyphSwiftmend.Location = new System.Drawing.Point(256, 36);
-            this.chbGlyphSwiftmend.Name = "chbGlyphSwiftmend";
-            this.chbGlyphSwiftmend.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphSwiftmend.TabIndex = 2;
-            this.chbGlyphSwiftmend.ToolTipText = "";
-            this.chbGlyphSwiftmend.UseVisualStyleBackColor = true;
-            this.chbGlyphSwiftmend.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
+            this.extendedToolTipLabel11.AutoSize = true;
+            this.extendedToolTipLabel11.Location = new System.Drawing.Point(6, 116);
+            this.extendedToolTipLabel11.Name = "extendedToolTipLabel11";
+            this.extendedToolTipLabel11.Size = new System.Drawing.Size(94, 13);
+            this.extendedToolTipLabel11.TabIndex = 5;
+            this.extendedToolTipLabel11.Text = "Glyph of Innervate";
+            this.extendedToolTipLabel11.ToolTipText = "20% additional Manaregen for you, if you use Innervate";
             // 
             // chbGlyphInnervate
             // 
             this.chbGlyphInnervate.AutoSize = true;
-            this.chbGlyphInnervate.Location = new System.Drawing.Point(256, 56);
+            this.chbGlyphInnervate.Location = new System.Drawing.Point(256, 115);
             this.chbGlyphInnervate.Name = "chbGlyphInnervate";
             this.chbGlyphInnervate.Size = new System.Drawing.Size(15, 14);
             this.chbGlyphInnervate.TabIndex = 8;
@@ -576,61 +608,26 @@
             this.chbGlyphInnervate.UseVisualStyleBackColor = true;
             this.chbGlyphInnervate.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
             // 
-            // chbGlyphLifebloom
-            // 
-            this.chbGlyphLifebloom.AutoSize = true;
-            this.chbGlyphLifebloom.Location = new System.Drawing.Point(256, 16);
-            this.chbGlyphLifebloom.Name = "chbGlyphLifebloom";
-            this.chbGlyphLifebloom.Size = new System.Drawing.Size(15, 14);
-            this.chbGlyphLifebloom.TabIndex = 6;
-            this.chbGlyphLifebloom.Tag = "Glyph of Lifebloom";
-            this.chbGlyphLifebloom.UseVisualStyleBackColor = true;
-            this.chbGlyphLifebloom.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
-            // 
-            // extendedToolTipLabel11
-            // 
-            this.extendedToolTipLabel11.AutoSize = true;
-            this.extendedToolTipLabel11.Location = new System.Drawing.Point(6, 56);
-            this.extendedToolTipLabel11.Name = "extendedToolTipLabel11";
-            this.extendedToolTipLabel11.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel11.TabIndex = 5;
-            this.extendedToolTipLabel11.Text = "Glyph of Innervate";
-            this.extendedToolTipLabel11.ToolTipText = "20% additional Manaregen for you, if you use Innervate";
-            // 
-            // extendedToolTipLabel9
-            // 
-            this.extendedToolTipLabel9.AutoSize = true;
-            this.extendedToolTipLabel9.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel9.Name = "extendedToolTipLabel9";
-            this.extendedToolTipLabel9.Size = new System.Drawing.Size(94, 13);
-            this.extendedToolTipLabel9.TabIndex = 3;
-            this.extendedToolTipLabel9.Text = "Glyph of Lifebloom";
-            this.extendedToolTipLabel9.ToolTipText = "+1sec Duration";
-            // 
             // extendedToolTipLabel10
             // 
             this.extendedToolTipLabel10.AutoSize = true;
-            this.extendedToolTipLabel10.Location = new System.Drawing.Point(6, 36);
+            this.extendedToolTipLabel10.Location = new System.Drawing.Point(6, 96);
             this.extendedToolTipLabel10.Name = "extendedToolTipLabel10";
             this.extendedToolTipLabel10.Size = new System.Drawing.Size(98, 13);
             this.extendedToolTipLabel10.TabIndex = 4;
             this.extendedToolTipLabel10.Text = "Glyph of Swiftmend";
             this.extendedToolTipLabel10.ToolTipText = "Swiftmend no longer consumes the HoT";
             // 
-            // groupBox10
+            // chbGlyphSwiftmend
             // 
-            this.groupBox10.Controls.Add(this.chbGlyphRejuvenation);
-            this.groupBox10.Controls.Add(this.chbGlyphRegrowth);
-            this.groupBox10.Controls.Add(this.chbGlyphHT);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel8);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel7);
-            this.groupBox10.Controls.Add(this.extendedToolTipLabel6);
-            this.groupBox10.Location = new System.Drawing.Point(6, 6);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(277, 75);
-            this.groupBox10.TabIndex = 0;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Glyphes from Inscription (375)";
+            this.chbGlyphSwiftmend.AutoSize = true;
+            this.chbGlyphSwiftmend.Location = new System.Drawing.Point(256, 95);
+            this.chbGlyphSwiftmend.Name = "chbGlyphSwiftmend";
+            this.chbGlyphSwiftmend.Size = new System.Drawing.Size(15, 14);
+            this.chbGlyphSwiftmend.TabIndex = 2;
+            this.chbGlyphSwiftmend.ToolTipText = "";
+            this.chbGlyphSwiftmend.UseVisualStyleBackColor = true;
+            this.chbGlyphSwiftmend.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
             // 
             // chbGlyphRejuvenation
             // 
@@ -654,6 +651,17 @@
             this.chbGlyphRegrowth.UseVisualStyleBackColor = true;
             this.chbGlyphRegrowth.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
             // 
+            // chbGlyphLifebloom
+            // 
+            this.chbGlyphLifebloom.AutoSize = true;
+            this.chbGlyphLifebloom.Location = new System.Drawing.Point(256, 75);
+            this.chbGlyphLifebloom.Name = "chbGlyphLifebloom";
+            this.chbGlyphLifebloom.Size = new System.Drawing.Size(15, 14);
+            this.chbGlyphLifebloom.TabIndex = 6;
+            this.chbGlyphLifebloom.Tag = "Glyph of Lifebloom";
+            this.chbGlyphLifebloom.UseVisualStyleBackColor = true;
+            this.chbGlyphLifebloom.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
+            // 
             // chbGlyphHT
             // 
             this.chbGlyphHT.AutoSize = true;
@@ -674,6 +682,16 @@
             this.extendedToolTipLabel8.TabIndex = 2;
             this.extendedToolTipLabel8.Text = "Glyph of Rejuvenation";
             this.extendedToolTipLabel8.ToolTipText = "Heals an additional 50% per Tick, if the target is under 50% life";
+            // 
+            // extendedToolTipLabel9
+            // 
+            this.extendedToolTipLabel9.AutoSize = true;
+            this.extendedToolTipLabel9.Location = new System.Drawing.Point(6, 76);
+            this.extendedToolTipLabel9.Name = "extendedToolTipLabel9";
+            this.extendedToolTipLabel9.Size = new System.Drawing.Size(94, 13);
+            this.extendedToolTipLabel9.TabIndex = 3;
+            this.extendedToolTipLabel9.Text = "Glyph of Lifebloom";
+            this.extendedToolTipLabel9.ToolTipText = "+1sec Duration";
             // 
             // extendedToolTipLabel7
             // 
@@ -725,9 +743,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox11.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.ResumeLayout(false);
@@ -764,7 +779,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chbLivingSeed;
         private System.Windows.Forms.TextBox tbWildGrowthAverageTicks;
@@ -782,7 +796,6 @@
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel8;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel7;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel6;
-        private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.CheckBox chbGlyphInnervate;
         private System.Windows.Forms.CheckBox chbGlyphLifebloom;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel11;
@@ -791,7 +804,10 @@
         private System.Windows.Forms.CheckBox chbGlyphRegrowth;
         private System.Windows.Forms.CheckBox chbGlyphHT;
         private Rawr.CustomControls.ExtendedToolTipCheckBox chbGlyphSwiftmend;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button bEditRotation;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Label label1;
     }
 }
