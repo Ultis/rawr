@@ -15,9 +15,9 @@ namespace Rawr.Rogue
             return xml.ToString();
         }
 
-        public int TargetLevel = 83;
-        public int TargetArmor = 10000;
-        public Cycle DPSCycle = new Cycle("4s5r");
+        public int TargetLevel;
+        public int TargetArmor;
+        public Cycle DPSCycle = new Cycle();
         public IPoison TempMainHandEnchant = new NoPoison();
         public IPoison TempOffHandEnchant = new NoPoison();
     }

@@ -87,8 +87,7 @@ namespace Rawr.Rogue
         {
             var calculatedStats = new CharacterCalculationsRogue(stats);
            
-            var ruthlessnessCP = .2f * talents.Ruthlessness;
-            var numCPG = calcOpts.DPSCycle.TotalComboPoints - 2f * ruthlessnessCP;
+            var numCPG = CalcComboPointsNeededForCycle(talents, calcOpts);
             var cpg = ComboPointGenerator.Get(talents, combatFactors);
 
             var whiteAttacks = new WhiteAttacks(talents, stats, combatFactors);
@@ -99,13 +98,14 @@ namespace Rawr.Rogue
             var finisherDPS = 0f;
             foreach (var component in calcOpts.DPSCycle.Components)
             {
-                finisherDPS += component.Finisher.CalcFinisherDPS(talents, stats, calcOpts, combatFactors, cycleTime);
+                finisherDPS += component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
             }
 
             var swordSpecDPS = CalcSwordSpecDPS(talents, combatFactors, whiteAttacks, numCPG, cycleTime);
             var poisonDPS = CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks);
 
             calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
@@ -124,6 +124,11 @@ namespace Rawr.Rogue
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
+        }
+
+        private static float CalcComboPointsNeededForCycle(RogueTalents talents, CalculationOptionsRogue calcOpts)
+        {
+            return calcOpts.DPSCycle.TotalComboPoints - (calcOpts.DPSCycle.Components.Count * .2f * talents.Ruthlessness);
         }
 
         private static float CalcCpgDPS(CpgAttackValues attackValues, CombatFactors combatFactors, float numCPG, float cycleTime)

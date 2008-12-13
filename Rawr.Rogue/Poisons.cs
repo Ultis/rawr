@@ -48,12 +48,14 @@ namespace Rawr.Rogue
     {
         public string Name { get { return "Deadly Poison"; } }
 
+        private const float _stackSize = 5f;
+        private const float _duration = 12f;
+
         public bool IsDeadlyPoison { get { return true; } }
 
         public float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            //stack size * damage divided by duration
-            return 5f * (296f + .08f * stats.AttackPower) * VilePoison.DamageMultiplier(talents) / 12f;
+            return _stackSize * (296f + .08f * stats.AttackPower) * VilePoison.DamageMultiplier(talents) / _duration;
         }
     }
 

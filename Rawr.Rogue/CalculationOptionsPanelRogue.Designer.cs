@@ -28,7 +28,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.groupBoxCycles = new System.Windows.Forms.GroupBox();
-            this.radioButton4s5r = new System.Windows.Forms.RadioButton();
+            this.comboBoxFinisher3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxComboPoints3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxFinisher2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxComboPoints2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxFinisher1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxComboPoints1 = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBoxOHPoison = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -76,25 +81,72 @@
             // 
             // groupBoxCycles
             // 
-            this.groupBoxCycles.Controls.Add(this.radioButton4s5r);
+            this.groupBoxCycles.Controls.Add(this.comboBoxFinisher3);
+            this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints3);
+            this.groupBoxCycles.Controls.Add(this.comboBoxFinisher2);
+            this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints2);
+            this.groupBoxCycles.Controls.Add(this.comboBoxFinisher1);
+            this.groupBoxCycles.Controls.Add(this.comboBoxComboPoints1);
             this.groupBoxCycles.Location = new System.Drawing.Point(15, 151);
             this.groupBoxCycles.Name = "groupBoxCycles";
-            this.groupBoxCycles.Size = new System.Drawing.Size(182, 112);
+            this.groupBoxCycles.Size = new System.Drawing.Size(182, 132);
             this.groupBoxCycles.TabIndex = 6;
             this.groupBoxCycles.TabStop = false;
             this.groupBoxCycles.Text = "Cycles";
             // 
-            // radioButton4s5r
+            // comboBoxFinisher3
             // 
-            this.radioButton4s5r.AutoSize = true;
-            this.radioButton4s5r.Checked = true;
-            this.radioButton4s5r.Location = new System.Drawing.Point(6, 19);
-            this.radioButton4s5r.Name = "radioButton4s5r";
-            this.radioButton4s5r.Size = new System.Drawing.Size(45, 17);
-            this.radioButton4s5r.TabIndex = 0;
-            this.radioButton4s5r.TabStop = true;
-            this.radioButton4s5r.Text = "4s5r";
-            this.radioButton4s5r.UseVisualStyleBackColor = true;
+            this.comboBoxFinisher3.FormattingEnabled = true;
+            this.comboBoxFinisher3.Location = new System.Drawing.Point(78, 75);
+            this.comboBoxFinisher3.Name = "comboBoxFinisher3";
+            this.comboBoxFinisher3.Size = new System.Drawing.Size(98, 21);
+            this.comboBoxFinisher3.TabIndex = 5;
+            this.comboBoxFinisher3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
+            // 
+            // comboBoxComboPoints3
+            // 
+            this.comboBoxComboPoints3.FormattingEnabled = true;
+            this.comboBoxComboPoints3.Location = new System.Drawing.Point(11, 76);
+            this.comboBoxComboPoints3.Name = "comboBoxComboPoints3";
+            this.comboBoxComboPoints3.Size = new System.Drawing.Size(60, 21);
+            this.comboBoxComboPoints3.TabIndex = 4;
+            this.comboBoxComboPoints3.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
+            // 
+            // comboBoxFinisher2
+            // 
+            this.comboBoxFinisher2.FormattingEnabled = true;
+            this.comboBoxFinisher2.Location = new System.Drawing.Point(78, 47);
+            this.comboBoxFinisher2.Name = "comboBoxFinisher2";
+            this.comboBoxFinisher2.Size = new System.Drawing.Size(98, 21);
+            this.comboBoxFinisher2.TabIndex = 3;
+            this.comboBoxFinisher2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
+            // 
+            // comboBoxComboPoints2
+            // 
+            this.comboBoxComboPoints2.FormattingEnabled = true;
+            this.comboBoxComboPoints2.Location = new System.Drawing.Point(11, 48);
+            this.comboBoxComboPoints2.Name = "comboBoxComboPoints2";
+            this.comboBoxComboPoints2.Size = new System.Drawing.Size(60, 21);
+            this.comboBoxComboPoints2.TabIndex = 2;
+            this.comboBoxComboPoints2.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
+            // 
+            // comboBoxFinisher1
+            // 
+            this.comboBoxFinisher1.FormattingEnabled = true;
+            this.comboBoxFinisher1.Location = new System.Drawing.Point(78, 19);
+            this.comboBoxFinisher1.Name = "comboBoxFinisher1";
+            this.comboBoxFinisher1.Size = new System.Drawing.Size(98, 21);
+            this.comboBoxFinisher1.TabIndex = 1;
+            this.comboBoxFinisher1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
+            // 
+            // comboBoxComboPoints1
+            // 
+            this.comboBoxComboPoints1.FormattingEnabled = true;
+            this.comboBoxComboPoints1.Location = new System.Drawing.Point(11, 20);
+            this.comboBoxComboPoints1.Name = "comboBoxComboPoints1";
+            this.comboBoxComboPoints1.Size = new System.Drawing.Size(60, 21);
+            this.comboBoxComboPoints1.TabIndex = 0;
+            this.comboBoxComboPoints1.SelectedIndexChanged += new System.EventHandler(this.CycleChanged);
             // 
             // groupBox1
             // 
@@ -102,7 +154,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.comboBoxMHPoison);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(15, 270);
+            this.groupBox1.Location = new System.Drawing.Point(15, 284);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(181, 77);
             this.groupBox1.TabIndex = 7;
@@ -188,7 +240,6 @@
             this.Name = "CalculationOptionsPanelRogue";
             this.Size = new System.Drawing.Size(209, 432);
             this.groupBoxCycles.ResumeLayout(false);
-            this.groupBoxCycles.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -205,11 +256,16 @@
         private System.Windows.Forms.GroupBox groupBoxCycles;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RadioButton radioButton4s5r;
         private System.Windows.Forms.ComboBox comboBoxOHPoison;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBoxMHPoison;
         private System.Windows.Forms.ComboBox comboBoxArmorBosses;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ComboBox comboBoxFinisher3;
+        private System.Windows.Forms.ComboBox comboBoxComboPoints3;
+        private System.Windows.Forms.ComboBox comboBoxFinisher2;
+        private System.Windows.Forms.ComboBox comboBoxComboPoints2;
+        private System.Windows.Forms.ComboBox comboBoxFinisher1;
+        private System.Windows.Forms.ComboBox comboBoxComboPoints1;
     }
 }
