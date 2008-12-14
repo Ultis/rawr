@@ -408,6 +408,7 @@ namespace Rawr
 					item.Stats.Strength += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
+				case "hastertng":
 				case "mlehastertng":
 				case "rgdhastertng":
 				case "splhastertng":
@@ -450,6 +451,7 @@ namespace Rawr
 					item.Stats.ArcaneResistance = float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 
+				case "hitrtng":
 				case "mlehitrtng":
 				case "rgdhitrtng":
 				case "splhitrtng":

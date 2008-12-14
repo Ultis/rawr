@@ -34,8 +34,7 @@ namespace Rawr
 			// 
 			// vScrollBarGraph
 			// 
-			this.vScrollBarGraph.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.vScrollBarGraph.Dock = System.Windows.Forms.DockStyle.Right;
 			this.vScrollBarGraph.LargeChange = 21;
 			this.vScrollBarGraph.Location = new System.Drawing.Point(409, 3);
 			this.vScrollBarGraph.Maximum = 20;
@@ -46,9 +45,7 @@ namespace Rawr
 			// 
 			// comparisonGraph1
 			// 
-			this.comparisonGraph1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.comparisonGraph1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.comparisonGraph1.BackColor = System.Drawing.Color.White;
 			this.comparisonGraph1.ItemCalculations = new Rawr.ComparisonCalculationBase[0];
 			this.comparisonGraph1.Location = new System.Drawing.Point(3, 3);
@@ -61,11 +58,12 @@ namespace Rawr
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.White;
+			this.BackColor = System.Drawing.Color.Violet;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.Controls.Add(this.vScrollBarGraph);
 			this.Controls.Add(this.comparisonGraph1);
 			this.Name = "ItemComparison";
+			this.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.Size = new System.Drawing.Size(430, 447);
 			this.ResumeLayout(false);
 

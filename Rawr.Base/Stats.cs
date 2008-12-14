@@ -2607,8 +2607,8 @@ namespace Rawr
         [Percentage]
         public float BonusLavaBurstDamage
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
         }
         #endregion
 
