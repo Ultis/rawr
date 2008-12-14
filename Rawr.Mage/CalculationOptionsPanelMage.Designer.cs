@@ -222,6 +222,8 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label92 = new System.Windows.Forms.Label();
+            this.checkBoxMode308 = new System.Windows.Forms.CheckBox();
             this.comboBoxMIPMethod = new System.Windows.Forms.ComboBox();
             this.label78 = new System.Windows.Forms.Label();
             this.label77 = new System.Windows.Forms.Label();
@@ -240,8 +242,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label92 = new System.Windows.Forms.Label();
-            this.checkBoxMode308 = new System.Windows.Forms.CheckBox();
+            this.label93 = new System.Windows.Forms.Label();
+            this.checkBoxGlyphOfArcaneBlast = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2015,6 +2017,8 @@
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.label93);
+            this.tabPage7.Controls.Add(this.checkBoxGlyphOfArcaneBlast);
             this.tabPage7.Controls.Add(this.label11);
             this.tabPage7.Controls.Add(this.checkBoxGlyphOfFrostfire);
             this.tabPage7.Controls.Add(this.label90);
@@ -2294,6 +2298,26 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(0, 67);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(71, 13);
+            this.label92.TabIndex = 176;
+            this.label92.Text = "3.0.8 Mode: *";
+            this.toolTipMage.SetToolTip(this.label92, "Change calculations to reflect changes in 3.0.8 patch.");
+            // 
+            // checkBoxMode308
+            // 
+            this.checkBoxMode308.AutoSize = true;
+            this.checkBoxMode308.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "Mode308", true));
+            this.checkBoxMode308.Location = new System.Drawing.Point(185, 67);
+            this.checkBoxMode308.Name = "checkBoxMode308";
+            this.checkBoxMode308.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxMode308.TabIndex = 175;
+            this.checkBoxMode308.UseVisualStyleBackColor = true;
+            // 
             // comboBoxMIPMethod
             // 
             this.comboBoxMIPMethod.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.calculationOptionsMageBindingSource, "MIPMethod", true));
@@ -2476,25 +2500,25 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label92
+            // label93
             // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(0, 67);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(71, 13);
-            this.label92.TabIndex = 176;
-            this.label92.Text = "3.0.8 Mode: *";
-            this.toolTipMage.SetToolTip(this.label92, "Change calculations to reflect changes in 3.0.8 patch.");
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(3, 223);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(112, 13);
+            this.label93.TabIndex = 193;
+            this.label93.Text = "Glyph of Arcane Blast:";
+            this.toolTipMage.SetToolTip(this.label93, "Optimize between mage and molten armor. Disable to improve performance.");
             // 
-            // checkBoxMode308
+            // checkBoxGlyphOfArcaneBlast
             // 
-            this.checkBoxMode308.AutoSize = true;
-            this.checkBoxMode308.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "Mode308", true));
-            this.checkBoxMode308.Location = new System.Drawing.Point(185, 67);
-            this.checkBoxMode308.Name = "checkBoxMode308";
-            this.checkBoxMode308.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode308.TabIndex = 175;
-            this.checkBoxMode308.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfArcaneBlast.AutoSize = true;
+            this.checkBoxGlyphOfArcaneBlast.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneBlast", true));
+            this.checkBoxGlyphOfArcaneBlast.Location = new System.Drawing.Point(140, 223);
+            this.checkBoxGlyphOfArcaneBlast.Name = "checkBoxGlyphOfArcaneBlast";
+            this.checkBoxGlyphOfArcaneBlast.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxGlyphOfArcaneBlast.TabIndex = 192;
+            this.checkBoxGlyphOfArcaneBlast.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2738,6 +2762,8 @@
         private System.Windows.Forms.CheckBox checkBoxPotionOfSpeed;
         private System.Windows.Forms.Label label92;
         private System.Windows.Forms.CheckBox checkBoxMode308;
+        private System.Windows.Forms.Label label93;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneBlast;
 
     }
 }

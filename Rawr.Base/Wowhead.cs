@@ -695,6 +695,7 @@ namespace Rawr
 				case "4494": return "Ahn'kahet";
 				case "4500": return "The Eye of Eternity";
 				case "4603": return "Vault of Archavon";
+                case "3520": return "Shadowmoon Valley";
 				default: return "Unknown - " + zoneId;
 			}
 		}

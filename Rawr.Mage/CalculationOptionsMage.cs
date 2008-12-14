@@ -225,6 +225,7 @@ namespace Rawr.Mage
         public bool GlyphOfWaterElemental { get; set; }
         public bool GlyphOfArcaneExplosion { get; set; }
         public bool GlyphOfArcanePower { get; set; }
+        public bool GlyphOfArcaneBlast { get; set; }
 
         private CalculationOptionsMage()
         {
