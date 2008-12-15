@@ -33,7 +33,7 @@ namespace Rawr.Rogue
     [Serializable]
     public class CycleComponent
     {
-        private IFinisher _finisher;
+        private FinisherBase _finisher;
         private int _rank;
 
         public CycleComponent()
@@ -42,7 +42,7 @@ namespace Rawr.Rogue
             _finisher = new NoFinisher();
         }
 
-        public CycleComponent(int r, IFinisher f)
+        public CycleComponent(int r, FinisherBase f)
         {
             _rank = r;
             _finisher = f;
@@ -54,7 +54,7 @@ namespace Rawr.Rogue
             set { _rank = value; }
         }
 
-        public IFinisher Finisher
+        public FinisherBase Finisher
         {
             get { return _finisher; }
             set { _finisher = value; }

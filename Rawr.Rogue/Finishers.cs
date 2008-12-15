@@ -1,16 +1,24 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Xml.Serialization;
 
 namespace Rawr.Rogue
 {
-    public interface IFinisher
+	[Serializable]
+	[XmlInclude(typeof(NoFinisher))]
+	[XmlInclude(typeof(SnD))]
+	[XmlInclude(typeof(Rupture))]
+	[XmlInclude(typeof(Evis))]
+	public abstract class FinisherBase
     {
-        char Id { get; }
-        string Name { get; }
-        float EnergyCost { get; }
-        float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime);
+		public abstract char Id { get; }
+		public abstract string Name { get; }
+		public abstract float EnergyCost { get; }
+		public abstract float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime);
     }
 
-    public class Finishers : List<IFinisher>
+	[Serializable]
+	public class Finishers : List<FinisherBase>
     {
         public Finishers()
         {
@@ -20,7 +28,7 @@ namespace Rawr.Rogue
             Add(new Evis());
         }
 
-        public static IFinisher Get(char id)
+        public static FinisherBase Get(char id)
         {
             foreach(var finisher in new Finishers())
             {
@@ -32,7 +40,7 @@ namespace Rawr.Rogue
             return new NoFinisher();
         }
 
-        public static IFinisher Get(string name)
+        public static FinisherBase Get(string name)
         {
             foreach (var finisher in new Finishers())
             {
@@ -45,15 +53,16 @@ namespace Rawr.Rogue
         }
     }
 
-    public class Rupture : IFinisher
+	[Serializable]
+	public class Rupture : FinisherBase
     {
-        public char Id { get { return 'R'; } }
+        public override char Id { get { return 'R'; } }
 
-        public string Name { get { return "Rupture"; } }
+		public override string Name { get { return "Rupture"; } }
 
-        public float EnergyCost { get { return 25f; } }
+		public override float EnergyCost { get { return 25f; } }
 
-        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
+		public override float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             float finisherDmg;
             switch (rank)
@@ -83,15 +92,16 @@ namespace Rawr.Rogue
         }
     }
 
-    public class Evis : IFinisher
+	[Serializable]
+	public class Evis : FinisherBase
     {
-        public char Id { get { return 'E'; } }
+		public override char Id { get { return 'E'; } }
 
-        public string Name { get { return "Evis"; } }
+		public override string Name { get { return "Evis"; } }
 
-        public float EnergyCost { get { return 35f; } }
+		public override float EnergyCost { get { return 35f; } }
 
-        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
+		public override float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             var evisMod = stats.AttackPower*rank*.03f;
             var evisMin = 245f + (rank - 1f)*185f + evisMod;
@@ -110,23 +120,25 @@ namespace Rawr.Rogue
         }
     }
 
-    public class SnD : IFinisher
+	[Serializable]
+	public class SnD : FinisherBase
     {
-        public char Id { get { return 'S'; } }
-        public string Name { get { return "SnD"; } }
-        public float EnergyCost { get { return 25f; } }
-        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
+		public override char Id { get { return 'S'; } }
+		public override string Name { get { return "SnD"; } }
+		public override float EnergyCost { get { return 25f; } }
+		public override float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             return 0f;
         }
     }
 
-    public class NoFinisher : IFinisher
+	[Serializable]
+	public class NoFinisher : FinisherBase
     {
-        public char Id { get { return 'Z'; } }
-        public string Name { get { return "None"; } }
-        public float EnergyCost { get { return 0f; } }
-        public float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
+		public override char Id { get { return 'Z'; } }
+		public override string Name { get { return "None"; } }
+		public override float EnergyCost { get { return 0f; } }
+		public override float CalcFinisherDPS(RogueTalents talents, Stats stats, CombatFactors combatFactors, int rank, float cycleTime)
         {
             return 0f;
         }

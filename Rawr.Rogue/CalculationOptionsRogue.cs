@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Rawr.Rogue
 {
@@ -8,17 +9,27 @@ namespace Rawr.Rogue
     {
         public string GetXml()
         {
-            var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
-            var xml = new StringBuilder();
-            var sw = new System.IO.StringWriter(xml);
-            s.Serialize(sw, this);
-            return xml.ToString();
+			try
+			{
+				var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRogue));
+				var xml = new StringBuilder();
+				var sw = new System.IO.StringWriter(xml);
+				s.Serialize(sw, this);
+				return xml.ToString();
+			}
+			catch (Exception ex)
+			{
+#if DEBUG
+				MessageBox.Show("DEBUG: Exception attempting to serialize CalculationOptionsRogue: " + ex.Message);
+#endif
+				return string.Empty;
+			}
         }
 
         public int TargetLevel;
         public int TargetArmor;
         public Cycle DPSCycle = new Cycle();
-        public IPoison TempMainHandEnchant = new NoPoison();
-        public IPoison TempOffHandEnchant = new NoPoison();
+		public PoisonBase TempMainHandEnchant = new NoPoison();
+		public PoisonBase TempOffHandEnchant = new NoPoison();
     }
 }
