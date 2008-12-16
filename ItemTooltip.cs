@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -92,13 +93,18 @@ namespace Rawr
         private Character CurrentItemCharacter { get; set; }
         private Enchant CurrentItemEnchant { get; set; }
 
-        private Font _fontName;
-		private Font _fontStats;
-		private Font _fontStatsSmall;
-        private Font _fontTinyName;
+        private Font _fontName = null;
+        private Font _fontStats = null;
+        private Font _fontStatsSmall = null;
+        private Font _fontTinyName = null;
 
         private void LoadGraphicsObjects()
         {
+            Debug.Assert(_fontName == null);
+            Debug.Assert(_fontTinyName == null);
+            Debug.Assert(_fontStats == null);
+            Debug.Assert(_fontStatsSmall == null);
+
             _fontName = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Bold, GraphicsUnit.Point, ((0)));
             _fontTinyName = new Font("Microsoft Sans Serif", 6.00F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
 			_fontStats = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((0)));
@@ -168,38 +174,45 @@ namespace Rawr
                                                                     90);
                             g.FillRectangle(lgBrush, rectBorder);
                             lgBrush.Dispose();
+                            lgBrush = null;
+
                             Pen pen = new Pen(Color.FromArgb(128, 0, 0, 0));
                             g.DrawRectangle(pen, rectBorder);
                             pen.Dispose();
-                            Brush nameBrush = null;
-                            switch (_currentItem.Quality)
-                            {
-                                case Item.ItemQuality.Common:
-                                case Item.ItemQuality.Temp:
-                                    nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
-                                    break;
-                                case Item.ItemQuality.Epic:
-                                    nameBrush = new SolidBrush(Color.Purple);
-                                    break;
-                                case Item.ItemQuality.Legendary:
-                                    nameBrush = new SolidBrush(Color.Orange);
-									break;
-								case Item.ItemQuality.Heirloom:
-								case Item.ItemQuality.Artifact:
-									nameBrush = new SolidBrush(Color.Gold);
-									break;
-                                case Item.ItemQuality.Poor:
-                                    nameBrush = new SolidBrush(Color.Gray);
-                                    break;
-                                case Item.ItemQuality.Rare:
-                                    nameBrush = new SolidBrush(Color.Blue);
-                                    break;
-                                case Item.ItemQuality.Uncommon:
-                                    nameBrush = new SolidBrush(Color.Green);
-                                    break;
+                            pen = null;
+
+                            { // hide the name brush scope to reduce bugs
+                                Brush nameBrush = null;
+                                switch (_currentItem.Quality)
+                                {
+                                    case Item.ItemQuality.Common:
+                                    case Item.ItemQuality.Temp:
+                                        nameBrush = new SolidBrush(Color.FromKnownColor(KnownColor.InfoText));
+                                        break;
+                                    case Item.ItemQuality.Epic:
+                                        nameBrush = new SolidBrush(Color.Purple);
+                                        break;
+                                    case Item.ItemQuality.Legendary:
+                                        nameBrush = new SolidBrush(Color.Orange);
+                                        break;
+                                    case Item.ItemQuality.Heirloom:
+                                    case Item.ItemQuality.Artifact:
+                                        nameBrush = new SolidBrush(Color.Gold);
+                                        break;
+                                    case Item.ItemQuality.Poor:
+                                        nameBrush = new SolidBrush(Color.Gray);
+                                        break;
+                                    case Item.ItemQuality.Rare:
+                                        nameBrush = new SolidBrush(Color.Blue);
+                                        break;
+                                    case Item.ItemQuality.Uncommon:
+                                        nameBrush = new SolidBrush(Color.Green);
+                                        break;
+                                }
+                                g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
+                                nameBrush.Dispose();
+                                nameBrush = null;
                             }
-                            g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
-                            nameBrush.Dispose();
 
                             // item level drawing
                             if (CurrentItem.ItemLevel > 0)
@@ -268,6 +281,8 @@ namespace Rawr
                                         }
                                         g.FillRectangle(brushGemBorder, rectGemBorder);
                                         brushGemBorder.Dispose();
+                                        brushGemBorder = null;
+
                                         Item gem = (i == 0 ? _currentItem.Gem1 : (i == 1 ? _currentItem.Gem2 : _currentItem.Gem3));
                                         if (gem != null)
                                         {
@@ -276,37 +291,38 @@ namespace Rawr
                                             {
                                                 g.DrawImageUnscaled(icon, rectGemBorder.X + 2, rectGemBorder.Y + 2);
                                                 icon.Dispose();
+                                                icon = null;
                                             }
-                                            
+
                                             Character characterWithItemEquipped = Character.Clone();
                                             characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
                                             bool active = gem.MeetsRequirements(characterWithItemEquipped);
 
                                             string[] stats = gem.Stats.ToString().Split(',');
 
-											switch (stats.Length)
-											{
-												case 1:
-													g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 3);
-													break;
+                                            switch (stats.Length)
+                                            {
+                                                case 1:
+                                                    g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 3);
+                                                    break;
 
-												case 2:
-													g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 3);
-													g.DrawString(stats[1].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 20);
-													break;
+                                                case 2:
+                                                    g.DrawString(stats[0].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 3);
+                                                    g.DrawString(stats[1].Trim(), _fontStats, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 20);
+                                                    break;
 
-												case 3:
-													g.DrawString(stats[0].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 0);
-													g.DrawString(stats[1].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 12);
-													g.DrawString(stats[2].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
-														rectGemBorder.X + 39, rectGemBorder.Y + 24);
-													break;
-											}
+                                                case 3:
+                                                    g.DrawString(stats[0].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 0);
+                                                    g.DrawString(stats[1].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 12);
+                                                    g.DrawString(stats[2].Trim(), _fontStatsSmall, active ? SystemBrushes.InfoText : SystemBrushes.GrayText,
+                                                        rectGemBorder.X + 39, rectGemBorder.Y + 24);
+                                                    break;
+                                            }
 
                                             if (!active)
                                             {
@@ -375,39 +391,45 @@ namespace Rawr
                                         }
 
                                         xPos = 2;
-                                        nameBrush = null;
-                                        switch (tinyItem.Quality)
-                                        {
-                                            case Item.ItemQuality.Common:
-                                            case Item.ItemQuality.Temp:
-                                                nameBrush = SystemBrushes.InfoText;
-                                                break;
-                                            case Item.ItemQuality.Epic:
-                                                nameBrush = Brushes.Purple;
-                                                break;
-                                            case Item.ItemQuality.Legendary:
-                                                nameBrush = Brushes.Orange;
-                                                break;
-                                            case Item.ItemQuality.Poor:
-                                                nameBrush = Brushes.Gray;
-                                                break;
-                                            case Item.ItemQuality.Rare:
-                                                nameBrush = Brushes.Blue;
-                                                break;
-                                            case Item.ItemQuality.Uncommon:
-                                                nameBrush = Brushes.Gray;
-                                                break;
+
+                                        { // hide the name brush scope to reduce bugs
+                                            Brush nameBrush = null;
+                                            switch (tinyItem.Quality)
+                                            {
+                                                case Item.ItemQuality.Common:
+                                                case Item.ItemQuality.Temp:
+                                                    nameBrush = SystemBrushes.InfoText;
+                                                    break;
+                                                case Item.ItemQuality.Epic:
+                                                    nameBrush = Brushes.Purple;
+                                                    break;
+                                                case Item.ItemQuality.Legendary:
+                                                    nameBrush = Brushes.Orange;
+                                                    break;
+                                                case Item.ItemQuality.Poor:
+                                                    nameBrush = Brushes.Gray;
+                                                    break;
+                                                case Item.ItemQuality.Rare:
+                                                    nameBrush = Brushes.Blue;
+                                                    break;
+                                                case Item.ItemQuality.Uncommon:
+                                                    nameBrush = Brushes.Gray;
+                                                    break;
+                                            }
+                                            string label = tinyItem.Name;
+                                            Enchant tinyEnchant = CurrentItemCharacter.GetEnchantBySlot(slot);
+                                            if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
+                                            g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
+                                            yPos += tinyItemSize;
+                                            nameBrush.Dispose();
+                                            nameBrush = null;
                                         }
-                                        string label = tinyItem.Name;
-                                        Enchant tinyEnchant = CurrentItemCharacter.GetEnchantBySlot(slot);
-                                        if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
-                                        g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
-                                        yPos += tinyItemSize;
                                     }
                                 }
                             }
 
                             g.Dispose();
+                            g = null;
                         }
                     }
                 }
