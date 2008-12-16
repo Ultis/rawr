@@ -113,7 +113,7 @@ namespace Rawr
 
         protected Image _cachedToolTipImage = null;
 
-        private static Graphics _sizeTest = Graphics.FromImage(new Bitmap(309, 50));
+        private static Graphics _dummyBitmap = Graphics.FromImage(new Bitmap(1, 1));
 
         protected Image CachedToolTipImage
         {
@@ -128,6 +128,7 @@ namespace Rawr
                             bool hasSockets = _currentItem.Sockets.Color1 != Item.ItemSlot.None ||
                                               _currentItem.Sockets.Color2 != Item.ItemSlot.None ||
                                               _currentItem.Sockets.Color3 != Item.ItemSlot.None;
+
                             var positiveStats = Calculations.GetRelevantStats(_currentItem.Stats).Values(x => x > 0);
                             int statHeight = (positiveStats.Count + 2) / 3; // number of lines
                             statHeight *= 17;// * line height
@@ -138,7 +139,7 @@ namespace Rawr
                             {
                                 location = _currentItem.LocationInfo.Description;
                             }
-                            SizeF locationSize = _sizeTest.MeasureString(location, _fontStats);
+                            SizeF locationSize = _dummyBitmap.MeasureString(location, _fontStats);
                             if (locationSize.Width > 300)
                             {
                                 extraLocation = (int)locationSize.Height;
@@ -148,6 +149,13 @@ namespace Rawr
                             if (CurrentItemEnchant != null)
                             {
                                 enchantSize = 17;
+                            }
+
+                            int gemInfoSize = 0;
+                            if (CurrentItem.IsGem)
+                            {
+                                SizeF gem_info_size = _dummyBitmap.MeasureString("Matches:", _fontStats);
+                                gemInfoSize = (int)gem_info_size.Height;
                             }
 
                             int numTinyItems = 0;
@@ -160,7 +168,7 @@ namespace Rawr
                                 }
                             }
 
-                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
+                            _cachedToolTipImage = new Bitmap(309, (hasSockets ? 96 + statHeight : 38 + statHeight) + extraLocation + enchantSize + gemInfoSize + numTinyItems * tinyItemSize, PixelFormat.Format32bppArgb);
 
                             Graphics g = Graphics.FromImage(_cachedToolTipImage);
                             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -240,6 +248,7 @@ namespace Rawr
                             int xPos = xGrid.initial;
                             int yPos = yGrid.initial;
 
+                            int ypos_nextline = 0;
                             foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
                             {
                                 float value = positiveStats[info];
@@ -247,6 +256,9 @@ namespace Rawr
                                     value *= 100;
                                 value = (float)Math.Round(value * 100f) / 100f;
                                 g.DrawString(string.Format("{0}{1}", value, Extensions.DisplayName(info)), _fontStats, SystemBrushes.InfoText, xPos, yPos);
+                                // once we write on a line store where the next line would be
+                                // (alternatively we could put the yPos update code below this at the top of the loop)
+                                ypos_nextline = yPos + yGrid.step;
 
                                 xPos += xGrid.step;
                                 if (xPos > xGrid.max)
@@ -255,6 +267,9 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                             }
+                            // this is the next clean/empty line after we wrote the stats
+                            yPos = ypos_nextline;
+
                             if (hasSockets)
                             {
                                 for (int i = 0; i < 3; i++)
@@ -346,14 +361,45 @@ namespace Rawr
                                          ? "None"
                                          : CurrentItem.Sockets.Stats.ToString()),
                                     _fontStats, brushBonus, 2, 63 + statHeight);
+
+                                // update cursor position (the magic number 63 comes from right above)
+                                SizeF socket_info_size = g.MeasureString("Socket Bonus:", _fontStats);
+                                yPos = 63 + statHeight + ((int)socket_info_size.Height);
                             }
+                            // draw information about gem color (for dummies like me)
+                            if (CurrentItem.IsGem)
+                            {
+                                // create a string that gives us some information about the gem
+                                string colors = "Matches: ";
+                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Meta))
+                                    colors += "Meta ";
+                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Red))
+                                    colors += "Red ";
+                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Yellow))
+                                    colors += "Yellow ";
+                                if (Item.GemMatchesSlot(CurrentItem, Item.ItemSlot.Blue))
+                                    colors += "Blue ";
+                                // put the info on the tooltip
+                                Brush gemBrush = new SolidBrush(Color.Gray);
+                                g.DrawString(colors, _fontStats, gemBrush, 2, yPos);
+                                gemBrush.Dispose();
+                                // update our cursor position
+                                SizeF gem_info_size = g.MeasureString(colors, _fontStats);
+                                yPos += (int)gem_info_size.Height;
+                            }
+
                             if (_currentItem.Quality != Item.ItemQuality.Temp)
                             {
-                                Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
-                                g.DrawString(location, _fontStats, SystemBrushes.InfoText, textRec);
+                                PointF draw_pos = new PointF(2, yPos);
+                                //Rectangle textRec = new Rectangle(2, (hasSockets ? 76 : 18) + statHeight + 4, _cachedToolTipImage.Width - 4, (int)locationSize.Height + extraLocation);
+                                g.DrawString(location, _fontStats, SystemBrushes.InfoText, draw_pos);
+                                // update yPos here
+                                SizeF quality_size = g.MeasureString(location, _fontStats);
+                                yPos += (int)quality_size.Height;
                             }
-                            xPos = 2;
-                            yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
+
+                            xPos = 2;                           
+                            //yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
 
                             if (CurrentItemEnchant != null)
                             {
