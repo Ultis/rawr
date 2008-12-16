@@ -201,6 +201,15 @@ namespace Rawr
                             g.DrawString(CurrentItem.Name, _fontName, nameBrush, 2, 4);
                             nameBrush.Dispose();
 
+                            // item level drawing
+                            if (CurrentItem.ItemLevel > 0)
+                            {
+                                SizeF name_size = g.MeasureString(CurrentItem.Name, _fontName);
+                                Brush ilvlBrush = new SolidBrush(Color.Gray);
+                                g.DrawString(string.Format("[{0}]", CurrentItem.ItemLevel), _fontName, ilvlBrush, name_size.Width + 2, 4);
+                                ilvlBrush.Dispose();
+                            }
+
                             var xGrid = new
                             {
                                 initial = 2,
