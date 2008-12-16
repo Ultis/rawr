@@ -62,8 +62,8 @@ namespace Rawr
 
         private void FormEnterId_Load(object sender, EventArgs e)
         {
-            textItemId.Focus();
             textItemId.Text = "";
+            this.ActiveControl = textItemId;
         }
     }
 }

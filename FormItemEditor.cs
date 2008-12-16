@@ -360,7 +360,7 @@ namespace Rawr
                 Int32 item_id = Armory.GetItemIdByName(name);
                 if (item_id > 0)
                 {
-                    AddItemById(item_id, useArmory, useWowhead);
+                    newItem = Item.LoadFromId(item_id, true, "Manually Added", true);
                 }
             }
 

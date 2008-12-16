@@ -113,15 +113,14 @@ namespace Rawr
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(259, 132);
             this.ControlBox = false;
+            this.Controls.Add(this.textItemId);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbWowhead);
             this.Controls.Add(this.cbArmory);
             this.Controls.Add(this.lblTextAddItemID);
-            this.Controls.Add(this.textItemId);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Name = "FormEnterId";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add item";
             this.Load += new System.EventHandler(this.FormEnterId_Load);
