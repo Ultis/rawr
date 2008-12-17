@@ -109,10 +109,15 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, whiteAttacks.OhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
+
             calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
+            calculatedStats.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
+
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, combatFactors.OhExpertise);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
+            calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
+            calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
+            
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating); 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, (1 - combatFactors.TotalHaste)*100f);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseMhCrit, combatFactors.MhCrit);

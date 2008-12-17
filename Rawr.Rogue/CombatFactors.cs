@@ -78,6 +78,14 @@ namespace Rawr.Rogue
             get { return CalcExpertise(MainHand); }
         }
 
+        public float BaseExpertise
+        {
+            get
+            {
+                return _talents.WeaponExpertise * 5f + _stats.Expertise + _stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
+            }
+        }
+
         public float OhExpertise
         {
             get { return CalcExpertise(OffHand); }
@@ -173,7 +181,7 @@ namespace Rawr.Rogue
 
         private float CalcExpertise(Item weapon)
         {
-            var baseExpertise = _talents.WeaponExpertise * 5f + _stats.Expertise + _stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
+            var baseExpertise = BaseExpertise;
 
             if (_characterRace == Character.CharacterRace.Human)
             {

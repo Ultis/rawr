@@ -9,17 +9,15 @@ namespace Rawr.Rogue
         public CharacterCalculationsRogue(Stats stats)
         {
             BasicStats = stats;
-            _dictValues.Add(DisplayValue.Health, stats.Health.ToString());
-            _dictValues.Add(DisplayValue.Stamina, stats.Stamina.ToString());
-            _dictValues.Add(DisplayValue.Strength, stats.Strength.ToString());
-            _dictValues.Add(DisplayValue.Agility, stats.Agility.ToString());
-            _dictValues.Add(DisplayValue.AttackPower, stats.AttackPower.ToString());
-            _dictValues.Add(DisplayValue.ArmorPenetrationRating, stats.ArmorPenetrationRating.ToString());
-            _dictValues.Add(DisplayValue.TotalDPS, "0");
+            AddDisplayValue(DisplayValue.Health, stats.Health.ToString());
+            AddDisplayValue(DisplayValue.Stamina, stats.Stamina.ToString());
+            AddDisplayValue(DisplayValue.Strength, stats.Strength.ToString());
+            AddDisplayValue(DisplayValue.Agility, stats.Agility.ToString());
+            AddDisplayValue(DisplayValue.AttackPower, stats.AttackPower.ToString());
+            AddDisplayValue(DisplayValue.TotalDPS, "0");
         }
 
-        private readonly Dictionary<DisplayValue, string> _dictValues = new Dictionary<DisplayValue, string>();
-
+        private readonly Dictionary<DisplayValue, StatAndToolTip> _dictValues = new Dictionary<DisplayValue, StatAndToolTip>();
         
         public Stats BasicStats { get; private set; }
 
@@ -39,20 +37,35 @@ namespace Rawr.Rogue
             get 
             {
                 float value;
-                float.TryParse(_dictValues[DisplayValue.TotalDPS], out value);
+                float.TryParse(_dictValues[DisplayValue.TotalDPS].Stat, out value);
                 return value;
             }
-            set { _dictValues[DisplayValue.TotalDPS] = Round(value); }
+            set { _dictValues[DisplayValue.TotalDPS].Stat = Round(value); }
         }
 
         public void AddDisplayValue(DisplayValue key, string value)
         {
-            _dictValues[key] = value;
+            if(!_dictValues.ContainsKey(key))
+            {
+                _dictValues.Add(key, new StatAndToolTip());
+            }
+            
+            _dictValues[key].Stat = value;
         }
 
         public void AddRoundedDisplayValue(DisplayValue key, float value)
         {
             AddDisplayValue(key, Round(value));
+        }
+
+        public void AddToolTip(DisplayValue key, params string[] toolTips)
+        {
+            if (!_dictValues.ContainsKey(key))
+            {
+                _dictValues.Add(key, new StatAndToolTip());
+            }
+            
+            _dictValues[key].ToolTips.AddRange(toolTips);
         }
 
         private static string Round(float value)
@@ -65,7 +78,8 @@ namespace Rawr.Rogue
             var _returnValue = new Dictionary<string, string>();
             foreach(var kvp in _dictValues)
             {
-                _returnValue.Add(kvp.Key.Name, kvp.Value);
+                var toolTip = kvp.Value.ToolTips.Count == 0 ? "" : "*" + string.Join("\r\n", kvp.Value.ToolTips.ToArray());
+                _returnValue.Add(kvp.Key.Name, kvp.Value.Stat + toolTip);
             }
             return _returnValue;
         }
@@ -90,6 +104,12 @@ namespace Rawr.Rogue
             }
 
             return 0f;
+        }
+
+        private class StatAndToolTip
+        {
+            public string Stat = "";
+            public readonly List<string> ToolTips = new List<string>();
         }
     }
 }
