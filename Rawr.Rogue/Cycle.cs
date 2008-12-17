@@ -21,7 +21,7 @@ namespace Rawr.Rogue
 
         public override string ToString()
         {
-            return string.Join("", components.ConvertAll(delegate(CycleComponent c) { return c.ToString(); }).ToArray());
+            return string.Join("", components.ConvertAll(c => c.ToString()).ToArray());
         }
 
         public List<CycleComponent> Components

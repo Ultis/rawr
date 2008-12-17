@@ -11,9 +11,10 @@ namespace Rawr.Rogue
         public static readonly float ExpertiseRatingToExpertise = 1.0f/3.9423f;
         public static readonly float ExpertiseToDodgeParryReduction = 0.25f;
         public static readonly float HasteRatingToHaste = 1.0f/15.77f;
-        public static readonly float HitRatingToHit = 1.0f/15.7692f;
+        public static readonly float HitRatingToHit = 1.0f/32f;
         public static readonly float ParryRatingToParry = 1.0f/23.6538461538462f;
         public static readonly float StaminaToHP = 10.0f;
         public static readonly float StrengthToAP = 1.0f;
+        public static readonly float ArmorPenRatingToArmorReduction = 1f / 15.39529991f;
     }
 }

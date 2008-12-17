@@ -91,7 +91,7 @@ namespace Rawr.Rogue
             var cpg = ComboPointGenerator.Get(talents, combatFactors);
 
             var whiteAttacks = new WhiteAttacks(talents, stats, combatFactors);
-            var cycleTime = CalcCycleTime(talents, calcOpts, combatFactors, whiteAttacks.OhHits(), numCPG, cpg);
+            var cycleTime = CalcCycleTime(talents, calcOpts, combatFactors, whiteAttacks.OhHits, numCPG, cpg);
             var cpgAttackValues = cpg.CalcAttackValues(stats, combatFactors);
             var cpgDPS = CalcCpgDPS(cpgAttackValues, combatFactors, numCPG, cycleTime);
 
@@ -105,12 +105,16 @@ namespace Rawr.Rogue
             var poisonDPS = CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks);
 
             calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, whiteAttacks.MhAvgDamage);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, whiteAttacks.OhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, combatFactors.OhExpertise);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, combatFactors.TotalHaste);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating); 
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, (1 - combatFactors.TotalHaste)*100f);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseMhCrit, combatFactors.MhCrit);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseOhCrit, combatFactors.OhCrit);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit);
@@ -161,16 +165,16 @@ namespace Rawr.Rogue
             if (combatFactors.MainHand.Type == Item.ItemType.OneHandSword)
             {
                 //MH hits + CPG + finisher
-                ssHits += whiteAttacks.MhHits() * 0.01f * talents.SwordSpecialization;
+                ssHits += whiteAttacks.MhHits * 0.01f * talents.SwordSpecialization;
                 ssHits += (numCPG / cycleTime) * 0.01f * talents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
                 ssHits += 1f / cycleTime * 0.01f * talents.SwordSpecialization * combatFactors.ProbMhWhiteHit;
             }
             if (combatFactors.OffHand.Type == Item.ItemType.OneHandSword)
             {
-                ssHits += whiteAttacks.OhHits() * 0.01f * talents.SwordSpecialization;
+                ssHits += whiteAttacks.OhHits * 0.01f * talents.SwordSpecialization;
             }
 
-            var ssDPS = (ssHits * whiteAttacks.MhAvgDamage()) * (1 - combatFactors.MhCrit / 100f) + (ssHits * whiteAttacks.MhAvgDamage() * 2f * combatFactors.BonusWhiteCritDmg) * (combatFactors.MhCrit / 100f);
+            var ssDPS = (ssHits * whiteAttacks.MhAvgDamage) * (1 - combatFactors.MhCrit / 100f) + (ssHits * whiteAttacks.MhAvgDamage * 2f * combatFactors.BonusWhiteCritDmg) * (combatFactors.MhCrit / 100f);
             ssDPS *= combatFactors.DamageReduction;
             return ssDPS;
         }
@@ -182,8 +186,8 @@ namespace Rawr.Rogue
                 return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, 0f);
             }
 
-            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.MhHits())
-                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.OhHits());
+            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.MhHits)
+                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.OhHits);
         }
 
         public Stats GetBuffsStats(Character character)
@@ -243,7 +247,7 @@ namespace Rawr.Rogue
             statsTotal.Stamina = (float) Math.Floor(staBase*(1f + statsTotal.BonusStaminaMultiplier)) + (float) Math.Floor(staBonus*(1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Health = (float) Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - staBase)*10f))));
 
-            statsTotal.AttackPower = (statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower) + statsGearEnchantsBuffs.AttackPower;
+            statsTotal.AttackPower = (statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1+statsTotal.BonusAttackPowerMultiplier);
 
             statsTotal.PhysicalHit = character.RogueTalents.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
@@ -254,16 +258,18 @@ namespace Rawr.Rogue
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
 
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
+            statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
+
             switch (character.RogueTalents.SerratedBlades)
             {
                 case 3:
-                    statsTotal.ArmorPenetration += 560;
+                    statsTotal.ArmorPenetration += 640;
                     break;
                 case 2:
-                    statsTotal.ArmorPenetration += 373;
+                    statsTotal.ArmorPenetration += 434.4f;
                     break;
                 case 1:
-                    statsTotal.ArmorPenetration += 186;
+                    statsTotal.ArmorPenetration += 213.6f;
                     break;
             }
 
@@ -401,9 +407,9 @@ namespace Rawr.Rogue
                                                                     { Character.CharacterRace.Human, new [] {158f, 95f, 89f}},
                                                                     { Character.CharacterRace.Orc, new [] {155f, 98f, 91f}},
                                                                     { Character.CharacterRace.Dwarf, new [] {154f, 97f, 92f,}},
-                                                                    { Character.CharacterRace.NightElf, new [] {163f, 92f, 88f,}},
-                                                                    { Character.CharacterRace.Undead, new [] {156f, 94f, 90f,}},
-                                                                    { Character.CharacterRace.Tauren, new [] {0f, 0f, 0f,}},
+                                                                    { Character.CharacterRace.NightElf, new [] {194f, 110f, 104f}},
+                                                                    { Character.CharacterRace.Undead, new [] {156f, 94f, 90f}},
+                                                                    { Character.CharacterRace.Tauren, new [] {0f, 0f, 0f}},
                                                                     { Character.CharacterRace.Gnome, new [] {161f, 90f, 88f}},
                                                                     { Character.CharacterRace.Troll, new [] {160f, 96f, 90f}},
                                                                     { Character.CharacterRace.BloodElf, new [] {160f, 92f, 87f}},
@@ -417,19 +423,16 @@ namespace Rawr.Rogue
 
             var statsRace = new Stats
                                 {
-                                    Health = 3524f,
+                                    Health = 7924f,
                                     Agility = BaseRogueRaceStats[race][0],
                                     Strength = BaseRogueRaceStats[race][1],
                                     Stamina = BaseRogueRaceStats[race][2],
-                                    AttackPower = 120f,
+                                    AttackPower = 140,
                                     PhysicalCrit = 3.73f,
                                     DodgeRating = (float) (-0.59*18.92f),
                                 };
 
             statsRace.Health += statsRace.Stamina*10f;
-
-            if (race == Character.CharacterRace.NightElf)
-                statsRace.DodgeRating += 18.92f;
 
             return statsRace;
         }

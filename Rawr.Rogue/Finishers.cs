@@ -28,18 +28,6 @@ namespace Rawr.Rogue
             Add(new Evis());
         }
 
-        public static FinisherBase Get(char id)
-        {
-            foreach(var finisher in new Finishers())
-            {
-                if(id == finisher.Id)
-                {
-                    return finisher;
-                }
-            }
-            return new NoFinisher();
-        }
-
         public static FinisherBase Get(string name)
         {
             foreach (var finisher in new Finishers())

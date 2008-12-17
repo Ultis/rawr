@@ -13,9 +13,8 @@ namespace Rawr.Rogue
             _dictValues.Add(DisplayValue.Stamina, stats.Stamina.ToString());
             _dictValues.Add(DisplayValue.Strength, stats.Strength.ToString());
             _dictValues.Add(DisplayValue.Agility, stats.Agility.ToString());
-            _dictValues.Add(DisplayValue.WeaponDamage, stats.WeaponDamage.ToString());
             _dictValues.Add(DisplayValue.AttackPower, stats.AttackPower.ToString());
-            _dictValues.Add(DisplayValue.ArmorPenetration, stats.ArmorPenetration.ToString());    
+            _dictValues.Add(DisplayValue.ArmorPenetrationRating, stats.ArmorPenetrationRating.ToString());
             _dictValues.Add(DisplayValue.TotalDPS, "0");
         }
 

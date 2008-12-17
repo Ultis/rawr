@@ -29,11 +29,18 @@ namespace Rawr.Rogue
             get { return _offHand; }
         }
 
+        public float TotalArmorPenetration
+        {
+            get
+            {
+                return _stats.ArmorPenetration + _calcOpts.TargetArmor*_stats.ArmorPenetrationRating*RogueConversions.ArmorPenRatingToArmorReduction/100;
+            }
+        }
         public float DamageReduction
         {
             get
             {
-                var totalArmor = _calcOpts.TargetArmor - _stats.ArmorPenetration;
+                var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
                 return 1f - (totalArmor / (totalArmor + 10557.5f)); 
             }
         } 
@@ -109,13 +116,11 @@ namespace Rawr.Rogue
         public float TotalHaste
         {
             get
-            {   
+            {
                 //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
-                var sndHaste = .3f;
-                sndHaste *= (1f + _stats.BonusSnDHaste);
-
                 var totalHaste = 1f;
-                totalHaste *= (1f + sndHaste) * (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
+                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));
+                totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
                 totalHaste *= (1f + .2f * 15f / 120f * _talents.BladeFlurry);
                 return totalHaste; 
             }
@@ -152,7 +157,7 @@ namespace Rawr.Rogue
         {
             get
             {
-                return _talents.Precision + _stats.PhysicalHit + _stats.HitRating * RogueConversions.HitRatingToHit;
+                return _stats.PhysicalHit + _stats.HitRating * RogueConversions.HitRatingToHit;
             }
         }
 
