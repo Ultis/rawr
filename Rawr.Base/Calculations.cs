@@ -268,6 +268,12 @@ namespace Rawr
 				return Instance.ItemFitsInSlot(item, character, slot);
 			return false;
 		}
+		public static bool IncludeOffHandInCalculations(Character character)
+		{
+			if (Instance != null)
+				return Instance.IncludeOffHandInCalculations(character);
+			return false;
+		}
 		public static ICalculationOptionBase DeserializeDataObject(string xml)
 		{
 			if (Instance != null)
@@ -705,7 +711,7 @@ namespace Rawr
 				character.ProjectileBag, character.Wrist});
 			if (additionalItem != null)
 				items.Add(additionalItem);
-			if (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand)
+			if (IncludeOffHandInCalculations(character))
 				items.Add(character.OffHand);
 
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
@@ -746,17 +752,22 @@ namespace Rawr
                 {
                     stats.AccumulateUnsafe(character.MainHandEnchant.Stats, true);
                 }
-                if (character.OffHand != null && (character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand) &&
+                if (character.OffHand != null && IncludeOffHandInCalculations(character) &&
                     (
-                        (
-                            character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
-                            (character.OffHand.Slot == Item.ItemSlot.OneHand ||
-                            character.OffHand.Slot == Item.ItemSlot.OffHand) &&
-                            character.OffHand.Type != Item.ItemType.None &&
-                            character.OffHand.Type != Item.ItemType.Shield
-                        )
-                        ||
-                        (
+						(
+							character.OffHandEnchant.Slot == Item.ItemSlot.OneHand &&
+							(character.OffHand.Slot == Item.ItemSlot.OneHand ||
+							character.OffHand.Slot == Item.ItemSlot.OffHand) &&
+							character.OffHand.Type != Item.ItemType.None &&
+							character.OffHand.Type != Item.ItemType.Shield
+						)
+						||
+						(
+							character.OffHandEnchant.Slot == Item.ItemSlot.TwoHand &&
+							character.OffHand.Slot == Item.ItemSlot.TwoHand
+						)
+						||
+						(
                             character.OffHandEnchant.Slot == Item.ItemSlot.OffHand &&
                             character.OffHand.Slot == Item.ItemSlot.OffHand &&
                             character.OffHand.Type == Item.ItemType.Shield
@@ -850,6 +861,11 @@ namespace Rawr
 		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
 		{
 			return item.FitsInSlot(slot);
+		}
+
+		public virtual bool IncludeOffHandInCalculations(Character character)
+		{
+			return character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand;
 		}
 
         public virtual bool CanUseAmmo

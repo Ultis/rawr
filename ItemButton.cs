@@ -94,8 +94,7 @@ namespace Rawr
 		{
 			if (CharacterSlot == Character.CharacterSlot.OffHand)
 			{
-				_dimIcon = Character[Character.CharacterSlot.MainHand] != null &&
-					Character[Character.CharacterSlot.MainHand].Slot == Item.ItemSlot.TwoHand;
+				_dimIcon = !Calculations.IncludeOffHandInCalculations(Character);
 			}
 		}
 
