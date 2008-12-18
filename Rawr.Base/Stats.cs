@@ -219,7 +219,9 @@ namespace Rawr
         ChainLightningCooldownReduction,
         BonusFlameShockDoTDamage,
         BonusFlametongueDamage,
-        ShockManaCostReduction
+        ShockManaCostReduction,
+		LightningBoltDamageModifier,
+		LightningBoltCostReduction
         #endregion
     }
 
@@ -2109,6 +2111,19 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.ShockManaCostReduction] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LightningBoltCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningBoltCostReduction] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LightningBoltDamageModifier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier] = value; }
+        }
+
         #endregion
 #endregion
 

@@ -1873,7 +1873,45 @@ namespace Rawr
 				Stats = { CHHealIncrease = .05f },
 				SetThreshold = 4
 			  });
-		    
+																																																																																							
+			  // Elemental Shaman set bonuses:
+					//Tier 6																																																																																		
+			  defaultBuffs.Add(new Buff()
+			  {
+				Name = "Skyshatter Regalia 2 Piece Bonus",
+				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+				SetName = "Skyshatter Regalia",
+				Stats = { Mp5 = 15f, CritRating = 35f, Spellpower = 45f },
+				SetThreshold = 2
+			  });
+
+			  defaultBuffs.Add(new Buff()
+			  {
+				Name = "Skyshatter Regalia 4 Piece Bonus",
+				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+				SetName = "Skyshatter Regalia",
+				Stats = { LightningBoltDamageModifier = 0.05f },
+				SetThreshold = 4
+			  });
+					//Tier 7																																																																																				
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Earthshatter Garb 2 Piece Bonus",
+				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+				SetName = "Earthshatter Garb",
+				Stats = { LightningBoltCostReduction = 0.05f },
+				SetThreshold = 2
+			});
+
+			  defaultBuffs.Add(new Buff()
+			  {
+				Name = "Earthshatter Garb 4 Piece Bonus",
+				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
+				SetName = "Earthshatter Garb",
+				Stats = { BonusLavaBurstCritDamage = 0.10f },
+				SetThreshold = 4
+			  });
+																																																																																							
 			//Hunter Set Bonuses
 			  defaultBuffs.Add(new Buff()
 			  {
