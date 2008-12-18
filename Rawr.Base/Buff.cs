@@ -1881,7 +1881,7 @@ namespace Rawr
 				Name = "Skyshatter Regalia 2 Piece Bonus",
 				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
 				SetName = "Skyshatter Regalia",
-				Stats = { Mp5 = 15f, CritRating = 35f, Spellpower = 45f },
+				Stats = { Mp5 = 15f, CritRating = 35f, SpellPower = 45f },
 				SetThreshold = 2
 			  });
 
