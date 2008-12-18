@@ -467,8 +467,6 @@ namespace Rawr
                                             if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
                                             g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
                                             yPos += tinyItemSize;
-                                            nameBrush.Dispose();
-                                            nameBrush = null;
                                         }
                                     }
                                 }
