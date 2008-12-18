@@ -530,6 +530,14 @@ namespace Rawr
                         }
                     }
                     g.Dispose();
+                    if (CustomRendered)
+                    {
+                        _scrollBar.Visible = false;
+                    }
+                    else
+                    {
+                        _scrollBar.Visible = true;
+                    }
                     _scrollBar.Maximum = _prerenderedGraph.Height;
                     _scrollBar.Value = 0;
                     _scrollBar.SmallChange = 32;

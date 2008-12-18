@@ -150,7 +150,7 @@ namespace Rawr.Mage
             {
                 if (_customRenderedChartNames == null)
                 {
-                    _customRenderedChartNames = new string[] { "Sequence Reconstruction" };
+                    _customRenderedChartNames = new string[] { "Sequence Reconstruction", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect" };
                 }
                 return _customRenderedChartNames;
             }
@@ -936,14 +936,33 @@ namespace Rawr.Mage
 
                     return comparisonList.ToArray();
                 case "Item Budget":
-                    Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { SpellPower = 11.7f } },
-                        new Item() { Stats = new Stats() { Mp5 = 4 } },
-                        new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } },
-                        new Item() { Stats = new Stats() { HitRating = 10 } },
+                    return EvaluateItemBudget(character);
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
+        }
+
+        private ComparisonCalculationBase[] EvaluateItemBudget(Character character)
+        {
+            Stats baseStats;
+            return EvaluateItemBudget(character, new Stats(), false, out baseStats);
+        }
+
+        private ComparisonCalculationBase[] EvaluateItemBudget(Character character, Stats offset, bool forceIncrementalBaseRecalculation, out Stats baseStats)
+        {
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            CharacterCalculationsMage baseCalc, calc;
+            ComparisonCalculationBase comparison;
+            float[] subPoints;
+
+            Item[] itemList = new Item[] {
+                        new Item() { Stats = new Stats() { SpellPower = 11.7f } + offset },
+                        new Item() { Stats = new Stats() { Mp5 = 4 } + offset },
+                        new Item() { Stats = new Stats() { CritRating = 10 } + offset },
+                        new Item() { Stats = new Stats() { HasteRating = 10 } + offset },
+                        new Item() { Stats = new Stats() { HitRating = 10 } + offset },
                     };
-                    string[] statList = new string[] {
+            string[] statList = new string[] {
                         "11.7 Spell Power",
                         "4 Mana per 5 sec",
                         "10 Crit Rating",
@@ -951,97 +970,96 @@ namespace Rawr.Mage
                         "10 Hit Rating",
                     };
 
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+            // offset might be very far from current position, so make sure to force incremental set recalc
+            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation) as CharacterCalculationsMage;
+            baseStats = baseCalc.BaseStats;
 
-                    for (int index = 0; index < statList.Length; index++)
-                    {
-                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsMage;
+            for (int index = 0; index < statList.Length; index++)
+            {
+                calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsMage;
 
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
+                comparison = CreateNewComparisonCalculation();
+                comparison.Name = statList[index];
+                comparison.Equipped = false;
+                comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+                subPoints = new float[calc.SubPoints.Length];
+                for (int i = 0; i < calc.SubPoints.Length; i++)
+                {
+                    subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+                }
+                comparison.SubPoints = subPoints;
 
-                        comparisonList.Add(comparison);
-                    }
-
-                    //Intellect
-                    CharacterCalculationsMage calcAtAdd;
-                    Stats statsAtAdd = baseCalc.BaseStats;
-                    float baseInt = baseCalc.BaseStats.Intellect;
-                    float intToAdd = 0f;
-                    while (baseInt == statsAtAdd.Intellect && intToAdd < 2)
-                    {
-                        intToAdd += 0.01f;
-                        statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToAdd } });
-                    }
-                    calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } }) as CharacterCalculationsMage;
-
-                    Stats statsAtSubtract = baseCalc.BaseStats;
-                    float intToSubtract = 0f;
-                    while (baseInt == statsAtSubtract.Intellect && intToSubtract > -2)
-                    {
-                        intToSubtract -= 0.01f;
-                        statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } });
-                    }
-                    intToSubtract += 0.01f;
-
-                    comparison = CreateNewComparisonCalculation();
-                    comparison.Name = "10 Intellect";
-                    comparison.Equipped = false;
-                    comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (intToAdd - intToSubtract);
-                    subPoints = new float[baseCalc.SubPoints.Length];
-                    for (int i = 0; i < baseCalc.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (intToAdd - intToSubtract);
-                    }
-                    comparison.SubPoints = subPoints;
-
-                    comparisonList.Add(comparison);
-
-                    //Spirit
-                    statsAtAdd = baseCalc.BaseStats;
-                    float baseSpi = baseCalc.BaseStats.Spirit;
-                    float spiToAdd = 0f;
-                    while (baseSpi == statsAtAdd.Spirit && spiToAdd < 2)
-                    {
-                        spiToAdd += 0.01f;
-                        statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } });
-                    }
-                    calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } }) as CharacterCalculationsMage;
-
-                    statsAtSubtract = baseCalc.BaseStats;
-                    float spiToSubtract = 0f;
-                    while (baseSpi == statsAtSubtract.Spirit && spiToSubtract > -2)
-                    {
-                        spiToSubtract -= 0.01f;
-                        statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } });
-                    }
-                    spiToSubtract += 0.01f;
-
-                    comparison = CreateNewComparisonCalculation();
-                    comparison.Name = "10 Spirit";
-                    comparison.Equipped = false;
-                    comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (spiToAdd - spiToSubtract);
-                    subPoints = new float[baseCalc.SubPoints.Length];
-                    for (int i = 0; i < baseCalc.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (spiToAdd - spiToSubtract);
-                    }
-                    comparison.SubPoints = subPoints;
-
-                    comparisonList.Add(comparison);
-
-                    return comparisonList.ToArray();
-                default:
-                    return new ComparisonCalculationBase[0];
+                comparisonList.Add(comparison);
             }
+
+            //Intellect
+            CharacterCalculationsMage calcAtAdd;
+            Stats statsAtAdd = baseCalc.BaseStats;
+            float baseInt = baseCalc.BaseStats.Intellect;
+            float intToAdd = 0f;
+            while (baseInt == statsAtAdd.Intellect && intToAdd < 2)
+            {
+                intToAdd += 0.01f;
+                statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToAdd } + offset });
+            }
+            calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = intToAdd } + offset }) as CharacterCalculationsMage;
+
+            Stats statsAtSubtract = baseCalc.BaseStats;
+            float intToSubtract = 0f;
+            while (baseInt == statsAtSubtract.Intellect && intToSubtract > -2)
+            {
+                intToSubtract -= 0.01f;
+                statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Intellect = intToSubtract } + offset });
+            }
+            intToSubtract += 0.01f;
+
+            comparison = CreateNewComparisonCalculation();
+            comparison.Name = "10 Intellect";
+            comparison.Equipped = false;
+            comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (intToAdd - intToSubtract);
+            subPoints = new float[baseCalc.SubPoints.Length];
+            for (int i = 0; i < baseCalc.SubPoints.Length; i++)
+            {
+                subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (intToAdd - intToSubtract);
+            }
+            comparison.SubPoints = subPoints;
+
+            comparisonList.Add(comparison);
+
+            //Spirit
+            statsAtAdd = baseCalc.BaseStats;
+            float baseSpi = baseCalc.BaseStats.Spirit;
+            float spiToAdd = 0f;
+            while (baseSpi == statsAtAdd.Spirit && spiToAdd < 2)
+            {
+                spiToAdd += 0.01f;
+                statsAtAdd = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } + offset });
+            }
+            calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = spiToAdd } + offset}) as CharacterCalculationsMage;
+
+            statsAtSubtract = baseCalc.BaseStats;
+            float spiToSubtract = 0f;
+            while (baseSpi == statsAtSubtract.Spirit && spiToSubtract > -2)
+            {
+                spiToSubtract -= 0.01f;
+                statsAtSubtract = GetCharacterStats(character, new Item() { Stats = new Stats() { Spirit = spiToSubtract } + offset });
+            }
+            spiToSubtract += 0.01f;
+
+            comparison = CreateNewComparisonCalculation();
+            comparison.Name = "10 Spirit";
+            comparison.Equipped = false;
+            comparison.OverallPoints = 10 * (calcAtAdd.OverallPoints - baseCalc.OverallPoints) / (spiToAdd - spiToSubtract);
+            subPoints = new float[baseCalc.SubPoints.Length];
+            for (int i = 0; i < baseCalc.SubPoints.Length; i++)
+            {
+                subPoints[i] = 10 * (calcAtAdd.SubPoints[i] - baseCalc.SubPoints[i]) / (spiToAdd - spiToSubtract);
+            }
+            comparison.SubPoints = subPoints;
+
+            comparisonList.Add(comparison);
+
+            return comparisonList.ToArray();
         }
 
         private static string TimeFormat(double time)
@@ -1052,6 +1070,50 @@ namespace Rawr.Mage
 
         public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
         {
+            Rectangle rectSubPoint;
+            System.Drawing.Drawing2D.LinearGradientBrush brushSubPointFill;
+            System.Drawing.Drawing2D.ColorBlend blendSubPoint;
+
+            Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
+            int legendY;
+
+            Brush[] brushSubPoints;
+            Color[] colorSubPointsA;
+            Color[] colorSubPointsB;
+
+            float graphStart;
+            float graphWidth;
+            float graphTop;
+            float graphBottom;
+            float graphHeight;
+            float maxScale;
+            float dpsScale;
+            float graphEnd;
+            float[] ticks;
+            Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
+            Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
+            Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
+            Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
+            Pen black25 = new Pen(Color.FromArgb(25, 0, 0, 0));
+            StringFormat formatTick = new StringFormat();
+            formatTick.LineAlignment = StringAlignment.Far;
+            formatTick.Alignment = StringAlignment.Center;
+            Brush black200brush = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
+            Brush black150brush = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
+            Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
+            Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
+            Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
+
+            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Hit Rating", "10 Intellect", "10 Spirit" };
+            Color[] statColors = new Color[] { Color.Red, Color.DarkBlue, Color.Orange, Color.Olive, Color.YellowGreen, Color.Aqua, Color.Blue };
+
+            List<float> X = new List<float>();
+            List<ComparisonCalculationBase[]> Y = new List<ComparisonCalculationBase[]>();
+            Stats baseStats;
+
+            float min;
+            float max;
+
             height -= 2;
             switch (chartName)
             {
@@ -1060,25 +1122,19 @@ namespace Rawr.Mage
 
                     if (calculationOptions.SequenceReconstruction == null)
                     {
-                        Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
                         g.DrawString("Sequence reconstruction data is not available.", fontLegend, Brushes.Black, 2, 2);
                     }
                     else
                     {
                         #region Legend
-                        Rectangle rectSubPoint;
-                        System.Drawing.Drawing2D.LinearGradientBrush brushSubPointFill;
-                        System.Drawing.Drawing2D.ColorBlend blendSubPoint;
-
-                        Font fontLegend = new Font("Verdana", 10f, GraphicsUnit.Pixel);
-                        int legendY = 2;
+                        legendY = 2;
 
                         Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
                         string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect" };
                         Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.LemonChiffon, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
-                        Brush[] brushSubPoints = new Brush[cooldownColors.Length];
-                        Color[] colorSubPointsA = new Color[cooldownColors.Length];
-                        Color[] colorSubPointsB = new Color[cooldownColors.Length];
+                        brushSubPoints = new Brush[cooldownColors.Length];
+                        colorSubPointsA = new Color[cooldownColors.Length];
+                        colorSubPointsB = new Color[cooldownColors.Length];
                         for (int i = 0; i < cooldownColors.Length; i++)
                         {
                             Color baseColor = cooldownColors[i];
@@ -1123,33 +1179,20 @@ namespace Rawr.Mage
                         #endregion
 
                         #region Graph Ticks
-                        float graphStart = 20f;
-                        float graphWidth = width - 40f;
-                        float graphTop = legendY;
-                        float graphBottom = height - 48;
-                        float graphHeight = graphBottom - graphTop - 40;
-                        float maxScale = calculationOptions.FightDuration;
-                        float graphEnd = graphStart + graphWidth;
-                        float[] ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+                        graphStart = 20f;
+                        graphWidth = width - 40f;
+                        graphTop = legendY;
+                        graphBottom = height - 48;
+                        graphHeight = graphBottom - graphTop - 40;
+                        maxScale = calculationOptions.FightDuration;
+                        graphEnd = graphStart + graphWidth;
+                        ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
 							(float)Math.Round(graphStart + graphWidth * 0.75f),
 							(float)Math.Round(graphStart + graphWidth * 0.25f),
 							(float)Math.Round(graphStart + graphWidth * 0.125f),
 							(float)Math.Round(graphStart + graphWidth * 0.375f),
 							(float)Math.Round(graphStart + graphWidth * 0.625f),
 							(float)Math.Round(graphStart + graphWidth * 0.875f)};
-                        Pen black200 = new Pen(Color.FromArgb(200, 0, 0, 0));
-                        Pen black150 = new Pen(Color.FromArgb(150, 0, 0, 0));
-                        Pen black75 = new Pen(Color.FromArgb(75, 0, 0, 0));
-                        Pen black50 = new Pen(Color.FromArgb(50, 0, 0, 0));
-                        Pen black25 = new Pen(Color.FromArgb(25, 0, 0, 0));
-                        StringFormat formatTick = new StringFormat();
-                        formatTick.LineAlignment = StringAlignment.Far;
-                        formatTick.Alignment = StringAlignment.Center;
-                        Brush black200brush = new SolidBrush(Color.FromArgb(200, 0, 0, 0));
-                        Brush black150brush = new SolidBrush(Color.FromArgb(150, 0, 0, 0));
-                        Brush black75brush = new SolidBrush(Color.FromArgb(75, 0, 0, 0));
-                        Brush black50brush = new SolidBrush(Color.FromArgb(50, 0, 0, 0));
-                        Brush black25brush = new SolidBrush(Color.FromArgb(25, 0, 0, 0));
 
                         g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
                         g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
@@ -1321,6 +1364,463 @@ namespace Rawr.Mage
                             }
                         }
                     }
+                    break;
+                case "Scaling vs Spell Power":
+
+                    #region Legend
+                    legendY = 2;
+
+                    brushSubPoints = new Brush[statColors.Length];
+                    colorSubPointsA = new Color[statColors.Length];
+                    colorSubPointsB = new Color[statColors.Length];
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        Color baseColor = statColors[i];
+                        brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                        colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                        colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                    }
+
+                    for (int i = 0; i < statNames.Length; i++)
+                    {
+                        g.DrawLine(new Pen(statColors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
+                        g.DrawString(statNames[i], fontLegend, Brushes.Black, new Point(60, legendY));
+
+                        legendY += 16;
+                    }
+                    #endregion
+
+                    #region Graph Ticks
+                    graphStart = 20f;
+                    graphWidth = width - 40f;
+                    graphTop = legendY;
+                    graphBottom = height - 5;
+                    graphHeight = graphBottom - graphTop - 40;
+                    maxScale = 4000;
+                    dpsScale = 20;
+                    graphEnd = graphStart + graphWidth;
+                    ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float h = (float)Math.Round(graphBottom - graphHeight * i / 10.0);
+                        g.DrawLine(black25, graphStart - 4, h, graphEnd, h);
+                        //g.DrawLine(black200, graphStart - 4, h, graphStart, h);
+
+                        g.DrawString((i / 10.0 * dpsScale).ToString("0"), fontLegend, black200brush, graphStart - 15, h + 6, formatTick);
+                    }
+
+                    g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                    g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                    g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                    g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                    g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                    g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                    g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                    g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                    g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                    g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                    g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                    g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                    g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                    g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                    g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                    g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
+
+                    g.DrawString((0f).ToString("0"), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                    g.DrawString((maxScale).ToString("0"), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.5f).ToString("0"), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.75f).ToString("0"), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.25f).ToString("0"), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.125f).ToString("0"), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.375f).ToString("0"), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.625f).ToString("0"), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.875f).ToString("0"), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+
+                    #endregion
+
+                    baseStats = GetCharacterStats(character);
+                    g.DrawLine(black200, (float)Math.Round(graphStart + baseStats.SpellPower / maxScale * graphWidth), graphBottom, (float)Math.Round(graphStart + baseStats.SpellPower / maxScale * graphWidth), graphBottom - graphHeight);
+                    min = -baseStats.SpellPower;
+                    max = maxScale - baseStats.SpellPower;
+
+                    for (float offset = min; offset <= max; offset += 100)
+                    {
+                        ComparisonCalculationBase[] result = EvaluateItemBudget(character, new Stats() { SpellPower = offset }, true, out baseStats);
+                        if (baseStats.SpellPower >= 0 && baseStats.SpellPower <= maxScale)
+                        {
+                            X.Add(baseStats.SpellPower);
+                            Y.Add(result);
+                        }
+                    }
+
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        List<PointF> list = new List<PointF>();
+                        for (int j = 0; j < X.Count; j++)
+                        {
+                            list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
+                        }
+                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                    }
+
+                    // restore incremental base
+                    if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
+                    {
+                        GetCharacterCalculations(character, null, true);
+                    }
+
+                    break;
+                case "Scaling vs Crit Rating":
+
+                    #region Legend
+                    legendY = 2;
+
+                    brushSubPoints = new Brush[statColors.Length];
+                    colorSubPointsA = new Color[statColors.Length];
+                    colorSubPointsB = new Color[statColors.Length];
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        Color baseColor = statColors[i];
+                        brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                        colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                        colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                    }
+
+                    for (int i = 0; i < statNames.Length; i++)
+                    {
+                        g.DrawLine(new Pen(statColors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
+                        g.DrawString(statNames[i], fontLegend, Brushes.Black, new Point(60, legendY));
+
+                        legendY += 16;
+                    }
+                    #endregion
+
+                    #region Graph Ticks
+                    graphStart = 20f;
+                    graphWidth = width - 40f;
+                    graphTop = legendY;
+                    graphBottom = height - 5;
+                    graphHeight = graphBottom - graphTop - 40;
+                    maxScale = 500;
+                    dpsScale = 20;
+                    graphEnd = graphStart + graphWidth;
+                    ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float h = (float)Math.Round(graphBottom - graphHeight * i / 10.0);
+                        g.DrawLine(black25, graphStart - 4, h, graphEnd, h);
+                        //g.DrawLine(black200, graphStart - 4, h, graphStart, h);
+
+                        g.DrawString((i / 10.0 * dpsScale).ToString("0"), fontLegend, black200brush, graphStart - 15, h + 6, formatTick);
+                    }
+
+                    g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                    g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                    g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                    g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                    g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                    g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                    g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                    g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                    g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                    g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                    g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                    g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                    g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                    g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                    g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                    g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
+
+                    g.DrawString((0f).ToString("0"), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                    g.DrawString((maxScale).ToString("0"), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.5f).ToString("0"), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.75f).ToString("0"), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.25f).ToString("0"), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.125f).ToString("0"), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.375f).ToString("0"), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.625f).ToString("0"), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.875f).ToString("0"), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+
+                    #endregion
+
+                    baseStats = GetCharacterStats(character);
+                    g.DrawLine(black200, (float)Math.Round(graphStart + baseStats.CritRating / maxScale * graphWidth), graphBottom, (float)Math.Round(graphStart + baseStats.CritRating / maxScale * graphWidth), graphBottom - graphHeight);
+                    min = -baseStats.CritRating;
+                    max = maxScale - baseStats.CritRating;
+
+                    for (float offset = min; offset <= max; offset += 50)
+                    {
+                        ComparisonCalculationBase[] result = EvaluateItemBudget(character, new Stats() { CritRating = offset }, true, out baseStats);
+                        if (baseStats.CritRating >= 0 && baseStats.CritRating <= maxScale)
+                        {
+                            X.Add(baseStats.CritRating);
+                            Y.Add(result);
+                        }
+                    }
+
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        List<PointF> list = new List<PointF>();
+                        for (int j = 0; j < X.Count; j++)
+                        {
+                            list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
+                        }
+                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                    }
+
+                    // restore incremental base
+                    if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
+                    {
+                        GetCharacterCalculations(character, null, true);
+                    }
+
+                    break;
+                case "Scaling vs Haste Rating":
+
+                    #region Legend
+                    legendY = 2;
+
+                    brushSubPoints = new Brush[statColors.Length];
+                    colorSubPointsA = new Color[statColors.Length];
+                    colorSubPointsB = new Color[statColors.Length];
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        Color baseColor = statColors[i];
+                        brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                        colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                        colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                    }
+
+                    for (int i = 0; i < statNames.Length; i++)
+                    {
+                        g.DrawLine(new Pen(statColors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
+                        g.DrawString(statNames[i], fontLegend, Brushes.Black, new Point(60, legendY));
+
+                        legendY += 16;
+                    }
+                    #endregion
+
+                    #region Graph Ticks
+                    graphStart = 20f;
+                    graphWidth = width - 40f;
+                    graphTop = legendY;
+                    graphBottom = height - 5;
+                    graphHeight = graphBottom - graphTop - 40;
+                    maxScale = 500;
+                    dpsScale = 20;
+                    graphEnd = graphStart + graphWidth;
+                    ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float h = (float)Math.Round(graphBottom - graphHeight * i / 10.0);
+                        g.DrawLine(black25, graphStart - 4, h, graphEnd, h);
+                        //g.DrawLine(black200, graphStart - 4, h, graphStart, h);
+
+                        g.DrawString((i / 10.0 * dpsScale).ToString("0"), fontLegend, black200brush, graphStart - 15, h + 6, formatTick);
+                    }
+
+                    g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                    g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                    g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                    g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                    g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                    g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                    g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                    g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                    g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                    g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                    g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                    g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                    g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                    g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                    g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                    g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
+
+                    g.DrawString((0f).ToString("0"), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                    g.DrawString((maxScale).ToString("0"), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.5f).ToString("0"), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.75f).ToString("0"), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.25f).ToString("0"), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.125f).ToString("0"), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.375f).ToString("0"), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.625f).ToString("0"), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.875f).ToString("0"), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+
+                    #endregion
+
+
+                    baseStats = GetCharacterStats(character);
+                    g.DrawLine(black200, (float)Math.Round(graphStart + baseStats.HasteRating / maxScale * graphWidth), graphBottom, (float)Math.Round(graphStart + baseStats.HasteRating / maxScale * graphWidth), graphBottom - graphHeight);
+                    min = -baseStats.HasteRating;
+                    max = maxScale - baseStats.HasteRating;
+
+                    for (float offset = min; offset <= max; offset += 50)
+                    {
+                        ComparisonCalculationBase[] result = EvaluateItemBudget(character, new Stats() { HasteRating = offset }, true, out baseStats);
+                        if (baseStats.HasteRating >= 0 && baseStats.HasteRating <= maxScale)
+                        {
+                            X.Add(baseStats.HasteRating);
+                            Y.Add(result);
+                        }
+                    }
+
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        List<PointF> list = new List<PointF>();
+                        for (int j = 0; j < X.Count; j++)
+                        {
+                            list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
+                        }
+                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                    }
+
+                    // restore incremental base
+                    if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
+                    {
+                        GetCharacterCalculations(character, null, true);
+                    }
+
+                    break;
+                case "Scaling vs Intellect":
+
+                    #region Legend
+                    legendY = 2;
+
+                    brushSubPoints = new Brush[statColors.Length];
+                    colorSubPointsA = new Color[statColors.Length];
+                    colorSubPointsB = new Color[statColors.Length];
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        Color baseColor = statColors[i];
+                        brushSubPoints[i] = new SolidBrush(Color.FromArgb(baseColor.R / 2, baseColor.G / 2, baseColor.B / 2));
+                        colorSubPointsA[i] = Color.FromArgb(baseColor.A / 2, baseColor.R / 2, baseColor.G / 2, baseColor.B / 2);
+                        colorSubPointsB[i] = Color.FromArgb(baseColor.A / 2, baseColor);
+                    }
+
+                    for (int i = 0; i < statNames.Length; i++)
+                    {
+                        g.DrawLine(new Pen(statColors[i]), new Point(20, legendY + 7), new Point(50, legendY + 7));
+                        g.DrawString(statNames[i], fontLegend, Brushes.Black, new Point(60, legendY));
+
+                        legendY += 16;
+                    }
+                    #endregion
+
+                    #region Graph Ticks
+                    graphStart = 20f;
+                    graphWidth = width - 40f;
+                    graphTop = legendY;
+                    graphBottom = height - 5;
+                    graphHeight = graphBottom - graphTop - 40;
+                    maxScale = 2000;
+                    dpsScale = 20;
+                    graphEnd = graphStart + graphWidth;
+                    ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
+							(float)Math.Round(graphStart + graphWidth * 0.75f),
+							(float)Math.Round(graphStart + graphWidth * 0.25f),
+							(float)Math.Round(graphStart + graphWidth * 0.125f),
+							(float)Math.Round(graphStart + graphWidth * 0.375f),
+							(float)Math.Round(graphStart + graphWidth * 0.625f),
+							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+
+                    for (int i = 0; i <= 10; i++)
+                    {
+                        float h = (float)Math.Round(graphBottom - graphHeight * i / 10.0);
+                        g.DrawLine(black25, graphStart - 4, h, graphEnd, h);
+                        //g.DrawLine(black200, graphStart - 4, h, graphStart, h);
+
+                        g.DrawString((i / 10.0 * dpsScale).ToString("0"), fontLegend, black200brush, graphStart - 15, h + 6, formatTick);
+                    }
+
+                    g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
+                    g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
+                    g.DrawLine(black75, ticks[3], graphTop + 36, ticks[3], graphTop + 39);
+                    g.DrawLine(black75, ticks[4], graphTop + 36, ticks[4], graphTop + 39);
+                    g.DrawLine(black75, ticks[5], graphTop + 36, ticks[5], graphTop + 39);
+                    g.DrawLine(black75, ticks[6], graphTop + 36, ticks[6], graphTop + 39);
+                    g.DrawLine(black75, graphEnd, graphTop + 41, graphEnd, height - 4);
+                    g.DrawLine(black75, ticks[0], graphTop + 41, ticks[0], height - 4);
+                    g.DrawLine(black50, ticks[1], graphTop + 41, ticks[1], height - 4);
+                    g.DrawLine(black50, ticks[2], graphTop + 41, ticks[2], height - 4);
+                    g.DrawLine(black25, ticks[3], graphTop + 41, ticks[3], height - 4);
+                    g.DrawLine(black25, ticks[4], graphTop + 41, ticks[4], height - 4);
+                    g.DrawLine(black25, ticks[5], graphTop + 41, ticks[5], height - 4);
+                    g.DrawLine(black25, ticks[6], graphTop + 41, ticks[6], height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphTop + 40, graphEnd + 4, graphTop + 40);
+                    g.DrawLine(black200, graphStart, graphTop + 36, graphStart, height - 4);
+                    g.DrawLine(black200, graphEnd, graphTop + 36, graphEnd, height - 4);
+                    g.DrawLine(black200, graphStart - 4, graphBottom, graphEnd + 4, graphBottom);
+
+                    g.DrawString((0f).ToString("0"), fontLegend, black200brush, graphStart, graphTop + 36, formatTick);
+                    g.DrawString((maxScale).ToString("0"), fontLegend, black200brush, graphEnd, graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.5f).ToString("0"), fontLegend, black200brush, ticks[0], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.75f).ToString("0"), fontLegend, black150brush, ticks[1], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.25f).ToString("0"), fontLegend, black150brush, ticks[2], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.125f).ToString("0"), fontLegend, black75brush, ticks[3], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.375f).ToString("0"), fontLegend, black75brush, ticks[4], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.625f).ToString("0"), fontLegend, black75brush, ticks[5], graphTop + 36, formatTick);
+                    g.DrawString((maxScale * 0.875f).ToString("0"), fontLegend, black75brush, ticks[6], graphTop + 36, formatTick);
+
+                    #endregion
+
+                    baseStats = GetCharacterStats(character);
+                    g.DrawLine(black200, (float)Math.Round(graphStart + baseStats.Intellect / maxScale * graphWidth), graphBottom, (float)Math.Round(graphStart + baseStats.Intellect / maxScale * graphWidth), graphBottom - graphHeight);
+                    min = -baseStats.Intellect;
+                    max = maxScale - baseStats.Intellect;
+
+                    for (float offset = min; offset <= max; offset += 100)
+                    {
+                        ComparisonCalculationBase[] result = EvaluateItemBudget(character, new Stats() { Intellect = offset }, true, out baseStats);
+                        if (baseStats.Intellect >= 0 && baseStats.Intellect <= maxScale)
+                        {
+                            X.Add(baseStats.Intellect);
+                            Y.Add(result);
+                        }
+                    }
+
+                    for (int i = 0; i < statColors.Length; i++)
+                    {
+                        List<PointF> list = new List<PointF>();
+                        for (int j = 0; j < X.Count; j++)
+                        {
+                            list.Add(new PointF(graphStart + X[j] / maxScale * graphWidth, graphBottom - graphHeight * Y[j][i].OverallPoints / dpsScale));
+                        }
+                        if (list.Count > 0) g.DrawLines(new Pen(statColors[i]), list.ToArray());
+                    }
+
+                    // restore incremental base
+                    if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
+                    {
+                        GetCharacterCalculations(character, null, true);
+                    }
+
                     break;
             }
         }
