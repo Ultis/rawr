@@ -849,7 +849,7 @@ namespace Rawr
 		{
 			try
 			{
-				return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Contains(TargetClass.ToString())) &&
+				return (string.IsNullOrEmpty(item.RequiredClasses) || item.RequiredClasses.Replace(" ","").Contains(TargetClass.ToString())) &&
 					(RelevantItemTypes.Contains(item.Type)) && HasRelevantStats(item.Stats);
 			}
 			catch (Exception )

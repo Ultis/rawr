@@ -143,7 +143,7 @@ namespace Rawr.DPSDK
             }
         }
 
-		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
+		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.DeathKnight; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation()
         {
             return new ComparisonCalculationDPSDK();
