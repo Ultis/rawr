@@ -293,35 +293,35 @@ namespace Rawr.ProtWarr
             float levelDifference = 0.2f * (TargetLevel - 80f);
             float targetCritReduction = 5f + levelDifference;
             float currentCritReduction = ((float)Math.Floor(
-                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
-                 WarriorConversions.DefenseToCritReduction) +
-                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction);
+                (BasicStats.DefenseRating * ProtWarr.DefenseRatingToDefense + BasicStats.Defense)) *
+                 ProtWarr.DefenseToCritReduction) +
+                (BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction);
             int defToCap = 0, resToCap = 0;
             if (currentCritReduction < targetCritReduction)
             {
                 while ((((float)Math.Floor(
-                ((BasicStats.DefenseRating + defToCap) * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
-                 WarriorConversions.DefenseToCritReduction) +
-                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction)) < targetCritReduction)
+                ((BasicStats.DefenseRating + defToCap) * ProtWarr.DefenseRatingToDefense + BasicStats.Defense)) *
+                 ProtWarr.DefenseToCritReduction) +
+                (BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction)) < targetCritReduction)
                     defToCap++;
                 while ((((float)Math.Floor(
-                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
-                 WarriorConversions.DefenseToCritReduction) +
-                ((BasicStats.Resilience + resToCap) * WarriorConversions.ResilienceRatingToCritReduction)) < targetCritReduction)
+                (BasicStats.DefenseRating * ProtWarr.DefenseRatingToDefense + BasicStats.Defense)) *
+                 ProtWarr.DefenseToCritReduction) +
+                ((BasicStats.Resilience + resToCap) * ProtWarr.ResilienceRatingToCritReduction)) < targetCritReduction)
                     resToCap++;
             }
             else if (currentCritReduction > targetCritReduction)
             {
                 while ((((float)Math.Floor(
-                ((BasicStats.DefenseRating + defToCap) * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
-                 WarriorConversions.DefenseToCritReduction) +
-                (BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction)) > targetCritReduction)
+                ((BasicStats.DefenseRating + defToCap) * ProtWarr.DefenseRatingToDefense + BasicStats.Defense)) *
+                 ProtWarr.DefenseToCritReduction) +
+                (BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction)) > targetCritReduction)
 
                     defToCap--;
                 while ((((float)Math.Floor(
-                (BasicStats.DefenseRating * WarriorConversions.DefenseRatingToDefense + BasicStats.Defense)) *
-                 WarriorConversions.DefenseToCritReduction) +
-                ((BasicStats.Resilience + resToCap) * WarriorConversions.ResilienceRatingToCritReduction)) > targetCritReduction)
+                (BasicStats.DefenseRating * ProtWarr.DefenseRatingToDefense + BasicStats.Defense)) *
+                 ProtWarr.DefenseToCritReduction) +
+                ((BasicStats.Resilience + resToCap) * ProtWarr.ResilienceRatingToCritReduction)) > targetCritReduction)
 
                     resToCap--;
                 defToCap++;
@@ -349,22 +349,22 @@ namespace Rawr.ProtWarr
             dictValues.Add("Resilience", BasicStats.Resilience.ToString() +
                 string.Format(@"*Reduces periodic damage and chance to be critically hit by {0}%.
 Reduces the effect of mana-drains and the damage of critical strikes by {1}%.",
-                BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction,
-                BasicStats.Resilience * WarriorConversions.ResilienceRatingToCritReduction * 2));
+                BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction,
+                BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction * 2));
             dictValues.Add("Block Value", BlockValue.ToString());
 
             #region Offensive Stats
             dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
-            dictValues["Hit"] = (BasicStats.HitRating * WarriorConversions.HitRatingToHit +
+            dictValues["Hit"] = (BasicStats.HitRating * ProtWarr.HitRatingToHit +
                 BasicStats.PhysicalHit).ToString() +
                 string.Format("%*Hit Rating {0}", BasicStats.HitRating);
-            dictValues["Expertise"] = (Math.Round(BasicStats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
+            dictValues["Expertise"] = (Math.Round(BasicStats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise +
                 BasicStats.Expertise)).ToString() +
                 string.Format(@"*Expertise Rating {0}
 Reduces chance to be dodged or parried by {1}%.", BasicStats.ExpertiseRating,
-                Math.Round((BasicStats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
-                BasicStats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction));
-            dictValues["Haste"] = (BasicStats.HasteRating * WarriorConversions.HasteRatingToHaste).ToString() +
+                Math.Round((BasicStats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise +
+                BasicStats.Expertise) * ProtWarr.ExpertiseToDodgeParryReduction));
+            dictValues["Haste"] = (BasicStats.HasteRating * ProtWarr.HasteRatingToHaste).ToString() +
                 string.Format("%*Haste Rating {0}", BasicStats.HasteRating);
             dictValues["Armor Penetration"] = BasicStats.ArmorPenetration.ToString();
             dictValues["Crit"] = Crit.ToString() +
@@ -416,12 +416,12 @@ Windfury TPS: {4}", HeroicStrikeThreat, ShieldSlamThreat, RevengeThreat, Devasta
             {
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
                     + string.Format("%*CRITTABLE! Short by {0} defense rating ({1} defense) or {2} resilience to be uncrittable by bosses.",
-                    defToCap, defToCap * WarriorConversions.DefenseRatingToDefense, resToCap));
+                    defToCap, defToCap * ProtWarr.DefenseRatingToDefense, resToCap));
             }
             else
                 dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString()
                     + string.Format("%*Uncrittable by bosses. {0} defense rating ({1} defense) or {2} resilience over the crit cap.",
-                    -defToCap, -defToCap * WarriorConversions.DefenseRatingToDefense, - resToCap));
+                    -defToCap, -defToCap * ProtWarr.DefenseRatingToDefense, - resToCap));
 
             dictValues.Add("Chance Crushed", CrushChance.ToString() + "%");
             dictValues.Add("Overall Points", OverallPoints.ToString());

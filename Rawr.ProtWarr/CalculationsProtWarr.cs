@@ -211,14 +211,14 @@ threat and limited threat scaled by the threat scale.",
 			calculatedStats.TargetLevel = targetLevel;
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
 
-            float defSkill = (float)Math.Floor(stats.DefenseRating * WarriorConversions.DefenseRatingToDefense);
-            float dodgeNonDR = stats.Dodge + stats.BaseAgility * WarriorConversions.AgilityToDodge - levelDifference;
+            float defSkill = (float)Math.Floor(stats.DefenseRating * ProtWarr.DefenseRatingToDefense);
+            float dodgeNonDR = stats.Dodge + stats.BaseAgility * ProtWarr.AgilityToDodge - levelDifference;
             float missNonDR = stats.Miss * 100f - levelDifference;
             float parryNonDR = stats.Parry - levelDifference;
-            float dodgePreDR = (stats.Agility - stats.BaseAgility) * WarriorConversions.AgilityToDodge + stats.DodgeRating * WarriorConversions.DodgeRatingToDodge +
-                               defSkill * WarriorConversions.DefenseToDodge;
-            float missPreDR = defSkill * WarriorConversions.DefenseToMiss;
-            float parryPreDR = stats.ParryRating * WarriorConversions.ParryRatingToParry + defSkill * WarriorConversions.DefenseToParry;
+            float dodgePreDR = (stats.Agility - stats.BaseAgility) * ProtWarr.AgilityToDodge + stats.DodgeRating * ProtWarr.DodgeRatingToDodge +
+                               defSkill * ProtWarr.DefenseToDodge;
+            float missPreDR = defSkill * ProtWarr.DefenseToMiss;
+            float parryPreDR = stats.ParryRating * ProtWarr.ParryRatingToParry + defSkill * ProtWarr.DefenseToParry;
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
             float missPostDR = 1f / (1f / 50 + 0.9560f / missPreDR);
             float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
@@ -230,21 +230,21 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
             calculatedStats.Parry = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge, parryTotal);
             calculatedStats.Defense = (float)Math.Floor(400f + stats.Defense + stats.DefenseRating *
-                                      WarriorConversions.DefenseRatingToDefense);
+                                      ProtWarr.DefenseRatingToDefense);
 
-            float block = 5f + stats.BlockRating * WarriorConversions.BlockRatingToBlock +
-                                    (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToBlock) +
+            float block = 5f + stats.BlockRating * ProtWarr.BlockRatingToBlock +
+                                    (((float)Math.Floor(stats.Defense + stats.DefenseRating * ProtWarr.DefenseRatingToDefense)) * ProtWarr.DefenseToBlock) +
                                     stats.Block - levelDifference;
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
             calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue * (1 + stats.BonusBlockValueMultiplier)) +
-                                         ((float)Math.Floor(stats.Strength * WarriorConversions.StrengthToBlockValue))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+                                         ((float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = (((float)Math.Floor(stats.Defense + stats.DefenseRating * WarriorConversions.DefenseRatingToDefense)) * WarriorConversions.DefenseToCritReduction) +
-                                            (stats.Resilience * WarriorConversions.ResilienceRatingToCritReduction);
+            calculatedStats.CritReduction = (((float)Math.Floor(stats.Defense + stats.DefenseRating * ProtWarr.DefenseRatingToDefense)) * ProtWarr.DefenseToCritReduction) +
+                                            (stats.Resilience * ProtWarr.ResilienceRatingToCritReduction);
             calculatedStats.CappedCritReduction = Math.Min(5f + levelDifference, calculatedStats.CritReduction);
 
             //Miss -> Dodge -> Parry -> Block -> Crushing Blow -> Critical Strikes -> Hit
@@ -292,7 +292,7 @@ threat and limited threat scaled by the threat scale.",
             float attackPower = stats.AttackPower;
 
 
-            float hasteBonus = stats.HasteRating * WarriorConversions.HasteRatingToHaste / 100f;
+            float hasteBonus = stats.HasteRating * ProtWarr.HasteRatingToHaste / 100f;
 
             float weaponSpeed;
             float weaponMinDamage;
@@ -323,17 +323,17 @@ threat and limited threat scaled by the threat scale.",
             if (attackSpeed < 1f)
                 attackSpeed = 1.0f;
 
-            float hitBonus = (stats.HitRating * WarriorConversions.HitRatingToHit + stats.PhysicalHit) / 100f;
-            float expertiseBonus = (stats.ExpertiseRating * WarriorConversions.ExpertiseRatingToExpertise +
-                                    stats.Expertise) * WarriorConversions.ExpertiseToDodgeParryReduction / 100f;
+            float hitBonus = (stats.HitRating * ProtWarr.HitRatingToHit + stats.PhysicalHit) / 100f;
+            float expertiseBonus = (stats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise +
+                                    stats.Expertise) * ProtWarr.ExpertiseToDodgeParryReduction / 100f;
 
 
-            float chanceCrit = Math.Min(0.75f, (stats.CritRating * WarriorConversions.CritRatingToCrit +
-                                                stats.LotPCritRating * WarriorConversions.CritRatingToCrit +
-                                               (stats.Agility * WarriorConversions.AgilityToCrit) +
+            float chanceCrit = Math.Min(0.75f, (stats.CritRating * ProtWarr.CritRatingToCrit +
+                                                stats.LotPCritRating * ProtWarr.CritRatingToCrit +
+                                               (stats.Agility * ProtWarr.AgilityToCrit) +
                                                 stats.PhysicalCrit - levelDifference) / 100f);
             calculatedStats.Crit = chanceCrit * 100f;
-            float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
+            float chanceDodge = Math.Max(0f, 0.064f - expertiseBonus);
             float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus);
             if((targetLevel - 80f) < 3)
                 chanceParry = Math.Max(0f, 0.065f - expertiseBonus);
@@ -342,15 +342,13 @@ threat and limited threat scaled by the threat scale.",
               * v. Level 80 mob: 5.0% / dual-wield: 24%
               * v. Level 81 mob: 5.5% / dual-wield: 24.5%
               * v. Level 82 mob: 6.0% / dual-wield: 25%
-              * v. Level 83 mob: 9.0% / dual-wield: 28%
+              * v. Level 83 mob: 8.0% / dual-wield: 27%
             */
-            float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+            float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
             if((targetLevel - 80f) < 3)
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
 
-            float defStanceThreatMod = 2.0735f *
-                                       //(1 + character.WarriorTalents.Defiance * 0.05f) * //TODO: Talent removed in WoW 3.0
-                                       (1 + stats.ThreatIncreaseMultiplier);
+            float defStanceThreatMod = 2.0735f * (1 + stats.ThreatIncreaseMultiplier);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
 
@@ -662,13 +660,13 @@ threat and limited threat scaled by the threat scale.",
                     attacksPerCycle * procDuration / cycleLength;
                 oneProcPerMinAveUptime = (float)(1f - Math.Pow(1f - procChance, attacksPer15Seconds));
                 statsBuffs.Agility += 120f * oneProcPerMinAveUptime;
-                statsBuffs.HasteRating += (2f / WarriorConversions.HasteRatingToHaste) *
+                statsBuffs.HasteRating += (2f / ProtWarr.HasteRatingToHaste) *
                                            oneProcPerMinAveUptime;
             }
             else if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcConstant > 0)
             {
                 statsBuffs.Agility += 120f;
-                statsBuffs.HasteRating += 2f / WarriorConversions.HasteRatingToHaste;
+                statsBuffs.HasteRating += 2f / ProtWarr.HasteRatingToHaste;
             }
 
             //Executioner
@@ -1051,7 +1049,7 @@ threat and limited threat scaled by the threat scale.",
 		}
     }
 
-    public class WarriorConversions
+    public class ProtWarr
     {
         public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
         public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
