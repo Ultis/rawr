@@ -52,7 +52,7 @@ namespace Rawr
             {
                 foreach (Item item in Items)
                 {
-                    if (item.FitsInSlot(slot))
+                    if (item.FitsInSlot(slot, Character))
                     {
                         itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
                     }

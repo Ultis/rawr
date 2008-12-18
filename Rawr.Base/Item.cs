@@ -841,7 +841,12 @@ namespace Rawr
 			//I wouldn't be out here... alone tonight
 		}
 
-        public bool MeetsRequirements(Character character)
+		public bool FitsInSlot(Character.CharacterSlot charSlot, Character character)
+		{
+			return Calculations.ItemFitsInSlot(this, character, charSlot);
+		}
+
+		public bool MeetsRequirements(Character character)
         {
             bool temp;
             return MeetsRequirements(character, out temp);

@@ -612,7 +612,7 @@ namespace Rawr
                     ReportProgress(0, 0);
                     foreach (Character.CharacterSlot slot in slots)
                     {
-                        if (item.FitsInSlot(slot))
+						if (item.FitsInSlot(slot, _character))
                         {
                             List<ComparisonCalculationBase> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
@@ -725,7 +725,7 @@ namespace Rawr
                 Item item = upgrade;                
                 foreach (Character.CharacterSlot slot in slots)
                 {
-                    if (item.FitsInSlot(slot))
+					if (item.FitsInSlot(slot, _character))
                     {
                         lockedItems = new Item[] { item };
                         if (upgradeEnchant == null)
@@ -1005,23 +1005,23 @@ namespace Rawr
                 if (item != null)
                 {
                     possibleGemmedItems = GetPossibleGemmedItemsForItem(item, gid, gemItems, metaGemItems);
-                    if (item.FitsInSlot(Character.CharacterSlot.Head)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { headItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Neck)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { neckItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Shoulders)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { shouldersItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Back)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { backItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Chest)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { chestItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Wrist)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { wristItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Hands)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { handsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Waist)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { waistItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Legs)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { legsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Feet)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { feetItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Finger1)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { fingerItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Trinket1)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { trinketItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.MainHand)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { mainHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.OffHand)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { offHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Ranged)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { rangedItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.Projectile)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-                    if (item.FitsInSlot(Character.CharacterSlot.ProjectileBag)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileBagItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+                    if (item.FitsInSlot(Character.CharacterSlot.Head, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { headItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Neck, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { neckItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Shoulders, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { shouldersItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Back, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { backItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Chest, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { chestItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Wrist, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { wristItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Hands, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { handsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Waist, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { waistItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Legs, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { legsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Feet, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { feetItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Finger1, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { fingerItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Trinket1, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { trinketItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.MainHand, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { mainHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.OffHand, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { offHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Ranged, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { rangedItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Projectile, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.ProjectileBag, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileBagItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 
                     List<Enchant> validEnchants = new List<Enchant>();
                     foreach (string restriction in gemmedIdMap[gid])

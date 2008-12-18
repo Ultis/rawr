@@ -733,7 +733,7 @@ namespace Rawr
                                             item = ItemCache.FindItemById(s.Substring(0, s.LastIndexOf('.')));
                                         }
                                     }
-                                    if (item != null && item.FitsInSlot((Character.CharacterSlot)slot))
+                                    if (item != null && item.FitsInSlot((Character.CharacterSlot)slot, character.Character))
                                     {
                                         character.Character[(Character.CharacterSlot)slot] = item;
                                         string se = s.Substring(s.LastIndexOf('.') + 1);

@@ -262,6 +262,12 @@ namespace Rawr
 				return Instance.IsItemRelevant(item);
 			return false;
 		}
+		public static bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+		{
+			if (Instance != null)
+				return Instance.ItemFitsInSlot(item, character, slot);
+			return false;
+		}
 		public static ICalculationOptionBase DeserializeDataObject(string xml)
 		{
 			if (Instance != null)
@@ -839,6 +845,11 @@ namespace Rawr
 			{
 				return false;
 			}
+		}
+
+		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+		{
+			return item.FitsInSlot(slot);
 		}
 
         public virtual bool CanUseAmmo

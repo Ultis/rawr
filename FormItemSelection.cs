@@ -206,7 +206,7 @@ namespace Rawr
 				{
 					foreach (Item item in this.Items)
 					{
-						if (item.FitsInSlot(slot))
+						if (item.FitsInSlot(slot, Character))
 						{
 							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
 						}
