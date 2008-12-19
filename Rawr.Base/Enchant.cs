@@ -494,6 +494,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3842, "Arcanum of the Savage Gladiator", Item.ItemSlot.Head, new Stats() { Stamina = 30, Resilience = 25 }));
             defaultEnchants.Add(new Enchant(3795, "Arcanum of Triumph", Item.ItemSlot.Head, new Stats() { AttackPower = 50, Resilience = 20 }));
 
+            defaultEnchants.Add(new Enchant(3793, "Inscription of Triumph", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, Resilience = 15 }));
+            defaultEnchants.Add(new Enchant(3794, "Inscription of Dominance", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 23, Resilience = 15 }));
+
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
             defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
             defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));
