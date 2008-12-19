@@ -1890,7 +1890,7 @@ namespace Rawr
 				Name = "Skyshatter Regalia 4 Piece Bonus",
 				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
 				SetName = "Skyshatter Regalia",
-				Stats = { LightningBoltDamageModifier = 0.05f },
+				Stats = { LightningBoltDamageModifier = 5f },
 				SetThreshold = 4
 			  });
 					//Tier 7																																																																																				
@@ -1899,7 +1899,7 @@ namespace Rawr
 				Name = "Earthshatter Garb 2 Piece Bonus",
 				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
 				SetName = "Earthshatter Garb",
-				Stats = { LightningBoltCostReduction = 0.05f },
+				Stats = { LightningBoltCostReduction = 5f },
 				SetThreshold = 2
 			});
 
@@ -1908,7 +1908,7 @@ namespace Rawr
 				Name = "Earthshatter Garb 4 Piece Bonus",
 				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
 				SetName = "Earthshatter Garb",
-				Stats = { BonusLavaBurstCritDamage = 0.10f },
+				Stats = { BonusLavaBurstCritDamage = 10f },
 				SetThreshold = 4
 			  });
 																																																																																							
