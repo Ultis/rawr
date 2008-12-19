@@ -82,6 +82,7 @@ namespace Rawr.ShadowPriest
             Name = "Base";
             Rotation = "None";
 
+            // USE trinkets & effects.
             Stats Twinkets = new Stats();
             if (playerStats.SpellPowerFor15SecOnUse90Sec > 0.0f)
                 Twinkets.SpellPower += playerStats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
@@ -177,13 +178,11 @@ namespace Rawr.ShadowPriest
         {
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
             foreach (string spellname in CalculationOptions.SpellPriority)
-                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
+            {
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
+                if (spelltmp != null) SpellPriority.Add(spelltmp);
+            }
 
-            Name = "Shadowform w/Mind Flay";
-            Rotation = "Priority Based:";
-            foreach (Spell spell in SpellPriority)
-                Rotation += "\r\n- " + spell.Name;
-            ShadowHitChance = (float)Math.Min(100f, HitChance + character.PriestTalents.ShadowFocus * 1f);
             SWP = GetSpellByName("Shadow Word: Pain");
             MF = GetSpellByName("Mind Flay");
             VE = GetSpellByName("Vampiric Embrace");
@@ -205,6 +204,13 @@ namespace Rawr.ShadowPriest
                 SpellPriority.Remove(SWP);
                 SpellPriority.Add(SWP);
             }
+
+
+            Name = "Shadow w/Mind Flay";
+            Rotation = "Priority Based:";
+            foreach (Spell spell in SpellPriority)
+                Rotation += "\r\n- " + spell.Name;
+            ShadowHitChance = (float)Math.Min(100f, HitChance + character.PriestTalents.ShadowFocus * 1f);
         }
 
         public override void Calculate(CharacterCalculationsShadowPriest calculatedStats)
@@ -229,11 +235,11 @@ namespace Rawr.ShadowPriest
             if (VE != null)
             {
                 VE.SpellStatistics.HitCount = CalculationOptions.FightLength;
-                VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost; 
+                VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost;
             }
 
+            #region Pass 1: Create the cast sequence
             bool CleanBreak = false;
-
             while (timer < (60f * 60f)) // Instead of  CalculationOptions.FightLength, try to use a 60 minute fight.
             {
                 Spell spell = GetCastSpell(timer);
@@ -266,18 +272,61 @@ namespace Rawr.ShadowPriest
                     break;
                 }
             }
+            #endregion
 
+            #region Pass 2: Calculate Statistics for Procs
             timer = 0;
-            float HPC = 0, CPC = 0; // Hits Pr Cycle, Crits Pr Cycle
+            float HitsPerSecond = 0, CritsPerSecond = 0;
             foreach (Spell spell in CastList)
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 timer += CalculationOptions.Delay / 1000f;
-                HPC++;
+                HitsPerSecond++;
+                if (spell == SWD || spell == MB)
+                    CritsPerSecond++;
                 //if (spell == MF)
                 //    HPC += 2;   // MF can hit 3 times / cast
-                if (spell == SWD || spell == MB)
-                    CPC++;
+            }
+            CritsPerSecond = CritsPerSecond / timer;
+            HitsPerSecond = HitsPerSecond / timer;
+
+            // Deal with Spirit Tap
+            float STCrit = 0f;
+            if (MB != null)
+                STCrit += MB.CritChance;
+            if (SWD != null)
+                STCrit += SWD.CritChance;
+            if (MB != null && SWD != null)
+                STCrit /= 2;
+            float ImpSTUptime = CritsPerSecond * STCrit * 8f;    // Spirit Tap lasts 8 seconds. Very little overlap time due to CD on MB/SW:D
+            float NewSpirit = simStats.Spirit * ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
+            float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
+            simStats.Spirit += NewSpirit;
+            simStats.SpellPower += NewSPP;
+
+            // Deal with Twinkets
+            if (simStats.SpellPowerFor10SecOnHit_10_45 > 0)
+            { // These have 10% Proc Chance (Sundial of the Exiled)
+                float ProcChance = 0.1f;
+                float ProcCumulative = 1f / ProcChance / HitsPerSecond; // This is how many seconds you need if chance would be cumulative.
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
+                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual; 
+                simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
+            }
+
+            #endregion
+
+            #region Pass 3: Redo Spell Power for all spells
+            foreach (Spell spell in SpellPriority)
+            {
+                spell.Calculate(simStats, character);
+            }
+            #endregion
+
+
+            #region Pass 3: Calculate Damage and Mana Usage
+            foreach (Spell spell in CastList)
+            {
                 float Damage = spell.AvgDamage;
                 float Cost = spell.ManaCost - simStats.ManaRestoreOnCast_5_15 * 0.05f;
                 switch (spell.Name)
@@ -317,14 +366,12 @@ namespace Rawr.ShadowPriest
                 OverallDamage += Damage;
                 OverallMana += Cost;
             }
+            #endregion
 
             if (!CleanBreak)
                 Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
             Rotation += string.Format("\r\nRotation reset after {0} seconds.", Math.Round(timer, 2));
 
-            
-            CPC = CPC / timer;
-            HPC = HPC / timer;
             foreach (Spell spell in SpellPriority)
             {
                 spell.SpellStatistics.HitCount /= timer;
@@ -352,8 +399,6 @@ namespace Rawr.ShadowPriest
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;
-            float ImpSTUptime = CPC * MB.CritChance * 8f;
-            simStats.Spirit *= 1f + ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
             float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
             tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalculationOptions.FSRRatio / 100f);
@@ -383,11 +428,19 @@ namespace Rawr.ShadowPriest
             tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * simStats.ManaRestoreFromMaxManaPerHit * HPC * (CalculationOptions.JoW / 100f);
+            tmpregen = simStats.Mana * simStats.ManaRestoreFromMaxManaPerHit * HitsPerSecond * (CalculationOptions.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
                 regen += tmpregen;
+            }
+
+            if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)
+            {   // Arcane Torrent is 6% max mana every 2 minutes.
+                tmpregen = simStats.Mana * 0.06f / 120f;
+                ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));
+                regen += tmpregen;
+                Rotation += "\r\n- Used Arcane Torrent";
             }
 
             if (MPS > regen && CalculationOptions.ManaAmt > 0)
@@ -450,7 +503,10 @@ namespace Rawr.ShadowPriest
             SpellComparerDpCT _scDpCT = new SpellComparerDpCT();
             SpellComparerDpM _scDpM = new SpellComparerDpM();
             foreach (string spellname in Spell.HolySpellList)
-                SpellPriority.Add(SpellFactory.CreateSpell(spellname, PlayerStats, character));
+            {
+                Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
+                if (spelltmp != null) SpellPriority.Add(spelltmp);
+            }
 
             SWP = GetSpellByName("Shadow Word: Pain");
             SWD = GetSpellByName("Shadow Word: Death");

@@ -67,7 +67,7 @@ namespace Rawr.ShadowPriest
 
         public SolverBase GetSolver(Character character, Stats stats)
         {
-            if ((character.PriestTalents.MindFlay > 0) && (character.PriestTalents.Shadowform > 0))
+            if (character.PriestTalents.MindFlay > 0)
                 return new SolverShadow(stats, character);
             else
                 return new SolverHoly(stats, character);
@@ -112,25 +112,21 @@ namespace Rawr.ShadowPriest
                 if (!character.ActiveBuffsContains("Heroic Presence"))
                     BonusHit += 1;
             }
-            float MiseryHit = 0;
-            if (character.PriestTalents.Misery > 0)
-            {
-                MiseryHit = character.PriestTalents.Misery * 1f;
-                if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
-                    BonusHit += MiseryHit;
-            }
+            float DebuffHit = character.PriestTalents.Misery * 1f;
+            if (character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
+                DebuffHit = 3f;
+            else
+                BonusHit += DebuffHit;
 
             float RHitRating = 1f / character.StatConversion.GetSpellHitFromRating(1);
             float ShadowFocusHit = character.PriestTalents.ShadowFocus * 1f;
             float HitShadow = Hit + BonusHit + ShadowFocusHit;
             float HitHoly = Hit + BonusHit;
-            if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
-                HitShadow += character.PriestTalents.Misery * 1f;
             dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from {5} points in Misery\r\n{6}% from {7} points in Shadow Focus\r\n{8}{9}% Hit with Shadow spells, {10}\r\n{11}% Hit with Holy spells, {12}",
                 BonusHit.ToString("0.00"),
                 character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"), BasicStats.HitRating,
-                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit - MiseryHit).ToString("0.00"),
-                MiseryHit, character.PriestTalents.Misery,
+                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit - DebuffHit).ToString("0.00"),
+                DebuffHit, character.PriestTalents.Misery,
                 ShadowFocusHit, character.PriestTalents.ShadowFocus,
                 RacialText,
                 HitShadow.ToString("0.00"), (HitShadow > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitShadow - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitShadow) * RHitRating)),

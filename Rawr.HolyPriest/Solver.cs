@@ -423,6 +423,15 @@ namespace Rawr.HolyPriest
             ActionList += "\r\n\r\nMana Options:";
 
             float mp1use = manacost / cyclelen;
+
+            if (mp1use > regen && character.Race == Character.CharacterRace.BloodElf)
+            {   // Arcane Torrent is 6% max mana every 2 minutes.
+                tmpregen = simstats.Mana * 0.06f / 120f;
+                ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));
+                regen += tmpregen;
+                ActionList += string.Format("\r\n- Used Arcane Torrent");
+            }
+
             if (mp1use > regen && calculationOptions.ManaAmt > 0f)
             {
                 float ManaPot = calculationOptions.ManaAmt * (1f + simstats.BonusManaPotion);

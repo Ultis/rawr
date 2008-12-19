@@ -491,6 +491,8 @@ namespace Rawr.ShadowPriest
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
+                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
                 TimbalsProc = stats.TimbalsProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier
             };
@@ -533,6 +535,8 @@ namespace Rawr.ShadowPriest
                 + stats.SpellPowerFor20SecOnUse2Min
                 + stats.HasteRatingFor20SecOnUse2Min
                 + stats.HasteRatingFor20SecOnUse5Min
+                + stats.SpellPowerFor10SecOnCast_15_45
+                + stats.SpellPowerFor10SecOnHit_10_45
                 + stats.TimbalsProc
                 + stats.BonusSpellCritMultiplier
                 ) > 0;
