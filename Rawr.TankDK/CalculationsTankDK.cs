@@ -250,14 +250,18 @@ namespace Rawr.TankDK
 
             float dps = 1000.0f;
 
-            float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - defSkill * 0.04f);
-            calcs.Crit = 5.0f + levelDifference - defSkill * 0.04f;
+            float critReduction = defSkill * 0.04f + stats.Resilience / 81.97497559f;
+
+            float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - critReduction);
+            calcs.Crit = 5.0f + levelDifference - critReduction;
             calcs.Defense = defSkill;
             calcs.DefenseRating = stats.DefenseRating;
             calcs.DefenseRatingNeeded = (attackerCrit / 0.04f) * 4.918498039f;
 
-            float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * 4.0f;
-            float critHitAvoidance = currentAvoidance + attackerCrit * 4.0f;
+            float critImpact = 4.0f;
+
+            float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * critImpact;
+            float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
 
             float armor = stats.Armor;
             // Damage Reduction is capped at 75%
@@ -296,7 +300,10 @@ namespace Rawr.TankDK
                 BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath),
                 Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare),
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
-                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker)
+                BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
+                Dodge = 0.01f * talents.Anticipation,
+                Parry = 0.02f * talents.BladeBarrier,
+
             };
             Stats statsTotal = new Stats();
             Stats statsGearEnchantsBuffs = new Stats();
@@ -363,6 +370,8 @@ namespace Rawr.TankDK
             statsTotal.Dodge = 0.03463600f + statsGearEnchantsBuffs.Dodge;
             statsTotal.Parry = 0.050f + statsGearEnchantsBuffs.Parry;
             statsTotal.Miss = 0.050f;
+
+            statsTotal.Resilience = statsGearEnchantsBuffs.Resilience;
             
 
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
@@ -472,6 +481,8 @@ namespace Rawr.TankDK
                 ParryRating = stats.ParryRating,
                 DodgeRating = stats.DodgeRating,
 
+                Resilience = stats.Resilience,
+
                 //AttackPower = stats.AttackPower,
                 //HitRating = stats.HitRating,
                 //CritRating = stats.CritRating,
@@ -514,7 +525,8 @@ namespace Rawr.TankDK
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.CritRating + stats.HitRating + 
-                stats.DodgeRating + stats.DefenseRating + stats.ParryRating +
+                stats.DodgeRating + stats.DefenseRating + stats.ParryRating + stats.Resilience +
+                stats.Dodge + stats.Parry + stats.Defense + stats.BonusArmorMultiplier +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust) != 0;

@@ -19,7 +19,9 @@ namespace Rawr.TankDK
         {
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = options = new CalculationOptionsTankDK();
+                Character.CalculationOptions = new CalculationOptionsTankDK();
+
+            options = Character.CalculationOptions as CalculationOptionsTankDK;
 
             for (int i = 0; i < cmbAttackerLevel.Items.Count; i++)
             {
