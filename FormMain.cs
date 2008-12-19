@@ -366,6 +366,11 @@ Here's a quick rundown of the status of each model:
 			finally
 			{
 				this.ConfigModel = displayName;
+                Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[displayName], true);
+                if (icon != null)
+                {
+                    this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+                }
 			}
 		}
 
@@ -461,26 +466,26 @@ Here's a quick rundown of the status of each model:
         }
 
 	
-		private void modelToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
-			if (!modelToolStripMenuItem.Checked)
-			{
-				foreach (ToolStripMenuItem item in _customChartMenuItems)
-					if (item.Checked)
-						slotToolStripMenuItem_Click(toolStripDropDownButtonSlot.DropDownItems[1], null);
+        //private void modelToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    ToolStripMenuItem modelToolStripMenuItem = sender as ToolStripMenuItem;
+        //    if (!modelToolStripMenuItem.Checked)
+        //    {
+        //        foreach (ToolStripMenuItem item in _customChartMenuItems)
+        //            if (item.Checked)
+        //                slotToolStripMenuItem_Click(toolStripDropDownButtonSlot.DropDownItems[1], null);
 
-				foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
-					item.Checked = item == modelToolStripMenuItem;
-				KeyValuePair<string, Type> kvpModel = (KeyValuePair<string, Type>)modelToolStripMenuItem.Tag;
-				Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[kvpModel.Key], true);
-				if (icon != null)
-				{
-					this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
-				}
-                this.LoadModel(kvpModel.Key);
-			}
-		}
+        //        foreach (ToolStripMenuItem item in (modelToolStripMenuItem.OwnerItem as ToolStripMenuItem).DropDownItems)
+        //            item.Checked = item == modelToolStripMenuItem;
+        //        KeyValuePair<string, Type> kvpModel = (KeyValuePair<string, Type>)modelToolStripMenuItem.Tag;
+        //        Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[kvpModel.Key], true);
+        //        if (icon != null)
+        //        {
+        //            this.Icon = Icon.FromHandle((icon as Bitmap).GetHicon());
+        //        }
+        //        this.LoadModel(kvpModel.Key);
+        //    }
+        //}
 
 		private void Calculations_ModelChanged(object sender, EventArgs e)
 		{
