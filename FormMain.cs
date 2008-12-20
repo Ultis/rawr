@@ -1200,26 +1200,31 @@ Here's a quick rundown of the status of each model:
 			StatusMessaging.UpdateStatusFinished("GetArmoryUpgrades");
 		}
 
-
 		public Character ReloadCharacterFromArmory(Character character)
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			Character reload = GetCharacterFromArmory(character.Realm, character.Name, character.Region);
 			if (reload != null)
 			{
-				//load values for gear from armory into original character
-				foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-				{
-					character[slot] = reload[slot];
-				}
-                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-				{
-                    character.SetEnchantBySlot_ThreadSafe(slot, reload.GetEnchantBySlot(slot));
-				}
-                character.AssignAllTalentsFromCharacter(reload);
+                this.Invoke(new ReloadCharacterFromArmoryUpdateDelegate(this.ReloadCharacterFromCharacterProfilerUpdate), character, reload);
 			}
 			return character;
 		}
+
+        public delegate void ReloadCharacterFromArmoryUpdateDelegate(Character character, Character reload);
+        public void ReloadCharacterFromArmoryUpdate(Character character, Character reload)
+        {
+            //load values for gear from armory into original character
+            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+            {
+                character[slot] = reload[slot];
+            }
+            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+            {
+                character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+            }
+            character.AssignAllTalentsFromCharacter(reload);
+        }
 
 		public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
 		{
@@ -1556,19 +1561,25 @@ Here's a quick rundown of the status of each model:
             Character reload = GetCharacterFromCharacterProfiler(characterProfilerCharacter);
             if (reload != null)
             {
-                //load values for gear from armory into original character
-                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-                {
-                    character[slot] = reload[slot];
-                }
-                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-                {
-                    character.SetEnchantBySlot_ThreadSafe(slot, reload.GetEnchantBySlot(slot));
-                }
-                character.AvailableItems = reload.AvailableItems;
-                character.AssignAllTalentsFromCharacter(reload);
+                this.Invoke(new ReloadCharacterFromCharacterProfilerUpdateDelegate(this.ReloadCharacterFromCharacterProfilerUpdate), character, reload);
             }
             return character;
+        }
+
+        public delegate void ReloadCharacterFromCharacterProfilerUpdateDelegate(Character character, Character reload);
+        public void ReloadCharacterFromCharacterProfilerUpdate(Character character, Character reload)
+        {
+            //load values for gear from armory into original character
+            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+            {
+                character[slot] = reload[slot];
+            }
+            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+            {
+                character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
+            }
+            character.AvailableItems = reload.AvailableItems;
+            character.AssignAllTalentsFromCharacter(reload);
         }
 
         public Character GetCharacterFromCharacterProfiler(CharacterProfilerCharacter characterProfilerCharacter)
