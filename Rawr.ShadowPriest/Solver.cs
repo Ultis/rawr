@@ -94,6 +94,9 @@ namespace Rawr.ShadowPriest
                 Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
             if (playerStats.HasteRatingFor20SecOnUse5Min > 0.0f)
                 Twinkets.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
+            if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0.0f)
+                // HACK FOR EMBRACE OF THE SPIDER. I HATE HASTE.
+                Twinkets.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
             // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
             Twinkets.SpellHaste += character.StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating) / 100f;
 
@@ -276,19 +279,21 @@ namespace Rawr.ShadowPriest
 
             #region Pass 2: Calculate Statistics for Procs
             timer = 0;
-            float HitsPerSecond = 0, CritsPerSecond = 0;
+            float CastsPerSecond = 0, HitsPerSecond = 0, CritsPerSecond = 0;
             foreach (Spell spell in CastList)
             {
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 timer += CalculationOptions.Delay / 1000f;
-                HitsPerSecond++;
+                CastsPerSecond++;
+                HitsPerSecond += ShadowHitChance / 100f;
                 if (spell == SWD || spell == MB)
                     CritsPerSecond++;
                 //if (spell == MF)
-                //    HPC += 2;   // MF can hit 3 times / cast
+                //    HitsPerSecond += 2;   // MF can hit 3 times / cast
             }
-            CritsPerSecond = CritsPerSecond / timer;
-            HitsPerSecond = HitsPerSecond / timer;
+            CastsPerSecond /= timer;
+            CritsPerSecond /= timer;
+            HitsPerSecond /= timer;
 
             // Deal with Spirit Tap
             float STCrit = 0f;
@@ -305,18 +310,26 @@ namespace Rawr.ShadowPriest
             simStats.SpellPower += NewSPP;
 
             // Deal with Twinkets
+            // HASTE IS NOT REEVALUATED SO DONT EVEN TRY.
             if (simStats.SpellPowerFor10SecOnHit_10_45 > 0)
-            { // These have 10% Proc Chance (Sundial of the Exiled)
+            {   // These have 10% Proc Chance (Sundial of the Exiled)
                 float ProcChance = 0.1f;
-                float ProcCumulative = 1f / ProcChance / HitsPerSecond; // This is how many seconds you need if chance would be cumulative.
+//                float ProcCumulative = 1f / ProcChance / HitsPerSecond; // This is how many seconds you need if chance would be cumulative.
                 float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
                 float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual; 
                 simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
             }
+            if (simStats.SpellPowerFor10SecOnCast_15_45 > 0)
+            {   // 15% Proc Chance (Dying Curse)
+                float ProcChance = 0.15f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / CastsPerSecond / ProcActual;
+                simStats.SpellPower += simStats.SpellPowerFor10SecOnCast_15_45 * 10f / EffCooldown;
+            }
 
             #endregion
 
-            #region Pass 3: Redo Spell Power for all spells
+            #region Pass 3: Redo Stats for all spells
             foreach (Spell spell in SpellPriority)
             {
                 spell.Calculate(simStats, character);
@@ -324,7 +337,7 @@ namespace Rawr.ShadowPriest
             #endregion
 
 
-            #region Pass 3: Calculate Damage and Mana Usage
+            #region Pass 4: Calculate Damage and Mana Usage
             foreach (Spell spell in CastList)
             {
                 float Damage = spell.AvgDamage;
@@ -372,6 +385,7 @@ namespace Rawr.ShadowPriest
                 Rotation += "\r\nWARNING: Did not find a clean rotation!\r\nThis may make Haste inaccurate!";
             Rotation += string.Format("\r\nRotation reset after {0} seconds.", Math.Round(timer, 2));
 
+            #region Pass 5: Do spell statistics.
             foreach (Spell spell in SpellPriority)
             {
                 spell.SpellStatistics.HitCount /= timer;
@@ -383,16 +397,37 @@ namespace Rawr.ShadowPriest
                 else
                     spell.SpellStatistics.DamageDone /= timer;
             }
+            #endregion
 
             DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
+
+            // Finalize Trinkets
             if (simStats.TimbalsProc > 0.0f)
-            {
+            {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
                 int dots = (MF != null)?3:0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Timbal = new Timbal(simStats, character);
+                Spell Timbal = new TimbalProc(simStats, character);
 
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+            }
+            if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
+            {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
+                int dots = (MF != null) ? 3 : 0;
+                foreach (Spell spell in SpellPriority)
+                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                Spell Extract = new ExtractProc(simStats, character);
+
+                DPS += Extract.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+            }
+            if (simStats.PendulumOfTelluricCurrentsProc > 0.0f)
+            {   // 15% proc chance, 45s internal cd, shoots a Shadow bolt
+                float ProcChance = 0.15f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
+                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual;
+                simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
+                Spell Pendulum = new PendulumProc(simStats, character);
+                DPS += Pendulum.AvgDamage / EffCooldown *(1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
 
             Rotation += "\r\n\r\nMana Buffs:";
@@ -616,7 +651,7 @@ namespace Rawr.ShadowPriest
                 int dots = (PE != null) ? 3 : 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
-                Spell Timbal = new Timbal(simStats, character);
+                Spell Timbal = new TimbalProc(simStats, character);
 
                 DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }

@@ -643,14 +643,80 @@ namespace Rawr.ShadowPriest
         }
     }
 
-    public class Timbal : Spell
+    public class TimbalProc : Spell
     {
         static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
             new SpellData(1, 0, 285, 475)
         };
 
-        public Timbal(Stats stats, Character character)
-            : base("Timbal", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+        public TimbalProc(Stats stats, Character character)
+            : base("TimbalProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+        {
+            Calculate(stats, character);
+        }
+
+        public override void Calculate(Stats stats, Character character)
+        {
+            MinDamage = BaseMinDamage
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + character.PriestTalents.Shadowform * 0.15f);
+
+            MaxDamage = BaseMaxDamage
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + character.PriestTalents.Shadowform * 0.15f);
+
+            //CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+            CritChance = stats.SpellCrit;
+
+            Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
+        }
+    }
+
+    public class ExtractProc : Spell
+    {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
+            new SpellData(1, 0, 788, 1312)
+        };
+
+        public ExtractProc(Stats stats, Character character)
+            : base("ExtractProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+        {
+            Calculate(stats, character);
+        }
+
+        public override void Calculate(Stats stats, Character character)
+        {
+            MinDamage = BaseMinDamage
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + character.PriestTalents.Shadowform * 0.15f);
+
+            MaxDamage = BaseMaxDamage
+                * (1 + character.PriestTalents.FocusedPower * 0.02f)
+                * (1 + character.PriestTalents.Darkness * 0.02f)
+                * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
+                * (1 + character.PriestTalents.Shadowform * 0.15f);
+
+            //CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+            CritChance = stats.SpellCrit;
+
+            Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
+        }
+    }
+
+    public class PendulumProc : Spell
+    {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
+            new SpellData(1, 0, 1168, 1752)
+        };
+
+        public PendulumProc(Stats stats, Character character)
+            : base("PendulumProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
         {
             Calculate(stats, character);
         }

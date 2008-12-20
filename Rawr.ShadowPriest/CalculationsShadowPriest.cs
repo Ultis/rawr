@@ -493,7 +493,10 @@ namespace Rawr.ShadowPriest
                 HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
                 SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
                 SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
+                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                 TimbalsProc = stats.TimbalsProc,
+                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier
             };
         }
@@ -537,7 +540,10 @@ namespace Rawr.ShadowPriest
                 + stats.HasteRatingFor20SecOnUse5Min
                 + stats.SpellPowerFor10SecOnCast_15_45
                 + stats.SpellPowerFor10SecOnHit_10_45
+                + stats.SpellHasteFor10SecOnCast_10_45
                 + stats.TimbalsProc
+                + stats.PendulumOfTelluricCurrentsProc
+                + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
                 ) > 0;
         }
