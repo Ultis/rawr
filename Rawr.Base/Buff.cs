@@ -257,9 +257,9 @@ namespace Rawr
 			{
 				Name = "Devotion Aura",
 				Group = "Armor",
-				Stats = { Armor = 1205f },
+				Stats = { BonusArmor = 1205f },
 				Improvements = { 
-					new Buff { Name = "Improved Devotion Aura (Armor)", Stats = { Armor = (float)Math.Floor(1205f * 0.5f) } }
+					new Buff { Name = "Improved Devotion Aura (Armor)", Stats = { BonusArmor = (float)Math.Floor(1205f * 0.5f) } }
 				}
 			});
 			#endregion
@@ -597,7 +597,7 @@ namespace Rawr
 			{
 				Name = "Mark of the Wild",
 				Group = "Stat Add",
-				Stats = { Armor = 750, Strength = 14, Agility = 37, Stamina = 37, Intellect = 37, Spirit = 37, 
+				Stats = { BonusArmor = 750, Strength = 14, Agility = 37, Stamina = 37, Intellect = 37, Spirit = 37, 
 					ArcaneResistanceBuff = 54, FireResistanceBuff = 54, FrostResistanceBuff = 54, 
 					NatureResistanceBuff = 54, ShadowResistanceBuff = 54 },
 				Improvements = { 
@@ -975,7 +975,7 @@ namespace Rawr
             //{
             //    Name = "Elixir of Major Defense",
             //    Group = "Elixirs and Flasks",
-            //    Stats = { Armor = 550 },
+            //    Stats = { BonusArmor = 550 },
             //    ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
             //});
             //defaultBuffs.Add(new Buff()
@@ -1200,7 +1200,7 @@ namespace Rawr
             {
                 Name = "Elixir of Protection",
                 Group = "Elixirs and Flasks",
-                Stats = { Armor = 800 },
+                Stats = { BonusArmor = 800 },
                 ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
             });
             defaultBuffs.Add(new Buff()
@@ -1278,7 +1278,7 @@ namespace Rawr
             //{
             //    Name = "Ironshield Potion",
             //    Group = "Potion",
-            //    Stats = { Armor = 2500 }
+            //    Stats = { BonusArmor = 2500 }
             //});
             //#endregion
 
@@ -1404,7 +1404,7 @@ namespace Rawr
                 Name = "Scroll of Protection VII",
 				Group = "Scrolls",
                 ConflictingBuffs = new List<string>( new string[] { "Scroll of Protection" }),
-                Stats = { Armor = 340 }
+                Stats = { BonusArmor = 340 }
             });
 			#endregion
 
@@ -1468,7 +1468,7 @@ namespace Rawr
             {
                 Name = "Malorne Harness 4 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
-                Stats = { Armor = 1400, CatFormStrength = 30 },
+                Stats = { BonusArmor = 1400, CatFormStrength = 30 },
                 SetName = "Malorne Harness",
                 SetThreshold = 4
             });
@@ -2205,7 +2205,7 @@ namespace Rawr
             {
                 Name = "Living Root of the Wildheart",
                 Group = "Temporary Buffs",
-				Stats = { Armor = 4070 },
+				Stats = { BonusArmor = 4070 },
 				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()
@@ -2226,7 +2226,7 @@ namespace Rawr
             {
                 Name = "Adamantite Figurine",
                 Group = "Temporary Buffs",
-				Stats = { Armor = 1280 },
+				Stats = { BonusArmor = 1280 },
 				ConflictingBuffs = new List<string>(new string[] { })
             });
             defaultBuffs.Add(new Buff()

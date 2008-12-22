@@ -297,7 +297,47 @@ namespace Rawr
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusMana")) { stats.Mana = int.Parse(node.InnerText); }
                 foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusSpirit")) { stats.Spirit = int.Parse(node.InnerText); }
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/bonusManaRegen")) { stats.Mp5 = int.Parse(node.InnerText); }
-                
+
+				if (slot == Item.ItemSlot.Finger ||
+					slot == Item.ItemSlot.MainHand ||
+					slot == Item.ItemSlot.Neck ||
+					slot == Item.ItemSlot.OffHand ||
+					slot == Item.ItemSlot.OneHand ||
+					slot == Item.ItemSlot.Trinket ||
+					slot == Item.ItemSlot.TwoHand)
+				{
+					stats.BonusArmor += stats.Armor;
+					stats.Armor = 0f;
+				}
+
+				if (slot == Item.ItemSlot.Back)
+				{
+					float baseArmor = 0;
+					switch (quality)
+					{     
+						case Item.ItemQuality.Temp:
+						case Item.ItemQuality.Poor:
+						case Item.ItemQuality.Common:
+						case Item.ItemQuality.Uncommon:
+							baseArmor = (float)itemLevel * 1.19f + 5.1f;
+							break;
+
+						case Item.ItemQuality.Rare:
+							baseArmor = ((float)itemLevel + 26.6f) * 16f / 25f;
+							break;
+
+						case Item.ItemQuality.Epic:
+						case Item.ItemQuality.Legendary:
+						case Item.ItemQuality.Artifact:
+						case Item.ItemQuality.Heirloom:
+							baseArmor = ((float)itemLevel + 358f) * 7f / 26f;
+							break;
+					}
+					baseArmor *= 0.48f;
+					baseArmor = (float)Math.Floor(baseArmor);
+					stats.BonusArmor = stats.Armor - baseArmor;
+					stats.Armor = baseArmor;
+				}
 
                 if (name.StartsWith("Ashtongue Talisman"))
 				{

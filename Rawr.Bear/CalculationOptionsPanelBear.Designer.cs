@@ -43,10 +43,12 @@
 			this.radioButtonMaul = new System.Windows.Forms.RadioButton();
 			this.radioButtonMelee = new System.Windows.Forms.RadioButton();
 			this.radioButtonNoAuto = new System.Windows.Forms.RadioButton();
-			this.checkBox304Armor = new System.Windows.Forms.CheckBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.numericUpDownSurvivalSoftCap = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -69,9 +71,9 @@
             "81",
             "82",
             "83"});
-			this.comboBoxTargetLevel.Location = new System.Drawing.Point(83, 3);
+			this.comboBoxTargetLevel.Location = new System.Drawing.Point(100, 3);
 			this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-			this.comboBoxTargetLevel.Size = new System.Drawing.Size(174, 21);
+			this.comboBoxTargetLevel.Size = new System.Drawing.Size(157, 21);
 			this.comboBoxTargetLevel.TabIndex = 1;
 			this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
@@ -90,14 +92,14 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.numericUpDownThreatValue.DecimalPlaces = 3;
 			this.numericUpDownThreatValue.Enabled = false;
-			this.numericUpDownThreatValue.Location = new System.Drawing.Point(84, 58);
+			this.numericUpDownThreatValue.Location = new System.Drawing.Point(101, 58);
 			this.numericUpDownThreatValue.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
 			this.numericUpDownThreatValue.Name = "numericUpDownThreatValue";
-			this.numericUpDownThreatValue.Size = new System.Drawing.Size(173, 20);
+			this.numericUpDownThreatValue.Size = new System.Drawing.Size(156, 20);
 			this.numericUpDownThreatValue.TabIndex = 3;
 			this.numericUpDownThreatValue.Value = new decimal(new int[] {
             1,
@@ -118,9 +120,9 @@
             "OT",
             "Crazy About Threat",
             "Custom Factor"});
-			this.comboBoxThreatValue.Location = new System.Drawing.Point(84, 30);
+			this.comboBoxThreatValue.Location = new System.Drawing.Point(101, 30);
 			this.comboBoxThreatValue.Name = "comboBoxThreatValue";
-			this.comboBoxThreatValue.Size = new System.Drawing.Size(173, 21);
+			this.comboBoxThreatValue.Size = new System.Drawing.Size(156, 21);
 			this.comboBoxThreatValue.TabIndex = 1;
 			this.comboBoxThreatValue.SelectedIndexChanged += new System.EventHandler(this.comboBoxThreatValue_SelectedIndexChanged);
 			// 
@@ -128,14 +130,14 @@
 			// 
 			this.numericUpDownTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(83, 84);
+			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(101, 110);
 			this.numericUpDownTargetArmor.Maximum = new decimal(new int[] {
             15000,
             0,
             0,
             0});
 			this.numericUpDownTargetArmor.Name = "numericUpDownTargetArmor";
-			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(174, 20);
+			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(156, 20);
 			this.numericUpDownTargetArmor.TabIndex = 3;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
@@ -148,7 +150,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 86);
+			this.label3.Location = new System.Drawing.Point(3, 112);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(71, 13);
 			this.label3.TabIndex = 0;
@@ -165,7 +167,7 @@
 			this.groupBox1.Controls.Add(this.radioButtonMaul);
 			this.groupBox1.Controls.Add(this.radioButtonMelee);
 			this.groupBox1.Controls.Add(this.radioButtonNoAuto);
-			this.groupBox1.Location = new System.Drawing.Point(7, 110);
+			this.groupBox1.Location = new System.Drawing.Point(7, 136);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(250, 88);
 			this.groupBox1.TabIndex = 4;
@@ -252,26 +254,51 @@
 			this.radioButtonNoAuto.UseVisualStyleBackColor = true;
 			this.radioButtonNoAuto.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
-			// checkBox304Armor
+			// label4
 			// 
-			this.checkBox304Armor.AutoSize = true;
-			this.checkBox304Armor.Location = new System.Drawing.Point(7, 204);
-			this.checkBox304Armor.Name = "checkBox304Armor";
-			this.checkBox304Armor.Size = new System.Drawing.Size(141, 17);
-			this.checkBox304Armor.TabIndex = 1;
-			this.checkBox304Armor.Text = "WoW 3.0.4 Armor Mode";
-			this.checkBox304Armor.UseVisualStyleBackColor = true;
-			this.checkBox304Armor.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(3, 86);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(92, 13);
+			this.label4.TabIndex = 0;
+			this.label4.Text = "Survival Soft Cap:";
+			// 
+			// numericUpDownSurvivalSoftCap
+			// 
+			this.numericUpDownSurvivalSoftCap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.numericUpDownSurvivalSoftCap.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.numericUpDownSurvivalSoftCap.Location = new System.Drawing.Point(101, 84);
+			this.numericUpDownSurvivalSoftCap.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+			this.numericUpDownSurvivalSoftCap.Name = "numericUpDownSurvivalSoftCap";
+			this.numericUpDownSurvivalSoftCap.Size = new System.Drawing.Size(156, 20);
+			this.numericUpDownSurvivalSoftCap.TabIndex = 3;
+			this.numericUpDownSurvivalSoftCap.ThousandsSeparator = true;
+			this.numericUpDownSurvivalSoftCap.Value = new decimal(new int[] {
+            140000,
+            0,
+            0,
+            0});
+			this.numericUpDownSurvivalSoftCap.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
 			// CalculationOptionsPanelBear
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.numericUpDownSurvivalSoftCap);
 			this.Controls.Add(this.numericUpDownTargetArmor);
-			this.Controls.Add(this.checkBox304Armor);
 			this.Controls.Add(this.numericUpDownThreatValue);
 			this.Controls.Add(this.comboBoxThreatValue);
+			this.Controls.Add(this.label4);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
@@ -282,6 +309,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -304,6 +332,7 @@
 		private System.Windows.Forms.RadioButton radioButtonMaul;
 		private System.Windows.Forms.RadioButton radioButtonMelee;
 		private System.Windows.Forms.RadioButton radioButtonNoAuto;
-		private System.Windows.Forms.CheckBox checkBox304Armor;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.NumericUpDown numericUpDownSurvivalSoftCap;
 	}
 }

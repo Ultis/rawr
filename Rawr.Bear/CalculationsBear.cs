@@ -259,7 +259,25 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.DamageTaken = hits + crits;
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
-			calculatedStats.SurvivalPoints = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - (calculatedStats.Mitigation / 100f)));
+			double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
+			double survivalRaw = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))) / 1000f;
+
+			if (survivalRaw <= survivalCap)
+				calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw; // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			else
+			{
+				double x = survivalRaw;
+				double cap = survivalCap;
+				double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
+				double topLeft = Math.Pow(((x - cap) / cap) + fourToTheNegativeFourThirds, 1d / 4d);
+				double topRight = Math.Pow(fourToTheNegativeFourThirds, 1d / 4d);
+				double fracTop = topLeft - topRight;
+				double fraction = fracTop / 2d;
+				double y = (cap * fraction + cap);
+				calculatedStats.SurvivalPoints = 1000f * (float)y;
+			}
+
 			calculatedStats.MitigationPoints = (2000000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
@@ -338,7 +356,7 @@ the Threat Scale defined on the Options tab.",
 			float meleeThreatRaw = bearThreatMultiplier * meleeDamageRaw;
 			float maulThreatRaw = bearThreatMultiplier * (maulDamageRaw + 424f / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
 			float mangleThreatRaw = bearThreatMultiplier * mangleDamageRaw * (1 + stats.BonusMangleBearThreat);
-			float swipeThreatRaw = bearThreatMultiplier * swipeDamageRaw;
+			float swipeThreatRaw = bearThreatMultiplier * swipeDamageRaw * 1.5f;
 			float faerieFireThreatRaw = bearThreatMultiplier * (faerieFireDamageRaw + 632f);
 			float lacerateThreatRaw = bearThreatMultiplier * (lacerateDamageRaw + 1031f) / 2f;
 			float lacerateDotThreat = bearThreatMultiplier * lacerateDotDamage / 2f;
@@ -346,7 +364,7 @@ the Threat Scale defined on the Options tab.",
 			float meleeThreatAverage = bearThreatMultiplier * meleeDamageAverage;
 			float maulThreatAverage = bearThreatMultiplier * (maulDamageAverage + (424f * (1 - chanceAvoided)) / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
 			float mangleThreatAverage = bearThreatMultiplier * mangleDamageAverage * (1 + stats.BonusMangleBearThreat);
-			float swipeThreatAverage = bearThreatMultiplier * swipeDamageAverage;
+			float swipeThreatAverage = bearThreatMultiplier * swipeDamageAverage * 1.5f;
 			float faerieFireThreatAverage = bearThreatMultiplier * (faerieFireDamageAverage + (632f * (.9f))); //TODO: Assumes 10% spell miss rate
 			float lacerateThreatAverage = bearThreatMultiplier * (lacerateDamageAverage + (1031f * (1 - chanceAvoided))) / 2f;
 
@@ -633,27 +651,9 @@ the Threat Scale defined on the Options tab.",
 			 * 
 			*/
 
-			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			DruidTalents talents = character.DruidTalents;
 			
 			Stats statsItems = GetItemStats(character, additionalItem);
-			float thickHideMultiplier = new float[] { 1f, 1.04f, 1.07f, 1.1f }[character.DruidTalents.ThickHide];
-			if (calcOpts.Use304ArmorMode)
-			{
-				Character charBaseArmorItems = character.Clone();
-				charBaseArmorItems.Finger1 = charBaseArmorItems.Finger2 = charBaseArmorItems.MainHand =
-					charBaseArmorItems.Neck = charBaseArmorItems.OffHand = charBaseArmorItems.Projectile =
-					charBaseArmorItems.ProjectileBag = charBaseArmorItems.Ranged = charBaseArmorItems.Shirt =
-					charBaseArmorItems.Tabard = charBaseArmorItems.Trinket1 = charBaseArmorItems.Trinket2 = null;
-				Stats statsBaseItems = GetItemStats(charBaseArmorItems, null);
-				statsItems.Armor += statsBaseItems.Armor * 3.7f * (1f + 0.22f * talents.SurvivalOfTheFittest) * thickHideMultiplier;
-			}
-			else
-			{
-				statsItems.Armor *= 4.7f * thickHideMultiplier;
-			}
-			
-
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = new Stats()
@@ -675,9 +675,9 @@ the Threat Scale defined on the Options tab.",
 				Expertise = 5 * talents.PrimalPrecision,
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
-				//BonusCritMultiplier = 0.05f * talents.PredatoryInstincts, PI doesn't work in bear form as of latest beta build
                 DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle),
+				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.22f * talents.SurvivalOfTheFittest) - 1f,
 			};
 			
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
@@ -692,9 +692,10 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.AttackPower += statsTotal.Strength * 2;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
 			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
-			statsTotal.Health += statsTotal.Stamina * 10f;
-			statsTotal.Armor += 2 * statsTotal.Agility;
-			statsTotal.Armor *= 1 + statsTotal.BonusArmorMultiplier;
+			statsTotal.Health += (float)Math.Floor(statsTotal.Stamina) * 10f;
+			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
+			statsTotal.Armor += 2f * statsTotal.Agility + statsTotal.BonusArmor;
+			statsTotal.Armor *= 1f + statsTotal.BonusArmorMultiplier;
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -1097,6 +1098,7 @@ the Threat Scale defined on the Options tab.",
 			return new Stats()
 			{
 				Armor = stats.Armor,
+				BonusArmor = stats.BonusArmor,
 				Stamina = stats.Stamina,
 				Agility = stats.Agility,
 				DodgeRating = stats.DodgeRating,
@@ -1104,6 +1106,7 @@ the Threat Scale defined on the Options tab.",
 				Resilience = stats.Resilience,
 				TerrorProc = stats.TerrorProc,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
+				BaseArmorMultiplier = stats.BaseArmorMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
@@ -1145,7 +1148,7 @@ the Threat Scale defined on the Options tab.",
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
+			return (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
 				stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health +
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
@@ -1207,7 +1210,8 @@ the Threat Scale defined on the Options tab.",
 		public float DamageTaken { get; set; }
 		public float CritReduction { get; set; }
 		public float CappedCritReduction { get; set; }
-
+		public float SurvivalPointsRaw { get; set; }
+		
 		public float NatureSurvivalPoints { get; set; }
 		public float FrostSurvivalPoints { get; set; }
 		public float FireSurvivalPoints { get; set; }
@@ -1327,7 +1331,7 @@ the Threat Scale defined on the Options tab.",
 			dictValues.Add("Chance to be Crit", ((5f + levelDifference) - CritReduction).ToString() + "%");
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
-			dictValues.Add("Survival Points", SurvivalPoints.ToString());
+			dictValues.Add("Survival Points", string.Format("{0}*{1} Before Soft Cap", SurvivalPoints.ToString(), SurvivalPointsRaw.ToString()));
 			dictValues.Add("Threat Points", ThreatPoints.ToString());
 
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();

@@ -183,7 +183,7 @@ namespace Rawr
 
 			if ((int)item.Quality < 2) return null;
 
-			json1 = json1.Replace(",subclass:", ".").Replace(",armor:", ",armorDUPE:");
+			json1 = json1.Replace(",subclass:", ".");//.Replace(",armor:", ",armorDUPE:");
 			string source = string.Empty;
 			if (json1.Contains("source:["))
 			{
@@ -260,6 +260,18 @@ namespace Rawr
 			}
 			foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
 			foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false);
+
+			if (item.Slot == Item.ItemSlot.Finger ||
+				item.Slot == Item.ItemSlot.MainHand ||
+				item.Slot == Item.ItemSlot.Neck ||
+				item.Slot == Item.ItemSlot.OffHand ||
+				item.Slot == Item.ItemSlot.OneHand ||
+				item.Slot == Item.ItemSlot.Trinket ||
+				item.Slot == Item.ItemSlot.TwoHand)
+			{
+				item.Stats.BonusArmor += item.Stats.Armor;
+				item.Stats.Armor = 0f;
+			}
 
 			if (htmlTooltip.Contains("Scourgeborne Battlegear")) item.SetName = "Scourgeborne Battlegear";
 			else if (htmlTooltip.Contains("Scourgeborne Plate")) item.SetName = "Scourgeborne Plate";
@@ -372,10 +384,14 @@ namespace Rawr
 					break;
 
 				case "armor":
-				//case "armorbonus":
-					item.Stats.Armor += int.Parse(value);
+					item.Stats.Armor = int.Parse(value);
 					break;
 
+				case "armorbonus":
+					item.Stats.Armor -= int.Parse(value);
+					item.Stats.BonusArmor = int.Parse(value);
+					break;
+				
 				case "healthrgn":
 					item.Stats.Hp5 += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;

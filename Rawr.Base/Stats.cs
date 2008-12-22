@@ -13,15 +13,16 @@ namespace Rawr
         AllResist,
         AldorRegaliaInterruptProtection,
         ArcaneBlastBonus,
-        ArcaneResistance,
+		ArcaneResistance,
 		Armor,
+		BonusArmor,
 		ArmorPenetration,
 		ArmorPenetrationRating,
 		AshtongueTrinketProc,
         AttackPower,
         AverageAgility,
-        AverageArmor,
-        BaseAgility,
+		AverageArmor,
+		BaseAgility,
         Block,
         BlockRating,
         BlockValue,
@@ -230,7 +231,8 @@ namespace Rawr
         BonusMangleBearThreat,
         BonusAgilityMultiplier,
         BonusArcaneDamageMultiplier,
-        BonusArmorMultiplier,
+		BaseArmorMultiplier,
+		BonusArmorMultiplier,
         BonusBleedDamageMultiplier,
         BonusBlockValueMultiplier,
         BonusAttackPowerMultiplier,
@@ -391,7 +393,15 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.Armor] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Category("Base Stats")]
+		public float BonusArmor
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusArmor]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusArmor] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float Health
         {
@@ -2270,7 +2280,16 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusArmorMultiplier] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("% Base Armor")]
+		public float BaseArmorMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BaseArmorMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BaseArmorMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Block Value")]
         public float BonusBlockValueMultiplier

@@ -162,7 +162,7 @@ namespace Rawr.Cat
 			#region Basic Chances and Constants
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
 			baseArmor *= (1f - (stats.ArmorPenetrationRating / 15.39529991f) / 100f);
-			float modArmor = 1f - (baseArmor / ((467.5f * calcOpts.TargetLevel) + baseArmor - 22167.5f));
+			float modArmor = 1f - (baseArmor / ((467.5f * calcOpts.TargetLevel) + baseArmor - 22167.5f)); //TODO: Check on this. Should it be target or character level?
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
@@ -741,7 +741,7 @@ namespace Rawr.Cat
 					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }).OverallPoints - dpsBase);
 					float dpsHit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBase);
 					float dpsDmg =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-					float dpsPen =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetration = 1 } }).OverallPoints - dpsBase);
+					float dpsPen =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetrationRating = 1 } }).OverallPoints - dpsBase);
 
 					//Differential Calculations for Agi
 					float dpsAtAdd = dpsBase;

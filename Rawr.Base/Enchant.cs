@@ -294,8 +294,8 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3256, "Shadow Armor", Item.ItemSlot.Back, new Stats() { Agility = 10 }));
             defaultEnchants.Add(new Enchant(3825, "Speed", Item.ItemSlot.Back, new Stats() { HasteRating = 15 }));
             defaultEnchants.Add(new Enchant(3831, "Greater Speed", Item.ItemSlot.Back, new Stats() { HasteRating = 23 }));
-            defaultEnchants.Add(new Enchant(2662, "Major Armor", Item.ItemSlot.Back, new Stats() { Armor = 120 }));
-            defaultEnchants.Add(new Enchant(3294, "Mighty Armor", Item.ItemSlot.Back, new Stats() { Armor = 225 }));
+            defaultEnchants.Add(new Enchant(2662, "Major Armor", Item.ItemSlot.Back, new Stats() { BonusArmor = 120 }));
+            defaultEnchants.Add(new Enchant(3294, "Mighty Armor", Item.ItemSlot.Back, new Stats() { BonusArmor = 225 }));
             defaultEnchants.Add(new Enchant(2622, "Dodge", Item.ItemSlot.Back, new Stats() { DodgeRating = 12 }));
             defaultEnchants.Add(new Enchant(2659, "Exceptional Health", Item.ItemSlot.Chest, new Stats() { Health = 150 }));
             defaultEnchants.Add(new Enchant(3236, "Mighty Health", Item.ItemSlot.Chest, new Stats() { Health = 200 }));
@@ -354,14 +354,14 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 10 }));
             defaultEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 10 }));
             defaultEnchants.Add(new Enchant(2841, "Heavy Knothide Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 10 }));
-            defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", Item.ItemSlot.Hands, new Stats() { Armor = 240 }));
+            defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", Item.ItemSlot.Hands, new Stats() { BonusArmor = 240 }));
             defaultEnchants.Add(new Enchant(1441, "Greater Shadow Resistance", Item.ItemSlot.Back, new Stats() { ShadowResistance = 15 }));
 
             defaultEnchants.Add(new Enchant(2543, "Arcanum of Rapidity", Item.ItemSlot.Head, new Stats() { HasteRating = 10 }));
             defaultEnchants.Add(new Enchant(3003, "Arcanum of Ferocity", Item.ItemSlot.Head, new Stats() { AttackPower = 34, HitRating = 16 }));
             defaultEnchants.Add(new Enchant(3817, "Arcanum of Torment", Item.ItemSlot.Head, new Stats() { AttackPower = 50, CritRating = 20 }));
             defaultEnchants.Add(new Enchant(3096, "Arcanum of the Outcast", Item.ItemSlot.Head, new Stats() { Strength = 17, Intellect = 16 }));
-            defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
+            defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, BonusArmor = 100 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 26, CritRating = 14 }));
             defaultEnchants.Add(new Enchant(2583, "Presence of Might", Item.ItemSlot.Head, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 15 }));
             defaultEnchants.Add(new Enchant(2583, "Presence of Might", Item.ItemSlot.Legs, new Stats() { Stamina = 10, DefenseRating = 10, BlockValue = 15 }));
@@ -554,7 +554,7 @@ namespace Rawr
 
 			//Sapphiron Enchants
 			defaultEnchants.Add(new Enchant(2721, "Power of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, SpellPower = 15 }));
-			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, Armor = 100 }));
+			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, BonusArmor = 100 }));
 			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
 			

@@ -286,7 +286,7 @@ namespace Rawr
 				line = line.Substring("Your melee and ranged attacks have a chance to increase your armor penetration rating by ".Length);
 				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.ArmorPenetrationRating += ((float)int.Parse(line)) / 3f;
+				stats.ArmorPenetrationRating += ((float)int.Parse(line)) / 5f;
 			}
 			else if (isArmory && line.StartsWith("Increases attack power by "))
 			{
