@@ -30,6 +30,9 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.cmbAttackerLevel = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numThreatWeight = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -56,12 +59,48 @@
             this.cmbAttackerLevel.TabIndex = 1;
             this.cmbAttackerLevel.SelectedIndexChanged += new System.EventHandler(this.cmbAttackerLevel_SelectedIndexChanged);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 41);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(75, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Threat Weight";
+            // 
+            // numThreatWeight
+            // 
+            this.numThreatWeight.DecimalPlaces = 2;
+            this.numThreatWeight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            131072});
+            this.numThreatWeight.Location = new System.Drawing.Point(92, 39);
+            this.numThreatWeight.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.numThreatWeight.Name = "numThreatWeight";
+            this.numThreatWeight.Size = new System.Drawing.Size(121, 20);
+            this.numThreatWeight.TabIndex = 3;
+            this.numThreatWeight.Value = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numThreatWeight.ValueChanged += new System.EventHandler(this.numThreatWeight_ValueChanged);
+            // 
             // CalculationOptionsPanelTankDK
             // 
+            this.Controls.Add(this.numThreatWeight);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.cmbAttackerLevel);
             this.Controls.Add(this.label1);
             this.Name = "CalculationOptionsPanelTankDK";
             this.Size = new System.Drawing.Size(216, 320);
+            ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -71,5 +110,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmbAttackerLevel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numThreatWeight;
     }
 }

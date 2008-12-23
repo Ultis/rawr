@@ -13,30 +13,37 @@ namespace Rawr.TankDK
             set { _name = value; }
         }
 
-        private float _overallPoints = 0f;
-        public override float OverallPoints
-        {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
-        }
-
-        private float[] _subPoints = new float[] { 0f, 0f };
-        public override float[] SubPoints
-        {
-            get { return _subPoints; }
-            set { _subPoints = value; }
-        }
-
-        public float MitigationPoints
+        public float Mitigation 
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SurvivalPoints
+        public float Avoidance
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
+        }
+
+        public float Threat
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
+
+        public override float OverallPoints
+        {
+            get { return Mitigation + Avoidance + Threat; }
+            set { }
+        }
+
+        private float[] _subPoints = {0.0f, 0.0f, 0.0f};
+
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
         }
 
         private Item _item = null;
@@ -55,7 +62,8 @@ namespace Rawr.TankDK
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints));
+            return "";
+            //return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints));
         }
     }
 }

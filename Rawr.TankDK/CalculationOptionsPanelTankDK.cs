@@ -32,6 +32,8 @@ namespace Rawr.TankDK
                 }
             }
 
+            numThreatWeight.Value = (decimal)options.ThreatWeight;
+
 
             _loadingCalculationOptions = false;
         }
@@ -48,12 +50,22 @@ namespace Rawr.TankDK
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void numThreatWeight_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.ThreatWeight = (float)(numThreatWeight.Value);
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
     public class CalculationOptionsTankDK : ICalculationOptionBase
     {
         public int TargetLevel = 83;
+        public float ThreatWeight = 0.25f;
 
         public string GetXml()
         {
