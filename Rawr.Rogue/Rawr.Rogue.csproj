@@ -103,6 +103,7 @@
     <Compile Include="Poisons.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RogueConversions.cs" />
+    <Compile Include="SwordSpec.cs" />
     <Compile Include="WhiteAttacks.cs" />
   </ItemGroup>
   <ItemGroup>

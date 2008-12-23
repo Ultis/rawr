@@ -2,7 +2,7 @@ namespace Rawr.Rogue
 {
     public class SwordSpec
     {
-        public static float CalcDPS(RogueTalents talents, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCPG, float cycleTime)
+        public float CalcDPS(RogueTalents talents, CombatFactors combatFactors, WhiteAttacks whiteAttacks, float numCPG, float cycleTime)
         {
             var ssHits = 0f;
             if (combatFactors.MainHand.Type == Item.ItemType.OneHandSword)

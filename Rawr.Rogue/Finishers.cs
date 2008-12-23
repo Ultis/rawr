@@ -74,7 +74,7 @@ namespace Rawr.Rogue
 
             //Note:  Shadowstep isn't modeled because the energy cost isn't modeled
             //Note:  Bonus Physical Damage isn't modeled yet  (e.g. Savage Combat/Blood Frenzy) 
-		    //Note:  Model Tier 7 2-Piece Bonus;
+		    //Note:  Need to Model Tier 7 2-Piece Bonus;
 
             finisherDmg *= (1f + 0.1f * talents.SerratedBlades + 0.15f * talents.BloodSpatter + 0.02f * talents.FindWeakness);
 		    finisherDmg *= (1f + 0.1f * 0.35f * talents.DirtyDeeds);
