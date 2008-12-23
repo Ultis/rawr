@@ -66,7 +66,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 1.7f;
             attackValues.AttackDamage *= 1.5f;
 
-            attackValues.Crit += combatFactors.MhCrit + 5f * _talents.PuncturingWounds;
+            attackValues.Crit += combatFactors.ProbMhCrit + 0.05f * _talents.PuncturingWounds;
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
             attackValues.BonusDamageMultiplier *= (1f + 0.04f * _talents.Opportunity);
             return attackValues;
@@ -95,7 +95,7 @@
             attackValues.BonusDamageMultiplier *= (1f + .02f * _talents.Aggression);
             attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + 0.04f * _talents.Opportunity);
-            attackValues.Crit += combatFactors.MhCrit + 10f * _talents.PuncturingWounds;
+            attackValues.Crit += combatFactors.ProbMhCrit + .1f * _talents.PuncturingWounds;
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
 
             return attackValues;
@@ -120,7 +120,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 2.4f;
             attackValues.AttackDamage *= 1.1f;
 
-            attackValues.Crit += combatFactors.MhCrit;
+            attackValues.Crit += combatFactors.ProbMhCrit;
             attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);
             attackValues.BonusCritDamageMultiplier *= (1f + .06f * _talents.Lethality);
@@ -158,7 +158,7 @@
             attackValues.AttackDamage += stats.AttackPower / 14f * 2.4f;
             attackValues.AttackDamage += 98f;
 
-            attackValues.Crit = combatFactors.MhCrit;
+            attackValues.Crit = combatFactors.ProbMhCrit;
             attackValues.BonusDamageMultiplier *= (1f + .02f * _talents.Aggression);
             attackValues.BonusDamageMultiplier *= (1f + .1f * _talents.SurpriseAttacks);
             attackValues.BonusDamageMultiplier *= (1f + stats.BonusCPGDamage);

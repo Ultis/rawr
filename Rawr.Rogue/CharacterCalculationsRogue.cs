@@ -58,6 +58,11 @@ namespace Rawr.Rogue
             AddDisplayValue(key, Round(value));
         }
 
+        public void AddPercentageToolTip(DisplayValue key, string prefix, float value)
+        {
+            AddToolTip(key, prefix + Round(value*100));    
+        }
+
         public void AddToolTip(DisplayValue key, params string[] toolTips)
         {
             if (!_dictValues.ContainsKey(key))

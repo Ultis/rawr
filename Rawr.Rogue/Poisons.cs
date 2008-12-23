@@ -11,6 +11,7 @@ namespace Rawr.Rogue
             Add(new NoPoison());
             Add(new DeadlyPoison());
             Add(new InstantPoison());
+            Add(new WoundPoison());
         }
 
 		public static PoisonBase Get(string poisonName)
@@ -31,6 +32,7 @@ namespace Rawr.Rogue
 	[XmlInclude(typeof(NoPoison))]
 	[XmlInclude(typeof(DeadlyPoison))]
 	[XmlInclude(typeof(InstantPoison))]
+    [XmlInclude(typeof(WoundPoison))]
 	public abstract class PoisonBase
     {
 		public abstract string Name { get; }
@@ -76,7 +78,20 @@ namespace Rawr.Rogue
 
 		public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits*combatFactors.ProbPoisonHit*(300f + .1f*stats.AttackPower)*VilePoison.DamageMultiplier(talents)*(.2f + ImprovedPoisons.IncreasedApplicationChance(talents));
+            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*VilePoison.DamageMultiplier(talents)*(.2f + ImprovedPoisons.IncreasedApplicationChance(talents));
+        }
+    }
+
+    [Serializable]
+    public class WoundPoison : PoisonBase
+    {
+        public override string Name { get { return "Wound Poison"; } }
+
+        public override bool IsDeadlyPoison { get { return false; } }
+
+        public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        {
+            return hits * combatFactors.ProbPoisonHit * (231f + 0.04f * stats.AttackPower) * 0.5f * VilePoison.DamageMultiplier(talents);
         }
     }
 

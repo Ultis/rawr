@@ -1,3 +1,5 @@
+using System;
+
 namespace Rawr.Rogue
 {
     public class CombatFactors
@@ -31,17 +33,15 @@ namespace Rawr.Rogue
 
         public float TotalArmorPenetration
         {
-            get
-            {
-                return _stats.ArmorPenetration + _calcOpts.TargetArmor*_stats.ArmorPenetrationRating*RogueConversions.ArmorPenRatingToArmorReduction/100;
-            }
+            get { return _stats.ArmorPenetration + _calcOpts.TargetArmor*_stats.ArmorPenetrationRating*RogueConversions.ArmorPenRatingToArmorReduction/100; }
         }
+
         public float DamageReduction
         {
             get
             {
                 var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
-                return 1f - (totalArmor / (totalArmor + 10557.5f)); 
+                return 1f - (totalArmor / ((467.5f * _calcOpts.TargetLevel) + totalArmor - 22167.5f));
             }
         } 
 
@@ -50,40 +50,43 @@ namespace Rawr.Rogue
             get { return CalcAverageWeaponDamage(MainHand, _stats); }
         }
 
+        public float MhAvgDamage
+        {
+            get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MainHand.Speed; }
+        }
+
         public float AvgOhWeaponDmg
         {
             get { return CalcAverageWeaponDamage(OffHand, _stats); }
         }
 
-        public float YellowMissChance
+        public float OhAvgDamage
         {
             get
             {
-                var missChance = 5f - HitPercent;
-                return missChance < 0f ? 0f : missChance;
+                var avgOhDmg = AvgOhWeaponDmg + (_stats.AttackPower / 14.0f) * OffHand.Speed;
+                return avgOhDmg * (0.25f + _talents.DualWieldSpecialization * 0.1f);
             }
+        }
+
+        public float YellowMissChance
+        {
+            get { return HitPercent > .08f ? 0f : .08f - HitPercent; }
         }
 
         public float WhiteMissChance
         {
-            get
-            {
-                var missChance = 28f - HitPercent;
-                return missChance < 0f ? 0f : missChance; 
-            }
+            get { return HitPercent > .28f ? 0f : .28f - HitPercent; }
+        }
+
+        public float BaseExpertise
+        {
+            get { return _talents.WeaponExpertise * 5f + _stats.Expertise + (float)Math.Floor(_stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise); }
         }
 
         public float MhExpertise
         {
             get { return CalcExpertise(MainHand); }
-        }
-
-        public float BaseExpertise
-        {
-            get
-            {
-                return _talents.WeaponExpertise * 5f + _stats.Expertise + _stats.ExpertiseRating * RogueConversions.ExpertiseRatingToExpertise;
-            }
         }
 
         public float OhExpertise
@@ -101,37 +104,34 @@ namespace Rawr.Rogue
             get { return CalcDodgeChance(OhExpertise); }
         }
 
-        public float MhCrit
+        public float ProbMhCrit
         {
-            get { return CalcCrit(MainHand); }
+            get { return CalcCrit(MainHand)/100f + BossCriticalReductionChance; }
         }
 
-        public float OhCrit
+        public float ProbOhCrit
         {
-            get { return CalcCrit(OffHand); }
+            get { return CalcCrit(OffHand)/100f + BossCriticalReductionChance; }
+        }
+
+        public float BossCriticalReductionChance
+        {
+            get { return 0.006f * (80 - (_calcOpts.TargetLevel == 83 ? 88 : _calcOpts.TargetLevel)); }
+        }
+
+        public float ProbGlancingHit
+        {
+            get { return (float)Math.Max(0.08 * (_calcOpts.TargetLevel - 80), 0); }
         }
 
         public float ProbMhWhiteHit
         {
-            get { return 1f - WhiteMissChance / 100f - MhDodgeChance / 100f; }
+            get { return 1f - WhiteMissChance - MhDodgeChance - ProbGlancingHit - ProbMhCrit; }
         }
 
         public float ProbOhWhiteHit
         {
-            get { return 1f - WhiteMissChance / 100f - OhDodgeChance / 100f; }
-        }
-        
-        public float TotalHaste
-        {
-            get
-            {
-                //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
-                var totalHaste = 1f;
-                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));
-                totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= (1f + .2f * 15f / 120f * _talents.BladeFlurry);
-                return totalHaste; 
-            }
+            get { return 1f - WhiteMissChance - OhDodgeChance - ProbGlancingHit - ProbOhCrit; }
         }
 
         public float BonusWhiteCritDmg
@@ -139,11 +139,16 @@ namespace Rawr.Rogue
             get { return 1f + _stats.BonusCritMultiplier; }
         }
 
+        public float BaseCritMultiplier
+        {
+            get { return 2f * BonusWhiteCritDmg; }
+        }
+
         public float ProbPoisonHit
         {
             get
             {
-                var missChance = 17f - HitPercent;
+                var missChance = .17f - HitPercent;
                 return missChance < 0f ? 0f : 1f - missChance / 100f;
             }
         }
@@ -161,17 +166,32 @@ namespace Rawr.Rogue
             }
         }
 
-        public float HitPercent
+        public float TotalHaste
         {
             get
             {
-                return _stats.PhysicalHit + _stats.HitRating * RogueConversions.HitRatingToHit;
+                //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
+                var totalHaste = 1f;
+                totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));
+                totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
+                totalHaste *= (1f + .2f * 15f / 120f * _talents.BladeFlurry);
+                return totalHaste;
             }
+        }
+
+        public float HitPercent
+        {
+            get { return _stats.PhysicalHit/100f + _stats.HitRating*RogueConversions.HitRatingToHit/100f; }
+        }
+
+        public float CritFromCritRating
+        {
+            get { return _stats.CritRating*RogueConversions.CritRatingToCrit; }
         }
 
         private float CalcCrit(Item weapon)
         {
-            var crit = _stats.PhysicalCrit + _stats.CritRating * RogueConversions.CritRatingToCrit;
+            var crit = _stats.PhysicalCrit + CritFromCritRating;
             if (weapon.Type == Item.ItemType.Dagger || weapon.Type == Item.ItemType.FistWeapon)
             {
                 crit += _talents.CloseQuartersCombat;
@@ -192,13 +212,14 @@ namespace Rawr.Rogue
             return baseExpertise;
         }
 
-        private static float CalcDodgeChance(float mhExpertise)
+        private static float CalcDodgeChance(float weaponExpertise)
         {
-            var mhDodgeChance = 6.5f - .25f * mhExpertise;
+            var mhDodgeChance = 6.5f - .25f * weaponExpertise;
 
             if (mhDodgeChance < 0f)
                 mhDodgeChance = 0f;
-            return mhDodgeChance;
+
+            return mhDodgeChance / 100f;
         }
 
         private static float CalcAverageWeaponDamage(Item weapon, Stats stats)

@@ -56,26 +56,32 @@ namespace Rawr.Rogue
             switch (rank)
             {
                 case 5:
-                    finisherDmg = 4f * (stats.AttackPower * .01f + 81f);
+                    finisherDmg = 8f * (stats.AttackPower * 0.0375f + 217f); 
                     break;
                 case 4:
-                    finisherDmg = 5f * (stats.AttackPower * 0.02f + 92f);
+                    finisherDmg = 7f * (stats.AttackPower * 0.03428571f + 199f); 
                     break;
                 case 3:
-                    finisherDmg = 6f * (stats.AttackPower * 0.03f + 103f);
+                    finisherDmg = 6f * (stats.AttackPower * 0.03f + 181f);
                     break;
                 case 2:
-                    finisherDmg = 7f * (stats.AttackPower * 0.03f + 114f);
+                    finisherDmg = 5f * (stats.AttackPower * 0.024f + 163f);
                     break;
                 default:
-                    finisherDmg = 8f * (stats.AttackPower * 0.03f + 125f);
+                    finisherDmg = 4f * (stats.AttackPower * .015f + 145f);
                     break;
             }
 
-            finisherDmg *= (1f + .1f * talents.SerratedBlades) * (1f + stats.BonusBleedDamageMultiplier);
-            finisherDmg *= (1f - combatFactors.WhiteMissChance / 100f);
+            //Note:  Shadowstep isn't modeled because the energy cost isn't modeled
+            //Note:  Bonus Physical Damage isn't modeled yet  (e.g. Savage Combat/Blood Frenzy) 
+		    //Note:  Model Tier 7 2-Piece Bonus;
+
+            finisherDmg *= (1f + 0.1f * talents.SerratedBlades + 0.15f * talents.BloodSpatter + 0.02f * talents.FindWeakness);
+		    finisherDmg *= (1f + 0.1f * 0.35f * talents.DirtyDeeds);
+            finisherDmg *= (1f + stats.BonusBleedDamageMultiplier);
+            finisherDmg *= (1f - combatFactors.YellowMissChance);
             if (talents.SurpriseAttacks < 1)
-                finisherDmg *= (1f - combatFactors.MhDodgeChance / 100f);
+                finisherDmg *= (1f - combatFactors.MhDodgeChance);
             return finisherDmg / cycleTime;
         }
     }
@@ -98,7 +104,7 @@ namespace Rawr.Rogue
             var finisherDmg = (evisMin + evisMax)/2f;
             finisherDmg *= (1f + 0.05f*talents.ImprovedEviscerate);
             finisherDmg *= (1f + 0.02f*talents.Aggression);
-            finisherDmg = finisherDmg * (1f - (combatFactors.MhCrit / 100f)) + (finisherDmg * 2f) * (combatFactors.MhCrit / 100f);
+            finisherDmg = finisherDmg * (1f - combatFactors.ProbMhCrit) + (finisherDmg * 2f) * combatFactors.ProbMhCrit;
             finisherDmg *= (1f - (combatFactors.WhiteMissChance / 100f));
             if (talents.SurpriseAttacks < 1)
                 finisherDmg *= (1f - (combatFactors.MhDodgeChance / 100f));

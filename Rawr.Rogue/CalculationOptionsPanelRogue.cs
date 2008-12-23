@@ -86,6 +86,7 @@ namespace Rawr.Rogue
         {
             if (Character != null && Character.CalculationOptions != null)
             {
+                Character.CalculationOptions = _calcOpts;
                 Character.OnCalculationsInvalidated();
             }
         }

@@ -95,41 +95,54 @@ namespace Rawr.Rogue
             var cpgAttackValues = cpg.CalcAttackValues(stats, combatFactors);
             var cpgDPS = CalcCpgDPS(cpgAttackValues, combatFactors, numCPG, cycleTime);
 
-            var finisherDPS = 0f;
+            var totalFinisherDPS = 0f;
             foreach (var component in calcOpts.DPSCycle.Components)
             {
-                finisherDPS += component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
+                var finisherDps = component.CalcFinisherDPS(talents, stats, combatFactors, cycleTime);
+                calculatedStats.AddToolTip(DisplayValue.FinisherDPS, component + ": " + finisherDps);
+                totalFinisherDPS += finisherDps;
             }
 
             var swordSpecDPS = CalcSwordSpecDPS(talents, combatFactors, whiteAttacks, numCPG, cycleTime);
             var poisonDPS = CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks);
 
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
+            calculatedStats.AddPercentageToolTip(DisplayValue.MhWeaponDamage, "MH Crit %: ", combatFactors.ProbMhCrit);
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
+            calculatedStats.AddPercentageToolTip(DisplayValue.OhWeaponDamage, "OH Crit%: ", combatFactors.ProbOhCrit);
+
             calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, whiteAttacks.MhAvgDamage);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, whiteAttacks.OhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
+
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
+            calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
             calculatedStats.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, combatFactors.HitPercent);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseExpertise, combatFactors.BaseExpertise);
             calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "MH Expertise: " + combatFactors.MhExpertise);
             calculatedStats.AddToolTip(DisplayValue.BaseExpertise, "OH Expertise: " + combatFactors.OhExpertise);
             
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating); 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.Haste, (1 - combatFactors.TotalHaste)*100f);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseMhCrit, combatFactors.MhCrit);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.BaseOhCrit, combatFactors.OhCrit);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
+            calculatedStats.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.TotalHaste <= 0 ? 0 : combatFactors.TotalHaste - 1) * 100f);
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit*100);
+            calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
+            calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
+            calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
+            calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "OH White DPS: " + whiteAttacks.CalcOhWhiteDPS());
+
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CPGDPS, cpgDPS);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, finisherDPS);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.FinisherDPS, totalFinisherDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.SwordSpecDPS, swordSpecDPS);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.PoisonDPS, poisonDPS);
 
-            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS + cpgDPS + finisherDPS + poisonDPS;
+            calculatedStats.TotalDPS = whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS() + swordSpecDPS + cpgDPS + totalFinisherDPS + poisonDPS;
             calculatedStats.OverallPoints = calculatedStats.TotalDPS;
 
             return calculatedStats;
@@ -179,7 +192,7 @@ namespace Rawr.Rogue
                 ssHits += whiteAttacks.OhHits * 0.01f * talents.SwordSpecialization;
             }
 
-            var ssDPS = (ssHits * whiteAttacks.MhAvgDamage) * (1 - combatFactors.MhCrit / 100f) + (ssHits * whiteAttacks.MhAvgDamage * 2f * combatFactors.BonusWhiteCritDmg) * (combatFactors.MhCrit / 100f);
+            var ssDPS = (ssHits * combatFactors.MhAvgDamage) * (1 - combatFactors.ProbMhCrit) + (ssHits * combatFactors.MhAvgDamage * 2f * combatFactors.BonusWhiteCritDmg) * combatFactors.ProbMhCrit;
             ssDPS *= combatFactors.DamageReduction;
             return ssDPS;
         }
@@ -252,7 +265,7 @@ namespace Rawr.Rogue
             statsTotal.Stamina = (float) Math.Floor(staBase*(1f + statsTotal.BonusStaminaMultiplier)) + (float) Math.Floor(staBonus*(1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Health = (float) Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina - staBase)*10f))));
 
-            statsTotal.AttackPower = (statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1+statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.AttackPower = (float)Math.Floor((statsTotal.Agility + statsTotal.Strength + statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1+statsTotal.BonusAttackPowerMultiplier));
 
             statsTotal.PhysicalHit = character.RogueTalents.Precision;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
@@ -279,9 +292,12 @@ namespace Rawr.Rogue
             }
 
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.PhysicalCrit = statsRace.PhysicalCrit;
-            statsTotal.PhysicalCrit += (statsTotal.Agility - (statsRace.Agility*(1f + statsTotal.BonusAgilityMultiplier)))*RogueConversions.AgilityToCrit;
+
+            statsTotal.PhysicalCrit = -0.295f;
+            statsTotal.PhysicalCrit += statsTotal.Agility*RogueConversions.AgilityToCrit;
             statsTotal.PhysicalCrit += character.RogueTalents.Malice*1f;
+
+            statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
 
             statsTotal.Dodge += statsTotal.Agility*RogueConversions.AgilityToDodge;
             statsTotal.Dodge += character.RogueTalents.LightningReflexes;

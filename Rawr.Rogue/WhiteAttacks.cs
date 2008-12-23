@@ -13,44 +13,40 @@
         private readonly Stats _stats;
         private readonly CombatFactors _combatFactors;
 
-        public float OhHits
-        {
-            get { return (_combatFactors.TotalHaste/_combatFactors.OffHand.Speed)*_combatFactors.ProbOhWhiteHit; }
-        }
-
         public float MhHits
         {
-            get { return (_combatFactors.TotalHaste/_combatFactors.MainHand.Speed)*_combatFactors.ProbMhWhiteHit; }
+            get { return MhSwingsPerSecond * (_combatFactors.ProbMhWhiteHit + _combatFactors.ProbMhCrit + _combatFactors.ProbGlancingHit); }
         }
 
-        public float MhAvgDamage
+        public float OhHits
         {
-            get { return _combatFactors.AvgMhWeaponDmg + (_stats.AttackPower/14.0f)*_combatFactors.MainHand.Speed; }
-        }
-
-        public float OhAvgDamage
-        {
-            get
-            {
-                var avgOhDmg = _combatFactors.AvgOhWeaponDmg + (_stats.AttackPower / 14.0f) * _combatFactors.OffHand.Speed;
-                return avgOhDmg * (0.25f + _talents.DualWieldSpecialization * 0.1f);
-            }
+            get { return OhSwingsPerSecond * (_combatFactors.ProbOhWhiteHit + _combatFactors.ProbOhCrit + _combatFactors.ProbGlancingHit); }
         }
 
         public float CalcMhWhiteDPS()
         {
-            var mhWhiteDPS = MhAvgDamage*MhHits;
-            mhWhiteDPS = (1f - _combatFactors.MhCrit/100f)*mhWhiteDPS + (_combatFactors.MhCrit/100f)*(mhWhiteDPS*(2f*_combatFactors.BonusWhiteCritDmg));
-            mhWhiteDPS *= _combatFactors.DamageReduction;
-            return mhWhiteDPS;
+            var dps = _combatFactors.MhAvgDamage * 0.75f * _combatFactors.ProbGlancingHit;
+            dps += _combatFactors.MhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbMhCrit;
+            dps += _combatFactors.MhAvgDamage * _combatFactors.ProbMhWhiteHit;
+            return dps*MhSwingsPerSecond*_combatFactors.DamageReduction;
         }
 
         public float CalcOhWhiteDPS()
         {
-            var ohWhite = OhAvgDamage * OhHits;
-            ohWhite = (1f - _combatFactors.OhCrit/100f)*ohWhite + (_combatFactors.OhCrit/100f)*(ohWhite*(2f*_combatFactors.BonusWhiteCritDmg));
-            ohWhite *= _combatFactors.DamageReduction;
-            return ohWhite;
+            var dps = _combatFactors.OhAvgDamage * 0.75f * _combatFactors.ProbGlancingHit;
+            dps += _combatFactors.OhAvgDamage * _combatFactors.BaseCritMultiplier * _combatFactors.ProbOhCrit;
+            dps += _combatFactors.OhAvgDamage * _combatFactors.ProbOhWhiteHit;
+            return dps*OhSwingsPerSecond*_combatFactors.DamageReduction;
+        }
+
+        private float MhSwingsPerSecond
+        {
+            get { return _combatFactors.TotalHaste / _combatFactors.MainHand.Speed; }
+        }
+
+        private float OhSwingsPerSecond
+        {
+            get { return _combatFactors.TotalHaste / _combatFactors.OffHand.Speed; }
         }
     }
 }
