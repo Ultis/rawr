@@ -108,16 +108,19 @@ namespace Rawr.Rogue
 
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
-            calculatedStats.AddPercentageToolTip(DisplayValue.MhWeaponDamage, "MH Crit %: ", combatFactors.ProbMhCrit);
-
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
-            calculatedStats.AddPercentageToolTip(DisplayValue.OhWeaponDamage, "OH Crit%: ", combatFactors.ProbOhCrit);
 
             calculatedStats.AddDisplayValue(DisplayValue.CPG, cpg.Name);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CycleTime, cycleTime);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitRating, stats.HitRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.HitRating, "Total % Hit: ", combatFactors.HitPercent);
+
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CritRating, stats.CritRating);
+            calculatedStats.AddToolTip(DisplayValue.CritRating, "Crit % from Rating: " + combatFactors.CritFromCritRating);
+            calculatedStats.AddPercentageToolTip(DisplayValue.CritRating, "MH Crit %: ", combatFactors.ProbMhCrit);
+            calculatedStats.AddPercentageToolTip(DisplayValue.CritRating, "OH Crit%: ", combatFactors.ProbOhCrit);
+            calculatedStats.AddToolTip(DisplayValue.CritRating, "Crit Multiplier: " + combatFactors.BaseCritMultiplier);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, combatFactors.TotalArmorPenetration);
             calculatedStats.AddToolTip(DisplayValue.ArmorPenetration, "Armor Penetration Rating: " + stats.ArmorPenetrationRating);
@@ -132,6 +135,7 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit*100);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
+            calculatedStats.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.WhiteDPS, whiteAttacks.CalcMhWhiteDPS() + whiteAttacks.CalcOhWhiteDPS());
             calculatedStats.AddToolTip(DisplayValue.WhiteDPS, "MH White DPS: " + whiteAttacks.CalcMhWhiteDPS());
