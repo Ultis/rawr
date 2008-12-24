@@ -71,6 +71,10 @@ namespace Rawr.TankDK
 					    "Basic Stats:Armor Penetration",*/
                         "Basic Stats:Armor",
 
+                        "Diminishing Returns:DR Dodge",
+                        "Diminishing Returns:DR Parry",
+                        "Diminishing Returns:DR Defense",
+
                         "Defense:Crit*Enemy's crit chance on you",
                         "Defense:Defense Rating",
                         "Defense:Defense",
@@ -240,15 +244,18 @@ namespace Rawr.TankDK
             float dodgePreDR = (stats.Agility - baseAgi) * (1.0f/73.52941176f) + (stats.DodgeRating / 39.34798813f) + (defSkill * 0.04f); 
             float missPreDR = (defSkill * 0.04f);
             float parryRatingFromStr = stats.Strength * 0.25f * (1.0f + uaUptime * 0.10f);
-            float parryPreDr = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
+            float parryPreDR = (defSkill * 0.04f) + (stats.ParryRating + parryRatingFromStr) / 49.18498611f;
 
             float dodgePostDR = 1f / (1f / 88.129021f + 0.9560f / dodgePreDR);
             float missPostDR = 1f / (1f / 47.003525f + 0.9560f / missPreDR); //TODO: Search for correct value
-            float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDr);
+            float parryPostDR = 1f / (1f / 47.003525f + 0.9560f / parryPreDR);
 
             float dodgeTotal = dodgeNonDR + dodgePostDR;
             float missTotal = missNonDR + missPostDR;
             float parryTotal = parryNonDR + parryPostDR;
+
+
+            calculateDRValues(calcs, dodgePreDR, missPreDR, parryPreDR, dodgePostDR, missPostDR, parryPostDR);
 
             float currentAvoidance = 100.0f;
 
@@ -287,8 +294,12 @@ namespace Rawr.TankDK
             
             float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR);
 
-            calcs.Mitigation = calcs.BasicStats.Health / (complete_dr * (dps * critHitBare / 100.0f));
-            calcs.Avoidance = calcs.BasicStats.Health / (complete_dr * (dps * critHitAvoidance / 100.0f)) - calcs.Mitigation;
+            float hp = calcs.BasicStats.Health;
+
+            calcs.Mitigation = hp / (complete_dr * (dps * critHitBare / 100.0f)) * opts.MitigationWeight;
+            calcs.Avoidance = hp / (complete_dr * (dps * critHitAvoidance / 100.0f)) - calcs.Mitigation;
+
+            calcs.Avoidance = Math.Max(0.0f, calcs.Avoidance);
 
             // ***** THREAT *****
 
@@ -305,6 +316,36 @@ namespace Rawr.TankDK
             }
 
             return calcs;
+        }
+
+        /// <summary>
+        /// calculates the effectivenes of avoidance ratings after diminishing returns
+        /// </summary>
+        /// <param name="calcs"></param>
+        /// <param name="dodgePreDR"></param>
+        /// <param name="missPreDR"></param>
+        /// <param name="parryPreDR"></param>
+        /// <param name="dodgePostDR"></param>
+        /// <param name="missPostDR"></param>
+        /// <param name="parryPostDR"></param>
+        private static void calculateDRValues(CharacterCalculationsTankDK calcs, float dodgePreDR, float missPreDR, float parryPreDR, float dodgePostDR, float missPostDR, float parryPostDR)
+        {
+            float dodgePreEffect = 1.0f / 39.34798813f;
+            float parryPreEffect = 1.0f / 49.18498611f;
+
+            float defPreEffect = 0.04f / 4.918498039f;
+
+            float dodgePostEffect = 1f / (1f / 88.129021f + 0.9560f / (dodgePreDR + dodgePreEffect)) - dodgePostDR;
+            float parryPostEffect = 1f / (1f / 47.003525f + 0.9560f / (parryPreDR + parryPreEffect)) - parryPostDR;
+
+            calcs.DRDodge = dodgePostEffect / dodgePreEffect * 100.0f;
+            calcs.DRParry = parryPostEffect / parryPreEffect * 100.0f;
+
+            float defPostEffect = 1f / (1f / 88.129021f + 0.9560f / (dodgePreDR + defPreEffect)) - dodgePostDR;
+            defPostEffect += 1f / (1f / 47.003525f + 0.9560f / (parryPreDR + defPreEffect)) - parryPostDR;
+            defPostEffect += 1f / (1f / 47.003525f + 0.9560f / (missPreDR + defPreEffect)) - missPostDR;
+
+            calcs.DRDefense = defPostEffect / (3.0f * defPreEffect) * 100.0f;
         }
 
         /// <summary>

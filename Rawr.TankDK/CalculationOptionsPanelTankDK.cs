@@ -33,6 +33,7 @@ namespace Rawr.TankDK
             }
 
             numThreatWeight.Value = (decimal)options.ThreatWeight;
+            numMitigationWeight.Value = (decimal)options.MitigationWeight;
 
 
             _loadingCalculationOptions = false;
@@ -59,6 +60,16 @@ namespace Rawr.TankDK
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void numMitigationWeight_ValueChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                options.MitigationWeight = (float)(numMitigationWeight.Value);
+                Character.OnCalculationsInvalidated();
+            }
+
+        }
     }
 
     [Serializable]
@@ -66,6 +77,7 @@ namespace Rawr.TankDK
     {
         public int TargetLevel = 83;
         public float ThreatWeight = 0.25f;
+        public float MitigationWeight = 1.10f;
 
         public string GetXml()
         {

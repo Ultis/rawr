@@ -30,6 +30,10 @@ namespace Rawr.TankDK
         public float CritReduction { get; set; }
         public float CappedCritReduction { get; set; }
 
+        public float DRDefense { get; set; }
+        public float DRParry { get; set; }
+        public float DRDodge { get; set; }
+
         public float Armor { get; set; }
 
         public float Crit { get; set; }
@@ -47,7 +51,11 @@ namespace Rawr.TankDK
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            
+
+            dict["DR Defense"] = DRDefense.ToString("F2") + "%";
+            dict["DR Parry"] = DRParry.ToString("F2") + "%";
+            dict["DR Dodge"] = DRDodge.ToString("F2") + "%";
+
             dict["Miss"] = Miss.ToString("F2");
             dict["Dodge"] = Dodge.ToString("F2");
             dict["Parry"] = Parry.ToString("F2");
