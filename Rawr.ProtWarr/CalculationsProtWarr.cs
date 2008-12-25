@@ -827,7 +827,7 @@ threat and limited threat scaled by the threat scale.",
 					//Differential Calculations for Def
 					calcAtAdd = calcBaseValue;
 					float defToAdd = 0f;
-					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 2)
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 20)
 					{
 						defToAdd += 0.01f;
 						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsProtWarr;
@@ -835,7 +835,7 @@ threat and limited threat scaled by the threat scale.",
 
 					calcAtSubtract = calcBaseValue;
 					float defToSubtract = 0f;
-					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -2)
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -20)
 					{
 						defToSubtract -= 0.01f;
 						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsProtWarr;
