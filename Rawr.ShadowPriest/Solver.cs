@@ -513,11 +513,10 @@ namespace Rawr.ShadowPriest
 
             calculatedStats.DpsPoints = DPS;
             calculatedStats.SustainPoints = SustainDPS;
-            // If opponent has 25% 1% of resilience gives -1% damage from dots and -1% chance to be crit. Also reduces crits by 2%.
-            // This effectively means you gain 12.5% extra health from removing 12.5% dot and 12.5% crits at resilience cap, 12.5%
-            // In addition, the remaining 12.5% crits are reduced by 25% (12.5%*200%damage*75% = 18.75%)
-            // At resilience cap I'd say that your hp's are scaled by 1.125*1.1875 = ~30%. Probably wrong but good enough.
-            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * CalculationOptions.Survivability / 100f * (1 + 0.3f * character.StatConversion.GetResilienceFromRating(calculatedStats.BasicStats.Resilience) / 12.5f);
+
+            // Lets just say that 15% of resilience scales all health by 150%.
+            float Resilience = (float)Math.Min(15f, character.StatConversion.GetResilienceFromRating(simStats.Resilience)) / 15f;
+            calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * CalculationOptions.Survivability / 100f;
         }
     }
    

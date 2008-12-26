@@ -181,7 +181,8 @@
             this.trkSurvivability.Size = new System.Drawing.Size(270, 42);
             this.trkSurvivability.TabIndex = 38;
             this.trkSurvivability.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkSurvivability, "Change this slider to tell Rawr how much you value your Health.");
+            this.toolTip1.SetToolTip(this.trkSurvivability, "Change this slider to tell Rawr how much you value your Health. Use 0-5% for PvE," +
+                    " 10-15% for PvP.");
             this.trkSurvivability.Scroll += new System.EventHandler(this.trkSurvivability_Scroll);
             // 
             // trkTestOfFaith

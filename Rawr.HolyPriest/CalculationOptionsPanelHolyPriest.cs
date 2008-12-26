@@ -204,7 +204,7 @@ namespace Rawr.HolyPriest
         public float Serendipity = 75f;
         public float Replenishment = 50f;
         public float Shadowfiend = 100f;
-        public float Survivability = 5f;
+        public float Survivability = 2f;
         public float Rapture = 75f;
         public float TestOfFaith = 25f;
         public bool ModelProcs = true;

@@ -191,7 +191,7 @@ namespace Rawr.ShadowPriest
             Shadowfiend = 100f;
             Replenishment = 100f;
             JoW = 100f;
-            Survivability = 5f;
+            Survivability = 2f;
 
             SpellPriority = null;
             ManaPot = 4;

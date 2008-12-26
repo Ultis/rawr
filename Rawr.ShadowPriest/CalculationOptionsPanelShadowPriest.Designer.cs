@@ -133,7 +133,7 @@
             this.cbTargetLevel.Items.AddRange(new object[] {
             "+0",
             "+1",
-            "+2",
+            "+2 (PvP)",
             "+3 (Boss)"});
             this.cbTargetLevel.Location = new System.Drawing.Point(131, 14);
             this.cbTargetLevel.Name = "cbTargetLevel";
@@ -203,7 +203,7 @@
             this.trkSurvivability.Size = new System.Drawing.Size(270, 42);
             this.trkSurvivability.TabIndex = 51;
             this.trkSurvivability.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkSurvivability, "Tell Rawr how much you value your life.");
+            this.toolTip1.SetToolTip(this.trkSurvivability, "Tell Rawr how much you value your life. Use 0-5% for PvE, 10-15% for PvP");
             this.trkSurvivability.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // trkFSR
