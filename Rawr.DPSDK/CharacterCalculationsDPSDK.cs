@@ -257,6 +257,13 @@ namespace Rawr.DPSDK
             set { _OHExpertise = value; }
         }
 
+        private float _GhoulDPS;
+        public float GhoulDPS
+        {
+            get { return _GhoulDPS; }
+            set { _GhoulDPS = value; }
+        }
+
         private Stats _basicStats;
         public Stats BasicStats
         {
@@ -340,9 +347,9 @@ namespace Rawr.DPSDK
             dictValues.Add("Plague Strike", PlagueStrikeDPS.ToString("N2"));
             dictValues.Add("Scourge Strike", ScourgeStrikeDPS.ToString("N2"));
             dictValues.Add("Unholy Blight", UnholyBlightDPS.ToString("N2"));
-            dictValues.Add("Wandering Plague", WindfuryDPS.ToString("N2"));
+            dictValues.Add("Wandering Plague", WanderingPlagueDPS.ToString("N2"));
             dictValues.Add("White", WhiteDPS.ToString("N2"));
-            dictValues.Add("Windfury", WindfuryDPS.ToString("N2"));
+            dictValues.Add("Ghoul", GhoulDPS.ToString("N2"));
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             return dictValues;

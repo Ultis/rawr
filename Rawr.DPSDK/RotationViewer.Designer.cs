@@ -65,6 +65,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.txtGargoyleDuration = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.cbPresence = new System.Windows.Forms.ComboBox();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +76,7 @@
             this.gbRotation.Controls.Add(this.rbFrost);
             this.gbRotation.Controls.Add(this.rbBlood);
             this.gbRotation.Controls.Add(this.rbUnholy);
-            this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.gbRotation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbRotation.Location = new System.Drawing.Point(12, 12);
             this.gbRotation.Name = "gbRotation";
             this.gbRotation.Size = new System.Drawing.Size(185, 74);
@@ -85,7 +87,7 @@
             // rbCustom
             // 
             this.rbCustom.AutoSize = true;
-            this.rbCustom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.rbCustom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbCustom.Location = new System.Drawing.Point(114, 45);
             this.rbCustom.Name = "rbCustom";
             this.rbCustom.Size = new System.Drawing.Size(67, 19);
@@ -98,7 +100,7 @@
             // rbFrost
             // 
             this.rbFrost.AutoSize = true;
-            this.rbFrost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.rbFrost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbFrost.Location = new System.Drawing.Point(114, 20);
             this.rbFrost.Name = "rbFrost";
             this.rbFrost.Size = new System.Drawing.Size(52, 19);
@@ -111,7 +113,7 @@
             // rbBlood
             // 
             this.rbBlood.AutoSize = true;
-            this.rbBlood.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.rbBlood.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbBlood.Location = new System.Drawing.Point(9, 45);
             this.rbBlood.Name = "rbBlood";
             this.rbBlood.Size = new System.Drawing.Size(57, 19);
@@ -124,7 +126,7 @@
             // rbUnholy
             // 
             this.rbUnholy.AutoSize = true;
-            this.rbUnholy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ( (byte)( 0 ) ));
+            this.rbUnholy.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rbUnholy.Location = new System.Drawing.Point(9, 20);
             this.rbUnholy.Name = "rbUnholy";
             this.rbUnholy.Size = new System.Drawing.Size(63, 19);
@@ -405,18 +407,40 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(31, 177);
+            this.label17.Location = new System.Drawing.Point(28, 177);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(92, 13);
+            this.label17.Size = new System.Drawing.Size(95, 13);
             this.label17.TabIndex = 66;
-            this.label17.Text = "GargoyleDuration:";
+            this.label17.Text = "Gargoyle Duration:";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(9, 209);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(55, 13);
+            this.label18.TabIndex = 69;
+            this.label18.Text = "Presence:";
+            this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // cbPresence
+            // 
+            this.cbPresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbPresence.FormattingEnabled = true;
+            this.cbPresence.Location = new System.Drawing.Point(76, 204);
+            this.cbPresence.Name = "cbPresence";
+            this.cbPresence.Size = new System.Drawing.Size(112, 23);
+            this.cbPresence.TabIndex = 70;
             // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(209, 516);
+            this.Controls.Add(this.cbPresence);
+            this.Controls.Add(this.label18);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.txtGargoyleDuration);
             this.Controls.Add(this.label17);
@@ -499,5 +523,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox txtGargoyleDuration;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.ComboBox cbPresence;
     }
 }

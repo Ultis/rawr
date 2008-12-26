@@ -7,6 +7,7 @@ namespace Rawr.DPSDK
     public class Rotation
     {
         public Type curRotationType = Type.Blood;
+        public CalculationOptionsDPSDK.Presence presence = CalculationOptionsDPSDK.Presence.Blood;
         public float curRotationDuration = 0f;  // rotation duration in seconds
 
         //disease info
@@ -61,6 +62,7 @@ namespace Rawr.DPSDK
                     curRotationDuration = 20f;
                     DancingRuneWeapon = 190f;
                     GargoyleDuration = 0f;
+                    presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Frost:
                     numDisease = 2f;
@@ -78,6 +80,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
                     GargoyleDuration = 0f;
+                    presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Unholy:
                     numDisease = 3f;
@@ -95,6 +98,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
                     GargoyleDuration = 50f;
+                    presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:
                     numDisease = 0f;
@@ -112,6 +116,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 0f;
                     GargoyleDuration = 0f;
+                    presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
             }
 

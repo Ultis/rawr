@@ -38,11 +38,6 @@ namespace Rawr.DPSDK
             if (calcOpts.rotation == null)
                 calcOpts.rotation = new Rotation();
             
-            rbDrumsWar.Checked = calcOpts.DrumsOfWar;
-            rbDrumsBattle.Checked = calcOpts.DrumsOfBattle;
-            rbDrumsNone.Checked = !calcOpts.DrumsOfBattle && !calcOpts.DrumsOfWar;
-
-            chkBloodLust.Checked = calcOpts.Bloodlust;
             cbWindfuryEffect.Checked = calcOpts.Windfury;
 
             cbTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
@@ -50,9 +45,6 @@ namespace Rawr.DPSDK
 			lblFightLengthNum.Text = tbFightLength.Value.ToString();
 
             checkBoxMeta.Checked = calcOpts.EnforceMetagemRequirements;
-
-            tbFerociousInspiration.Value = calcOpts.FerociousInspiration;
-            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
 
             nudTargetArmor.Value = calcOpts.BossArmor;
 
@@ -209,59 +201,10 @@ namespace Rawr.DPSDK
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbFerociousInspiration_ValueChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            calcOpts.FerociousInspiration = tbFerociousInspiration.Value;
-            lblFerociousInspirationNum.Text = tbFerociousInspiration.Value.ToString();
-            Character.OnCalculationsInvalidated();
-        }
-
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)
         {
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             calcOpts.BossArmor = (int)nudTargetArmor.Value;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void rbDrumsNone_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsNone.Checked)
-            {
-                CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-                calcOpts.DrumsOfBattle = false;
-                calcOpts.DrumsOfWar = false;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void rbDrumsWar_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsWar.Checked)
-            {
-                CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-                calcOpts.DrumsOfBattle = false;
-                calcOpts.DrumsOfWar = true;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void rbDrumsBattle_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbDrumsBattle.Checked)
-            {
-                CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-                calcOpts.DrumsOfBattle = true;
-                calcOpts.DrumsOfWar = false;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkBloodLust_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-            if (chkBloodLust.Checked) { calcOpts.Bloodlust = true; }
-            else { calcOpts.Bloodlust = true; }
             Character.OnCalculationsInvalidated();
         }
 
@@ -340,6 +283,38 @@ namespace Rawr.DPSDK
                 cbCryptFever.Enabled = true;
             }
         }
+
+        private void cbGlyphOblit_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (cbGlyphOblit.Checked) { calcOpts.GlyphofOblit = true; }
+            else { calcOpts.GlyphofOblit = false; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbGlyphPlagueStrike_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (cbGlyphPlagueStrike.Checked) { calcOpts.GlyphofPS = true; }
+            else { calcOpts.GlyphofPS = false; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbGlyphGhoul_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (cbGlyphGhoul.Checked) { calcOpts.GlyphofGhoul = true; }
+            else { calcOpts.GlyphofGhoul = false; }
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbGhoul_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
+            if (cbGhoul.Checked) { calcOpts.Ghoul = true; }
+            else { calcOpts.Ghoul = false; }
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 	[Serializable]
@@ -355,6 +330,11 @@ namespace Rawr.DPSDK
 			return xml.ToString();
 		}
 
+        public enum Presence
+        {
+            Blood, Unholy
+        }
+
         public int TargetLevel = 73;
 		public int BossArmor = 7700;
 		public int FightLength = 10;
@@ -368,7 +348,12 @@ namespace Rawr.DPSDK
 	    public bool MagicVuln = false;
 	    public bool CryptFever = false;
         public bool HammerOfWrath = false;
-	    public bool BloodPresence = true;  //This isn't changeable... ATM no other presence comes close in DPS
+        public bool Ghoul = false;
+        public Presence presence = Presence.Blood;
+
+        public bool GlyphofOblit = false;
+        public bool GlyphofPS = false;
+        public bool GlyphofGhoul = false;
 
 	    public DeathKnightTalents talents = null;
 	    public Rotation rotation;

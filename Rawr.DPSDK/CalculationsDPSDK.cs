@@ -92,6 +92,7 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:DRW*Dancing Rune Weapon",
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
+                        "DPS Breakdown:Ghoul",
                         "DPS Breakdown:Total DPS",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
@@ -213,6 +214,7 @@ namespace Rawr.DPSDK
             float dpsWanderingPlague = 0f;
             float dpsWPFromFF = 0f;
             float dpsWPFromBP = 0f;
+            float dpsGhoul = 0f;
 
             //shared variables
             DeathKnightTalents talents = calcOpts.talents;
@@ -659,11 +661,41 @@ namespace Rawr.DPSDK
                 if (calcOpts.rotation.GargoyleDuration > 0f)
                 {
                     float GargoyleCastTime = 2.5f;
+
+                    if (stats.Bloodlust > 0)
+                    {
+                        GargoyleCastTime *= .7f;
+                    }
+
                     float GargoyleStrike = GargoyleAPMult * stats.AttackPower;
                     float GargoyleStrikeCount = calcOpts.rotation.GargoyleDuration / GargoyleCastTime;
                     float GargoyleDmg = GargoyleStrike*GargoyleStrikeCount;
                     GargoyleDmg *= 1f + spellCrits;
                     dpsGargoyle = GargoyleDmg / 180f;
+                }
+            }
+            #endregion
+
+            #region Ghoul
+            {
+                if (calcOpts.Ghoul)
+                {
+                    float uptime = 1f;
+                    if (talents.MasterOfGhouls == 0)
+                    {
+                        float timeleft = calcOpts.FightLength;
+                        float numCDs = timeleft / (5*60);
+                        float duration = numCDs * 120f;
+                        timeleft -= 300f;
+                        if (timeleft > 120f)
+                        {
+                            uptime = 240f/calcOpts.FightLength;
+                        }
+                        else
+                        {
+                            uptime = (timeleft + 120f)/calcOpts.FightLength;
+                        }
+                    }
                 }
             }
             #endregion
@@ -787,9 +819,10 @@ namespace Rawr.DPSDK
             calcs.UnholyBlightDPS = dpsUnholyBlight;
             calcs.WhiteDPS = dpsWhite;
             calcs.WindfuryDPS = dpsWindfury;
+            calcs.WanderingPlagueDPS = dpsWanderingPlague;
             
 
-            calcs.DPSPoints = dpsBCB + dpsBloodPlague + dpsBloodStrike + dpsDeathCoil + dpsFrostFever + dpsFrostStrike + dpsGargoyle + 
+            calcs.DPSPoints = dpsBCB + dpsBloodPlague + dpsBloodStrike + dpsDeathCoil + dpsFrostFever + dpsFrostStrike + dpsGargoyle + dpsWanderingPlague +
                               dpsHeartStrike + dpsHowlingBlast + dpsIcyTouch + dpsNecrosis + dpsObliterate + dpsPlagueStrike + dpsScourgeStrike + dpsUnholyBlight +
                               dpsWhite; //windfury and DRW are handled elsewhere
 
@@ -987,10 +1020,14 @@ namespace Rawr.DPSDK
                 statsTotal.BonusSpellPowerMultiplier += .13f;
             }
 
-            if (calcOpts.BloodPresence)  // a final, multiplicative component
+            if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Blood)  // a final, multiplicative component
             {
                 statsTotal.BonusPhysicalDamageMultiplier *= 1.15f;
                 statsTotal.BonusSpellPowerMultiplier *= 1.15f;
+            }
+            else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
+            {
+                statsTotal.PhysicalHaste *= 1.15f;
             }
 
             return (statsTotal);

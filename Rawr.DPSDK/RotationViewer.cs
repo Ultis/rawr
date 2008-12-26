@@ -17,6 +17,10 @@ namespace Rawr.DPSDK
             InitializeComponent();
             rotation = r;
 
+            cbPresence.Items.Clear();
+            cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
+            cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Unholy.ToString());
+
             txtBS.KeyPress += new KeyPressEventHandler(txtBS_KeyPress);
             txtDC.KeyPress += new KeyPressEventHandler(txtDC_KeyPress);
             txtDuration.KeyPress += new KeyPressEventHandler(txtDuration_KeyPress);
