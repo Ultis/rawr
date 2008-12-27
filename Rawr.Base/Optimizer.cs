@@ -1928,7 +1928,21 @@ namespace Rawr
                 },
                 delegate(int slot, Item item)
                 {
-                    return (lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]);
+                    if (lockedSlot == (Character.CharacterSlot)slot)
+                    {
+                        if (lockedEnchants != null)
+                        {
+                            return lockedEnchants[rand.Next(lockedEnchants.Length)];
+                        }
+                        else
+                        {
+                            return slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]; // at least "no enchant" will be marked as available
+                        }
+                    }
+                    else
+                    {
+                        return (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]);
+                    }
                 });
         }
 
@@ -2327,7 +2341,7 @@ namespace Rawr
                 },
                 delegate(int slot, Item item)
                 {
-                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)])) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
+                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : ((item.EnchantValidList != null && lockedSlot != (Character.CharacterSlot)slot) ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)])) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
                 });
 		}
 
