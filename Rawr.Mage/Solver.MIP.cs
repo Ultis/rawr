@@ -383,6 +383,10 @@ namespace Rawr.Mage
                 {
                     valid = ValidateIntegralConsumableOverall(VariableType.Evocation, 2.0 / calculationResult.BaseState.CastingSpeed);
                 }
+                if (valid && conjureManaGem)
+                {
+                    valid = ValidateIntegralConsumableOverall(VariableType.ConjureManaGem, calculationResult.ConjureManaGem.CastTime);
+                }
             }
 
             if (segmentCooldowns)
@@ -1550,7 +1554,7 @@ namespace Rawr.Mage
             switch (integralConsumable)
             {
                 case VariableType.ManaGem:
-                    row = rowManaGemOnly;
+                    row = rowManaGemMax;
                     break;
                 case VariableType.ManaPotion:
                     row = rowManaPotion;
@@ -1563,6 +1567,9 @@ namespace Rawr.Mage
                     break;
                 case VariableType.SummonWaterElemental:
                     row = rowSummonWaterElementalCount;
+                    break;
+                case VariableType.ConjureManaGem:
+                    row = rowConjureManaGem;
                     break;
             }
             if (!valid)

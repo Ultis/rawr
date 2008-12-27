@@ -31,6 +31,7 @@ namespace Rawr.Mage
         private bool minimizeTime;
         private bool restrictManaUse;
         private bool needsTimeExtension;
+        private bool conjureManaGem;
 
         private bool heroismAvailable;
         private bool arcanePowerAvailable;
@@ -60,8 +61,9 @@ namespace Rawr.Mage
         private int rowEvocation = -1;
         private int rowPotion = -1;
         private int rowManaPotion = -1;
+        private int rowConjureManaGem = -1;
         private int rowManaGem = -1;
-        private int rowManaGemOnly = -1;
+        private int rowManaGemMax = -1;
         private int rowHeroism = -1;
         private int rowArcanePower = -1;
         private int rowHeroismArcanePower = -1;
@@ -503,6 +505,7 @@ namespace Rawr.Mage
 
             needsTimeExtension = false;
             bool afterFightRegen = calculationOptions.FarmingMode;
+            conjureManaGem = calculationOptions.ManaGemEnabled && calculationOptions.FightDuration > 500.0f;
 
             minimizeTime = false;
             if (calculationOptions.TargetDamage > 0)
@@ -536,7 +539,7 @@ namespace Rawr.Mage
                 lp.SetRowScaleUnsafe(rowManaRegen, 0.1);
                 lp.SetRowScaleUnsafe(rowManaGem, 40.0);
                 lp.SetRowScaleUnsafe(rowPotion, 40.0);
-                lp.SetRowScaleUnsafe(rowManaGemOnly, 40.0);
+                lp.SetRowScaleUnsafe(rowManaGemMax, 40.0);
                 lp.SetRowScaleUnsafe(rowManaPotion, 40.0);
                 lp.SetRowScaleUnsafe(rowManaGemFlameCap, 40.0);
                 lp.SetRowScaleUnsafe(rowCombustion, 10.0);
@@ -769,7 +772,7 @@ namespace Rawr.Mage
                 if (calculationOptions.ManaGemEnabled)
                 {
                     int manaGemSegments = (segmentCooldowns && (flameCapAvailable || restrictManaUse)) ? segments : 1;
-                    calculationResult.MaxManaGem = Math.Min(3, 1 + (int)((calculationOptions.FightDuration - 30f) / 120f));
+                    calculationResult.MaxManaGem = 1 + (int)((calculationOptions.FightDuration - 30f) / 120f);
                     double manaGemRegen = -(1 + characterStats.BonusManaGem) * calculationResult.ManaGemValue;
                     for (int segment = 0; segment < manaGemSegments; segment++)
                     {
@@ -781,7 +784,7 @@ namespace Rawr.Mage
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaGemRegen);
                         lp.SetElementUnsafe(rowManaGem, column, 1.0);
-                        lp.SetElementUnsafe(rowManaGemOnly, column, 1.0);
+                        lp.SetElementUnsafe(rowManaGemMax, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0);
                         lp.SetElementUnsafe(rowManaGemEffectActivation, column, -1.0);
                         lp.SetElementUnsafe(rowThreat, column, tps = -manaGemRegen * 0.5f * threatFactor);
@@ -1109,6 +1112,47 @@ namespace Rawr.Mage
                         }
                     }
                 }
+                // conjure mana gem
+                if (conjureManaGem)
+                {
+                    int conjureSegments = (restrictManaUse) ? segments : 1;
+                    Spell spell = new ConjureManaGem(calculationResult.BaseState);
+                    calculationResult.ConjureManaGem = spell;
+                    calculationResult.MaxConjureManaGem = (int)((calculationOptions.FightDuration - 300.0f) / 360.0f) + 1;
+                    manaRegen = spell.CostPerSecond - spell.ManaRegenPerSecond;
+                    for (int segment = 0; segment < conjureSegments; segment++)
+                    {
+                        column = lp.AddColumnUnsafe();
+                        lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : calculationResult.MaxConjureManaGem));                        
+                        calculationResult.SolutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Spell = spell, Segment = segment, State = calculationResult.BaseState });
+                        lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
+                        lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
+                        lp.SetElementUnsafe(rowConjureManaGem, column, 1.0);
+                        lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                        lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                        lp.SetElementUnsafe(rowThreat, column, tps = spell.ThreatPerSecond);
+                        lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
+                        lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
+                        tpsList.Add(tps);
+                        lp.SetElementUnsafe(rowManaGem, column, -3.0 / spell.CastTime); // one cast time gives 3 new gem uses
+                        if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                        if (restrictManaUse)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, manaRegen);
+                                lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, -manaRegen);
+                            }
+                        }
+                        if (restrictThreat)
+                        {
+                            for (int ss = segment; ss < segments - 1; ss++)
+                            {
+                                lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                            }
+                        }
+                    }
+                }
                 // spells
                 if (calculationOptions.IncrementalOptimizations)
                 {
@@ -1309,8 +1353,9 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowEvocation, calculationResult.EvocationDuration * calculationResult.MaxEvocation);
             lp.SetRHSUnsafe(rowPotion, calculationResult.MaxManaPotion);
             lp.SetRHSUnsafe(rowManaPotion, calculationResult.MaxManaPotion);
-            lp.SetRHSUnsafe(rowManaGem, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
-            lp.SetRHSUnsafe(rowManaGemOnly, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
+            lp.SetRHSUnsafe(rowManaGem, Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem));
+            lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
+            if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
             if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
@@ -1548,7 +1593,11 @@ namespace Rawr.Mage
             if (calculationOptions.ManaGemEnabled)
             {
                 rowManaGem = rowCount++;
-                if (integralMana) rowManaGemOnly = rowCount++;
+                rowManaGemMax = rowCount++;
+            }
+            if (conjureManaGem)
+            {
+                rowConjureManaGem = rowCount++;
             }
             if (heroismAvailable) rowHeroism = rowCount++;
             if (arcanePowerAvailable) rowArcanePower = rowCount++;

@@ -3422,6 +3422,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     label = "Drink";
                 }
+                else if (type == VariableType.ConjureManaGem)
+                {
+                    label = "Conjure Mana Gem";
+                }
                 else if (type == VariableType.Spell)
                 {
                     label = spell.Name;

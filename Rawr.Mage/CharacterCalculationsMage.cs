@@ -23,7 +23,8 @@ namespace Rawr.Mage
         AfterFightRegen,
         ManaOverflow,
         Spell,
-        SummonWaterElemental
+        SummonWaterElemental,
+        ConjureManaGem
     }
 
     public struct SolutionVariable
@@ -134,6 +135,9 @@ namespace Rawr.Mage
         public int ColumnAfterFightRegen = -1;
         public int ColumnManaOverflow = -1;
         public int ColumnSummonWaterElemental = -1;
+
+        public Spell ConjureManaGem { get; set; }
+        public int MaxConjureManaGem { get; set; }
 
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
@@ -352,6 +356,7 @@ namespace Rawr.Mage
             double manaGem = 0;
             double drums = 0;
             double we = 0;
+            double cmg = 0;
             bool segmentedOutput = false;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
@@ -392,6 +397,10 @@ namespace Rawr.Mage
                             we += Solution[i];
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SolutionVariable[i].Segment));
                             break;
+                        case VariableType.ConjureManaGem:
+                            cmg += Solution[i];
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SolutionVariable[i].Segment));
+                            break;
                         case VariableType.Wand:
                         case VariableType.Spell:
                             double value;
@@ -431,6 +440,10 @@ namespace Rawr.Mage
                 if (we > 0)
                 {
                     sb.AppendLine(String.Format("{0}: {1:F}x", "Summon Water Elemental", we / BaseState.GlobalCooldown));
+                }
+                if (cmg > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Conjure Mana Gem", cmg / ConjureManaGem.CastTime));
                 }
                 foreach (KeyValuePair<string, double> kvp in combinedSolution)
                 {
