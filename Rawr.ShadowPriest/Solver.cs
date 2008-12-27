@@ -427,7 +427,7 @@ namespace Rawr.ShadowPriest
                 float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / HitsPerSecond / ProcActual;
                 simStats.SpellPower += simStats.SpellPowerFor10SecOnHit_10_45 * 10f / EffCooldown;
                 Spell Pendulum = new PendulumProc(simStats, character);
-                DPS += Pendulum.AvgDamage / EffCooldown *(1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+                DPS += Pendulum.AvgDamage / EffCooldown * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
 
             Rotation += "\r\n\r\nMana Buffs:";

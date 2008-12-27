@@ -650,7 +650,7 @@ namespace Rawr.ShadowPriest
         };
 
         public TimbalProc(Stats stats, Character character)
-            : base("TimbalProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+            : base("TimbalProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
         {
             Calculate(stats, character);
         }
@@ -683,7 +683,7 @@ namespace Rawr.ShadowPriest
         };
 
         public ExtractProc(Stats stats, Character character)
-            : base("ExtractProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+            : base("ExtractProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
         {
             Calculate(stats, character);
         }
@@ -716,7 +716,7 @@ namespace Rawr.ShadowPriest
         };
 
         public PendulumProc(Stats stats, Character character)
-            : base("PendulumProc", stats, character, SpellRankTable, 0, 0f, 0f, 0, 0f, 0, 0f, Color.Black)
+            : base("PendulumProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
         {
             Calculate(stats, character);
         }
