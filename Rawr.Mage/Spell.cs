@@ -2268,6 +2268,7 @@ namespace Rawr.Mage
         public FBABarSlow(CastingState castingState)
         {
             Name = "FBABarSlow";
+            AffectedByFlameCap = true;
 
             Spell FB = castingState.MaintainSnareState.GetSpell(SpellId.Fireball);
             Spell ABar = castingState.MaintainSnareState.GetSpell(SpellId.ArcaneBarrage);
@@ -3432,6 +3433,7 @@ namespace Rawr.Mage
         public FB2ABar(CastingState castingState)
         {
             Name = "FB2ABar";
+            AffectedByFlameCap = true;
 
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
@@ -3628,6 +3630,7 @@ namespace Rawr.Mage
         public FBABar(CastingState castingState)
         {
             Name = "FBABar";
+            AffectedByFlameCap = true;
 
             Spell FB = castingState.GetSpell(SpellId.Fireball);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
@@ -3790,6 +3793,7 @@ namespace Rawr.Mage
         public FFBABar(CastingState castingState)
         {
             Name = "FFBABar";
+            AffectedByFlameCap = true;
 
             Spell FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
@@ -4503,6 +4507,7 @@ namespace Rawr.Mage
         public ABFB3FBSc(CastingState castingState) : base(13)
         {
             Name = "ABFB3FBSc";
+            AffectedByFlameCap = true;
 
             Spell AB30 = castingState.GetSpell(SpellId.ArcaneBlast30);
             Spell AB11 = castingState.GetSpell(SpellId.ArcaneBlast11);
@@ -4567,6 +4572,7 @@ namespace Rawr.Mage
         public FBPyro(CastingState castingState)
         {
             Name = "FBPyro";
+            AffectedByFlameCap = true;
 
             FB = (Fireball)castingState.GetSpell(SpellId.Fireball);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
@@ -4657,6 +4663,7 @@ namespace Rawr.Mage
         public FBLBPyro(CastingState castingState)
         {
             Name = "FBLBPyro";
+            AffectedByFlameCap = true;
 
             FB = (BaseSpell)castingState.GetSpell(SpellId.Fireball);
             LB = (BaseSpell)castingState.GetSpell(SpellId.LivingBomb);
@@ -4796,6 +4803,7 @@ namespace Rawr.Mage
         public FFBLBPyro(CastingState castingState)
         {
             Name = "FFBLBPyro";
+            AffectedByFlameCap = true;
 
             FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
             LB = (BaseSpell)castingState.GetSpell(SpellId.LivingBomb);
@@ -4857,6 +4865,7 @@ namespace Rawr.Mage
         {
             Name = "ScLBPyro";
             ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
+            AffectedByFlameCap = true;
 
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
             LB = (BaseSpell)castingState.GetSpell(SpellId.LivingBomb);
@@ -4915,6 +4924,7 @@ namespace Rawr.Mage
         public FFBPyro(CastingState castingState)
         {
             Name = "FFBPyro";
+            AffectedByFlameCap = true;
 
             FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOM);
@@ -4966,6 +4976,7 @@ namespace Rawr.Mage
         {
             Name = "FBScPyro";
             ProvidesScorch = true;
+            AffectedByFlameCap = true;
 
             FB = (BaseSpell)castingState.GetSpell(SpellId.Fireball);
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
@@ -5107,6 +5118,7 @@ namespace Rawr.Mage
         {
             Name = "FBScLBPyro";
             ProvidesScorch = true;
+            AffectedByFlameCap = true;
 
             FB = (BaseSpell)castingState.GetSpell(SpellId.Fireball);
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
@@ -5417,6 +5429,7 @@ namespace Rawr.Mage
         {
             Name = "FFBScLBPyro";
             ProvidesScorch = true;
+            AffectedByFlameCap = true;
 
             FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBolt);
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
@@ -5562,6 +5575,7 @@ namespace Rawr.Mage
         {
             Name = "FFBScPyro";
             ProvidesScorch = true;
+            AffectedByFlameCap = true;
 
             FFB = (BaseSpell)castingState.GetSpell(SpellId.FrostfireBoltFOF);
             Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
