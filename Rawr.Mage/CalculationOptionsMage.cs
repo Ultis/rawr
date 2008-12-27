@@ -150,6 +150,7 @@ namespace Rawr.Mage
         public float ChanceToLiveScore { get; set; }
 
         public float EffectSpiritBonus { get; set; }
+        public float EffectCritBonus { get; set; }
         public float EffectShadowSilenceFrequency { get; set; }
         public float EffectShadowSilenceDuration { get; set; }
         public float EffectShadowManaDrainFrequency { get; set; }

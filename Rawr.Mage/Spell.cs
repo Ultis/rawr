@@ -501,6 +501,8 @@ namespace Rawr.Mage
             CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
             if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
 
+            CritRate = Math.Min(1.0f, CritRate);
+
             // Quagmirran
             if (castingState.BaseStats.SpellHasteFor6SecOnHit_10_45 > 0 && HitProcs > 0)
             {

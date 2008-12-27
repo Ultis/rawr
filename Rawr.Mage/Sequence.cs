@@ -106,6 +106,8 @@ namespace Rawr.Mage.SequenceReconstruction
         {
             const double eps = 0.000001;
             if (minMps > maxMps) maxMps = minMps;
+            double limitTime = sequence[sequence.Count - 1].Timestamp + sequence[sequence.Count - 1].Duration;
+            if (targetTime > limitTime) targetTime = limitTime;
 
             this.sortByMps = true;
             this.preserveCooldowns = preserveCooldowns;
@@ -2074,7 +2076,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (mps < maxMps)
                     {
                         maxMps = mps;
-                        if (nextGem < targetTime) targetTime = nextGem;
+                        targetTime = nextGem;
                     }
                 }
                 if (nextPot > time && potTime > 0)
@@ -2086,7 +2088,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (mps < maxMps)
                     {
                         maxMps = mps;
-                        if (nextPot < targetTime) targetTime = nextPot;
+                        targetTime = nextPot;
                     }
                 }
                 if (nextEvo > time && evoTime > 0)
@@ -2098,7 +2100,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     if (mps < maxMps)
                     {
                         maxMps = mps;
-                        if (nextEvo < targetTime) targetTime = nextEvo;
+                        targetTime = nextEvo;
                     }
                 }
                 if (potTime > 0 && (nextPot <= nextGem || gemTime <= 0 || nextPot == 0) && (nextPot <= nextEvo || nextPot == 0 || evoTime <= 0))
@@ -2109,7 +2111,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     else
                     {
-                        if (nextPot < targetTime) targetTime = nextPot;
+                        targetTime = nextPot;
                         minMps = ((1 + BaseStats.BonusManaPotion) * potMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
@@ -2121,7 +2123,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     else
                     {
-                        if (nextGem < targetTime) targetTime = nextGem;
+                        targetTime = nextGem;
                         minMps = ((1 + BaseStats.BonusManaGem) * gemMaxValue - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }
@@ -2133,7 +2135,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     }
                     else
                     {
-                        if (nextEvo < targetTime) targetTime = nextEvo;
+                        targetTime = nextEvo;
                         minMps = (EvocationRegen * Math.Min(evoTime, EvocationDuration) - (BaseStats.Mana - mana)) / (targetTime - time);
                     }
                 }

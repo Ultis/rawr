@@ -702,6 +702,10 @@ namespace Rawr.Mage
             {
                 statsTotal.SpellCrit += 0.03f + (calculationOptions.GlyphOfMoltenArmor ? 0.02f : 0.0f);
             }
+            if (calculationOptions.EffectCritBonus > 0)
+            {
+                statsTotal.SpellCrit += calculationOptions.EffectCritBonus;
+            }
             if (calculationOptions.GlyphOfManaGem)
             {
                 statsTotal.BonusManaGem = (1 + statsTotal.BonusManaGem) * (1 + 0.1f) - 1;
