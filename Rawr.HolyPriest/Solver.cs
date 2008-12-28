@@ -247,7 +247,7 @@ namespace Rawr.HolyPriest
                     mcost = sr[x].ManaCost;
                     mcost -= mcost * hcchance;
                     serendipitytot += mcost * serendipityconst;
-                    mcost -= simstats.ManaGainOnGreaterHealOverheal * (1f - calculationOptions.Serendipity / 100f);
+                    mcost -= simstats.ManaGainOnGreaterHealOverheal * calculationOptions.Serendipity / 100f;
                     castctr++;
                     crittable += sr[x].CritChance;
                 }

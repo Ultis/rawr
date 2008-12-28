@@ -557,6 +557,8 @@ namespace Rawr.HolyPriest
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
 
                 MementoProc = stats.MementoProc,
+                ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
+                RenewDurationIncrease = stats.RenewDurationIncrease,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
@@ -600,7 +602,8 @@ namespace Rawr.HolyPriest
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
                 
-                + stats.MementoProc + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier +
+                + stats.MementoProc + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
+                + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
                 + stats.ManaregenFor8SecOnUse5Min + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
                 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min

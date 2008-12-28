@@ -2619,8 +2619,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName(" Increased duration of Renew")]
+        [DisplayName(" second increased duration of Renew")]
         public float RenewDurationIncrease
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RenewDurationIncrease]; }
@@ -2628,7 +2627,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
         [DisplayName(" mana gained on Greater Heal Overheals")]
         public float ManaGainOnGreaterHealOverheal
         {
