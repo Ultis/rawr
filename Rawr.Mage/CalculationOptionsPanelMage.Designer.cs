@@ -123,6 +123,8 @@
             this.comboBoxTargetLevel = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.textBoxBonusCrit = new System.Windows.Forms.TextBox();
+            this.label94 = new System.Windows.Forms.Label();
             this.label76 = new System.Windows.Forms.Label();
             this.textBoxEffectShadowBinary = new System.Windows.Forms.TextBox();
             this.textBoxEffectShadow = new System.Windows.Forms.TextBox();
@@ -244,8 +246,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxBonusCrit = new System.Windows.Forms.TextBox();
-            this.label94 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -1238,9 +1238,9 @@
             this.label12.Size = new System.Drawing.Size(96, 13);
             this.label12.TabIndex = 148;
             this.label12.Text = "Molten Fury (0-1): *";
-            this.toolTipMage.SetToolTip(this.label12, "Percentage of time spent in molen fury range (i.e. < 20% boss health). Default va" +
-                    "lue of 0.15 indicates that 15% of time is spent in molten fury range due to raid" +
-                    " dps stacking in execute range.");
+            this.toolTipMage.SetToolTip(this.label12, "Percentage of time spent in molen fury range (i.e. < 35% boss health). Default va" +
+                    "lue of 0.3 indicates that 30% of time is spent in molten fury range due to raid " +
+                    "dps stacking in execute range.");
             // 
             // label10
             // 
@@ -1327,6 +1327,24 @@
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Effects";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // textBoxBonusCrit
+            // 
+            this.textBoxBonusCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCritBonus", true));
+            this.textBoxBonusCrit.Location = new System.Drawing.Point(112, 29);
+            this.textBoxBonusCrit.Name = "textBoxBonusCrit";
+            this.textBoxBonusCrit.Size = new System.Drawing.Size(75, 20);
+            this.textBoxBonusCrit.TabIndex = 234;
+            // 
+            // label94
+            // 
+            this.label94.AutoSize = true;
+            this.label94.Location = new System.Drawing.Point(0, 32);
+            this.label94.Name = "label94";
+            this.label94.Size = new System.Drawing.Size(115, 13);
+            this.label94.TabIndex = 233;
+            this.label94.Text = "Bonus Crit Rate (0-1): *";
+            this.toolTipMage.SetToolTip(this.label94, "Increase in crit rate.");
             // 
             // label76
             // 
@@ -2523,24 +2541,6 @@
             this.toolTipMage.AutoPopDelay = 15000;
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
-            // 
-            // textBoxBonusCrit
-            // 
-            this.textBoxBonusCrit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "EffectCritBonus", true));
-            this.textBoxBonusCrit.Location = new System.Drawing.Point(112, 29);
-            this.textBoxBonusCrit.Name = "textBoxBonusCrit";
-            this.textBoxBonusCrit.Size = new System.Drawing.Size(75, 20);
-            this.textBoxBonusCrit.TabIndex = 234;
-            // 
-            // label94
-            // 
-            this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(0, 32);
-            this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(115, 13);
-            this.label94.TabIndex = 233;
-            this.label94.Text = "Bonus Crit Rate (0-1): *";
-            this.toolTipMage.SetToolTip(this.label94, "Increase in crit rate.");
             // 
             // CalculationOptionsPanelMage
             // 
