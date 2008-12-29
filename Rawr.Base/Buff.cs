@@ -1978,6 +1978,24 @@ namespace Rawr
 
               defaultBuffs.Add(new Buff()
               {
+                  Name = "Garb of Faith 2 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { MindBlastCostReduction = 0.1f },
+                  SetName = "Garb of Faith",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Garb of Faith 4 Piece Bonus",
+                  Group = "Set Bonuses", ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { ShadowWordDeathCritIncrease = 0.1f },
+                  SetName = "Garb of Faith",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
                   Name = "Avatar Raiment 2 Piece Bonus",
                   Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                   Stats = { ManaGainOnGreaterHealOverheal = 100f },
@@ -1994,7 +2012,67 @@ namespace Rawr
                   SetThreshold = 4                 
               });
 
-			// Rogue set bonuses
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Regalia of Faith 2 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { PrayerOfMendingExtraJumps = 1 },
+                  SetName = "Regalia of Faith",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Regalia of Faith 4 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { GreaterHealCostReduction = 0.05f },
+                  SetName = "Regalia of Faith",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Gladiator's Investiture 2 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { Resilience = 50f },
+                  SetName = "Gladiator's Investiture",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Gladiator's Investiture 4 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { WeakenedSoulDurationDecrease = 2f },
+                  SetName = "Gladiator's Investiture",
+                  SetThreshold = 4
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Gladiator's Raiment 2 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { Resilience = 50f },
+                  SetName = "Gladiator's Raiment",
+                  SetThreshold = 2
+              });
+
+              defaultBuffs.Add(new Buff()
+              {
+                  Name = "Gladiator's Raiment 4 Piece Bonus",
+                  Group = "Set Bonuses",
+                  ConflictingBuffs = new List<string>(new string[] { }),
+                  Stats = { WeakenedSoulDurationDecrease = 2f },
+                  SetName = "Gladiator's Raiment",
+                  SetThreshold = 4
+              });
+
+              // Rogue set bonuses
 			  defaultBuffs.Add(new Buff() {
 				  Name = "Netherblade 2 Piece Bonus",
 				  Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),

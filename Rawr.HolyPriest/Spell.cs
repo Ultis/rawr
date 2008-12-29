@@ -322,7 +322,8 @@ namespace Rawr.HolyPriest
                 * (1 + stats.BonusGHHealingMultiplier);
 
             ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
-                * (1 - character.PriestTalents.ImprovedHealing * 0.05f));
+                * (1 - character.PriestTalents.ImprovedHealing * 0.05f)
+                * (1 - stats.GreaterHealCostReduction));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
             CastTime = Math.Max(1.0f, (BaseCastTime - character.PriestTalents.DivineFury * 0.1f) 
@@ -726,15 +727,6 @@ namespace Rawr.HolyPriest
             new SpellData(3, 79, 1043, 1043, 0)
         };
 
-        private static readonly Color[] targetColors = new Color[]
-                                           {
-                                               Color.Cyan,
-                                               Color.Cyan,
-                                               Color.Cyan,
-                                               Color.DarkCyan,
-                                               Color.DeepSkyBlue
-                                           };
-
         public override float AvgTotHeal
         {
             get
@@ -760,14 +752,14 @@ namespace Rawr.HolyPriest
         }
 
         public PrayerOfMending(Stats stats, Character character, int targets)
-            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 2.3f / 3.5f, targetColors[targets - 1])
+            : base(string.Format("Prayer of Mending ({0} targets)", targets), stats, character, SpellRankTable, 15, 2.3f / 3.5f, Color.Cyan)
         {
             Targets = targets;
             Calculate(stats, character);
         }
 
         public PrayerOfMending(Stats stats, Character character)
-            : this(stats, character, 5)
+            : this(stats, character, 5 + (int)stats.PrayerOfMendingExtraJumps)
         {}
 
         protected void Calculate(Stats stats, Character character)

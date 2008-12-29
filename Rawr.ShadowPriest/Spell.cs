@@ -403,7 +403,8 @@ namespace Rawr.ShadowPriest
             
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                 * (1f - character.PriestTalents.ShadowFocus * 0.02f)
-                * (1f - character.PriestTalents.FocusedMind * 0.05f));
+                * (1f - character.PriestTalents.FocusedMind * 0.05f)
+                * (1f - stats.MindBlastCostReduction));
 
             Range = (int)Math.Round(BaseRange * (1 + character.PriestTalents.ShadowReach * 0.1f));
         }
@@ -440,7 +441,8 @@ namespace Rawr.ShadowPriest
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f);
 
-            CritChance = stats.SpellCrit;
+            CritChance = stats.SpellCrit
+                + stats.ShadowWordDeathCritIncrease;
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.PriestTalents.ShadowPower * 0.2f) + 1f;
 

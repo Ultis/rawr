@@ -198,8 +198,13 @@ namespace Rawr
 		SpellPower,
         RenewDurationIncrease,
         SWPDurationIncrease,
+        MindBlastCostReduction,
+        ShadowWordDeathCritIncrease,
 		ManaGainOnGreaterHealOverheal,
-		BonusRageOnCrit,
+        PrayerOfMendingExtraJumps,
+        GreaterHealCostReduction,
+        WeakenedSoulDurationDecrease,
+        BonusRageOnCrit,
 		BonusCPOnCrit,
 		BonusEnergyOnTigersFury,
 		FinisherEnergyOnAvoid,
@@ -2583,8 +2588,7 @@ namespace Rawr
         }*/
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName(" Increased duration of Shadow Word: Pain")]
+        [DisplayName(" seconds increased duration of Shadow Word: Pain")]
         public float SWPDurationIncrease
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SWPDurationIncrease]; }
@@ -2598,6 +2602,24 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMindBlastMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMindBlastMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% reduced cost on Mind Blast")]
+        public float MindBlastCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MindBlastCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MindBlastCostReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased critical hit chance on Shadow Word: Death")]
+        public float ShadowWordDeathCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShadowWordDeathCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShadowWordDeathCritIncrease] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2632,6 +2654,31 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaGainOnGreaterHealOverheal] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" extra jumps on Prayer of Mending")]
+        public float PrayerOfMendingExtraJumps
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.PrayerOfMendingExtraJumps]; }
+            set { _rawAdditiveData[(int)AdditiveStat.PrayerOfMendingExtraJumps] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% reduced cost of Greater Heal")]
+        [Percentage]
+        public float GreaterHealCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.GreaterHealCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.GreaterHealCostReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" second reduced duration of Weakened Soul")]
+        public float WeakenedSoulDurationDecrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WeakenedSoulDurationDecrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WeakenedSoulDurationDecrease] = value; }
         }
 
         #region Added by Rawr.Elemental

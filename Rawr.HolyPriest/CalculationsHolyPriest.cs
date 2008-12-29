@@ -561,6 +561,10 @@ namespace Rawr.HolyPriest
                 RenewDurationIncrease = stats.RenewDurationIncrease,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
                 BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
+                PrayerOfMendingExtraJumps = stats.PrayerOfMendingExtraJumps,
+                GreaterHealCostReduction = stats.GreaterHealCostReduction,
+                WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
+
                 ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
                 HealingDoneFor15SecOnUse2Min = stats.HealingDoneFor15SecOnUse2Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -604,6 +608,9 @@ namespace Rawr.HolyPriest
                 
                 + stats.MementoProc + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
                 + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
+                + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
+                + stats.WeakenedSoulDurationDecrease
+
                 + stats.ManaregenFor8SecOnUse5Min + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
                 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min

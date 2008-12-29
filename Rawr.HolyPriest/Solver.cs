@@ -124,8 +124,7 @@ namespace Rawr.HolyPriest
             Penance penance = new Penance(simstats, character);
             PowerWordShield pws = new PowerWordShield(simstats, character) as PowerWordShield;
             PrayerOfMending prom_1 = new PrayerOfMending(simstats, character, 1);
-            PrayerOfMending prom_2 = new PrayerOfMending(simstats, character, 2);
-            PrayerOfMending prom_3 = new PrayerOfMending(simstats, character, 3);
+            PrayerOfMending prom_max = new PrayerOfMending(simstats, character);
             Renew renew = new Renew(simstats, character);
 
             // Surge of Light Flash Heal (cannot crit, is free)
@@ -174,7 +173,7 @@ namespace Rawr.HolyPriest
                     break;
                 case 6:     // Holy Raid Healing, prom, cohx2, fh, cohx2, fh
                     Role += "Holy Raid";
-                    sr.Add(prom_3);     // 1.5s 1.5 -8.5
+                    sr.Add(prom_max);   // 1.5s 1.5 -8.5
                     sr.Add(coh);        // 1.5s 3.0 -7.0
                     sr.Add(coh);        // 1.5s 4.5 -5.5
                     sr.Add(fh);         // 1.5s 6.0 -4.0
@@ -221,7 +220,7 @@ namespace Rawr.HolyPriest
                     Role += "Disc Raid";
                     sr.Add(pws);        // 1.5  1.5  -2.5  -??   -??
                     sr.Add(penance_bt); // 1.5  3.0  -1.0  -8.0  -??
-                    sr.Add(prom_3);     // 1.5  4.5  -??   -6.5  -8.5
+                    sr.Add(prom_max);   // 1.5  4.5  -??   -6.5  -8.5
                     sr.Add(pws);        // 1.5  6.0  -2.5  -5.0  -7.0
                     sr.Add(fh_bt);      // 1.5  7.5  -1.0  -3.5  -5.5
                     sr.Add(fh);         // 1.5  9.0  -??   -2.0  -4.0
@@ -297,7 +296,7 @@ namespace Rawr.HolyPriest
                     mcost = pws.ManaCost;
                     castctr++;
                 }
-                else if (sr[x] == prom_1 || sr[x] == prom_2 || sr[x] == prom_3)
+                else if (sr[x] == prom_1 || sr[x] == prom_max)
                 {
                     clen = sr[x].GlobalCooldown;
                     heal = sr[x].AvgTotHeal * healmultiplier;
