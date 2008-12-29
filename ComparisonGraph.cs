@@ -555,6 +555,7 @@ namespace Rawr
             InitializeComponent();
 
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+			this.MouseWheel += new MouseEventHandler(ComparisonGraph_MouseWheel);
         }
 
         private void ComparisonGraph_Resize(object sender, EventArgs e)
@@ -724,6 +725,11 @@ namespace Rawr
             }
         }
 
-
+		private void ComparisonGraph_MouseWheel(object sender, MouseEventArgs e)
+		{
+			System.Diagnostics.Trace.WriteLine(e.Delta);
+			ScrollBar.Value = Math.Min(ScrollBar.Maximum - ScrollBar.LargeChange, Math.Max(ScrollBar.Minimum, ScrollBar.Value - e.Delta));
+			_scrollBar_Scroll(this, null);
+		}
     }
 }

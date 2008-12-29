@@ -966,59 +966,12 @@ namespace Rawr
 			#region Elixirs and Flasks
             defaultBuffs.Add(new Buff()
             {
-                Name = "Elixir of Ironskin",
-                Group = "Elixirs and Flasks",
-                Stats = { Resilience = 30 },
-                ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
-            });
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Elixir of Major Defense",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { BonusArmor = 550 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Elixir of Major Fortitude",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { Health = 250 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
-            //});
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Major Agility",
-                Group = "Elixirs and Flasks",
-                Stats = { Agility = 35, CritRating = 20 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Elixir of Demonslaying",
-				Group = "Elixirs and Flasks",
-				Stats = { AttackPower = 265 },
-				ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-			});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Elixir of Mastery",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { Agility = 15, Stamina = 15, Strength = 15, Intellect = 15, Spirit = 15 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Elixir of Major Strength",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { Strength = 35 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            //});
-            defaultBuffs.Add(new Buff()
-            {
                 Name = "Flask of Fortification",
                 Group = "Elixirs and Flasks",
                 Stats = { Health = 500, DefenseRating = 10 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
+                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Fortification (Mixology)", Stats = { 
+					Health = 221, DefenseRating = 5 } } }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -1026,239 +979,238 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Agility = 18, Strength = 18, Stamina = 18, Intellect = 18, Spirit = 18, 
 					ArcaneResistance = 35, FireResistance = 35, FrostResistance = 35, ShadowResistance = 35, NatureResistance = 35 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Flask of Relentless Assault",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { AttackPower = 120 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            //});
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Adept's Elixir",
-                Group = "Elixirs and Flasks",
-                Stats = { SpellPower = 24, CritRating = 24 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Healing Power",
-                Group = "Elixirs and Flasks",
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Chromatic Wonder (Mixology)", Stats = {
+					Agility = 4, Strength = 4, Stamina = 4, Intellect = 4, Spirit = 4, 
+					ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4, NatureResistance = 4 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Flask of Distilled Wisdom",
+				Group = "Elixirs and Flasks",
+				Stats = { Intellect = 65 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Distilled Wisdom (Mixology)", Stats = { Intellect = 20 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Flask of Endless Rage",
+				Group = "Elixirs and Flasks",
+				Stats = { AttackPower = 180 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Endless Rage (Mixology)", Stats = { AttackPower = 64 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Flask of Pure Mojo",
+				Group = "Elixirs and Flasks",
+				Stats = { Mp5 = 38 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Pure Mojo (Mixology)", Stats = { Mp5 = 13 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Flask of Stoneblood",
+				Group = "Elixirs and Flasks",
+				Stats = { Health = 650 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 320 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Flask of the Frost Wyrm",
+				Group = "Elixirs and Flasks",
+				Stats = { SpellPower = 125 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { Health = 37 } } }
+			});
+
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Major Agility",
+				Group = "Elixirs and Flasks",
+				Stats = { Agility = 30, CritRating = 12 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Major Agility (Mixology)", Stats = { Agility = 10, CritRating = 4 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Demonslaying",
+				Group = "Elixirs and Flasks",
+				Stats = { AttackPower = 265 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Demonslaying (Mixology)", Stats = { AttackPower = 88 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Adept's Elixir",
+				Group = "Elixirs and Flasks",
+				Stats = { SpellPower = 24, CritRating = 24 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Adept's Elixir (Mixology)", Stats = { SpellPower = 9, CritRating = 9 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Healing Power",
+				Group = "Elixirs and Flasks",
 				Stats = { SpellPower = 24f, Spirit = 24 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            });
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Healing Power (Mixology)", Stats = { SpellPower = 9, Spirit = 9 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Accuracy",
+				Group = "Elixirs and Flasks",
+				Stats = { HitRating = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Accuracy (Mixology)", Stats = { HitRating = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Armor Piercing",
+				Group = "Elixirs and Flasks",
+				Stats = { ArmorPenetrationRating = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Armor Piercing (Mixology)", Stats = { ArmorPenetrationRating = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Deadly Strikes",
+				Group = "Elixirs and Flasks",
+				Stats = { CritRating = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Deadly Strikes (Mixology)", Stats = { CritRating = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Expertise",
+				Group = "Elixirs and Flasks",
+				Stats = { ExpertiseRating = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Expertise (Mixology)", Stats = { ExpertiseRating = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Lightning Speed",
+				Group = "Elixirs and Flasks",
+				Stats = { HasteRating = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Lightning Speed (Mixology)", Stats = { HasteRating = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Mighty Agility",
+				Group = "Elixirs and Flasks",
+				Stats = { Agility = 45 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Agility (Mixology)", Stats = { Agility = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Mighty Strength",
+				Group = "Elixirs and Flasks",
+				Stats = { Strength = 50 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Strength (Mixology)", Stats = { Strength = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Guru's Elixir",
+				Group = "Elixirs and Flasks",
+				Stats = { Stamina = 20, Intellect = 20, Spirit = 20, Strength = 20, Agility = 20 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Guru's Elixir (Mixology)", Stats = { 
+					Stamina = 6, Intellect = 6, Spirit = 6, Strength = 6, Agility = 6} } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Spellpower Elixir",
+				Group = "Elixirs and Flasks",
+				Stats = { SpellPower = 58 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Spellpower Elixir (Mixology)", Stats = { SpellPower = 19 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Wrath Elixir",
+				Group = "Elixirs and Flasks",
+				Stats = { AttackPower = 90 },
+				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
+				Improvements = { new Buff { Name = "Wrath Elixir (Mixology)", Stats = { AttackPower = 32 } } }
+			});
+
             defaultBuffs.Add(new Buff()
             {
-                Name = "Elixir of Major Firepower",
+                Name = "Elixir of Ironskin",
                 Group = "Elixirs and Flasks",
-                Stats = { SpellFireDamageRating = 55 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Major Frost Power",
-                Group = "Elixirs and Flasks",
-                Stats = { SpellFrostDamageRating = 55 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Major Shadow Power",
-                Group = "Elixirs and Flasks",
-                Stats = { SpellShadowDamageRating = 55 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir" })
+                Stats = { Resilience = 30 },
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Ironskin (Mixology)", Stats = { Resilience = 10 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Draenic Wisdom",
                 Group = "Elixirs and Flasks",
                 Stats = { Intellect = 30, Spirit = 30 },
-                ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
-            });
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Elixir of Major Mageblood",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { Mp5 = 16 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Guardian Elixir" })
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Flask of Blinding Light",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { SpellArcaneDamageRating = 80, SpellNatureDamageRating = 80},
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            //});
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Flask of Distilled Wisdom",
-                Group = "Elixirs and Flasks",
-                Stats = { Intellect = 65 },
-                ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Flask of Mighty Restoration",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { Mp5 = 25 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Flask of Pure Death",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { SpellFireDamageRating = 80, SpellFrostDamageRating = 80, SpellShadowDamageRating = 80 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            //});
-            //defaultBuffs.Add(new Buff()
-            //{
-            //    Name = "Flask of Supreme Power",
-            //    Group = "Elixirs and Flasks",
-            //    Stats = { SpellPower = 70 },
-            //    ConflictingBuffs = new List<string>( new string[] { "Battle Elixir", "Guardian Elixir" })
-            //});
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Flask of Endless Rage",
-                Group = "Elixirs and Flasks",
-                Stats = { AttackPower = 180 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Flask of Pure Mojo",
-                Group = "Elixirs and Flasks",
-                Stats = { Mp5 = 38 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Flask of Stoneblood",
-                Group = "Elixirs and Flasks",
-                Stats = { Health = 650 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Flask of Frost Wyrm",
-                Group = "Elixirs and Flasks",
-                Stats = { SpellPower = 125 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Accuracy",
-                Group = "Elixirs and Flasks",
-                Stats = { HitRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Armor Piercing",
-                Group = "Elixirs and Flasks",
-                Stats = { ArmorPenetrationRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Deadly Strikes",
-                Group = "Elixirs and Flasks",
-                Stats = { CritRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Expertise",
-                Group = "Elixirs and Flasks",
-                Stats = { ExpertiseRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Lightning Speed",
-                Group = "Elixirs and Flasks",
-                Stats = { HasteRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Draenic Wisdom (Mixology)", Stats = { Intellect = 8, Spirit = 8 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Mighty Defense",
                 Group = "Elixirs and Flasks",
                 Stats = { DefenseRating = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Defense (Mixology)", Stats = { DefenseRating = 16 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Mighty Mageblood",
                 Group = "Elixirs and Flasks",
                 Stats = { Mp5 = 24 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Mageblood (Mixology)", Stats = { Mp5 = 6 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Protection",
                 Group = "Elixirs and Flasks",
                 Stats = { BonusArmor = 800 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Protection (Mixology)", Stats = { Armor = 266 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Mighty Thoughts",
                 Group = "Elixirs and Flasks",
                 Stats = { Intellect = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Thoughts (Mixology)", Stats = { Intellect = 16 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Mighty Fortitude",
                 Group = "Elixirs and Flasks",
                 Stats = { Health = 350, Hp5 = 20 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Mighty Agility",
-                Group = "Elixirs and Flasks",
-                Stats = { Agility = 45 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Elixir of Mighty Strength",
-                Group = "Elixirs and Flasks",
-                Stats = { Strength = 50 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Mighty Fortitude (Mixology)", Stats = { Health = 116, Hp5 = 6 } } }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Elixir of Spirit",
                 Group = "Elixirs and Flasks",
                 Stats = { Spirit = 50 },
-                ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Guru's Elixir",
-                Group = "Elixirs and Flasks",
-                Stats = { Stamina = 20, Intellect = 20, Spirit = 20, Strength = 20, Agility = 20 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Spellpower Elixir",
-                Group = "Elixirs and Flasks",
-                Stats = { SpellPower = 58 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Wrath Elixir",
-                Group = "Elixirs and Flasks",
-                Stats = { AttackPower = 90 },
-                ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" })
-            });
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Spirit (Mixology)", Stats = { Spirit = 16 } } }
+			});
+			defaultBuffs.Add(new Buff()
+			{
+				Name = "Elixir of Empowerment",
+				Group = "Elixirs and Flasks",
+				Stats = { SpellPenetration = 30 },
+				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
+				Improvements = { new Buff { Name = "Elixir of Empowerment (Mixology)", Stats = { SpellPenetration = 10 } } }
+			});
 			#endregion
 
             //#region Potion
