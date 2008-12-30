@@ -95,7 +95,11 @@
     <Compile Include="CalculationsRogue.cs" />
     <Compile Include="CharacterCalculationsRogue.cs" />
     <Compile Include="CombatFactors.cs" />
-    <Compile Include="ComboPointGenerator.cs" />
+    <Compile Include="ComboPointGenerators\Backstab.cs" />
+    <Compile Include="ComboPointGenerators\ComboPointGenerator.cs" />
+    <Compile Include="ComboPointGenerators\Hemo.cs" />
+    <Compile Include="ComboPointGenerators\Mutilate.cs" />
+    <Compile Include="ComboPointGenerators\SinisterStrike.cs" />
     <Compile Include="ComparisonCalculationsRogue.cs" />
     <Compile Include="Cycle.cs" />
     <Compile Include="DisplayValue.cs" />

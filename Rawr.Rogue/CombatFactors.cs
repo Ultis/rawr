@@ -31,6 +31,16 @@ namespace Rawr.Rogue
             get { return _offHand; }
         }
 
+        public float MhNormalizedAttackSpeed
+        {
+            get { return MainHand.Type == Item.ItemType.Dagger ? 1.7f : 2.4f; }
+        }
+
+        public float OhNormalizedAttackSpeed
+        {
+            get { return OffHand.Type == Item.ItemType.Dagger ? 1.7f : 2.4f; }
+        }
+
         public float TotalArmorPenetration
         {
             get { return _stats.ArmorPenetration + _calcOpts.TargetArmor*_stats.ArmorPenetrationRating*RogueConversions.ArmorPenRatingToArmorReduction/100; }
@@ -55,6 +65,11 @@ namespace Rawr.Rogue
             get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MainHand.Speed; }
         }
 
+        public float MhNormalizedDamage
+        {
+            get { return AvgMhWeaponDmg + (_stats.AttackPower / 14.0f) * MhNormalizedAttackSpeed; }
+        }
+
         public float AvgOhWeaponDmg
         {
             get { return CalcAverageWeaponDamage(OffHand, _stats); }
@@ -62,11 +77,17 @@ namespace Rawr.Rogue
 
         public float OhAvgDamage
         {
-            get
-            {
-                var avgOhDmg = AvgOhWeaponDmg + (_stats.AttackPower / 14.0f) * OffHand.Speed;
-                return avgOhDmg * (0.25f + _talents.DualWieldSpecialization * 0.1f);
-            }
+            get { return (AvgOhWeaponDmg + (_stats.AttackPower/14.0f)*OffHand.Speed)*OffHandDamagePenalty; }
+        }
+
+        public float OhNormalizedDamage
+        {
+            get { return (AvgOhWeaponDmg + (_stats.AttackPower/14.0f)*OhNormalizedAttackSpeed)*OffHandDamagePenalty; }
+        }
+
+        public float OffHandDamagePenalty
+        {
+            get { return 0.5f + _talents.DualWieldSpecialization*0.05f; }
         }
 
         public float YellowMissChance
@@ -122,6 +143,12 @@ namespace Rawr.Rogue
         public float ProbGlancingHit
         {
             get { return (float)Math.Max(0.08 * (_calcOpts.TargetLevel - 80), 0); }
+        }
+
+        public float ProbYellowHit
+        {
+            //assume parry & glance are always 0 for a yellow attack
+            get { return 1 - YellowMissChance - MhDodgeChance; }
         }
 
         public float ProbMhWhiteHit
@@ -224,7 +251,7 @@ namespace Rawr.Rogue
 
         private static float CalcAverageWeaponDamage(Item weapon, Stats stats)
         {
-            return (weapon.MinDamage + weapon.MaxDamage + stats.WeaponDamage * 2) / 2.0f;
+            return stats.WeaponDamage + (weapon.MinDamage + weapon.MaxDamage) / 2.0f;
         }
 
         public class Knuckles : Item

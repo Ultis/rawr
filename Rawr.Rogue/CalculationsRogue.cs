@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
+using Rawr.Rogue.ComboPointGenerators;
 
 namespace Rawr.Rogue
 {
@@ -83,7 +84,7 @@ namespace Rawr.Rogue
             return GetCalculations(combatFactors, stats, calcOpts, character.RogueTalents);
         }
 
-        private static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsRogue calcOpts, RogueTalents talents)
+        public static CharacterCalculationsBase GetCalculations(CombatFactors combatFactors, Stats stats, CalculationOptionsRogue calcOpts, RogueTalents talents)
         {
             var calculatedStats = new CharacterCalculationsRogue(stats);
            
@@ -92,8 +93,7 @@ namespace Rawr.Rogue
 
             var whiteAttacks = new WhiteAttacks(talents, stats, combatFactors);
             var cycleTime = CalcCycleTime(talents, calcOpts, combatFactors, whiteAttacks.OhHits, numCPG, cpg);
-            var cpgAttackValues = cpg.CalcAttackValues(stats, combatFactors);
-            var cpgDPS = CalcCpgDPS(cpgAttackValues, combatFactors, numCPG, cycleTime);
+            var cpgDPS = cpg.CalcCpgDPS(stats, combatFactors, calcOpts, numCPG, cycleTime);
 
             var totalFinisherDPS = 0f;
             foreach (var component in calcOpts.DPSCycle.Components)
@@ -131,7 +131,7 @@ namespace Rawr.Rogue
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HasteRating, stats.HasteRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.HasteRating, "Total Haste %: ", (combatFactors.TotalHaste <= 0 ? 0 : combatFactors.TotalHaste - 1) * 100f);
 
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpgAttackValues.Crit*100);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.CpgCrit, cpg.Crit(combatFactors)*100);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit From Stats: " + stats.PhysicalCrit);
             calculatedStats.AddToolTip(DisplayValue.CpgCrit, "Crit from Crit Rating: " + combatFactors.CritFromCritRating);
             calculatedStats.AddPercentageToolTip(DisplayValue.CpgCrit, "Boss Crit Reduction: ", combatFactors.BossCriticalReductionChance);
@@ -154,16 +154,6 @@ namespace Rawr.Rogue
         private static float CalcComboPointsNeededForCycle(RogueTalents talents, CalculationOptionsRogue calcOpts)
         {
             return calcOpts.DPSCycle.TotalComboPoints - (calcOpts.DPSCycle.Components.Count * .2f * talents.Ruthlessness);
-        }
-
-        private static float CalcCpgDPS(CpgAttackValues attackValues, CombatFactors combatFactors, float numCPG, float cycleTime)
-        {
-            var avgCPGDmg = attackValues.AttackDamage * attackValues.BonusDamageMultiplier;
-            avgCPGDmg = (1f - attackValues.Crit / 100f) * avgCPGDmg + (attackValues.Crit / 100f) * (avgCPGDmg * attackValues.BonusCritDamageMultiplier);
-
-            var cpgDPS = avgCPGDmg*numCPG/cycleTime;
-            cpgDPS *= combatFactors.DamageReduction;
-            return cpgDPS;
         }
 
         private static float CalcCycleTime(RogueTalents talents, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float ohHits, float numCPG, IComboPointGenerator cpg)

@@ -1,0 +1,71 @@
+using System;
+
+namespace Rawr.Rogue.ComboPointGenerators
+{
+    public class Mutilate : IComboPointGenerator
+    {
+        public Mutilate(RogueTalents talents)
+        {
+            _talents = talents;
+        }
+
+        private readonly RogueTalents _talents;
+
+        public string Name { get { return "Mutilate"; } }
+        public float EnergyCost { get { return 60f; } }
+
+        public float Crit(CombatFactors combatFactors)
+        {
+            return combatFactors.ProbMhCrit + 0.05f * _talents.PuncturingWounds;
+        }
+
+        public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
+        {
+            var baseDamage = BaseAttackDamage(combatFactors);
+            baseDamage *= TalentBonusDamage();
+            baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
+            baseDamage *= (1f + .35f * 0.1f * _talents.DirtyDeeds);
+            baseDamage *= combatFactors.DamageReduction;
+
+            var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
+            var nonCritDamage = baseDamage * Math.Max(combatFactors.ProbYellowHit - Crit(combatFactors), 0);
+
+            return (critDamage + nonCritDamage)*(numCPG/2f)/cycleTime;
+        }
+
+        private static float BaseAttackDamage(CombatFactors combatFactors)
+        {
+            var damage = combatFactors.MhNormalizedDamage + 181;
+
+            //Strange:  the rogueCalc spreadsheet has the offhand +181 damage increased by DualWieldSpecialization
+            damage += combatFactors.OhNormalizedDamage + (181 * 2 *combatFactors.OffHandDamagePenalty);
+            return damage;
+        }
+
+        private float TalentBonusDamage()
+        {
+            var talentBonuses = 1f;
+            talentBonuses += 0.02f * _talents.FindWeakness;
+            talentBonuses += 0.1f * _talents.Opportunity;
+            return talentBonuses;
+        }
+
+        private static float BonusIfTargetIsPoisoned(CalculationOptionsRogue calcOpts)
+        {
+            if (calcOpts.TempMainHandEnchant.IsDeadlyPoison
+                || calcOpts.TempOffHandEnchant.IsDeadlyPoison
+                || calcOpts.TempMainHandEnchant.Name == new WoundPoison().Name
+                || calcOpts.TempOffHandEnchant.Name == new WoundPoison().Name)
+            {
+                return 1.5f;
+            }
+
+            return 1f;
+        }
+
+        private float CriticalDamageMultiplier(CombatFactors combatFactors)
+        {
+            return (combatFactors.BaseCritMultiplier + .06f * _talents.Lethality);
+        }
+    }
+}

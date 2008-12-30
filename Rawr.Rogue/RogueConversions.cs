@@ -4,7 +4,7 @@ namespace Rawr.Rogue
     {
         public static readonly float AgilityToAP = 1.0f;
         public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f/83.3f;
+        public static readonly float AgilityToCrit = 1.0f/83.333f;
         public static readonly float AgilityToDodge = 1.0f/20.0f;
         public static readonly float CritRatingToCrit = 1.0f/45.91f;
         public static readonly float ExpertiseRatingToExpertise = 1.0f/8.2f;
