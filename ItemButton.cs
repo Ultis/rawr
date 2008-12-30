@@ -119,7 +119,7 @@ namespace Rawr
 				_selectedItem = Character[CharacterSlot];
 			}
 			this.Text = string.Empty;
-			this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem) : null;
+			this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
 		}
 
 		private Item _selectedItem;

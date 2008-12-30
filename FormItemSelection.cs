@@ -212,6 +212,12 @@ namespace Rawr
 						}
 					}
 				}
+				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+				emptyCalcs.Name = "Empty";
+				emptyCalcs.Item = new Item();
+				emptyCalcs.Item.Name = "Empty";
+				emptyCalcs.Equipped = this.Character[slot] == null;
+				itemCalculations.Add(emptyCalcs);
 				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
 				ItemCalculations = itemCalculations.ToArray();
 			}
@@ -272,7 +278,7 @@ namespace Rawr
                 ComparisonCalculationBase calc = this.ItemCalculations[i];
 				if (_button != null)
 				{
-					calc.Equipped = calc.Item == _button.SelectedItem;
+					calc.Equipped = calc.Item == _button.SelectedItem || (calc.Item.Id == 0 && _button.SelectedItem == null);
 					ctrl.IsEnchant = false;
 
 				}

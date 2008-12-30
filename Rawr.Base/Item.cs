@@ -603,6 +603,9 @@ namespace Rawr
 				case Character.CharacterSlot.OffHand: return Item.ItemSlot.OffHand;
 				case Character.CharacterSlot.Ranged: return Item.ItemSlot.Ranged;
 				case Character.CharacterSlot.ProjectileBag: return Item.ItemSlot.ProjectileBag;
+				case Character.CharacterSlot.ExtraWristSocket: return Item.ItemSlot.Prismatic;
+				case Character.CharacterSlot.ExtraHandsSocket: return Item.ItemSlot.Prismatic;
+				case Character.CharacterSlot.ExtraWaistSocket: return Item.ItemSlot.Prismatic;
 				case Character.CharacterSlot.Tabard: return Item.ItemSlot.Tabard;
 				case Character.CharacterSlot.Shirt: return Item.ItemSlot.Shirt;
 				case Character.CharacterSlot.Gems: return Item.ItemSlot.Prismatic;
@@ -739,9 +742,9 @@ namespace Rawr
 			{
 				case ItemSlot.Red:
 					return gem != null && (gem.Slot == ItemSlot.Red || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
-			case ItemSlot.Yellow:
+				case ItemSlot.Yellow:
 					return gem != null && (gem.Slot == ItemSlot.Yellow || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Prismatic);
-			case ItemSlot.Blue:
+				case ItemSlot.Blue:
 					return gem != null && (gem.Slot == ItemSlot.Blue || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
 				case ItemSlot.Meta:
 					return gem != null && (gem.Slot == ItemSlot.Meta);
@@ -829,6 +832,9 @@ namespace Rawr
 					return this.Slot == ItemSlot.Projectile;
 				case Character.CharacterSlot.ProjectileBag:
 					return this.Slot == ItemSlot.ProjectileBag;
+				case Character.CharacterSlot.ExtraWristSocket:
+				case Character.CharacterSlot.ExtraHandsSocket:
+				case Character.CharacterSlot.ExtraWaistSocket:
 				case Character.CharacterSlot.Gems:
 					return this.Slot == ItemSlot.Red || this.Slot == ItemSlot.Blue || this.Slot == ItemSlot.Yellow
 						|| this.Slot == ItemSlot.Purple || this.Slot == ItemSlot.Green || this.Slot == ItemSlot.Orange

@@ -27,9 +27,9 @@ namespace Rawr //O O . .
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
         [XmlIgnore]
-        private string[] _item = new string[21];
+        private string[] _item = new string[24];
         [XmlIgnore]
-        private Item[] _itemCached = new Item[21];
+        private Item[] _itemCached = new Item[24];
         [XmlIgnore]
         private int[] _itemEnchant = new int[21];
         [XmlIgnore]
@@ -76,6 +76,12 @@ namespace Rawr //O O . .
         public string _projectile { get { return _item[(int)CharacterSlot.Projectile]; } set { _item[(int)CharacterSlot.Projectile] = value; } }
 		[XmlElement("ProjectileBag")]
         public string _projectileBag { get { return _item[(int)CharacterSlot.ProjectileBag]; } set { _item[(int)CharacterSlot.ProjectileBag] = value; } }
+		[XmlElement("ExtraWristSocket")]
+		public string _extraWristSocket { get { return _item[(int)CharacterSlot.ExtraWristSocket]; } set { _item[(int)CharacterSlot.ExtraWristSocket] = value; } }
+		[XmlElement("ExtraHandsSocket")]
+		public string _extraHandsSocket { get { return _item[(int)CharacterSlot.ExtraHandsSocket]; } set { _item[(int)CharacterSlot.ExtraHandsSocket] = value; } }
+		[XmlElement("ExtraWaistSocket")]
+		public string _extraWaistSocket { get { return _item[(int)CharacterSlot.ExtraWaistSocket]; } set { _item[(int)CharacterSlot.ExtraWaistSocket] = value; } }
 		[XmlElement("HeadEnchant")]
         public int _headEnchant { get { return _itemEnchant[(int)CharacterSlot.Head]; } set { _itemEnchant[(int)CharacterSlot.Head] = value; } }
 		[XmlElement("ShouldersEnchant")]
@@ -338,6 +344,12 @@ namespace Rawr //O O . .
 		public Item Projectile { get { return this[CharacterSlot.Projectile]; } set { this[CharacterSlot.Projectile] = value; } }
 		[XmlIgnore]
 		public Item ProjectileBag { get { return this[CharacterSlot.ProjectileBag]; } set { this[CharacterSlot.ProjectileBag] = value; } }
+		[XmlIgnore]
+		public Item ExtraWristSocket { get { return this[CharacterSlot.ExtraWristSocket]; } set { this[CharacterSlot.ExtraWristSocket] = value; } }
+		[XmlIgnore]
+		public Item ExtraHandsSocket { get { return this[CharacterSlot.ExtraHandsSocket]; } set { this[CharacterSlot.ExtraHandsSocket] = value; } }
+		[XmlIgnore]
+		public Item ExtraWaistSocket { get { return this[CharacterSlot.ExtraWaistSocket]; } set { this[CharacterSlot.ExtraWaistSocket] = value; } }
 
         [XmlIgnore]
 		public Enchant HeadEnchant { get { return GetEnchantBySlot(CharacterSlot.Head); } set { SetEnchantBySlot(CharacterSlot.Head, value); } }
@@ -1023,6 +1035,10 @@ namespace Rawr //O O . .
             count += GetItemGemColorCount(Projectile, slotColor);
             count += GetItemGemColorCount(ProjectileBag, slotColor);
 
+			if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
+			if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
+			if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
+            
             return count;
         }
 		
@@ -1114,7 +1130,7 @@ namespace Rawr //O O . .
             get
             {
                 int i = (int)slot;
-                if (i < 0 || i > 20) return null;
+                if (i < 0 || i > 23) return null;
                 Item item;
                 if ((item = _itemCached[i]) == null)
                 {
@@ -1126,7 +1142,7 @@ namespace Rawr //O O . .
             set
             {
                 int i = (int)slot;
-                if (i < 0 || i > 20) return;
+                if (i < 0 || i > 23) return;
                 if (value == null || _item[i] != value.GemmedId)
                 {
                     _item[i] = value != null ? value.GemmedId : null;
@@ -1220,13 +1236,16 @@ namespace Rawr //O O . .
             ProjectileBag = 18,
             Tabard = 19,
             Shirt = 20,
+			ExtraWristSocket = 21,
+			ExtraHandsSocket = 22,
+			ExtraWaistSocket = 23,
 			
 			Gems = 100,
 			Metas = 101,
             AutoSelect = 1000,
         }
 
-        public static CharacterSlot GetCharacterSlotFromId(int slotId)
+		public static CharacterSlot GetCharacterSlotFromId(int slotId)
         {
             Character.CharacterSlot cslot = CharacterSlot.None;
             switch (slotId)
@@ -1325,15 +1344,24 @@ namespace Rawr //O O . .
         }
 
         public Character() { }
-		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
-                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, string projectileBag) 
-        : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, legs, feet, finger1, finger2, trinket1, trinket2, mainHand, offHand, ranged, projectile, projectileBag,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
+                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
+			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
+			string projectileBag, string extraWristSocket, string extraHandsSocket, string extraWaistSocket) 
+        : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, 
+			legs, feet, finger1, finger2, trinket1, trinket2, mainHand, offHand, ranged, projectile, projectileBag,
+			extraWristSocket, extraHandsSocket, extraWaistSocket, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		{ }
 
-		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
-				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, string projectileBag,
-			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, int enchantMainHand, int enchantOffHand, int enchantRanged)
+		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
+				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
+			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
+			string projectileBag, string extraWristSocket, string extraHandsSocket, string extraWaistSocket,
+			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, 
+			int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, 
+			int enchantMainHand, int enchantOffHand, int enchantRanged)
         {
             _name = name;
             _realm = realm;
@@ -1360,6 +1388,9 @@ namespace Rawr //O O . .
 			_ranged = ranged;
 			_projectile = projectile;
 			_projectileBag = projectileBag;
+			_extraWristSocket = extraWristSocket;
+			_extraHandsSocket = extraHandsSocket;
+			_extraWaistSocket = extraWaistSocket;
 
 			_headEnchant = enchantHead;
 			_shouldersEnchant = enchantShoulders;
@@ -1376,9 +1407,15 @@ namespace Rawr //O O . .
 			_rangedEnchant = enchantRanged;
 		}
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
-                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, bool trackEquippedItemChanges)
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+			Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
+                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, 
+			Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, 
+			Item projectileBag, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
+			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
+			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand,
+			Enchant enchantRanged, bool trackEquippedItemChanges)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -1405,8 +1442,11 @@ namespace Rawr //O O . .
             MainHand = mainHand;
             OffHand = offHand;
             Ranged = ranged;
-            Projectile = projectile;
-            ProjectileBag = projectileBag;
+			Projectile = projectile;
+			ProjectileBag = projectileBag;
+			ExtraWristSocket = extraWristSocket;
+			ExtraHandsSocket = extraHandsSocket;
+			ExtraWaistSocket = extraWaistSocket;
 
             HeadEnchant = enchantHead;
             ShouldersEnchant = enchantShoulders;
@@ -1426,9 +1466,15 @@ namespace Rawr //O O . .
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
-                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, Item projectileBag,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
+			Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
+                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, 
+			Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile,
+			Item projectileBag, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
+			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
+			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, 
+			Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -1456,7 +1502,10 @@ namespace Rawr //O O . .
             _itemCached[(int)CharacterSlot.OffHand] = offHand;
             _itemCached[(int)CharacterSlot.Ranged] = ranged;
             _itemCached[(int)CharacterSlot.Projectile] = projectile;
-            _itemCached[(int)CharacterSlot.ProjectileBag] = projectileBag;
+			_itemCached[(int)CharacterSlot.ProjectileBag] = projectileBag;
+			_itemCached[(int)CharacterSlot.ExtraWristSocket] = extraWristSocket;
+			_itemCached[(int)CharacterSlot.ExtraHandsSocket] = extraHandsSocket;
+			_itemCached[(int)CharacterSlot.ExtraWaistSocket] = extraWaistSocket;
 
             _itemEnchantCached[(int)CharacterSlot.Head] = enchantHead;
             _itemEnchantCached[(int)CharacterSlot.Shoulders] = enchantShoulders;
@@ -1477,8 +1526,11 @@ namespace Rawr //O O . .
             RecalculateSetBonusesFromCache();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,  Item[] items,
+            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
+			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
+			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, 
+			Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -1507,7 +1559,8 @@ namespace Rawr //O O . .
             RecalculateSetBonusesFromCache();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items, Enchant[] enchants, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items, 
+			Enchant[] enchants, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
         {
             _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
@@ -1537,6 +1590,9 @@ namespace Rawr //O O . .
                         this.Ranged,
                         this.Projectile,
                         this.ProjectileBag,
+						this.ExtraWristSocket,
+						this.ExtraHandsSocket,
+						this.ExtraWristSocket,
                         this.HeadEnchant,
                         this.ShouldersEnchant,
                         this.BackEnchant,

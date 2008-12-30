@@ -303,8 +303,11 @@ namespace Rawr
             getGearStringBySlot(characterInfo, "SecondaryHand"),
             getGearStringBySlot(characterInfo, "Ranged"),
             getGearStringBySlot(characterInfo, "Ammo"),
-            null, // Not sure what projectile bag is called
-            getEnchantBySlot(characterInfo, "Head"),
+			null, // Not sure what projectile bag is called
+			null, //TODO: Find ExtraWristSocket
+			null, //TODO: Find ExtraHandsSocket
+			null, //TODO: Find ExtraWaistSocket
+			getEnchantBySlot(characterInfo, "Head"),
             getEnchantBySlot(characterInfo, "Shoulder"),
             getEnchantBySlot(characterInfo, "Back"),
             getEnchantBySlot(characterInfo, "Chest"),

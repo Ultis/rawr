@@ -44,6 +44,92 @@ namespace Rawr
 						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value);
 					enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
 				}
+
+				if (items.ContainsKey(Character.CharacterSlot.Wrist))
+				{
+					string[] wristIds = items[Character.CharacterSlot.Wrist].Split('.');
+					Item wristItemRaw = null;
+					string keyStartsWith = wristIds[0] + ".";
+					foreach (string key in ItemCache.Items.Keys)
+						if (key.StartsWith(keyStartsWith))
+						{
+							wristItemRaw = ItemCache.Items[key][0];
+							break;
+						}
+					wristItemRaw = wristItemRaw ?? GetItem(wristIds[0] + ".0.0.0", "Loading Character from Armory");
+					if (wristItemRaw.Sockets.Color1 == Item.ItemSlot.None && wristIds[1] != "0")
+					{
+						items[Character.CharacterSlot.Wrist] = string.Format("{0}.0.0.0", wristIds[0]);
+						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[1] + ".0.0.0";
+					}
+					else if (wristItemRaw.Sockets.Color2 == Item.ItemSlot.None && wristIds[2] != "0")
+					{
+						items[Character.CharacterSlot.Wrist] = string.Format("{0}.{1}.0.0", wristIds[0], wristIds[1]);
+						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[2] + ".0.0.0";
+					}
+					else if (wristItemRaw.Sockets.Color3 == Item.ItemSlot.None && wristIds[3] != "0")
+					{
+						items[Character.CharacterSlot.Wrist] = string.Format("{0}.{1}.{2}.0", wristIds[0], wristIds[1], wristIds[2]);
+						items[Character.CharacterSlot.ExtraWristSocket] = wristIds[3] + ".0.0.0";
+					}
+				}
+				if (items.ContainsKey(Character.CharacterSlot.Hands))
+				{
+					string[] handsIds = items[Character.CharacterSlot.Hands].Split('.');
+					Item handsItemRaw = null;
+					string keyStartsWith = handsIds[0] + ".";
+					foreach (string key in ItemCache.Items.Keys)
+						if (key.StartsWith(keyStartsWith))
+						{
+							handsItemRaw = ItemCache.Items[key][0];
+							break;
+						}
+					handsItemRaw = handsItemRaw ?? GetItem(handsIds[0] + ".0.0.0", "Loading Character from Armory");
+					if (handsItemRaw.Sockets.Color1 == Item.ItemSlot.None && handsIds[1] != "0")
+					{
+						items[Character.CharacterSlot.Hands] = string.Format("{0}.0.0.0", handsIds[0]);
+						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[1] + ".0.0.0";
+					}
+					else if (handsItemRaw.Sockets.Color2 == Item.ItemSlot.None && handsIds[2] != "0")
+					{
+						items[Character.CharacterSlot.Hands] = string.Format("{0}.{1}.0.0", handsIds[0], handsIds[1]);
+						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[2] + ".0.0.0";
+					}
+					else if (handsItemRaw.Sockets.Color3 == Item.ItemSlot.None && handsIds[3] != "0")
+					{
+						items[Character.CharacterSlot.Hands] = string.Format("{0}.{1}.{2}.0", handsIds[0], handsIds[1], handsIds[2]);
+						items[Character.CharacterSlot.ExtraHandsSocket] = handsIds[3] + ".0.0.0";
+					}
+				}
+				if (items.ContainsKey(Character.CharacterSlot.Waist))
+				{
+					string[] waistIds = items[Character.CharacterSlot.Waist].Split('.');
+					Item waistItemRaw = null;
+					string keyStartsWith = waistIds[0] + ".";
+					foreach (string key in ItemCache.Items.Keys)
+						if (key.StartsWith(keyStartsWith))
+						{
+							waistItemRaw = ItemCache.Items[key][0];
+							break;
+						}
+					waistItemRaw = waistItemRaw ?? GetItem(waistIds[0] + ".0.0.0", "Loading Character from Armory");
+					if (waistItemRaw.Sockets.Color1 == Item.ItemSlot.None && waistIds[1] != "0")
+					{
+						items[Character.CharacterSlot.Waist] = string.Format("{0}.0.0.0", waistIds[0]);
+						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[1] + ".0.0.0";
+					}
+					else if (waistItemRaw.Sockets.Color2 == Item.ItemSlot.None && waistIds[2] != "0")
+					{
+						items[Character.CharacterSlot.Waist] = string.Format("{0}.{1}.0.0", waistIds[0], waistIds[1]);
+						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[2] + ".0.0.0";
+					}
+					else if (waistItemRaw.Sockets.Color3 == Item.ItemSlot.None && waistIds[3] != "0")
+					{
+						items[Character.CharacterSlot.Waist] = string.Format("{0}.{1}.{2}.0", waistIds[0], waistIds[1], waistIds[2]);
+						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
+					}
+				}
+
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);
 				Character character = new Character(name, realm, region, race,
@@ -68,6 +154,9 @@ namespace Rawr
 					items.ContainsKey(Character.CharacterSlot.Ranged) ? items[Character.CharacterSlot.Ranged] : null,
 					items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
 					null,
+					items.ContainsKey(Character.CharacterSlot.ExtraWristSocket) ? items[Character.CharacterSlot.ExtraWristSocket] : null,
+					items.ContainsKey(Character.CharacterSlot.ExtraHandsSocket) ? items[Character.CharacterSlot.ExtraHandsSocket] : null,
+					items.ContainsKey(Character.CharacterSlot.ExtraWaistSocket) ? items[Character.CharacterSlot.ExtraWaistSocket] : null,
 					enchants.ContainsKey(Character.CharacterSlot.Head) ? enchants[Character.CharacterSlot.Head] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Shoulders) ? enchants[Character.CharacterSlot.Shoulders] : 0,
 					enchants.ContainsKey(Character.CharacterSlot.Back) ? enchants[Character.CharacterSlot.Back] : 0,

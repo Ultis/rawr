@@ -2386,8 +2386,11 @@ namespace Rawr
                 slot == Character.CharacterSlot.MainHand ? item : baseCharacter.MainHand,
                 slot == Character.CharacterSlot.OffHand ? item : baseCharacter.OffHand,
                 slot == Character.CharacterSlot.Ranged ? item : baseCharacter.Ranged,
-                slot == Character.CharacterSlot.Projectile ? item : baseCharacter.Projectile,
-                slot == Character.CharacterSlot.ProjectileBag ? item : baseCharacter.ProjectileBag,
+				slot == Character.CharacterSlot.Projectile ? item : baseCharacter.Projectile,
+				slot == Character.CharacterSlot.ProjectileBag ? item : baseCharacter.ProjectileBag,
+				slot == Character.CharacterSlot.ExtraWristSocket ? item : baseCharacter.ExtraWristSocket,
+				slot == Character.CharacterSlot.ExtraHandsSocket ? item : baseCharacter.ExtraHandsSocket,
+				slot == Character.CharacterSlot.ExtraWaistSocket ? item : baseCharacter.ExtraWaistSocket,
                 slot == Character.CharacterSlot.Head ? enchant : baseCharacter.HeadEnchant,
                 slot == Character.CharacterSlot.Shoulders ? enchant : baseCharacter.ShouldersEnchant,
                 slot == Character.CharacterSlot.Back ? enchant : baseCharacter.BackEnchant,
@@ -2435,6 +2438,9 @@ namespace Rawr
 				slot == Character.CharacterSlot.Ranged ? item : baseCharacter.Ranged,
 				slot == Character.CharacterSlot.Projectile ? item : baseCharacter.Projectile,
 				slot == Character.CharacterSlot.ProjectileBag ? item : baseCharacter.ProjectileBag,
+				slot == Character.CharacterSlot.ExtraWristSocket ? item : baseCharacter.ExtraWristSocket,
+				slot == Character.CharacterSlot.ExtraHandsSocket ? item : baseCharacter.ExtraHandsSocket,
+				slot == Character.CharacterSlot.ExtraWaistSocket ? item : baseCharacter.ExtraWaistSocket,
 				baseCharacter.HeadEnchant,
 				baseCharacter.ShouldersEnchant,
 				baseCharacter.BackEnchant,
@@ -2482,6 +2488,9 @@ namespace Rawr
 				baseCharacter.Ranged,
 				baseCharacter.Projectile,
 				baseCharacter.ProjectileBag,
+				baseCharacter.ExtraWristSocket,
+				baseCharacter.ExtraHandsSocket,
+				baseCharacter.ExtraWaistSocket,
 				slot == Character.CharacterSlot.Head ? enchant : baseCharacter.HeadEnchant,
 				slot == Character.CharacterSlot.Shoulders ? enchant : baseCharacter.ShouldersEnchant,
 				slot == Character.CharacterSlot.Back ? enchant : baseCharacter.BackEnchant,
@@ -2495,7 +2504,7 @@ namespace Rawr
 				slot == Character.CharacterSlot.MainHand ? enchant : baseCharacter.MainHandEnchant,
 				slot == Character.CharacterSlot.OffHand ? enchant : baseCharacter.OffHandEnchant,
 				slot == Character.CharacterSlot.Ranged ? enchant : baseCharacter.RangedEnchant,
-                _character.ActiveBuffs, false, _character.CurrentModel);
+				_character.ActiveBuffs, false, _character.CurrentModel);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2719,9 +2728,8 @@ namespace Rawr
             }
             public override bool Equals(object obj)
             {
-
                 if(obj != null && obj.GetType() == this.GetType())
-                {
+                {        
                     return this == (obj as StatsColors);
                 }
                 return base.Equals(obj);

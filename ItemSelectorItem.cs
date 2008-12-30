@@ -54,7 +54,10 @@ namespace Rawr
 		{
 			if (e.Button == MouseButtons.Left)
 			{
-				(FindForm() as FormItemSelection).Select(_itemCalculation.Item);
+				if (_itemCalculation.Item.Id == 0)
+					(FindForm() as FormItemSelection).Select(null);
+				else
+					(FindForm() as FormItemSelection).Select(_itemCalculation.Item);
 			}
 			else if (e.Button == MouseButtons.Right)
 			{
@@ -92,7 +95,7 @@ namespace Rawr
 				int tipX = this.Width + 20;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
-				ItemToolTip.Instance.Show(_itemCalculation.Item, this, new Point(tipX, 0));
+				ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, this, new Point(tipX, 0));
 
 				//UpdateBackColors();
 				Invalidate();

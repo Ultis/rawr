@@ -232,7 +232,8 @@ Here's a quick rundown of the status of each model:
 						itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
 						itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
 						itemButtonProjectile.Character = itemButtonProjectileBag.Character = 
-						itemButtonWrist.Character = _character;
+						itemButtonExtraHandsSocket.Character = itemButtonExtraWaistSocket.Character =
+						itemButtonExtraWristSocket.Character = itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
 					_character.ClassChanged += new EventHandler(_character_ClassChanged);
@@ -341,6 +342,7 @@ Here's a quick rundown of the status of each model:
 				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
 				itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
 				itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
+				itemButtonExtraHandsSocket.UpdateSelectedItem(); itemButtonExtraWaistSocket.UpdateSelectedItem(); itemButtonExtraWristSocket.UpdateSelectedItem();
 				//ItemEnchantsChanged();
 			}
 			//and the clouds above move closer / looking so dissatisfied
@@ -751,22 +753,7 @@ Here's a quick rundown of the status of each model:
                 form.Icon = this.Icon;
 				if (form.ShowDialog(this) == DialogResult.OK)
 				{
-					if (form.ArmoryRegion == Character.CharacterRegion.US && form.Realm == "Dragonmaw" && form.CharacterName == "Emposter")
-					{
-						Form formForEmposter = new Form();
-						Label labelForEmposter = new Label();
-						labelForEmposter.Font = new Font(labelForEmposter.Font.FontFamily, 42);
-						labelForEmposter.Dock = DockStyle.Fill;
-						labelForEmposter.ForeColor = System.Drawing.Color.Red;
-						labelForEmposter.Text = "HEY EMPOSTER!\r\n*SLAP SLAP*";
-						labelForEmposter.TextAlign = ContentAlignment.MiddleCenter;
-						formForEmposter.Controls.Add(labelForEmposter);
-						formForEmposter.Width += 100;
-						formForEmposter.StartPosition = FormStartPosition.CenterParent;
-						formForEmposter.Show(this);
-						Application.DoEvents();
-					}
-                    StartProcessing();
+					StartProcessing();
                     BackgroundWorker bw = new BackgroundWorker();
                     bw.DoWork += new DoWorkEventHandler(bw_ArmoryGetCharacter);
                     bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_ArmoryGetCharacterComplete);
@@ -856,8 +843,7 @@ Here's a quick rundown of the status of each model:
 			else
 			{
 				saveAsToolStripMenuItem_Click(null, null);
-			}
-            
+			}            
 		}
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -888,7 +874,6 @@ Here's a quick rundown of the status of each model:
 			e.Cancel = !PromptToSaveBeforeClosing();
 			Properties.Recent.Default.Save();
 			ItemCache.Save();
-			
 		}
 
 		private bool PromptToSaveBeforeClosing()
@@ -1123,7 +1108,8 @@ Here's a quick rundown of the status of each model:
                 if (_statusForm.HasErrors)
                 {
                     _statusForm.SwitchToErrorTab();
-                }else
+                }
+				else
                 {
                     _statusForm.Close();
                     _statusForm.Dispose();  
@@ -1264,7 +1250,7 @@ Here's a quick rundown of the status of each model:
                         // force load all gems also
                         Item gem;
                         gem = newItem.Gem1;
-                        gem =newItem.Gem2;
+                        gem = newItem.Gem2;
                         gem = newItem.Gem3;
                         items.Add(newItem);
                     }

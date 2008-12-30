@@ -708,7 +708,8 @@ namespace Rawr
 				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
 				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
 				character.Waist, character.MainHand, character.Ranged, character.Projectile, 
-				character.ProjectileBag, character.Wrist});
+				character.ProjectileBag, character.Wrist, character.ExtraHandsSocket, character.ExtraWaistSocket,
+				character.ExtraWristSocket});
 			if (additionalItem != null)
 				items.Add(additionalItem);
 			if (IncludeOffHandInCalculations(character))
