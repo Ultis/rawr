@@ -499,6 +499,14 @@ namespace Rawr
             try
             {
                 ItemCache.Instance = optimizerItemCache;
+                if (_thoroughness == 1)
+                {
+                    // if we just start from current character and look for direct upgrades
+                    // then we have to deal with items that are currently equipped, but are not
+                    // currently available
+                    MarkEquippedItemsAsValid(_character);
+                }
+
                 if (injectCharacter)
                 {
                     optimizedCharacter = Optimize(character, out bestValue, out injected);
@@ -729,6 +737,10 @@ namespace Rawr
             try
             {
                 ItemCache.Instance = optimizerItemCache;
+
+                // make equipped gear/enchant valid
+                // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
+                // MarkEquippedItemsAsValid(_character);
 
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
@@ -1545,10 +1557,6 @@ namespace Rawr
 			}
 			else
 			{
-                // if we just start from current character and look for direct upgrades
-                // then we have to deal with items that are currently equipped, but are not
-                // currently available
-                MarkEquippedItemsAsValid(_character);
 				bestCharacter = _character;
                 best = GetCalculationsValue(_character, model.GetCharacterCalculations(_character));
 			}
