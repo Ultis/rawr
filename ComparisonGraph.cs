@@ -727,9 +727,21 @@ namespace Rawr
 
 		private void ComparisonGraph_MouseWheel(object sender, MouseEventArgs e)
 		{
+            
 			System.Diagnostics.Trace.WriteLine(e.Delta);
-			ScrollBar.Value = Math.Min(ScrollBar.Maximum - ScrollBar.LargeChange, Math.Max(ScrollBar.Minimum, ScrollBar.Value - e.Delta));
-			_scrollBar_Scroll(this, null);
+            int ScrollBarValue = Math.Min(ScrollBar.Maximum - ScrollBar.LargeChange, Math.Max(ScrollBar.Minimum, ScrollBar.Value - e.Delta));
+            if (ScrollBarValue > 0)  // ScrollBar.Value cannot be a negitive number.
+            {
+                ScrollBar.Value = ScrollBarValue;
+
+            }
+            else
+            {
+                //do nothing
+            }
+
+           _scrollBar_Scroll(this, null);
+			
 		}
     }
 }
