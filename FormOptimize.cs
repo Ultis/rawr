@@ -12,6 +12,14 @@ namespace Rawr
 	{
 		private Character _character;
         private Optimizer _optimizer;
+        private Item _itemToEvaluate;
+
+        public void EvaluateUpgrades(Item itemToEvaluate)
+        {
+            _itemToEvaluate = itemToEvaluate;
+            buttonUpgrades_Click(null, null);
+            _itemToEvaluate = null;
+        }
 
 		public FormOptimize(Character character)
 		{
@@ -453,7 +461,7 @@ namespace Rawr
             buttonCancel.DialogResult = DialogResult.None;
 
             Optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
-            _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness);
+            _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
         }
 
         private void FormOptimize_FormClosed(object sender, FormClosedEventArgs e)

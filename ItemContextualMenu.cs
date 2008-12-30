@@ -41,6 +41,7 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemDeleteDuplicates;
 		private ToolStripMenuItem _menuItemCreateBearGemmings;
 		private ToolStripMenuItem _menuItemCreateCatGemmings;
+        private ToolStripMenuItem _menuItemEvaluateUpgrade;
 		public ItemContextualMenu()
 		{
 			_menuItemName = new ToolStripMenuItem();
@@ -70,6 +71,9 @@ namespace Rawr
 			_menuItemDeleteDuplicates = new ToolStripMenuItem("Delete Duplicates");
 			_menuItemDeleteDuplicates.Click += new EventHandler(_menuItemDeleteDuplicates_Click);
 
+            _menuItemEvaluateUpgrade = new ToolStripMenuItem("Evaluate Upgrade");
+            _menuItemEvaluateUpgrade.Click += new EventHandler(_menuItemEvaluateUpgrade_Click);
+
 			//TODO: Implement this for all models.
 			_menuItemCreateBearGemmings = new ToolStripMenuItem("Create Bear Gemmings");
 			_menuItemCreateBearGemmings.Click += new EventHandler(_menuItemCreateBearGemmings_Click);
@@ -86,10 +90,19 @@ namespace Rawr
             this.Items.Add(_menuItemEquipAll);
             this.Items.Add(_menuItemDelete);
 			this.Items.Add(_menuItemDeleteDuplicates);
+            this.Items.Add(_menuItemEvaluateUpgrade);
 
 			//this.Items.Add(_menuItemCreateBearGemmings);
 			//this.Items.Add(_menuItemCreateCatGemmings);
 		}
+
+        void _menuItemEvaluateUpgrade_Click(object sender, EventArgs e)
+        {
+            FormOptimize optimize = new FormOptimize(Character);
+            optimize.EvaluateUpgrades(_item);
+            optimize.ShowDialog(this);
+            optimize.Dispose();
+        }
 
         public void Show(Item item, Character.CharacterSlot equipSlot, bool allowDelete)
         {
@@ -103,7 +116,7 @@ namespace Rawr
             _menuItemEquipAll.Visible = (_itemCharacter != null);
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (this.Character[equipSlot] != item);
-			_menuItemEquip.Visible = equipSlot != Character.CharacterSlot.None;
+            _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = equipSlot != Character.CharacterSlot.None;
 			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled;
 			_menuItemDeleteDuplicates.Enabled = allowDelete;
 			_menuItemName.Text = item.Name;

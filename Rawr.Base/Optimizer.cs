@@ -337,7 +337,7 @@ namespace Rawr
         private bool cancellationPending;
         private AsyncOperation asyncOperation;
         private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
-        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness);
+        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades);
         private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
@@ -395,20 +395,25 @@ namespace Rawr
 
         public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
         {
+            ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
+        }
+
+        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, null, null);
+            computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, null, null);
         }
 
-        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
             try
             {
-                upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, out error);
+                upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             }
             catch (Exception ex)
             {
@@ -516,14 +521,14 @@ namespace Rawr
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, out error);
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -563,7 +568,7 @@ namespace Rawr
             }
         }
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, out Exception error)
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -598,7 +603,14 @@ namespace Rawr
                     itemById[item.Id] = item;
                 }
 
-                items = new List<Item>(itemById.Values).ToArray();
+                if (singleItemUpgrades != null)
+                {
+                    items = new Item[] { singleItemUpgrades };
+                }
+                else
+                {
+                    items = new List<Item>(itemById.Values).ToArray();
+                }
 
                 for (int i = 0; i < items.Length; i++)
                 {
