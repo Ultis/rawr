@@ -496,7 +496,7 @@ namespace Rawr
 			CurrentItem = item;
             CurrentItemCharacter = itemCharacter;
             CurrentItemEnchant = itemEnchant;
-            if (CachedToolTipImage != null)
+            if (CachedToolTipImage != null && CurrentItem != null)
             {
                 base.Show(item.Name, window, point);
             }
