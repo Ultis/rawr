@@ -72,6 +72,7 @@ namespace Rawr.Mage
         private int rowMoltenFury = -1;
         //private int rowMoltenFuryDestructionPotion = -1;
         private int rowMoltenFuryIcyVeins = -1;
+        private int rowMoltenFuryManaGemEffect = -1;
         //private int rowHeroismDestructionPotion = -1;
         //private int rowIcyVeinsDestructionPotion = -1;
         private int rowManaGemFlameCap = -1;
@@ -1363,6 +1364,7 @@ namespace Rawr.Mage
             if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFury, mflength);
             //if (moltenFuryAvailable) lp.SetRHSUnsafe(rowMoltenFuryDestructionPotion, 15);
             if (moltenFuryAvailable && icyVeinsAvailable) lp.SetRHSUnsafe(rowMoltenFuryIcyVeins, coldsnapAvailable ? 40 : 20);
+            if (moltenFuryAvailable && manaGemEffectAvailable) lp.SetRHSUnsafe(rowMoltenFuryManaGemEffect, manaGemEffectDuration);
             //if (heroismAvailable) lp.SetRHSUnsafe(rowHeroismDestructionPotion, 15);
             //if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeinsDestructionPotion, dpivlength);
             if (segmentCooldowns)
@@ -1606,6 +1608,7 @@ namespace Rawr.Mage
             if (moltenFuryAvailable) rowMoltenFury = rowCount++;
             //if (moltenFuryAvailable && potionOfWildMagicAvailable) rowMoltenFuryDestructionPotion = rowCount++;
             if (moltenFuryAvailable && icyVeinsAvailable) rowMoltenFuryIcyVeins = rowCount++;
+            if (moltenFuryAvailable && manaGemEffectAvailable) rowMoltenFuryManaGemEffect = rowCount++;
             //if (heroismAvailable && effectPotionAvailable) rowHeroismDestructionPotion = rowCount++;
             //if (icyVeinsAvailable && effectPotionAvailable) rowIcyVeinsDestructionPotion = rowCount++;
             if (flameCapAvailable) rowManaGemFlameCap = rowCount++;
@@ -1844,6 +1847,7 @@ namespace Rawr.Mage
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
             //if (state.MoltenFury && state.PotionOfWildMagic) lp.SetElementUnsafe(rowMoltenFuryDestructionPotion, column, 1.0);
             if (state.MoltenFury && state.IcyVeins) lp.SetElementUnsafe(rowMoltenFuryIcyVeins, column, 1.0);
+            if (state.MoltenFury && state.ManaGemEffect) lp.SetElementUnsafe(rowMoltenFuryManaGemEffect, column, 1.0);
             //if (state.PotionOfWildMagic && state.Heroism) lp.SetElementUnsafe(rowHeroismDestructionPotion, column, 1.0);
             //if (state.PotionOfWildMagic && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDestructionPotion, column, 1.0);
             if (state.FlameCap) lp.SetElementUnsafe(rowManaGemFlameCap, column, 1.0 / 40.0);
