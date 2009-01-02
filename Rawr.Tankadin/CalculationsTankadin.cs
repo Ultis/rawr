@@ -359,7 +359,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             stats.Defense += character.StatConversion.GetDefenseFromRating(stats.DefenseRating);
             stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
-            stats.Block += .05f + stats.Defense * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating);
+            stats.Block += .05f + stats.Defense * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
 
             float fullDodge = stats.Defense * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility) * .01f
                 + character.StatConversion.GetDodgeFromRating(stats.DodgeRating) * .01f;
