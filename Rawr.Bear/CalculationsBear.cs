@@ -289,18 +289,21 @@ the Threat Scale defined on the Options tab.",
             calculatedStats.ArcaneSurvivalPoints = (float) (stats.Health / ((1f - (System.Math.Min(cappedResist, stats.ArcaneResistance) / cappedResist) * .75)));
 
 			//TODO:
-            CalculateThreat(stats, targetLevel, calculatedStats, calcOpts, character.DruidTalents);
+            CalculateThreat(stats, targetLevel, calculatedStats, character);
 			calculatedStats.OverallPoints = calculatedStats.MitigationPoints + 
 				calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
             return calculatedStats;
         }
         
-        private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, CalculationOptionsBear calcOpts, DruidTalents talents)
+        private void CalculateThreat(Stats stats, int targetLevel, CharacterCalculationsBear calculatedStats, Character character)
         {
-            int targetArmor = calcOpts.TargetArmor;
+			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+			DruidTalents talents = character.DruidTalents;
+
+			int targetArmor = calcOpts.TargetArmor;
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
 			baseArmor *= (1f - (stats.ArmorPenetrationRating / 15.39529991f) / 100f);
-			float modArmor = 1f - (baseArmor / ((467.5f * calcOpts.TargetLevel) + baseArmor - 22167.5f));
+			float modArmor = 1f - (baseArmor / ((467.5f * character.Level) + baseArmor - 22167.5f));
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);

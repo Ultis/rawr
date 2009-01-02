@@ -162,7 +162,7 @@ namespace Rawr.Cat
 			#region Basic Chances and Constants
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
 			baseArmor *= (1f - (stats.ArmorPenetrationRating / 15.39529991f) / 100f);
-			float modArmor = 1f - (baseArmor / ((467.5f * calcOpts.TargetLevel) + baseArmor - 22167.5f)); //TODO: Check on this. Should it be target or character level?
+			float modArmor = 1f - (baseArmor / ((467.5f * character.Level) + baseArmor - 22167.5f));
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
