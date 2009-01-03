@@ -291,6 +291,11 @@ namespace Rawr.Retribution
             else { calcOpts.GlyphOfSenseUD = false; }
             Character.OnCalculationsInvalidated();
         }
+
+        private void CalculationOptionsPanelRetribution_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 	[Serializable]

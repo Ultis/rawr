@@ -273,7 +273,7 @@ namespace Rawr.Retribution
 
                 // Convert armor to mitigation
                 //mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
-                mitigation = 1f - targetArmor / ( targetArmor + 400f + 85f * ( 5.5f * (float)calcOpts.TargetLevel - 265.5f ) );
+                mitigation = 1f - targetArmor / ((467.5f * character.Level) + targetArmor - 22167.5f);
             }
             #endregion
 
