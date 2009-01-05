@@ -390,7 +390,7 @@ namespace Rawr
 				if (slot == Item.ItemSlot.Finger ||
 					slot == Item.ItemSlot.MainHand ||
 					slot == Item.ItemSlot.Neck ||
-					slot == Item.ItemSlot.OffHand ||
+					(slot == Item.ItemSlot.OffHand && type != Item.ItemType.Shield) ||
 					slot == Item.ItemSlot.OneHand ||
 					slot == Item.ItemSlot.Trinket ||
 					slot == Item.ItemSlot.TwoHand)

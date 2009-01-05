@@ -270,7 +270,7 @@ namespace Rawr
 			if (item.Slot == Item.ItemSlot.Finger ||
 				item.Slot == Item.ItemSlot.MainHand ||
 				item.Slot == Item.ItemSlot.Neck ||
-				item.Slot == Item.ItemSlot.OffHand ||
+				(item.Slot == Item.ItemSlot.OffHand && item.Type != Item.ItemType.Shield) ||
 				item.Slot == Item.ItemSlot.OneHand ||
 				item.Slot == Item.ItemSlot.Trinket ||
 				item.Slot == Item.ItemSlot.TwoHand)

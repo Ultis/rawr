@@ -329,7 +329,7 @@ namespace Rawr
 			if (_button != null)
 				_button.SelectedItem = item;
 			if (_buttonEnchant != null)
-				_buttonEnchant.SelectedEnchantId = Math.Abs(item.Id % 10000);
+				_buttonEnchant.SelectedEnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
 			_characterSlot = Character.CharacterSlot.None;
 			ItemToolTip.Instance.Hide(this);
 			this.Hide();

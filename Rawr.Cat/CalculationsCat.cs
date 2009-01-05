@@ -1012,7 +1012,8 @@ namespace Rawr.Cat
 			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 			
 			dictValues.Add("Health", BasicStats.Health.ToString());
-			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
+			dictValues.Add("Attack Power", string.Format("{0}*{0} with Savage Roar\r\n{1} without Savage Roar", 
+				BasicStats.AttackPower.ToString(), (BasicStats.AttackPower / 1.4f).ToString()));
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Strength", BasicStats.Strength.ToString());
 			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
