@@ -1,11 +1,33 @@
-Rawr v2.1.4
+Rawr v2.1.5
 ------------
- Welcome to Rawr 2.1.4. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+ Welcome to Rawr 2.1.5. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
 Recent Changes:
+v2.1.5: 
+	Items now show their item level in their tooltips. 
+	Armor and Bonus Armor are now handled separately. 
+	Performance and crash fixes to the Optimizer. 
+	Added mousewheel support for the charts. 
+	Added buffs for Mixology. 
+	Added support for Blacksmithing sockets (reload character from armory, or load character from 2.1.4 and remove extra gem from items). 
+	Added a context menu item to quickly evaluate the upgrade value of the clicked item.
+	Added support for updating the entire item cache from Wowhead.
+	Added parsing for Greatness cards.
+	Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror.
+	Rawr.Cat: Fix for damage reduction calculations for different level targets. Added support for Mongoose, Berserking, Trauma, and Mangle from another feral. Fixed calculations for Idol of Terror.
+	Rawr.Healadin:
+	Rawr.HolyPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
+	Rawr.Mage: Added custom graphs for stats scaling. Supports extra crit rate from encounter effects (ie, Loatheb). Fix for new cycles ignoring flame caps. Support for reconjuring mana gems.
+	Rawr.ProtWarr: Adjusted miss rate from 9% to 8%, and dodge rate from 6.5% to 6.4%.
+	Rawr.ShadowPriest Added Arcane Torrent for blood elves. Fixed display issue with Misery/Faerie Fire hit. Support for more trinket effects. Support for more set bonuses.
+	Rawr.Tankadin: Fix for block rating conversion.
+	Rawr.DPSDK: Fixes for a few calculations. Fixes for item relevancy to show DK set items, not paladin ones.
+	Rawr.RestoSham: Updated a variety of calculations. Not fully updated yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.RestoSham in conjunction with other theorycrafting tools.
+		
+		
 v2.1.4: Added tracking of item levels, and filtering by item level and a few other item properties. Added support for several additional buffs and enchants. Fixed Wowhead and Armory parsing for a few stats. Fixed CharacterProfiler support. ShadowPriest: Fixes for Optimization, and support for a few more buffs. HolyPriest: Fixes for Optimization and Haste calculations. Moonkin: Added support for a couple trinkets, allowed fist weapons, fixes to Starfire glyph calculations, fix for double application of Kings, and added support for user-defined rotations. Healadin: Added Burst Healing rating, support for Divine Favor and Divine Illumination. ProtWarr: Updated with correct base stats for all races at 80. Mage: Added a 3.0.8 calculation mode. Tree: Fixed haste and crit calculations. Cat: Adjusted base miss rate to 8%, added support for total % damage increases. Bear: Fixed a minor bug in DR calculations.
 v2.1.3: Improvements to CharacterProfiler support. Can now load items by exact name, as well as load from Armory and fail over to Wowhead if not found. Support for several new set bonuses and proc/use effects. Fixed base stat calculations in Retribution and Tankadin, and a few more calculation fixes in Retribution. Fixes for a few buff/enchant stats.
 v2.1.2: Improvements to launch time, and item editor performance. Support for more set bonuses and abnormal item stats. Fix for crash in Priest models. Updates to base stats and rating conversions for several models. Fixes for requirements and optimization of several gems. Added ghost hit for Frostfire bolt in Mage. Fixed the formula for PW: Shield in HolyPriest. Improved calculations for Cat and Bear, and made Cat results more descriptive.
@@ -16,21 +38,21 @@ Here's a quick rundown of the status of each model:
    •Rawr.Base: Fully functional. Still want to implement a global interface for glyphs, but they're left up to each model for now.
    •Rawr.Bear: Fully functional for level 80.
    •Rawr.Cat: Fully functional for level 80.
-   •Rawr.DPSDK: Fully functional for level 80.
+   •Rawr.DPSDK: Fully functional for level 80, but still has a few problems since it's brand new.
    •Rawr.DPSWarr: Not updated for 3.0.
-   •Rawr.Enhance: Fully functional for level 80.
+   •Rawr.Enhance: Fully functional for level 80, but still has a few problems since it's brand new.
    •Rawr.Healadin: Fully functional for level 80.
    •Rawr.HolyPriest: Fully functional for level 80.
-   •Rawr.Hunter: Fully functional for level 80.
+   •Rawr.Hunter: Fully functional for level 80, but still has a few problems since it's brand new.
    •Rawr.Mage: Fully functional for level 80.
    •Rawr.Moonkin: Fully functional for level 80.
    •Rawr.ProtWarr: Partially updated for 3.0 & level 80.
-   •Rawr.RestoSham: Not updated for 3.0.
+   •Rawr.RestoSham: Partially updated for 3.0.
    •Rawr.Retribution: Fully functional for level 80.
    •Rawr.Rogue: Not updated for 3.0.
    •Rawr.ShadowPriest: Fully functional for level 80.
    •Rawr.Tankadin: Fully functional for level 80.
-   •Rawr.Tree: Fully functional for level 80.
+   •Rawr.Tree: Partiall functional for level 80.
    •Rawr.Warlock: Not updated for 3.0.
     
     
