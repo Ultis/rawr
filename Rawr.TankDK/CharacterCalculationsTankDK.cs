@@ -48,6 +48,16 @@ namespace Rawr.TankDK
             set { _subPoints = value; }
         }
 
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Crit": return Crit;
+                default:
+                    return 0.0f;
+            }
+        }
+
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -66,6 +76,7 @@ namespace Rawr.TankDK
             dict["Armor"] = BasicStats.Armor.ToString("F0");
             dict["Strength"] = BasicStats.Strength.ToString("F0");
             dict["Agility"] = BasicStats.Agility.ToString("F0");
+            dict["Stamina"] = BasicStats.Stamina.ToString("F0");
 
             dict["TTL"] = (Mitigation + Avoidance).ToString("F1");
             dict["TTL Avoidance"] = Avoidance.ToString("F1");

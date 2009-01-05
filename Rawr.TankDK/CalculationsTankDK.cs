@@ -59,16 +59,18 @@ namespace Rawr.TankDK
                 {
                     List<string> labels = new List<string>(new string[]
                     {
-                        "Basic Stats:Health",
+
 
                         "Basic Stats:Strength",
 					    "Basic Stats:Agility",
+                        "Basic Stats:Stamina",
 /*					    "Basic Stats:Attack Power",
 					    "Basic Stats:Crit Rating",
 					    "Basic Stats:Hit Rating",
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
 					    "Basic Stats:Armor Penetration",*/
+                        "Basic Stats:Health",
                         "Basic Stats:Armor",
 
                         "Diminishing Returns:DR Dodge",
@@ -199,7 +201,10 @@ namespace Rawr.TankDK
         /// An array of strings which define what calculations (in addition to the subpoint ratings)
         /// will be available to the optimizer
         /// </summary>
-        //public virtual string[] OptimizableCalculationLabels { get { return new string[0]; } }
+        public override string[] OptimizableCalculationLabels { get { return new string[] {
+            "Crit",
+            }; } 
+        }
 
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
@@ -234,8 +239,8 @@ namespace Rawr.TankDK
             calcs.TargetLevel = targetLevel;
 
             float baseAgi = raceStats.Agility;
-            //float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
-            float defSkill = stats.DefenseRating / 4.918498039f;
+            float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
+            //float defSkill = stats.DefenseRating / 4.918498039f;
 
             float dodgeNonDR = stats.Dodge * 100f - levelDifference + baseAgi * (1.0f / 73.52941176f) + stats.Defense * 0.04f;
             float missNonDR = stats.Miss * 100f - levelDifference + stats.Defense * 0.04f;
@@ -611,20 +616,15 @@ namespace Rawr.TankDK
                 Resilience = stats.Resilience,
 
                 //AttackPower = stats.AttackPower,
-                //HitRating = stats.HitRating,
+                HitRating = stats.HitRating,
                 //CritRating = stats.CritRating,
                 //ArmorPenetration = stats.ArmorPenetration,
-                //ExpertiseRating = stats.ExpertiseRating,
+                ExpertiseRating = stats.ExpertiseRating,
                 //HasteRating = stats.HasteRating,
                 //WeaponDamage = stats.WeaponDamage,
                 //PhysicalCrit = stats.PhysicalCrit,
                 //PhysicalHaste = stats.PhysicalHaste,
-                //PhysicalHit = stats.PhysicalHit,
-
-                //HitRating = stats.HitRating,
-                //SpellPower = stats.SpellPower,
-                //SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
-                //SpellHit = stats.SpellHit,
+                PhysicalHit = stats.PhysicalHit,
 
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
