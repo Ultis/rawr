@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Rawr.TankDK
 {
-    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
+    [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", Character.CharacterClass.DeathKnight)]
     class CalculationsTankDK : CalculationsBase
     {
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
@@ -64,12 +64,12 @@ namespace Rawr.TankDK
                         "Basic Stats:Strength",
 					    "Basic Stats:Agility",
                         "Basic Stats:Stamina",
-/*					    "Basic Stats:Attack Power",
+					    "Basic Stats:Attack Power",
 					    "Basic Stats:Crit Rating",
 					    "Basic Stats:Hit Rating",
 					    "Basic Stats:Expertise",
 					    "Basic Stats:Haste Rating",
-					    "Basic Stats:Armor Penetration",*/
+/*					    "Basic Stats:Armor Penetration",*/
                         "Basic Stats:Health",
                         "Basic Stats:Armor",
 
@@ -91,6 +91,9 @@ namespace Rawr.TankDK
                         "TTL:TTL Avoidance*TTL increase by avoidance",
                         "TTL:TTL*Time To Live",
 
+                        "Threat Stats:Target Miss*Chance to miss the target",
+                        "Threat Stats:Target Dodge*Chance the target dodges",
+                        "Threat Stats:Target Parry*Chance the target parries",
                         "Threat Stats:Threat",
                         "Overall Stats:Overall",
                     });
@@ -310,6 +313,27 @@ namespace Rawr.TankDK
 
             if (character.MainHand != null)
             {
+                float hitBonus = (float)(stats.HitRating / (32.78998947f * 100.0f) + stats.PhysicalHit);
+                float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
+                if ((opts.TargetLevel - 80f) < 3)
+                {
+                    chanceMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
+                }
+                float chanceParry = Math.Max(0.0f, 0.15f - (stats.ExpertiseRating / (32.78998947f * 100.0f) + stats.Expertise * 0.0025f));
+                float chanceDodge = Math.Max(0.0f, 0.065f - (stats.ExpertiseRating / (32.78998947f * 100.0f) + stats.Expertise * 0.0025f));
+                float hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
+
+                calcs.TargetDodge = chanceDodge;
+                calcs.TargetMiss = chanceMiss;
+                calcs.TargetParry = chanceParry;
+
+                float physCrits = .0065f;
+                physCrits += stats.CritRating / 4591f;
+                physCrits += stats.Agility / 6250f;
+                physCrits += .01f * (float)(character.DeathKnightTalents.DarkConviction
+                    + character.DeathKnightTalents.EbonPlaguebringer
+                    + character.DeathKnightTalents.Annihilation);
+
                 float weaponDmg = (character.MainHand.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
                 float totalStaticHaste = 1.0f + (calcs.BasicStats.HasteRating / 32.78998947f / 100.0f);
@@ -317,7 +341,11 @@ namespace Rawr.TankDK
 
                 calcs.Threat = weaponDmg / (character.MainHand.Speed / totalStaticHaste);
 
+                calcs.Threat *= hitChance * (physCrits + 1.0f);
+
                 calcs.Threat *= opts.ThreatWeight;
+
+                calcs.Expertise = stats.Expertise + (stats.ExpertiseRating / 32.78998947f) / 0.25f;
             }
 
             return calcs;
@@ -461,13 +489,13 @@ namespace Rawr.TankDK
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
-            statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
+            //statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
-            statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
-            statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
-            statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
+            //statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;
+            //statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
+            //statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
 
             statsTotal.BonusCritMultiplier = statsGearEnchantsBuffs.BonusCritMultiplier;
 

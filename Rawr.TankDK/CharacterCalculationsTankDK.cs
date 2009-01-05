@@ -41,6 +41,12 @@ namespace Rawr.TankDK
         public float DefenseRating { get; set; }
         public float DefenseRatingNeeded { get; set; }
 
+        public float TargetMiss { get; set; }
+        public float TargetDodge { get; set; }
+        public float TargetParry { get; set; }
+
+        public float Expertise { get; set; }
+
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
@@ -77,6 +83,11 @@ namespace Rawr.TankDK
             dict["Strength"] = BasicStats.Strength.ToString("F0");
             dict["Agility"] = BasicStats.Agility.ToString("F0");
             dict["Stamina"] = BasicStats.Stamina.ToString("F0");
+            dict["Hit Rating"] = BasicStats.HitRating.ToString("F0");
+            dict["Haste Rating"] = BasicStats.HasteRating.ToString("F0");
+            dict["Crit Rating"] = BasicStats.CritRating.ToString("F0");
+            dict["Expertise"] = Expertise.ToString("F0");
+            dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
 
             dict["TTL"] = (Mitigation + Avoidance).ToString("F1");
             dict["TTL Avoidance"] = Avoidance.ToString("F1");
@@ -86,6 +97,10 @@ namespace Rawr.TankDK
             dict["Defense"] = Defense.ToString("F0");
             dict["Defense Rating"] = DefenseRating.ToString("F0");
             dict["Defense Rating needed"] = DefenseRatingNeeded.ToString("F0");
+
+            dict["Target Miss"] = (TargetMiss * 100.0f).ToString("F1") + "%";
+            dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("F1") + "%";
+            dict["Target Parry"] = (TargetParry * 100.0f).ToString("F1") + "%";
 
             dict["Threat"] = Threat.ToString("F1");
             dict["Overall"] = OverallPoints.ToString("F1");
