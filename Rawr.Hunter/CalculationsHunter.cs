@@ -380,21 +380,6 @@ namespace Rawr.Hunter
             HunterRatings ratings = new HunterRatings();
 
             double hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
-            #region Remove Any Incorrect Modelling
-            /*
-            bool hasDST = false;
-            if (character.Trinket1 != null && character.Trinket1.Name == "Dragonspine Trophy")
-            {
-                calculatedStats.BasicStats.HasteRating -= character.Trinket1.Stats.HasteRating;
-                hasDST = true;
-            }
-            else if (character.Trinket2 != null && character.Trinket2.Name == "Dragonspine Trophy")
-            {
-                calculatedStats.BasicStats.HasteRating -= character.Trinket2.Stats.HasteRating;
-                hasDST = true;
-            }
-            */
-            #endregion
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )
@@ -652,24 +637,17 @@ namespace Rawr.Hunter
 				statsTotal.Health += (float)Math.Round((statsTotal.Health * character.HunterTalents.EnduranceTraining * .01f));
 			}
 
-            statsTotal.PhysicalHit = (float)(ratings.BASE_HIT_PERCENT + (statsTotal.HitRating / (ratings.HIT_RATING_PER_PERCENT * 100.0f)) 
-								- (statsTotal.Miss / 100.0f) 
-								+ (character.Race == Character.CharacterRace.Draenei ? .01 : 0)
-								+ statsTalents.PhysicalHit);
+            float hitBonus = (float)(statsTotal.HitRating / (ratings.HIT_RATING_PER_PERCENT * 100.0f) + statsTalents.PhysicalHit + statsRace.PhysicalHit);
 
+            float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
+            if ((options.TargetLevel - 80f) < 3)
+            {
+                chanceMiss = Math.Max(0f, 0.05f + 0.005f * (options.TargetLevel - 80f) - hitBonus);
+            }
 
-			if (targetDefence > 410)
-			{
-				statsTotal.PhysicalHit = statsTotal.PhysicalHit - (targetDefence - 410) * .004f - .02f;
-			} else {
-				statsTotal.PhysicalHit -= ((targetDefence - 400) * .001f);
-			}
-            if (statsTotal.PhysicalHit > 1.0f)
-			{
-                statsTotal.PhysicalHit = 1.0f;
-			}
+            statsTotal.PhysicalHit = 1.0f - chanceMiss;
 
-			if (character.Ranged != null &&
+ 			if (character.Ranged != null &&
 				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Type == Item.ItemType.Gun) ||
 				(character.Race == Character.CharacterRace.Troll && character.Ranged.Type == Item.ItemType.Bow)))
 			{
@@ -777,7 +755,8 @@ namespace Rawr.Hunter
 						Agility = 148f,
 						Stamina = 106f,
 						Intellect = 78f,
-						Spirit = 82f
+						Spirit = 82f,
+                        PhysicalHit = 0.01f,
 					};
 					break;
 				case Character.CharacterRace.Dwarf:
