@@ -185,6 +185,7 @@ namespace Rawr
 			if (filter && (int)item.Quality < 2) return null;
 
 			json1 = json1.Replace(",subclass:", ".");//.Replace(",armor:", ",armorDUPE:");
+			json1 = json1.Replace(item.Name.Replace("'", "\\'"), "NAME");
 			string source = string.Empty;
 			if (json1.Contains("source:["))
 			{
@@ -220,9 +221,13 @@ namespace Rawr
 				if (sourcemore.Contains("n:'"))
 				{
 					n = sourcemore.Substring(sourcemore.IndexOf("n:'") + "n:'".Length);
-					n = n.Substring(0, n.IndexOf("'"));
+					if (n.Contains("',"))
+						n = n.Substring(0, n.IndexOf("',"));
+					else
+						n = n.Substring(0, n.LastIndexOf("'"));
 					if (!string.IsNullOrEmpty(n))
 						sourcemore = sourcemore.Replace(n, "N");
+					n = n.Replace("\\'", "'");
 				}
 
 				foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))

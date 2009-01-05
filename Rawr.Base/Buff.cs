@@ -597,12 +597,12 @@ namespace Rawr
 			{
 				Name = "Mark of the Wild",
 				Group = "Stat Add",
-				Stats = { BonusArmor = 750, Strength = 14, Agility = 37, Stamina = 37, Intellect = 37, Spirit = 37, 
+				Stats = { BonusArmor = 750, Strength = 37, Agility = 37, Stamina = 37, Intellect = 37, Spirit = 37, 
 					ArcaneResistanceBuff = 54, FireResistanceBuff = 54, FrostResistanceBuff = 54, 
 					NatureResistanceBuff = 54, ShadowResistanceBuff = 54 },
 				Improvements = { 
 					new Buff { Name = "Improved Mark of the Wild", Stats = {
-					Armor = (float)Math.Floor(750f * 0.4f),
+					BonusArmor = (float)Math.Floor(750f * 0.4f),
 					Strength = (float)Math.Floor(37f * 0.4f),
 					Agility = (float)Math.Floor(37f * 0.4f),
 					Stamina = (float)Math.Floor(37f * 0.4f),
@@ -1022,7 +1022,7 @@ namespace Rawr
 				Group = "Elixirs and Flasks",
 				Stats = { SpellPower = 125 },
 				ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-				Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { Health = 37 } } }
+				Improvements = { new Buff { Name = "Flask of the Frost Wyrm (Mixology)", Stats = { SpellPower = 37 } } }
 			});
 
 			defaultBuffs.Add(new Buff()

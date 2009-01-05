@@ -652,6 +652,14 @@ namespace Rawr
                                 int gemBonusValue = int.Parse(gemBonus.Substring(0, gemBonus.IndexOf(' ')).Trim('+').Trim('%'));
                                 switch (gemBonus.Substring(gemBonus.IndexOf(' ') + 1).Trim())
                                 {
+									case "to All Stats":
+									case "All Stats":
+										stats.Agility = gemBonusValue;
+										stats.Strength = gemBonusValue;
+										stats.Stamina = gemBonusValue;
+										stats.Intellect = gemBonusValue;
+										stats.Spirit = gemBonusValue;
+										break;
                                     case "Resist All":
                                         stats.ArcaneResistance = gemBonusValue;
                                         stats.FireResistance = gemBonusValue;

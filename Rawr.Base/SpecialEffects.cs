@@ -261,7 +261,7 @@ namespace Rawr
 				if (moonkinline.Contains(" ")) moonkinline = moonkinline.Substring(0, moonkinline.IndexOf(" "));
 				stats.IdolCritRating += (float)int.Parse(moonkinline);
 				// Tree of Life form
-				treeline = treeline.Substring("Increases the healing granted by the Tree of Life form aura by ".Length);
+				treeline = treeline.Substring("Increases the healing spell power granted by the Tree of Life form aura by ".Length);
 				if (treeline.Contains(",")) treeline = treeline.Substring(0, treeline.IndexOf(","));
 				if (treeline.Contains(".")) treeline = treeline.Substring(0, treeline.IndexOf("."));
 				if (treeline.Contains(" ")) treeline = treeline.Substring(0, treeline.IndexOf(" "));

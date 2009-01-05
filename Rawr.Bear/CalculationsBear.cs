@@ -354,7 +354,7 @@ the Threat Scale defined on the Options tab.",
             float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
             float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
             float chanceBlock = 0;//ha!
-            float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+            float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
             if ((targetLevel - 80f) < 3)
             {
                 chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);

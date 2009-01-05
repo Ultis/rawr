@@ -16,9 +16,8 @@ v2.1.5:
 	Added a context menu item to quickly evaluate the upgrade value of the clicked item.
 	Added support for updating the entire item cache from Wowhead.
 	Added parsing for Greatness cards.
-	Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror.
+	Rawr.Bear: Now includes correct calcultions for armor in patch 3.0.8. Fix for damage reduction calculations for different level targets. Added support for Mongoose. Fixed calculations for Idol of Terror. Added support for soft-capping Survivability.
 	Rawr.Cat: Fix for damage reduction calculations for different level targets. Added support for Mongoose, Berserking, Trauma, and Mangle from another feral. Fixed calculations for Idol of Terror.
-	Rawr.Healadin:
 	Rawr.HolyPriest: Added Arcane Torrent for blood elves. Support for more set bonuses.
 	Rawr.Mage: Added custom graphs for stats scaling. Supports extra crit rate from encounter effects (ie, Loatheb). Fix for new cycles ignoring flame caps. Support for reconjuring mana gems.
 	Rawr.ProtWarr: Adjusted miss rate from 9% to 8%, and dodge rate from 6.5% to 6.4%.
