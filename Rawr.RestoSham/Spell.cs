@@ -9,7 +9,7 @@ namespace Rawr.RestoSham
                 null,
                 new SpellRank(50, 150, 150, 1.5f, 300),
                 new SpellRank(60, 205, 205, 1.5f, 372),
-                new SpellRank(70, 270, 270, 1.5f, 450)};
+                new SpellRank(70, 337, 337, 1.5f, 660)};
         
         public EarthShield()
           : this(_spellRanks.Length - 1)
@@ -51,15 +51,15 @@ namespace Rawr.RestoSham
 
             // Bonus amount (Earth Shield not subject to downrank penalties?):
 
-            float bonus = stats.SpellPower * 1.88f;
+            float bonus = stats.SpellPower * 1.88f * (1f + (.05f * character.ShamanTalents.ImprovedEarthShield + character.ShamanTalents.ImprovedShields));
             bonus *= SpellCoefficient;
             
-            AverageHealed = (baseHeal + bonus) * 6;
+            AverageHealed = (baseHeal + bonus) * (6 + character.ShamanTalents.ImprovedEarthShield);
             HealPerCharge = baseHeal + bonus;
 
             // Cast time is considered to be the global cooldown (which won't reduce below 1 sec):
 
-            CastTime = Math.Max(SpellRanks[Rank].CastTime / (1 + (stats.HasteRating / 1570)), 1.0f);
+            CastTime = Math.Max(SpellRanks[Rank].CastTime / (1f + (stats.SpellHaste)), 1.0f);
             
             // Mana not reduced by Tidal Focus:
             
@@ -133,7 +133,7 @@ namespace Rawr.RestoSham
                 new SpellRank(44,  458,  514, 1.5f, 235),
                 new SpellRank(52,  631,  705, 1.5f, 305),
                 new SpellRank(60,  832,  928, 1.5f, 380),
-                new SpellRank(66, 1039, 1185, 1.5f, 440)};
+                new SpellRank(76, 1606, 1834, 1.5f, 550)};
         
         public LesserHealingWave()
           : this(_spellRanks.Length - 1)
@@ -171,7 +171,7 @@ namespace Rawr.RestoSham
                 new SpellRank(56, 1367, 1561, 3.0f, 560),
                 new SpellRank(60, 1620, 1850, 3.0f, 620),
                 new SpellRank(63, 1725, 1969, 3.0f, 655),
-                new SpellRank(70, 2134, 2436, 3.0f, 720)};
+                new SpellRank(80, 3034, 3466, 3.0f, 1099)};
         
         
         public HealingWave()
@@ -202,7 +202,7 @@ namespace Rawr.RestoSham
             
             //points = CalculationsRestoSham.GetTalentPoints("Improved Healing Wave", "Restoration", character.AllTalents);
             float baseTime = SpellRanks[Rank].CastTime - (.1f * character.ShamanTalents.ImprovedHealingWave);
-            CastTime = baseTime / (1 + (stats.HasteRating / 1570));
+            CastTime = baseTime / (1f + (stats.SpellHaste));
           }
 
         protected override SpellRank[] SpellRanks
@@ -225,7 +225,7 @@ namespace Rawr.RestoSham
                 new SpellRank(46, 405, 465, 2.5f, 315),
                 new SpellRank(54, 551, 629, 2.5f, 405),
                 new SpellRank(61, 605, 691, 2.5f, 435),
-                new SpellRank(68, 826, 942, 2.5f, 540)}; 
+                new SpellRank(68, 1055, 1205, 2.5f, 835)}; 
         
         public ChainHeal()
           : this(_spellRanks.Length - 1)
@@ -376,8 +376,8 @@ namespace Rawr.RestoSham
 
             // Crit rate:
 
-            float crit = .022f + ((stats.Intellect / 80f) / 100) + ((stats.CritRating / 22.08f) / 100) +
-                                  stats.SpellCrit;
+            float crit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
+                + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit;
             float critRate = 1 + 0.5f * crit;
 
             // Purification talent:
@@ -391,8 +391,8 @@ namespace Rawr.RestoSham
             AverageHealed = (baseHeal + bonus) * critRate * purificationBonus;
             
             // Compute spell cast time:
-            
-            CastTime = SpellRanks[Rank].CastTime / (1 + (stats.HasteRating / 1570));
+
+            CastTime = SpellRanks[Rank].CastTime / (1f + (stats.SpellHaste));
             
             // Compute mana cost:
             
