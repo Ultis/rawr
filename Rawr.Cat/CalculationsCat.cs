@@ -157,7 +157,8 @@ namespace Rawr.Cat
 			CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
-
+			bool maintainMangle = stats.BonusBleedDamageMultiplier == 0f;
+			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
 			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
@@ -179,10 +180,33 @@ namespace Rawr.Cat
 				chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
 			}
 
-			float terrorUptime = 0.4f; //TODO: Calculate this
-			stats.Agility += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier);
-			stats.AttackPower += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+			if (stats.TerrorProc > 0)
+			{
+				float terrorUptime = 0.4f; //TODO: Calculate this
+				stats.Agility += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier);
+				stats.AttackPower += stats.TerrorProc * terrorUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+			}
 
+			if (stats.MongooseProc > 0)
+			{
+				float whiteAttacksPerSecond = (1f - chanceMiss - chanceDodge) / attackSpeed;
+				float yellowAttacksPerSecond = (1f - chanceMiss - chanceDodge) / 3f; //TODO: Calculate this
+				float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+				float mongooseUptime = 15f / timeBetweenMongooseProcs;
+				stats.Agility += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+				stats.AttackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+				attackSpeed /= 1f + (0.02f * mongooseUptime);
+			}
+
+			if (stats.BerserkingProc > 0)
+			{
+				float whiteAttacksPerSecond = (1f - chanceMiss - chanceDodge) / attackSpeed;
+				float yellowAttacksPerSecond = (1f - chanceMiss - chanceDodge) / 3f; //TODO: Calculate this
+				float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+				float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+				stats.AttackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+			}
+			
 			float glanceMultiplier = .7f;
 			float chanceAvoided = chanceMiss + chanceDodge;
 			float chanceGlance = 0.24f;
@@ -237,8 +261,7 @@ namespace Rawr.Cat
 
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-				(!character.ActiveBuffsContains("Mangle") && !character.ActiveBuffsContains("Trauma")),
-				calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration, attackSpeed, 
+				maintainMangle, calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration, attackSpeed, 
 				character.DruidTalents.OmenOfClarity > 0, chanceAvoided, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
@@ -559,7 +582,6 @@ namespace Rawr.Cat
 				FinisherEnergyOnAvoid = 0.4f * talents.PrimalPrecision,
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f), 
-				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle),
 				BonusFerociousBiteDamageMultiplier = 0.03f * talents.FeralAggression,
 				BonusRipDuration = (character.CalculationOptions as CalculationOptionsCat).GlyphOfRip ? 4f : 0f,
 			};
@@ -888,6 +910,9 @@ namespace Rawr.Cat
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 					PhysicalHaste = stats.PhysicalHaste,
 					PhysicalHit = stats.PhysicalHit,
+					MongooseProc = stats.MongooseProc,
+					BerserkingProc = stats.BerserkingProc,
+					BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 
 					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,
@@ -912,10 +937,10 @@ namespace Rawr.Cat
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc +
-				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration +
+				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc + stats.MongooseProc +
+				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BerserkingProc +
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
-				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
+				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
@@ -1010,9 +1035,10 @@ namespace Rawr.Cat
 			dictValues.Add("Rip Damage", string.Format(attackFormat, 100f * HighestDPSRotation.RipDamageTotal / HighestDPSRotation.DamageTotal, RipDamagePerHit, RipDamagePerSwing));
 			dictValues.Add("Bite Damage", string.Format(attackFormat, 100f * HighestDPSRotation.BiteDamageTotal / HighestDPSRotation.DamageTotal, BiteDamagePerHit, BiteDamagePerSwing));
 
-			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\nKeep Rake up.\r\nKeep Mangle up.\r\n{2}{3}Use {4} for combo points.",
+			string rotationDescription = string.Format("{0}*Keep {1}cp Savage Roar up.\r\nKeep Rake up.\r\n{2}{3}{4}Use {5} for combo points.",
 				HighestDPSRotation.Name.Replace(" + ", "+"), HighestDPSRotation.RoarCP,
 				HighestDPSRotation.Name.Contains("Rip") ? "Keep 5cp Rip up.\r\n" : "",
+				HighestDPSRotation.Name.Contains("Mangle") ? "Keep Mangle up.\r\n" : "",
 				HighestDPSRotation.Name.Contains("Bite") ? "Use Ferocious Bite to use up extra combo points.\r\n" : "",
 				HighestDPSRotation.Name.Contains("Shred") ? "Shred" : "Mangle");
 

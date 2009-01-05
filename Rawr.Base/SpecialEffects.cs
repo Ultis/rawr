@@ -203,6 +203,13 @@ namespace Rawr
 			{ //Special handling for Shard of Contempt due to higher uptime
 				stats.AttackPower += 90f;
 			}
+			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
+			{ //Darkmoon Card: Greatness
+				stats.Strength *= 2f;
+				stats.Agility *= 2f;
+				stats.Intellect *= 2f;
+				stats.Spirit *= 2f;
+			}
 			else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
 			{
 				stats.AttackPower += 120; //Crusade = 120ap

@@ -107,8 +107,9 @@ namespace Rawr
         MementoProc,
         Miss,
         MoonfireDmg,
-        MoonfireExtension,
-        MongooseProc,
+		MoonfireExtension,
+		MongooseProc,
+		BerserkingProc,
         MongooseProcAverage,
         MongooseProcConstant,
         Mp5,
@@ -1717,7 +1718,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MongooseProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.MongooseProc] = value; }
-        }
+		}
+
+		[DisplayName("Berserking Proc")]
+		[Category("Equipment Procs")]
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		public float BerserkingProc
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BerserkingProc]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BerserkingProc] = value; }
+		}
 
         [DisplayName("Mongoose Proc Average")]
         [Category("Equipment Procs")]

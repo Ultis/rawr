@@ -228,6 +228,42 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
 
+			if (stats.MongooseProc + stats.TerrorProc > 0)
+			{
+				//Add stats for Mongoose/Terror
+				float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
+				float attackSpeed = (2.5f) / (1f + hasteBonus);
+				attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
+
+				float hitBonus = stats.HitRating / 32.78998947f / 100f;
+				float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+				float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
+				float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
+				float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+				if ((targetLevel - 80f) < 3) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
+				
+				float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+
+				if (stats.TerrorProc > 0)
+				{
+					float terrorAgi = (1 - (float)Math.Pow(chanceAvoided, 3f)) * stats.TerrorProc * 2f / 3f * (1 + stats.BonusAgilityMultiplier);
+					stats.Agility += terrorAgi;
+					stats.Armor += terrorAgi * 2;
+				}
+
+				if (stats.MongooseProc > 0)
+				{
+					float whiteAttacksPerSecond = (1f - chanceAvoided) / attackSpeed;
+					float yellowAttacksPerSecond = (1f - chanceAvoided) / 1.5f; //TODO: Calculate this
+					float timeBetweenMongooseProcs = 24f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+					float mongooseUptime = 15f / timeBetweenMongooseProcs;
+					float mongooseAgi = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+					stats.Agility += mongooseAgi;
+					stats.Armor += mongooseAgi * 2;
+					stats.PhysicalHaste *= 1f + (0.02f * mongooseUptime);
+				}
+			}
+
 			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 75; //TODO: Find correct base agi values at 80
 			
 			float defSkill = (float)Math.Floor(stats.DefenseRating / 4.918498039f);
@@ -264,7 +300,7 @@ the Threat Scale defined on the Options tab.",
 			double survivalRaw = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))) / 1000f;
 
 			if (survivalRaw <= survivalCap)
-				calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw; // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+				calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw;
 			else
 			{
 				double x = survivalRaw;
@@ -328,9 +364,8 @@ the Threat Scale defined on the Options tab.",
             float glanceMultiplier = .7f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
-			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 45.90598679f + 
-				((stats.Agility + (1 - (float)Math.Pow(chanceAvoided, 2f) ) * stats.TerrorProc * 2.0f / 3.0f) * 0.012f)) 
-				/ 100f + stats.PhysicalCrit);
+			float chanceCrit = Math.Min(0.75f, 
+				(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit);
 
             calculatedStats.DodgedAttacks = chanceDodge * 100;
             calculatedStats.ParriedAttacks = chanceParry * 100;
@@ -1126,6 +1161,7 @@ the Threat Scale defined on the Options tab.",
 				FireResistanceBuff = stats.FireResistanceBuff,
 				FrostResistanceBuff = stats.FrostResistanceBuff,
 				ShadowResistanceBuff = stats.ShadowResistanceBuff,
+				MongooseProc = stats.MongooseProc,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1158,7 +1194,7 @@ the Threat Scale defined on the Options tab.",
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
-				stats.ArmorPenetrationRating + stats.PhysicalHaste
+				stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.MongooseProc
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
 				 + stats.BonusRipDuration

@@ -173,8 +173,8 @@ namespace Rawr
 			this.reloadInvetoryFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.updateItemCacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateItemCacheArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.updateItemCacheWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
@@ -1559,20 +1559,20 @@ namespace Rawr
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
 			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			// 
 			// redoToolStripMenuItem
 			// 
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
 			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.redoToolStripMenuItem.Text = "&Redo";
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
 			// 
 			// cutToolStripMenuItem
 			// 
@@ -1580,7 +1580,7 @@ namespace Rawr
 			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
 			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.cutToolStripMenuItem.Text = "Cu&t";
 			// 
 			// copyToolStripMenuItem
@@ -1589,7 +1589,7 @@ namespace Rawr
 			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
 			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.copyToolStripMenuItem.Text = "&Copy";
 			// 
 			// pasteToolStripMenuItem
@@ -1598,18 +1598,18 @@ namespace Rawr
 			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
 			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.pasteToolStripMenuItem.Text = "&Paste";
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
 			// 
 			// selectAllToolStripMenuItem
 			// 
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.selectAllToolStripMenuItem.Text = "Select &All";
 			// 
 			// toolsToolStripMenuItem
@@ -1627,8 +1627,8 @@ namespace Rawr
             this.reloadInvetoryFromCharacterProfilerToolStripMenuItem,
             this.toolStripSeparator12,
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem,
-            this.updateItemCacheToolStripMenuItem,
-            this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem,
+            this.updateItemCacheArmoryToolStripMenuItem,
+            this.updateItemCacheWowheadToolStripMenuItem,
             this.toolStripSeparator10,
             this.optionsToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -1715,19 +1715,19 @@ namespace Rawr
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Text = "Load Possible Upgrades From Armory";
 			this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromArmoryToolStripMenuItem_Click);
 			// 
-			// updateItemCacheToolStripMenuItem
+			// updateItemCacheArmoryToolStripMenuItem
 			// 
-			this.updateItemCacheToolStripMenuItem.Name = "updateItemCacheToolStripMenuItem";
-			this.updateItemCacheToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-			this.updateItemCacheToolStripMenuItem.Text = "Update Item Cache";
-			this.updateItemCacheToolStripMenuItem.Click += new System.EventHandler(this.updateAllItemsToolStripMenuItem_Click_1);
+			this.updateItemCacheArmoryToolStripMenuItem.Name = "updateItemCacheArmoryToolStripMenuItem";
+			this.updateItemCacheArmoryToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
+			this.updateItemCacheArmoryToolStripMenuItem.Text = "Update Item Cache from the Armory";
+			this.updateItemCacheArmoryToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheArmoryToolStripMenuItem_Click);
 			// 
-			// reloadKnownWotLKItemsFromWowheadToolStripMenuItem
+			// updateItemCacheWowheadToolStripMenuItem
 			// 
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Name = "reloadKnownWotLKItemsFromWowheadToolStripMenuItem";
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Text = "Reload Known WotLK Items from Wowhead";
-			this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem.Click += new System.EventHandler(this.reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click);
+			this.updateItemCacheWowheadToolStripMenuItem.Name = "updateItemCacheWowheadToolStripMenuItem";
+			this.updateItemCacheWowheadToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
+			this.updateItemCacheWowheadToolStripMenuItem.Text = "Update Item Cache from Wowhead";
+			this.updateItemCacheWowheadToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheWowheadToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator10
 			// 
@@ -1886,7 +1886,7 @@ namespace Rawr
 		private System.Windows.Forms.Label label32;
 		private CalculationDisplay calculationDisplay1;
 		private System.Windows.Forms.TabPage tabPageOptions;
-        private System.Windows.Forms.ToolStripMenuItem updateItemCacheToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateItemCacheArmoryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
 		private System.Windows.Forms.ComboBox comboBoxRace;
 		private ItemButton itemButtonProjectileBag;
@@ -1918,7 +1918,7 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonFilter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFilterOther;
-		private System.Windows.Forms.ToolStripMenuItem reloadKnownWotLKItemsFromWowheadToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem updateItemCacheWowheadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadInvetoryFromCharacterProfilerToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
 		private ItemButton itemButtonExtraWristSocket;

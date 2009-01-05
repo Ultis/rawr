@@ -1592,7 +1592,7 @@ namespace Rawr //O O . .
                         this.ProjectileBag,
 						this.ExtraWristSocket,
 						this.ExtraHandsSocket,
-						this.ExtraWristSocket,
+						this.ExtraWaistSocket,
                         this.HeadEnchant,
                         this.ShouldersEnchant,
                         this.BackEnchant,

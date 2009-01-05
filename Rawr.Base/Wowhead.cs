@@ -157,7 +157,8 @@ namespace Rawr
             return item;
 		}
 
-		public static Item GetItem(string gemmedId)
+		public static Item GetItem(string gemmedId) { return GetItem(gemmedId, true); }
+		public static Item GetItem(string gemmedId, bool filter)
 		{
 			string[] idsplit = gemmedId.Split('.');
 			string wowhead_id = idsplit[0];
@@ -181,7 +182,7 @@ namespace Rawr
 			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/json")) { json1 = node.InnerText; }
 			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/jsonEquip")) { json2 = node.InnerText; }
 
-			if ((int)item.Quality < 2) return null;
+			if (filter && (int)item.Quality < 2) return null;
 
 			json1 = json1.Replace(",subclass:", ".");//.Replace(",armor:", ",armorDUPE:");
 			string source = string.Empty;
@@ -294,7 +295,7 @@ namespace Rawr
 			else if (htmlTooltip.Contains("Dreadnaught Plate")) item.SetName = "Dreadnaught Plate";
 
 
-			if (item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
+			if (filter && item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
 			return item;
 		}
 

@@ -1121,19 +1121,33 @@ Here's a quick rundown of the status of each model:
             this.Cursor = Cursors.Default;
         }
 
-        private void updateAllItemsToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private void updateItemCacheArmoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             StartProcessing();
             BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(bw_UpdateAllCachedItems);
+            bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheArmory);
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
             bw.RunWorkerAsync();
         }
 
-        void bw_UpdateAllCachedItems(object sender, DoWorkEventArgs e)
+        void bw_UpdateItemCacheArmory(object sender, DoWorkEventArgs e)
         {
-            this.UpdateAllCachedItems();
+            this.UpdateItemCacheArmory();
         }
+
+		private void updateItemCacheWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			StartProcessing();
+			BackgroundWorker bw = new BackgroundWorker();
+			bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheWowhead);
+			bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+			bw.RunWorkerAsync();
+		}
+
+		void bw_UpdateItemCacheWowhead(object sender, DoWorkEventArgs e)
+		{
+			this.UpdateItemCacheWowhead();
+		}
 
         void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -1158,18 +1172,37 @@ Here's a quick rundown of the status of each model:
             optimize.Dispose();
 		}
 
-		public void UpdateAllCachedItems()
+		public void UpdateItemCacheArmory()
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
-			StatusMessaging.UpdateStatus("Update All Items", "Beginning Update");
+			StatusMessaging.UpdateStatus("Update All Items from Armory", "Beginning Update");
 			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
-				StatusMessaging.UpdateStatus("Update All Items", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+				StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
 					Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
+				}
+			}
+			StatusMessaging.UpdateStatusFinished("Update All Items");
+			ItemIcons.CacheAllIcons(ItemCache.AllItems);
+			ItemCache.OnItemsChanged();
+		}
+
+		public void UpdateItemCacheWowhead()
+		{
+			WebRequestWrapper.ResetFatalErrorIndicator();
+			StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Beginning Update");
+			StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
+			for (int i = 0; i < ItemCache.AllItems.Length; i++)
+			{
+				Item item = ItemCache.AllItems[i];
+				StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+				if (item.Id < 90000)
+				{
+					Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
 				}
 			}
 			StatusMessaging.UpdateStatusFinished("Update All Items");
@@ -1409,18 +1442,9 @@ Here's a quick rundown of the status of each model:
             }
         }
 
-		private void reloadKnownWotLKItemsFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (MessageBox.Show("This will take a while (~15min maybe?), and I don't have a progress bar for it yet. " +
-				"Are you sure you'd like to do this?", "Reload WotLK items from Wowhead?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-			{
-				Wowhead.LoadKnownWotlkItems();
-				MessageBox.Show("Wowhead WotLK Item Reload Done!");
-			}
-		}
-
 		private void FormMain_KeyDown(object sender, KeyEventArgs e)
 		{
+#if DEBUG
 			if (e.KeyCode == (Keys)192 && e.Modifiers == Keys.Alt)
 			{
 				ToString(); //Breakpoint Here
@@ -1428,26 +1452,16 @@ Here's a quick rundown of the status of each model:
 
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (item.Name.Contains("Valorous ") || item.Name.Contains("Heroes' "))
-					{
-						ItemCache.DeleteItem(item, false);
-						Item newItem = Wowhead.GetItem(item.GemmedId);
-						if (newItem == null)
-						{
-							MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-							ItemCache.AddItem(item, true, false);
-						}
-						else
-						{
-							ItemCache.AddItem(newItem, true, false);
-						}
-					}
+					if (item.Sockets.Color1 == Item.ItemSlot.None && item.Gem1Id != 0) item.Gem1Id = 0;
+					else if (item.Sockets.Color2 == Item.ItemSlot.None && item.Gem2Id != 0) item.Gem2Id = 0;
+					else if (item.Sockets.Color3 == Item.ItemSlot.None && item.Gem3Id != 0) item.Gem3Id = 0;
 				}
 
 				ItemCache.OnItemsChanged();
 				
 				ToString();
 			}
+#endif
 		}
 
         public class LoadCharacterProfileArguments

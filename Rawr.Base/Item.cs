@@ -991,8 +991,9 @@ namespace Rawr
 
 		public static Item LoadFromId(int id, string logReason) { return LoadFromId(id, false, logReason, true); }
 		public static Item LoadFromId(int id, bool forceRefresh, string logReason, bool raiseEvent) { return LoadFromId(id.ToString() + ".0.0.0", forceRefresh, logReason, raiseEvent); }
-		public static Item LoadFromId(string gemmedId, string logReason) { return LoadFromId(gemmedId, false, logReason, true); }	
-        public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent)
+		public static Item LoadFromId(string gemmedId, string logReason) { return LoadFromId(gemmedId, false, logReason, true); }
+		public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent) { return LoadFromId(gemmedId, forceRefresh, logReason, raiseEvent, false); }
+		public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent, bool useWowhead)
 		{
 			if (string.IsNullOrEmpty(gemmedId))
 				return null;
@@ -1005,7 +1006,7 @@ namespace Rawr
                 {
                     ItemCache.DeleteItem(cachedItem, raiseEvent);
                 }
-				Item newItem = Armory.GetItem(gemmedId, logReason);
+				Item newItem = useWowhead ? Wowhead.GetItem(gemmedId, false) : Armory.GetItem(gemmedId, logReason);
 				if (newItem == null && cachedItem != null)
 				{
 					ItemCache.AddItem(cachedItem, true, raiseEvent);
