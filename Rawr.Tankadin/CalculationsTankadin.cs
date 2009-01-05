@@ -345,7 +345,7 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .03f) * (1f + talents.CombatExpertise * .02f))
                 + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .03f) * (1f + talents.CombatExpertise * .02f));
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
-            stats.Armor = (float)Math.Round((stats.Armor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
+            stats.Armor = (float)Math.Round((stats.Armor + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 
@@ -383,6 +383,7 @@ you are being killed by burst damage, focus on Survival Points.",
             return new Stats()
             {
                 Armor = stats.Armor,
+				BonusArmor = stats.BonusArmor,
                 Stamina = stats.Stamina,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
@@ -417,7 +418,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Agility + stats.Armor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier + stats.BonusAttackPowerMultiplier +
+            return (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier + stats.BonusAttackPowerMultiplier +
                 stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHolyDamageMultiplier +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue +
                 stats.SpellHitRating + stats.SpellPower + stats.HitRating + stats.ExpertiseRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +

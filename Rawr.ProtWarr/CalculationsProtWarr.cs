@@ -692,7 +692,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.AttackPower += statsTotal.Strength * 2;
             statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.Armor += 2 * statsTotal.Agility;
+            statsTotal.Armor += 2 * statsTotal.Agility + statsTotal.BonusArmor;
             statsTotal.Armor *= 1 + statsTotal.BonusArmorMultiplier;
             statsTotal.BlockValue *= 1 + statsTotal.BonusBlockValueMultiplier;
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
@@ -969,6 +969,7 @@ threat and limited threat scaled by the threat scale.",
 			return new Stats()
 			{
 				Armor = stats.Armor,
+				BonusArmor = stats.BonusArmor,
                 AverageArmor = stats.AverageArmor,
 				Stamina = stats.Stamina,
 				Agility = stats.Agility,
@@ -1027,7 +1028,7 @@ threat and limited threat scaled by the threat scale.",
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.Armor + stats.AverageArmor +
+			return (stats.Agility + stats.Armor + stats.AverageArmor + stats.BonusArmor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
