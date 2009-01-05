@@ -85,6 +85,22 @@ namespace Rawr
 			overallToolStripMenuItem.Tag = -1;
 			alphabeticalToolStripMenuItem.Tag = -2;
 
+			Calculations_ModelChanged(null, null);
+
+			this.Activated += new EventHandler(FormItemSelection_Activated);
+            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+		}
+
+		void Calculations_ModelChanged(object sender, EventArgs e)
+		{
+			_characterSlot = Character.CharacterSlot.None;
+
+			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
+			toolStripDropDownButtonSort.DropDownItems.Clear();
+			toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
+			toolStripDropDownButtonSort.DropDownItems.Add(alphabeticalToolStripMenuItem);
+
 			foreach (string name in Calculations.SubPointNameColors.Keys)
 			{
 				ToolStripMenuItem toolStripMenuItemSubPoint = new ToolStripMenuItem(name);
@@ -92,10 +108,6 @@ namespace Rawr
 				toolStripMenuItemSubPoint.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
 				toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
 			}
-
-			this.Activated += new EventHandler(FormItemSelection_Activated);
-            
-            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)

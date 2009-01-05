@@ -496,6 +496,7 @@ Here's a quick rundown of the status of each model:
 			Character.CurrentModel = null;
 
 			UpdateCustomChartMenuItems();
+
 			toolStripDropDownButtonSort.DropDownItems.Clear();
 			toolStripDropDownButtonSort.DropDownItems.Add(overallToolStripMenuItem);
 			toolStripDropDownButtonSort.DropDownItems.Add(alphabeticalToolStripMenuItem);
@@ -507,47 +508,12 @@ Here's a quick rundown of the status of each model:
 				toolStripDropDownButtonSort.DropDownItems.Add(toolStripMenuItemSubPoint);
 			}
 
-			//comboBoxEnchantBack.Items.Clear();
-			//comboBoxEnchantChest.Items.Clear();
-			//comboBoxEnchantFeet.Items.Clear();
-			//comboBoxEnchantFinger1.Items.Clear();
-			//comboBoxEnchantFinger2.Items.Clear();
-			//comboBoxEnchantHands.Items.Clear();
-			//comboBoxEnchantHead.Items.Clear();
-			//comboBoxEnchantLegs.Items.Clear();
-			//comboBoxEnchantShoulders.Items.Clear();
-			//comboBoxEnchantMainHand.Items.Clear();
-			//comboBoxEnchantOffHand.Items.Clear();
-			//comboBoxEnchantRanged.Items.Clear();
-			//comboBoxEnchantWrists.Items.Clear();
-			//comboBoxEnchantBack.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Back).ToArray());
-			//comboBoxEnchantChest.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Chest).ToArray());
-			//comboBoxEnchantFeet.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Feet).ToArray());
-			//comboBoxEnchantFinger1.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-			//comboBoxEnchantFinger2.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Finger).ToArray());
-			//comboBoxEnchantHands.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Hands).ToArray());
-			//comboBoxEnchantHead.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Head).ToArray());
-			//comboBoxEnchantLegs.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Legs).ToArray());
-			//comboBoxEnchantShoulders.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Shoulders).ToArray());
-			//comboBoxEnchantMainHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.MainHand).ToArray());
-			//comboBoxEnchantOffHand.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.OffHand).ToArray());
-			//comboBoxEnchantRanged.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Ranged).ToArray());
-			//comboBoxEnchantWrists.Items.AddRange(Enchant.FindEnchants(Item.ItemSlot.Wrist).ToArray());
-
 			Calculations.CalculationOptionsPanel.Dock = DockStyle.Fill;
 			tabPageOptions.Controls.Clear();
 			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
-            if (Calculations.CanUseAmmo)
-            {
-                itemButtonProjectile.Visible = true;
-                itemButtonProjectileBag.Visible = true;
-            }
-            else
-            {
-                itemButtonProjectile.Visible = false;
-                itemButtonProjectileBag.Visible = false;
-            }
-			Character = Character;
+            
+			itemButtonProjectile.Visible = itemButtonProjectileBag.Visible = Calculations.CanUseAmmo;
+            Character = Character; //Reload the character
 
             ItemRefinement.resetLists();
 			ItemCache.OnItemsChanged();
