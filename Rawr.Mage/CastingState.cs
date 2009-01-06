@@ -526,6 +526,12 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissiles1:
                     s = new ArcaneMissiles(this, false, 1);
                     break;
+                case SpellId.ArcaneMissiles2:
+                    s = new ArcaneMissiles(this, false, 2);
+                    break;
+                case SpellId.ArcaneMissiles3:
+                    s = new ArcaneMissiles(this, false, 3);
+                    break;
                 case SpellId.ArcaneMissilesMB:
                     s = new ArcaneMissiles(this, true, 0);
                     break;
