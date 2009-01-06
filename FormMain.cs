@@ -658,7 +658,48 @@ Here's a quick rundown of the status of each model:
         {
             Character = character;
             _unsavedChanges = unsavedChanges;
+            initializeAvailableItemList(Character);
             SetTitle();
+        }
+
+        /// <summary>
+        /// 09.01.01 - TankConcrete
+        /// Sets up the initial list of gear that the toon has available. Method looks the
+        /// gear that is currently equipped and adds it to the "AvailableItems" list if it
+        /// is not already there.
+        /// 
+        /// If a new item is added to the "AvailableItems" list, the "unsaved" changes flag
+        /// will be updated so the user knows to save.
+        /// </summary>
+        /// <param name="currentChar"></param>
+        private void initializeAvailableItemList(Character currentChar)
+        {
+            // Get the current list of items that we know about.
+            string[] equippedItems = currentChar.GetAllEquipedAndAvailableGearIds();
+            string itemId = string.Empty;
+
+            // Loop through the list of known and equipped items
+            foreach (string item in equippedItems)
+            {
+                itemId = item;
+                // Check to see if this is a compound item id.
+                if (item.IndexOf('.') > 0)
+                {
+                    // We're only concerned with the base item ID, so take out the .*.*.*
+                    itemId = item.Substring(0, item.IndexOf('.'));
+                }
+
+                // Check the list of available items to see if this item is in the list
+                if (!currentChar.AvailableItems.Contains(itemId))
+                {
+                    // Add this item to our list
+                    currentChar.AvailableItems.Add(itemId);
+
+                    // We have unsaved changes - let the user know.
+                    this._unsavedChanges = true;
+                }
+            }
+           
         }
 
         public void LoadBatchCharacter(BatchCharacter character)
@@ -999,6 +1040,7 @@ Here's a quick rundown of the status of each model:
 					{
 						case "Gear":
 						case "Gems":
+                            //Character._availableItems.Add(
 							itemComparison1.LoadGearBySlot((Character.CharacterSlot)Enum.Parse(typeof(Character.CharacterSlot), tag[1]));
 							break;
 
