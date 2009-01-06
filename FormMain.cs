@@ -15,14 +15,21 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 12;
+		private const int INTRO_VERSION = 13;
 		private const string INTRO_TEXT =
-@" Welcome to Rawr 2.1.5. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+@" Welcome to Rawr 2.1.6. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
 Recent Changes:
+v2.1.6:
+	Fixes for several Armory/Wowhead parsing errors.
+	Fixes for stats on a couple buffs.
+	Fix for a crash when choosing No Enchant from the enchant dropdowns.
+	Rawr.Hunter/Bear/Cat: Adjusted miss chance to 8%.
+	Rawr.TankDK: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.TankDK in conjunction with other theorycrafting tools.
+
 v2.1.5: 
 	Items now show their item level in their tooltips. 
 	Armor and Bonus Armor are now handled separately. 
@@ -48,21 +55,22 @@ Here's a quick rundown of the status of each model:
    •Rawr.Bear: Fully functional for level 80.
    •Rawr.Cat: Fully functional for level 80.
    •Rawr.DPSDK: Fully functional for level 80, but still has a few problems since it's brand new.
-   •Rawr.DPSWarr: Not updated for 3.0.
+   •Rawr.DPSWarr: Not functional for 3.0.
    •Rawr.Enhance: Fully functional for level 80, but still has a few problems since it's brand new.
    •Rawr.Healadin: Fully functional for level 80.
    •Rawr.HolyPriest: Fully functional for level 80.
    •Rawr.Hunter: Fully functional for level 80, but still has a few problems since it's brand new.
    •Rawr.Mage: Fully functional for level 80.
    •Rawr.Moonkin: Fully functional for level 80.
-   •Rawr.ProtWarr: Partially updated for 3.0 & level 80.
-   •Rawr.RestoSham: Partially updated for 3.0.
+   •Rawr.ProtWarr: Partially functional for 3.0 & level 80.
+   •Rawr.RestoSham: Partially functional for 3.0.
    •Rawr.Retribution: Fully functional for level 80.
-   •Rawr.Rogue: Not updated for 3.0.
+   •Rawr.Rogue: Not functional for 3.0.
    •Rawr.ShadowPriest: Fully functional for level 80.
    •Rawr.Tankadin: Fully functional for level 80.
-   •Rawr.Tree: Partiall functional for level 80.
-   •Rawr.Warlock: Not updated for 3.0.
+   •Rawr.TankDK: Partially functional for 3.0.
+   •Rawr.Tree: Partially functional for level 80.
+   •Rawr.Warlock: Not functional for 3.0.
     
     
  As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!";
