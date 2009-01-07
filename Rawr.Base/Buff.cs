@@ -1177,7 +1177,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { BonusArmor = 800 },
 				ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
-				Improvements = { new Buff { Name = "Elixir of Protection (Mixology)", Stats = { Armor = 266 } } }
+				Improvements = { new Buff { Name = "Elixir of Protection (Mixology)", Stats = { BonusArmor = 224 } } }
             });
             defaultBuffs.Add(new Buff()
             {
