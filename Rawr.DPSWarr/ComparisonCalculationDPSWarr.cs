@@ -32,7 +32,7 @@ namespace Rawr.DPSWarr
             }
         }
 
-        private float[] subPoints = new float[] { 0f, 0f };
+        private float[] subPoints = new float[] { 0f };
 
         public override float[] SubPoints
         {
@@ -62,11 +62,11 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                return subPoints[1];
+                return subPoints[0];
             }
             set
             {
-                subPoints[1] = value;
+                subPoints[0] = value;
             }
         }
 
