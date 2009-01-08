@@ -86,7 +86,7 @@ namespace Rawr.DPSWarr
 		public int TargetArmor = 13000;
 		public int FightLength = 240;
         public int SimMode = 0;
-        public int HeroicStrikeRage = 60;
+        public int HeroicStrikeRage = 35;
 
 	}
 }

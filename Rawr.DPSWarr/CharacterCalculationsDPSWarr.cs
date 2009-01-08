@@ -32,6 +32,13 @@ namespace Rawr.DPSWarr
             get { return _btDPSPoints; }
             set { _btDPSPoints = value; }
         }
+        private float _hsDPSPoints;
+        public float HSDPSPoints
+        {
+            get { return _hsDPSPoints; }
+            set { _hsDPSPoints = value; }
+        }
+
         private float _deepWoundsDPSPoints;
         public float DeepWoundsDPSPoints
         {
@@ -150,6 +157,12 @@ namespace Rawr.DPSWarr
             get { return _hastedMainSpeed; }
             set { _hastedMainSpeed = value; }
         }
+        private float _flurryUptime;
+        public float FlurryUptime
+        {
+            get { return _flurryUptime; }
+            set { _flurryUptime = value; }
+        }
 
         public Character character { get; set; }
 
@@ -173,13 +186,15 @@ namespace Rawr.DPSWarr
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("N2") + "%");
             dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString() + "/" +
                 (BasicStats.ArmorPenetrationRating / CalculationsDPSWarr.fArmorPen).ToString("N2") + "%");
-            dictValues.Add("Hasted Speed", HastedMainSpeed.ToString("N2") + "/" + HastedOffSpeed.ToString("N2"));
-            dictValues.Add("Weapon Damage", BasicStats.WeaponDamage.ToString("N2"));
+
+            dictValues.Add("Flurry Uptime", FlurryUptime.ToString("N2") + "%");
 
             dictValues.Add("Bloodthirst DPS", BTDPSPoints.ToString("N2") + " / " + (BTDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Heroic Strike DPS", HSDPSPoints.ToString("N2") + " / " + (HSDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Whirlwind DPS", WWDPSPoints.ToString("N2") + " / " + (WWDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("White DPS", WhiteDPSPoints.ToString("N2") + " / " + (WhiteDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Deep Wounds DPS", DeepWoundsDPSPoints.ToString("N2")  + " / " + (DeepWoundsDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Slam DPS", SlamDPSPoints.ToString("N2") + " / " + (SlamDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
 
