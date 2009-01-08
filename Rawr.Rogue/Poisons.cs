@@ -37,7 +37,7 @@ namespace Rawr.Rogue
     {
 		public abstract string Name { get; }
 		public abstract bool IsDeadlyPoison { get; }
-		public abstract float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits);
+		public abstract float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits);
     }
 
 	[Serializable]
@@ -47,7 +47,7 @@ namespace Rawr.Rogue
 
 		public override bool IsDeadlyPoison { get { return false; } }
 
-		public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
             return 0f;
         }
@@ -63,9 +63,9 @@ namespace Rawr.Rogue
 
 		public override bool IsDeadlyPoison { get { return true; } }
 
-		public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return _stackSize * (296f + .08f * stats.AttackPower) * VilePoison.DamageMultiplier(talents) / _duration;
+            return _stackSize * (296f + .08f * stats.AttackPower) * Talents.VilePoison.Multiplier / _duration;
         }
     }
 
@@ -76,9 +76,9 @@ namespace Rawr.Rogue
 
 		public override bool IsDeadlyPoison { get { return false; } }
 
-		public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*VilePoison.DamageMultiplier(talents)*(.2f + ImprovedPoisons.IncreasedApplicationChance(talents));
+            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*Talents.VilePoison.Multiplier*(Talents.ImprovedPoisons.Multiplier);
         }
     }
 
@@ -89,28 +89,9 @@ namespace Rawr.Rogue
 
         public override bool IsDeadlyPoison { get { return false; } }
 
-        public override float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
+        public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits * combatFactors.ProbPoisonHit * (231f + 0.04f * stats.AttackPower) * 0.5f * VilePoison.DamageMultiplier(talents);
-        }
-    }
-
-	[Serializable]
-	public static class VilePoison
-    {
-        private static readonly float[] _multipliers = new[] { 1f, 1.07f, 1.14f, 1.2f };
-        public static float DamageMultiplier(RogueTalents talents)
-        {
-            return _multipliers[talents.VilePoisons];
-        }
-    }
-
-	[Serializable]
-	public static class ImprovedPoisons
-    {
-        public static float IncreasedApplicationChance(RogueTalents talents)
-        {
-            return talents.ImprovedPoisons*.02f;
+            return hits * combatFactors.ProbPoisonHit * (231f + 0.04f * stats.AttackPower) * 0.5f * Talents.VilePoison.Multiplier;
         }
     }
 }

@@ -25,9 +25,9 @@ namespace Rawr.Rogue.ComboPointGenerators
 
         public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)
         {
-            var baseDamage = BaseAttackDamage(stats, combatFactors);
+            var baseDamage = BaseAttackDamage(combatFactors);
             baseDamage *= TalentBonusDamage();
-            baseDamage *= (1f + .35f * 0.1f * _talents.DirtyDeeds);
+            baseDamage *= Talents.DirtyDeeds.Multiplier;
             baseDamage *= combatFactors.DamageReduction;
 
             var critDamage = baseDamage*CriticalDamageMultiplier(combatFactors)*Crit(combatFactors);
@@ -36,28 +36,26 @@ namespace Rawr.Rogue.ComboPointGenerators
             return (critDamage + nonCritDamage)* numCPG / cycleTime;
         }
 
-        private float BaseAttackDamage(Stats stats, CombatFactors combatFactors)
+        private static float BaseAttackDamage(CombatFactors combatFactors)
         {
             var attackDamage = combatFactors.MhNormalizedDamage;
             attackDamage += 465;
-            attackDamage *= (1.5f + 0.01f * _talents.SinisterCalling);
+            attackDamage *= (1.5f + Talents.SinisterCalling.Bonus);
             return attackDamage;
         }
 
-        private float CriticalDamageMultiplier(CombatFactors combatFactors)
+        private static float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
-            return (combatFactors.BaseCritMultiplier + .06f * _talents.Lethality);
+            return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
         }
 
-        private float TalentBonusDamage()
+        private static float TalentBonusDamage()
         {
-            var talentBonuses = 1f;
-            talentBonuses += 0.02f*_talents.FindWeakness;
-            talentBonuses += 0.03f*_talents.Aggression;
-            talentBonuses += 0.05f*_talents.BladeTwisting;
-            talentBonuses += 0.1f*_talents.SurpriseAttacks;
-            talentBonuses += 0.1f*_talents.Opportunity;
-            return talentBonuses;
+            return Talents.Add(Talents.FindWeakness,
+                                    Talents.Aggression,
+                                    Talents.BladeTwisting,
+                                    Talents.SurpriseAttacks,
+                                    Talents.Opportunity);
         }
     }
 }

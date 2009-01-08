@@ -24,7 +24,7 @@ namespace Rawr.Rogue.ComboPointGenerators
             var baseDamage = BaseAttackDamage(combatFactors);
             baseDamage *= TalentBonusDamage();
             baseDamage *= BonusIfTargetIsPoisoned(calcOpts);
-            baseDamage *= (1f + .35f * 0.1f * _talents.DirtyDeeds);
+            baseDamage *= Talents.DirtyDeeds.Multiplier;
             baseDamage *= combatFactors.DamageReduction;
 
             var critDamage = baseDamage * CriticalDamageMultiplier(combatFactors) * Crit(combatFactors);
@@ -42,12 +42,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return damage;
         }
 
-        private float TalentBonusDamage()
+        private static float TalentBonusDamage()
         {
-            var talentBonuses = 1f;
-            talentBonuses += 0.02f * _talents.FindWeakness;
-            talentBonuses += 0.1f * _talents.Opportunity;
-            return talentBonuses;
+            return Talents.Add(Talents.FindWeakness, Talents.Opportunity);
         }
 
         private static float BonusIfTargetIsPoisoned(CalculationOptionsRogue calcOpts)
@@ -63,9 +60,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return 1f;
         }
 
-        private float CriticalDamageMultiplier(CombatFactors combatFactors)
+        private static float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
-            return (combatFactors.BaseCritMultiplier + .06f * _talents.Lethality);
+            return combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus;
         }
     }
 }

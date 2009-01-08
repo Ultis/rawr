@@ -78,6 +78,7 @@ namespace Rawr.Rogue
         /// 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
+            Talents.Initialize(character.RogueTalents);
             var stats = GetCharacterStats(character, additionalItem);
             var calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             var combatFactors = new CombatFactors(character, stats);
@@ -103,8 +104,8 @@ namespace Rawr.Rogue
                 totalFinisherDPS += finisherDps;
             }
 
-            var swordSpecDPS = new SwordSpec().CalcDPS(talents, combatFactors, whiteAttacks, numCPG, cycleTime);
-            var poisonDPS = CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks);
+            var swordSpecDPS = new SwordSpec().CalcDPS(combatFactors, whiteAttacks, numCPG, cycleTime);
+            var poisonDPS = CalcPoisonDPS(stats, calcOpts, combatFactors, whiteAttacks);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.MhWeaponDamage, combatFactors.MhAvgDamage);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.OhWeaponDamage, combatFactors.OhAvgDamage);
@@ -170,15 +171,15 @@ namespace Rawr.Rogue
             return energyCost / energyRegen;
         }
 
-        private static float CalcPoisonDPS(RogueTalents talents, Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
+        private static float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, WhiteAttacks whiteAttacks)
         {
             if (calcOpts.TempMainHandEnchant.IsDeadlyPoison && calcOpts.TempOffHandEnchant.IsDeadlyPoison)
             {
-                return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, 0f);
+                return calcOpts.TempMainHandEnchant.CalcPoisonDPS(stats, calcOpts, combatFactors, 0f);
             }
 
-            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.MhHits)
-                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(talents, stats, calcOpts, combatFactors, whiteAttacks.OhHits);
+            return calcOpts.TempMainHandEnchant.CalcPoisonDPS(stats, calcOpts, combatFactors, whiteAttacks.MhHits)
+                    + calcOpts.TempOffHandEnchant.CalcPoisonDPS(stats, calcOpts, combatFactors, whiteAttacks.OhHits);
         }
 
         public Stats GetBuffsStats(Character character)
