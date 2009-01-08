@@ -65,7 +65,7 @@ namespace Rawr.DPSWarr
             a_calcs.ArmorMitigation = (1.0f - fMitigation) * 100.0f;
 
             fDamageModifier = 1.0f + (0.02f * talents.TwoHandedWeaponSpecialization) + stats.BonusPhysicalDamageMultiplier;
-            float fHaste = stats.HasteRating;
+            float fHaste = stats.HasteRating + 16.0f * CalculationsDPSWarr.fHastePerPercent; // added windfury totem
 
             float fMHWeaponSwingSpeed = 2.0f, fOHWeaponSwingSpeed = 2.0f;
             if (character.MainHand != null)
@@ -413,7 +413,7 @@ namespace Rawr.DPSWarr
                 nCurrentRage = 0;
             nCurrentRage += (int)((a_fDamage / 320.62f * 7.5f + a_fWeaponSpeed * a_fWeaponFactor) / 2f);
             if (nCurrentRage > 100)
-                nCurrentRage = 0;
+                nCurrentRage = 100;
         }
 
         public void PossibleBloodSurgeProc()
@@ -636,21 +636,27 @@ namespace Rawr.DPSWarr
 
         public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
         {
-            WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
-            if (talents.TitansGrip > 0 && 
-                (item.Type == Item.ItemType.TwoHandAxe || item.Type == Item.ItemType.TwoHandSword || item.Type == Item.ItemType.TwoHandMace) &&
-                slot == Character.CharacterSlot.OffHand )
+            if (character.CurrentTalents is WarriorTalents)
             {
-                return true;
+                WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
+                if (talents.TitansGrip > 0 &&
+                    (item.Type == Item.ItemType.TwoHandAxe || item.Type == Item.ItemType.TwoHandSword || item.Type == Item.ItemType.TwoHandMace) &&
+                    slot == Character.CharacterSlot.OffHand)
+                {
+                    return true;
+                }
             }
             return item.FitsInSlot(slot);
         }
 
         public override bool IncludeOffHandInCalculations(Character character)
         {
-            WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
-            if (talents.TitansGrip > 0 )
-                return true;
+            if (character.CurrentTalents is WarriorTalents )
+            {
+                WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
+                if (talents.TitansGrip > 0)
+                    return true;
+            }
             return false;
         }
 
@@ -937,7 +943,7 @@ namespace Rawr.DPSWarr
             statsTotal.CritRating = statsRace.PhysicalCrit + statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += ((statsTotal.Agility / fAgiPerCritPercent) * fCritRatingPerPercent);
             statsTotal.CritRating += statsBuffs.LotPCritRating;
-            statsTotal.CritRating += fCritRatingPerPercent * 8.0f;
+            statsTotal.CritRating += fCritRatingPerPercent * 3.2f; // added 3.2%, +5% lotp, +3% retpally, -4.8% boss crit chance reduction.
             
             /*Check if axe, if so assume poleaxe spec
               -This allows easier comparison between weapon specs
