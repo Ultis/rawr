@@ -418,7 +418,7 @@ namespace Rawr.DPSWarr
 
         public void PossibleBloodSurgeProc()
         {
-            if (rnd.NextDouble() < 0.1)
+            if (rnd.NextDouble() < 0.2)
                 bBloodSurgeProcced = true;
         }
 
