@@ -37,6 +37,11 @@
             this.TargetArmorEdit = new System.Windows.Forms.TextBox();
             this.TargetArmor = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.GlyphOfWhirlwind = new System.Windows.Forms.CheckBox();
+            this.GlyphOfHeroicStrike = new System.Windows.Forms.CheckBox();
+            this.GlyphOfMortalStrike = new System.Windows.Forms.CheckBox();
+            this.GlyphOfExecute = new System.Windows.Forms.CheckBox();
+            this.HideLowQualityItems = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SimModeCombo
@@ -45,8 +50,7 @@
             this.SimModeCombo.FormattingEnabled = true;
             this.SimModeCombo.Items.AddRange(new object[] {
             "Fury - DW>WW>BT>Slam>HS",
-            "Fury - DW>Slam>WW>BT>HS",
-            "Arms - BS>MS>Ex>OP>Slam"});
+            "Arms - Rend>BS>Ex>MS>OP>Slam"});
             this.SimModeCombo.Location = new System.Drawing.Point(127, 17);
             this.SimModeCombo.Name = "SimModeCombo";
             this.SimModeCombo.Size = new System.Drawing.Size(147, 21);
@@ -123,10 +127,70 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "s";
             // 
+            // GlyphOfWhirlwind
+            // 
+            this.GlyphOfWhirlwind.AutoSize = true;
+            this.GlyphOfWhirlwind.Location = new System.Drawing.Point(16, 174);
+            this.GlyphOfWhirlwind.Name = "GlyphOfWhirlwind";
+            this.GlyphOfWhirlwind.Size = new System.Drawing.Size(116, 17);
+            this.GlyphOfWhirlwind.TabIndex = 9;
+            this.GlyphOfWhirlwind.Text = "Glyph Of Whirlwind";
+            this.GlyphOfWhirlwind.UseVisualStyleBackColor = true;
+            this.GlyphOfWhirlwind.CheckedChanged += new System.EventHandler(this.GlyphOfWhirlwind_CheckedChanged);
+            // 
+            // GlyphOfHeroicStrike
+            // 
+            this.GlyphOfHeroicStrike.AutoSize = true;
+            this.GlyphOfHeroicStrike.Location = new System.Drawing.Point(16, 207);
+            this.GlyphOfHeroicStrike.Name = "GlyphOfHeroicStrike";
+            this.GlyphOfHeroicStrike.Size = new System.Drawing.Size(131, 17);
+            this.GlyphOfHeroicStrike.TabIndex = 10;
+            this.GlyphOfHeroicStrike.Text = "Glyph Of Heroic Strike";
+            this.GlyphOfHeroicStrike.UseVisualStyleBackColor = true;
+            this.GlyphOfHeroicStrike.CheckedChanged += new System.EventHandler(this.GlyphOfHeroicStrike_CheckedChanged);
+            // 
+            // GlyphOfMortalStrike
+            // 
+            this.GlyphOfMortalStrike.AutoSize = true;
+            this.GlyphOfMortalStrike.Location = new System.Drawing.Point(16, 239);
+            this.GlyphOfMortalStrike.Name = "GlyphOfMortalStrike";
+            this.GlyphOfMortalStrike.Size = new System.Drawing.Size(129, 17);
+            this.GlyphOfMortalStrike.TabIndex = 11;
+            this.GlyphOfMortalStrike.Text = "Glyph Of Mortal Strike";
+            this.GlyphOfMortalStrike.UseVisualStyleBackColor = true;
+            this.GlyphOfMortalStrike.CheckedChanged += new System.EventHandler(this.GlyphOfMortalStrike_CheckedChanged);
+            // 
+            // GlyphOfExecute
+            // 
+            this.GlyphOfExecute.AutoSize = true;
+            this.GlyphOfExecute.Location = new System.Drawing.Point(16, 271);
+            this.GlyphOfExecute.Name = "GlyphOfExecute";
+            this.GlyphOfExecute.Size = new System.Drawing.Size(109, 17);
+            this.GlyphOfExecute.TabIndex = 12;
+            this.GlyphOfExecute.Text = "Glyph Of Execute";
+            this.GlyphOfExecute.UseVisualStyleBackColor = true;
+            this.GlyphOfExecute.CheckedChanged += new System.EventHandler(this.GlyphOfExecute_CheckedChanged);
+            // 
+            // HideLowQualityItems
+            // 
+            this.HideLowQualityItems.AutoSize = true;
+            this.HideLowQualityItems.Location = new System.Drawing.Point(16, 315);
+            this.HideLowQualityItems.Name = "HideLowQualityItems";
+            this.HideLowQualityItems.Size = new System.Drawing.Size(127, 17);
+            this.HideLowQualityItems.TabIndex = 13;
+            this.HideLowQualityItems.Text = "Hide low quality items";
+            this.HideLowQualityItems.UseVisualStyleBackColor = true;
+            this.HideLowQualityItems.CheckedChanged += new System.EventHandler(this.HideLowQualityItems_CheckedChanged);
+            // 
             // CalculationOptionsPanelDPSWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.HideLowQualityItems);
+            this.Controls.Add(this.GlyphOfExecute);
+            this.Controls.Add(this.GlyphOfMortalStrike);
+            this.Controls.Add(this.GlyphOfHeroicStrike);
+            this.Controls.Add(this.GlyphOfWhirlwind);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.TargetArmorEdit);
             this.Controls.Add(this.TargetArmor);
@@ -154,6 +218,11 @@
         private System.Windows.Forms.TextBox TargetArmorEdit;
         private System.Windows.Forms.Label TargetArmor;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox GlyphOfWhirlwind;
+        private System.Windows.Forms.CheckBox GlyphOfHeroicStrike;
+        private System.Windows.Forms.CheckBox GlyphOfMortalStrike;
+        private System.Windows.Forms.CheckBox GlyphOfExecute;
+        private System.Windows.Forms.CheckBox HideLowQualityItems;
 
     }
 }

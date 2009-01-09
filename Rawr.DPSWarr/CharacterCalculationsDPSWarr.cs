@@ -177,12 +177,11 @@ namespace Rawr.DPSWarr
             dictValues.Add("Strength", BasicStats.Strength.ToString("N2"));
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("N2"));
 
-            dictValues.Add("Hit", BasicStats.HitRating.ToString() + " (" + (BasicStats.HitRating / CalculationsDPSWarr.fHitRatingPerPercent).ToString("N2") + "%/8%)");
-            dictValues.Add("Crit", BasicStats.CritRating.ToString() + " (" + (BasicStats.CritRating / CalculationsDPSWarr.fCritRatingPerPercent).ToString("N2") + "% )");
-            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("N2") + " (" + 
-                (BasicStats.ExpertiseRating / CalculationsDPSWarr.fExpertiseRatingPerPercent / 4.0f).ToString("N2") + "%/6.5%)");
-            
-            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("N2"));
+            dictValues.Add("Hit", (BasicStats.HitRating / CalculationsDPSWarr.fHitRatingPerPercent).ToString("N2") + "%/8%");
+            dictValues.Add("Crit", (BasicStats.CritRating / CalculationsDPSWarr.fCritRatingPerPercent).ToString("N2") + "%");
+            dictValues.Add("Expertise", (BasicStats.ExpertiseRating / CalculationsDPSWarr.fExpertiseRatingPerPercent / 4.0f).ToString("N2") + "%/6.5%");
+
+            dictValues.Add("Haste", (BasicStats.HasteRating / CalculationsDPSWarr.fHastePerPercent).ToString("N2") + "%" );
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("N2") + "%");
             dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString() + "/" +
                 (BasicStats.ArmorPenetrationRating / CalculationsDPSWarr.fArmorPen).ToString("N2") + "%");
@@ -199,10 +198,10 @@ namespace Rawr.DPSWarr
 
 
             float nTotalHits = WhiteHits + WhiteCrit + DodgedAttacks + MissedAttacks;
-            dictValues.Add("White Hits", WhiteHits.ToString("N2") + " / " + ((float)WhiteHits / nTotalHits * 100.0f).ToString("N2") + "%" );
-            dictValues.Add("White Crits", WhiteCrit.ToString("N2") + " / " + ((float)WhiteCrit / nTotalHits * 100.0f).ToString("N2") + "%");
-            dictValues.Add("White Dodges", DodgedAttacks.ToString("N2") + " / " + ((float)DodgedAttacks / nTotalHits * 100.0f).ToString("N2") + "%");
-            dictValues.Add("White Misses", MissedAttacks.ToString("N2") + " / " + ((float)MissedAttacks / nTotalHits * 100.0f).ToString("N2") + "%");
+            dictValues.Add("White Hits", ((float)WhiteHits / nTotalHits * 100.0f).ToString("N2") + "%" );
+            dictValues.Add("White Crits", ((float)WhiteCrit / nTotalHits * 100.0f).ToString("N2") + "%");
+            dictValues.Add("White Dodges", ((float)DodgedAttacks / nTotalHits * 100.0f).ToString("N2") + "%");
+            dictValues.Add("White Misses", ((float)MissedAttacks / nTotalHits * 100.0f).ToString("N2") + "%");
 
             return dictValues;
            

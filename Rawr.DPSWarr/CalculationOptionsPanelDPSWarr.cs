@@ -24,6 +24,11 @@ namespace Rawr.DPSWarr
             FightLengthEdit.Text = calcOpts.FightLength.ToString();
             HeroicStrikeRageEdit.Text = calcOpts.HeroicStrikeRage.ToString();
             SimModeCombo.SelectedIndex = calcOpts.SimMode;
+            GlyphOfWhirlwind.Checked = calcOpts.GlyphOfWhirlwind;
+            GlyphOfHeroicStrike.Checked = calcOpts.GlyphOfHeroicStrike;
+            GlyphOfMortalStrike.Checked = calcOpts.GlyphOfMortalStrike;
+            GlyphOfExecute.Checked = calcOpts.GlyphOfExecute;
+            HideLowQualityItems.Checked = calcOpts.HideLowQualityItems;
         }
 
         private void FightLengthEdit_TextChanged(object sender, EventArgs e)
@@ -62,6 +67,41 @@ namespace Rawr.DPSWarr
             calcOpts.SimMode = SimModeCombo.SelectedIndex;
             Character.OnCalculationsInvalidated();
         }
+
+        private void GlyphOfWhirlwind_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.GlyphOfWhirlwind = GlyphOfWhirlwind.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void GlyphOfHeroicStrike_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.GlyphOfHeroicStrike = GlyphOfHeroicStrike.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void GlyphOfMortalStrike_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.GlyphOfMortalStrike = GlyphOfMortalStrike.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void GlyphOfExecute_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.GlyphOfExecute = GlyphOfExecute.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void HideLowQualityItems_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.HideLowQualityItems = HideLowQualityItems.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 
@@ -83,10 +123,16 @@ namespace Rawr.DPSWarr
 		{
 		}
 
-		public int TargetArmor = 13000;
-		public int FightLength = 240;
+		public int TargetArmor = 13083;
+		public int FightLength = 300;
         public int SimMode = 0;
         public int HeroicStrikeRage = 35;
+
+        public bool GlyphOfHeroicStrike = true;
+        public bool GlyphOfWhirlwind = true;
+        public bool GlyphOfExecute = true;
+        public bool GlyphOfMortalStrike = true;
+        public bool HideLowQualityItems = true;
 
 	}
 }
