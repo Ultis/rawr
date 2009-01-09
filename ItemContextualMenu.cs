@@ -106,7 +106,16 @@ namespace Rawr
 
         public void Show(Item item, Character.CharacterSlot equipSlot, bool allowDelete)
         {
-            Show(item, equipSlot, null, allowDelete);
+            // TankConcrete 09.01.09 - Added a check to make sure the item being displayed
+            // is really an item we can show a context menu for. Enchants, etc., won't work
+            // properly so there's no reason to display the "Open in Wowhead" menu.
+            // Items with ID > 0 are regular items. Below 0 are enchants and the like.
+            if (item.Id > 0)
+            {
+                Show(item, equipSlot, null, allowDelete);
+            }
+
+            return;
         }
 
 		public void Show(Item item, Character.CharacterSlot equipSlot, Character itemCharacter, bool allowDelete)
