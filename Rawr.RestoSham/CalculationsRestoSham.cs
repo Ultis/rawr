@@ -43,17 +43,20 @@ namespace Rawr.RestoSham
                           "Basic Stats:Stamina",
                           "Basic Stats:Intellect",
                           "Basic Stats:Spirit",
-                          "Basic Stats:Healing",
+                          "Basic Stats:Spell Power",
                           "Basic Stats:MP5 (in FSR)*Mana regeneration while casting (inside the 5-second rule)",
                           "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
                           "Basic Stats:Heal Spell Crit",
                           "Basic Stats:Spell Haste",
-                          "Fight Details:Total Mana Pool",
-                          "Fight Details:Average Heal",
-                          "Fight Details:Average Cast Time",
-                          "Fight Details:Average Mana Cost",
-                          "Fight Details:Total Healed",
-                          "Fight Details:Fight HPS" };
+                          "Fight Details:Fight HPS" ,
+                          "Fight Details:ES + LHW HPS",
+                          "Fight Details:ES + LHW OOM*Seconds into the fight you are expected to go Out of Mana",
+                          "Fight Details:ES + HW HPS",
+                          "Fight Details:ES + HW OOM*Seconds into the fight you are expected to go Out of Mana",
+                          "Fight Details:ES + CH HPS",
+                          "Fight Details:ES + CH OOM*Seconds into the fight you are expected to go Out of Mana",
+                          "Fight Details:ES + RT + CHx2 HPS",
+                          "Fight Details:ES + RT + CHx2 OOM*Seconds into the fight you are expected to go Out of Mana" };
                 }
                 return _characterDisplayCalcLabels;
             }
@@ -100,8 +103,8 @@ namespace Rawr.RestoSham
                 {
                     _relevantItemTypes = new List<Item.ItemType>(new Item.ItemType[] {
                          Item.ItemType.None,
-						 Item.ItemType.Cloth,
-						 Item.ItemType.Leather,
+
+
                          Item.ItemType.Mail,
                          Item.ItemType.Totem,
                          Item.ItemType.OneHandMace,
@@ -161,12 +164,9 @@ namespace Rawr.RestoSham
 
             // Total Mana Pool for the fight:
 
-            float ctimer = (options.LHWRatio * 1.5f * (1f - (stats.SpellHaste))) + (options.HWRatio * (3f - (.1f * character.ShamanTalents.ImprovedHealingWave) *
-                (1f - (stats.SpellHaste)))) + (options.CHRatio * 2.5f * (1f - (stats.SpellHaste)));
             float onUse = 0.0f;
-            if (options.ManaPotTime > 0)
-                onUse += (float)Math.Truncate(options.FightLength / options.ManaPotTime) *
-                          (options.ManaPotAmount * (1 + stats.BonusManaPotion));
+            if (options.ManaPotAmount > 0)
+                onUse += (float)Math.Truncate(options.FightLength) * (options.ManaPotAmount * (1 + stats.BonusManaPotion));
             if (options.ManaTideEveryCD)
                 onUse += (((float)Math.Truncate(options.FightLength / 5.025f) + 1) *
                     (stats.Mana * .24f)) * character.ShamanTalents.ManaTideTotem;
@@ -174,164 +174,79 @@ namespace Rawr.RestoSham
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
             mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
 
-            // MP5 From Improved Water Shield
-            if (options.LHWRatio > 0)
-                if (character.ShamanTalents.ImprovedWaterShield > 0)
-                    mp5 += ((calcStats.SpellCrit / 4) * ((options.LHWRatio) / 100) *
-                        (character.ShamanTalents.ImprovedWaterShield / 3 * .6f)) * 400f * 5f / (1.5f
-                        * (1f - (character.StatConversion.GetSpellHasteFromRating(stats.HasteRating))));
-            if (options.HWRatio > 0)
-                if (character.ShamanTalents.ImprovedWaterShield > 0)
-                    mp5 += ((calcStats.SpellCrit / 4) * ((options.HWRatio) / 100) *
-                        (character.ShamanTalents.ImprovedWaterShield / 3)) * 400f * 5f / ((3f - (.1f * character.ShamanTalents.ImprovedHealingWave))
-                        * (1f - (character.StatConversion.GetSpellHasteFromRating(stats.HasteRating))));
-
             calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) + 
-                (((15f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f)) *
-                (.01f * stats.FullManaRegenFor15SecOnSpellcast)) * ((60 * options.FightLength) / ctimer)) + 
                 ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * .85f);
 
-            // Get a list of the heals we're casting, and assign relative weights to them:
+            // This is my new calcs, still testing:
+            float CurrentMana = calcStats.TotalManaPool;
+            if (options.ESInterval < 32)
+                options.ESInterval = 32;
+            float Time = (options.FightLength * 60f);
+            float Critical = 1f + (calcStats.SpellCrit);
+            float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
+            float Healing = 1.88f * stats.SpellPower;
+            float ESC = (((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.1f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify;
+            float ESCMPS = ((Time / options.ESInterval) * 660f);
+            float Hasted = 1 - (stats.HasteRating / 3279);
+            float LHWC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWC = (3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float CHC = 2.5f;
+            float RTC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float LHWM = 550 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWM = 1099 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float CHM = 835;
+            float RTM = 792 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float EFL = Time - (1.5f * (Time / options.ESInterval));
+            float LHWHeal = ((1720f + (Healing * (LHWC / 3.5f))) * Purify) * Critical;
+            float HWHeal = ((3250f + (Healing * (HWC / 3.5f))) * Purify);
+            float CHHeal = ((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical;
+            float CHRTHeal = ((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical;
+            float RTHeal = ((1670f + (Healing * .5f)) * Purify) * Critical;
+            float RTHot = ((1670f + (Healing * .5f)) * Purify) / 15f;
+            float ESLHWMPSMT = (ESCMPS + ((EFL / (LHWC * Hasted)) * LHWM)) / Time;
+            float ESHWMPSMT = (ESCMPS + ((EFL / ((HWC) * Hasted)) * HWM)) / Time;
+            float ESCHMPSMT = (ESCMPS + ((EFL / (CHC * Hasted)) * CHM)) / Time;
+            float RTMPSMT = (ESCMPS + ((EFL / (RTC * Hasted)) * RTM)) / Time; ;
 
-            // Haste from IWS
-            if (character.ShamanTalents.ImprovedWaterShield > 0)
-                if (options.LHWRatio > 0)
-                    stats.HasteRating += ((calcStats.SpellCrit / 4) * ((options.LHWRatio) / 100) * 
-                        (character.ShamanTalents.ImprovedWaterShield / 9)) * -1 * 3279;
-            if (character.ShamanTalents.ImprovedWaterShield > 0)
-                if (options.HWRatio > 0)
-                    stats.HasteRating += ((calcStats.SpellCrit / 4) * ((options.HWRatio) / 100) * 
-                        (character.ShamanTalents.ImprovedWaterShield / 3)) * -1 * 3279;
+            // HPS Calcs
+            calcStats.ESLHWHPSMT = (ESC + ((LHWHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESLHWMPSMT) / Time), 1));
+            calcStats.ESHWHPSMT = (ESC + ((HWHeal * (EFL / ((HWC) * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESHWMPSMT) / Time), 1));
+            calcStats.ESCHHPSMT = (ESC + ((CHHeal * (EFL / (CHC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESCHMPSMT) / Time), 1));
+            calcStats.ESRTCHCHHPSMT = ((ESC + ((RTHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / RTMPSMT) / Time), 1)) / 3) + (calcStats.ESCHHPSMT / 3 * 2);
 
-            List<HealSpell> list = new List<HealSpell>();
-            float totalRatio = options.HWRatio + options.LHWRatio + options.CHRatio;
+            // MPS Calcs
+            calcStats.ESLHWMPSMT = CurrentMana / ESLHWMPSMT;
+            calcStats.ESHWMPSMT = CurrentMana / ESHWMPSMT;
+            calcStats.ESCHMPSMT = CurrentMana / ESCHMPSMT;
+            calcStats.ESRTCHCHMPSMT = CurrentMana / ((RTMPSMT + ESCHMPSMT + ESCHMPSMT) /3);
 
-            if (options.LHWRatio > 0)
-            {
-                LesserHealingWave lhw = new LesserHealingWave();
-                lhw.Calcluate(stats, character);
-                lhw.Weight = options.LHWWeight;
-                list.Add(lhw);
-            }
 
-            if (options.HWRatio > 0)
-            {
-                if (options.HWDownrank.Ratio > 0)
-                {
-                    HealingWave hw = new HealingWave(options.HWDownrank.MaxRank);
-                    hw.Calcluate(stats, character);
-                    hw.Weight = options.HWWeight * (options.HWDownrank.Ratio / 100f);
-                    list.Add(hw);
-                }
-                if (options.HWDownrank.Ratio < 100)
-                {
-                    HealingWave hw = new HealingWave(options.HWDownrank.MinRank);
-                    hw.Calcluate(stats, character);
-                    hw.Weight = options.HWWeight * ((100 - options.HWDownrank.Ratio) / 100f);
-                    list.Add(hw);
-                }
-            }
+            // Calculate Best HPS
+            if (calcStats.ESCHHPSMT > calcStats.ESHWHPSMT)
+                if (calcStats.ESCHHPSMT > calcStats.ESLHWHPSMT)
+                    if (calcStats.ESCHHPSMT > calcStats.ESRTCHCHHPSMT)
+                        calcStats.FightHPS = calcStats.ESCHHPSMT;
+            if (calcStats.ESHWHPSMT > calcStats.ESCHHPSMT)
+                if (calcStats.ESHWHPSMT > calcStats.ESLHWHPSMT)
+                    if (calcStats.ESHWHPSMT > calcStats.ESRTCHCHHPSMT)
+                        calcStats.FightHPS = calcStats.ESHWHPSMT;
+            if (calcStats.ESLHWHPSMT > calcStats.ESCHHPSMT)
+                if (calcStats.ESLHWHPSMT > calcStats.ESHWHPSMT)
+                    if (calcStats.ESLHWHPSMT > calcStats.ESRTCHCHHPSMT)
+                        calcStats.FightHPS = calcStats.ESLHWHPSMT;
+            if (calcStats.ESRTCHCHHPSMT > calcStats.ESHWHPSMT)
+                if (calcStats.ESRTCHCHHPSMT > calcStats.ESLHWHPSMT)
+                    if (calcStats.ESRTCHCHHPSMT > calcStats.ESCHHPSMT)
+                        calcStats.FightHPS = calcStats.ESRTCHCHHPSMT;
 
-            if (options.CHRatio > 0)
-            {
-                if (options.CHDownrank.Ratio > 0)
-                {
-                    ChainHeal ch = new ChainHeal(options.CHDownrank.MaxRank);
-                    ch.Calcluate(stats, character);
-                    ch.Weight = options.CHWeight * (options.CHDownrank.Ratio / 100f);
-                    list.Add(ch);
-                }
-                if (options.CHDownrank.Ratio < 100)
-                {
-                    ChainHeal ch = new ChainHeal(options.CHDownrank.MinRank);
-                    ch.Calcluate(stats, character);
-                    ch.Weight = options.CHWeight * ((100 - options.CHDownrank.Ratio) / 100f);
-                    list.Add(ch);
-                }
-            }
-
-            // Now get weighted average heal, weighted average mana cost, and weighted average cast time:
-
-            calcStats.AverageHeal = 0;
-            calcStats.AverageManaCost = 0;
-            calcStats.AverageCastTime = 0;
-            foreach (HealSpell spell in list)
-            {
-                calcStats.AverageHeal += spell.AverageHealed * spell.Weight;
-                calcStats.AverageCastTime += spell.CastTime * spell.Weight;
-                calcStats.AverageManaCost += spell.ManaCost * spell.Weight;
-            }
-            calcStats.AverageManaCost -= stats.ManaRestoreOnCast_5_15 * .02f;  // Insightful Earthstorm Diamond
-
-            // Earth Shield computations:
-
-            float esMana = 0f;
-            float esHeal = 0f;
-            float esNum = 0f;
-            if (options.ESInterval > 0)
-            {
-                EarthShield es = new EarthShield(options.ESRank);
-                es.Calcluate(stats, character);
-                esNum = (float)Math.Round((options.FightLength / (options.ESInterval / 60f)) + 1, 0);
-                esMana = es.ManaCost * esNum;
-                esHeal = (es.AverageHealed * esNum * (1 + (character.ShamanTalents.Purification * .02f))) * (1.5f * (1 + calcStats.SpellCrit));
-            }
-            float numHeals = Math.Min((options.FightLength * 60) / calcStats.AverageCastTime, (calcStats.TotalManaPool - esMana) / calcStats.AverageManaCost);
-
-            // Now, Shattered Sun Pendant of Restoration Aldor proc.  From what I understand, this has a
-            //  4% proc rate with no cooldown. This is a rough estimation of the value of this proc, and
-            //  doesn't take into account other things that might proc it (Gift of the Naaru, Earth Shield
-            //  if cast on the shaman, etc):
-
-            if (options.ExaltedFaction == Faction.Aldor && stats.ShatteredSunRestoProc > 0)
-            {
-                // Determine how many more "casts" we get from Chain Heal second / third targets
-                //  and Earth Shield (assumption is Earth Shield procs it?):
-
-                float ssNumHeals = numHeals;
-                if (options.CHRatio > 0)
-                    ssNumHeals += numHeals * options.CHWeight * (options.NumCHTargets - 1);
-                ssNumHeals += esNum;
-                float ssHeal = (((ssNumHeals * .04f) * 10f) / (options.FightLength * 60f)) * 220f;
-
-                // Now, we have to recalculate the amount healed based on the proc's addition to healing bonus:
-
-                stats.SpellPower += ssHeal / 1.88f;
-                calcStats.AverageHeal = 0f;
-                foreach (HealSpell spell in list)
-                {
-                    spell.Calcluate(stats, character);
-                    calcStats.AverageHeal += spell.AverageHealed * spell.Weight;
-                }
-                stats.SpellPower -= ssHeal / 1.88f;
-            }
-
-            calcStats.TotalHealed = (numHeals * calcStats.AverageHeal) + esHeal;
-
-            // Shattered Sun Pendant of Restoration Scryers proc. This is going to be a best case
-            //  scenario (procs every cooldown, and the proc actually heals someone. Healers using
-            //  a mouseover healing system (like Clique) might not benefit at all from this proc):
-
-            if (options.ExaltedFaction == Faction.Scryers && stats.ShatteredSunRestoProc > 0)
-            {
-                float numProcs = (float)Math.Round((options.FightLength / 60f) / 45f, 0) + 1f;
-                float crit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit;
-                float critRate = 1 + 0.5f * crit;
-                float ssHealed = numProcs * 650 * critRate;
-
-                calcStats.TotalHealed += ssHealed;
-            }
-
-            calcStats.FightHPS = calcStats.TotalHealed / (options.FightLength * 60);
-
+            calcStats.TotalHealed = calcStats.FightHPS * Time;
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
             return calcStats;
         }
 
-
+        
         //
         // Create the statistics for a given character:
         //
@@ -421,8 +336,6 @@ namespace Rawr.RestoSham
             //points = GetTalentPoints("Ancestral Knowledge", "Enhancement", talentTree);
             statsTotal.Intellect += statsTotal.Intellect * (.02f * talentTree.AncestralKnowledge);
 
-            //points = GetTalentPoints("Elemental Weapons", "Enhancement", talentTree);
-            statsTotal.SpellPower += (110f * (talentTree.ElementalWeapons * .1f));
         }
 
 
@@ -506,56 +419,7 @@ namespace Rawr.RestoSham
 
                     break;
 
-                case "Healing Spell Ranks":
-                    // Healing Wave ranks:
 
-                    for (int i = 1; i <= 12; i++)
-                    {
-                        HealingWave hw = new HealingWave(i);
-                        hw.Calcluate(calc.BasicStats, character);
-                        ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(hw.FullName);
-                        comp.OverallPoints = hw.AverageHealed + hw.HealingWay;
-                        comp.SubPoints[0] = hw.AverageHealed;
-                        comp.SubPoints[3] = hw.HealingWay;
-                        list.Add(comp);
-                    }
-
-                    // Lesser Healing Wave ranks:
-
-                    for (int i = 1; i <= 7; i++)
-                    {
-                        LesserHealingWave lhw = new LesserHealingWave(i);
-                        lhw.Calcluate(calc.BasicStats, character);
-                        ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(lhw.FullName);
-                        comp.OverallPoints = comp.SubPoints[0] = lhw.AverageHealed;
-                        list.Add(comp);
-                    }
-
-                    // Chain Heal ranks:
-
-                    for (int i = 1; i <= 5; i++)
-                    {
-                        ChainHeal ch = new ChainHeal(i);
-                        ch.Calcluate(calc.BasicStats, character);
-                        ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(ch.FullName);
-                        comp.OverallPoints = ch.TotalHealed;
-                        for (int j = 0; j < 3; j++)
-                            comp.SubPoints[j] = ch.HealsOnTargets[j];
-                        list.Add(comp);
-                    }
-
-                    // The Draenei racial:
-
-                    if (character.Race == Character.CharacterRace.Draenei)
-                    {
-                        GiftOfTheNaaru gift = new GiftOfTheNaaru();
-                        gift.Calcluate(calc.BasicStats, character);
-                        ComparisonCalculationRestoSham comp = new ComparisonCalculationRestoSham(gift.FullName);
-                        comp.OverallPoints = comp.SubPoints[0] = gift.AverageHealed;
-                        list.Add(comp);
-                    }
-
-                    break;
             }
 
             ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
@@ -583,24 +447,17 @@ namespace Rawr.RestoSham
                 Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaSpringMp5Increase = stats.ManaSpringMp5Increase,
-                LHWManaReduction = stats.LHWManaReduction,
-                CHHealIncrease = stats.CHHealIncrease,
-                CHManaReduction = stats.CHManaReduction,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                ShatteredSunRestoProc = stats.ShatteredSunRestoProc,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast
             };
         }
 
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower * 1.88f + stats.CritRating +
+            return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating +
                     stats.HasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
-                    stats.BonusManaPotion + stats.CHManaReduction + stats.CHHealIncrease + stats.LHWManaReduction +
-                    stats.ManaSpringMp5Increase + stats.ManaRestoreOnCast_5_15 + stats.ShatteredSunRestoProc +
-                    stats.ManaRestoreFromMaxManaPerSecond + stats.FullManaRegenFor15SecOnSpellcast) > 0;
+                    stats.BonusManaPotion + stats.ManaSpringMp5Increase + stats.ManaRestoreOnCast_5_15 + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
 
 
