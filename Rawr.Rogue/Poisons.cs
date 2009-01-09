@@ -65,7 +65,7 @@ namespace Rawr.Rogue
 
 		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return _stackSize * (296f + .08f * stats.AttackPower) * Talents.VilePoison.Multiplier / _duration;
+            return _stackSize * (296f + .08f * stats.AttackPower) * Talents.VilePoisons.Multiplier / _duration;
         }
     }
 
@@ -78,7 +78,7 @@ namespace Rawr.Rogue
 
 		public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*Talents.VilePoison.Multiplier*(Talents.ImprovedPoisons.Multiplier);
+            return hits*combatFactors.ProbPoisonHit*(445f + .15f*stats.AttackPower)*Talents.VilePoisons.Multiplier*(Talents.ImprovedPoisons.Multiplier);
         }
     }
 
@@ -91,7 +91,7 @@ namespace Rawr.Rogue
 
         public override float CalcPoisonDPS(Stats stats, CalculationOptionsRogue calcOpts, CombatFactors combatFactors, float hits)
         {
-            return hits * combatFactors.ProbPoisonHit * (231f + 0.04f * stats.AttackPower) * 0.5f * Talents.VilePoison.Multiplier;
+            return hits * combatFactors.ProbPoisonHit * (231f + 0.04f * stats.AttackPower) * 0.5f * Talents.VilePoisons.Multiplier;
         }
     }
 }

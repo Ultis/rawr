@@ -4,18 +4,11 @@ namespace Rawr.Rogue.ComboPointGenerators
 {
     public class Hemo : IComboPointGenerator
     {
-        public Hemo(RogueTalents talents)
-        {
-            _talents = talents;
-        }
-
-        private readonly RogueTalents _talents;
-
         public string Name { get { return "Hemo"; } }
 
         public float EnergyCost
         {
-            get { return 35f - _talents.SlaughterFromTheShadows; }
+            get { return 35f - Talents.SlaughterFromTheShadows.Bonus; }
         }
 
         public float Crit(CombatFactors combatFactors)

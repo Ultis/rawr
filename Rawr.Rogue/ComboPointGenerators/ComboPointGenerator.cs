@@ -17,23 +17,23 @@
                 combatFactors.MainHand.Type == Item.ItemType.Dagger &&
                 combatFactors.OffHand.Type == Item.ItemType.Dagger)
             {
-                return new Mutilate(talents);
+                return new Mutilate();
             }
 
             // if we're main handing a dagger, assume we're using backstab it to generate CPs
             if (combatFactors.MainHand.Type == Item.ItemType.Dagger)
             {
-                return new Backstab(talents);
+                return new Backstab();
             }
 
             // if we have hemo, assume we use it to generate CPs
             if (talents.Hemorrhage > 0)
             {
-                return new Hemo(talents);
+                return new Hemo();
             }
 
             // otherwise use sinister strike
-            return new SinisterStrike(talents);
+            return new SinisterStrike();
         }
     }
 }

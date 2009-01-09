@@ -4,23 +4,16 @@ namespace Rawr.Rogue.ComboPointGenerators
 {
     public class Backstab : IComboPointGenerator
     {
-        public Backstab(RogueTalents talents)
-        {
-            _talents = talents;
-        }
-
-        private readonly RogueTalents _talents;
-
         public string Name { get { return "Backstab"; } }
 
         public float EnergyCost
         {
-            get { return 60f - 3f * _talents.SlaughterFromTheShadows; }
+            get { return 60f - Talents.SlaughterFromTheShadows.SecondaryBonus; }
         }
 
         public float Crit(CombatFactors combatFactors)
         {
-            return (combatFactors.ProbMhCrit + .1f * _talents.PuncturingWounds) * combatFactors.ProbYellowHit;
+            return (combatFactors.ProbMhCrit + Talents.PuncturingWounds.SecondaryBonus) * combatFactors.ProbYellowHit;
         }
 
         public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)

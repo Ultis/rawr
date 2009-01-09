@@ -4,19 +4,12 @@ namespace Rawr.Rogue.ComboPointGenerators
 {
     public class Mutilate : IComboPointGenerator
     {
-        public Mutilate(RogueTalents talents)
-        {
-            _talents = talents;
-        }
-
-        private readonly RogueTalents _talents;
-
         public string Name { get { return "Mutilate"; } }
         public float EnergyCost { get { return 60f; } }
 
         public float Crit(CombatFactors combatFactors)
         {
-            return combatFactors.ProbMhCrit + 0.05f * _talents.PuncturingWounds;
+            return combatFactors.ProbMhCrit + Talents.PuncturingWounds.Bonus;
         }
 
         public float CalcCpgDPS(Stats stats, CombatFactors combatFactors, CalculationOptionsRogue calcOpts, float numCPG, float cycleTime)

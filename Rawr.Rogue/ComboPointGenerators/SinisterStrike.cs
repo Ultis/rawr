@@ -4,25 +4,13 @@ namespace Rawr.Rogue.ComboPointGenerators
 {
     public class SinisterStrike : IComboPointGenerator
     {
-        public SinisterStrike(RogueTalents talents)
-        {
-            _talents = talents;
-        }
-
-        private readonly RogueTalents _talents;
-        
         public string Name { get { return "Sinister Strike"; } }
 
         public float EnergyCost
         {
             get
             {
-                switch (_talents.ImprovedSinisterStrike)
-                {
-                    case 2: return 40f;
-                    case 1: return 42f;
-                    default: return 45f;
-                }
+                return 45f - Talents.ImprovedSinisterStrike.Bonus;
             }
         }
 
@@ -51,9 +39,9 @@ namespace Rawr.Rogue.ComboPointGenerators
             return damage;
         }
 
-        private float CriticalDamageMultiplier(CombatFactors combatFactors)
+        private static float CriticalDamageMultiplier(CombatFactors combatFactors)
         {
-            return (combatFactors.BaseCritMultiplier + .06f * _talents.Lethality);
+            return (combatFactors.BaseCritMultiplier + Talents.Lethality.Bonus);
         }
 
         private static float TalentBonusDamage()

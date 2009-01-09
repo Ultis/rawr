@@ -165,7 +165,7 @@ namespace Rawr.Rogue
             var energyCost = numCPG*cpg.EnergyCost;
             foreach(var component in calcOpts.DPSCycle.Components)
             {
-                energyCost += component.Finisher.EnergyCost;
+                energyCost += component.Finisher.EnergyCost(combatFactors);
             }
 
             return energyCost / energyRegen;
