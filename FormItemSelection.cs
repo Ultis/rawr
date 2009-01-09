@@ -272,15 +272,21 @@ namespace Rawr
 			if (currentItemLength < targetItemLength)
 			{
 				int itemSelectorsToCreate = targetItemLength - _itemSelectorItems.Count;
-				for (int i = 0; i < itemSelectorsToCreate; i++)
-					_itemSelectorItems.Add(new ItemSelectorItem());
-				for (int i = currentItemLength; i < targetItemLength; i++)
-					panelItems.Controls.Add(_itemSelectorItems[i]);
+                for (int i = 0; i < itemSelectorsToCreate; i++)
+                {
+                    _itemSelectorItems.Add(new ItemSelectorItem());
+                }
+                for (int i = currentItemLength; i < targetItemLength; i++)
+                {
+                    panelItems.Controls.Add(_itemSelectorItems[i]);
+                }
 			}
 			else if (currentItemLength > targetItemLength)
 			{
-				for (int i = currentItemLength; i > targetItemLength; i--)
-					panelItems.Controls.RemoveAt(i - 1);
+                for (int i = currentItemLength; i > targetItemLength; i--)
+                {
+                    panelItems.Controls.RemoveAt(i - 1);
+                }
 			}
 
 			float maxRating = 0;
@@ -292,7 +298,6 @@ namespace Rawr
 				{
 					calc.Equipped = calc.Item == _button.SelectedItem || (calc.Item.Id == 0 && _button.SelectedItem == null);
 					ctrl.IsEnchant = false;
-
 				}
 				if (_buttonEnchant != null)
 				{
@@ -308,15 +313,21 @@ namespace Rawr
 				{
 					float calcRating;
                     if (Sort == ComparisonGraph.ComparisonSort.Overall || this.Sort == ComparisonGraph.ComparisonSort.Alphabetical)
-						calcRating = calc.OverallPoints;
-					else
+                    {
+                        calcRating = calc.OverallPoints;
+                    }
+                    else
+                    {
                         calcRating = calc.SubPoints[(int)Sort];
+                    }
 					maxRating = Math.Max(maxRating, calcRating);
 				}
 			}
 			panelItems.ResumeLayout(true);
-			foreach (ItemSelectorItem ctrl in panelItems.Controls)
-				ctrl.MaxRating = maxRating;
+            foreach (ItemSelectorItem ctrl in panelItems.Controls)
+            {
+                ctrl.MaxRating = maxRating;
+            }
 		}
 
 		private void toolStripTextBoxFilter_TextChanged(object sender, EventArgs e)
