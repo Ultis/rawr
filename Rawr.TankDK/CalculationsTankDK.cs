@@ -489,6 +489,7 @@ namespace Rawr.TankDK
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
+            statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
             //statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
