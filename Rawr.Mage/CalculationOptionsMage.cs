@@ -114,6 +114,7 @@ namespace Rawr.Mage
         public float FocusMagicTargetCritRate { get; set; }
         public bool UnlimitedMana { get; set; }
         public bool Mode308 { get; set; }
+        public bool AllowLatencyCombos { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }
         public bool CustomSpellMixEnabled { get; set; }
@@ -271,6 +272,7 @@ namespace Rawr.Mage
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 80;
             FocusMagicTargetCritRate = 0.2f;
+            AllowLatencyCombos = true;
         }
 
         public CalculationOptionsMage(Character character)

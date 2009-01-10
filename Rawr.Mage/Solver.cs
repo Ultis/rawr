@@ -535,6 +535,7 @@ namespace Rawr.Mage
             {
                 double maxdps = 0;
                 double mindpm = double.PositiveInfinity;
+                double maxdpm = 0;
                 double[] spellControl = new double[34];
                 for (int control0 = 0; control0 < 3; control0++)
                 for (int control1 = 0; control1 < 3; control1++)
@@ -558,14 +559,18 @@ namespace Rawr.Mage
                     spellControl[30 + control8] = 1;
                     Spell generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33]);
                     // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 4544.744140625) / (generic.ManaPerSecond - 428.7687);
+                    double dpm = (generic.DamagePerSecond - 4325.446) / (generic.ManaPerSecond - 175.643127);
                     if (generic.DamagePerSecond > maxdps)
                     {
                         maxdps = generic.DamagePerSecond;
                     }
-                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 300)
+                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 200)
                     {
                         mindpm = dpm;
+                    }
+                    if (generic.DamagePerSecond > 4325.446 && dpm > maxdpm)
+                    {
+                        maxdpm = dpm;
                     }
                 }
             }*/
@@ -2327,6 +2332,11 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarY);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABar);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarX);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABAMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB2AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB32AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3MBAMABar);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

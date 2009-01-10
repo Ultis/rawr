@@ -700,6 +700,21 @@ namespace Rawr.Mage
                 case SpellId.ABMBAM:
                     s = new ABMBAM(this);
                     break;
+                case SpellId.AB3MBAMABar:
+                    s = new AB3MBAMABar(this);
+                    break;
+                case SpellId.ABAMABar:
+                    s = new ABAMABar(this);
+                    break;
+                case SpellId.AB2AMABar:
+                    s = new AB2AMABar(this);
+                    break;
+                case SpellId.AB3AMABar:
+                    s = new AB3AMABar(this);
+                    break;
+                case SpellId.AB32AMABar:
+                    s = new AB32AMABar(this);
+                    break;
                 case SpellId.ABABar:
                     s = new ABABar(this);
                     break;
