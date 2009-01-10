@@ -163,6 +163,30 @@ namespace Rawr.DPSWarr
             get { return _flurryUptime; }
             set { _flurryUptime = value; }
         }
+        private float _msDPSPoints;
+        public float MSDPSPoints
+        {
+            get { return _msDPSPoints; }
+            set { _msDPSPoints = value; }
+        }
+        private float _executeDPSPoints;
+        public float ExecuteDPSPoints
+        {
+            get { return _executeDPSPoints; }
+            set { _executeDPSPoints = value; }
+        }
+        private float _overpowerDPSPoints;
+        public float OverpowerDPSPoints
+        {
+            get { return _overpowerDPSPoints; }
+            set { _overpowerDPSPoints = value; }
+        }
+        private float _rendDPSPoints;
+        public float RendDPSPoints
+        {
+            get { return _rendDPSPoints; }
+            set { _rendDPSPoints = value; }
+        }
 
         public Character character { get; set; }
 
@@ -194,6 +218,10 @@ namespace Rawr.DPSWarr
             dictValues.Add("White DPS", WhiteDPSPoints.ToString("N2") + " / " + (WhiteDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Deep Wounds DPS", DeepWoundsDPSPoints.ToString("N2")  + " / " + (DeepWoundsDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Slam DPS", SlamDPSPoints.ToString("N2") + " / " + (SlamDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Execute DPS", ExecuteDPSPoints.ToString("N2") + " / " + (ExecuteDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Mortal Strike DPS", MSDPSPoints.ToString("N2") + " / " + (MSDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Overpower DPS", OverpowerDPSPoints.ToString("N2") + " / " + (OverpowerDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
+            dictValues.Add("Rend DPS", RendDPSPoints.ToString("N2") + " / " + (RendDPSPoints / DPSPoints * 100.0f).ToString("N2") + "%");
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
 

@@ -10,13 +10,21 @@ namespace Rawr.DPSWarr
         private float fSwingTimerMH = 0.0f, fSwingTimerOH = 0.0f, fMHSwingTimeUnderFlurry = 0.0f, fOHSwingTimeUnderFlurry = 0.0f;
         private float fMHSwingTimeNormal = 0.0f, fOHSwingTimeNormal = 0.0f, fMHSwingTimeUnderFlurryAndBL = 0.0f, fOHSwingTimeUnderFlurryAndBL = 0.0f;
         private float fMHSwingTimeUnderBL = 0.0f, fOHSwingTimeUnderBL = 0.0f;
+        private float fMHWeaponSwingSpeed = 2.0f, fOHWeaponSwingSpeed = 2.0f;
+
         private int nCurrentRage = 0;
-        private bool bBloodSurgeProcced = false;
+        private bool bBloodSurgeProcced = false, bSuddenDeathProcced = false, bOverpowerProcced = false;
         private int nFlurryActive = 0;
         private int nDeathWishCoolDown = 0;
         private int nDeathWishActive = -1;
+        private int nBladeStormCoolDown = 0;
+        
         private int nWhirlWindCoolDown = 0;
         private int nBloodthirstCoolDown = 0;
+        private int nMortalStrikeCoolDown = 0;
+        private int nOverpowerCoolDown = 0;
+        private int nRendCharges = 0, nRendCoolDown = 0, nAngerManagementCoolDown = 0;
+
         private int nBloodlustCoolDown = 0;
         private int nBloodlustActive = 0;
 
@@ -38,14 +46,23 @@ namespace Rawr.DPSWarr
         public float nDamageDone = 0;
         public float nDeepWoundDamage = 0;
         public float nWhiteDamage = 0, nWhirlwindDamage = 0, nBloodthirstDamage = 0, nHeroicStrikeDamage = 0, nSlamDamage = 0;
+        public float nExecuteDamage = 0, nMortalStrikeDamage = 0, nOverpowerDamage = 0, nRendDamage = 0;
+        
         public int nFlurryActiveCounter = 0;
-        public int nHits = 0, nCrits=0, nMisses=0, nDodges=0;
+        public int nHits = 0, nCrits = 0, nMisses = 0, nDodges = 0, nYellowMisses = 0;
+        public int nDreadnoughtPieces = 0;
         
         private Stats stats;
         private CharacterCalculationsDPSWarr calc;
         private CalculationOptionsDPSWarr options;
         private WarriorTalents talents;
         private Character character;
+
+        public void CheckSetBonus(Item a_item)
+        {
+            if (a_item != null && a_item.Name.Contains("Dreadnaught") && a_item.Stats.DefenseRating == 0)
+                ++nDreadnoughtPieces;
+        }
 
         public void PreCalc( Character a_character, Stats a_stats, CharacterCalculationsDPSWarr a_calcs, CalculationOptionsDPSWarr a_calcOpts, WarriorTalents a_talents )
         {
@@ -63,11 +80,15 @@ namespace Rawr.DPSWarr
             fMitigation = 1.0f - modifiedTargetArmor / (modifiedTargetArmor + 15232.5f);
 
             a_calcs.ArmorMitigation = (1.0f - fMitigation) * 100.0f;
+            CheckSetBonus( character.Head );
+            CheckSetBonus(character.Shoulders);
+            CheckSetBonus(character.Chest);
+            CheckSetBonus(character.Hands);
+            CheckSetBonus(character.Legs);
 
-            fDamageModifier = 1.0f + (0.02f * talents.TwoHandedWeaponSpecialization) + stats.BonusPhysicalDamageMultiplier;
+            fDamageModifier = 1.0f + (0.02f * talents.TwoHandedWeaponSpecialization) + stats.BonusPhysicalDamageMultiplier + (talents.WreckingCrew * 0.02f);
             float fHaste = stats.HasteRating;
 
-            float fMHWeaponSwingSpeed = 2.0f, fOHWeaponSwingSpeed = 2.0f;
             if (character.MainHand != null)
             {
                 favgBaseMainHandWeaponHit = (character.MainHand.MinDamage + character.MainHand.MaxDamage + stats.WeaponDamage * 2f) / 2.0f;
@@ -81,7 +102,7 @@ namespace Rawr.DPSWarr
             
             favgBaseMainHandWeaponHit += stats.AttackPower / 14.0f * fMHWeaponSwingSpeed;
             favgBaseMainHandWeaponHitNormalized += stats.AttackPower / 14.0f * 3.3f;
-            if (character.OffHand != null)
+            if (character.OffHand != null && talents.TitansGrip > 0)
             {
                 favgBaseOffHandWeaponHit = (character.OffHand.MinDamage + character.OffHand.MaxDamage + stats.WeaponDamage * 2f) / 2.0f;
                 fOHWeaponSwingSpeed = character.OffHand.Speed;
@@ -119,11 +140,16 @@ namespace Rawr.DPSWarr
             nBloodthirstDamage = 0;
             nHeroicStrikeDamage = 0;
             nSlamDamage = 0;
+            nExecuteDamage = 0;
+            nMortalStrikeDamage = 0;
+            nOverpowerDamage = 0; 
+            nRendDamage = 0;
             nFlurryActiveCounter = 0;
             nHits = 0;
             nCrits=0;
             nMisses = 0;
             nDodges = 0;
+            nYellowMisses = 0;
         }
 
 
@@ -132,6 +158,7 @@ namespace Rawr.DPSWarr
             fMHSwingTime = fMHSwingTimeNormal;
             fOHSwingTime = fOHSwingTimeNormal;
             bBloodSurgeProcced = false;
+            bSuddenDeathProcced = false;
             nFlurryActive = -1;
             fSwingTimerMH = 0.0f;
             fSwingTimerOH = 0.0f;
@@ -140,21 +167,35 @@ namespace Rawr.DPSWarr
             nBloodthirstCoolDown = 0;
             nWhirlWindCoolDown = 0;
             nBloodlustCoolDown = 0;
+            nMortalStrikeCoolDown = 0;
+            nOverpowerCoolDown = 0;
+            nRendCoolDown = 0;
+            nRendCharges = 0;
+            nBladeStormCoolDown = 0;
+            nAngerManagementCoolDown = 0;
+
             nBloodlustActive = 0;
             fGCDTimer = 0.0f;
             bHeroicStrikeOnNextSwing = false;
-            fDamageModifier = 1.0f + (0.02f * talents.TwoHandedWeaponSpecialization) + stats.BonusPhysicalDamageMultiplier;
+            fDamageModifier = 1.0f + (0.02f * talents.TwoHandedWeaponSpecialization) + stats.BonusPhysicalDamageMultiplier + (talents.WreckingCrew * 0.02f);
         }
 
         public void DoRotation()
         {
             Reset();
             int nFightLenIterations = options.FightLength * 10;
+            int nExecuteRange = (int)((float)nFightLenIterations * 0.8f);
             for (int nCurTime = 0; nCurTime < nFightLenIterations; ++nCurTime)
             {
                 DoWhiteHitCalcs();
-                if (options.SimMode == 0)
+                if (options.ExecuteSpam && nCurTime > nExecuteRange)
+                    DoExecuteSpamRotation();
+                else if (options.SimMode == 0)
                     DoFuryRotation1();
+                else if (options.SimMode == 1)
+                    DoFuryRotation2();
+                else if (options.SimMode == 2)
+                    DoArmsRotation();
             }
         }
 
@@ -201,6 +242,16 @@ namespace Rawr.DPSWarr
                 --nFlurryActive;
                 DoOffHandWhiteHit();
                 fSwingTimerOH -= fOHSwingTime;
+            }
+            if (talents.AngerManagement > 0)
+            {
+                if (nAngerManagementCoolDown > 0)
+                    --nAngerManagementCoolDown;
+                if (nAngerManagementCoolDown == 0)
+                {
+                    nAngerManagementCoolDown = (int)(3f / fTimeStep);
+                    ++nCurrentRage;
+                }
             }
             fSwingTimerOH += fTimeStep;
             if (fGCDTimer > 0)
@@ -261,6 +312,7 @@ namespace Rawr.DPSWarr
             else if (dRand < fchanceToMiss + fchanceToDodge)
             {
                 ++nDodges;
+                bOverpowerProcced = true;
                 return ETypeOfHit.eDodge;
             }
             else if (dRand < fchanceToMiss + fchanceToDodge + fchanceToGlance)
@@ -277,15 +329,20 @@ namespace Rawr.DPSWarr
             return ETypeOfHit.eHit;
         }
         
-
-        public ETypeOfHit rollYellow()
+        public ETypeOfHit rollYellow(float a_fAdditionalCritChance )
         {
             double dRand = rnd.NextDouble(); // Zahl zwischen 0.0 und 1.0
             if (dRand <= fchanceToMissYellow)
+            {
+                ++nYellowMisses;
                 return ETypeOfHit.eMiss;
+            }
             else if (dRand <= fchanceToMissYellow + fchanceToDodge)
+            {
+                bOverpowerProcced = true;
                 return ETypeOfHit.eDodge;
-            else if (dRand <= fchanceToMissYellow + fchanceToDodge + fchanceToCrit)
+            }
+            else if (dRand <= fchanceToMissYellow + fchanceToDodge + fchanceToCrit + a_fAdditionalCritChance)
                 return ETypeOfHit.eCrit;
             return ETypeOfHit.eHit;
         }
@@ -294,7 +351,7 @@ namespace Rawr.DPSWarr
         {
             ETypeOfHit type = ETypeOfHit.eHit;
             if (bHeroicStrikeOnNextSwing)
-                type = rollYellow();
+                type = rollYellow(talents.Incite * 0.05f);
             else
                 type = rollWhite();
 
@@ -328,11 +385,17 @@ namespace Rawr.DPSWarr
                 nWhiteDamage += nTempDamageDone;
             nDamageDone += nTempDamageDone;
             bHeroicStrikeOnNextSwing = false;
+
+            PossibleSuddenDeathProc();
+/*            if (talents.SwordSpecialization > 0 && nSwordCoolDown <= 0 )
+            {
+                
+            }*/
         }
 
         public void DoOffHandWhiteHit()
         {
-            if (character.OffHand == null)
+            if (character.OffHand == null || talents.TitansGrip == 0 )
                 return;
             ETypeOfHit type = rollWhite();
             float nTempDamageDone = 0;
@@ -350,11 +413,13 @@ namespace Rawr.DPSWarr
             GenerateRage(nTempDamageDone, character.OffHand.Speed, type == ETypeOfHit.eCrit ? 2.5f : 1.25f);
             nWhiteDamage += nTempDamageDone;
             nDamageDone += nTempDamageDone;
+
+            PossibleSuddenDeathProc();
         }
 
         public bool DoWhirlWindMainHandHit(bool a_bOffHandCrit)
         {
-            ETypeOfHit type = rollYellow();
+            ETypeOfHit type = rollYellow(0.0f);
             float nTempDamageDone = 0;
             if (type == ETypeOfHit.eHit)
                 nTempDamageDone += favgBaseMainHandWeaponHitNormalized;
@@ -368,12 +433,13 @@ namespace Rawr.DPSWarr
             nTempDamageDone *= fMitigation * fDamageModifier * (1f + talents.ImprovedWhirlwind * 0.1f + talents.UnendingFury * 0.02f);
             nWhirlwindDamage += nTempDamageDone;
             nDamageDone += nTempDamageDone;
+            PossibleSuddenDeathProc();
             return type == ETypeOfHit.eCrit;
         }
 
         public bool DoWhirlWindOffHandHit()
         {
-            ETypeOfHit type = rollYellow();
+            ETypeOfHit type = rollYellow(0.0f);
             float nTempDamageDone = 0;
             if (type == ETypeOfHit.eHit)
                 nTempDamageDone += favgBaseOffHandWeaponHitNormalized;
@@ -386,6 +452,7 @@ namespace Rawr.DPSWarr
             nTempDamageDone *= fMitigation * fDamageModifier * (1f + talents.ImprovedWhirlwind * 0.1f + talents.UnendingFury * 0.02f); 
             nWhirlwindDamage += nTempDamageDone;
             nDamageDone += nTempDamageDone;
+            PossibleSuddenDeathProc();
             return type == ETypeOfHit.eCrit;
         }
 
@@ -393,7 +460,7 @@ namespace Rawr.DPSWarr
         {
             if (talents.Bloodthirst == 0)
                 return;
-            ETypeOfHit type = rollYellow();
+            ETypeOfHit type = rollYellow(0.0f);
             float nTempDamageDone = 0;
             if (type == ETypeOfHit.eHit)
                 nTempDamageDone += stats.AttackPower / 2.0f;
@@ -408,9 +475,28 @@ namespace Rawr.DPSWarr
             nDamageDone += nTempDamageDone;
         }
 
+        public void DoExecuteHit( float a_fRage )
+        {
+            ETypeOfHit type = rollYellow(0.0f);
+            float nTempDamageDone = 0;
+            float fbaseDamage = (stats.AttackPower * 0.2f) + 1456f + 38f * a_fRage;
+            if (type == ETypeOfHit.eHit)
+                nTempDamageDone += fbaseDamage;
+            else if (type == ETypeOfHit.eCrit)
+            {
+                nTempDamageDone += fbaseDamage * (2f + talents.Impale * 0.1f + stats.BonusCritMultiplier * 2.0f);
+                GenerateDeepWoundMainHand();
+                nFlurryActive = 3;
+            }
+            nTempDamageDone *= fMitigation * fDamageModifier;
+            nExecuteDamage += nTempDamageDone;
+            nDamageDone += nTempDamageDone;
+            PossibleSuddenDeathProc();
+        }
+
         public void SlamHit()
         {
-            ETypeOfHit type = rollYellow();
+            ETypeOfHit type = rollYellow(0.0f);
             float nTempDamageDone = 0;
             float fBaseDamage = favgBaseMainHandWeaponHit + 250f;
             if (type == ETypeOfHit.eHit)
@@ -422,13 +508,55 @@ namespace Rawr.DPSWarr
                 nFlurryActive = 3;
             }
             nTempDamageDone *= fMitigation * fDamageModifier;
+            if (nDreadnoughtPieces >= 2)
+                nTempDamageDone *= 1.1f;
             nSlamDamage += nTempDamageDone;
+            nDamageDone += nTempDamageDone;
+        }
+
+        public void MortalStrikeHit()
+        {
+            if (talents.MortalStrike == 0)
+                return;
+            ETypeOfHit type = rollYellow(0.0f);
+            float nTempDamageDone = 0;
+            float fBaseDamage = favgBaseMainHandWeaponHitNormalized + 380f;
+            if (type == ETypeOfHit.eHit)
+                nTempDamageDone += fBaseDamage;
+            else if (type == ETypeOfHit.eCrit)
+            {
+                nTempDamageDone += fBaseDamage * (2f + talents.Impale * 0.1f + stats.BonusCritMultiplier * 2.0f);
+                GenerateDeepWoundMainHand();
+                nFlurryActive = 3;
+            }
+            nTempDamageDone *= fMitigation * fDamageModifier * ( 1f + (options.GlyphOfMortalStrike ? 0.1f : 0.0f) + talents.ImprovedMortalStrike * 0.0333f);
+            nMortalStrikeDamage += nTempDamageDone;
+            nDamageDone += nTempDamageDone;
+        }
+
+        public void OverpowerHit()
+        {
+            ETypeOfHit type = rollYellow(talents.ImprovedOverpower * 0.25f);
+            float nTempDamageDone = 0;
+            float fBaseDamage = favgBaseMainHandWeaponHitNormalized + 380f;
+            if (type == ETypeOfHit.eHit)
+                nTempDamageDone += fBaseDamage;
+            else if (type == ETypeOfHit.eCrit)
+            {
+                nTempDamageDone += fBaseDamage * (2f + talents.Impale * 0.1f + stats.BonusCritMultiplier * 2.0f);
+                GenerateDeepWoundMainHand();
+                nFlurryActive = 3;
+            }
+            nTempDamageDone *= fMitigation * fDamageModifier;
+            nOverpowerDamage += nTempDamageDone;
             nDamageDone += nTempDamageDone;
         }
         
         public void GenerateDeepWoundMainHand()
         {
             float nDamage = (favgBaseMainHandWeaponHit * talents.DeepWounds * 0.16f * fDamageModifier * (1f + stats.BonusBleedDamageMultiplier)); // Assuming Mangle present
+            if (nDeathWishActive > 0)
+                nDamage *= 1.2f;
             nDeepWoundDamage += nDamage;
             nDamageDone += nDamage;
         }
@@ -436,7 +564,18 @@ namespace Rawr.DPSWarr
         public void GenerateDeepWoundOffHand()
         {
             float nDamage = (favgBaseOffHandWeaponHit * talents.DeepWounds * 0.16f * fDamageModifier * (1f+stats.BonusBleedDamageMultiplier));
+            if (nDeathWishActive > 0)
+                nDamage *= 1.2f;
             nDeepWoundDamage += nDamage;
+            nDamageDone += nDamage;
+        }
+
+        public void DoRendTick()
+        {
+            // 380 + [ 7.14% of MWS * AP + 50% of MWB + 50% of mwb ]
+            float nDamage = (380f + (stats.AttackPower * 0.0714f * fMHWeaponSwingSpeed) + favgBaseMainHandWeaponHit) * fDamageModifier * (1f + stats.BonusBleedDamageMultiplier) / 5f;
+            nDamage *= 1f + (talents.ImprovedRend * 0.1f);
+            nRendDamage += nDamage;
             nDamageDone += nDamage;
         }
 
@@ -445,15 +584,41 @@ namespace Rawr.DPSWarr
             // ((Damage Dealt) / (Rage Conversion at Your Level) * 7.5 + (Weapon Speed * Factor))/2;
             if (nCurrentRage < 0)
                 nCurrentRage = 0;
-            nCurrentRage += (int)((a_fDamage / 320.62f * 7.5f + a_fWeaponSpeed * a_fWeaponFactor) / 2f);
+            int nRageGen = (int)((a_fDamage / 320.62f * 7.5f + a_fWeaponSpeed * a_fWeaponFactor) / 2f);
+            if (talents.UnbridledWrath > 0)
+            {
+                float fChance = 0.16f * talents.UnbridledWrath;
+                if (rnd.NextDouble() < fChance)
+                    nRageGen += 1;
+            }
+            if (talents.EndlessRage > 0)
+                nRageGen = (int) (1.25f * (float)nRageGen);
+            nCurrentRage += nRageGen;
             if (nCurrentRage > 100)
                 nCurrentRage = 100;
         }
 
         public void PossibleBloodSurgeProc()
         {
-            if (rnd.NextDouble() < 0.2)
-                bBloodSurgeProcced = true;
+            if (talents.Bloodsurge == 3)
+            {
+                if (rnd.NextDouble() < 0.2f)
+                    bBloodSurgeProcced = true;
+            }
+            else if( talents.Bloodsurge > 0)
+            {
+                if(rnd.NextDouble() < (0.07f * talents.Bloodsurge))
+                    bBloodSurgeProcced = true;
+            }
+        }
+
+        public void PossibleSuddenDeathProc()
+        {
+            if (talents.SuddenDeath > 0)
+            {
+                if (rnd.NextDouble() < (0.03f * talents.SuddenDeath))
+                    bSuddenDeathProcced = true;
+            }
         }
 
         public bool OnGCD()
@@ -510,6 +675,158 @@ namespace Rawr.DPSWarr
             {
                 nCurrentRage -= nHSRageCost;
                 bHeroicStrikeOnNextSwing = true;
+            }
+        }
+        public void DoFuryRotation2()
+        {
+            if (nWhirlWindCoolDown > 0)
+                --nWhirlWindCoolDown;
+            if (nBloodthirstCoolDown > 0)
+                --nBloodthirstCoolDown;
+
+            bool bOnGCD = fGCDTimer > 0.0f;
+            if (bOnGCD)
+                return;
+            int nHSRageCost = 15 - talents.ImprovedHeroicStrike;
+
+            if (nCurrentRage > 15 && bBloodSurgeProcced)
+            {
+                // slam!
+                nCurrentRage -= 15;
+                bBloodSurgeProcced = false;
+                SlamHit();
+                InvokeGCD();
+            }
+            else if (nCurrentRage > 25 && nWhirlWindCoolDown <= 0)
+            {
+                if (options.GlyphOfWhirlwind)
+                    nWhirlWindCoolDown = (int)(8.0f / fTimeStep);
+                else
+                    nWhirlWindCoolDown = (int)(10.0f / fTimeStep);
+                nCurrentRage -= 25;
+                bool bCrit = DoWhirlWindOffHandHit();
+                DoWhirlWindMainHandHit(bCrit);
+                InvokeGCD();
+                PossibleBloodSurgeProc();
+            }
+            else if (nCurrentRage > 30 && nBloodthirstCoolDown <= 0)
+            {
+                nBloodthirstCoolDown = (int)(5.0f / fTimeStep);
+                nCurrentRage -= 30;
+                DoBloodthirstHit();
+                InvokeGCD();
+                PossibleBloodSurgeProc();
+            }
+            else if (nCurrentRage > nHSRageCost && nCurrentRage > options.HeroicStrikeRage && !bHeroicStrikeOnNextSwing)
+            {
+                nCurrentRage -= nHSRageCost;
+                bHeroicStrikeOnNextSwing = true;
+            }
+        }
+        public void DoArmsRotation()
+        {
+            if (nMortalStrikeCoolDown > 0)
+                --nMortalStrikeCoolDown;
+            if (nOverpowerCoolDown > 0)
+                --nOverpowerCoolDown;
+            if (nRendCoolDown > 0)
+                --nRendCoolDown;
+            if (nRendCoolDown == 0 && nRendCharges > 0)
+            {
+                nRendCoolDown = (int)(3f / fTimeStep);
+                --nRendCharges;
+                DoRendTick();
+                if (talents.TasteForBlood > 0)
+                {
+                    float fTasteForBlood = talents.TasteForBlood * 0.1f;
+                    if (rnd.NextDouble() < fTasteForBlood)
+                        bOverpowerProcced = true;
+                }
+            }
+            bool bOnGCD = fGCDTimer > 0.0f;
+            if (bOnGCD)
+                return;
+            int nExecuteRageCost = 15;
+            if (talents.ImprovedExecute == 1)
+                nExecuteRageCost -= 2;
+            if (talents.ImprovedExecute == 2)
+                nExecuteRageCost -= 5;
+            if (nCurrentRage > 10 && nRendCharges <= 0)
+            {
+                nRendCharges = 5 + (options.GlyphOfRend ? 1 : 0);
+                nRendCoolDown = (int)(3f / fTimeStep);
+                nCurrentRage -= 10;
+                InvokeGCD();
+            }
+            else if (nCurrentRage > 25 && nBladeStormCoolDown <= 0 && talents.Bladestorm > 0)
+            {
+                nBladeStormCoolDown = (int)( 90f / fTimeStep);
+                nCurrentRage -= 25;
+                for (int i = 0; i < 6; ++i)
+                {
+                    DoWhirlWindMainHandHit(false);
+                    PossibleSuddenDeathProc();
+                }
+                fGCDTimer = 6.0f;
+            }
+            else if (nCurrentRage > nExecuteRageCost && bSuddenDeathProcced)
+            {
+                nCurrentRage -= nExecuteRageCost;
+                bSuddenDeathProcced = false;
+                int nRageUsed = System.Math.Max(nCurrentRage, 30);
+                DoExecuteHit(nRageUsed + (options.GlyphOfExecute ? 10f : 0f));
+                nCurrentRage -= nRageUsed;
+                if (nCurrentRage < 10)
+                    nCurrentRage = 10;
+                InvokeGCD();
+                PossibleSuddenDeathProc();
+            }
+            else if (nCurrentRage > 30 && nMortalStrikeCoolDown <= 0)
+            {
+                nMortalStrikeCoolDown = (int)((6.0f - talents.ImprovedMortalStrike * 0.333f) / fTimeStep);
+                nCurrentRage -= 30;
+                MortalStrikeHit();
+                InvokeGCD();
+                PossibleSuddenDeathProc();
+            }
+            else if (nCurrentRage > 5 && nOverpowerCoolDown <= 0 && bOverpowerProcced)
+            {
+                nOverpowerCoolDown = (int)((5.0f - talents.UnrelentingAssault * 2.0f) / fTimeStep);
+                bOverpowerProcced = false;
+                nCurrentRage -= 5;
+                OverpowerHit();
+                fGCDTimer = 1.0f;
+                PossibleSuddenDeathProc();
+            }
+            else if (nCurrentRage > 15 && talents.ImprovedSlam > 0 && nCurrentRage > options.HeroicStrikeRage )
+            {
+                // slam!
+                nCurrentRage -= 15;
+                fSwingTimerMH -= (1.5f - talents.ImprovedSlam * 0.5f);
+                fSwingTimerOH -= (1.5f - talents.ImprovedSlam * 0.5f);
+                SlamHit();
+                InvokeGCD();
+                PossibleSuddenDeathProc();
+            }
+
+        }
+
+        public void DoExecuteSpamRotation()
+        {
+            bool bOnGCD = fGCDTimer > 0.0f;
+            if (bOnGCD)
+                return;
+            int nExecuteRageCost = 15;
+            if (talents.ImprovedExecute == 1)
+                nExecuteRageCost -= 2;
+            if (talents.ImprovedExecute == 2)
+                nExecuteRageCost -= 5;
+            if ( nCurrentRage > nExecuteRageCost )
+            {
+                nCurrentRage -= nExecuteRageCost;
+                DoExecuteHit(nCurrentRage + (options.GlyphOfExecute ? 10f : 0f));
+                nCurrentRage = 0;
+                InvokeGCD();
             }
         }
     }
@@ -580,13 +897,17 @@ namespace Rawr.DPSWarr
 					"Basic Stats:Armor Penetration Rating",
 					"Basic Stats:Armor Mitigation",
 					"Basic Stats:Flurry Uptime",
+                    "DPS Result:Total DPS",
                     "DPS Breakdown:White DPS",
                     "DPS Breakdown:Heroic Strike DPS",
                     "DPS Breakdown:Deep Wounds DPS",
                     "DPS Breakdown:Whirlwind DPS",
                     "DPS Breakdown:Bloodthirst DPS",
                     "DPS Breakdown:Slam DPS",
-                    "DPS Breakdown:Total DPS",
+                    "DPS Breakdown:Execute DPS",
+                    "DPS Breakdown:Mortal Strike DPS",
+                    "DPS Breakdown:Overpower DPS",
+                    "DPS Breakdown:Rend DPS",
                     "Simulation Results (200xFight Length):White Hits",
                     "Simulation Results (200xFight Length):White Crits",
                     "Simulation Results (200xFight Length):White Dodges",
@@ -742,13 +1063,16 @@ namespace Rawr.DPSWarr
                 calcData.DoRotation();
 
                 calcs.FlurryUptime += (float)calcData.nFlurryActiveCounter * calcData.fTimeStep / calcOpts.FightLength * 100.0f / nIterations;
-
                 calcs.SlamDPSPoints += calcData.nSlamDamage / calcOpts.FightLength / nIterations;
                 calcs.HSDPSPoints += calcData.nHeroicStrikeDamage / calcOpts.FightLength / nIterations;
                 calcs.BTDPSPoints += calcData.nBloodthirstDamage / calcOpts.FightLength / nIterations;
                 calcs.WWDPSPoints += calcData.nWhirlwindDamage / calcOpts.FightLength / nIterations;
                 calcs.WhiteDPSPoints += calcData.nWhiteDamage / calcOpts.FightLength / nIterations;
                 calcs.DeepWoundsDPSPoints += calcData.nDeepWoundDamage / calcOpts.FightLength / nIterations;
+                calcs.MSDPSPoints += calcData.nMortalStrikeDamage / calcOpts.FightLength / nIterations;
+                calcs.ExecuteDPSPoints += calcData.nExecuteDamage / calcOpts.FightLength / nIterations;
+                calcs.OverpowerDPSPoints += calcData.nOverpowerDamage / calcOpts.FightLength / nIterations;
+                calcs.RendDPSPoints += calcData.nRendDamage / calcOpts.FightLength / nIterations;
                 calcs.MissedAttacks += (float)calcData.nMisses / nIterations;
                 calcs.DodgedAttacks += (float)calcData.nDodges / nIterations;
                 calcs.WhiteCrit += (float)calcData.nCrits / nIterations;
@@ -972,6 +1296,9 @@ namespace Rawr.DPSWarr
             }
             
             statsTotal.Strength = (strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier)));
+            if (talents.StrengthOfArms > 0)
+                statsTotal.Strength *= 1f + (talents.StrengthOfArms * 0.02f);
+
             statsTotal.Stamina = (staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier)));
             statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + ((statsTotal.Stamina-staBase) * 10f))));
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + fBerserkAPProc +
@@ -1011,9 +1338,11 @@ namespace Rawr.DPSWarr
 
             statsTotal.ExpertiseRating = (statsRace.Expertise * fExpertiseRatingPerPercent) + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.ExpertiseRating += talents.WeaponMastery * fExpertiseRatingPerPercent * 4f;
+            statsTotal.ExpertiseRating += talents.StrengthOfArms * fExpertiseRatingPerPercent * 2f;
 
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
             statsTotal.HasteRating += (statsGearEnchantsBuffs.PhysicalHaste + statsRace.PhysicalHaste) * 100.0f * fHastePerPercent;
+            statsTotal.HasteRating += talents.BloodFrenzy * 3f * fHastePerPercent;
 
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;

@@ -28,6 +28,8 @@ namespace Rawr.DPSWarr
             GlyphOfHeroicStrike.Checked = calcOpts.GlyphOfHeroicStrike;
             GlyphOfMortalStrike.Checked = calcOpts.GlyphOfMortalStrike;
             GlyphOfExecute.Checked = calcOpts.GlyphOfExecute;
+            GlyphOfRend.Checked = calcOpts.GlyphOfRend;
+            ExecuteSpam.Checked = calcOpts.ExecuteSpam;
             HideLowQualityItems.Checked = calcOpts.HideLowQualityItems;
         }
 
@@ -102,6 +104,20 @@ namespace Rawr.DPSWarr
             calcOpts.HideLowQualityItems = HideLowQualityItems.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+        private void ExecuteSpam_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.ExecuteSpam = ExecuteSpam.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void GlyphOfRend_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+            calcOpts.GlyphOfRend = GlyphOfRend.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 
@@ -133,6 +149,7 @@ namespace Rawr.DPSWarr
         public bool GlyphOfExecute = true;
         public bool GlyphOfMortalStrike = true;
         public bool HideLowQualityItems = true;
-
+        public bool GlyphOfRend = true;
+        public bool ExecuteSpam = true;
 	}
 }
