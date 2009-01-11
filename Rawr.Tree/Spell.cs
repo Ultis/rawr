@@ -78,7 +78,7 @@ namespace Rawr.Tree
         public float Duration
         { get { return periodicTicks * periodicTickTime; } }
 
-        public void Initialize(float hasteRating)
+        public void InitializeGCD(float hasteRating)
         {
             gcd = 1.5f / (1 + hasteRating / TreeConstants.hasteconversation);
         }
@@ -91,38 +91,33 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 3f;
             coefDH = castTime / 3.5f;
-            manaCost = 0.33f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.33f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage/100f;
             critPercent = calculatedStats.SpellCrit;
 
             #region minHeal, maxHeal
-            //if (calcOpts.level == 70)
-            //{
-            //    minHeal = 2321f;
-            //    maxHeal = 2739f;
-            //}
-            //else if (calcOpts.level == 80)
-            //{
-                minHeal = 3750f;
-                maxHeal = 4428f;
-            //}
+            minHeal = 3750f;
+            maxHeal = 4428f;
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.hasteconversation), 4);
 
+            #region Idols
             //guessed that it doesnt work with talents
             //z.B.: Idol of the Avian Heart (+136 Healing)
             healingBonus += calculatedStats.HealingTouchFinalHealBonus;
 
             //z.B.: Idol of Longevity (25 Mana on cast.... -25 Manacost)
             manaCost -= calculatedStats.ReduceHealingTouchCost;
+            #endregion
 
+            #region Glyph of Healing Touch
             if (calcOpts.glyphOfHealingTouch)
             {
                 castTime -= 1.5f;
@@ -131,6 +126,7 @@ namespace Rawr.Tree
                 maxHeal *= 1 - 0.5f;
                 coefDH *= 1 - 0.5f;
             }
+            #endregion
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -192,7 +188,7 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 2f;
             coefDH = 0.3f; //0.289f; It seems the DH coef got Buffed a bit
@@ -279,7 +275,7 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 0f;
             coefHoT = 0.8f / 4f;
@@ -358,7 +354,7 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 0f;
             periodicTickTime = 1f;
@@ -483,7 +479,7 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 0f;
             coefHoT = 0.96f / 7f; // Haven't fully tested yet, 1,88 coef included. (w/o Empowered Rejuvenation it would be 0.8)
@@ -558,9 +554,12 @@ namespace Rawr.Tree
         public Nourish(CharacterCalculationsTree calcs, bool hotActive)
         {
             InitializeNourish(calcs);
-            minHeal *= 1.2f;
-            maxHeal *= 1.2f;
-            coefDH *= 1.2f;
+            if (hotActive)
+            {
+                minHeal *= 1.2f;
+                maxHeal *= 1.2f;
+                coefDH *= 1.2f;
+            }
         }
 
         private void InitializeNourish(CharacterCalculationsTree calcs)
@@ -568,7 +567,7 @@ namespace Rawr.Tree
             Stats calculatedStats = calcs.BasicStats;
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
 
-            base.Initialize(calculatedStats.HasteRating);
+            base.InitializeGCD(calculatedStats.HasteRating);
 
             castTime = 1.5f;
             coefDH = castTime / 3.5f;
@@ -576,17 +575,9 @@ namespace Rawr.Tree
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 
-            #region minHeal, maxHeal
-            //if (calcOpts.level == 70)
-            //{
-            //    minHeal = 2321f;
-            //    maxHeal = 2739f;
-            //}
-            //else if (calcOpts.level == 80)
-            //{
+            #region minHeal and maxHeal for level 80
             minHeal = 1883f;
             maxHeal = 2187f;
-            //}
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);

@@ -408,29 +408,8 @@ namespace Rawr.Tree
 
     public static class TreeConstants
     {
-        public static float getBaseMana(Character.CharacterRace race)
-        {
-            if (race == Character.CharacterRace.NightElf)
-            {
-                //if (level == 70)
-                //    return 2470f;
-                //else if (level == 80)
-                    return 5361f;
-                //else
-                //    return 2470f;
-            }
-            else if (race == Character.CharacterRace.Tauren)
-            {
-                //if (level == 70)
-                //    return 2370f;
-                //else if (level == 80)
-                return 5286f;
-                //else
-                //    return 2370f;
-            }
-            return 5361f;
-        }
-
+        // Source: http://www.wowwiki.com/Base_mana
+        public static float BaseMana = 3496f;
         public static float hasteconversation = 3279f;
     }
 }
