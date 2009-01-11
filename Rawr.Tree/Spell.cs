@@ -193,7 +193,7 @@ namespace Rawr.Tree
             castTime = 2f;
             coefDH = 0.3f; //0.289f; It seems the DH coef got Buffed a bit
             coefHoT = 0.7f / 7f;
-            manaCost = 0.29f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.29f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 
@@ -279,7 +279,7 @@ namespace Rawr.Tree
 
             castTime = 0f;
             coefHoT = 0.8f / 4f;
-            manaCost = 0.18f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.18f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
 
             periodicTicks = 4;
@@ -360,7 +360,7 @@ namespace Rawr.Tree
             periodicTickTime = 1f;
             coefDH = 0.3434f; //0.342 doesn't seem accurate too
             coefHoT = 0.05055f; //0.44f / 7f; have to test it even more ... 0.44f/7f isn't true anymore .. its afaik lower
-            manaCost = 0.14f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.14f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 
@@ -484,7 +484,7 @@ namespace Rawr.Tree
             castTime = 0f;
             coefHoT = 0.96f / 7f; // Haven't fully tested yet, 1,88 coef included. (w/o Empowered Rejuvenation it would be 0.8)
             periodicTickTime = 1f;
-            manaCost = 0.23f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.23f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
 
             periodicTicks = 7;
@@ -571,7 +571,7 @@ namespace Rawr.Tree
 
             castTime = 1.5f;
             coefDH = castTime / 3.5f;
-            manaCost = 0.18f * TreeConstants.getBaseMana(calcs.LocalCharacter.Race);
+            manaCost = 0.18f * TreeConstants.BaseMana;
             healingBonus = calculatedStats.SpellPower * 1.88f + calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
 

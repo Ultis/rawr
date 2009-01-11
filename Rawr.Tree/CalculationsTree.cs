@@ -180,6 +180,26 @@ namespace Rawr.Tree
             calculatedStats.ManaRegInFSR = spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + replenishRegen;
             calculatedStats.ManaRegOutFSR = spiritRegen + calculatedStats.BasicStats.Mp5 + replenishRegen;
 
+            Spell regrowth1 = new Regrowth(calculatedStats, false);
+            Spell regrowth2 = new Regrowth(calculatedStats, true);
+            Spell lifebloom = new Lifebloom(calculatedStats);
+            Spell stack = new LifebloomStack(calculatedStats);
+            Spell rejuvenate = new Rejuvenation(calculatedStats);
+            Spell nourish1 = new Nourish(calculatedStats);
+            Spell nourish2 = new Nourish(calculatedStats, true);
+            Spell healingtouch = new HealingTouch(calculatedStats);
+            Spell wildgrowth = new WildGrowth(calculatedStats);
+
+            // calculate HPS for RJ raid spam (different people)
+            double RJhps = rejuvenate.HPSHoT * (15f / rejuvenate.gcd);
+            // calculate HPS for LB raid spam (different people)
+            double LBhps = lifebloom.HPSHoT * (lifebloom.Duration / rejuvenate.gcd) + lifebloom.HPS;
+            // calculate HPS for maximal 1 tank healing
+            double HPS_dots = rejuvenate.HPSHoT + stack.HPSHoT + regrowth1.HPSHoT;
+            double dot_cast_time = 1f / rejuvenate.Duration * rejuvenate.CastTime +
+                1f / lifebloom.Duration * lifebloom.CastTime + 1f / regrowth1.CastTime * regrowth1.HPSHoT;
+            double HPS_nourish = nourish2.HPS * (1f - dot_cast_time);
+
             //HPS Points
             if (calcOpts.Spellrotations.Count < 0)
                 calculatedStats.HpSPoints = 0;
@@ -250,7 +270,7 @@ namespace Rawr.Tree
         private static Stats GetRacialBaseStats(Character.CharacterRace race)
         {
             Stats statsRace = new Stats();
-            statsRace.Mana = TreeConstants.getBaseMana(race); //pulled in an extra class, because i've to know them for spells etc
+            statsRace.Mana = TreeConstants.BaseMana; //pulled in an extra class, because i've to know them for spells etc
 
             //if (level == 70)
             //{
