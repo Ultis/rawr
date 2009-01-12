@@ -16,8 +16,8 @@ namespace Rawr.Tree
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("HpS", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("HD", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("HealBurst", System.Drawing.Color.Red);
+                    _subPointNameColors.Add("HealSustained", System.Drawing.Color.Blue);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
                 }
                 return _subPointNameColors;
@@ -634,7 +634,7 @@ namespace Rawr.Tree
             if (stats.HasteRating == 81.25)
                 return false;
 
-            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana
+            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana + stats.CritRating
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
                 + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
                 + stats.ShatteredSunRestoProc

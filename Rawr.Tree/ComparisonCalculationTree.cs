@@ -7,8 +7,12 @@ namespace Rawr.Tree
         
         public override float OverallPoints { get; set;}
 
-        private float[] subPoints = new float[] { 0f, 0f, 0f, 0f };
-        public override float[] SubPoints { get; set;}
+        private float[] subPoints = new float[] { 0f, 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return subPoints; }
+            set { subPoints = value; }
+        }
 
         public float HpSPoints
         {
