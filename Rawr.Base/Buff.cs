@@ -725,7 +725,21 @@ namespace Rawr
                 Stats = { MageIceArmor = 1f },
                 ConflictingBuffs = new List<string>( new string[] { "Mage Class Armor" })
             });
-			#endregion
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Fel Armor",
+                Group = "Class Buffs",
+                Stats = { WarlockFelArmor = 1f },
+                ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Demon Armor",
+                Group = "Class Buffs",
+                Stats = { WarlockDemonArmor = 1f },
+                ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
+            });
+            #endregion
 
             #region Racial Buffs
             defaultBuffs.Add(new Buff

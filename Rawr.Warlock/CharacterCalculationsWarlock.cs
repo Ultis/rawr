@@ -1,5 +1,207 @@
 ﻿using System;
 using System.Collections.Generic;
+
+namespace Rawr.Warlock
+{
+
+    public class CharacterCalculationsWarlock : CharacterCalculationsBase
+    {
+        private Stats basicStats;
+        private Character character;
+
+        public float SpiritRegen { get; set; }
+        public float RegenInFSR { get; set; }
+        public float RegenOutFSR { get; set; }
+        public Character.CharacterRace Race { get; set; }
+
+        public Character Character
+        {
+            get { return character; }
+            set { character = value; }
+        }
+        
+        public Stats BasicStats
+        {
+            get { return basicStats; }
+            set { basicStats = value; }
+        }
+
+        public override float OverallPoints
+        {
+            get
+            {
+                float f = 0f;
+                foreach (float f2 in _subPoints)
+                    f += f2;
+                return f;
+            }
+            set { }
+        }
+
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
+
+        public float DpsPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
+
+        public float SustainPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
+
+        public float SurvivalPoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
+        public SolverBase GetSolver(Character character, Stats stats)
+        {
+                return new SolverShadow(stats, character);
+        }
+
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
+
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            float ResilienceCap = 15f, ResilienceFromRating = character.StatConversion.GetResilienceFromRating(1);
+            float Resilience = character.StatConversion.GetResilienceFromRating(BasicStats.Resilience);
+            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.\r\n{3}",
+                BasicStats.Resilience.ToString(),
+                Resilience.ToString("0.00"),
+                (Resilience * 2.2f).ToString("0.00"),
+                (Resilience > ResilienceCap) ? (string.Format("{0} rating above cap", ((float)Math.Floor((Resilience - ResilienceCap) / ResilienceFromRating)).ToString("0"))) : (string.Format("{0} rating below cap", ((float)Math.Ceiling((ResilienceCap - Resilience) / ResilienceFromRating)).ToString("0")))));
+            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Spirit", Math.Floor(BasicStats.Spirit).ToString("0"));
+            dictValues.Add("Spell Power", String.Format("{0}*{1} Bonus Shadow\r\n{2} Bonus Fire",
+                Math.Floor(BasicStats.SpellPower),
+                Math.Floor(BasicStats.SpellPower + BasicStats.SpellShadowDamageRating),
+                Math.Floor(BasicStats.SpellPower + BasicStats.SpellFireDamageRating)));
+            dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
+            dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs",
+                (BasicStats.SpellCrit * 100f).ToString("0.00"),
+                character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating).ToString("0.00"),
+                BasicStats.CritRating.ToString("0"),
+                (character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect)).ToString("0.00"),
+                "1,701",
+                (BasicStats.SpellCrit * 100f - character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating) - character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) - 1.24f).ToString("0.00")));
+
+            float Hit = calcOptions.TargetHit;
+            float BonusHit = BasicStats.SpellHit * 100f;
+            float RacialHit = 0;
+            string RacialText = "";
+            if (character.Race == Character.CharacterRace.Draenei)
+            {
+                RacialHit = 1;
+                RacialText = "1% from Draenei Racial\r\n";
+                if (!character.ActiveBuffsContains("Heroic Presence"))
+                    BonusHit += 1;
+            }
+            float DebuffHit = 0;
+            if (character.ActiveBuffsContains("Spell Hit Chance Taken"))
+            {
+                DebuffHit = 3f;
+                BonusHit += DebuffHit;
+            }
+            float RHitRating = 1f / character.StatConversion.GetSpellHitFromRating(1);
+            float AfflictionHit = character.WarlockTalents.Suppression * 1f;
+            float DestructionHit = character.WarlockTalents.Cataclysm * 1f;
+            float HitAffliction = Hit + BonusHit + AfflictionHit;
+            float HitDestruction = Hit + BonusHit + DestructionHit;
+            dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from Misery or Improved Faerie Fire\r\n{5}% from {6} points in Suppression\r\n{7}% from {8} points in Cataclysm\r\n{9}{10}% Hit with Shadow spells, {11}\r\n{12}% Hit with Fire spells, {13}",
+                BonusHit.ToString("0.00"),
+                character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"), 
+                BasicStats.HitRating,
+                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit - DebuffHit).ToString("0.00"),
+                DebuffHit, 
+                AfflictionHit, 
+                character.WarlockTalents.Suppression,
+                DestructionHit, 
+                character.WarlockTalents.Cataclysm,
+                RacialText,
+                HitAffliction.ToString("0.00"), 
+                (HitAffliction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitAffliction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitAffliction) * RHitRating)),
+                HitDestruction.ToString("0.00"),  
+                (HitDestruction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitDestruction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitDestruction) * RHitRating))));
+
+            dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
+                (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+
+            SolverBase solver = GetSolver(character, BasicStats);
+            solver.Calculate(this);
+
+            dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
+            dictValues.Add("Burst DPS", string.Format("{0}*DPS", solver.DPS.ToString("0")));
+            dictValues.Add("Sustained DPS", string.Format("{0}*DPS", solver.SustainDPS.ToString("0")));
+
+            dictValues.Add("Shadow Bolt", new ShadowBolt(BasicStats, character).ToString());
+            dictValues.Add("Incinerate", new Incinerate(BasicStats, character).ToString());
+            dictValues.Add("Immolate", new Immolate(BasicStats, character).ToString());
+            dictValues.Add("Curse of Agony", new CurseOfAgony(BasicStats, character).ToString());
+            dictValues.Add("Curse of Doom", new CurseOfDoom(BasicStats, character).ToString());
+            dictValues.Add("Corruption", new Corruption(BasicStats, character).ToString());
+            if (character.WarlockTalents.SiphonLife > 0)
+                dictValues.Add("Siphon Life", new SiphonLife(BasicStats, character).ToString());
+            else
+                dictValues.Add("Siphon Life", "- *Required talent not available");
+            if (character.WarlockTalents.UnstableAffliction > 0)
+                dictValues.Add("Unstable Affliction", new UnstableAffliction(BasicStats, character).ToString());
+            else
+                dictValues.Add("Unstable Affliction", "- *Required talent not available");
+//            dictValues.Add("Life Tap", new LifeTap(BasicStats, character).ToString());
+/*            if (character.WarlockTalents.DarkPact > 0)
+                dictValues.Add("Dark Pact", new DarkPact(BasicStats, character).ToString());
+            else
+                dictValues.Add("Dark Pact", "- *Required talent not available");*/
+            dictValues.Add("Death Coil", new DeathCoil(BasicStats, character).ToString());
+            dictValues.Add("Drain Life", new DrainLife(BasicStats, character).ToString());
+            dictValues.Add("Drain Soul", new DrainSoul(BasicStats, character).ToString());
+            if (character.WarlockTalents.Haunt > 0)
+                dictValues.Add("Haunt", new Haunt(BasicStats, character).ToString());
+            else
+                dictValues.Add("Haunt", "- *Required talent not available");
+            dictValues.Add("Seed of Corruption", new SeedOfCorruption(BasicStats, character).ToString());
+            dictValues.Add("Rain of Fire", new RainOfFire(BasicStats, character).ToString());
+            dictValues.Add("Hellfire", new Hellfire(BasicStats, character).ToString());
+            dictValues.Add("Searing Pain", new SearingPain(BasicStats, character).ToString());
+            dictValues.Add("Shadowflame", new Shadowflame(BasicStats, character).ToString());
+            dictValues.Add("Soul Fire", new SoulFire(BasicStats, character).ToString());
+            if (character.WarlockTalents.Shadowburn > 0)
+                dictValues.Add("Shadowburn", new Shadowburn(BasicStats, character).ToString());
+            else
+                dictValues.Add("Shadowburn", "- *Required talent not available");
+            if (character.WarlockTalents.Conflagrate > 0)
+                dictValues.Add("Conflagrate", new Conflagrate(BasicStats, character).ToString());
+            else
+                dictValues.Add("Conflagrate", "- *Required talent not available");
+            if (character.WarlockTalents.Shadowfury > 0)
+                dictValues.Add("Shadowfury", new Shadowfury(BasicStats, character).ToString());
+            else
+                dictValues.Add("Shadowfury", "- *Required talent not available");
+            if (character.WarlockTalents.ChaosBolt > 0)
+                dictValues.Add("Chaos Bolt", new ChaosBolt(BasicStats, character).ToString());
+            else
+                dictValues.Add("Chaos Bolt", "- *Required talent not available");
+
+            return dictValues;
+        }
+    }
+}
+
+/*using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Reflection;
@@ -8,7 +210,7 @@ namespace Rawr.Warlock
 {
     public enum FillerSpell
     {
-        Shadowbolt, 
+        Shadowbolt,
         Incinerate
     }
 
@@ -16,7 +218,7 @@ namespace Rawr.Warlock
     {
         CurseOfAgony, 
         CurseOfDoom, 
-        CurseOfTheElements, 
+        CurseOfTheElements,
         CurseOfShadow, 
         CurseOfRecklessness,
         CurseOfWeakness, 
@@ -26,21 +228,16 @@ namespace Rawr.Warlock
     public enum Pet
     {
         Succubus,
-        Felhunter, 
+        Felhunter,
         Imp, 
         Voidwalker,
         Felguard
     }
 
-    public enum IsbMethod
-    {
-        Custom,
-        Raid
-    }
-
     [Serializable]
     public class CalculationOptionsWarlock : ICalculationOptionBase
     {
+
         public string GetXml()
         {
             System.Xml.Serialization.XmlSerializer serializer =
@@ -67,22 +264,6 @@ namespace Rawr.Warlock
         public bool CastSiphonLife { get; set; }
         public bool CastShadowburn { get; set; }
         public bool CastConflagrate { get; set; }
-        public IsbMethod IsbMethod { get; set; }
-        public float CustomIsbUptime { get; set; }
-        public int NumRaidWarlocks { get; set; }
-        private SUWarlock[] raidWarlocks = new SUWarlock[5];
-        public SUWarlock[] RaidWarlocks
-        {
-            get { return raidWarlocks; }
-            set { raidWarlocks = value; }
-        }
-        public int NumRaidShadowPriests { get; set; }
-        private SUShadowPriest[] raidShadowPriests = new SUShadowPriest[5];
-        public SUShadowPriest[] RaidShadowPriests
-        {
-            get { return raidShadowPriests; }
-            set { raidShadowPriests = value; }
-        }
 
         //affliction talents
         public int Suppression { get; set; }
@@ -99,6 +280,14 @@ namespace Rawr.Warlock
         public int Contagion { get; set; }
         public int DarkPact { get; set; }
         public int UnstableAffliction { get; set; }
+        public int Frailty { get; set; }
+        public int ImprovedFear { get; set; }
+        public int ImprovedFelhunter { get; set; }
+        public int Eradication { get; set; }
+        public int DeathsEmbrace { get; set; }
+        public int Pandemic { get; set; }
+        public int EverlastingAffliction { get; set; }
+        public int Haunt { get; set; }
 
         //demonology talents
         public int ImprovedImp { get; set; }
@@ -115,6 +304,14 @@ namespace Rawr.Warlock
         public int DemonicKnowledge { get; set; }
         public int DemonicTactics { get; set; }
         public int SummonFelguard { get; set; }
+        public int DemonicBrutality { get; set; }
+        public int FelVitality { get; set; }
+        public int DemonicEmpowerment { get; set; }
+        public int FelSynergy { get; set; }
+        public int ImprovedDemonicTactics { get; set; }
+        public int DemonicEmpathy { get; set; }
+        public int DemonicPact { get; set; }
+        public int Metamorphosis { get; set; }
 
         //destruction talents
         public int ImprovedShadowBolt { get; set; }
@@ -132,6 +329,13 @@ namespace Rawr.Warlock
         public int Conflagrate { get; set; }
         public int SoulLeech { get; set; }
         public int ShadowAndFlame { get; set; }
+        public int MoltenCore { get; set; }
+        public int DemonicPower { get; set; }
+        public int ImprovedSoulLeech { get; set; }
+        public int Backdraft { get; set; }
+        public int EmpoweredImp { get; set; }
+        public int FireAndBrimstone { get; set; }
+        public int ChaosBolt { get; set; }
 
         //not implemented
         public int ImprovedCurseOfWeakness { get; set; }
@@ -156,25 +360,19 @@ namespace Rawr.Warlock
         public int NetherProtection { get; set; }
         public int Shadowfury { get; set; }
 
-        private CalculationOptionsWarlock() 
+        private CalculationOptionsWarlock()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                RaidWarlocks[i] = new SUWarlock();
-                RaidShadowPriests[i] = new SUShadowPriest();
-            }
         }
-
+        
         public CalculationOptionsWarlock(Character character)
         {
             ImportTalents(character);
 
             Latency = 0.05f;
-            TargetLevel = 73;
-            FightDuration = 360;
+            TargetLevel = 83;
+            FightDuration = 300;
             DotGap = 1;
             AfflictionDebuffs = 12;
-            ShadowPriestDps = 1200;
             FillerSpell = FillerSpell.Shadowbolt;
             CastedCurse = CastedCurse.CurseOfShadow;
             CastImmolate = false;
@@ -185,16 +383,6 @@ namespace Rawr.Warlock
             CastConflagrate = false;
             Pet = Pet.Succubus;
             PetSacrificed = true;
-            IsbMethod = IsbMethod.Raid;
-            CustomIsbUptime = .6f;
-            NumRaidWarlocks = 2;
-            NumRaidShadowPriests = 2;
-
-            for (int i = 0; i < 5; i++)
-            {
-                RaidWarlocks[i] = new SUWarlock();
-                RaidShadowPriests[i] = new SUShadowPriest();
-            }
         }
 
         private void ImportTalents(Character character)
@@ -341,7 +529,6 @@ namespace Rawr.Warlock
 
         public float TotalDamage { get; set; }
         public float IsbUptime { get; set; }
-        public float RaidDpsFromIsb { get; set; }
 
         private Stats _totalStats;
         public Stats TotalStats
@@ -375,20 +562,20 @@ namespace Rawr.Warlock
             vals.Add("Mana", BasicStats.Mana.ToString());
             vals.Add("Stamina", BasicStats.Stamina.ToString());
             vals.Add("Intellect", BasicStats.Intellect.ToString());
+            vals.Add("Spirit", BasicStats.Spirit.ToString());
             vals.Add("Total Crit %", CritPercent.ToString("0.00"));
             vals.Add("Hit %", HitPercent.ToString("0.00"));
             vals.Add("Haste %", HastePercent.ToString("0.00"));
             vals.Add("Shadow Damage", ShadowDamage.ToString("0"));
             vals.Add("Fire Damage", FireDamage.ToString("0"));
             vals.Add("ISB Uptime", IsbUptime.ToString("0.00"));
-            vals.Add("RDPS from ISB", Math.Round(RaidDpsFromIsb).ToString());
             vals.Add("Total Damage", TotalDamage.ToString());
             vals.Add("DPS", Math.Round(DpsRating).ToString());
             
             //vals.Add("Casting Speed", (1f / (TotalStats.SpellHasteRating / 1570f + 1f)).ToString());
-            //vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
-            //vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());
-            //vals.Add("DPS", DPS.ToString());
+            vals.Add("Shadow Damage", (TotalStats.SpellShadowDamageRating + TotalStats.SpellDamageRating).ToString());
+            vals.Add("Fire Damage", (TotalStats.SpellFireDamageRating + TotalStats.SpellDamageRating).ToString());
+            vals.Add("DPS", DPS.ToString());
             //if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "SHADOWBOLT"; }))
             //{
             //    ShadowBolt sb = new ShadowBolt(character, TotalStats);
@@ -400,7 +587,6 @@ namespace Rawr.Warlock
             //    vals.Add("SB Crit Rate", sb.CritPercent.ToString());
             //    vals.Add("ISB Uptime", (sb.ISBuptime * 100f).ToString());
             //    vals.Add("#SB Casts", NumCasts[sb].ToString());
-
             //}
             //else
             //{
@@ -412,7 +598,6 @@ namespace Rawr.Warlock
             //    vals.Add("SB Crit Rate", "");
             //    vals.Add("ISB Uptime", "");
             //    vals.Add("#SB Casts", "0");
-
             //}
             //if (Spells.Exists(delegate(Spell s) { return s.Name.ToUpper() == "INCINERATE"; }))
             //{
@@ -446,7 +631,7 @@ namespace Rawr.Warlock
             //    vals.Add("ImmolateCrit Rate", sb.CritPercent.ToString());
             //    vals.Add("#Immolate Casts", NumCasts[sb].ToString());
             //}
-            //else 
+            //else
             //{
             //    vals.Add("ImmolateMin Hit","");
             //    vals.Add("ImmolateMax Hit","");
@@ -519,10 +704,11 @@ namespace Rawr.Warlock
             //    vals.Add("SL Total Damage","");
             //    vals.Add("#SL Casts","0");
             //}
-            //vals.Add("#Lifetaps", NumLifetaps.ToString());
-            //vals.Add("Mana Per LT", LifetapManaReturn.ToString());
+            vals.Add("#Lifetaps", NumLifetaps.ToString());
+            vals.Add("Mana Per LT", LifetapManaReturn.ToString());
             
             return vals;
         }
     }
 }
+*/

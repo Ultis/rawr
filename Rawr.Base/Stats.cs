@@ -91,6 +91,8 @@ namespace Rawr
         MageIceArmor,
         MageMageArmor,
         MageMoltenArmor,
+        WarlockFelArmor,
+        WarlockDemonArmor,
         Mana,
         ManaSpringMp5Increase,
         ManaRestore5min,
@@ -1641,6 +1643,20 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageMoltenArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float WarlockFelArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockFelArmor] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float WarlockDemonArmor
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WarlockDemonArmor] = value; }
         }
 
         // Unseen Moon idol

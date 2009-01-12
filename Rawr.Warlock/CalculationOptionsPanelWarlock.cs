@@ -1,5 +1,212 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Rawr.Warlock
+{
+    public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase
+    {
+        public CalculationOptionsPanelWarlock()
+        {
+            InitializeComponent();
+        }
+
+        private bool loading;
+
+        protected override void LoadCalculationOptions()
+        {
+            loading = true;
+            if (Character.CalculationOptions == null)
+                Character.CalculationOptions = new CalculationOptionsWarlock();
+
+            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            
+            cbTargetLevel.SelectedIndex = calcOpts.TargetLevel;
+            
+            trkFightLength.Value = (int)calcOpts.FightLength;
+            lblFightLength.Text = trkFightLength.Value + " minute fight.";
+
+            trkFSR.Value = (int)calcOpts.FSRRatio;
+            lblFSR.Text = trkFSR.Value + "% time spent in FSR";
+
+            trkDelay.Value = (int)calcOpts.Delay;
+            lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
+
+            trkReplenishment.Value = (int)calcOpts.Replenishment;
+            lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
+
+            trkJoW.Value = (int)calcOpts.JoW;
+            lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+
+            trkSurvivability.Value = (int)calcOpts.Survivability;
+            lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
+            
+            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
+
+            if (calcOpts.SpellPriority == null)
+                calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
+            lsSpellPriopity.Items.Clear();
+            lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
+            
+            loading = false;
+        }
+
+        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+               
+        private void bChangePriority_Click(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            SpellPriorityForm priority = new SpellPriorityForm(calcOpts.SpellPriority, lsSpellPriopity, Character);
+            priority.Show();
+        }
+
+        private void cbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.TargetLevel = cbTargetLevel.SelectedIndex;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkFightLength_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.FightLength = trkFightLength.Value;
+                lblFightLength.Text = trkFightLength.Value + " minute fight.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkFSR_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.FSRRatio = trkFSR.Value;
+                lblFSR.Text = trkFSR.Value + "% time spent in FSR";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkDelay_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.Delay = trkDelay.Value;
+                lblDelay.Text = trkDelay.Value + "ms Game/Brain Latency";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkReplenishment_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.Replenishment = trkReplenishment.Value;
+                lblReplenishment.Text = trkReplenishment.Value + "% effect from Replenishment.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trkJoW_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.JoW = trkJoW.Value;
+                lblJoW.Text = trkJoW.Value + "% effect from JoW.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.Survivability = trkSurvivability.Value;
+                lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void cmbManaAmt_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblJoW_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+    [Serializable]
+	public class CalculationOptionsWarlock : ICalculationOptionBase
+	{
+        public int TargetLevel { get; set; }
+        public float FightLength { get; set; }
+        public float FSRRatio { get; set; }
+        public float Delay { get; set; }
+        public float Shadowfiend { get; set; }
+        public float Replenishment { get; set; }
+        public float JoW { get; set; }
+        public float Survivability { get; set; }
+
+        public List<string> SpellPriority { get; set; }
+
+        private static readonly List<int> targetHit = new List<int>() {100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39};
+        public int TargetHit { get { return targetHit[TargetLevel]; } }
+
+        private static readonly List<int> manaAmt = new List<int>() { 0, 1800, 2200, 2400, 4300 };
+        public int ManaPot { get; set; }
+        public int ManaAmt { get { return manaAmt[ManaPot]; } }
+
+        public CalculationOptionsWarlock()
+        {
+            TargetLevel = 3;
+            FightLength = 5f;
+            FSRRatio = 100f;
+            Delay = 100f;
+            Shadowfiend = 100f;
+            Replenishment = 100f;
+            JoW = 100f;
+            Survivability = 2f;
+
+            SpellPriority = null;
+            ManaPot = 4;
+        }
+
+        public string GetXml()
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsWarlock));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
+	}
+}
+
+/*using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
@@ -11,14 +218,10 @@ namespace Rawr.Warlock
 	public partial class CalculationOptionsPanelWarlock : CalculationOptionsPanelBase
 	{
         private bool calculationSuspended = false;
-        private WarlockTalentsForm talents;
-        private RaidISB raidIsb;
 
 		public CalculationOptionsPanelWarlock()
 		{
 			InitializeComponent();
-            talents = new WarlockTalentsForm(this);
-            raidIsb = new RaidISB(this);
         }
 
 		protected override void LoadCalculationOptions()
@@ -34,25 +237,10 @@ namespace Rawr.Warlock
             textBoxFightDuration.Text = options.FightDuration.ToString();
             textBoxDotGap.Text = options.DotGap.ToString();
             textBoxAfflictionDebuffs.Text = options.AfflictionDebuffs.ToString();
-            textBoxShadowPriestDps.Text = options.ShadowPriestDps.ToString();
             comboBoxFillerSpell.SelectedIndex = (int)options.FillerSpell;
             comboBoxCastedCurse.SelectedIndex = (int)options.CastedCurse;
             checkBoxCastImmolate.Checked = options.CastImmolate;
             checkBoxCastCorruption.Checked = options.CastCorruption;
-            if (options.IsbMethod == IsbMethod.Custom)
-            {
-                radioButtonIsbCustom.Checked = true;
-                textBoxIsbCustom.Enabled = true;
-                buttonIsbRaid.Enabled = false;
-            }
-            else
-            {
-                radioButtonIsbRaid.Checked = true;
-                textBoxIsbCustom.Enabled = false;
-                buttonIsbRaid.Enabled = true;
-            }
-            textBoxIsbCustom.Text = options.CustomIsbUptime.ToString();
-
             checkBoxCastUnstableAffliction.Enabled = options.UnstableAffliction == 1;
             checkBoxCastUnstableAffliction.Checked = checkBoxCastUnstableAffliction.Enabled && options.CastUnstableAffliction;
             checkBoxCastSiphonLife.Enabled = options.SiphonLife == 1;
@@ -68,9 +256,6 @@ namespace Rawr.Warlock
             comboBoxPet.SelectedIndex = (int)options.Pet;
             checkBoxPetSacrificed.Enabled = options.DemonicSacrifice == 1;
             checkBoxPetSacrificed.Checked = checkBoxPetSacrificed.Enabled && options.PetSacrificed;
-
-            if (talents != null)
-                talents.LoadCalculationOptions();
 
             calculationSuspended = false;
         }
@@ -110,11 +295,6 @@ namespace Rawr.Warlock
             Character.OnCalculationsInvalidated();
         }
 
-        private void buttonTalents_Click(object sender, EventArgs e)
-        {
-            talents.Show();
-        }
-
         private void textBoxLatency_Leave(object sender, EventArgs e)
         {
             CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
@@ -128,9 +308,9 @@ namespace Rawr.Warlock
 	
 		private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
-            options.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
-            if (!calculationSuspended) Character.OnCalculationsInvalidated();
+                    CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+                    options.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
+                    if (!calculationSuspended) Character.OnCalculationsInvalidated();
 		}
 
         private void textBoxFightDuration_Leave(object sender, EventArgs e)
@@ -162,17 +342,6 @@ namespace Rawr.Warlock
             if (int.TryParse(textBoxAfflictionDebuffs.Text, out value))
             {
                 options.AfflictionDebuffs = value;
-                if (!calculationSuspended) Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void textBoxShadowPriestDps_Leave(object sender, EventArgs e)
-        {
-            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
-            float value;
-            if (float.TryParse(textBoxShadowPriestDps.Text, out value))
-            {
-                options.ShadowPriestDps = value;
                 if (!calculationSuspended) Character.OnCalculationsInvalidated();
             }
         }
@@ -239,64 +408,18 @@ namespace Rawr.Warlock
 
         private void comboBoxPet_SelectedIndexChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
             options.Pet = (Pet)(comboBoxPet.SelectedIndex);
             if (!calculationSuspended) Character.OnCalculationsInvalidated();
         }
 
         private void checkBoxPetSacrificed_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
+            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
             options.PetSacrificed = checkBoxPetSacrificed.Checked;
             if (!calculationSuspended) Character.OnCalculationsInvalidated();
         }
 
-        private void radioButtonIsbCustom_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
-            if (radioButtonIsbCustom.Checked)
-            {
-                options.IsbMethod = IsbMethod.Custom;
-                textBoxIsbCustom.Enabled = true;
-            }
-            else
-                textBoxIsbCustom.Enabled = false;
-            if (!calculationSuspended) Character.OnCalculationsInvalidated();
-        }
-
-        private void textBoxIsbCustom_Leave(object sender, EventArgs e)
-        {
-            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
-            float value;
-            if(float.TryParse(textBoxIsbCustom.Text, out value))
-            {
-                options.CustomIsbUptime = value;
-                if (!calculationSuspended) Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void radioButtonIsbRaid_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsWarlock options = Character.CalculationOptions as CalculationOptionsWarlock;
-            if (radioButtonIsbRaid.Checked)
-            {
-                options.IsbMethod = IsbMethod.Raid;
-                buttonIsbRaid.Enabled = true;
-            }
-            else
-            {
-                options.IsbMethod = IsbMethod.Custom;
-                buttonIsbRaid.Enabled = false;
-            }
-            if (!calculationSuspended) Character.OnCalculationsInvalidated();
-        }
-
-        private void buttonIsbRaid_Click(object sender, EventArgs e)
-        {
-            raidIsb.LoadRaid();
-            if (raidIsb.ShowDialog(this) == DialogResult.OK)
-                raidIsb.SaveRaid();
-            if (!calculationSuspended) Character.OnCalculationsInvalidated();
-        }
 	}
 }
+*/

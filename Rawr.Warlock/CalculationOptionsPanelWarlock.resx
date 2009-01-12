@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTipWarlock.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="trkFSR.ToolTip" xml:space="preserve">
+    <value>Time of fight spent in FSR. FSR is the "Five Second Rule". Whenever you cast a spell that eats mana, you regenerate no mana from spirit until 5 seconds has passed. This slider lets you tell Rawr how much time in a fight you spend inside the FSR.</value>
+  </data>
 </root>
