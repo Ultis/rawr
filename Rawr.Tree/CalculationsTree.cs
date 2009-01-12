@@ -17,7 +17,7 @@ namespace Rawr.Tree
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("HpS", System.Drawing.Color.Red);
-                    _subPointNameColors.Add("Mp5", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("HD", System.Drawing.Color.Blue);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Green);
                 }
                 return _subPointNameColors;
@@ -43,14 +43,23 @@ namespace Rawr.Tree
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Global CD",
 
-                        "Points:HpS",
-                        "Points:Mp5",
+                        "Points:HealBurst",
+                        "Points:HealSustained",
                         "Points:Survival",
                         "Points:Overall",
 
-                        "Prim Rotation:Rota HPS",
-                        "Prim Rotation:Rota Mana",
-                        "Prim Rotation:Rota Time2OOM",
+                        "Simulation:Time until OOM",
+                        "Simulation:Total healing done",
+                        "Simulation:HPS for primary heal",
+                        "Simulation:HPS for tank HoTs",
+                        "Simulation:MPS for primary heal",
+                        "Simulation:MPS for tank HoTs",
+                        "Simulation:MPS for Wild Growth",
+                        "Simulation:HoT refresh fraction",
+                        "Simulation:Mana regen per second",
+                        "Simulation:Casts per minute until OOM",
+                        "Simulation:Time to regen full mana",
+                        "Simulation:Cast% after OOM",
 
                         "Lifebloom:LB Tick",
                         "Lifebloom:LB Heal",
@@ -148,6 +157,116 @@ namespace Rawr.Tree
             return new CharacterCalculationsTree();
         }
 
+        private static float DoTrinketManaRestoreCalcs(CharacterCalculationsTree calcs, float castsPerMinute)
+        {
+            float mp5FromTrinket = 0.0f;
+            // Mp5 on cast for 10 sec, 45 sec cooldown
+            if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
+            {
+                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / 15f;
+            }
+            if (calcs.BasicStats.FullManaRegenFor15SecOnSpellcast > 0)
+            {
+                // Blue Dragon. 2% chance to proc on cast, no known internal cooldown. calculate as the chance to have procced during its duration. 2% proc/cast.
+                float avgcastlen = 60f / castsPerMinute;
+                float tmpregen = calcs.ManaRegOutFSR * (1f - calcs.BasicStats.SpellCombatManaRegeneration) * (1f - (float)Math.Pow(1f - 0.02f, 15f / avgcastlen));
+                if (tmpregen > 0f)
+                {
+                    mp5FromTrinket += tmpregen;
+                }
+            }
+            if (calcs.BasicStats.MementoProc > 0)
+            {
+                mp5FromTrinket += 17; // 3 sec cast time, 15.5 mp5, 1.5 sec cast time 19 mp5
+            }
+            return mp5FromTrinket;
+        }
+        
+        protected float[] SimulateHealing(CharacterCalculationsTree calculatedStats, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal)
+        {
+            #region Spells
+            Spell regrowth = new Regrowth(calculatedStats, false);
+            Spell regrowthWhileActive = new Regrowth(calculatedStats, true);
+            Spell lifebloom = new Lifebloom(calculatedStats);
+            Spell stack = new LifebloomStack(calculatedStats);
+            Spell rejuvenate = new Rejuvenation(calculatedStats);
+            Spell nourish = new Nourish(calculatedStats);
+            Spell nourishWithHoT = new Nourish(calculatedStats, true);
+            Spell healingTouch = new HealingTouch(calculatedStats);
+            Spell wildGrowth = new WildGrowth(calculatedStats);
+            #endregion
+
+            float castsPerMinute = 0;
+
+            #region WildGrowthPerMinute
+            float wgCastTime = wildGrowth.CastTime / 60f * wgPerMin;
+            float wgMPS = wildGrowth.manaCost / 60f * wgPerMin;
+            castsPerMinute += wgPerMin;
+            #endregion
+
+            #region HotsOnTanks
+            float hotsHPS = 0;
+            float hotsCastTime = 0;
+            float hotsMPS = 0;
+            float hotsCastsPerMinute = 0;
+            if (rejuvOnTank)
+            {
+                hotsHPS += rejuvenate.HPSHoT;
+                hotsMPS += rejuvenate.manaCost / rejuvenate.Duration;
+                hotsCastTime += rejuvenate.CastTime / rejuvenate.Duration;
+                hotsCastsPerMinute += 60f / rejuvenate.Duration;
+            }
+            if (rgOnTank)
+            {
+                hotsHPS += regrowth.HPSHoT + regrowth.HPS / regrowth.Duration;
+                hotsMPS += regrowth.manaCost / regrowth.Duration;
+                hotsCastTime += regrowth.CastTime / regrowth.Duration;
+                hotsCastsPerMinute += 60f / regrowth.Duration;
+            }
+            if (lbOnTank)
+            {
+                hotsHPS += stack.HPSHoT;
+                hotsMPS += stack.manaCost / stack.Duration;
+                hotsCastTime += stack.CastTime / stack.Duration;
+                hotsCastsPerMinute += 60f / stack.Duration;
+            }
+            hotsHPS *= nTanks;
+            hotsMPS *= nTanks;
+            hotsCastTime *= nTanks;
+            hotsCastsPerMinute *= nTanks;
+            castsPerMinute += hotsCastsPerMinute;
+            #endregion
+
+            #region Primary Heal
+            float tpsHealing = 1f - (hotsCastTime + wgCastTime);
+            float hpsHealing = 0;
+            if (primaryHeal is Lifebloom || primaryHeal is Rejuvenation)
+            {
+                hpsHealing = tpsHealing * primaryHeal.HPSHoT;
+            } 
+            else 
+            {
+                hpsHealing = tpsHealing * primaryHeal.HPS;
+            }
+            float mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
+            castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
+            #endregion
+
+            float[] result = new float[] {
+                hotsHPS + hpsHealing,
+                hotsMPS + mpsHealing + wgMPS,
+                hpsHealing,
+                hotsHPS,
+                mpsHealing,
+                hotsMPS,
+                hotsCastTime,
+                castsPerMinute,
+                wgMPS
+            };
+
+            return result;
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
@@ -174,55 +293,205 @@ namespace Rawr.Tree
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor20SecOnUse2Min / 6;
             #endregion
 
+            float MPS = 0; // mana per second used
+            float HPS = 0; // healing per second of rotation
+
+            #region Rotations
+            switch (calcOpts.Rotation)
+            {
+                case 0:
+                default:
+                    // 1 Tank (RJ/RG/LB/N*)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute, 
+                            true, true, true, 1,
+                            new Nourish(calculatedStats, true));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                        
+                    }
+                    break;
+                case 1:
+                    // 2 Tanks (RJ/RG/LB/N*)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, true, true, 2,
+                            new Nourish(calculatedStats, true));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 2:
+                    // 1 Tank (RJ/RG/LB/HT*)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, true, true, 1,
+                            new HealingTouch(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 3:
+                    // 2 Tanks (RJ/RG/LB/HT*)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, true, true, 2,
+                            new HealingTouch(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 4:
+                    // HT spam
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            false, false, false, 0,
+                            new HealingTouch(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 5:
+                    // RG Raid (1 Tank RJ/LB)
+                    {
+                        // TODO: also include HoT from RG on raid members
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 1,
+                            new Regrowth(calculatedStats, false));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 6:
+                    // RG Raid (2 Tanks RJ/LB)
+                    {
+                        // TODO: also include HoT from RG on raid members
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 2,
+                            new Regrowth(calculatedStats, false));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 7:
+                    // RJ Raid (1 Tank RJ/LB)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 1,
+                            new Rejuvenation(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 8:
+                    // RJ Raid (2 Tanks RJ/LB)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 2,
+                            new Rejuvenation(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 9:
+                    // N Raid (1 Tank RJ/LB)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 1,
+                            new Nourish(calculatedStats, false));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 10:
+                    // N Raid (2 Tanks RJ/LB)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, false, true, 2,
+                            new Nourish(calculatedStats, false));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+            }
+            #endregion
+
             float spiritRegen = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.Spirit);
-            float replenishRegen = (calcOpts.haveReplenishSupport ? 1 : 0) * calculatedStats.BasicStats.Mana * 0.0025f * 5 * (calcOpts.averageReplenishActiveTime / 100f);
+            float replenishRegen = calculatedStats.BasicStats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
             //spirit regen + mp5 + replenishmp5
             calculatedStats.ManaRegInFSR = spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + replenishRegen;
             calculatedStats.ManaRegOutFSR = spiritRegen + calculatedStats.BasicStats.Mp5 + replenishRegen;
+            float ratio = 1f / 100f * calcOpts.FSRRatio;
 
-            Spell regrowth1 = new Regrowth(calculatedStats, false);
-            Spell regrowth2 = new Regrowth(calculatedStats, true);
-            Spell lifebloom = new Lifebloom(calculatedStats);
-            Spell stack = new LifebloomStack(calculatedStats);
-            Spell rejuvenate = new Rejuvenation(calculatedStats);
-            Spell nourish1 = new Nourish(calculatedStats);
-            Spell nourish2 = new Nourish(calculatedStats, true);
-            Spell healingtouch = new HealingTouch(calculatedStats);
-            Spell wildgrowth = new WildGrowth(calculatedStats);
-
-            // calculate HPS for RJ raid spam (different people)
-            double RJhps = rejuvenate.HPSHoT * (15f / rejuvenate.gcd);
-            // calculate HPS for LB raid spam (different people)
-            double LBhps = lifebloom.HPSHoT * (lifebloom.Duration / rejuvenate.gcd) + lifebloom.HPS;
-            // calculate HPS for maximal 1 tank healing
-            double HPS_dots = rejuvenate.HPSHoT + stack.HPSHoT + regrowth1.HPSHoT;
-            double dot_cast_time = 1f / rejuvenate.Duration * rejuvenate.CastTime +
-                1f / lifebloom.Duration * lifebloom.CastTime + 1f / regrowth1.CastTime * regrowth1.HPSHoT;
-            double HPS_nourish = nourish2.HPS * (1f - dot_cast_time);
-
-            //HPS Points
-            if (calcOpts.Spellrotations.Count < 0)
-                calculatedStats.HpSPoints = 0;
-            else
+            float extraMana = 0f;
+            switch (calcOpts.ManaPot)
             {
-                calcOpts.Spellrotations[0].CalculateSpellRotaion(calculatedStats);
-                calculatedStats.HpSPoints = calcOpts.Spellrotations[0].HPS;//calcOpts.spellRotationPlaceholder == "Healing Touch" ? (new HealingTouch(calculatedStats)).HPS : (new Regrowth(calculatedStats)).HPS;
+                default:
+                case 0:
+                    break;
+                case 1:
+                    extraMana = 1800;
+                    break;
+                case 2:
+                    extraMana = 2200;
+                    break;
+                case 3:
+                    extraMana = 2400;
+                    break;
+                case 4:
+                    extraMana = 4300;
+                    break;
             }
+            extraMana *= (calculatedStats.BasicStats.BonusManaPotion + 1f); float trinketRegen = DoTrinketManaRestoreCalcs(calculatedStats, calculatedStats.Simulation[7]);
+            float manaRegen = ratio * calculatedStats.ManaRegInFSR + (1 - ratio) * calculatedStats.ManaRegOutFSR + trinketRegen;
+
+            calculatedStats.HpSPoints = HPS;
 
             //Survival Points
             int health = (int)calculatedStats.BasicStats.Health;
             int healthBelow = (int)(health < calcOpts.SurvTargetLife ? health : calcOpts.SurvTargetLife);
             int healthAbove = health - healthBelow;
 
+            calculatedStats.TimeUntilOOM = 0;
+            if (manaRegen/5f >= MPS) calculatedStats.TimeUntilOOM = calcOpts.FightDuration;
+            else calculatedStats.TimeUntilOOM = (extraMana+calculatedStats.BasicStats.Mana) / (MPS - manaRegen/5f);
+            if (calculatedStats.TimeUntilOOM > calcOpts.FightDuration) 
+                calculatedStats.TimeUntilOOM = calcOpts.FightDuration;
+            calculatedStats.TotalHealing = calculatedStats.TimeUntilOOM * calculatedStats.HpSPoints;
+            // Correct for mana returns
+            calculatedStats.TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / calculatedStats.ManaRegOutFSR;
+            if (calcOpts.FightDuration > calculatedStats.TimeUntilOOM)
+            {
+                float timeLeft = calcOpts.FightDuration - calculatedStats.TimeUntilOOM;
+                float cycle = (calculatedStats.TimeToRegenFull + calculatedStats.TimeUntilOOM);
+                calculatedStats.CvRFraction = calculatedStats.TimeUntilOOM / cycle;
+                calculatedStats.TotalHealing *= 1 + timeLeft / cycle;
+            }
+            else
+            {
+                calculatedStats.CvRFraction = 0;
+            }
+
+            calculatedStats.ManaRegen = manaRegen;
+
+            calculatedStats.HDPoints = calculatedStats.TotalHealing / calcOpts.FightDuration;
+
             calculatedStats.SurvivalPoints =
                 ((calcOpts.SurvScaleBelowTarget > 0) ? healthBelow / 10F * (calcOpts.SurvScaleBelowTarget / 100F) : 0) +
                 (healthAbove / 100F);
 
-            //Mp5 Points
-            calculatedStats.AddMp5Points(calculatedStats.ManaRegInFSR * (calcOpts.mP5Scale / 100), "Regen");
-            //calculatedStats.AddMp5Points(calculatedStats.ManaRegInFSR, "Regen");
-
-            calculatedStats.OverallPoints = calculatedStats.HpSPoints + calculatedStats.Mp5Points + calculatedStats.SurvivalPoints;
+            calculatedStats.OverallPoints = calculatedStats.HpSPoints + calculatedStats.HDPoints + calculatedStats.SurvivalPoints;
 
             calcOpts.calculatedStats = calculatedStats;
             return calculatedStats;
@@ -260,6 +529,7 @@ namespace Rawr.Tree
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * character.DruidTalents.LunarGuidance * 0.04) + (character.DruidTalents.NurturingInstinct * 0.35f * statsTotal.Agility));
 
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f); //don't know why, but it's right..
+            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
 
             statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
@@ -271,27 +541,6 @@ namespace Rawr.Tree
         {
             Stats statsRace = new Stats();
             statsRace.Mana = TreeConstants.BaseMana; //pulled in an extra class, because i've to know them for spells etc
-
-            //if (level == 70)
-            //{
-            //    if (race == Character.CharacterRace.NightElf)
-            //    {
-            //        statsRace.Health = 3434f;
-            //        statsRace.Stamina = 82f;
-            //        statsRace.Agility = 75f;
-            //        statsRace.Intellect = 120f;
-            //        statsRace.Spirit = 133f;
-            //    }
-            //    else
-            //    {
-            //        statsRace.Health = 3434f; //Tauren racial is now a fixed ammount .. have to figure it out.. rumors say something around 600 Health
-            //        statsRace.Stamina = 85f;
-            //        statsRace.Agility = 64.5f;
-            //        statsRace.Intellect = 115f;
-            //        statsRace.Spirit = 135f;
-            //    }
-            //}
-            //else if (level == 80)
 
             //taken from http://forums.worldofwarcraft.com/thread.html?topicId=9336866956&sid=2000
             if (race == Character.CharacterRace.NightElf)
@@ -415,13 +664,7 @@ namespace Rawr.Tree
 
         public float CalculateManaRegen(float intel, float spi)
         {
-            float baseRegen;
-            // if (level == 70) 
-            //    baseRegen = 0.009327f;
-            //else if (level == 80)
-                baseRegen = 0.005575f; //Values Taken from StatLogic-1.0 Lib (Whitetooth wrote them there, search for BaseManaRegenPerSpi)
-            //else baseRegen = 0.00932715221261f;
-
+            float baseRegen = 0.005575f; 
             return (float)Math.Round(5f * (0.001f + (float)Math.Sqrt(intel) * spi * baseRegen));
         }
     }
@@ -430,6 +673,6 @@ namespace Rawr.Tree
     {
         // Source: http://www.wowwiki.com/Base_mana
         public static float BaseMana = 3496f;
-        public static float hasteconversation = 3279f;
+        public static float HasteRatingToHaste = 3279f;
     }
 }

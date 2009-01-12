@@ -7,7 +7,6 @@ namespace Rawr.Tree
     public partial class CalculationOptionsPanelTree : CalculationOptionsPanelBase
     {
         private bool loading = false;
-        private SpellRotationEditor rotaeditor = null;
 
         public CalculationOptionsPanelTree()
         {
@@ -28,23 +27,24 @@ namespace Rawr.Tree
             else
                 calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
 
-            calcOpts.Spellrotations.Clear();
-            Spellrotation rotation = new Spellrotation();
-            rotation.addSpell(new Spellcast("Healing Touch", "1"));
-            calcOpts.Spellrotations.Add(rotation);
-            
-
             cbSchattrathFaction.SelectedIndex = calcOpts.ShattrathFaction == "Aldor" ? 1 : calcOpts.ShattrathFaction == "None" ? 0 : 2;
             tbSurvScale.Text = calcOpts.SurvScaleBelowTarget.ToString();
             tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
             tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
-            tbMP5Scale.Text = calcOpts.mP5Scale.ToString();
-            tbFightDuration.Text = new TimeSpan(0,0,calcOpts.fightDuration).ToString();
-            tbWildGrowthTargets.Text = calcOpts.wildGrowthTargets.ToString();
-            tbWildGrowthAverageTicks.Text = calcOpts.wildGrowthTicks.ToString();
-            tbReplenishmentActive.Text = calcOpts.averageReplenishActiveTime.ToString();
             chbLivingSeed.Checked = calcOpts.useLivingSeedAsCritMultiplicator;
-            chbReplenishment.Checked = calcOpts.haveReplenishSupport;
+
+            cbRotation.SelectedIndex = calcOpts.Rotation;
+            lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
+            trkTimeInFSR.Value = calcOpts.FSRRatio;
+            trkFightLength.Value = calcOpts.FightDuration / 15;
+            int m = trkFightLength.Value / 4;
+            int s = calcOpts.FightDuration - 60 * m;
+            lblFightLength.Text = "Fight duration: " + m + ":" + s;
+            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
+            tkReplenishment.Value = calcOpts.ReplenishmentUptime;
+            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
+            tbWildGrowth.Value = calcOpts.WildGrowthPerMinute;
+            lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
 
             chbGlyphHT.Checked = calcOpts.glyphOfHealingTouch;
             chbGlyphRegrowth.Checked = calcOpts.glyphOfRegrowth;
@@ -52,7 +52,6 @@ namespace Rawr.Tree
             chbGlyphSwiftmend.Checked = calcOpts.glyphOfSwiftmend;
             chbGlyphLifebloom.Checked = calcOpts.glyphOfLifebloom;
             chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
-
 
             loading = false;
 
@@ -83,102 +82,6 @@ namespace Rawr.Tree
             if (!loading)
             {
                 ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleBelowTarget = parseFloat(tbSurvScale.Text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chbReplenishment_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-                ((CalculationOptionsTree)Character.CalculationOptions).haveReplenishSupport = chbReplenishment.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void tbReplenishmentActive_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                float tmp = parseFloat(tbReplenishmentActive.Text);
-                if (tmp > 100)
-                {
-                    tmp = 100;
-                    tbReplenishmentActive.Text = "100";
-                }
-
-                ((CalculationOptionsTree)Character.CalculationOptions).averageReplenishActiveTime = tmp;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbAverageProcUsage_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                float tmp = parseFloat(tbAverageProcUsage.Text);
-                
-                if (tmp > 100)
-                {
-                    tmp = 100;
-                    tbAverageProcUsage.Text = "100";
-                }
-
-                ((CalculationOptionsTree)Character.CalculationOptions).averageSpellpowerUsage = tmp;
-                
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbMP5Scale_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).mP5Scale = parseFloat(tbMP5Scale.Text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbFightDuration_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                TimeSpan tmp;
-                TimeSpan.TryParse(tbFightDuration.Text, out tmp);
-
-                if (tmp.TotalMinutes > 0)
-                {
-                    ((CalculationOptionsTree)Character.CalculationOptions).fightDuration = (int)tmp.TotalSeconds;
-                    Character.OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        private void tbWildGrowthTargets_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                int tmp = (int)parseFloat(tbWildGrowthTargets.Text);
-                if (tmp > 5)
-                {
-                    tmp = 5;
-                    tbWildGrowthTargets.Text = "5";
-                }
-
-                ((CalculationOptionsTree)Character.CalculationOptions).wildGrowthTargets = tmp;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbWildGrowthAverageTicks_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                int tmp = (int)parseFloat(tbWildGrowthAverageTicks.Text);
-                if (tmp > 7)
-                {
-                    tmp = 7;
-                    tbWildGrowthAverageTicks.Text = "7";
-                }
-                ((CalculationOptionsTree)Character.CalculationOptions).wildGrowthTicks = tmp;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -231,14 +134,66 @@ namespace Rawr.Tree
             return 0;
         }
 
-        private void bEditRotation_Click(object sender, EventArgs e)
+        private void cbRotation_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (rotaeditor == null)
-            {
-                rotaeditor = new SpellRotationEditor();
-            }
-            rotaeditor.generateEditorContent(Character);
-            rotaeditor.Show();
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.Rotation = cbRotation.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void trkTimeInFSR_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
+            calcOpts.FSRRatio = trkTimeInFSR.Value;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void trkFightLength_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.FightDuration = trkFightLength.Value * 15;
+            int m = trkFightLength.Value / 4;
+            int s = calcOpts.FightDuration - 60 * m;
+            lblFightLength.Text = "Fight duration: "+m+":"+s;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbManaAmt_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tkReplenishment_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.ReplenishmentUptime = tkReplenishment.Value;
+            lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbWildGrowth_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.WildGrowthPerMinute = tbWildGrowth.Value;
+            lblWG.Text = tbWildGrowth.Value + " Wild Growth casts per minute.";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbAverageProcUsage_TextChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.averageSpellpowerUsage = parseFloat(tbAverageProcUsage.Text);
+            Character.OnCalculationsInvalidated();
         }
     }
 
@@ -252,21 +207,18 @@ namespace Rawr.Tree
         public string ShattrathFaction = "Aldor";
         public bool useLivingSeedAsCritMultiplicator = true;
 
-        public float SurvTargetLife = 8500f;
+        public float SurvTargetLife = 12000f;
         public float SurvScaleBelowTarget = 100f;
 
-        public float mP5Scale = 100f; //Scale the importance of MP5
-
         //Add Average Spellpower to Calculation = 0.0f (% used)
-        public float averageSpellpowerUsage = 0.0f;
+        public float averageSpellpowerUsage = 80f;
 
-        public int fightDuration = 300; //5 Minutes
-
-        public bool haveReplenishSupport = true;
-        public float averageReplenishActiveTime = 80f;
-
-        public int wildGrowthTargets = 4; //0-5 Targets
-        public int wildGrowthTicks = 4; //0-7 Ticks
+        public int FightDuration = 300; //5 Minutes
+        public int Rotation = 5; // default: group regrowth and heal 1 tank
+        public int ManaPot = 0; // none
+        public int FSRRatio = 90;
+        public int ReplenishmentUptime = 30;
+        public int WildGrowthPerMinute = 4;
 
         public bool glyphOfHealingTouch = false;
         public bool glyphOfRegrowth = false;
@@ -275,8 +227,6 @@ namespace Rawr.Tree
         public bool glyphOfLifebloom = false;
         public bool glyphOfInnervate = false;
         public bool glyphOfSwiftmend = false;
-
-        public List<Spellrotation> Spellrotations = new List<Spellrotation>();
 
         public string GetXml()
         {

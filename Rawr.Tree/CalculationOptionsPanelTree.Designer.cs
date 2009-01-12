@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelTree));
             this.label2 = new System.Windows.Forms.Label();
             this.cbSchattrathFaction = new System.Windows.Forms.ComboBox();
             this.tbSurvScale = new System.Windows.Forms.TextBox();
@@ -39,10 +40,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.tbMP5Scale = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,27 +48,22 @@
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.chbLivingSeed = new System.Windows.Forms.CheckBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel5 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.tbFightDuration = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.bEditRotation = new System.Windows.Forms.Button();
+            this.tkReplenishment = new System.Windows.Forms.TrackBar();
+            this.lblReplenishment = new System.Windows.Forms.Label();
+            this.cbRotation = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
+            this.lblFSR = new System.Windows.Forms.Label();
+            this.trkFightLength = new System.Windows.Forms.TrackBar();
+            this.lblFightLength = new System.Windows.Forms.Label();
+            this.trkTimeInFSR = new System.Windows.Forms.TrackBar();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.tbWildGrowthAverageTicks = new System.Windows.Forms.TextBox();
-            this.tbWildGrowthTargets = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.label14 = new System.Windows.Forms.Label();
-            this.tbReplenishmentActive = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.chbReplenishment = new System.Windows.Forms.CheckBox();
+            this.tbWildGrowth = new System.Windows.Forms.TrackBar();
+            this.lblWG = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipLabel11 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -90,14 +82,15 @@
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox9.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.SuspendLayout();
@@ -181,7 +174,6 @@
             // 
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.groupBox5);
-            this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -196,7 +188,7 @@
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.tbAverageProcUsage);
             this.groupBox6.Controls.Add(this.label9);
-            this.groupBox6.Location = new System.Drawing.Point(6, 130);
+            this.groupBox6.Location = new System.Drawing.Point(6, 83);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(277, 39);
             this.groupBox6.TabIndex = 26;
@@ -207,51 +199,12 @@
             // 
             this.groupBox5.Controls.Add(this.cbSchattrathFaction);
             this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Location = new System.Drawing.Point(6, 175);
+            this.groupBox5.Location = new System.Drawing.Point(6, 128);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(277, 40);
             this.groupBox5.TabIndex = 25;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Schattrath Faction";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.extendedToolTipLabel3);
-            this.groupBox4.Controls.Add(this.tbMP5Scale);
-            this.groupBox4.Controls.Add(this.label15);
-            this.groupBox4.Location = new System.Drawing.Point(6, 83);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(277, 41);
-            this.groupBox4.TabIndex = 24;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "MP5 Points";
-            // 
-            // extendedToolTipLabel3
-            // 
-            this.extendedToolTipLabel3.AutoSize = true;
-            this.extendedToolTipLabel3.Location = new System.Drawing.Point(3, 16);
-            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
-            this.extendedToolTipLabel3.Size = new System.Drawing.Size(98, 13);
-            this.extendedToolTipLabel3.TabIndex = 25;
-            this.extendedToolTipLabel3.Text = "Scale MP5 Points *";
-            this.extendedToolTipLabel3.ToolTipText = "Scale the mp5 Points to meet your priorities";
-            // 
-            // tbMP5Scale
-            // 
-            this.tbMP5Scale.Location = new System.Drawing.Point(220, 13);
-            this.tbMP5Scale.Name = "tbMP5Scale";
-            this.tbMP5Scale.Size = new System.Drawing.Size(35, 20);
-            this.tbMP5Scale.TabIndex = 3;
-            this.tbMP5Scale.TextChanged += new System.EventHandler(this.tbMP5Scale_TextChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(256, 16);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(15, 13);
-            this.label15.TabIndex = 2;
-            this.label15.Text = "%";
+            this.groupBox5.Text = "Shattrath Faction";
             // 
             // groupBox1
             // 
@@ -291,17 +244,15 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 22);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(101, 13);
+            this.label4.Size = new System.Drawing.Size(119, 13);
             this.label4.TabIndex = 14;
-            this.label4.Text = "Your target HP Pool";
+            this.label4.Text = "Your preferred HP Pool:";
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox9);
-            this.tabPage2.Controls.Add(this.groupBox8);
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -314,7 +265,7 @@
             // 
             this.groupBox9.Controls.Add(this.label3);
             this.groupBox9.Controls.Add(this.chbLivingSeed);
-            this.groupBox9.Location = new System.Drawing.Point(6, 190);
+            this.groupBox9.Location = new System.Drawing.Point(6, 310);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(277, 36);
             this.groupBox9.TabIndex = 35;
@@ -339,221 +290,192 @@
             this.chbLivingSeed.TabIndex = 29;
             this.chbLivingSeed.UseVisualStyleBackColor = true;
             // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.extendedToolTipLabel5);
-            this.groupBox8.Controls.Add(this.tbFightDuration);
-            this.groupBox8.Location = new System.Drawing.Point(6, 6);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(277, 39);
-            this.groupBox8.TabIndex = 34;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Fight";
-            // 
-            // extendedToolTipLabel5
-            // 
-            this.extendedToolTipLabel5.AutoSize = true;
-            this.extendedToolTipLabel5.Location = new System.Drawing.Point(6, 16);
-            this.extendedToolTipLabel5.Name = "extendedToolTipLabel5";
-            this.extendedToolTipLabel5.Size = new System.Drawing.Size(75, 13);
-            this.extendedToolTipLabel5.TabIndex = 2;
-            this.extendedToolTipLabel5.Text = "Fightduration *";
-            this.extendedToolTipLabel5.ToolTipText = "Usage: HH:MM:SS. *not yet implemented*";
-            // 
-            // tbFightDuration
-            // 
-            this.tbFightDuration.Location = new System.Drawing.Point(217, 13);
-            this.tbFightDuration.Name = "tbFightDuration";
-            this.tbFightDuration.Size = new System.Drawing.Size(54, 20);
-            this.tbFightDuration.TabIndex = 1;
-            this.tbFightDuration.TextChanged += new System.EventHandler(this.tbFightDuration_TextChanged);
-            // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.label1);
-            this.groupBox7.Controls.Add(this.radioButton3);
-            this.groupBox7.Controls.Add(this.radioButton2);
-            this.groupBox7.Controls.Add(this.radioButton1);
-            this.groupBox7.Controls.Add(this.bEditRotation);
+            this.groupBox7.Controls.Add(this.tkReplenishment);
+            this.groupBox7.Controls.Add(this.lblReplenishment);
+            this.groupBox7.Controls.Add(this.cbRotation);
             this.groupBox7.Controls.Add(this.label11);
-            this.groupBox7.Location = new System.Drawing.Point(6, 232);
+            this.groupBox7.Controls.Add(this.label10);
+            this.groupBox7.Controls.Add(this.cmbManaAmt);
+            this.groupBox7.Controls.Add(this.lblFSR);
+            this.groupBox7.Controls.Add(this.trkFightLength);
+            this.groupBox7.Controls.Add(this.lblFightLength);
+            this.groupBox7.Controls.Add(this.trkTimeInFSR);
+            this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 105);
+            this.groupBox7.Size = new System.Drawing.Size(277, 288);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Spellrotation";
+            this.groupBox7.Text = "Fight Details";
             // 
-            // label1
+            // tkReplenishment
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 13);
-            this.label1.TabIndex = 37;
-            this.label1.Text = "Custom Rotation";
+            this.tkReplenishment.BackColor = System.Drawing.SystemColors.Control;
+            this.tkReplenishment.Location = new System.Drawing.Point(9, 229);
+            this.tkReplenishment.Maximum = 100;
+            this.tkReplenishment.Name = "tkReplenishment";
+            this.tkReplenishment.Size = new System.Drawing.Size(262, 45);
+            this.tkReplenishment.TabIndex = 38;
+            this.tkReplenishment.TickFrequency = 5;
+            this.tkReplenishment.Scroll += new System.EventHandler(this.tkReplenishment_Scroll);
             // 
-            // radioButton3
+            // lblReplenishment
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(9, 65);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(107, 17);
-            this.radioButton3.TabIndex = 36;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "custom Rotations";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.Visible = false;
+            this.lblReplenishment.AutoSize = true;
+            this.lblReplenishment.Location = new System.Drawing.Point(6, 213);
+            this.lblReplenishment.Name = "lblReplenishment";
+            this.lblReplenishment.Size = new System.Drawing.Size(80, 13);
+            this.lblReplenishment.TabIndex = 50;
+            this.lblReplenishment.Text = "Replenishment:";
             // 
-            // radioButton2
+            // cbRotation
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(9, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(72, 17);
-            this.radioButton2.TabIndex = 35;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "LB RJ HT";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.Visible = false;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(125, 42);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(125, 17);
-            this.radioButton1.TabIndex = 34;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Healing Touch Spam";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.Visible = false;
-            // 
-            // bEditRotation
-            // 
-            this.bEditRotation.Location = new System.Drawing.Point(245, 11);
-            this.bEditRotation.Name = "bEditRotation";
-            this.bEditRotation.Size = new System.Drawing.Size(26, 23);
-            this.bEditRotation.TabIndex = 33;
-            this.bEditRotation.Text = "...";
-            this.bEditRotation.UseVisualStyleBackColor = true;
-            this.bEditRotation.Click += new System.EventHandler(this.bEditRotation_Click);
+            this.cbRotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbRotation.FormattingEnabled = true;
+            this.cbRotation.Items.AddRange(new object[] {
+            "Single target Nourish (plus RJ/RG/LB)",
+            "Single target Nourish (2 Tanks RJ/RG/LB)",
+            "Single target Healing Touch (plus RJ/RG/LB)",
+            "Single target Healing Touch (2 Tanks RJ/RG/LB)",
+            "Healing Touch spam",
+            "Raid healing with Regrowth (1 Tank RJ/LB)",
+            "Raid healing with Regrowth (2 Tanks RJ/LB)",
+            "Raid healing with Rejuvenation (1 Tank RJ/LB)",
+            "Raid healing with Rejuvenation (2 Tanks RJ/LB)",
+            "Raid healing with Nourish (1 Tank RJ/LB)",
+            "Raid healing with Nourish (2 Tanks RJ/LB)"});
+            this.cbRotation.Location = new System.Drawing.Point(9, 34);
+            this.cbRotation.MaxDropDownItems = 10;
+            this.cbRotation.Name = "cbRotation";
+            this.cbRotation.Size = new System.Drawing.Size(262, 21);
+            this.cbRotation.TabIndex = 49;
+            this.cbRotation.SelectedIndexChanged += new System.EventHandler(this.cbRotation_SelectedIndexChanged);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(25, 29);
+            this.label11.Location = new System.Drawing.Point(6, 18);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(109, 13);
-            this.label11.TabIndex = 32;
-            this.label11.Text = "* still in developement";
+            this.label11.Size = new System.Drawing.Size(67, 13);
+            this.label11.TabIndex = 48;
+            this.label11.Text = "Spell Usage:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 192);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(74, 13);
+            this.label10.TabIndex = 47;
+            this.label10.Text = "Mana potions:";
+            // 
+            // cmbManaAmt
+            // 
+            this.cmbManaAmt.DisplayMember = "2400";
+            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbManaAmt.Items.AddRange(new object[] {
+            "(None) 0",
+            "(Major) 1350-2250, Avg 1800",
+            "(Mad) 1650-2750, Avg 2200",
+            "(Super) 1800-3000, Avg 2400",
+            "(Runic) 4200-4400, Avg 4300"});
+            this.cmbManaAmt.Location = new System.Drawing.Point(86, 189);
+            this.cmbManaAmt.Name = "cmbManaAmt";
+            this.cmbManaAmt.Size = new System.Drawing.Size(185, 21);
+            this.cmbManaAmt.TabIndex = 46;
+            this.cmbManaAmt.ValueMember = "2400";
+            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
+            // 
+            // lblFSR
+            // 
+            this.lblFSR.AutoSize = true;
+            this.lblFSR.Location = new System.Drawing.Point(6, 122);
+            this.lblFSR.Name = "lblFSR";
+            this.lblFSR.Size = new System.Drawing.Size(97, 13);
+            this.lblFSR.TabIndex = 38;
+            this.lblFSR.Text = "Time spent in FSR:";
+            // 
+            // trkFightLength
+            // 
+            this.trkFightLength.Location = new System.Drawing.Point(9, 74);
+            this.trkFightLength.Maximum = 60;
+            this.trkFightLength.Minimum = 1;
+            this.trkFightLength.Name = "trkFightLength";
+            this.trkFightLength.Size = new System.Drawing.Size(262, 45);
+            this.trkFightLength.TabIndex = 39;
+            this.trkFightLength.TickFrequency = 4;
+            this.trkFightLength.Value = 1;
+            this.trkFightLength.Scroll += new System.EventHandler(this.trkFightLength_Scroll);
+            // 
+            // lblFightLength
+            // 
+            this.lblFightLength.AutoSize = true;
+            this.lblFightLength.Location = new System.Drawing.Point(6, 58);
+            this.lblFightLength.Name = "lblFightLength";
+            this.lblFightLength.Size = new System.Drawing.Size(69, 13);
+            this.lblFightLength.TabIndex = 38;
+            this.lblFightLength.Text = "Fight Length:";
+            // 
+            // trkTimeInFSR
+            // 
+            this.trkTimeInFSR.BackColor = System.Drawing.SystemColors.Control;
+            this.trkTimeInFSR.Location = new System.Drawing.Point(9, 138);
+            this.trkTimeInFSR.Maximum = 100;
+            this.trkTimeInFSR.Name = "trkTimeInFSR";
+            this.trkTimeInFSR.Size = new System.Drawing.Size(262, 45);
+            this.trkTimeInFSR.TabIndex = 37;
+            this.trkTimeInFSR.TickFrequency = 5;
+            this.trkTimeInFSR.Scroll += new System.EventHandler(this.trkTimeInFSR_Scroll);
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.extendedToolTipLabel4);
-            this.groupBox3.Controls.Add(this.tbWildGrowthAverageTicks);
-            this.groupBox3.Controls.Add(this.tbWildGrowthTargets);
+            this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Location = new System.Drawing.Point(6, 119);
+            this.groupBox3.Controls.Add(this.tbWildGrowth);
+            this.groupBox3.Controls.Add(this.lblWG);
+            this.groupBox3.Location = new System.Drawing.Point(6, 362);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 65);
+            this.groupBox3.Size = new System.Drawing.Size(277, 171);
             this.groupBox3.TabIndex = 27;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Wild Growth";
             // 
-            // extendedToolTipLabel4
+            // label7
             // 
-            this.extendedToolTipLabel4.AutoSize = true;
-            this.extendedToolTipLabel4.Location = new System.Drawing.Point(6, 42);
-            this.extendedToolTipLabel4.Name = "extendedToolTipLabel4";
-            this.extendedToolTipLabel4.Size = new System.Drawing.Size(140, 13);
-            this.extendedToolTipLabel4.TabIndex = 4;
-            this.extendedToolTipLabel4.Text = "average ammount of Ticks *";
-            this.extendedToolTipLabel4.ToolTipText = "until it got overhealed..";
-            // 
-            // tbWildGrowthAverageTicks
-            // 
-            this.tbWildGrowthAverageTicks.Location = new System.Drawing.Point(245, 39);
-            this.tbWildGrowthAverageTicks.Name = "tbWildGrowthAverageTicks";
-            this.tbWildGrowthAverageTicks.Size = new System.Drawing.Size(26, 20);
-            this.tbWildGrowthAverageTicks.TabIndex = 3;
-            this.tbWildGrowthAverageTicks.TextChanged += new System.EventHandler(this.tbWildGrowthAverageTicks_TextChanged);
-            // 
-            // tbWildGrowthTargets
-            // 
-            this.tbWildGrowthTargets.Location = new System.Drawing.Point(245, 13);
-            this.tbWildGrowthTargets.Name = "tbWildGrowthTargets";
-            this.tbWildGrowthTargets.Size = new System.Drawing.Size(26, 20);
-            this.tbWildGrowthTargets.TabIndex = 1;
-            this.tbWildGrowthTargets.TextChanged += new System.EventHandler(this.tbWildGrowthTargets_TextChanged);
+            this.label7.AutoEllipsis = true;
+            this.label7.Location = new System.Drawing.Point(6, 89);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(262, 79);
+            this.label7.TabIndex = 42;
+            this.label7.Text = resources.GetString("label7.Text");
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 16);
+            this.label5.Location = new System.Drawing.Point(6, 89);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(143, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "average ammount of Targets";
+            this.label5.Size = new System.Drawing.Size(0, 13);
+            this.label5.TabIndex = 40;
             // 
-            // groupBox2
+            // tbWildGrowth
             // 
-            this.groupBox2.Controls.Add(this.extendedToolTipLabel1);
-            this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Controls.Add(this.tbReplenishmentActive);
-            this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.chbReplenishment);
-            this.groupBox2.Location = new System.Drawing.Point(6, 51);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(277, 62);
-            this.groupBox2.TabIndex = 26;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Replenishment";
+            this.tbWildGrowth.BackColor = System.Drawing.SystemColors.Control;
+            this.tbWildGrowth.Location = new System.Drawing.Point(6, 41);
+            this.tbWildGrowth.Maximum = 20;
+            this.tbWildGrowth.Name = "tbWildGrowth";
+            this.tbWildGrowth.Size = new System.Drawing.Size(262, 45);
+            this.tbWildGrowth.TabIndex = 39;
+            this.tbWildGrowth.Scroll += new System.EventHandler(this.tbWildGrowth_Scroll);
             // 
-            // extendedToolTipLabel1
+            // lblWG
             // 
-            this.extendedToolTipLabel1.AutoSize = true;
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(6, 17);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(102, 13);
-            this.extendedToolTipLabel1.TabIndex = 27;
-            this.extendedToolTipLabel1.Text = "get Replenishment *";
-            this.extendedToolTipLabel1.ToolTipText = "0.25% of maximum Mana per Second";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(256, 38);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(15, 13);
-            this.label14.TabIndex = 28;
-            this.label14.Text = "%";
-            // 
-            // tbReplenishmentActive
-            // 
-            this.tbReplenishmentActive.Location = new System.Drawing.Point(217, 36);
-            this.tbReplenishmentActive.Name = "tbReplenishmentActive";
-            this.tbReplenishmentActive.Size = new System.Drawing.Size(33, 20);
-            this.tbReplenishmentActive.TabIndex = 27;
-            this.tbReplenishmentActive.TextChanged += new System.EventHandler(this.tbReplenishmentActive_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 39);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(141, 13);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "% of the Fightduration active";
-            // 
-            // chbReplenishment
-            // 
-            this.chbReplenishment.AutoSize = true;
-            this.chbReplenishment.Location = new System.Drawing.Point(256, 16);
-            this.chbReplenishment.Name = "chbReplenishment";
-            this.chbReplenishment.Size = new System.Drawing.Size(15, 14);
-            this.chbReplenishment.TabIndex = 24;
-            this.chbReplenishment.UseVisualStyleBackColor = true;
-            this.chbReplenishment.CheckedChanged += new System.EventHandler(this.chbReplenishment_CheckedChanged);
+            this.lblWG.AutoSize = true;
+            this.lblWG.Location = new System.Drawing.Point(6, 25);
+            this.lblWG.Name = "lblWG";
+            this.lblWG.Size = new System.Drawing.Size(148, 13);
+            this.lblWG.TabIndex = 5;
+            this.lblWG.Text = "Wild Growth casts per minute:";
             // 
             // tabPage3
             // 
@@ -563,7 +485,7 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(289, 550);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Glyphes";
+            this.tabPage3.Text = "Glyphs";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox10
@@ -727,21 +649,19 @@
             this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkTimeInFSR)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
@@ -764,30 +684,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox chbReplenishment;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox tbReplenishmentActive;
-        private System.Windows.Forms.Label label13;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Label label15;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
-        private System.Windows.Forms.TextBox tbMP5Scale;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chbLivingSeed;
-        private System.Windows.Forms.TextBox tbWildGrowthAverageTicks;
-        private System.Windows.Forms.TextBox tbWildGrowthTargets;
-        private System.Windows.Forms.Label label5;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel4;
-        private System.Windows.Forms.GroupBox groupBox8;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel5;
-        private System.Windows.Forms.TextBox tbFightDuration;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.TabPage tabPage3;
@@ -804,10 +706,19 @@
         private System.Windows.Forms.CheckBox chbGlyphRegrowth;
         private System.Windows.Forms.CheckBox chbGlyphHT;
         private Rawr.CustomControls.ExtendedToolTipCheckBox chbGlyphSwiftmend;
-        private System.Windows.Forms.Button bEditRotation;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TrackBar trkTimeInFSR;
+        private System.Windows.Forms.Label lblFSR;
+        private System.Windows.Forms.Label lblFightLength;
+        private System.Windows.Forms.TrackBar trkFightLength;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox cmbManaAmt;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.ComboBox cbRotation;
+        private System.Windows.Forms.TrackBar tkReplenishment;
+        private System.Windows.Forms.Label lblReplenishment;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TrackBar tbWildGrowth;
+        private System.Windows.Forms.Label lblWG;
+        private System.Windows.Forms.Label label7;
     }
 }
