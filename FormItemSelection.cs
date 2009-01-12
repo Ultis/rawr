@@ -216,13 +216,19 @@ namespace Rawr
 				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 				if (this.Items != null && this.Character != null)
 				{
+                    bool seenEquippedItem = Character[slot] == null;
 					foreach (Item item in this.Items)
 					{
+                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
 						if (item.FitsInSlot(slot, Character))
 						{
 							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
 						}
 					}
+                    if (!seenEquippedItem)
+                    {
+                        itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], this.Character, slot));
+                    }
 				}
 				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
 				emptyCalcs.Name = "Empty";
