@@ -350,6 +350,8 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 
             stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating));
+            // Haste trinket (Meteorite Whetstone)
+            stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
             stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +

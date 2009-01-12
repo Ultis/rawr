@@ -609,6 +609,8 @@ namespace Rawr.Hunter
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
 			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
 
 			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);

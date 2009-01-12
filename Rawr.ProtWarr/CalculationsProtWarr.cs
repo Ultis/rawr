@@ -711,6 +711,8 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
             statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;

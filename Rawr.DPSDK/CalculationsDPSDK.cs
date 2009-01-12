@@ -1002,6 +1002,8 @@ namespace Rawr.DPSDK
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
             statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
 
             statsTotal.SpellCrit = statsGearEnchantsBuffs.SpellCrit;

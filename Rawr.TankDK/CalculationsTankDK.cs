@@ -336,6 +336,8 @@ namespace Rawr.TankDK
 
                 float weaponDmg = (character.MainHand.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
+                // Haste trinket (Meteorite Whetstone)
+                calcs.BasicStats.HasteRating += calcs.BasicStats.HasteRatingOnPhysicalAttack * 10 / 45;
                 float totalStaticHaste = 1.0f + (calcs.BasicStats.HasteRating / 32.78998947f / 100.0f);
                 totalStaticHaste *= 1.0f + (character.DeathKnightTalents.IcyTalons * 0.04f);
 

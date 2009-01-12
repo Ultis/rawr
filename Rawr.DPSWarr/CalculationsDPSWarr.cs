@@ -1343,6 +1343,8 @@ namespace Rawr.DPSWarr
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
             statsTotal.HasteRating += (statsGearEnchantsBuffs.PhysicalHaste + statsRace.PhysicalHaste) * 100.0f * fHastePerPercent;
             statsTotal.HasteRating += talents.BloodFrenzy * 3f * fHastePerPercent;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
 
             statsTotal.BonusPhysicalDamageMultiplier = statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier;
             statsTotal.BonusBleedDamageMultiplier = statsGearEnchantsBuffs.BonusBleedDamageMultiplier;

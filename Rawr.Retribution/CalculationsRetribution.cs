@@ -720,6 +720,8 @@ namespace Rawr.Retribution
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
             statsTotal.Expertise += (float)Math.Floor(statsGearEnchantsBuffs.ExpertiseRating / 8.197497f);
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.WeaponDamage = statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;

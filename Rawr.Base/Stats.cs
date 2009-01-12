@@ -68,6 +68,7 @@ namespace Rawr
         FlashOfLightCrit,
         FrostResistance,
         HasteRating,
+        HasteRatingOnPhysicalAttack,
         Healing,
         Health,
         PhysicalHit,
@@ -900,6 +901,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.HasteRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Equipment Procs")]
+        public float HasteRatingOnPhysicalAttack
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HasteRatingOnPhysicalAttack]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HasteRatingOnPhysicalAttack] = value; }
         }
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]

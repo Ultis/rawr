@@ -248,6 +248,8 @@ namespace Rawr.Rogue
             statsTotal.ExpertiseRating = statsGearEnchantsBuffs.ExpertiseRating;
 
             statsTotal.HasteRating = statsGearEnchantsBuffs.HasteRating;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
 
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;

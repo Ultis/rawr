@@ -739,6 +739,8 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack*10/45;
 
 			return statsTotal;
 			/*

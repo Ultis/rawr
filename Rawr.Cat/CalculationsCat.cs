@@ -613,6 +613,8 @@ namespace Rawr.Cat
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 			statsTotal.WeaponDamage += 16f; //Tiger's Fury
+            // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10 / 45;
 
 			#region OLD - Manul Stat Summing
 			//float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));

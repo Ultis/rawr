@@ -283,10 +283,21 @@ namespace Rawr
 			}
 			else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your haste rating by "))
 			{
+                // Dragonspine Trophy
+                // Meteorite Whetstone
 				line = line.Substring("Your melee and ranged attacks have a chance to increase your haste rating by ".Length);
 				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.HasteRating += ((float)int.Parse(line)) / 4f;
+                int rating = int.Parse(line);
+                if (rating == 325)
+                {
+                    // internal cooldown of 20 secs, Dragonspine Trophy
+                    stats.HasteRatingOnPhysicalAttack += 325 * 20 / 45;
+                }
+                else
+                {
+                    stats.HasteRatingOnPhysicalAttack += rating;
+                }
 			}
 			else if (line.StartsWith("Your melee and ranged attacks have a chance to increase your armor penetration rating by "))
 			{
