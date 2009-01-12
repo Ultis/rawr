@@ -50,13 +50,18 @@ namespace Rawr
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             if (Items != null && Character != null)
             {
+                bool seenEquippedItem = (Character[slot]==null);
                 foreach (Item item in Items)
                 {
                     if (item.FitsInSlot(slot, Character))
                     {
+                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
                         itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
                     }
                 }
+                // add item
+                if (!seenEquippedItem)
+                    itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
             }
 
             comparisonGraph1.RoundValues = true;
