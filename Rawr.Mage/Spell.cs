@@ -26,6 +26,9 @@ namespace Rawr.Mage
         ArcaneBarrage1,
         ArcaneBarrage2,
         ArcaneBarrage3,
+        ArcaneBarrage1Combo,
+        ArcaneBarrage2Combo,
+        ArcaneBarrage3Combo,
         ArcaneBolt,
         PendulumOfTelluricCurrents,
         [Description("Arcane Missiles")]
@@ -109,6 +112,7 @@ namespace Rawr.Mage
         AB2ABar,
         AB2ABarMBAM,
         AB3ABar,
+        AB3ABarC,
         AB3ABarX,
         AB3ABarY,
         FBABar,
@@ -1434,7 +1438,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ArcaneBarrage(CastingState castingState, int arcaneBlastDebuff)
+        public ArcaneBarrage(CastingState castingState, float arcaneBlastDebuff)
             : base("Arcane Barrage", false, false, true, false, 30, 0, 3, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
@@ -1513,6 +1517,11 @@ namespace Rawr.Mage
 
         public override void Calculate(CastingState castingState)
         {
+            if (castingState.CalculationOptions.Mode308)
+            {
+                BaseMinDamage = 1185f;
+                BaseMaxDamage = 1377f;
+            }
             base.Calculate(castingState);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
@@ -4290,7 +4299,7 @@ namespace Rawr.Mage
             AB3 = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             S0 = MB / (MB + (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB));
@@ -4369,6 +4378,84 @@ namespace Rawr.Mage
         }
     }
 
+    class AB3ABarC : Spell
+    {
+        SpellCycle chain1;
+        SpellCycle chain2;
+        float MB, K1, K2;
+
+        public AB3ABarC(CastingState castingState)
+        {
+            Name = "AB3ABarC";
+
+            // S0: no proc at start
+            // AB0-AB1-AB2-ABar3          => S0     (1-MB)*(1-MB)*(1-MB)*(1-MB)
+            //                            => S1     (1-MB)*(1-MB)*(1 - (1-MB)*(1-MB))
+            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1 - (1-MB)*(1-MB))*(1-MB)
+            //                            => S1     (1 - (1-MB)*(1-MB))*MB
+            // S1: proc at start
+            // AB0-AB1-AB2-MBAM3-ABar3C   => S0     (1-MB)
+            //                            => S1     MB
+
+            // S0 = S0 * ((1-MB)*(1-MB)*(1-MB)*(1-MB) + (1 - (1-MB)*(1-MB))*(1-MB)) + S1 * (1-MB)
+            // S1 = S0 * ((1-MB)*(1-MB)*(1 - (1-MB)*(1-MB)) + (1 - (1-MB)*(1-MB))*MB) + S1 * MB
+            // S0 + S1 = 1
+
+            // S1 = S0 * (1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + S1 * MB
+            // (1-MB) = S0 * [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
+            // S0 = (1-MB) / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
+            // S1 = [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB)] / [(1 - (1-MB)*(1-MB)) * ((1-MB)*(1-MB) + MB) + (1-MB)]
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
+            Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
+
+            MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            float S0 = (1 - MB) / ((1 - (1 - MB) * (1 - MB)) * ((1 - MB) * (1 - MB) + MB) + (1 - MB));
+            float S1 = 1 - S0;
+            K1 = S0 * (1 - MB) * (1 - MB);
+            K2 = S0 * (1 - (1 - MB) * (1 - MB)) + S1;
+
+            chain1 = new SpellCycle(5);
+            chain1.AddSpell(AB0, castingState);
+            chain1.AddSpell(AB1, castingState);
+            chain1.AddSpell(AB2, castingState);
+            chain1.AddSpell(ABar3, castingState);
+            chain1.Calculate(castingState);
+
+            chain2 = new SpellCycle(6);
+            chain2.AddSpell(AB0, castingState);
+            chain2.AddSpell(AB1, castingState);
+            chain2.AddSpell(AB2, castingState);
+            chain2.AddSpell(MBAM3, castingState);
+            if (castingState.CalculationOptions.AllowLatencyCombos)
+            {
+                chain2.AddSpell(ABar3C, castingState);
+            }
+            else
+            {
+                chain2.AddSpell(ABar, castingState);
+            }
+            chain2.Calculate(castingState);
+
+            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
+            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
+            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
+            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+        }
+    }
+
     class AB3AMABar : Spell
     {
         SpellCycle chain1;
@@ -4388,7 +4475,7 @@ namespace Rawr.Mage
             Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
@@ -4460,8 +4547,8 @@ namespace Rawr.Mage
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = 1 - (1 - MB) * (1 - MB);
@@ -4545,7 +4632,7 @@ namespace Rawr.Mage
             Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB) * (1 - MB);
@@ -4610,7 +4697,7 @@ namespace Rawr.Mage
             Spell AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
             Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB);
@@ -6950,9 +7037,9 @@ namespace Rawr.Mage
 
     class GenericArcane : Spell
     {
-        Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;
+        Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, ABar1C, ABar2C, ABar3C, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;
         double S00, S01, S02, S10, S11, S12, S20, S21, S22, S30, S31, S32;
-        float KAB0, KAB1, KAB2, KAB3, KABar0, KABar1, KABar2, KABar3, KAM0, KAM1, KAM2, KAM3, KMBAM0, KMBAM1, KMBAM2, KMBAM3;
+        float KAB0, KAB1, KAB2, KAB3, KABar0, KABar1, KABar2, KABar3, KABar1C, KABar2C, KABar3C, KAM0, KAM1, KAM2, KAM3, KMBAM0, KMBAM1, KMBAM2, KMBAM3;
 
         public unsafe GenericArcane(CastingState castingState, double X00, double X01, double X02, double X03, double X10, double X11, double X12, double X13, double X20, double X22, double X23, double X30, double X32, double X33, double X40, double X41, double X42, double X43, double X50, double X51, double X52, double X53, double X60, double X61, double X62, double X63, double X70, double X71, double X72, double X73, double X80, double X81, double X82, double X83)
         {
@@ -7195,6 +7282,9 @@ namespace Rawr.Mage
             ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
             ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
             ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            ABar1C = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
+            ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
+            ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
             AM0 = castingState.GetSpell(SpellId.ArcaneMissiles);
             AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
             AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
@@ -7209,23 +7299,26 @@ namespace Rawr.Mage
             KAM0 = (float)(S00 * X02 + S00 * X03 + S01 * X22 + S01 * X23);
             KMBAM0 = (float)(S02 * X32 + S02 * X33);
             KAB1 = (float)(S10 * X10 + S11 * X10 + S12 * X40);
-            KABar1 = (float)(S10 * X11 + S10 * X13 + S11 * X11 + S11 * X13 + S12 * X41 + S12 * X43);
+            KABar1 = (float)(S10 * X11 + S11 * X11 + S12 * X41);
+            KABar1C = (float)(S10 * X13 + S11 * X13 + S12 * X43);
             KAM1 = (float)(S10 * X12 + S10 * X13);
             KMBAM1 = (float)(S11 * X12 + S11 * X13 + S12 * X42 + S12 * X43);
             KAB2 = (float)(S20 * X50 + S21 * X50 + S22 * X60);
-            KABar2 = (float)(S20 * X51 + S20 * X53 + S21 * X51 + S21 * X53 + S22 * X61 + S22 * X63);
+            KABar2 = (float)(S20 * X51 + S21 * X51 + S22 * X61);
+            KABar2C = (float)(S20 * X53 + S21 * X53 + S22 * X63);
             KAM2 = (float)(S20 * X52 + S20 * X53);
             KMBAM2 = (float)(S21 * X52 + S21 * X53 + S22 * X62 + S22 * X63);
             KAB3 = (float)(S30 * X70 + S31 * X70 + S32 * X80);
-            KABar3 = (float)(S30 * X71 + S30 * X73 + S31 * X71 + S31 * X73 + S32 * X81 + S32 * X83);
+            KABar3 = (float)(S30 * X71 + S31 * X71 + S32 * X81);
+            KABar3C = (float)(S30 * X73 + S31 * X73 + S32 * X83);
             KAM3 = (float)(S30 * X72 + S30 * X73);
             KMBAM3 = (float)(S31 * X72 + S31 * X73 + S32 * X82 + S32 * X83);
 
-            CastTime = KAB0 * AB0.CastTime + KABar0 * ABar0.CastTime + KAM0 * AM0.CastTime + KMBAM0 * MBAM0.CastTime + KAB1 * AB1.CastTime + KABar1 * ABar1.CastTime + KAM1 * AM1.CastTime + KMBAM1 * MBAM1.CastTime + KAB2 * AB2.CastTime + KABar2 * ABar2.CastTime + KAM2 * AM2.CastTime + KMBAM2 * MBAM2.CastTime + KAB3 * AB3.CastTime + KABar3 * ABar3.CastTime + KAM3 * AM3.CastTime + KMBAM3 * MBAM3.CastTime;
-            CostPerSecond = (KAB0 * AB0.CastTime * AB0.CostPerSecond + KABar0 * ABar0.CastTime * ABar0.CostPerSecond + KAM0 * AM0.CastTime * AM0.CostPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.CostPerSecond + KAB1 * AB1.CastTime * AB1.CostPerSecond + KABar1 * ABar1.CastTime * ABar1.CostPerSecond + KAM1 * AM1.CastTime * AM1.CostPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.CostPerSecond + KAB2 * AB2.CastTime * AB2.CostPerSecond + KABar2 * ABar2.CastTime * ABar2.CostPerSecond + KAM2 * AM2.CastTime * AM2.CostPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.CostPerSecond + KAB3 * AB3.CastTime * AB3.CostPerSecond + KABar3 * ABar3.CastTime * ABar3.CostPerSecond + KAM3 * AM3.CastTime * AM3.CostPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.CostPerSecond) / CastTime;
-            DamagePerSecond = (KAB0 * AB0.CastTime * AB0.DamagePerSecond + KABar0 * ABar0.CastTime * ABar0.DamagePerSecond + KAM0 * AM0.CastTime * AM0.DamagePerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.DamagePerSecond + KAB1 * AB1.CastTime * AB1.DamagePerSecond + KABar1 * ABar1.CastTime * ABar1.DamagePerSecond + KAM1 * AM1.CastTime * AM1.DamagePerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.DamagePerSecond + KAB2 * AB2.CastTime * AB2.DamagePerSecond + KABar2 * ABar2.CastTime * ABar2.DamagePerSecond + KAM2 * AM2.CastTime * AM2.DamagePerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.DamagePerSecond + KAB3 * AB3.CastTime * AB3.DamagePerSecond + KABar3 * ABar3.CastTime * ABar3.DamagePerSecond + KAM3 * AM3.CastTime * AM3.DamagePerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (KAB0 * AB0.CastTime * AB0.ThreatPerSecond + KABar0 * ABar0.CastTime * ABar0.ThreatPerSecond + KAM0 * AM0.CastTime * AM0.ThreatPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ThreatPerSecond + KAB1 * AB1.CastTime * AB1.ThreatPerSecond + KABar1 * ABar1.CastTime * ABar1.ThreatPerSecond + KAM1 * AM1.CastTime * AM1.ThreatPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ThreatPerSecond + KAB2 * AB2.CastTime * AB2.ThreatPerSecond + KABar2 * ABar2.CastTime * ABar2.ThreatPerSecond + KAM2 * AM2.CastTime * AM2.ThreatPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ThreatPerSecond + KAB3 * AB3.CastTime * AB3.ThreatPerSecond + KABar3 * ABar3.CastTime * ABar3.ThreatPerSecond + KAM3 * AM3.CastTime * AM3.ThreatPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (KAB0 * AB0.CastTime * AB0.ManaRegenPerSecond + KABar0 * ABar0.CastTime * ABar0.ManaRegenPerSecond + KAM0 * AM0.CastTime * AM0.ManaRegenPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ManaRegenPerSecond + KAB1 * AB1.CastTime * AB1.ManaRegenPerSecond + KABar1 * ABar1.CastTime * ABar1.ManaRegenPerSecond + KAM1 * AM1.CastTime * AM1.ManaRegenPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ManaRegenPerSecond + KAB2 * AB2.CastTime * AB2.ManaRegenPerSecond + KABar2 * ABar2.CastTime * ABar2.ManaRegenPerSecond + KAM2 * AM2.CastTime * AM2.ManaRegenPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ManaRegenPerSecond + KAB3 * AB3.CastTime * AB3.ManaRegenPerSecond + KABar3 * ABar3.CastTime * ABar3.ManaRegenPerSecond + KAM3 * AM3.CastTime * AM3.ManaRegenPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ManaRegenPerSecond) / CastTime;
+            CastTime = KAB0 * AB0.CastTime + KABar0 * ABar0.CastTime + KAM0 * AM0.CastTime + KMBAM0 * MBAM0.CastTime + KAB1 * AB1.CastTime + KABar1 * ABar1.CastTime + KAM1 * AM1.CastTime + KMBAM1 * MBAM1.CastTime + KAB2 * AB2.CastTime + KABar2 * ABar2.CastTime + KAM2 * AM2.CastTime + KMBAM2 * MBAM2.CastTime + KAB3 * AB3.CastTime + KABar3 * ABar3.CastTime + KAM3 * AM3.CastTime + KMBAM3 * MBAM3.CastTime + KABar1C * ABar1C.CastTime + KABar2C * ABar2C.CastTime + KABar3C * ABar3C.CastTime;
+            CostPerSecond = (KAB0 * AB0.CastTime * AB0.CostPerSecond + KABar0 * ABar0.CastTime * ABar0.CostPerSecond + KAM0 * AM0.CastTime * AM0.CostPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.CostPerSecond + KAB1 * AB1.CastTime * AB1.CostPerSecond + KABar1 * ABar1.CastTime * ABar1.CostPerSecond + KAM1 * AM1.CastTime * AM1.CostPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.CostPerSecond + KAB2 * AB2.CastTime * AB2.CostPerSecond + KABar2 * ABar2.CastTime * ABar2.CostPerSecond + KAM2 * AM2.CastTime * AM2.CostPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.CostPerSecond + KAB3 * AB3.CastTime * AB3.CostPerSecond + KABar3 * ABar3.CastTime * ABar3.CostPerSecond + KAM3 * AM3.CastTime * AM3.CostPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.CostPerSecond + KABar1C * ABar1C.CastTime * ABar1C.CostPerSecond + KABar2C * ABar2C.CastTime * ABar2C.CostPerSecond + KABar3C * ABar3C.CastTime * ABar3C.CostPerSecond) / CastTime;
+            DamagePerSecond = (KAB0 * AB0.CastTime * AB0.DamagePerSecond + KABar0 * ABar0.CastTime * ABar0.DamagePerSecond + KAM0 * AM0.CastTime * AM0.DamagePerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.DamagePerSecond + KAB1 * AB1.CastTime * AB1.DamagePerSecond + KABar1 * ABar1.CastTime * ABar1.DamagePerSecond + KAM1 * AM1.CastTime * AM1.DamagePerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.DamagePerSecond + KAB2 * AB2.CastTime * AB2.DamagePerSecond + KABar2 * ABar2.CastTime * ABar2.DamagePerSecond + KAM2 * AM2.CastTime * AM2.DamagePerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.DamagePerSecond + KAB3 * AB3.CastTime * AB3.DamagePerSecond + KABar3 * ABar3.CastTime * ABar3.DamagePerSecond + KAM3 * AM3.CastTime * AM3.DamagePerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.DamagePerSecond + KABar1C * ABar1C.CastTime * ABar1C.DamagePerSecond + KABar2C * ABar2C.CastTime * ABar2C.DamagePerSecond + KABar3C * ABar3C.CastTime * ABar3C.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (KAB0 * AB0.CastTime * AB0.ThreatPerSecond + KABar0 * ABar0.CastTime * ABar0.ThreatPerSecond + KAM0 * AM0.CastTime * AM0.ThreatPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ThreatPerSecond + KAB1 * AB1.CastTime * AB1.ThreatPerSecond + KABar1 * ABar1.CastTime * ABar1.ThreatPerSecond + KAM1 * AM1.CastTime * AM1.ThreatPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ThreatPerSecond + KAB2 * AB2.CastTime * AB2.ThreatPerSecond + KABar2 * ABar2.CastTime * ABar2.ThreatPerSecond + KAM2 * AM2.CastTime * AM2.ThreatPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ThreatPerSecond + KAB3 * AB3.CastTime * AB3.ThreatPerSecond + KABar3 * ABar3.CastTime * ABar3.ThreatPerSecond + KAM3 * AM3.CastTime * AM3.ThreatPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ThreatPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ThreatPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ThreatPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (KAB0 * AB0.CastTime * AB0.ManaRegenPerSecond + KABar0 * ABar0.CastTime * ABar0.ManaRegenPerSecond + KAM0 * AM0.CastTime * AM0.ManaRegenPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ManaRegenPerSecond + KAB1 * AB1.CastTime * AB1.ManaRegenPerSecond + KABar1 * ABar1.CastTime * ABar1.ManaRegenPerSecond + KAM1 * AM1.CastTime * AM1.ManaRegenPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ManaRegenPerSecond + KAB2 * AB2.CastTime * AB2.ManaRegenPerSecond + KABar2 * ABar2.CastTime * ABar2.ManaRegenPerSecond + KAM2 * AM2.CastTime * AM2.ManaRegenPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ManaRegenPerSecond + KAB3 * AB3.CastTime * AB3.ManaRegenPerSecond + KABar3 * ABar3.CastTime * ABar3.ManaRegenPerSecond + KAM3 * AM3.CastTime * AM3.ManaRegenPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ManaRegenPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ManaRegenPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ManaRegenPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ManaRegenPerSecond) / CastTime;
         }
 
         private SpellCycle commonChain;
@@ -7256,6 +7349,9 @@ namespace Rawr.Mage
             ABar3.AddSpellContribution(dict, KABar3 * ABar3.CastTime / CastTime * duration);
             AM3.AddSpellContribution(dict, KAM3 * AM3.CastTime / CastTime * duration);
             MBAM3.AddSpellContribution(dict, KMBAM3 * MBAM3.CastTime / CastTime * duration);
+            ABar1C.AddSpellContribution(dict, KABar1C * ABar1C.CastTime / CastTime * duration);
+            ABar2C.AddSpellContribution(dict, KABar2C * ABar2C.CastTime / CastTime * duration);
+            ABar3C.AddSpellContribution(dict, KABar3C * ABar3C.CastTime / CastTime * duration);
         }
     }
     #endregion

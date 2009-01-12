@@ -95,6 +95,7 @@ namespace Rawr.Mage
                     "Spell Info:AB2ABar*AB-AB-ABar, if any of the spells procs Missile Barrage replace next section with MBAM-AB-ABar",
                     "Spell Info:AB2ABarMBAM*AB-AB-ABar, if first AB procs MB insert MBAM before ABar, otherwise add MBAM after ABar",
                     "Spell Info:AB3ABar*AB-AB-AB-ABar, if MB on first 2 casts do MBAM as soon as you notice, followed by ABar, otherwise MBAM after ABar",
+                    "Spell Info:AB3ABarC*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:AB3ABarX*AB-AB-AB-ABar, always ramp to 3 AB, MBAM either before or after ABar based on when it procs",
                     "Spell Info:AB3ABarY*AB-AB-AB-ABar, MBAM as soon as you notice proc, restart cycle on MBAM (don't follow with ABar)",
                     "Spell Info:ABABarSlow*Arcane Missiles on Missile Barrage (after Arcane Barrage), maintain Slow",

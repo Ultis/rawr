@@ -537,15 +537,15 @@ namespace Rawr.Mage
                 double mindpm = double.PositiveInfinity;
                 double maxdpm = 0;
                 double[] spellControl = new double[34];
-                for (int control0 = 0; control0 < 3; control0++)
-                for (int control1 = 0; control1 < 3; control1++)
-                for (int control2 = 0; control2 < 2; control2++)
-                for (int control3 = 0; control3 < 2; control3++)
-                for (int control4 = 0; control4 < 3; control4++)
-                for (int control5 = 0; control5 < 3; control5++)
-                for (int control6 = 0; control6 < 3; control6++)
-                for (int control7 = 0; control7 < 3; control7++)
-                for (int control8 = 0; control8 < 3; control8++)
+                for (int control0 = 0; control0 < 4; control0++)
+                for (int control1 = 0; control1 < 4; control1++)
+                for (int control2 = 0; control2 < 3; control2++)
+                for (int control3 = 0; control3 < 3; control3++)
+                for (int control4 = 0; control4 < 4; control4++)
+                for (int control5 = 0; control5 < 4; control5++)
+                for (int control6 = 0; control6 < 4; control6++)
+                for (int control7 = 0; control7 < 4; control7++)
+                for (int control8 = 0; control8 < 4; control8++)
                 {
                     for (int i = 0; i < 34; i++) spellControl[i] = 0;
                     spellControl[0 + control0] = 1;
@@ -559,16 +559,16 @@ namespace Rawr.Mage
                     spellControl[30 + control8] = 1;
                     Spell generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33]);
                     // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 4325.446) / (generic.ManaPerSecond - 175.643127);
+                    double dpm = (generic.DamagePerSecond - 4852.069) / (generic.ManaPerSecond - 250.269913);
                     if (generic.DamagePerSecond > maxdps)
                     {
                         maxdps = generic.DamagePerSecond;
                     }
-                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 200)
+                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 300)
                     {
                         mindpm = dpm;
                     }
-                    if (generic.DamagePerSecond > 4325.446 && dpm > maxdpm)
+                    if (generic.DamagePerSecond > 4852.069 && dpm > maxdpm)
                     {
                         maxdpm = dpm;
                     }
@@ -2331,6 +2331,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarX);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarY);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarC);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarX);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABAMABar);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB2AMABar);
