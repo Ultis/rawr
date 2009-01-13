@@ -1381,6 +1381,12 @@ namespace Rawr
 				Group = "Temporary Weapon Enchantment",
 				Stats = { WeaponDamage = 12, CritRating = 14 }
 			});
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthliving Weapon",
+                Group = "Temporary Weapon Enchantment",
+                Stats = { SpellPower = 150 }
+            });
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Righteous Weapon Coating",

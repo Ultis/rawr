@@ -174,28 +174,32 @@ namespace Rawr.RestoSham
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
             mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
 
-            calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) + 
+            calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) +
                 ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * .85f);
+            if (character.ActiveBuffsContains("Earthliving Weapon"))
+                stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .01f * 150f);
+
 
             // This is my new calcs, still testing:
             float CurrentMana = calcStats.TotalManaPool;
             if (options.ESInterval < 32)
                 options.ESInterval = 32;
+            float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
             float Critical = 1f + (calcStats.SpellCrit);
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
             float ESC = (((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.1f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify;
-            float ESCMPS = ((Time / options.ESInterval) * 660f);
+            float ESCMPS = ((Time / options.ESInterval) * (660f * Redux));
             float Hasted = 1 - (stats.HasteRating / 3279);
             float LHWC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
             float HWC = (3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float CHC = 2.5f;
             float RTC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float LHWM = 550 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float HWM = 1099 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float CHM = 835;
-            float RTM = 792 - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float LHWM = (550 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWM = (1099 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float CHM = (835 * Redux);
+            float RTM = (792 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
             float EFL = Time - (1.5f * (Time / options.ESInterval));
             float LHWHeal = ((1720f + (Healing * (LHWC / 3.5f))) * Purify) * Critical;
             float HWHeal = ((3250f + (Healing * (HWC / 3.5f))) * Purify);
@@ -218,7 +222,7 @@ namespace Rawr.RestoSham
             calcStats.ESLHWMPSMT = CurrentMana / ESLHWMPSMT;
             calcStats.ESHWMPSMT = CurrentMana / ESHWMPSMT;
             calcStats.ESCHMPSMT = CurrentMana / ESCHMPSMT;
-            calcStats.ESRTCHCHMPSMT = CurrentMana / ((RTMPSMT + ESCHMPSMT + ESCHMPSMT) /3);
+            calcStats.ESRTCHCHMPSMT = CurrentMana / ((RTMPSMT + ESCHMPSMT + ESCHMPSMT) / 3);
 
 
             // Calculate Best HPS
@@ -246,7 +250,7 @@ namespace Rawr.RestoSham
             return calcStats;
         }
 
-        
+
         //
         // Create the statistics for a given character:
         //
