@@ -306,7 +306,7 @@ namespace Rawr
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
 				stats.ArmorPenetrationRating += ((float)int.Parse(line)) / 5f;
 			}
-			else if (isArmory && line.StartsWith("Increases attack power by "))
+			else if (isArmory && line.StartsWith("Increases attack power by ") && !line.Contains("forms only"))
 			{
 				line = line.Substring("Increases attack power by ".Length);
 				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));

@@ -482,7 +482,7 @@ namespace Rawr
 
 				case "atkpwr":
 				case "mleatkpwr":
-				case "feratkpwr":
+				//case "feratkpwr":
 					item.Stats.AttackPower += float.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 					break;
 

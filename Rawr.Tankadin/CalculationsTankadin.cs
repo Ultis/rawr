@@ -179,7 +179,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float defDif = (targetLevel - 80) * .002f;
             cs.Defense = stats.Defense;
-            cs.Miss = Math.Min(1f, .05f + cs.Defense * .0004f - defDif);
+            cs.Miss = Math.Min(1f, .04f + cs.Defense * .0004f - defDif);
             cs.Dodge = Math.Min(1f - cs.Miss, stats.Dodge - defDif);
             cs.Parry = Math.Min(1f - cs.Miss - cs.Dodge, stats.Parry - defDif);
             cs.Avoidance = cs.Miss + cs.Dodge + cs.Parry;

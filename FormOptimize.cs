@@ -231,6 +231,7 @@ namespace Rawr
 					e.CurrentCharacterValue),
 					"Rawr Optimizer Results", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
+					_character.IsLoading = true;
 					_character.Back = bestCharacter.Back == null ? null : ItemCache.FindItemById(bestCharacter.Back.GemmedId);
 					_character.Chest = bestCharacter.Chest == null ? null : ItemCache.FindItemById(bestCharacter.Chest.GemmedId);
 					_character.Feet = bestCharacter.Feet == null ? null : ItemCache.FindItemById(bestCharacter.Feet.GemmedId);
@@ -263,6 +264,7 @@ namespace Rawr
 					_character.RangedEnchant = bestCharacter.RangedEnchant;
 					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
 					_character.WristEnchant = bestCharacter.WristEnchant;
+					_character.IsLoading = false;
 					_character.OnCalculationsInvalidated();
 					Close();
 				}

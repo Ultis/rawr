@@ -125,7 +125,8 @@ namespace Rawr.Cat
 						Item.ItemType.Leather,
 						Item.ItemType.Idol,
 						Item.ItemType.Staff,
-						Item.ItemType.TwoHandMace
+						Item.ItemType.TwoHandMace,
+						Item.ItemType.Polearm
 					});
 				}
 				return _relevantItemTypes;
@@ -596,7 +597,13 @@ namespace Rawr.Cat
 
 			Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
 			statsWeapon.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
-			statsWeapon.AttackPower += statsWeapon.Strength * 2;
+			statsWeapon.AttackPower += statsWeapon.Strength * 2f;
+			if (character.MainHand != null)
+			{
+				float fap = (character.MainHand.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
+				statsTotal.AttackPower += fap;
+				statsWeapon.AttackPower += fap;
+			}
 
 			statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
 			statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
@@ -866,8 +873,7 @@ namespace Rawr.Cat
 		public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == Item.ItemSlot.OffHand || 
-				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol) ||
-				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.AttackPower < 100)) 
+				(item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Idol)) 
 				return false;
 			return base.IsItemRelevant(item);
 		}

@@ -130,7 +130,7 @@ namespace Rawr
                                               _currentItem.Sockets.Color3 != Item.ItemSlot.None;
 
                             var positiveStats = Calculations.GetRelevantStats(_currentItem.Stats).Values(x => x > 0);
-                            int statHeight = (positiveStats.Count + 2) / 3; // number of lines
+							int statHeight = (positiveStats.Count + 2 + (_currentItem.DPS > 0 ? 1 : 0)) / 3; // number of lines
                             statHeight *= 17;// * line height
                             int extraLocation = 0;
 
@@ -267,6 +267,29 @@ namespace Rawr
                                     yPos += yGrid.step;
                                 }
                             }
+
+							if (_currentItem.DPS > 0)
+							{
+								float dps = (float)Math.Round(_currentItem.DPS * 100f) / 100f;
+								g.DrawString(dps + " DPS", _fontStats, SystemBrushes.InfoText, xPos, yPos);
+								ypos_nextline = yPos + yGrid.step;
+								xPos += xGrid.step;
+								if (xPos > xGrid.max)
+								{
+									xPos = xGrid.initial;
+									yPos += yGrid.step;
+								}
+
+								g.DrawString(_currentItem.Speed + " Speed", _fontStats, SystemBrushes.InfoText, xPos, yPos);
+								ypos_nextline = yPos + yGrid.step;
+								xPos += xGrid.step;
+								if (xPos > xGrid.max)
+								{
+									xPos = xGrid.initial;
+									yPos += yGrid.step;
+								}
+							}
+
                             // this is the next clean/empty line after we wrote the stats
                             yPos = ypos_nextline;
 

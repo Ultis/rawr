@@ -292,8 +292,8 @@ namespace Rawr.Retribution
                 if (chanceDodged < 0f) chanceDodged = 0f;
                 calcs.DodgedAttacks = chanceDodged;
 
-                // Miss: Base 9%, Minimum 0%
-                float chanceMiss = .09f;
+                // Miss: Base 8%, Minimum 0%
+                float chanceMiss = .08f;
                 chanceMiss -= stats.HitRating / 3279f;
                 chanceMiss -= stats.PhysicalHit;
                 if (chanceMiss < 0f) chanceMiss = 0f;
