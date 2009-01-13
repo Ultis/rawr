@@ -1418,6 +1418,8 @@ Here's a quick rundown of the status of each model:
 
         private void toolStripMenuItemItemFilterEditor_Click(object sender, EventArgs e)
         {
+            // in order to preserve which filters are enabled we have to save the filters before initiating the edit
+            ItemFilter.Save("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
             FormItemFilter.bindingSourceItemFilter.DataSource = ItemFilter.RegexList;
             if (FormItemFilter.ShowDialog(this) == DialogResult.OK)
             {
@@ -1428,6 +1430,7 @@ Here's a quick rundown of the status of each model:
             else
             {
 				ItemFilter.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemFilter.xml");
+                UpdateItemFilterDropDown(); // you have to rebuild dropdown, because reloading item filters from file makes Tags on drop down menu invalid
             }
         }
 
