@@ -26,6 +26,8 @@ namespace Rawr
             MinItemQuality = Item.ItemQuality.Temp;
             MaxItemQuality = Item.ItemQuality.Heirloom;
             AdditiveFilter = true;
+            AppliesToItems = true;
+            AppliesToGems = true;
         }
 
         public string Name { get; set; }
@@ -50,6 +52,8 @@ namespace Rawr
         public Item.ItemQuality MinItemQuality { get; set; }
         public Item.ItemQuality MaxItemQuality { get; set; }
         public bool AdditiveFilter { get; set; }
+        public bool AppliesToItems { get; set; }
+        public bool AppliesToGems { get; set; }
 
         public bool Enabled { get; set; }
 
@@ -83,6 +87,11 @@ namespace Rawr
                 }
             }
             return false;
+        }
+
+        public bool AppliesTo(Item item)
+        {
+            return (item.IsGem && AppliesToGems) || (!item.IsGem && AppliesToItems);
         }
     }
 
@@ -142,7 +151,7 @@ namespace Rawr
                 bool enabledMatch = false;
                 foreach (ItemFilterRegex regex in data.RegexList)
                 {
-                    if (regex.AdditiveFilter && regex.IsMatch(item))
+                    if (regex.AdditiveFilter && regex.AppliesTo(item) && regex.IsMatch(item))
                     {
                         anyMatch = true;
                         if (regex.Enabled)
@@ -164,7 +173,7 @@ namespace Rawr
                 {
                     foreach (ItemFilterRegex regex in data.RegexList)
                     {
-                        if (!regex.AdditiveFilter && regex.Enabled && regex.IsMatch(item))
+                        if (!regex.AdditiveFilter && regex.Enabled && regex.AppliesTo(item) && regex.IsMatch(item))
                         {
                             return false;
                         }

@@ -60,6 +60,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.checkBoxAdditiveFilter = new System.Windows.Forms.CheckBox();
+            this.checkBoxAppliesToItems = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxAppliesToGems = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceItemFilter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
@@ -69,7 +73,7 @@
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OKButton.Location = new System.Drawing.Point(167, 443);
+            this.OKButton.Location = new System.Drawing.Point(167, 484);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 25);
             this.OKButton.TabIndex = 5;
@@ -80,7 +84,7 @@
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(86, 443);
+            this.CancelButton.Location = new System.Drawing.Point(86, 484);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 25);
             this.CancelButton.TabIndex = 4;
@@ -339,12 +343,54 @@
             this.checkBoxAdditiveFilter.TabIndex = 22;
             this.checkBoxAdditiveFilter.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAppliesToItems
+            // 
+            this.checkBoxAppliesToItems.AutoSize = true;
+            this.checkBoxAppliesToItems.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceItemFilter, "AppliesToItems", true));
+            this.checkBoxAppliesToItems.Location = new System.Drawing.Point(227, 442);
+            this.checkBoxAppliesToItems.Name = "checkBoxAppliesToItems";
+            this.checkBoxAppliesToItems.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAppliesToItems.TabIndex = 24;
+            this.checkBoxAppliesToItems.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 442);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(84, 13);
+            this.label6.TabIndex = 23;
+            this.label6.Text = "Applies to Items:";
+            // 
+            // checkBoxAppliesToGems
+            // 
+            this.checkBoxAppliesToGems.AutoSize = true;
+            this.checkBoxAppliesToGems.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.bindingSourceItemFilter, "AppliesToGems", true));
+            this.checkBoxAppliesToGems.Location = new System.Drawing.Point(227, 462);
+            this.checkBoxAppliesToGems.Name = "checkBoxAppliesToGems";
+            this.checkBoxAppliesToGems.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAppliesToGems.TabIndex = 26;
+            this.checkBoxAppliesToGems.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 462);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(86, 13);
+            this.label7.TabIndex = 25;
+            this.label7.Text = "Applies to Gems:";
+            // 
             // FormItemFilter
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(254, 480);
+            this.ClientSize = new System.Drawing.Size(254, 521);
+            this.Controls.Add(this.checkBoxAppliesToGems);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.checkBoxAppliesToItems);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.checkBoxAdditiveFilter);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.comboBoxMaxItemQuality);
@@ -407,5 +453,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBoxAdditiveFilter;
+        private System.Windows.Forms.CheckBox checkBoxAppliesToItems;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxAppliesToGems;
+        private System.Windows.Forms.Label label7;
     }
 }
