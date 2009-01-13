@@ -42,6 +42,7 @@ namespace Rawr
         BonusSnDDuration,
         BonusSnDHaste,
 		BonusStreadyShotCrit,
+        ExtraSpiritWhileCasting,
         CatFormStrength,
         CHHealIncrease,
         CHManaReduction,
@@ -157,6 +158,7 @@ namespace Rawr
         SpellHasteFor5SecOnCrit_50,
         SpellHasteFor6SecOnCast_15_45,
         SpellHasteFor10SecOnCast_10_45,
+        SpellHasteFor10SecOnHeal_10_45,
         SpellHasteFor6SecOnHit_10_45,
         SpellHasteRating,
         SpellHit,
@@ -172,6 +174,7 @@ namespace Rawr
         Strength,
         TerrorProc,
         TimbalsProc,
+        TrollDivinity,
         UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
@@ -1265,6 +1268,16 @@ namespace Rawr
 
         // 10% chance, 45 sec internal cooldown
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Haste (10% 10 sec/Cast)")]
+        [Category("Equipment Procs")]
+        public float SpellHasteFor10SecOnHeal_10_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45] = value; }
+        }
+        
+        // 10% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Haste (10% 6 sec/Hit)")]
         [Category("Equipment Procs")]
         public float SpellHasteFor6SecOnHit_10_45
@@ -1754,6 +1767,15 @@ namespace Rawr
 			set { _rawAdditiveData[(int)AdditiveStat.BerserkingProc] = value; }
 		}
 
+        [DisplayName("Troll Divinity")]
+        [Category("Equipment Procs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TrollDivinity
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TrollDivinity]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TrollDivinity] = value; }
+        }
+
         [DisplayName("Mongoose Proc Average")]
         [Category("Equipment Procs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2037,6 +2059,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpiritFor20SecOnUse2Min] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spirit while casting")]
+        [Category("Equipment Procs")]
+        public float ExtraSpiritWhileCasting
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExtraSpiritWhileCasting] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

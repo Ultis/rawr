@@ -772,10 +772,20 @@ namespace Rawr
                 // Je'Tze's Bell
                 stats.ManaRestoreOnCast_10_45 += 100 * 3;
             }
+            else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
+            {
+                // Majestic Dragon Figurine
+                stats.ExtraSpiritWhileCasting += 180;
+            }
             else if (line.StartsWith("Your spells have a chance to increase your haste rating by 505 for 10 secs."))
             {
                 // Embrace of the Spider
                 stats.SpellHasteFor10SecOnCast_10_45 += 505;
+            }
+            else if (line.StartsWith("Your direct healing and heal over time spells have a chance to increase your haste rating by 505 for 10 secs."))
+            {
+                // The Egg of Mortal Essence
+                stats.SpellHasteFor10SecOnHeal_10_45 += 505;
             }
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
@@ -920,6 +930,11 @@ namespace Rawr
 					}
 				}
 			}
+            else if (line.StartsWith("For the next 20 sec, your direct heals increase healing received by their target by up to 58."))
+            {
+                // Talisman of Troll Divinity
+                stats.TrollDivinity = 58*5;                
+            }
 			else if (line.StartsWith("Your heals each cost "))
 			{
 				// Lower City Prayerbook
