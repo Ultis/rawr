@@ -55,12 +55,13 @@ namespace Rawr.Tree
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power");
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString() + (BasicStats.ExtraSpiritWhileCasting>0?"*180 from MDF trinket":""));
+            dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power" + (BasicStats.TrollDivinity>0?"\n58 Troll Divinity bonus":""));
 
             dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
-            dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / TreeConstants.HasteRatingToHaste * 100, 2) + "%");
+            float hr_from_trinkets = (BasicStats.SpellHasteFor10SecOnCast_10_45 + BasicStats.SpellHasteFor10SecOnHeal_10_45) * .17f;
+            dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / TreeConstants.HasteRatingToHaste * 100, 2) + "%" + (hr_from_trinkets>0?"*"+Math.Round(hr_from_trinkets,2).ToString()+" Haste from trinkets":""));
             dictValues.Add("Global CD", Math.Round(1.5f / (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste), 2) + "sec");
 
             dictValues.Add("Time until OOM", TimeUntilOOM.ToString());

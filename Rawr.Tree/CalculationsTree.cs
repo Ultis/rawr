@@ -291,6 +291,9 @@ namespace Rawr.Tree
             #region TrinketEffects
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor15SecOnUse90Sec / 8;
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor20SecOnUse2Min / 6;
+            // For 10% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 60-65 seconds, .17 to be optimistic
+            calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnCast_10_45 * .17f;
+            calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnHeal_10_45 * .17f;
             #endregion
 
             float MPS = 0; // mana per second used
@@ -522,6 +525,7 @@ namespace Rawr.Tree
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + character.DruidTalents.HeartOfTheWild * 0.04f));
+            statsTotal.Spirit += statsTotal.ExtraSpiritWhileCasting;
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
 
@@ -531,8 +535,20 @@ namespace Rawr.Tree
             statsTotal.Mana = statsTotal.Mana + ((statsTotal.Intellect - 20f) * 15f + 20f); //don't know why, but it's right..
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
 
-            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Health = (float)Math.Round(statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * (character.DruidTalents.Dreamstate > 0 ? character.DruidTalents.Dreamstate * 0.03f + 0.01f : 0f));
+
+            if (statsTotal.TrollDivinity > 0)
+            {
+                // 58 +healing, stacks 5 times, lasts 10 seconds, 20 seconds, with a 2 minute cooldown
+                // Direct heals: Nourish (1.5) HT (3) Regrowth (2)
+                // Lets assume Nourish, a 5 time stack takes 8-10 seconds. Means there are 20 seconds left
+                // with 58*5 and 8 seconds with 58*4, 58*3, 58*2 and 58*1
+                // (2*(1+2+3+4)+20*5)*58 / 120
+                // = 120 * 58 / 120 = 58
+                // But remember that the spellpower will increase for others in the raid too!
+                statsTotal.SpellPower += 58;
+            }
 
             return statsTotal;
         }
@@ -542,18 +558,18 @@ namespace Rawr.Tree
             Stats statsRace = new Stats();
             statsRace.Mana = TreeConstants.BaseMana; //pulled in an extra class, because i've to know them for spells etc
 
-            //taken from http://forums.worldofwarcraft.com/thread.html?topicId=9336866956&sid=2000
             if (race == Character.CharacterRace.NightElf)
             {
-                statsRace.Health = 5493f;
-                //statsRace.Strength = 85f;
+                statsRace.Health = 7417;
+                statsRace.Strength = 86f;
                 statsRace.Agility = 87f;
                 statsRace.Stamina = 97f;
                 statsRace.Intellect = 143f;
-                statsRace.Spirit = 159f;
+                statsRace.Spirit = 182f;
             }
             else
             {
+                // NEED TO BE CHECKED.
                 statsRace.Health = 7599f;
                 //statsRace.Strength = 94f;
                 statsRace.Agility = 77f;
@@ -590,6 +606,9 @@ namespace Rawr.Tree
                 #region Trinkets
                 MementoProc = stats.MementoProc,
                 AverageHeal = stats.AverageHeal,
+                TrollDivinity = stats.TrollDivinity,
+                ExtraSpiritWhileCasting = stats.ExtraSpiritWhileCasting,
+                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
                 //ManaResto = stats.ManaRestorePerCast_5_15,
                 BangleProc = stats.BangleProc,
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
@@ -597,6 +616,8 @@ namespace Rawr.Tree
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                SpellHasteFor10SecOnHeal_10_45 = stats.SpellHasteFor10SecOnHeal_10_45,
+                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                 #endregion
                 #region Neck
                 ShatteredSunRestoProc = stats.ShatteredSunRestoProc,
@@ -636,8 +657,8 @@ namespace Rawr.Tree
 
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana + stats.CritRating
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
-                + stats.BonusManaPotion + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
-                + stats.ShatteredSunRestoProc
+                + stats.BonusManaPotion + stats.TrollDivinity + stats.ExtraSpiritWhileCasting + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
+                + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45
                 + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost + stats.HealingTouchFinalHealBonus
                 > 0)
                 return true;
