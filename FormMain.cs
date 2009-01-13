@@ -1613,6 +1613,7 @@ Here's a quick rundown of the status of each model:
         public void ReloadCharacterFromCharacterProfilerUpdate(Character character, Character reload)
         {
             //load values for gear from armory into original character
+			character.IsLoading = true;
             foreach (Character.CharacterSlot slot in Character.CharacterSlots)
             {
                 character[slot] = reload[slot];
@@ -1621,8 +1622,15 @@ Here's a quick rundown of the status of each model:
             {
                 character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
             }
-            character.AvailableItems = reload.AvailableItems;
+			foreach (string existingAvailableItem in character.AvailableItems)
+			{
+				string itemId = existingAvailableItem.Split('.')[0];
+				if (reload.AvailableItems.Contains(itemId)) reload.AvailableItems.Remove(itemId);
+			}
+            character.AvailableItems.AddRange(reload.AvailableItems);
             character.AssignAllTalentsFromCharacter(reload);
+			character.IsLoading = false;
+			character.OnCalculationsInvalidated();
         }
 
         public Character GetCharacterFromCharacterProfiler(CharacterProfilerCharacter characterProfilerCharacter)
