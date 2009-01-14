@@ -50,7 +50,6 @@
     <Compile Include="CalculationDPSWarr.cs" />
     <Compile Include="CharacterCalculationsDPSWarr.cs" />
     <Compile Include="CombatFactors.cs" />
-    <Compile Include="ComboPointGenerator.cs" />
     <Compile Include="ComparisonCalculationsDPSWarr.cs" />
     <Compile Include="DisplayValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

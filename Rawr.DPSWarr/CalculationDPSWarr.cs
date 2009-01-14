@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr
 {
-    [Rawr.Calculations.RawrModelInfo("FuryWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
+    [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase
     {
         public CalculationsDPSWarr()
