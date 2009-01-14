@@ -27,11 +27,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
-            this.groupBoxCycles = new System.Windows.Forms.GroupBox();
-            this.radioButton4s5r = new System.Windows.Forms.RadioButton();
             this.comboBoxArmorBosses = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBoxCycles.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBoxTargetLevel
@@ -68,28 +65,6 @@
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(157, 55);
             this.labelTargetArmorDescription.TabIndex = 5;
             // 
-            // groupBoxCycles
-            // 
-            this.groupBoxCycles.Controls.Add(this.radioButton4s5r);
-            this.groupBoxCycles.Location = new System.Drawing.Point(15, 151);
-            this.groupBoxCycles.Name = "groupBoxCycles";
-            this.groupBoxCycles.Size = new System.Drawing.Size(182, 112);
-            this.groupBoxCycles.TabIndex = 6;
-            this.groupBoxCycles.TabStop = false;
-            this.groupBoxCycles.Text = "Cycles";
-            // 
-            // radioButton4s5r
-            // 
-            this.radioButton4s5r.AutoSize = true;
-            this.radioButton4s5r.Checked = true;
-            this.radioButton4s5r.Location = new System.Drawing.Point(6, 19);
-            this.radioButton4s5r.Name = "radioButton4s5r";
-            this.radioButton4s5r.Size = new System.Drawing.Size(45, 17);
-            this.radioButton4s5r.TabIndex = 0;
-            this.radioButton4s5r.TabStop = true;
-            this.radioButton4s5r.Text = "4s5r";
-            this.radioButton4s5r.UseVisualStyleBackColor = true;
-            // 
             // comboBoxArmorBosses
             // 
             this.comboBoxArmorBosses.FormattingEnabled = true;
@@ -118,7 +93,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.comboBoxArmorBosses);
-            this.Controls.Add(this.groupBoxCycles);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBoxTargetLevel);
@@ -126,8 +100,6 @@
             this.Controls.Add(this.groupBox3);
             this.Name = "CalculationOptionsPanelDPSWarr";
             this.Size = new System.Drawing.Size(209, 432);
-            this.groupBoxCycles.ResumeLayout(false);
-            this.groupBoxCycles.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -139,8 +111,6 @@
 		private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelTargetArmorDescription;
-        private System.Windows.Forms.GroupBox groupBoxCycles;
-        private System.Windows.Forms.RadioButton radioButton4s5r;
         private System.Windows.Forms.ComboBox comboBoxArmorBosses;
         private System.Windows.Forms.GroupBox groupBox3;
     }
