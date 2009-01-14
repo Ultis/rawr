@@ -65,10 +65,12 @@ namespace Rawr.DPSWarr
                 return false;
             if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.TwoHand && character.WarriorTalents.TitansGrip == 1)
                 return true;
-            if (character.WarriorTalents.TitansGrip > 0 && slot == Character.CharacterSlot.MainHand && item.Type == Item.ItemType.Polearm)
+            if (character.WarriorTalents.TitansGrip == 1 && slot == Character.CharacterSlot.MainHand && item.Type == Item.ItemType.Polearm)
                 return false;
-            if (slot == Character.CharacterSlot.OffHand && character.MainHand.Slot == Item.ItemSlot.TwoHand)
+            if (slot == Character.CharacterSlot.OffHand && character.MainHand != null && character.MainHand.Slot == Item.ItemSlot.TwoHand)
                 return false;
+            if (item.Type == Item.ItemType.Polearm)
+                return true;
             return base.ItemFitsInSlot(item, character, slot);
         }
 
@@ -194,7 +196,7 @@ namespace Rawr.DPSWarr
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Polearm)
+            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Polearm && character.WarriorTalents.TitansGrip == 0)
                 character.MainHand.Type = Item.ItemType.TwoHandAxe;
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);

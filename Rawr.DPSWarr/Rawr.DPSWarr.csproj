@@ -47,7 +47,7 @@
     <Compile Include="CalculationOptionsPanelDPSWarr.Designer.cs">
       <DependentUpon>CalculationOptionsPanelDPSWarr.cs</DependentUpon>
     </Compile>
-    <Compile Include="CalculationDPSWarr.cs" />
+    <Compile Include="CalculationsDPSWarr.cs" />
     <Compile Include="CharacterCalculationsDPSWarr.cs" />
     <Compile Include="CombatFactors.cs" />
     <Compile Include="ComparisonCalculationsDPSWarr.cs" />
