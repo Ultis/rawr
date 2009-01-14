@@ -263,6 +263,8 @@ namespace Rawr
         BonusDamageMultiplier,
         BonusRipDamageMultiplier,
         BonusShieldSlamDamage,
+        BonusSlamDamage,
+        DreadnaughtBonusRageProc,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
         BonusSpiritMultiplier,
@@ -2294,6 +2296,23 @@ namespace Rawr
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Slam Damage")]
+        public float BonusSlamDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Extra Rage Proc")]
+        public float DreadnaughtBonusRageProc
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.DreadnaughtBonusRageProc]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.DreadnaughtBonusRageProc] = value; }
+        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
