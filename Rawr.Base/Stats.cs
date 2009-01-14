@@ -222,6 +222,7 @@ namespace Rawr
         BonusScourgeStrikeDamage,
 		BonusInsectSwarmDamage,
 		BonusNukeCritChance,
+        BonusHoTOnDirectHeals,
         #region Added by Rawr.Elemental
         BonusCritChance,
         BonusThunderCritChance,
@@ -2124,6 +2125,16 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast]; }
             set { _rawAdditiveData[(int)AdditiveStat.FullManaRegenFor15SecOnSpellcast] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Extra heal over time from direct healing spells")]
+        public float BonusHoTOnDirectHeals
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals] = value; }
+        }
+
+        
 
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]

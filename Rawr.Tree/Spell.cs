@@ -61,11 +61,13 @@ namespace Rawr.Tree
         { get { return periodicTickTime; } }
         public float coefHoT = 0f; //coef for HoT
 
+        protected float extraHealing = 0f; // for BonusHoTOnDirectHeals
+
         public float AverageHealing
-        { get { return (minHeal + maxHeal) / 2 + HealingBonus * coefDH; } }
+        { get { return extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH; } }
 
         public float AverageHealingwithCrit
-        { get { return (AverageHealing * (100 - critPercent) + (AverageHealing * critModifier) * critPercent) / 100; } }
+        { get { return extraHealing + (AverageHealing * (100 - critPercent) + (AverageHealing * critModifier) * critPercent) / 100; } }
 
         virtual public float PeriodicTick
         { get { return periodicTick + healingBonus * coefHoT; } }
@@ -117,6 +119,8 @@ namespace Rawr.Tree
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
+
+            extraHealing = calcs.BasicStats.BonusHoTOnDirectHeals;
 
             #region Idols
             //guessed that it doesnt work with talents
@@ -229,6 +233,8 @@ namespace Rawr.Tree
             #endregion
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+
+            extraHealing = calcs.BasicStats.BonusHoTOnDirectHeals;
 
             #region Idols
             //z.B.: Idol of the Crescent Goddess (-65 Mana)
@@ -559,6 +565,8 @@ namespace Rawr.Tree
             minHeal = 1883f;
             maxHeal = 2187f;
             #endregion
+
+            extraHealing = calcs.BasicStats.BonusHoTOnDirectHeals;
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 

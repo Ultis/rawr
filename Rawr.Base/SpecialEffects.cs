@@ -809,6 +809,20 @@ namespace Rawr
                 // Darkmoon Card: Death
                 stats.DarkmoonCardDeathProc += 1;
             }
+            else if (line.StartsWith("Your direct healing spells have a chance to place a heal over time on your target"))
+            {
+                Regex r = new Regex("Your direct healing spells have a chance to place a heal over time on your target, healing (?<hot>\\d*) over (?<dur>\\d*) sec\\.");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    float hot = int.Parse(m.Groups["hot"].Value);
+                    float dur = int.Parse(m.Groups["dur"].Value);
+                    // internal cooldown: 45 seconds
+                    // 20% chance, so on average procs after 5 casts
+                    // lets say 60 seconds
+                    stats.BonusHoTOnDirectHeals += hot / 60f;
+                }
+            }
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)
