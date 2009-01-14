@@ -98,7 +98,7 @@ namespace Rawr
 			this.trinket1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.trinket2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.weaponToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.offHandToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.idolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,6 +130,8 @@ namespace Rawr
 			this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.directUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparatorRelativeStats = new System.Windows.Forms.ToolStripSeparator();
+            this.relativeStatValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -926,7 +928,7 @@ namespace Rawr
             this.trinket1ToolStripMenuItem,
             this.trinket2ToolStripMenuItem,
             this.weaponToolStripMenuItem,
-            this.toolStripMenuItem1,
+            this.offHandToolStripMenuItem1,
             this.idolToolStripMenuItem,
             this.toolStripMenuItem2,
             this.toolStripMenuItem3,
@@ -957,7 +959,9 @@ namespace Rawr
             this.talentsMenuItem,
             this.currentGearEnchantsBuffsToolStripMenuItem,
             this.directUpgradesMenuItem,
-            this.toolStripSeparator9});
+            this.toolStripSeparator9,
+            this.relativeStatValuesToolStripMenuItem,
+            this.toolStripSeparatorRelativeStats});
 			this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
 			this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
@@ -1092,13 +1096,13 @@ namespace Rawr
 			this.weaponToolStripMenuItem.Text = " Main Hand";
 			this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem1
+			// offHandToolStripMenuItem1
 			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-			this.toolStripMenuItem1.Tag = "Gear.OffHand";
-			this.toolStripMenuItem1.Text = " Off Hand";
-			this.toolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			this.offHandToolStripMenuItem1.Name = "offHandToolStripMenuItem1";
+			this.offHandToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
+			this.offHandToolStripMenuItem1.Tag = "Gear.OffHand";
+			this.offHandToolStripMenuItem1.Text = " Off Hand";
+			this.offHandToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// idolToolStripMenuItem
 			// 
@@ -1336,6 +1340,19 @@ namespace Rawr
 			// 
 			this.toolStripSeparator9.Name = "toolStripSeparator9";
 			this.toolStripSeparator9.Size = new System.Drawing.Size(223, 6);
+            //
+            // toolStripSeparator12
+            //
+            this.toolStripSeparatorRelativeStats.Name = "toolStripSeparator12";
+            this.toolStripSeparatorRelativeStats.Size = new System.Drawing.Size(223, 6);
+            //
+            // relativeStatValuesToolStripMenuItem
+            //
+            this.relativeStatValuesToolStripMenuItem.Name = "relativeStatValuesToolStripMenuItem";
+            this.relativeStatValuesToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.relativeStatValuesToolStripMenuItem.Tag = "Relative Stat Values";
+            this.relativeStatValuesToolStripMenuItem.Text = "Relative Stat Values";
+            this.relativeStatValuesToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
 			// 
 			// toolStripLabel2
 			// 
@@ -1891,12 +1908,14 @@ namespace Rawr
 		private System.Windows.Forms.ComboBox comboBoxRace;
 		private ItemButton itemButtonProjectileBag;
 		private ItemButton itemButtonProjectile;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem offHandToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorRelativeStats;
+        private System.Windows.Forms.ToolStripMenuItem relativeStatValuesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadCurrentCharacterFromArmoryToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem optimizeToolStripMenuItem;

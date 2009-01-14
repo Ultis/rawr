@@ -1030,6 +1030,10 @@ Here's a quick rundown of the status of each model:
 							itemComparison1.LoadTalents();
 							break;
 
+                        case "Relative Stat Values":
+                            itemComparison1.LoadRelativeStatValues();
+                            break;
+
 						case "Custom":
 							itemComparison1.LoadCustomChart(tag[1]);
 							break;

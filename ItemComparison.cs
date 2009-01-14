@@ -327,6 +327,14 @@ namespace Rawr
             comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
         }
 
+        public void LoadRelativeStatValues()
+        {
+            comparisonGraph1.RoundValues = true;
+            comparisonGraph1.CustomRendered = false;
+            comparisonGraph1.ItemCalculations = CalculationsBase.GetRelativeStatValues(Character);
+            comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
+        }
+
         public void LoadCustomChart(string chartName)
         {
             comparisonGraph1.RoundValues = true;
