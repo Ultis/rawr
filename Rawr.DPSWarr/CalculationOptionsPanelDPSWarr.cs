@@ -1,155 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace Rawr.DPSWarr
 {
     public partial class CalculationOptionsPanelDPSWarr : CalculationOptionsPanelBase
     {
+        private readonly Dictionary<int, string> armorBosses = new Dictionary<int, string>();
+
         public CalculationOptionsPanelDPSWarr()
         {
             InitializeComponent();
+
+            armorBosses.Add(10900, "Patchwerk");
+            armorBosses.Add(12000, "Grobbulus");
+            armorBosses.Add(13083, "-");
+
+            comboBoxArmorBosses.DisplayMember = "Key";
+            comboBoxArmorBosses.DataSource = new BindingSource(armorBosses, null);
+
+            comboBoxTargetLevel.DataSource = new[] {83, 82, 81, 80};
         }
+
         protected override void LoadCalculationOptions()
         {
             if (Character.CalculationOptions == null)
-                Character.CalculationOptions = new CalculationOptionsDPSWarr(Character);
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            TargetArmorEdit.Text = calcOpts.TargetArmor.ToString();
-            FightLengthEdit.Text = calcOpts.FightLength.ToString();
-            HeroicStrikeRageEdit.Text = calcOpts.HeroicStrikeRage.ToString();
-            SimModeCombo.SelectedIndex = calcOpts.SimMode;
-            GlyphOfWhirlwind.Checked = calcOpts.GlyphOfWhirlwind;
-            GlyphOfHeroicStrike.Checked = calcOpts.GlyphOfHeroicStrike;
-            GlyphOfMortalStrike.Checked = calcOpts.GlyphOfMortalStrike;
-            GlyphOfExecute.Checked = calcOpts.GlyphOfExecute;
-            GlyphOfRend.Checked = calcOpts.GlyphOfRend;
-            ExecuteSpam.Checked = calcOpts.ExecuteSpam;
-            HideLowQualityItems.Checked = calcOpts.HideLowQualityItems;
+            {
+                Character.CalculationOptions = new CalculationOptionsDPSWarr();
+            }
         }
 
-        private void FightLengthEdit_TextChanged(object sender, EventArgs e)
+        private void comboBoxArmorBosses_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            if (FightLengthEdit.TextLength > 0)
-                calcOpts.FightLength = int.Parse(FightLengthEdit.Text);
-            else
-                calcOpts.FightLength = 1;
-            Character.OnCalculationsInvalidated();
+            var targetArmor = int.Parse(comboBoxArmorBosses.Text);
+            labelTargetArmorDescription.Text = armorBosses[targetArmor];
+
+            if (Character != null && Character.CalculationOptions != null)
+            {
+                var calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.TargetArmor = targetArmor;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
-        private void HeroicStrikeRageEdit_TextChanged(object sender, EventArgs e)
+        private void comboBoxTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            if (HeroicStrikeRageEdit.TextLength > 0)
-                calcOpts.HeroicStrikeRage = int.Parse(HeroicStrikeRageEdit.Text);
-            else
-                calcOpts.HeroicStrikeRage = 0;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void TargetArmorEdit_TextChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            if (TargetArmorEdit.TextLength > 0)
-                calcOpts.TargetArmor = int.Parse(TargetArmorEdit.Text);
-            else
-                calcOpts.TargetArmor = 0;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void SimModeCombo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.SimMode = SimModeCombo.SelectedIndex;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void GlyphOfWhirlwind_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.GlyphOfWhirlwind = GlyphOfWhirlwind.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void GlyphOfHeroicStrike_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.GlyphOfHeroicStrike = GlyphOfHeroicStrike.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void GlyphOfMortalStrike_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.GlyphOfMortalStrike = GlyphOfMortalStrike.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void GlyphOfExecute_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.GlyphOfExecute = GlyphOfExecute.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void HideLowQualityItems_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.HideLowQualityItems = HideLowQualityItems.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void ExecuteSpam_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.ExecuteSpam = ExecuteSpam.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void GlyphOfRend_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsDPSWarr calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
-            calcOpts.GlyphOfRend = GlyphOfRend.Checked;
-            Character.OnCalculationsInvalidated();
+            if (Character != null && Character.CalculationOptions != null)
+            {
+                var calcOpts = Character.CalculationOptions as CalculationOptionsDPSWarr;
+                calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.Text);
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
-
-
-	[Serializable]
-	public class CalculationOptionsDPSWarr : ICalculationOptionBase
-	{
-		public string GetXml()
-		{
-			System.Xml.Serialization.XmlSerializer serializer =
-				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
-
-		public CalculationOptionsDPSWarr() {}
-		public CalculationOptionsDPSWarr(Character character) : this()
-		{
-		}
-
-		public int TargetArmor = 13083;
-		public int FightLength = 300;
-        public int SimMode = 0;
-        public int HeroicStrikeRage = 35;
-
-        public bool GlyphOfHeroicStrike = true;
-        public bool GlyphOfWhirlwind = true;
-        public bool GlyphOfExecute = true;
-        public bool GlyphOfMortalStrike = true;
-        public bool HideLowQualityItems = true;
-        public bool GlyphOfRend = true;
-        public bool ExecuteSpam = true;
-	}
 }
