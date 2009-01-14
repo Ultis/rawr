@@ -1784,6 +1784,24 @@ namespace Rawr
                 SetName = "Onslaught Armor",
                 SetThreshold = 4
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusSlamDamage = 0.1f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DreadnaughtBonusRageProc = 5f },
+                SetName = "Dreadnaught Battlegear",
+                SetThreshold = 4
+            });
 			defaultBuffs.Add(new Buff()
 			{
 				Name = "Primalstrike 3 Piece Bonus",
