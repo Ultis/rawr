@@ -751,15 +751,17 @@ namespace Rawr
             {
                 // Forge Ember
                 stats.SpellPowerFor10SecOnHit_10_45 += 512;
+                // This is a nasty trick for compatibility = when designing a healer, please use this version:
+                stats.SpellPowerFor10SecOnHeal_10_45 += 512;
             }
             else if (line.StartsWith("Your harmful spells have a chance to increase your spell power by 590 for 10 sec."))
             {
-                // Sundial of the Exiled
+                // Sundial of the Exiled (NOT FOR HEALERS)
                 stats.SpellPowerFor10SecOnHit_10_45 += 590;
             }
             else if (line.StartsWith("Your spells have a chance to increase your spell power by 765 for 10 sec."))
             {
-                // Sundial of the Exiled
+                // Dying Curse
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
             }
             else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))

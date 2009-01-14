@@ -214,7 +214,7 @@ namespace Rawr.Tree
         public float averageSpellpowerUsage = 80f;
 
         public int FightDuration = 300; //5 Minutes
-        public int Rotation = 5; // default: group regrowth and heal 1 tank
+        public int Rotation = 6; // default: group regrowth and heal 1 tank
         public int ManaPot = 0; // none
         public int FSRRatio = 90;
         public int ReplenishmentUptime = 30;

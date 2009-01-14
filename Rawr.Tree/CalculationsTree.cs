@@ -281,7 +281,7 @@ namespace Rawr.Tree
 
             //Improved Tree of Live Aura increases your Healing Spellpower ... 
             //this is not implemented in Rawr, so I take the normal Spellpower since I wont calculate damagespells :>
-            calculatedStats.BasicStats.SpellPower += (calculatedStats.BasicStats.Spirit * character.DruidTalents.ImprovedTreeOfLife * 0.05f);
+            calculatedStats.BasicStats.SpellPower += ((calculatedStats.BasicStats.Spirit + calculatedStats.BasicStats.ExtraSpiritWhileCasting)* character.DruidTalents.ImprovedTreeOfLife * 0.05f);
 
             if (calculatedStats.BasicStats.ShatteredSunRestoProc > 0 && calcOpts.ShattrathFaction == "Aldor")
             {
@@ -294,6 +294,9 @@ namespace Rawr.Tree
             // For 10% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 60-65 seconds, .17 to be optimistic
             calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnCast_10_45 * .17f;
             calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnHeal_10_45 * .17f;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnHeal_10_45 * .17f;
+            // For 15% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 57-60 seconds, .18 to be optimistic
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnCast_15_45 * .18f;
             #endregion
 
             float MPS = 0; // mana per second used
@@ -349,17 +352,28 @@ namespace Rawr.Tree
                     }
                     break;
                 case 4:
-                    // HT spam
+                    // 1 Tank (RJ/RG/LB/RG*)
                     {
                         calculatedStats.Simulation = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
-                            false, false, false, 0,
-                            new HealingTouch(calculatedStats));
+                            true, true, true, 1,
+                            new Regrowth(calculatedStats, true));
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
                 case 5:
+                    // 2 Tanks (RJ/RG/LB/RG*)
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            true, true, true, 2,
+                            new Regrowth(calculatedStats, true));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 6:
                     // RG Raid (1 Tank RJ/LB)
                     {
                         // TODO: also include HoT from RG on raid members
@@ -371,7 +385,7 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
-                case 6:
+                case 7:
                     // RG Raid (2 Tanks RJ/LB)
                     {
                         // TODO: also include HoT from RG on raid members
@@ -383,7 +397,7 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
-                case 7:
+                case 8:
                     // RJ Raid (1 Tank RJ/LB)
                     {
                         calculatedStats.Simulation = SimulateHealing(
@@ -394,7 +408,7 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
-                case 8:
+                case 9:
                     // RJ Raid (2 Tanks RJ/LB)
                     {
                         calculatedStats.Simulation = SimulateHealing(
@@ -405,7 +419,7 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
-                case 9:
+                case 10:
                     // N Raid (1 Tank RJ/LB)
                     {
                         calculatedStats.Simulation = SimulateHealing(
@@ -416,7 +430,7 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
-                case 10:
+                case 11:
                     // N Raid (2 Tanks RJ/LB)
                     {
                         calculatedStats.Simulation = SimulateHealing(
@@ -427,14 +441,50 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                     }
                     break;
+                case 12:
+                    // N spam
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            false, false, false, 0,
+                            new Nourish(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 13:
+                    // HT spam
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            false, false, false, 0,
+                            new HealingTouch(calculatedStats));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
+                case 14:
+                    // RG spam
+                    {
+                        calculatedStats.Simulation = SimulateHealing(
+                            calculatedStats, calcOpts.WildGrowthPerMinute,
+                            false, false, false, 0,
+                            new Regrowth(calculatedStats, true));
+                        HPS = calculatedStats.Simulation[0];
+                        MPS = calculatedStats.Simulation[1];
+                    }
+                    break;
             }
             #endregion
 
             float spiritRegen = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.Spirit);
-            float replenishRegen = calculatedStats.BasicStats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
+            float spiritRegenWhileCasting = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.ExtraSpiritWhileCasting + calculatedStats.BasicStats.Spirit);
+            calculatedStats.replenishRegen = calculatedStats.BasicStats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
             //spirit regen + mp5 + replenishmp5
-            calculatedStats.ManaRegInFSR = spiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + replenishRegen;
-            calculatedStats.ManaRegOutFSR = spiritRegen + calculatedStats.BasicStats.Mp5 + replenishRegen;
+            calculatedStats.ManaRegInFSR = spiritRegenWhileCasting * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
+            calculatedStats.ManaRegOutFSR = spiritRegenWhileCasting + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
+            float ratio_extraspi = 0.8f; // OK, lets assume a mana starved person keeps 80% of the extra spirit effect, because they will keep casting anyway
+            float ManaRegOutFSRNoCasting = (1-ratio_extraspi)*spiritRegen + ratio_extraspi*spiritRegenWhileCasting + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
             float ratio = 1f / 100f * calcOpts.FSRRatio;
 
             float extraMana = 0f;
@@ -473,7 +523,7 @@ namespace Rawr.Tree
                 calculatedStats.TimeUntilOOM = calcOpts.FightDuration;
             calculatedStats.TotalHealing = calculatedStats.TimeUntilOOM * calculatedStats.HpSPoints;
             // Correct for mana returns
-            calculatedStats.TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / calculatedStats.ManaRegOutFSR;
+            calculatedStats.TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSRNoCasting;
             if (calcOpts.FightDuration > calculatedStats.TimeUntilOOM)
             {
                 float timeLeft = calcOpts.FightDuration - calculatedStats.TimeUntilOOM;
@@ -525,10 +575,10 @@ namespace Rawr.Tree
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + character.DruidTalents.HeartOfTheWild * 0.04f));
-            statsTotal.Spirit += statsTotal.ExtraSpiritWhileCasting;
             statsTotal.Spirit += statsTotal.SpiritFor20SecOnUse2Min / 6f;
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
+            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
 
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.Intellect * character.DruidTalents.LunarGuidance * 0.04); //LunarGuidance, 4% per Point
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) + (statsTotal.Intellect * character.DruidTalents.LunarGuidance * 0.04) + (character.DruidTalents.NurturingInstinct * 0.35f * statsTotal.Agility));
@@ -548,7 +598,7 @@ namespace Rawr.Tree
                 // (2*(1+2+3+4)+20*5)*58 / 120
                 // = 120 * 58 / 120 = 58
                 // But remember that the spellpower will increase for others in the raid too!
-                statsTotal.SpellPower += 58;
+                statsTotal.AverageHeal += 58;
             }
 
             return statsTotal;
@@ -619,6 +669,8 @@ namespace Rawr.Tree
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
                 SpellHasteFor10SecOnHeal_10_45 = stats.SpellHasteFor10SecOnHeal_10_45,
                 SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                SpellPowerFor10SecOnHeal_10_45 = stats.SpellPowerFor10SecOnHeal_10_45,
+                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
                 #endregion
                 #region Neck
                 ShatteredSunRestoProc = stats.ShatteredSunRestoProc,
@@ -659,7 +711,7 @@ namespace Rawr.Tree
             if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana + stats.CritRating
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
                 + stats.BonusManaPotion + stats.TrollDivinity + stats.ExtraSpiritWhileCasting + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
-                + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45
+                + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnHeal_10_45 + stats.SpellPowerFor10SecOnCast_15_45
                 + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost + stats.HealingTouchFinalHealBonus
                 > 0)
                 return true;

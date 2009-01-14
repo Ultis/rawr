@@ -338,13 +338,17 @@
             "Single target Nourish (2 Tanks RJ/RG/LB)",
             "Single target Healing Touch (plus RJ/RG/LB)",
             "Single target Healing Touch (2 Tanks RJ/RG/LB)",
-            "Healing Touch spam",
+            "Single target Regrowth (plus RJ/RG/LB)",
+            "Single target Regrowth (2 Tanks RJ/RG/LB)",
             "Raid healing with Regrowth (1 Tank RJ/LB)",
             "Raid healing with Regrowth (2 Tanks RJ/LB)",
             "Raid healing with Rejuvenation (1 Tank RJ/LB)",
             "Raid healing with Rejuvenation (2 Tanks RJ/LB)",
             "Raid healing with Nourish (1 Tank RJ/LB)",
-            "Raid healing with Nourish (2 Tanks RJ/LB)"});
+            "Raid healing with Nourish (2 Tanks RJ/LB)",
+            "Nourish spam",
+            "Healing Touch spam",
+            "Regrowth spam"});
             this.cbRotation.Location = new System.Drawing.Point(9, 34);
             this.cbRotation.MaxDropDownItems = 10;
             this.cbRotation.Name = "cbRotation";

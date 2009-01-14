@@ -44,6 +44,7 @@ namespace Rawr.Tree
         public float ManaRegen;
         public float TimeToRegenFull;
         public float CvRFraction;
+        public float replenishRegen;
 
         public Character LocalCharacter { get; set; }
 
@@ -55,11 +56,12 @@ namespace Rawr.Tree
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            float spi_from_trinkets = (BasicStats.SpiritFor20SecOnUse2Min / 6f + BasicStats.ExtraSpiritWhileCasting);
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString() + (spi_from_trinkets>0?"*"+Math.Round(spi_from_trinkets,2).ToString()+" Spirit from trinkets":""));
+            float spi_from_trinkets = (BasicStats.SpiritFor20SecOnUse2Min / 6f);
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString() + (spi_from_trinkets > 0 || BasicStats.ExtraSpiritWhileCasting > 0 ? "*" + Math.Round(spi_from_trinkets, 2).ToString() + " Spirit from trinkets\n" + Math.Round(BasicStats.ExtraSpiritWhileCasting,2).ToString() + " Spirit while casting" : ""));
             dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power" + (BasicStats.TrollDivinity>0?"\n58 Troll Divinity bonus":""));
 
-            dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR");
+            bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
+            dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + replenishRegen.ToString() + " From Replenishment" + (hasSpiWhileCasting?"\n(values include extra Spirit while casting)":""));
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
             float hr_from_trinkets = (BasicStats.SpellHasteFor10SecOnCast_10_45 + BasicStats.SpellHasteFor10SecOnHeal_10_45) * .17f;
             dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / TreeConstants.HasteRatingToHaste * 100, 2) + "%" + (hr_from_trinkets>0?"*"+Math.Round(hr_from_trinkets,2).ToString()+" Haste from trinkets":""));
