@@ -78,6 +78,8 @@
             this.extendedToolTipLabel9 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel7 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -93,6 +95,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -164,6 +167,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -639,6 +643,29 @@
             this.extendedToolTipLabel6.Text = "Glyph of Healing Touch";
             this.extendedToolTipLabel6.ToolTipText = "-50% Healing -1.5sec Casttime -25% Manacost";
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.tbModuleNotes);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(289, 550);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Module Notes";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tbModuleNotes
+            // 
+            this.tbModuleNotes.AcceptsReturn = true;
+            this.tbModuleNotes.AcceptsTab = true;
+            this.tbModuleNotes.Location = new System.Drawing.Point(7, 7);
+            this.tbModuleNotes.Multiline = true;
+            this.tbModuleNotes.Name = "tbModuleNotes";
+            this.tbModuleNotes.ReadOnly = true;
+            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbModuleNotes.Size = new System.Drawing.Size(276, 537);
+            this.tbModuleNotes.TabIndex = 0;
+            // 
             // CalculationOptionsPanelTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -669,6 +696,8 @@
             this.tabPage3.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -724,5 +753,7 @@
         private System.Windows.Forms.TrackBar tbWildGrowth;
         private System.Windows.Forms.Label lblWG;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox tbModuleNotes;
     }
 }

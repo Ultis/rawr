@@ -11,6 +11,24 @@ namespace Rawr.Tree
         public CalculationOptionsPanelTree()
         {
             InitializeComponent();
+
+            // Set about text
+            tbModuleNotes.Text =
+                "Notes on trinkets:\r\n"+
+                "Trinkets are hard to model; some trinkets can be much better if you use them in a smart way; we expect On-Use trinkets are used whenever on cooldown, there is a setting (average use of spellpower procs) that you can use to influence the value of these type of trinkets.\r\n"+
+                "\r\n" +
+                "Implemented trinkets:\r\n" +
+                "Forethought Talisman (expected to proc every minute)\r\n" +
+                "Majestic Dragon Figurine (expected 80% uptime after going out of mana)\r\n" +
+                "Forge Ember (expected uptime 17%, it has 10% chance to proc)\r\n" +
+                "Dying Curse (expected uptime 18%, it has 15% chance to proc)\r\n" +
+                "Illustration of the Dragon Soul\r\n" +
+                "Talisman of Troll Divinity (expected to add 58 spell damage on average, keep in mind that it also helps other healers so it is probably worth more)\r\n" +
+                "Alchemist Stones (they add 40% to the potion effect, mana potions are modelled as extra mana at the start of the fight)\r\n" +
+                "Haste procs like Embrace of the Spider are modelled with 17% uptime)\r\n" +
+                "\r\n"+
+                "Currently unmodelled trinkets:\r\n" +
+                "Darkmoon Card: Blue Dragon, various Figurines, Soul Preserver";
         }
 
         protected override void LoadCalculationOptions()
