@@ -25,8 +25,16 @@ namespace Rawr
 			get { return _character; }
 			set
 			{
-				_character = value;
-				_characterSlot = Character.CharacterSlot.None;
+                if (_character != null)
+                {
+                    _character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
+                }
+                _character = value;
+                _characterSlot = Character.CharacterSlot.None;
+                if (_character != null)
+                {
+                    _character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
+                }
 			}
 		}
 
@@ -118,7 +126,12 @@ namespace Rawr
 			LoadItemsBySlot(characterSlot);
 		}
 
-		void FormItemSelection_Activated(object sender, EventArgs e)
+        void _character_ItemsChanged(object sender, EventArgs e)
+        {
+            _characterSlot = Character.CharacterSlot.None;
+        }
+        
+        void FormItemSelection_Activated(object sender, EventArgs e)
 		{
 			panelItems.AutoScrollPosition = new Point(0, 0);
 		}
