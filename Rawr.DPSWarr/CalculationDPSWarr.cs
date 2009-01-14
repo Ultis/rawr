@@ -194,6 +194,8 @@ namespace Rawr.DPSWarr
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            if (character.MainHand != null && character.MainHand.Type == Item.ItemType.Polearm)
+                character.MainHand.Type = Item.ItemType.TwoHandAxe;
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsEnchants = GetEnchantsStats(character);
@@ -458,6 +460,7 @@ namespace Rawr.DPSWarr
                                                                  Item.ItemType.OneHandMace,
                                                                  Item.ItemType.OneHandSword,
                                                                  Item.ItemType.OneHandAxe,
+                                                                 Item.ItemType.Polearm,
                                                                  Item.ItemType.TwoHandMace,
                                                                  Item.ItemType.TwoHandSword,
                                                                  Item.ItemType.TwoHandAxe
