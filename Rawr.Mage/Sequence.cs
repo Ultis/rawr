@@ -2046,6 +2046,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 time += sequence[0].Duration;
             }
+            ComputeTimestamps(); 
             do
             {
             DoStart:
@@ -2478,7 +2479,8 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (gemActivated && gemTime > 0)
                 {
                     double maxtime = fight;
-                    if (potTime > 0 && pot < maxtime) maxtime = pot;
+                    // don't wait for pot unless we'll still have room for gem after, just heuristic for now, do something more sophisticated
+                    if (potTime > 0 && pot < maxtime && (gem < pot || gem - pot > 20)) maxtime = pot;
                     if (evoTime > 0 && evo < maxtime) maxtime = evo;
                     if (time == 0) maxtime = fight; // assume that at start we want to activate SCB as soon as possible, in most cases we have to insert burn before activation to prevent overflow and that can cause pot to activate earlier recausing overflow
                     t = 0;
@@ -2488,6 +2490,15 @@ namespace Rawr.Mage.SequenceReconstruction
                         if (sequence[i].IsManaPotionOrGem) d = 0;
                         if (d > 0 && t >= time && t < maxtime && sequence[i].CastingState.ManaGemActivation && (i == 0 || (!sequence[i - 1].CastingState.ManaGemActivation && sequence[i - 1].VariableType != VariableType.ManaGem && sequence[i - 1].VariableType != VariableType.ManaPotion)))
                         {
+                            // make sure that we have verified time up to here (give some extra room to make sure overflow is accounted for)
+                            if (t + d * 0.1 > targetTime + eps)
+                            {
+                                targetTime = t + d * 0.1;
+                                lastTargetMana = -1;
+                                extraMana = 0;
+                                oomtime = double.PositiveInfinity;
+                                goto Retry;
+                            }
                             // insert gem
                             InsertIndex(SequenceItem.Calculations.ColumnManaGem, Math.Min(1.0, gemTime), t);
                             time = Math.Min(t + 0.01, t + d / 2); // block activation from moving
@@ -2566,7 +2577,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     InsertIndex(SequenceItem.Calculations.ColumnEvocation, Math.Min(EvocationDuration, evoTime), evo);
                     ComputeTimestamps();
                     time = evo + Math.Min(EvocationDuration, evoTime);
-                    nextEvo = evo + 60 * 5;
+                    nextEvo = evo + SequenceItem.Calculations.EvocationCooldown;
                     evoTime -= EvocationDuration;
                     if (evoTime <= eps || nextEvo > fight)
                     {
@@ -2839,7 +2850,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                         if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
                         mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
-                        evocationCooldown = 60 * 5;
+                        evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
                     }
                 }
                 if (mana < 0) mana = 0;
