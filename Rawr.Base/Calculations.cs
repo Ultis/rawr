@@ -872,7 +872,7 @@ namespace Rawr
 
 		public virtual bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
 		{
-			return enchant.FitsInSlot(slot) || (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
+			return enchant.FitsInSlot(slot);
 		}
 
 		public virtual bool IncludeOffHandInCalculations(Character character)
