@@ -620,7 +620,7 @@ namespace Rawr //O O . .
                     {
                         // any => all
                         _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
-                        foreach (Enchant e in Enchant.FindEnchants(item.Slot))
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(item.GemmedId + "." + e.Id.ToString());
                         }
@@ -654,7 +654,7 @@ namespace Rawr //O O . .
                     {
                         // any => all
                         _availableItems.RemoveAll(x => x.StartsWith(id));
-                        foreach (Enchant e in Enchant.FindEnchants(item.Slot))
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
                             _availableItems.Add(anyGem + "." + e.Id.ToString());
                         }
@@ -741,7 +741,7 @@ namespace Rawr //O O . .
             Enchant e = _itemEnchantCached[i];
             if (e == null)
             {
-				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Rawr.Item.GetItemSlotByCharacterSlot(slot));
+				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Rawr.Item.GetItemSlotByCharacterSlot(slot), this);
             }
             return e;
         }

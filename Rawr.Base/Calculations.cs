@@ -268,6 +268,12 @@ namespace Rawr
 				return Instance.ItemFitsInSlot(item, character, slot);
 			return false;
 		}
+		public static bool EnchantFitsInSlot(Enchant item, Character character, Item.ItemSlot slot)
+		{
+			if (Instance != null)
+				return Instance.EnchantFitsInSlot(item, character, slot);
+			return false;
+		}
 		public static bool IncludeOffHandInCalculations(Character character)
 		{
 			if (Instance != null)
@@ -538,7 +544,7 @@ namespace Rawr
 			List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
 			CharacterCalculationsBase calcsEquipped = null;
 			CharacterCalculationsBase calcsUnequipped = null;
-			foreach (Enchant enchant in Enchant.FindEnchants(slot))
+			foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
 			{
 				//if (enchantCalcs.ContainsKey(enchant.Id)) continue;
 
@@ -862,6 +868,11 @@ namespace Rawr
 		public virtual bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
 		{
 			return item.FitsInSlot(slot);
+		}
+
+		public virtual bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+		{
+			return enchant.FitsInSlot(slot) || (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
 		}
 
 		public virtual bool IncludeOffHandInCalculations(Character character)

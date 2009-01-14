@@ -934,51 +934,51 @@ namespace Rawr
             Dictionary<string, bool> uniqueStore = new Dictionary<string, bool>();
 
             List<Enchant> backEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Back, availableItems, model))
+            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Back, _character, availableItems, model))
                 backEnchantList.Add(enchant);
             backEnchants = backEnchantList.ToArray();
             List<Enchant> chestEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Chest, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Chest, _character, availableItems, model))
                 chestEnchantList.Add(enchant);
             chestEnchants = chestEnchantList.ToArray();
             List<Enchant> feetEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Feet, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Feet, _character, availableItems, model))
                 feetEnchantList.Add(enchant);
             feetEnchants = feetEnchantList.ToArray();
             List<Enchant> fingerEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Finger, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Finger, _character, availableItems, model))
                 fingerEnchantList.Add(enchant);
             fingerEnchants = fingerEnchantList.ToArray();
             List<Enchant> handsEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Hands, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Hands, _character, availableItems, model))
                 handsEnchantList.Add(enchant);
             handsEnchants = handsEnchantList.ToArray();
             List<Enchant> headEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Head, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Head, _character, availableItems, model))
                 headEnchantList.Add(enchant);
             headEnchants = headEnchantList.ToArray();
             List<Enchant> legsEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Legs, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Legs, _character, availableItems, model))
                 legsEnchantList.Add(enchant);
             legsEnchants = legsEnchantList.ToArray();
             List<Enchant> shouldersEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Shoulders, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Shoulders, _character, availableItems, model))
                 shouldersEnchantList.Add(enchant);
             shouldersEnchants = shouldersEnchantList.ToArray();
             List<Enchant> mainHandEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.MainHand, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.MainHand, _character, availableItems, model))
                 mainHandEnchantList.Add(enchant);
             mainHandEnchants = mainHandEnchantList.ToArray();
             List<Enchant> offHandEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand, _character, availableItems, model))
                 offHandEnchantList.Add(enchant);
             offHandEnchants = offHandEnchantList.ToArray();
             List<Enchant> rangedEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Ranged, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Ranged, _character, availableItems, model))
                 rangedEnchantList.Add(enchant);
             rangedEnchants = rangedEnchantList.ToArray();
             List<Enchant> wristEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Wrist, availableItems, model))
+			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Wrist, _character, availableItems, model))
                 wristEnchantList.Add(enchant);
             wristEnchants = wristEnchantList.ToArray();
 
@@ -1104,11 +1104,11 @@ namespace Rawr
                         }
                         else
                         {
-                            Enchant e = Enchant.FindEnchant(int.Parse(restriction), item.Slot);
+                            Enchant e = Enchant.FindEnchant(int.Parse(restriction), item.Slot, _character);
                             if (e != null && !validEnchants.Contains(e)) validEnchants.Add(e);
                         }
                     }
-                    List<Enchant> allEnchants = Enchant.FindEnchants(item.Slot);
+                    List<Enchant> allEnchants = Enchant.FindEnchants(item.Slot, _character);
                     foreach (Item possibleGemmedItem in possibleGemmedItems)
                     {
                         Dictionary<int, bool> dict;
@@ -1192,7 +1192,7 @@ namespace Rawr
                 }
                 if (validEnchants != null)
                 {
-                    List<Enchant> allEnchants = Enchant.FindEnchants(itemSlot, model);
+                    List<Enchant> allEnchants = Enchant.FindEnchants(itemSlot, _character, model);
                     Dictionary<int, bool> dict = slotAvailableEnchants[slot] = new Dictionary<int, bool>();
                     foreach (Enchant enchant in allEnchants)
                     {
@@ -1207,18 +1207,18 @@ namespace Rawr
             }
 
             // set to all enchants, restrictions will be applied per item
-            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Back).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Chest).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Feet).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Finger).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Hands).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Head).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Legs).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Shoulders).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.MainHand).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.OffHand).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Ranged).ToArray();
-            slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Wrist).ToArray();
+            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Back, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Chest, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Feet, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Finger, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Hands, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Head, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Legs, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Shoulders, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.MainHand, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.OffHand, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Ranged, _character).ToArray();
+			slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Wrist, _character).ToArray();
 
             if (headItemList.Count == 0) headItemList.Add(null);
             if (neckItemList.Count == 0) neckItemList.Add(null);

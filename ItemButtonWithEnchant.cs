@@ -59,7 +59,7 @@ namespace Rawr
 			set
 			{
 				if (value == 0) SelectedEnchant = null;
-				else SelectedEnchant = Enchant.FindEnchant(value, Item.GetItemSlotByCharacterSlot(CharacterSlot));
+				else SelectedEnchant = Enchant.FindEnchant(value, Item.GetItemSlotByCharacterSlot(CharacterSlot), Character);
 			}
 		}
 		private Enchant _selectedEnchant;

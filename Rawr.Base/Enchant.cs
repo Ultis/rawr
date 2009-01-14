@@ -116,6 +116,18 @@ namespace Rawr
             return (Name+Id.ToString()+Slot.ToString()+Stats.ToString()).GetHashCode();
         }
 
+		public bool FitsInSlot(Item.ItemSlot slot)
+		{
+			return (Slot == slot ||
+				(Slot == Item.ItemSlot.OneHand && (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)) ||
+				(Slot == Item.ItemSlot.TwoHand && (slot == Item.ItemSlot.MainHand)));
+		}
+
+		public bool FitsInSlot(Item.ItemSlot slot, Character character)
+		{
+			return Calculations.EnchantFitsInSlot(this, character, slot);
+		}
+
 		/// <summary>
 		/// A List<Enchant> containing all known enchants relevant to all models.
 		/// </summary>
@@ -127,79 +139,81 @@ namespace Rawr
 			}
 		}
 
-		public static Enchant FindEnchant(int id, Item.ItemSlot slot)
+		public static Enchant FindEnchant(int id, Item.ItemSlot slot, Character character)
 		{
-			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			if (slot != Item.ItemSlot.MainHand)
-				validSlots.Add(slot);
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-				validSlots.Add(Item.ItemSlot.OneHand);
-			if (slot == Item.ItemSlot.MainHand)
-				validSlots.Add(Item.ItemSlot.TwoHand);
-			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) { return (enchant.Id == id) && (validSlots.Contains(enchant.Slot)); })) ?? AllEnchants[0];
+			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			//if (slot != Item.ItemSlot.MainHand)
+			//    validSlots.Add(slot);
+			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+			//    validSlots.Add(Item.ItemSlot.OneHand);
+			//if (slot == Item.ItemSlot.MainHand)
+			//    validSlots.Add(Item.ItemSlot.TwoHand);
+			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) 
+				{ return (enchant.Id == id) && (enchant.FitsInSlot(slot, character) || 
+					(enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand)); })) ?? AllEnchants[0];
 		}
 
-        public static List<Enchant> FindEnchants(Item.ItemSlot slot)
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character)
         {
-            return FindEnchants(slot, Calculations.Instance);
+            return FindEnchants(slot, character, Calculations.Instance);
         }
 
-		public static List<Enchant> FindEnchants(Item.ItemSlot slot, CalculationsBase model)
+		public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, CalculationsBase model)
 		{
-			List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			if (slot != Item.ItemSlot.MainHand)
-				validSlots.Add(slot);
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-				validSlots.Add(Item.ItemSlot.OneHand);
-			if (slot == Item.ItemSlot.MainHand)
-				validSlots.Add(Item.ItemSlot.TwoHand);
+			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			//if (slot != Item.ItemSlot.MainHand)
+			//    validSlots.Add(slot);
+			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+			//    validSlots.Add(Item.ItemSlot.OneHand);
+			//if (slot == Item.ItemSlot.MainHand)
+			//    validSlots.Add(Item.ItemSlot.TwoHand);
 			return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
 					return model.HasRelevantStats(enchant.Stats) &&
-						( validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None )
+						( enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None )
 						|| enchant.Slot == Item.ItemSlot.None;
 				}
 			));
 		}
 
-        public static List<Enchant> FindAllEnchants(Item.ItemSlot slot)
+        public static List<Enchant> FindAllEnchants(Item.ItemSlot slot, Character character)
         {
-            List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-            if (slot != Item.ItemSlot.MainHand)
-                validSlots.Add(slot);
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-                validSlots.Add(Item.ItemSlot.OneHand);
-            if (slot == Item.ItemSlot.MainHand)
-                validSlots.Add(Item.ItemSlot.TwoHand);
+			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			//if (slot != Item.ItemSlot.MainHand)
+			//    validSlots.Add(slot);
+			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+			//    validSlots.Add(Item.ItemSlot.OneHand);
+			//if (slot == Item.ItemSlot.MainHand)
+			//    validSlots.Add(Item.ItemSlot.TwoHand);
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
-                    return (validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None)
+                    return (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None)
                         || enchant.Slot == Item.ItemSlot.None;
                 }
             ));
         }
 
-        public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds)
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds)
         {
-            return FindEnchants(slot, availableIds, Calculations.Instance);
+            return FindEnchants(slot, character, availableIds, Calculations.Instance);
         }
 
-        public static List<Enchant> FindEnchants(Item.ItemSlot slot, List<string> availableIds, CalculationsBase model)
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds, CalculationsBase model)
 		{
-            List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-            if (slot != Item.ItemSlot.MainHand)
-                validSlots.Add(slot);
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
-                validSlots.Add(Item.ItemSlot.OneHand);
-            if (slot == Item.ItemSlot.MainHand)
-                validSlots.Add(Item.ItemSlot.TwoHand);
+			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+			//if (slot != Item.ItemSlot.MainHand)
+			//    validSlots.Add(slot);
+			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+			//    validSlots.Add(Item.ItemSlot.OneHand);
+			//if (slot == Item.ItemSlot.MainHand)
+			//    validSlots.Add(Item.ItemSlot.TwoHand);
             return AllEnchants.FindAll(new Predicate<Enchant>(
 				delegate(Enchant enchant)
 				{
                     return ((model.HasRelevantStats(enchant.Stats) &&
-                        (validSlots.Contains(enchant.Slot) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
+                        (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
                         || enchant.Id == 0;
 				}

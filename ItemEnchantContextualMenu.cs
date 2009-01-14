@@ -77,7 +77,7 @@ namespace Rawr
             }
 
             ((ToolStripMenuItem)Items[2]).Checked = allEnabled;
-            List<Enchant> list = Enchant.FindEnchants(_item.Slot);
+            List<Enchant> list = Enchant.FindEnchants(_item.Slot, Character);
             for (int i = 0; i < list.Count; i++)
             {
                 if (Items.Count <= i + 3)

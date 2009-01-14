@@ -679,7 +679,7 @@ namespace Rawr
                                 {
                                     // have to replace enchant
                                     string s = sublist[0];
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot));
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
                                     character.UnsavedChanges = true;
                                 }
                             }
@@ -697,7 +697,7 @@ namespace Rawr
                                 {
                                     // have to replace enchant
                                     string s = sublist[0];
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot));
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(s.Substring(s.LastIndexOf('.') + 1)), item.Slot, character.Character));
                                     character.UnsavedChanges = true;
                                 }
                             }
@@ -709,7 +709,7 @@ namespace Rawr
                                 string se = s.Substring(s.LastIndexOf('.') + 1);
                                 if (se != "*")
                                 {
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot));
+                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot, character.Character));
                                 }
                                 character.UnsavedChanges = true;
                             }
@@ -739,7 +739,7 @@ namespace Rawr
                                         string se = s.Substring(s.LastIndexOf('.') + 1);
                                         if (se != "*")
                                         {
-                                            character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot));
+                                            character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot, character.Character));
                                         }
                                         character.UnsavedChanges = true;
                                         break;
