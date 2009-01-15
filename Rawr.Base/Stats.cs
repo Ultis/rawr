@@ -322,17 +322,11 @@ namespace Rawr
     {
         public static bool IsCommonProperty(PropertyInfo property)
         {
-            bool isCommon = false;
             foreach (System.Attribute attribute in property.GetCustomAttributes(false))
-            {
                 if (attribute is Common)
-                {
-                    isCommon = true;
-                    break;
-                }
-            }
-            return isCommon;
-        }
+                    return true;
+			return false;
+		}
     }
 
     /// <summary>
@@ -421,7 +415,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Armor
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Armor]; }
@@ -430,7 +424,7 @@ namespace Rawr
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Base Stats")]
-        [Common()]
+        [Common]
 		public float BonusArmor
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.BonusArmor]; }
@@ -439,7 +433,7 @@ namespace Rawr
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Health
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Health]; }
@@ -448,7 +442,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Mana
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Mana]; }
@@ -457,7 +451,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Agility
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Agility]; }
@@ -474,7 +468,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Stamina
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Stamina]; }
@@ -483,7 +477,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float AttackPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
@@ -500,7 +494,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Strength
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Strength]; }
@@ -509,7 +503,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float WeaponDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.WeaponDamage]; }
@@ -518,7 +512,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float ScopeDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ScopeDamage]; }
@@ -537,7 +531,7 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Base Stats")]
         [DisplayName("Penetration Rating")]
-        [Common()]
+        [Common]
 		public float ArmorPenetrationRating
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating]; }
@@ -546,7 +540,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Intellect
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Intellect]; }
@@ -555,7 +549,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common()]
+        [Common]
         public float Spirit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
@@ -636,7 +630,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Crit Rating")]
-        [Common()]
+        [Common]
         public float SpellCritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellCritRating]; }
@@ -646,7 +640,7 @@ namespace Rawr
         [Obsolete]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Damage")]
-        [Common()]
+        [Common]
 		public float SpellDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageRating]; }
@@ -656,7 +650,7 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Spell Combat Ratings")]
         [DisplayName("Spell Power")]
-        [Common()]
+        [Common]
 		public float SpellPower
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
@@ -666,7 +660,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Shadow Damage")]
-        [Common()]
+        [Common]
         public float SpellShadowDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellShadowDamageRating]; }
@@ -676,7 +670,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Fire Damage")]
-        [Common()]
+        [Common]
         public float SpellFireDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellFireDamageRating]; }
@@ -686,7 +680,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Frost Damage")]
-        [Common()]
+        [Common]
         public float SpellFrostDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellFrostDamageRating]; }
@@ -696,7 +690,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Arcane Damage")]
-        [Common()]
+        [Common]
         public float SpellArcaneDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellArcaneDamageRating]; }
@@ -706,7 +700,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Nature Damage")]
-        [Common()]
+        [Common]
         public float SpellNatureDamageRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellNatureDamageRating]; }
@@ -725,7 +719,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit Rating")]
-        [Common()]
+        [Common]
         public float SpellHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
@@ -752,7 +746,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste Rating")]
-        [Common()]
+        [Common]
         public float SpellHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
@@ -792,7 +786,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Crit Rating")]
-        [Common()]
+        [Common]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -802,7 +796,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Melee Crit")]
-        [Common()]
+        [Common]
         public float CritMeleeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
@@ -821,7 +815,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Hit Rating")]
-        [Common()]
+        [Common]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -841,7 +835,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Dodge Rating")]
-        [Common()]
+        [Common]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -869,7 +863,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Parry Rating")]
-        [Common()]
+        [Common]
         public float ParryRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ParryRating]; }
@@ -889,7 +883,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Block Rating")]
-        [Common()]
+        [Common]
         public float BlockRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
@@ -899,7 +893,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Block Value")]
-        [Common()]
+        [Common]
         public float BlockValue
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockValue]; }
@@ -917,7 +911,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Defense Rating")]
-        [Common()]
+        [Common]
         public float DefenseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
@@ -927,7 +921,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Resilience")]
-        [Common()]
+        [Common]
         public float Resilience
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Resilience]; }
@@ -945,7 +939,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Expertise Rating")]
-        [Common()]
+        [Common]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
@@ -955,7 +949,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Haste Rating")]
-        [Common()]
+        [Common]
         public float HasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
@@ -991,7 +985,7 @@ namespace Rawr
 		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Mana per 5 sec")]
-        [Common()]
+        [Common]
         public float Mp5
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Mp5]; }
@@ -1001,7 +995,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Health per 5 sec")]
-        [Common()]
+        [Common]
         public float Hp5
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Hp5]; }

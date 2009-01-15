@@ -894,17 +894,19 @@ namespace Rawr
         /// <returns>An array of the comparitive calculations for each of the relative stat values.</returns>
         public static ComparisonCalculationBase[] GetRelativeStatValues(Character character)
         {
-            List<ComparisonCalculationBase> _RetComparisonCalcutions = new List<ComparisonCalculationBase>();
+            List<ComparisonCalculationBase> retComparisonCalcutions = new List<ComparisonCalculationBase>();
             //
-            Stats CharacterStats = Calculations.GetCharacterStats(character);
-            IDictionary<PropertyInfo, float> RelevantCharacterStats = Calculations.GetRelevantStats(CharacterStats).Values(x => x > 0);
-            foreach (KeyValuePair<PropertyInfo, float> pair in RelevantCharacterStats)
+			Stats allStats = new Stats();
+			for (int i = 0; i < allStats._rawAdditiveData.Length; i++) allStats._rawAdditiveData[i] = 1f;
+			
+            IDictionary<PropertyInfo, float> relevantStats = Calculations.GetRelevantStats(allStats).Values(x => x > 0);
+            foreach (KeyValuePair<PropertyInfo, float> pair in relevantStats)
             {
                 ComparisonCalculationBase ccb = GetRelativeStatValue(character, pair.Key);
-                if (ccb != null) { _RetComparisonCalcutions.Add(ccb); }
+                if (ccb != null && ccb.OverallPoints > 0f) { retComparisonCalcutions.Add(ccb); }
             }
             // Return results
-            return _RetComparisonCalcutions.ToArray();
+            return retComparisonCalcutions.ToArray();
         }
         /// <summary>
         /// Get the relative stat value for the given property (of a Stats object) of the given Character.
@@ -918,36 +920,36 @@ namespace Rawr
         /// Stats object) for the given Character.</returns>
         public static ComparisonCalculationBase GetRelativeStatValue(Character character, PropertyInfo property)
         {
-            const float Resolution = 0.01f; // the minimum resolution of change for the purpose of testing continuity and determining step locations
+            const float resolution = 0.005f; // the minimum resolution of change for the purpose of testing continuity and determining step locations
             ComparisonCalculationBase ccb = null;
             if (Common.IsCommonProperty(property))
             {
                 // Get change bounds
                 Item item = new Item() { Stats = new Stats() };
-                CharacterCalculationsBase CCsB = Calculations.GetCharacterCalculations(character);
-                float basePoints = CCsB.OverallPoints;
+                CharacterCalculationsBase charCalcsBase = Calculations.GetCharacterCalculations(character);
+                float basePoints = charCalcsBase.OverallPoints;
                 float upperChangePoint = 1.0f;
                 float lowerChangePoint = 0.0f;
-                if (!PropertyIsContinuous(character, basePoints, property, item, Resolution))
+                if (!PropertyValueIsContinuous(character, basePoints, property, item, resolution))
                 {
-                    upperChangePoint = GetChangePoint(character, basePoints, property, item, 2.0f, 0.1f, Resolution);
-                    lowerChangePoint = GetChangePoint(character, basePoints, property, item, 0.0f, -2.0f, Resolution);
+                    upperChangePoint = GetStatValueUpperChangePoint(character, basePoints, property, item, 10.0f, resolution, resolution);
+                    lowerChangePoint = GetStatValueLowerChangePoint(character, basePoints, property, item, 0.0f, -10.0f, resolution);
                 }
                 float changePointDifference = upperChangePoint - lowerChangePoint;
                 // Get new overall points with the [upperChangePoint] improvement
                 property.SetValue(item.Stats, upperChangePoint, null);
                 item.InvalidateCachedData();
-                CharacterCalculationsBase newCCsB = Calculations.Instance.GetCharacterCalculations(character, item);
+                CharacterCalculationsBase charCalcsUpper = Calculations.Instance.GetCharacterCalculations(character, item);
                 // Create new CCB, populate, and return it.
                 ccb = Calculations.CreateNewComparisonCalculation();
-                ccb.Name = property.Name;
+				ccb.Name = Extensions.DisplayName(property);
                 //      transfer OverallPoints
-                ccb.OverallPoints = (newCCsB.OverallPoints - basePoints) / changePointDifference;
+                ccb.OverallPoints = (charCalcsUpper.OverallPoints - basePoints) / changePointDifference;
                 //      transfer SubPoints
-                ccb.SubPoints = new float[newCCsB.SubPoints.Length];
-                for (int i = 0; i < newCCsB.SubPoints.Length; i++)
+                ccb.SubPoints = new float[charCalcsUpper.SubPoints.Length];
+                for (int i = 0; i < charCalcsUpper.SubPoints.Length; i++)
                 {
-                    ccb.SubPoints[i] = (newCCsB.SubPoints[i] - CCsB.SubPoints[i]) / changePointDifference;
+                    ccb.SubPoints[i] = (charCalcsUpper.SubPoints[i] - charCalcsBase.SubPoints[i]) / changePointDifference;
                 }
             }
             return ccb;
@@ -964,7 +966,7 @@ namespace Rawr
         /// <param name="tagItem">A "tag" item to reduce memory allocation.</param>
         /// <param name="resolution">The resolution at which continuity is being checked.</param>
         /// <returns>Whether the property was deemed continuous.</returns>
-        private static bool PropertyIsContinuous(Character character, float basePoints, PropertyInfo property, Item tagItem, float resolution)
+        private static bool PropertyValueIsContinuous(Character character, float basePoints, PropertyInfo property, Item tagItem, float resolution)
         {
             bool continuous;
             property.SetValue(tagItem.Stats, resolution, null);
@@ -1001,7 +1003,7 @@ namespace Rawr
         /// at which the OverallPoints of the given Character *would* change if 
         /// Math.Sign(upperBound) * 0.01
         /// were added to it.</returns>
-        private static float GetChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float upperBound, float lowerBound, float resolution)
+        private static float GetStatValueUpperChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float upperBound, float lowerBound, float resolution)
         {
             // Exit condition: If we've reached a change point at the smallest desired 
             // resolution, return the "no change" value.
@@ -1015,7 +1017,7 @@ namespace Rawr
             {
                 // Set the stat of the item to the mid point of the range to test which 
                 // half contains the change point.
-                float midPoint = (upperBound + lowerBound) / 2;
+                float midPoint = (upperBound + lowerBound) / 2f;
                 property.SetValue(tagItem.Stats, midPoint, null);
                 tagItem.InvalidateCachedData();
                 // If the midpoint leaves the OverallPoints unchanged, the change point 
@@ -1023,15 +1025,47 @@ namespace Rawr
                 float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem).OverallPoints;
                 if (basePoints == newOverall)
                 {
-                    return GetChangePoint(character, basePoints, property, tagItem, upperBound, midPoint, resolution);
+					return GetStatValueUpperChangePoint(character, basePoints, property, tagItem, upperBound, midPoint, resolution);
                 }
                 // Otherwise, the change point is in the lower half of the given range.
                 else
                 {
-                    return GetChangePoint(character, basePoints, property, tagItem, midPoint, lowerBound, resolution);
+					return GetStatValueUpperChangePoint(character, basePoints, property, tagItem, midPoint, lowerBound, resolution);
                 }
             }
         }
+
+		private static float GetStatValueLowerChangePoint(Character character, float basePoints, PropertyInfo property, Item tagItem, float upperBound, float lowerBound, float resolution)
+		{
+			// Exit condition: If we've reached a change point at the smallest desired 
+			// resolution, return the "no change" value.
+			if ((upperBound - lowerBound) <= resolution)
+			{
+				return upperBound;
+			}
+			// Recusive condition: We still need to reduce the difference between the 
+			// upper and lower bounds of the range we are searching.
+			else
+			{
+				// Set the stat of the item to the mid point of the range to test which 
+				// half contains the change point.
+				float midPoint = (upperBound + lowerBound) / 2f;
+				property.SetValue(tagItem.Stats, midPoint, null);
+				tagItem.InvalidateCachedData();
+				// If the midpoint leaves the OverallPoints unchanged, the change point 
+				// is in the lower half of the given range.
+				float newOverall = Calculations.Instance.GetCharacterCalculations(character, tagItem).OverallPoints;
+				if (basePoints == newOverall)
+				{
+					return GetStatValueLowerChangePoint(character, basePoints, property, tagItem, midPoint, lowerBound, resolution);
+				}
+				// Otherwise, the change point is in the upper half of the given range.
+				else
+				{
+					return GetStatValueLowerChangePoint(character, basePoints, property, tagItem, upperBound, midPoint, resolution);
+				}
+			}
+		}
     }
 
 	/// <summary>

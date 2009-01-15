@@ -731,23 +731,23 @@ the Threat Scale defined on the Options tab.",
 				statsWeapon.AttackPower += fap;
 			}
 
-			statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
-			statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
-			statsTotal.Agility *= (1 + statsTotal.BonusAgilityMultiplier);
-			statsTotal.AttackPower += statsTotal.Strength * 2;
+			statsTotal.Stamina *= (1f + statsTotal.BonusStaminaMultiplier);
+			statsTotal.Strength *= (1f + statsTotal.BonusStrengthMultiplier);
+			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
-			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1 + statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.Health += (float)Math.Floor(statsTotal.Stamina) * 10f;
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
-			statsTotal.Armor += 2f * statsTotal.Agility + statsTotal.BonusArmor;
-			statsTotal.Armor *= 1f + statsTotal.BonusArmorMultiplier;
+			statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
+			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
             // Haste trinket (Meteorite Whetstone)
-            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack*10/45;
+            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10f / 45f;
 
 			return statsTotal;
 			/*
@@ -893,7 +893,8 @@ the Threat Scale defined on the Options tab.",
 					}
 					agiToSubtract += 0.01f;
 
-					ComparisonCalculationBear comparisonAgi = new ComparisonCalculationBear() { Name = "Agility", 
+					ComparisonCalculationBear comparisonAgi = new ComparisonCalculationBear() { 
+						Name = string.Format("Agility ({0})", agiToAdd-agiToSubtract), 
                         OverallPoints =     (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
 						MitigationPoints =  (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract), 
                         SurvivalPoints =    (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract),
@@ -920,7 +921,7 @@ the Threat Scale defined on the Options tab.",
 
 					ComparisonCalculationBear comparisonStr = new ComparisonCalculationBear()
 					{
-						Name = "Strength",
+						Name = string.Format("Strength ({0})", strToAdd-strToSubtract),
 						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (strToAdd - strToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (strToAdd - strToSubtract),
 						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (strToAdd - strToSubtract),
@@ -948,7 +949,7 @@ the Threat Scale defined on the Options tab.",
 
 					ComparisonCalculationBear comparisonDef = new ComparisonCalculationBear()
 					{
-						Name = "Defense Rating",
+						Name = string.Format("Defense Rating ({0})", defToAdd-defToSubtract),
 						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
 						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
@@ -974,12 +975,41 @@ the Threat Scale defined on the Options tab.",
 					}
 					acToSubtract += 0.01f;
 
-					ComparisonCalculationBear comparisonAC = new ComparisonCalculationBear() { Name = "Armor", 
-                        OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
+					ComparisonCalculationBear comparisonAC = new ComparisonCalculationBear() {
+						Name = string.Format("Armor ({0})", acToAdd-acToSubtract),
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (acToAdd - acToSubtract), 
                         SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (acToAdd - acToSubtract), 
                         ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (acToAdd - acToSubtract)
                     };
+
+
+					//Differential Calculations for BonusAC
+					calcAtAdd = calcBaseValue;
+					float bacToAdd = 0f;
+					while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && bacToAdd < 2)
+					{
+						bacToAdd += 0.01f;
+						calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BonusArmor = bacToAdd } }) as CharacterCalculationsBear;
+					}
+
+					calcAtSubtract = calcBaseValue;
+					float bacToSubtract = 0f;
+					while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && bacToSubtract > -2)
+					{
+						bacToSubtract -= 0.01f;
+						calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BonusArmor = bacToSubtract } }) as CharacterCalculationsBear;
+					}
+					bacToSubtract += 0.01f;
+
+					ComparisonCalculationBear comparisonBAC = new ComparisonCalculationBear()
+					{
+						Name = string.Format("Bonus Armor ({0})", bacToAdd - bacToSubtract),
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (bacToAdd - bacToSubtract),
+						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (bacToAdd - bacToSubtract),
+						SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (bacToAdd - bacToSubtract),
+						ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (bacToAdd - bacToSubtract)
+					};
 
 
 					//Differential Calculations for Sta
@@ -1000,8 +1030,9 @@ the Threat Scale defined on the Options tab.",
 					}
 					staToSubtract += 0.01f;
 
-					ComparisonCalculationBear comparisonSta = new ComparisonCalculationBear() { Name = "Stamina", 
-                        OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
+					ComparisonCalculationBear comparisonSta = new ComparisonCalculationBear() {
+						Name = string.Format("Stamina ({0})", staToAdd-staToSubtract),
+						OverallPoints = (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
 						MitigationPoints = (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (staToAdd - staToSubtract), 
                         SurvivalPoints = (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (staToAdd - staToSubtract), 
                         ThreatPoints = (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (staToAdd - staToSubtract)};
@@ -1009,6 +1040,7 @@ the Threat Scale defined on the Options tab.",
 					return new ComparisonCalculationBase[] { 
 						comparisonAgi,
 						comparisonAC,
+						comparisonBAC,
 						comparisonSta,
 						comparisonDef,
 						comparisonStr,

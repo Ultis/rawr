@@ -605,15 +605,15 @@ namespace Rawr.Cat
 				statsWeapon.AttackPower += fap;
 			}
 
-			statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
-			statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
-			statsTotal.Agility *= (1 + statsTotal.BonusAgilityMultiplier);
-			statsTotal.AttackPower += statsTotal.Strength * 2 + statsTotal.Agility;
+			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+			statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
+			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+			statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility;
 			statsTotal.AttackPower += statsWeapon.AttackPower * 0.2f * (talents.PredatoryStrikes / 3f);
-			statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
-			statsTotal.Health += (statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
-			statsTotal.Armor += 2 * statsTotal.Agility;
-			statsTotal.Armor *= (1 + statsTotal.BonusArmorMultiplier);
+			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f+ statsTotal.BonusAttackPowerMultiplier));
+			statsTotal.Health += (float)Math.Floor(statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
+			statsTotal.Armor += 2f * statsTotal.Agility;
+			statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
 			statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
 			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
 			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -623,7 +623,7 @@ namespace Rawr.Cat
             // Haste trinket (Meteorite Whetstone)
             statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10 / 45;
 
-			#region OLD - Manul Stat Summing
+			#region OLD - Manual Stat Summing
 			//float agiBase = (float)Math.Floor(statsRace.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			//float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			//float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
