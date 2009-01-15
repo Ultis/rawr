@@ -433,7 +433,6 @@ namespace Rawr
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common]
         public float Health
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Health]; }
@@ -442,7 +441,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [Common]
         public float Mana
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Mana]; }
