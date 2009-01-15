@@ -3165,12 +3165,14 @@ namespace Rawr.Mage.SequenceReconstruction
                         //unexplained += Math.Min(duration, 15 - (time - apTime));
                         combustionTime = -1;
                         combustionLeft = 0;
+                        combustionActive = false;
                         if (timing != null) timing.AppendLine("INFO: Combustion is still up!");
                     }
                     else if (duration > 0) // do not cancel for gems/pots
                     {
                         combustionTime = -1;
                         combustionLeft = 0;
+                        combustionActive = false;
                     }
                 }
                 else
