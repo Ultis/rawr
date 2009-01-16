@@ -175,7 +175,7 @@ namespace Rawr.DPSWarr
             get
             {
                 float baseCritDmg = (2 * (1f + _stats.BonusCritMultiplier) - 1);
-                baseCritDmg *= (MainHand.Type == Item.ItemType.TwoHandAxe) ? 0.01f * _talents.PoleaxeSpecialization : 1;
+                baseCritDmg *= (MainHand.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 1;
                 return (2 * (1f + _stats.BonusCritMultiplier) - 1) * (1 + _talents.PoleaxeSpecialization * 0.01f);
             }
         }
@@ -208,7 +208,7 @@ namespace Rawr.DPSWarr
             if(_talents.TitansGrip == 1)
                 crit += 0.03f;
 
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe)?0.01f * _talents.PoleaxeSpecialization:0;
+            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
             
             return crit;
         }
@@ -224,7 +224,7 @@ namespace Rawr.DPSWarr
             if (_talents.TitansGrip == 1)
                 crit += 0.03f;
 
-            crit += (weapon.Type == Item.ItemType.TwoHandAxe) ? 0.01f * _talents.PoleaxeSpecialization : 0;
+            crit += (weapon.Type == Item.ItemType.TwoHandAxe || MainHand.Type == Item.ItemType.Polearm) ? 0.01f * _talents.PoleaxeSpecialization : 0;
 
             return crit;
         }
