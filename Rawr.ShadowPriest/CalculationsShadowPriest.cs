@@ -502,7 +502,11 @@ namespace Rawr.ShadowPriest
                 TimbalsProc = stats.TimbalsProc,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+
+                GLYPH_Shadow = stats.GLYPH_Shadow,
+                GLYPH_ShadowWordDeath = stats.GLYPH_ShadowWordDeath,
+                GLYPH_ShadowWordPain = stats.GLYPH_ShadowWordPain,
             };
         }
 
@@ -555,6 +559,10 @@ namespace Rawr.ShadowPriest
                 + stats.PendulumOfTelluricCurrentsProc
                 + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
+
+                + stats.GLYPH_Shadow
+                + stats.GLYPH_ShadowWordDeath
+                + stats.GLYPH_ShadowWordPain
                 ) > 0;
         }
 

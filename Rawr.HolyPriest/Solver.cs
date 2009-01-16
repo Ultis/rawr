@@ -371,6 +371,16 @@ namespace Rawr.HolyPriest
                         regen += tmpregen;
                     }
                 }
+                if (simstats.ManaRestoreOnCast_10_45 > 0)
+                {
+                    float proc_50 = (float)Math.Log(0.5f) / (float)Math.Log(1f - 0.1f);
+                    tmpregen = simstats.ManaRestoreOnCast_10_45 * 0.5f / (45f + proc_50 * avgcastlen);
+                    if (tmpregen > 0f)
+                    {
+                        ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
 
                 float trinketmp5 = 0;
                 if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
@@ -421,7 +431,15 @@ namespace Rawr.HolyPriest
 
             ActionList += "\r\n\r\nMana Options:";
 
-            float mp1use = manacost / cyclelen;
+            // Real Cyclelen also has time for FSR. To get 80% FSR, a cycle of 20 seconds needs to include:
+            // (20 + 5) / 0.8 = 31.25 seconds. (31.25 - 5 - 20 = 6.25 / 31.25 = 0.2 seconds of FSR regen).
+            //float realcyclelen = (cyclelen + 5f) / (calculationOptions.FSRRatio / 100f);
+            // Extra fudge model: (As you approach 100% FSR, realcyclelen approaches cyclelen)
+            //float realcyclelen = (cyclelen + 5f * (1f - (float)Math.Pow(calculationOptions.FSRRatio / 100f, 2f))) / (calculationOptions.FSRRatio / 100f);
+            // Xtreme fudge model: Cast 25 seconds, 5 seconds no casting, then slap on FSR.
+            // ((25 + 5) / FSR) / 25 * cyclelen = realcyclelen.
+            float realcyclelen = cyclelen * ((25f + 5f) / (calculationOptions.FSRRatio / 100f)) / 25f;
+            float mp1use = manacost / realcyclelen;
 
             if (mp1use > regen && character.Race == Character.CharacterRace.BloodElf)
             {   // Arcane Torrent is 6% max mana every 2 minutes.

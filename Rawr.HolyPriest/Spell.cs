@@ -207,6 +207,8 @@ namespace Rawr.HolyPriest
                 MinHeal = MaxHeal = MinHeal * (HotDuration + stats.RenewDurationIncrease) / HotDuration;
                 HotDuration += stats.RenewDurationIncrease;
             }
+            if (stats.GLYPH_Renew > 0f)
+                HotDuration -= stats.GLYPH_Renew;
             CastTime = 0;
         }
 
@@ -261,7 +263,8 @@ namespace Rawr.HolyPriest
             CastTime = Math.Max(1.0f, BaseCastTime / (1 + stats.SpellHaste));
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
-            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana
+                * (1f - stats.GLYPH_FlashHeal));
         }
 
         public void SurgeOfLight()
@@ -444,15 +447,6 @@ namespace Rawr.HolyPriest
             new SpellData(1, 80,  684,  756, 0f),
         };
 
-        private static readonly Color[] targetColors = new Color[]
-                                           {
-                                               Color.Yellow,
-                                               Color.Yellow,
-                                               Color.Yellow,
-                                               Color.Gold,
-                                               Color.Goldenrod
-                                           };
-
         public override float AvgTotHeal
         {
             get
@@ -478,14 +472,14 @@ namespace Rawr.HolyPriest
         }
 
         public CircleOfHealing(Stats stats, Character character, int targets)
-            : base(string.Format("Circle of Healing ({0} targets)", targets), stats, character, SpellRankTable, 21, 1.5f / 3.5f * 0.5f, targetColors[targets - 1])
+            : base(string.Format("Circle of Healing ({0} targets)", targets), stats, character, SpellRankTable, 21, 1.5f / 3.5f * 0.5f, Color.Gold)
         {
             Targets = targets;
             Calculate(stats, character);
         }
 
         public CircleOfHealing(Stats stats, Character character)
-            : this(stats, character, 5)
+            : this(stats, character, 5 + (int)(stats.GLYPH_CircleOfHealing))
         {}
 
         protected void Calculate(Stats stats, Character character)
@@ -605,13 +599,15 @@ namespace Rawr.HolyPriest
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + stats.GLYPH_HolyNova);
             MaxHeal = (MaxHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef))
                 * (1 + character.PriestTalents.TwinDisciplines * 0.01f)
                 * (1 + character.PriestTalents.FocusedPower * 0.02f)
                 * (1 + character.PriestTalents.DivineProvidence * 0.02f)
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + stats.GLYPH_HolyNova);
 
             CritChance = stats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f;
 
@@ -897,7 +893,8 @@ namespace Rawr.HolyPriest
         {
             MinHeal = (MinHeal +
                 stats.SpellPower * SP2HP * HealingCoef * (1 - RankCoef)) 
-                * (1 + character.PriestTalents.SpiritualHealing * 0.02f);
+                * (1 + character.PriestTalents.SpiritualHealing * 0.02f)
+                * (1 + stats.GLYPH_Lightwell);
             MaxHeal = MinHeal;
 
             CritChance = 0f;

@@ -578,7 +578,18 @@ namespace Rawr.HolyPriest
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 BangleProc = stats.BangleProc,
                 SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25
+                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
+                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
+
+                GLYPH_CircleOfHealing =  stats.GLYPH_CircleOfHealing,
+                GLYPH_Dispel = stats.GLYPH_Dispel,
+                GLYPH_FlashHeal = stats.GLYPH_FlashHeal,
+                GLYPH_PowerWordShield = stats.GLYPH_PowerWordShield,
+                GLYPH_PrayerOfHealing = stats.GLYPH_PrayerOfHealing,
+                GLYPH_Renew = stats.GLYPH_Renew,
+                GLYPH_HolyNova = stats.GLYPH_HolyNova,
+                GLYPH_Lightwell = stats.GLYPH_Lightwell,
+                GLYPH_MassDispel = stats.GLYPH_MassDispel,
             };
         }
 
@@ -616,6 +627,11 @@ namespace Rawr.HolyPriest
                 + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
                 + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25
+                + stats.ManaRestoreOnCast_10_45
+
+                + stats.GLYPH_CircleOfHealing + stats.GLYPH_Dispel + stats.GLYPH_FlashHeal
+                + stats.GLYPH_PowerWordShield + stats.GLYPH_PrayerOfHealing + stats.GLYPH_Renew
+                + stats.GLYPH_HolyNova + stats.GLYPH_Lightwell + stats.GLYPH_MassDispel
                 ) > 0;
         }
 

@@ -315,6 +315,21 @@ namespace Rawr
         ShadowResistanceBuff,
         MovementSpeed,
         ManacostReduceWithin15OnUse1Min,
+        #region Added by Rawr.*Priest for Glyphs
+        GLYPH_FlashHeal,
+        GLYPH_Dispel,
+        GLYPH_PowerWordShield,
+        GLYPH_CircleOfHealing,
+        GLYPH_Renew,
+        GLYPH_PrayerOfHealing,
+        GLYPH_HolyNova,
+        GLYPH_Lightwell,
+        GLYPH_MassDispel,
+
+        GLYPH_ShadowWordPain,
+        GLYPH_Shadow,
+        GLYPH_ShadowWordDeath,
+        #endregion
     }
 
     [System.AttributeUsage(System.AttributeTargets.Property)]
@@ -2933,8 +2948,116 @@ namespace Rawr
             set { _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min] = value; }
         }
 
-#endregion
-	
+        #region Added by Rawr.*Priest for Glyphs
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% reduced cost on Flash Heal")]
+        public float GLYPH_FlashHeal
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_FlashHeal]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_FlashHeal] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% of max health healed on Dispel.")]
+        public float GLYPH_Dispel
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_Dispel]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_Dispel] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% of Absorb healed on cast.")]
+        public float GLYPH_PowerWordShield
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_PowerWordShield]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_PowerWordShield] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" extra target(s) hit by Circle of Healing.")]
+        public float GLYPH_CircleOfHealing
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_CircleOfHealing]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_CircleOfHealing] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" second shorter duration on Renew, but increased healing each tick.")]
+        public float GLYPH_Renew
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_Renew]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_Renew] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% of healed amount also healed over time.")]
+        public float GLYPH_PrayerOfHealing
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_PrayerOfHealing]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_PrayerOfHealing] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased healing and reduced damage from Holy Nova.")]
+        public float GLYPH_HolyNova
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_HolyNova]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_HolyNova] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased healing from Lightwell.")]
+        public float GLYPH_Lightwell
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_Lightwell]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_Lightwell] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% cheaper Mass Dispel.")]
+        public float GLYPH_MassDispel
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_MassDispel]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_MassDispel] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased Mind Flay damage on targets with Shadow Word: Pain.")]
+        public float GLYPH_ShadowWordPain
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_ShadowWordPain]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_ShadowWordPain] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% of spirit added as spell power after spell criticals while in Shadowform.")]
+        public float GLYPH_Shadow
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_Shadow]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_Shadow] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased damage on Shadow Word: Death when target is below 35%.")]
+        public float GLYPH_ShadowWordDeath
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.GLYPH_ShadowWordDeath]; }
+            set { _rawNoStackData[(int)NonStackingStat.GLYPH_ShadowWordDeath] = value; }
+        }
+        #endregion
+
+        #endregion
+
         /// <summary>
         /// Adds together two stats, when using a + operator. When adding additional stats for
         /// Rawr to track, after adding the stat property, also add a line for it to this method,

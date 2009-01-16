@@ -308,6 +308,7 @@ namespace Rawr.ShadowPriest
             float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
             simStats.Spirit += NewSpirit;
             simStats.SpellPower += NewSPP;
+            simStats.SpellPower += simStats.Spirit * simStats.GLYPH_Shadow;
 
             // Deal with Twinkets
             // HASTE IS NOT REEVALUATED SO DONT EVEN TRY.
@@ -348,6 +349,8 @@ namespace Rawr.ShadowPriest
                     case "Mind Flay":
                         // Reapplyable DoTs, a resist means you lose 1 GCD to reapply. (~= cost of 1 GCD worth of MF)
                         Damage -= MF.DpS * MF.GlobalCooldown * (1f - ShadowHitChance / 100f);
+                        if ((simStats.GLYPH_ShadowWordPain > 0f) && (SWP != null))
+                            Damage *= (1f + simStats.GLYPH_ShadowWordPain);
                         // Also invokes a mana penalty by needing to cast it again.
                         Cost *= (2f - ShadowHitChance / 100f);
                         break;

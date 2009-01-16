@@ -238,10 +238,109 @@ namespace Rawr
         {
 			List<Buff> defaultBuffs = new List<Buff>();
 
-			#region Buffs
+            #region Glyphs
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Flash Heal",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_FlashHeal = 0.1f }
+            });
 
-			#region Agility and Strength
-			defaultBuffs.Add(new Buff
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Dispel",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_Dispel = 0.03f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Power Word: Shield",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_PowerWordShield = 0.2f }
+            });
+            
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Circle of Healing",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_CircleOfHealing = 1f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Renew",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_Renew = 3f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Prayer of Healing",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_PrayerOfHealing = 0.2f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Holy Nova",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_HolyNova = 0.4f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Lightwell",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_Lightwell = 0.2f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Mass Dispel",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_MassDispel = 0.2f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Shadow Word: Pain",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_ShadowWordPain = 0.1f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Shadow",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_Shadow = 0.1f }
+            });
+
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Glyph of Shadow Word: Death",
+                Group = "Glyphs",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { GLYPH_ShadowWordDeath = 0.1f }
+            });
+
+            #endregion
+
+            #region Buffs
+
+            #region Agility and Strength
+            defaultBuffs.Add(new Buff
 			{
 				Name = "Strength of Earth Totem",
 				Group = "Agility and Strength",
