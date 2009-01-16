@@ -237,8 +237,8 @@ threat and limited threat scaled by the threat scale.",
                                     stats.Block - levelDifference;
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
-            calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue * (1 + stats.BonusBlockValueMultiplier)) +
-                                         ((float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+            calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor(((stats.BlockValue + (float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue)) *
+                                         (1 + stats.BonusBlockValueMultiplier))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -440,7 +440,7 @@ threat and limited threat scaled by the threat scale.",
 	        /*Gnome*/		{	170f,	    116f,	    159f,   },
 			/*Troll*/		{	175f,	    115f,	    160f,   },	
 			/*BloodElf*/	{	0f,		    0f,		    0f,	    },
-			/*Draenei*/		{	176f,		110f,		159f,	},
+			/*Draenei*/		{	175f,		110f,		158f,	},
 		};
 
         private Stats GetRaceStats(Character character)
@@ -460,7 +460,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Miss = 0.05f,
                         Parry = 5f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     if ((character.MainHand != null) &&
                         ((character.MainHand.Type == Item.ItemType.OneHandSword) ||
@@ -481,7 +481,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
 
                     if ((character.MainHand != null) &&
@@ -502,7 +502,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.NightElf:
@@ -517,7 +517,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Miss = 0.05f + 0.02f,
                         Parry = 5f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.Undead:
@@ -532,7 +532,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.Tauren:
@@ -548,7 +548,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.Gnome:
@@ -563,7 +563,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.Troll:
@@ -578,7 +578,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 case Character.CharacterRace.Draenei:
@@ -594,7 +594,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 3.9f - (91f / 33f),
+                        PhysicalCrit = 3.185f,
                     };
                     break;
                 default:
@@ -630,6 +630,7 @@ threat and limited threat scaled by the threat scale.",
                     BonusStrengthMultiplier = tree.Vitality * 0.02f,
                     Expertise = tree.Vitality * 2f,
                     BonusShieldSlamDamage = tree.GagOrder * 0.05f,
+                    BaseArmorMultiplier = tree.Toughness * 0.02f,
                 };
 
             float oneProcPerMinAveUptime = 0f;
@@ -650,8 +651,8 @@ threat and limited threat scaled by the threat scale.",
             }
 
             Stats statsItems = GetItemStats(character, additionalItem);
-            float toughnessMultiplier = new float[] { 1f, 1.02f, 1.04f, 1.06f, 1.08f, 1.1f }[character.WarriorTalents.Toughness];
-            statsItems.Armor *= toughnessMultiplier;
+            //float toughnessMultiplier = new float[] { 1f, 1.02f, 1.04f, 1.06f, 1.08f, 1.1f }[character.WarriorTalents.Toughness];
+            //statsItems.Armor *= toughnessMultiplier;
 
             //Mongoose
             if (statsEnchants.MongooseProc > 0 && statsBuffs.MongooseProcAverage > 0)
@@ -692,9 +693,10 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.AttackPower += statsTotal.Strength * 2;
             statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.Armor += 2 * statsTotal.Agility + statsTotal.BonusArmor;
-            statsTotal.Armor *= 1 + statsTotal.BonusArmorMultiplier;
-            statsTotal.BlockValue *= 1 + statsTotal.BonusBlockValueMultiplier;
+            statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
+            statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
+            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
+ //           statsTotal.BlockValue *= 1 + statsTotal.BonusBlockValueMultiplier;
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -984,6 +986,7 @@ threat and limited threat scaled by the threat scale.",
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
+				BaseArmorMultiplier = stats.BaseArmorMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 				Health = stats.Health,
