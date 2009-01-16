@@ -42,6 +42,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxComboReliability = new System.Windows.Forms.TextBox();
+            this.label96 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
             this.checkBoxAllowLatencyCombos = new System.Windows.Forms.CheckBox();
             this.label91 = new System.Windows.Forms.Label();
@@ -248,8 +250,8 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxComboReliability = new System.Windows.Forms.TextBox();
-            this.label96 = new System.Windows.Forms.Label();
+            this.textBoxHolyResist = new System.Windows.Forms.TextBox();
+            this.label97 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -450,6 +452,24 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxComboReliability
+            // 
+            this.textBoxComboReliability.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ComboReliability", true));
+            this.textBoxComboReliability.Location = new System.Drawing.Point(142, 189);
+            this.textBoxComboReliability.Name = "textBoxComboReliability";
+            this.textBoxComboReliability.Size = new System.Drawing.Size(75, 20);
+            this.textBoxComboReliability.TabIndex = 200;
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(0, 192);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(121, 13);
+            this.label96.TabIndex = 199;
+            this.label96.Text = "Combo Reliability (0-1): *";
+            this.toolTipMage.SetToolTip(this.label96, "Chance that the AM-ABar latency combo will be successful.");
             // 
             // label95
             // 
@@ -883,6 +903,8 @@
             // tabPage3
             // 
             this.tabPage3.AutoScroll = true;
+            this.tabPage3.Controls.Add(this.textBoxHolyResist);
+            this.tabPage3.Controls.Add(this.label97);
             this.tabPage3.Controls.Add(this.label24);
             this.tabPage3.Controls.Add(this.checkBoxUnlimitedMana);
             this.tabPage3.Controls.Add(this.label46);
@@ -932,7 +954,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(0, 467);
+            this.label24.Location = new System.Drawing.Point(0, 493);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(90, 13);
             this.label24.TabIndex = 183;
@@ -943,7 +965,7 @@
             // 
             this.checkBoxUnlimitedMana.AutoSize = true;
             this.checkBoxUnlimitedMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "UnlimitedMana", true));
-            this.checkBoxUnlimitedMana.Location = new System.Drawing.Point(112, 467);
+            this.checkBoxUnlimitedMana.Location = new System.Drawing.Point(112, 493);
             this.checkBoxUnlimitedMana.Name = "checkBoxUnlimitedMana";
             this.checkBoxUnlimitedMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxUnlimitedMana.TabIndex = 182;
@@ -952,7 +974,7 @@
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(0, 447);
+            this.label46.Location = new System.Drawing.Point(0, 473);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(84, 13);
             this.label46.TabIndex = 181;
@@ -964,7 +986,7 @@
             // 
             this.checkBoxFarmingMode.AutoSize = true;
             this.checkBoxFarmingMode.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "FarmingMode", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 447);
+            this.checkBoxFarmingMode.Location = new System.Drawing.Point(112, 473);
             this.checkBoxFarmingMode.Name = "checkBoxFarmingMode";
             this.checkBoxFarmingMode.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFarmingMode.TabIndex = 180;
@@ -973,7 +995,7 @@
             // textBoxTargetDamage
             // 
             this.textBoxTargetDamage.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "TargetDamage", true));
-            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 421);
+            this.textBoxTargetDamage.Location = new System.Drawing.Point(112, 447);
             this.textBoxTargetDamage.Name = "textBoxTargetDamage";
             this.textBoxTargetDamage.Size = new System.Drawing.Size(75, 20);
             this.textBoxTargetDamage.TabIndex = 179;
@@ -981,7 +1003,7 @@
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(0, 424);
+            this.label45.Location = new System.Drawing.Point(0, 450);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(91, 13);
             this.label45.TabIndex = 178;
@@ -993,7 +1015,7 @@
             // textBoxDrinkingTime
             // 
             this.textBoxDrinkingTime.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "DrinkingTime", true));
-            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 395);
+            this.textBoxDrinkingTime.Location = new System.Drawing.Point(112, 421);
             this.textBoxDrinkingTime.Name = "textBoxDrinkingTime";
             this.textBoxDrinkingTime.Size = new System.Drawing.Size(75, 20);
             this.textBoxDrinkingTime.TabIndex = 177;
@@ -1001,7 +1023,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(0, 398);
+            this.label44.Location = new System.Drawing.Point(0, 424);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(82, 13);
             this.label44.TabIndex = 176;
@@ -2570,23 +2592,22 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxComboReliability
+            // textBoxHolyResist
             // 
-            this.textBoxComboReliability.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "ComboReliability", true));
-            this.textBoxComboReliability.Location = new System.Drawing.Point(142, 189);
-            this.textBoxComboReliability.Name = "textBoxComboReliability";
-            this.textBoxComboReliability.Size = new System.Drawing.Size(75, 20);
-            this.textBoxComboReliability.TabIndex = 200;
+            this.textBoxHolyResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyResist", true));
+            this.textBoxHolyResist.Location = new System.Drawing.Point(112, 395);
+            this.textBoxHolyResist.Name = "textBoxHolyResist";
+            this.textBoxHolyResist.Size = new System.Drawing.Size(75, 20);
+            this.textBoxHolyResist.TabIndex = 185;
             // 
-            // label96
+            // label97
             // 
-            this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(0, 192);
-            this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(121, 13);
-            this.label96.TabIndex = 199;
-            this.label96.Text = "Combo Reliability (0-1): *";
-            this.toolTipMage.SetToolTip(this.label96, "Chance that the AM-ABar latency combo will be successful.");
+            this.label97.AutoSize = true;
+            this.label97.Location = new System.Drawing.Point(0, 398);
+            this.label97.Name = "label97";
+            this.label97.Size = new System.Drawing.Size(87, 13);
+            this.label97.TabIndex = 184;
+            this.label97.Text = "Holy Resist (0-1):";
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2838,6 +2859,8 @@
         private System.Windows.Forms.CheckBox checkBoxAllowLatencyCombos;
         private System.Windows.Forms.TextBox textBoxComboReliability;
         private System.Windows.Forms.Label label96;
+        private System.Windows.Forms.TextBox textBoxHolyResist;
+        private System.Windows.Forms.Label label97;
 
     }
 }

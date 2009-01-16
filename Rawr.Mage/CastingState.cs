@@ -46,6 +46,7 @@ namespace Rawr.Mage
         public float NatureDamage { get; set; }
         public float ShadowDamage { get; set; }
         public float FrostFireDamage { get; set; }
+        public float HolyDamage { get; set; }
 
         public float SpiritRegen { get; set; }
         public float ManaRegen { get; set; }
@@ -67,6 +68,7 @@ namespace Rawr.Mage
         public float NatureSpellModifier { get; set; }
         public float ShadowSpellModifier { get; set; }
         public float FrostFireSpellModifier { get; set; }
+        public float HolySpellModifier { get; set; }
 
         public float ArcaneCritBonus { get; set; }
         public float FireCritBonus { get; set; }
@@ -74,6 +76,7 @@ namespace Rawr.Mage
         public float NatureCritBonus { get; set; }
         public float ShadowCritBonus { get; set; }
         public float FrostFireCritBonus { get; set; }
+        public float HolyCritBonus { get; set; }
 
         public float ArcaneCritRate { get; set; }
         public float FireCritRate { get; set; }
@@ -81,6 +84,7 @@ namespace Rawr.Mage
         public float NatureCritRate { get; set; }
         public float ShadowCritRate { get; set; }
         public float FrostFireCritRate { get; set; }
+        public float HolyCritRate { get; set; }
 
         public float ArcaneHitRate { get; set; }
         public float FireHitRate { get; set; }
@@ -88,6 +92,7 @@ namespace Rawr.Mage
         public float NatureHitRate { get; set; }
         public float ShadowHitRate { get; set; }
         public float FrostFireHitRate { get; set; }
+        public float HolyHitRate { get; set; }
 
         public float ArcaneThreatMultiplier { get; set; }
         public float FireThreatMultiplier { get; set; }
@@ -95,6 +100,7 @@ namespace Rawr.Mage
         public float NatureThreatMultiplier { get; set; }
         public float ShadowThreatMultiplier { get; set; }
         public float FrostFireThreatMultiplier { get; set; }
+        public float HolyThreatMultiplier { get; set; }
 
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
@@ -254,8 +260,9 @@ namespace Rawr.Mage
             ArcaneDamage = characterStats.SpellArcaneDamageRating + SpellDamageRating;
             FireDamage = characterStats.SpellFireDamageRating + SpellDamageRating + (flameCap ? 80.0f : 0.0f);
             FrostDamage = characterStats.SpellFrostDamageRating + SpellDamageRating;
-            NatureDamage = /* characterStats.SpellNatureDamageRating + */ SpellDamageRating;
+            NatureDamage = characterStats.SpellNatureDamageRating + SpellDamageRating;
             ShadowDamage = characterStats.SpellShadowDamageRating + SpellDamageRating;
+            HolyDamage = /* characterStats.SpellHolyDamageRating + */ SpellDamageRating;
             FrostFireDamage = Math.Max(FireDamage, FrostDamage);
 
             float spellCritPerInt = 0f;
@@ -331,6 +338,7 @@ namespace Rawr.Mage
             NatureHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
             ShadowHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
             FrostFireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ElementalPrecision);
+            HolyHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + (calculationOptions.Mode308 ? 0.01f * character.MageTalents.ElementalPrecision : 0f));
 
             SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
             ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
@@ -422,12 +430,14 @@ namespace Rawr.Mage
             FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
             NatureSpellModifier = ArcaneSpellModifier;
             ShadowSpellModifier = ArcaneSpellModifier;
+            HolySpellModifier = ArcaneSpellModifier;
             FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds) * Math.Max(1 + characterStats.BonusFireDamageMultiplier, 1 + characterStats.BonusFrostDamageMultiplier);
             ArcaneSpellModifier *= (1 + characterStats.BonusArcaneDamageMultiplier);
             FireSpellModifier *= (1 + characterStats.BonusFireDamageMultiplier);
             FrostSpellModifier *= (1 + characterStats.BonusFrostDamageMultiplier);
             NatureSpellModifier *= (1 + characterStats.BonusNatureDamageMultiplier);
             ShadowSpellModifier *= (1 + characterStats.BonusShadowDamageMultiplier);
+            HolySpellModifier *= (1 + characterStats.BonusHolyDamageMultiplier);
 
             ResilienceCritDamageReduction = 1;
             ResilienceCritRateReduction = 0;
@@ -438,6 +448,7 @@ namespace Rawr.Mage
             FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
             NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
             ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
+            HolyCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
 
             ArcaneCritRate = SpellCrit;
             FireCritRate = SpellCrit + 0.02f * character.MageTalents.CriticalMass + 0.01f * character.MageTalents.Pyromaniac;
@@ -450,6 +461,7 @@ namespace Rawr.Mage
             FrostCritRate = SpellCrit;
             NatureCritRate = SpellCrit;
             ShadowCritRate = SpellCrit;
+            HolyCritRate = SpellCrit;
 
             float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
 
@@ -459,6 +471,7 @@ namespace Rawr.Mage
             FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
             NatureThreatMultiplier = threatFactor;
             ShadowThreatMultiplier = threatFactor;
+            HolyThreatMultiplier = threatFactor;
 
             if (BaseStats.LightningCapacitorProc > 0)
             {

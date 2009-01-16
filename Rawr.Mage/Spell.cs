@@ -7,6 +7,7 @@ namespace Rawr.Mage
 {
     public enum MagicSchool
     {
+        Holy = 1,
         Fire = 2,
         Nature,
         Frost,
@@ -448,6 +449,15 @@ namespace Rawr.Mage
                     RealResistance = castingState.CalculationOptions.ShadowResist;
                     ThreatMultiplier = castingState.ShadowThreatMultiplier;
                     break;
+                case MagicSchool.Holy:
+                    SpellModifier = castingState.HolySpellModifier;
+                    CritRate = castingState.HolyCritRate;
+                    CritBonus = castingState.HolyCritBonus;
+                    RawSpellDamage = castingState.HolyDamage;
+                    HitRate = castingState.HolyHitRate;
+                    RealResistance = castingState.CalculationOptions.HolyResist;
+                    ThreatMultiplier = castingState.HolyThreatMultiplier;
+                    break;
             }
 
             int targetLevel = AreaEffect ? castingState.CalculationOptions.AoeTargetLevel : castingState.CalculationOptions.TargetLevel;
@@ -475,6 +485,7 @@ namespace Rawr.Mage
                 if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
                 if (MagicSchool == MagicSchool.Nature) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
                 if (MagicSchool == MagicSchool.Shadow) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
+                if (MagicSchool == MagicSchool.Holy) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ElementalPrecision);
             }
 
             if (ManualClearcasting && !ClearcastingAveraged)

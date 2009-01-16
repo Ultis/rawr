@@ -936,6 +936,16 @@ namespace Rawr
 					BonusArcaneDamageMultiplier = 0.13f, BonusShadowDamageMultiplier = 0.13f,
 					BonusHolyDamageMultiplier = 0.13f, BonusNatureDamageMultiplier = 0.13f},
 			});
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Rune of Razorice",
+                Group = "Spell Damage Taken",
+                ConflictingBuffs = new List<string>(),
+                Stats =
+                {
+                    BonusFrostDamageMultiplier = 0.05f,
+                }
+            });
 
             #endregion
 

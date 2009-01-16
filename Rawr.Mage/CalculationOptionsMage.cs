@@ -26,6 +26,7 @@ namespace Rawr.Mage
         public float FrostResist { get; set; }
         public float NatureResist { get; set; }
         public float ShadowResist { get; set; }
+        public float HolyResist { get; set; }
         public float FightDuration { get; set; }
         public float TpsLimit { get; set; }
         public bool HeroismAvailable { get; set; }
