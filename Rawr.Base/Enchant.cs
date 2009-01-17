@@ -610,6 +610,9 @@ namespace Rawr
             // Engineering enchant
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (22 + 2.0f / 3.0f) } ));
 
+            // Tailoring enchant
+            defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { LightweaveEmbroideryProc = 1 }));
+
             #region Enchants to Delete
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));

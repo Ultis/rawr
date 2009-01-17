@@ -22,6 +22,7 @@ namespace Rawr.Mage
         Wand,
         LightningBolt,
         ThunderBolt,
+        LightweaveBolt,
         [Description("Arcane Barrage")]
         ArcaneBarrage,
         ArcaneBarrage1,
@@ -724,6 +725,13 @@ namespace Rawr.Mage
                 DamagePerSecond += boltDps;
                 ThreatPerSecond += boltDps * castingState.ShadowThreatMultiplier;
             }
+            if (!ForceMiss && !EffectProc && castingState.BaseStats.LightweaveEmbroideryProc > 0)
+            {
+                BaseSpell LightweaveBolt = castingState.LightweaveBolt;
+                float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
+                DamagePerSecond += boltDps;
+                ThreatPerSecond += boltDps * castingState.HolyThreatMultiplier;
+            }
 
             /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
             float OO5SR = 0;
@@ -836,6 +844,18 @@ namespace Rawr.Mage
                 }
                 float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
+                contrib.Damage += boltDps * duration;
+            }
+            if (!EffectProc && castingState.BaseStats.LightweaveEmbroideryProc > 0)
+            {
+                BaseSpell LightweaveBolt = castingState.LightweaveBolt;
+                if (!dict.TryGetValue(LightweaveBolt.Name, out contrib))
+                {
+                    contrib = new SpellContribution() { Name = LightweaveBolt.Name };
+                    dict[LightweaveBolt.Name] = contrib;
+                }
+                float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
+                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.5f);
                 contrib.Damage += boltDps * duration;
             }
         }
@@ -1887,6 +1907,24 @@ namespace Rawr.Mage
     {
         public PendulumOfTelluricCurrents(CastingState castingState)
             : base("Pendulum of Telluric Currents", false, false, true, false, 0, 50, 0, 0, MagicSchool.Shadow, 1168, 1752, 0, 0, 0, 0, 0, 0, false)
+        {
+            EffectProc = true;
+            Calculate(castingState);
+        }
+
+        public override void Calculate(CastingState castingState)
+        {
+            base.Calculate(castingState);
+            CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
+            CalculateDerivedStats(castingState);
+        }
+    }
+
+    // Lightweave Embroidery
+    public class LightweaveBolt : BaseSpell
+    {
+        public LightweaveBolt(CastingState castingState)
+            : base("Lightweave Bolt", false, false, true, false, 0, 50, 0, 0, MagicSchool.Holy, 1000, 1200, 0, 0, 0, 0, 0, 0, false)
         {
             EffectProc = true;
             Calculate(castingState);
