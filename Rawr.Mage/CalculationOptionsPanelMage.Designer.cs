@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -88,6 +87,8 @@
             this.textBoxLatency = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBoxHolyResist = new System.Windows.Forms.TextBox();
+            this.label97 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.checkBoxUnlimitedMana = new System.Windows.Forms.CheckBox();
             this.label46 = new System.Windows.Forms.Label();
@@ -250,17 +251,16 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.textBoxHolyResist = new System.Windows.Forms.TextBox();
-            this.label97 = new System.Windows.Forms.Label();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -322,11 +322,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -950,6 +945,23 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Fight";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // textBoxHolyResist
+            // 
+            this.textBoxHolyResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyResist", true));
+            this.textBoxHolyResist.Location = new System.Drawing.Point(112, 395);
+            this.textBoxHolyResist.Name = "textBoxHolyResist";
+            this.textBoxHolyResist.Size = new System.Drawing.Size(75, 20);
+            this.textBoxHolyResist.TabIndex = 185;
+            // 
+            // label97
+            // 
+            this.label97.AutoSize = true;
+            this.label97.Location = new System.Drawing.Point(0, 398);
+            this.label97.Name = "label97";
+            this.label97.Size = new System.Drawing.Size(87, 13);
+            this.label97.TabIndex = 184;
+            this.label97.Text = "Holy Resist (0-1):";
             // 
             // label24
             // 
@@ -2126,16 +2138,16 @@
             this.label93.AutoSize = true;
             this.label93.Location = new System.Drawing.Point(3, 223);
             this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(112, 13);
+            this.label93.Size = new System.Drawing.Size(119, 13);
             this.label93.TabIndex = 193;
-            this.label93.Text = "Glyph of Arcane Blast:";
-            this.toolTipMage.SetToolTip(this.label93, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label93.Text = "Glyph of Arcane Blast: *";
+            this.toolTipMage.SetToolTip(this.label93, "Increases the damage from your Arcane Blast buff by 5%.");
             // 
             // checkBoxGlyphOfArcaneBlast
             // 
             this.checkBoxGlyphOfArcaneBlast.AutoSize = true;
             this.checkBoxGlyphOfArcaneBlast.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneBlast", true));
-            this.checkBoxGlyphOfArcaneBlast.Location = new System.Drawing.Point(140, 223);
+            this.checkBoxGlyphOfArcaneBlast.Location = new System.Drawing.Point(146, 223);
             this.checkBoxGlyphOfArcaneBlast.Name = "checkBoxGlyphOfArcaneBlast";
             this.checkBoxGlyphOfArcaneBlast.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfArcaneBlast.TabIndex = 192;
@@ -2146,16 +2158,17 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(3, 203);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(89, 13);
+            this.label11.Size = new System.Drawing.Size(96, 13);
             this.label11.TabIndex = 191;
-            this.label11.Text = "Glyph of Frostfire:";
-            this.toolTipMage.SetToolTip(this.label11, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label11.Text = "Glyph of Frostfire: *";
+            this.toolTipMage.SetToolTip(this.label11, "Increases the initial damage dealt by Frostfire Bolt by 2% and its critical strik" +
+                    "e chance by 2%.");
             // 
             // checkBoxGlyphOfFrostfire
             // 
             this.checkBoxGlyphOfFrostfire.AutoSize = true;
             this.checkBoxGlyphOfFrostfire.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFrostfire", true));
-            this.checkBoxGlyphOfFrostfire.Location = new System.Drawing.Point(140, 203);
+            this.checkBoxGlyphOfFrostfire.Location = new System.Drawing.Point(146, 203);
             this.checkBoxGlyphOfFrostfire.Name = "checkBoxGlyphOfFrostfire";
             this.checkBoxGlyphOfFrostfire.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfFrostfire.TabIndex = 190;
@@ -2166,16 +2179,16 @@
             this.label90.AutoSize = true;
             this.label90.Location = new System.Drawing.Point(3, 183);
             this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(119, 13);
+            this.label90.Size = new System.Drawing.Size(126, 13);
             this.label90.TabIndex = 189;
-            this.label90.Text = "Glyph of Arcane Power:";
-            this.toolTipMage.SetToolTip(this.label90, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label90.Text = "Glyph of Arcane Power: *";
+            this.toolTipMage.SetToolTip(this.label90, "Increases the duration of Arcane Power by 3 sec.");
             // 
             // checkBoxGlyphOfArcanePower
             // 
             this.checkBoxGlyphOfArcanePower.AutoSize = true;
             this.checkBoxGlyphOfArcanePower.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcanePower", true));
-            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(140, 183);
+            this.checkBoxGlyphOfArcanePower.Location = new System.Drawing.Point(146, 183);
             this.checkBoxGlyphOfArcanePower.Name = "checkBoxGlyphOfArcanePower";
             this.checkBoxGlyphOfArcanePower.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfArcanePower.TabIndex = 188;
@@ -2186,16 +2199,17 @@
             this.label89.AutoSize = true;
             this.label89.Location = new System.Drawing.Point(3, 163);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(97, 13);
+            this.label89.Size = new System.Drawing.Size(104, 13);
             this.label89.TabIndex = 187;
-            this.label89.Text = "Glyph of Ice Armor:";
-            this.toolTipMage.SetToolTip(this.label89, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label89.Text = "Glyph of Ice Armor: *";
+            this.toolTipMage.SetToolTip(this.label89, "Your Ice Armor and Frost Armor spells grant an additional 20% armor and resistanc" +
+                    "e.");
             // 
             // checkBoxGlyphOfIceArmor
             // 
             this.checkBoxGlyphOfIceArmor.AutoSize = true;
             this.checkBoxGlyphOfIceArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfIceArmor", true));
-            this.checkBoxGlyphOfIceArmor.Location = new System.Drawing.Point(140, 163);
+            this.checkBoxGlyphOfIceArmor.Location = new System.Drawing.Point(146, 163);
             this.checkBoxGlyphOfIceArmor.Name = "checkBoxGlyphOfIceArmor";
             this.checkBoxGlyphOfIceArmor.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfIceArmor.TabIndex = 186;
@@ -2206,16 +2220,16 @@
             this.label85.AutoSize = true;
             this.label85.Location = new System.Drawing.Point(3, 143);
             this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(114, 13);
+            this.label85.Size = new System.Drawing.Size(121, 13);
             this.label85.TabIndex = 185;
-            this.label85.Text = "Glyph of Molten Armor:";
-            this.toolTipMage.SetToolTip(this.label85, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label85.Text = "Glyph of Molten Armor: *";
+            this.toolTipMage.SetToolTip(this.label85, "Your Molten Armor spell grants an additional 2% critical strike chance.");
             // 
             // checkBoxGlyphOfMoltenArmor
             // 
             this.checkBoxGlyphOfMoltenArmor.AutoSize = true;
             this.checkBoxGlyphOfMoltenArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfMoltenArmor", true));
-            this.checkBoxGlyphOfMoltenArmor.Location = new System.Drawing.Point(140, 143);
+            this.checkBoxGlyphOfMoltenArmor.Location = new System.Drawing.Point(146, 143);
             this.checkBoxGlyphOfMoltenArmor.Name = "checkBoxGlyphOfMoltenArmor";
             this.checkBoxGlyphOfMoltenArmor.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfMoltenArmor.TabIndex = 184;
@@ -2226,16 +2240,16 @@
             this.label86.AutoSize = true;
             this.label86.Location = new System.Drawing.Point(3, 123);
             this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(109, 13);
+            this.label86.Size = new System.Drawing.Size(116, 13);
             this.label86.TabIndex = 183;
-            this.label86.Text = "Glyph of Mage Armor:";
-            this.toolTipMage.SetToolTip(this.label86, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label86.Text = "Glyph of Mage Armor: *";
+            this.toolTipMage.SetToolTip(this.label86, "Your Mage Armor spell grants an additional 20% mana regeneration while casting.");
             // 
             // checkBoxGlyphOfMageArmor
             // 
             this.checkBoxGlyphOfMageArmor.AutoSize = true;
             this.checkBoxGlyphOfMageArmor.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfMageArmor", true));
-            this.checkBoxGlyphOfMageArmor.Location = new System.Drawing.Point(140, 123);
+            this.checkBoxGlyphOfMageArmor.Location = new System.Drawing.Point(146, 123);
             this.checkBoxGlyphOfMageArmor.Name = "checkBoxGlyphOfMageArmor";
             this.checkBoxGlyphOfMageArmor.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfMageArmor.TabIndex = 182;
@@ -2246,16 +2260,16 @@
             this.label87.AutoSize = true;
             this.label87.Location = new System.Drawing.Point(3, 103);
             this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(104, 13);
+            this.label87.Size = new System.Drawing.Size(111, 13);
             this.label87.TabIndex = 181;
-            this.label87.Text = "Glyph of Mana Gem:";
-            this.toolTipMage.SetToolTip(this.label87, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label87.Text = "Glyph of Mana Gem: *";
+            this.toolTipMage.SetToolTip(this.label87, "Increases the mana recieved from using a mana gem by 10%.");
             // 
             // checkBoxGlyphOfManaGem
             // 
             this.checkBoxGlyphOfManaGem.AutoSize = true;
             this.checkBoxGlyphOfManaGem.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfManaGem", true));
-            this.checkBoxGlyphOfManaGem.Location = new System.Drawing.Point(140, 103);
+            this.checkBoxGlyphOfManaGem.Location = new System.Drawing.Point(146, 103);
             this.checkBoxGlyphOfManaGem.Name = "checkBoxGlyphOfManaGem";
             this.checkBoxGlyphOfManaGem.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfManaGem.TabIndex = 180;
@@ -2266,16 +2280,16 @@
             this.label88.AutoSize = true;
             this.label88.Location = new System.Drawing.Point(3, 83);
             this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(130, 13);
+            this.label88.Size = new System.Drawing.Size(137, 13);
             this.label88.TabIndex = 179;
-            this.label88.Text = "Glyph of Water Elemental:";
-            this.toolTipMage.SetToolTip(this.label88, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label88.Text = "Glyph of Water Elemental: *";
+            this.toolTipMage.SetToolTip(this.label88, "Reduces the cooldown of your Summon Water Elemental spell by 30 sec.");
             // 
             // checkBoxGlyphOfWaterElemental
             // 
             this.checkBoxGlyphOfWaterElemental.AutoSize = true;
             this.checkBoxGlyphOfWaterElemental.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfWaterElemental", true));
-            this.checkBoxGlyphOfWaterElemental.Location = new System.Drawing.Point(140, 83);
+            this.checkBoxGlyphOfWaterElemental.Location = new System.Drawing.Point(146, 83);
             this.checkBoxGlyphOfWaterElemental.Name = "checkBoxGlyphOfWaterElemental";
             this.checkBoxGlyphOfWaterElemental.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfWaterElemental.TabIndex = 178;
@@ -2286,16 +2300,16 @@
             this.label84.AutoSize = true;
             this.label84.Location = new System.Drawing.Point(3, 63);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(134, 13);
+            this.label84.Size = new System.Drawing.Size(141, 13);
             this.label84.TabIndex = 177;
-            this.label84.Text = "Glyph of Arcane Explosion:";
-            this.toolTipMage.SetToolTip(this.label84, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label84.Text = "Glyph of Arcane Explosion: *";
+            this.toolTipMage.SetToolTip(this.label84, "Reduces mana cost of Arcane Explosion by 10%.");
             // 
             // checkBoxGlyphOfArcaneExplosion
             // 
             this.checkBoxGlyphOfArcaneExplosion.AutoSize = true;
             this.checkBoxGlyphOfArcaneExplosion.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneExplosion", true));
-            this.checkBoxGlyphOfArcaneExplosion.Location = new System.Drawing.Point(140, 63);
+            this.checkBoxGlyphOfArcaneExplosion.Location = new System.Drawing.Point(146, 63);
             this.checkBoxGlyphOfArcaneExplosion.Name = "checkBoxGlyphOfArcaneExplosion";
             this.checkBoxGlyphOfArcaneExplosion.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfArcaneExplosion.TabIndex = 176;
@@ -2306,16 +2320,17 @@
             this.label83.AutoSize = true;
             this.label83.Location = new System.Drawing.Point(3, 43);
             this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(133, 13);
+            this.label83.Size = new System.Drawing.Size(140, 13);
             this.label83.TabIndex = 175;
-            this.label83.Text = "Glyph of Improved Scorch:";
-            this.toolTipMage.SetToolTip(this.label83, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label83.Text = "Glyph of Improved Scorch: *";
+            this.toolTipMage.SetToolTip(this.label83, "The Improved Scorch talent now generates 3 applications of the Improved Scorch ef" +
+                    "fect each time Scorch is cast.");
             // 
             // checkBoxGlyphOfImprovedScorch
             // 
             this.checkBoxGlyphOfImprovedScorch.AutoSize = true;
             this.checkBoxGlyphOfImprovedScorch.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfImprovedScorch", true));
-            this.checkBoxGlyphOfImprovedScorch.Location = new System.Drawing.Point(140, 43);
+            this.checkBoxGlyphOfImprovedScorch.Location = new System.Drawing.Point(146, 43);
             this.checkBoxGlyphOfImprovedScorch.Name = "checkBoxGlyphOfImprovedScorch";
             this.checkBoxGlyphOfImprovedScorch.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfImprovedScorch.TabIndex = 174;
@@ -2326,16 +2341,16 @@
             this.label82.AutoSize = true;
             this.label82.Location = new System.Drawing.Point(3, 23);
             this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(92, 13);
+            this.label82.Size = new System.Drawing.Size(99, 13);
             this.label82.TabIndex = 173;
-            this.label82.Text = "Glyph of Frostbolt:";
-            this.toolTipMage.SetToolTip(this.label82, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label82.Text = "Glyph of Frostbolt: *";
+            this.toolTipMage.SetToolTip(this.label82, "Increases the damage dealt by Frostbolt by 5%, but removes the slowing effect.");
             // 
             // checkBoxGlyphOfFrostbolt
             // 
             this.checkBoxGlyphOfFrostbolt.AutoSize = true;
             this.checkBoxGlyphOfFrostbolt.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFrostbolt", true));
-            this.checkBoxGlyphOfFrostbolt.Location = new System.Drawing.Point(140, 23);
+            this.checkBoxGlyphOfFrostbolt.Location = new System.Drawing.Point(146, 23);
             this.checkBoxGlyphOfFrostbolt.Name = "checkBoxGlyphOfFrostbolt";
             this.checkBoxGlyphOfFrostbolt.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfFrostbolt.TabIndex = 172;
@@ -2346,16 +2361,17 @@
             this.label81.AutoSize = true;
             this.label81.Location = new System.Drawing.Point(3, 3);
             this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(85, 13);
+            this.label81.Size = new System.Drawing.Size(92, 13);
             this.label81.TabIndex = 171;
-            this.label81.Text = "Glyph of Fireball:";
-            this.toolTipMage.SetToolTip(this.label81, "Optimize between mage and molten armor. Disable to improve performance.");
+            this.label81.Text = "Glyph of Fireball: *";
+            this.toolTipMage.SetToolTip(this.label81, "Increases the critical strike chance of Fireball by 5%, but removes the damage ov" +
+                    "er time effect.");
             // 
             // checkBoxGlyphOfFireball
             // 
             this.checkBoxGlyphOfFireball.AutoSize = true;
             this.checkBoxGlyphOfFireball.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfFireball", true));
-            this.checkBoxGlyphOfFireball.Location = new System.Drawing.Point(140, 3);
+            this.checkBoxGlyphOfFireball.Location = new System.Drawing.Point(146, 3);
             this.checkBoxGlyphOfFireball.Name = "checkBoxGlyphOfFireball";
             this.checkBoxGlyphOfFireball.Size = new System.Drawing.Size(15, 14);
             this.checkBoxGlyphOfFireball.TabIndex = 170;
@@ -2592,22 +2608,10 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // textBoxHolyResist
+            // calculationOptionsMageBindingSource
             // 
-            this.textBoxHolyResist.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "HolyResist", true));
-            this.textBoxHolyResist.Location = new System.Drawing.Point(112, 395);
-            this.textBoxHolyResist.Name = "textBoxHolyResist";
-            this.textBoxHolyResist.Size = new System.Drawing.Size(75, 20);
-            this.textBoxHolyResist.TabIndex = 185;
-            // 
-            // label97
-            // 
-            this.label97.AutoSize = true;
-            this.label97.Location = new System.Drawing.Point(0, 398);
-            this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(87, 13);
-            this.label97.TabIndex = 184;
-            this.label97.Text = "Holy Resist (0-1):";
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2620,7 +2624,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2633,6 +2636,7 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
