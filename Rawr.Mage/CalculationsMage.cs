@@ -1961,5 +1961,17 @@ namespace Rawr.Mage
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + + stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating;
             return (mageStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
         }
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        {
+            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot);
+        }
     }
 }
