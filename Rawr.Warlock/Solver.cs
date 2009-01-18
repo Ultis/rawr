@@ -105,9 +105,6 @@ namespace Rawr.Warlock
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
             HitChance = PlayerStats.SpellHit * 100f + CalculationOptions.TargetHit;
-            //Change to Lock hit talents
-            /*            if (!character.ActiveBuffsConflictingBuffContains("Spell Hit Chance Taken"))
-                            HitChance += character.PriestTalents.Misery * 1f;*/
             if (character.Race == Character.CharacterRace.Draenei && !character.ActiveBuffsContains("Heroic Presence"))
                 HitChance += 1;
             HitChance = (float)Math.Min(100f, HitChance);
@@ -171,15 +168,18 @@ namespace Rawr.Warlock
         protected float AfflictionHitChance { get; set; }
         protected float DestructionHitChance { get; set; }
         protected Spell SB { get; set; }
-        protected Spell INC { get; set; }
+        protected Spell Inc { get; set; }
+        protected Spell Sb { get; set; }
+        protected Spell CB { get; set; }
+        protected Spell Cor { get; set; }
+        protected Spell Ha { get; set; }
+        protected Spell DL { get; set; }
+        protected Spell Sf { get; set; }
+        protected Spell SP { get; set; }
+        protected Spell Con { get; set; }
+        protected Spell LT { get; set; }
 
-        protected Spell SWP { get; set; }
-        protected Spell MF { get; set; }
-        protected Spell VE { get; set; }
-        protected Spell SWD { get; set; }
-        protected Spell MB { get; set; }
-        protected Spell DP { get; set; }
-        protected bool bPnS { get; set; }
+        protected bool bEA { get; set; }
 
         public SolverShadow(Stats BasicStats, Character character)
             : base(BasicStats, character)
@@ -192,23 +192,29 @@ namespace Rawr.Warlock
             }
 
             SB = GetSpellByName("Shadow Bolt");
-            INC = GetSpellByName("Incinerate");
+            Inc = GetSpellByName("Incinerate");
 
-            if (VE != null)
+            Sb = GetSpellByName("Shadowburn");
+            CB = GetSpellByName("Chaos Bolt");
+            Cor = GetSpellByName("Corruption");
+            Ha = GetSpellByName("Haunt");
+            DL = GetSpellByName("Drain Life");
+            Sf = GetSpellByName("Shadowfury");
+            SP = GetSpellByName("Searing Pain");
+            Con = GetSpellByName("Conflagrate");
+            LT = SpellFactory.CreateSpell("Life Tap", PlayerStats, character);
+
+//Is this needed in any way?
+            /*if (SB != null)
             {   // Functional yet abysmal method of moving VE to bottom of priority.
-                SpellPriority.Remove(VE);
-                SpellPriority.Add(VE);
-            }
+                SpellPriority.Remove(SB);
+                SpellPriority.Add(SB);
+            }*/
 
-            // With Pain and Suffering, Mind Flay has a 33/66/100% chance to refresh SW:P.
-            // This mean we cast SW:P once, and reap the benefits later. Only use PnS if SWP is in the prio list.
-            bPnS = (SWP != null) && (character.PriestTalents.PainAndSuffering > 0);
-            if (bPnS)
-            {   // Move SW:Pain to the end of the list in a very non-fashionable and hacky way.
-                SpellPriority.Remove(SWP);
-                SpellPriority.Add(SWP);
-            }
-
+            // With Everlasting Affliction, Haunt and Drain Life have a 20/40/60/80/100% chance to refresh Corruption.
+            // This mean we cast Corruption once, and reap the benefits later. Only use EA if Cor is in the prio list.
+//different talent levels not implemented
+            bEA = (Cor != null) && (character.WarlockTalents.EverlastingAffliction > 0);
 
             Name = "User defined";
             Rotation = "Priority Based:";
@@ -229,18 +235,12 @@ namespace Rawr.Warlock
             int sequence = SpellPriority.Count - 1;
             List<Spell> CastList = new List<Spell>();
 
-            // Initial SW:Pain application
-            if (bPnS)
+            // Initial Corruption application
+            if (bEA)
             {
-                SWP.SpellStatistics.CooldownReset = timer + SWP.DebuffDuration;
-                SWP.SpellStatistics.HitCount++;
-                SWP.SpellStatistics.ManaUsed = SWP.ManaCost;
-            }
-
-            if (VE != null)
-            {
-                VE.SpellStatistics.HitCount = CalculationOptions.FightLength;
-                VE.SpellStatistics.ManaUsed = CalculationOptions.FightLength * VE.ManaCost;
+                Cor.SpellStatistics.CooldownReset = timer + Cor.DebuffDuration;
+                Cor.SpellStatistics.HitCount++;
+                Cor.SpellStatistics.ManaUsed = Cor.ManaCost;
             }
 
             #region Pass 1: Create the cast sequence
@@ -258,9 +258,9 @@ namespace Rawr.Warlock
                 timer += CalculationOptions.Delay / 1000f;
                 spell.SpellStatistics.HitCount++;
 
-                if (bPnS && spell == MF)
-                    SWP.SpellStatistics.CooldownReset = timer + SWP.DebuffDuration;
-                else if (spell.DebuffDuration > 0f || spell.Cooldown > 0f)
+                if (bEA && (spell == Ha || spell == DL))
+                    Cor.SpellStatistics.CooldownReset = timer + Cor.DebuffDuration;
+                if (spell.DebuffDuration > 0f || spell.Cooldown > 0f)
                     spell.SpellStatistics.CooldownReset = timer + (spell.DebuffDuration > spell.Cooldown ? spell.DebuffDuration : spell.Cooldown);
 
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
@@ -287,11 +287,9 @@ namespace Rawr.Warlock
                 timer += (spell.CastTime > 0) ? spell.CastTime : spell.GlobalCooldown;
                 timer += CalculationOptions.Delay / 1000f;
                 CastsPerSecond++;
-//                HitsPerSecond += AfflictionHitChance / 100f;
-                if (spell.SpellTree == SpellTree.Affliction) HitsPerSecond += AfflictionHitChance;
-                else if (spell.SpellTree == SpellTree.Destruction) HitsPerSecond += DestructionHitChance;
+                if (spell.SpellTree == SpellTree.Affliction) HitsPerSecond += AfflictionHitChance / 100f;
+                else if (spell.SpellTree == SpellTree.Destruction) HitsPerSecond += DestructionHitChance / 100f;
                 else HitsPerSecond++;
-//                if (spell == SWD || spell == MB)
                 if (spell.CritChance > 0)
                     CritsPerSecond++;
                 //if (spell == MF)
@@ -300,20 +298,6 @@ namespace Rawr.Warlock
             CastsPerSecond /= timer;
             CritsPerSecond /= timer;
             HitsPerSecond /= timer;
-
-            // Deal with Spirit Tap
-            float STCrit = 0f;
-            if (MB != null)
-                STCrit += MB.CritChance;
-            if (SWD != null)
-                STCrit += SWD.CritChance;
-            if (MB != null && SWD != null)
-                STCrit /= 2;
-            float ImpSTUptime = CritsPerSecond * STCrit * 8f;    // Spirit Tap lasts 8 seconds. Very little overlap time due to CD on MB/SW:D
-            float NewSpirit = simStats.Spirit * ImpSTUptime * character.PriestTalents.ImprovedSpiritTap * 0.05f;
-            float NewSPP = NewSpirit * simStats.SpellDamageFromSpiritPercentage;
-            simStats.Spirit += NewSpirit;
-            simStats.SpellPower += NewSPP;
 
             // Deal with Twinkets
             // HASTE IS NOT REEVALUATED SO DONT EVEN TRY.
@@ -407,12 +391,12 @@ namespace Rawr.Warlock
             }
             #endregion
 
-            DPS = OverallDamage / timer + (bPnS ? SWP.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
+            DPS = OverallDamage / timer + (bEA ? Cor.DpS * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) : 0);
 
             // Finalize Trinkets
             if (simStats.TimbalsProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
-                int dots = (MF != null) ? 3 : 0;
+                int dots = 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Timbal = new TimbalProc(simStats, character);
@@ -421,7 +405,7 @@ namespace Rawr.Warlock
             }
             if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
-                int dots = (MF != null) ? 3 : 0;
+                int dots = 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Extract = new ExtractProc(simStats, character);
@@ -444,12 +428,6 @@ namespace Rawr.Warlock
             float MPS = OverallMana / timer;
             float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
-            tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalculationOptions.FSRRatio / 100f);
-            if (tmpregen > 0f)
-            {
-                ManaSources.Add(new ManaSource("Meditation", tmpregen));
-                regen += tmpregen;
-            }
             tmpregen = SpiritRegen * (1f - CalculationOptions.FSRRatio / 100f);
             if (tmpregen > 0f)
             {
@@ -459,10 +437,29 @@ namespace Rawr.Warlock
             tmpregen = simStats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
             regen += tmpregen;
-            tmpregen = SpiritRegen * character.PriestTalents.ImprovedSpiritTap * 0.1f * ImpSTUptime;
+            tmpregen = (CalculationOptions.Pet == "Felhunter" ? 1 : 0) * (CalculationOptions.PetSacrificed ? 1 : 0) * simStats.Mana * 0.03f / 4f;
             if (tmpregen > 0f)
             {
-                ManaSources.Add(new ManaSource("Imp. Spirit Tap", tmpregen));
+                ManaSources.Add(new ManaSource("Sacrificed Felhunter", tmpregen));
+                regen += tmpregen;
+            }
+            tmpregen = (CalculationOptions.Pet == "Felguard" ? 1 : 0) * (CalculationOptions.PetSacrificed ? 1 : 0) * simStats.Mana * 0.02f / 4f;
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("Sacrificed Felguard", tmpregen));
+                regen += tmpregen;
+            }
+            tmpregen = simStats.Mana * character.WarlockTalents.ImprovedSoulLeech * 0.3f * 0.02f *
+                ( (SB != null ? SB.SpellStatistics.HitCount : 0)
+                + (Sb != null ? Sb.SpellStatistics.HitCount : 0)
+                + (CB != null ? CB.SpellStatistics.HitCount : 0)
+                + (Sf != null ? Sf.SpellStatistics.HitCount : 0)
+                + (Inc != null ? Inc.SpellStatistics.HitCount : 0)
+                + (SP != null ? SP.SpellStatistics.HitCount : 0)
+                + (Con != null ? Con.SpellStatistics.HitCount : 0));
+            if (tmpregen > 0f)
+            {
+                ManaSources.Add(new ManaSource("Imp. Soul Leech", tmpregen));
                 regen += tmpregen;
             }
             tmpregen = simStats.Mana / (CalculationOptions.FightLength * 60f);
@@ -494,6 +491,21 @@ namespace Rawr.Warlock
                 Rotation += "\r\n- Used Mana Potion";
             }
 
+            if (MPS > regen)
+            {   // Not enough mana, so use Life Tap, remove DPS worth of Life Tap cast time of the filler spell.
+                tmpregen = 0;
+                int numberOfTaps = 0;
+                while (MPS > regen + tmpregen)
+                {
+                    tmpregen -= LT.ManaCost / (CalculationOptions.FightLength * 60f);
+                    numberOfTaps++;
+                }
+                ManaSources.Add(new ManaSource("Life Tap", tmpregen));
+                regen += tmpregen;
+                SustainDPS -= SB.DpS * numberOfTaps * LT.CastTime;
+                Rotation += string.Format("\r\n- Used {0} Life Taps", numberOfTaps);
+            }
+
             /*            if (MPS > regen)
                         {   // Not enough mana, use Shadowfiend
                             float sf_rat = (CalculationOptions.Shadowfiend / 100f) / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
@@ -503,16 +515,6 @@ namespace Rawr.Warlock
                             SustainDPS -= MF.DpS * sf_rat;
                             Rotation += "\r\n- Used Shadowfiend";
                         }*/
-
-            if (MPS > regen && character.PriestTalents.Dispersion > 0)
-            {   // Not enough mana, so eat a Dispersion, remove DPS worth of 6 seconds of mindflay.
-                float disp_rat = 6f / (60f * 3f);
-                tmpregen = simStats.Mana * 0.06f * disp_rat;
-                ManaSources.Add(new ManaSource("Dispersion", tmpregen));
-                regen += tmpregen;
-                SustainDPS -= MF.DpS * disp_rat;
-                Rotation += "\r\n- Used Dispersion";
-            }
 
             DPS *= (1f - CalculationOptions.TargetLevel * 0.02f); // Level based Partial resists.
             SustainDPS *= (1f - CalculationOptions.TargetLevel * 0.02f);

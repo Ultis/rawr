@@ -446,9 +446,9 @@ namespace Rawr.Warlock
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
+                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating + statsTotal.WarlockGrandFirestone * 49) / 100f
                 + 0.01701f;
-            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
+            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating + statsTotal.WarlockGrandSpellstone * 60) / 100f;
             statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
             if (statsTotal.WarlockFelArmor > 0)
             {
@@ -462,7 +462,7 @@ namespace Rawr.Warlock
                     statsTotal.Hp5 += statsTotal.Health * 0.006f;
                 }
             }
-            if (statsTotal.WarlockDemonArmor > 0)
+            else if (statsTotal.WarlockDemonArmor > 0)
             {
                 statsTotal.Armor += 950;
                 statsTotal.HealingReceivedMultiplier += 0.2f;
@@ -564,13 +564,8 @@ namespace Rawr.Warlock
                 + stats.BonusFireDamageMultiplier
                 + stats.WarlockFelArmor
                 + stats.WarlockDemonArmor
-//add talent/glyph modifiers or is it set bonuses?
-/*                + stats.BonusDiseaseDamageMultiplier
-                + stats.SWPDurationIncrease
-                + stats.BonusMindBlastMultiplier
-                + stats.MindBlastCostReduction
-                + stats.ShadowWordDeathCritIncrease
-                + stats.WeakenedSoulDurationDecrease*/
+                + stats.WarlockGrandSpellstone
+                + stats.WarlockGrandFirestone
                 + stats.ManaRestoreOnCast_5_15
                 + stats.ManaRestoreFromMaxManaPerHit
                 + stats.SpellPowerFor15SecOnUse90Sec

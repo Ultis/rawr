@@ -21,11 +21,14 @@ namespace Rawr.Warlock
             character = _character;
 
             InitializeComponent();
+            foreach (string spell in spells)
+            {
+                if (Spell.SpellList.Contains(spell))
+                    lsSpellPriority.Items.Add(spell);
+            }
             foreach (string spell in Spell.SpellList)
             {
-                if (spells.Contains(spell))
-                    lsSpellPriority.Items.Add(spell);
-                else
+                if (!spells.Contains(spell))
                     cmbSpells.Items.Add(spell);
             }
         }

@@ -37,13 +37,14 @@
             this.trkFSR = new System.Windows.Forms.TrackBar();
             this.trkDelay = new System.Windows.Forms.TrackBar();
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
+            this.chbUseDoomguard = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblFSR = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
+            this.cbManaAmt = new System.Windows.Forms.ComboBox();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
@@ -54,6 +55,9 @@
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriopity = new System.Windows.Forms.ListBox();
             this.tabPet = new System.Windows.Forms.TabPage();
+            this.chbPetSacrificed = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbPet = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -64,6 +68,7 @@
             this.tabFight.SuspendLayout();
             this.tabChar.SuspendLayout();
             this.gbSpellPriority.SuspendLayout();
+            this.tabPet.SuspendLayout();
             this.SuspendLayout();
             // 
             // trkJoW
@@ -134,6 +139,18 @@
             this.toolTip1.SetToolTip(this.trkSurvivability, "Tell Rawr how much you value your life. Use 0-5% for PvE, 10-15% for PvP");
             this.trkSurvivability.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
+            // chbUseDoomguard
+            // 
+            this.chbUseDoomguard.AutoSize = true;
+            this.chbUseDoomguard.Location = new System.Drawing.Point(33, 73);
+            this.chbUseDoomguard.Name = "chbUseDoomguard";
+            this.chbUseDoomguard.Size = new System.Drawing.Size(103, 17);
+            this.chbUseDoomguard.TabIndex = 66;
+            this.chbUseDoomguard.Text = "Use Doomguard";
+            this.toolTip1.SetToolTip(this.chbUseDoomguard, "Check if you want to use a Doomguard during the last minute of the fight");
+            this.chbUseDoomguard.UseVisualStyleBackColor = true;
+            this.chbUseDoomguard.CheckedChanged += new System.EventHandler(this.chbUseDoomguard_CheckedChanged);
+            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabFight);
@@ -153,7 +170,7 @@
             this.tabFight.Controls.Add(this.lblJoW);
             this.tabFight.Controls.Add(this.label4);
             this.tabFight.Controls.Add(this.trkReplenishment);
-            this.tabFight.Controls.Add(this.cmbManaAmt);
+            this.tabFight.Controls.Add(this.cbManaAmt);
             this.tabFight.Controls.Add(this.lblReplenishment);
             this.tabFight.Controls.Add(this.trkFightLength);
             this.tabFight.Controls.Add(this.label15);
@@ -190,12 +207,11 @@
             // lblJoW
             // 
             this.lblJoW.AutoSize = true;
-            this.lblJoW.Location = new System.Drawing.Point(-1, 258);
+            this.lblJoW.Location = new System.Drawing.Point(6, 258);
             this.lblJoW.Name = "lblJoW";
             this.lblJoW.Size = new System.Drawing.Size(123, 13);
             this.lblJoW.TabIndex = 65;
             this.lblJoW.Text = "% Judgement of Wisdom";
-            this.lblJoW.Click += new System.EventHandler(this.lblJoW_Click);
             // 
             // label4
             // 
@@ -206,22 +222,22 @@
             this.label4.TabIndex = 58;
             this.label4.Text = "Mana Potions:";
             // 
-            // cmbManaAmt
+            // cbManaAmt
             // 
-            this.cmbManaAmt.DisplayMember = "2400";
-            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbManaAmt.Items.AddRange(new object[] {
+            this.cbManaAmt.DisplayMember = "2400";
+            this.cbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbManaAmt.Items.AddRange(new object[] {
             "(None) 0",
             "(Major) 1350-2250, Avg 1800",
             "(Mad) 1650-2750, Avg 2200",
             "(Super) 1800-3000, Avg 2400",
             "(Runic) 4200-4400, Avg 4300"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(87, 41);
-            this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(192, 21);
-            this.cmbManaAmt.TabIndex = 57;
-            this.cmbManaAmt.ValueMember = "2400";
-            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged_1);
+            this.cbManaAmt.Location = new System.Drawing.Point(87, 41);
+            this.cbManaAmt.Name = "cbManaAmt";
+            this.cbManaAmt.Size = new System.Drawing.Size(192, 21);
+            this.cbManaAmt.TabIndex = 57;
+            this.cbManaAmt.ValueMember = "2400";
+            this.cbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             // 
             // lblReplenishment
             // 
@@ -318,6 +334,10 @@
             // 
             // tabPet
             // 
+            this.tabPet.Controls.Add(this.chbUseDoomguard);
+            this.tabPet.Controls.Add(this.chbPetSacrificed);
+            this.tabPet.Controls.Add(this.label1);
+            this.tabPet.Controls.Add(this.cbPet);
             this.tabPet.Location = new System.Drawing.Point(4, 22);
             this.tabPet.Name = "tabPet";
             this.tabPet.Padding = new System.Windows.Forms.Padding(3);
@@ -325,6 +345,43 @@
             this.tabPet.TabIndex = 3;
             this.tabPet.Text = "Pet";
             this.tabPet.UseVisualStyleBackColor = true;
+            // 
+            // chbPetSacrificed
+            // 
+            this.chbPetSacrificed.AutoSize = true;
+            this.chbPetSacrificed.Location = new System.Drawing.Point(33, 50);
+            this.chbPetSacrificed.Name = "chbPetSacrificed";
+            this.chbPetSacrificed.Size = new System.Drawing.Size(90, 17);
+            this.chbPetSacrificed.TabIndex = 65;
+            this.chbPetSacrificed.Text = "Pet sacrificed";
+            this.chbPetSacrificed.UseVisualStyleBackColor = true;
+            this.chbPetSacrificed.CheckedChanged += new System.EventHandler(this.chbPetSacrificed_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(30, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.TabIndex = 62;
+            this.label1.Text = "Used Pet";
+            // 
+            // cbPet
+            // 
+            this.cbPet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPet.FormattingEnabled = true;
+            this.cbPet.Items.AddRange(new object[] {
+            "Imp",
+            "Felhunter",
+            "Felguard",
+            "Succubus",
+            "Voidwalker",
+            "Doomguard"});
+            this.cbPet.Location = new System.Drawing.Point(87, 15);
+            this.cbPet.Name = "cbPet";
+            this.cbPet.Size = new System.Drawing.Size(151, 21);
+            this.cbPet.TabIndex = 61;
+            this.cbPet.SelectedIndexChanged += new System.EventHandler(this.cbPet_SelectedIndexChanged);
             // 
             // CalculationOptionsPanelWarlock
             // 
@@ -346,6 +403,8 @@
             this.tabChar.ResumeLayout(false);
             this.tabChar.PerformLayout();
             this.gbSpellPriority.ResumeLayout(false);
+            this.tabPet.ResumeLayout(false);
+            this.tabPet.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -361,7 +420,7 @@
         private System.Windows.Forms.Label lblJoW;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TrackBar trkReplenishment;
-        private System.Windows.Forms.ComboBox cmbManaAmt;
+        private System.Windows.Forms.ComboBox cbManaAmt;
         private System.Windows.Forms.Label lblReplenishment;
         private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.Label label15;
@@ -376,6 +435,10 @@
         private System.Windows.Forms.GroupBox gbSpellPriority;
         private System.Windows.Forms.Button bChangePriority;
         private System.Windows.Forms.ListBox lsSpellPriopity;
+        private System.Windows.Forms.ComboBox cbPet;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chbUseDoomguard;
+        private System.Windows.Forms.CheckBox chbPetSacrificed;
     }
 }
 

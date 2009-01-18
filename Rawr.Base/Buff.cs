@@ -838,6 +838,20 @@ namespace Rawr
                 Stats = { WarlockDemonArmor = 1f },
                 ConflictingBuffs = new List<string>(new string[] { "Warlock Class Armor" })
             });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Grand Spellstone",
+                Group = "Class Buffs",
+                Stats = { WarlockGrandSpellstone = 1f },
+                ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Grand Firestone",
+                Group = "Class Buffs",
+                Stats = { WarlockGrandFirestone = 1f },
+                ConflictingBuffs = new List<string>(new string[] { "Warlock Weapon Enchant" })
+            });
             #endregion
 
             #region Racial Buffs

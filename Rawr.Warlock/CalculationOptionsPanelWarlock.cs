@@ -44,10 +44,10 @@ namespace Rawr.Warlock
             trkSurvivability.Value = (int)calcOpts.Survivability;
             lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
             
-            cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
+            cbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
             if (calcOpts.SpellPriority == null)
-                calcOpts.SpellPriority = new List<string>(Spell.ShadowSpellList);
+                calcOpts.SpellPriority = new List<string>(Spell.SpellList);
             lsSpellPriopity.Items.Clear();
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
             
@@ -59,7 +59,7 @@ namespace Rawr.Warlock
             if (!loading)
             {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.ManaPot = cmbManaAmt.SelectedIndex;
+                calcOpts.ManaPot = cbManaAmt.SelectedIndex;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -147,13 +147,34 @@ namespace Rawr.Warlock
             }
         }
 
-        private void cmbManaAmt_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void cbPet_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.Pet = (String)cbPet.SelectedItem;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
-        private void lblJoW_Click(object sender, EventArgs e)
+        private void chbUseDoomguard_CheckedChanged(object sender, EventArgs e)
         {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.UseDoomguard = chbUseDoomguard.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbPetSacrificed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.PetSacrificed = chbPetSacrificed.Checked;
+                Character.OnCalculationsInvalidated();
+            }
 
         }
     }
@@ -164,10 +185,12 @@ namespace Rawr.Warlock
         public float FightLength { get; set; }
         public float FSRRatio { get; set; }
         public float Delay { get; set; }
-        public float Shadowfiend { get; set; }
         public float Replenishment { get; set; }
         public float JoW { get; set; }
         public float Survivability { get; set; }
+        public String Pet { get; set; }
+        public bool PetSacrificed { get; set; }
+        public bool UseDoomguard { get; set; }
 
         public List<string> SpellPriority { get; set; }
 
@@ -184,7 +207,6 @@ namespace Rawr.Warlock
             FightLength = 5f;
             FSRRatio = 100f;
             Delay = 100f;
-            Shadowfiend = 100f;
             Replenishment = 100f;
             JoW = 100f;
             Survivability = 2f;
