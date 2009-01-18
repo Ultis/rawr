@@ -128,6 +128,8 @@ namespace Rawr.Mage
         public bool DrumsOfBattle { get; set; }
         public bool Combustion { get; set; }
         public bool WaterElemental { get; set; }
+        public bool Frozen { get; set; }
+        public string MageArmor { get; set; }
 
         public Cooldown Cooldown { get; set; }
 
@@ -205,7 +207,27 @@ namespace Rawr.Mage
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect)
+        private CastingState frozenState;
+        public CastingState FrozenState
+        {
+            get
+            {
+                if (frozenState == null)
+                {
+                    if (Frozen)
+                    {
+                        frozenState = this;
+                    }
+                    else
+                    {
+                        frozenState = new CastingState(calculations, BaseStats, CalculationOptions, MageArmor, calculations.Character, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, true);
+                    }
+                }
+                return frozenState;
+            }
+        }
+
+        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool frozen)
         {
             MageTalents = calculations.Character.MageTalents;
             BaseStats = calculations.BaseStats; // == characterStats
@@ -327,6 +349,7 @@ namespace Rawr.Mage
                     break;
             }
             SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0));
+            if (frozen) SpellCrit += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
             SpellHit = characterStats.HitRating * levelScalingFactor / 800f + characterStats.SpellHit;
 
             int targetLevel = calculationOptions.TargetLevel;
@@ -383,6 +406,8 @@ namespace Rawr.Mage
             DrumsOfBattle = drums;
             WaterElemental = waterElemental;
             ManaGemEffect = manaGemEffect;
+            Frozen = frozen;
+            MageArmor = armor;
 
             Cooldown c = Cooldown.None;
             if (arcanePower) c |= Cooldown.ArcanePower;
@@ -846,6 +871,12 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ABAM3CCAM:
                     s = new ABAM3CCAM(this);
+                    break;
+                case SpellId.IceLance:
+                    s = new IceLance(this);
+                    break;
+                case SpellId.FrBFBIL:
+                    s = new FrBFBIL(this);
                     break;
                 case SpellId.ArcaneExplosion:
                     s = new ArcaneExplosion(this);

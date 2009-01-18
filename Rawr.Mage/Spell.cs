@@ -137,6 +137,7 @@ namespace Rawr.Mage
         FrB2ABar,
         ScLBPyro,
         FrBFB,
+        FrBFBIL,
         FBSc,
         FBFBlast,
         FBPyro,
@@ -148,6 +149,7 @@ namespace Rawr.Mage
         FBScLBPyro,
         FFBScLBPyro,
         Slow,
+        IceLance,
         ABABarSlow,
         FBABarSlow,
         FrBABarSlow,
@@ -1443,6 +1445,38 @@ namespace Rawr.Mage
             int ImprovedConeOfCold = castingState.MageTalents.ImprovedConeOfCold;
             SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0)) * (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
+            CalculateDerivedStats(castingState);
+        }
+    }
+
+    public class IceLance : BaseSpell
+    {
+        public static SpellData[] SpellData = new SpellData[11];
+        static IceLance()
+        {
+            SpellData[0] = new SpellData() { Cost = (int)(0.07 * BaseMana[70]), MinDamage = 161, MaxDamage = 187, SpellDamageCoefficient = 0.1429f };
+            SpellData[1] = new SpellData() { Cost = (int)(0.07 * BaseMana[71]), MinDamage = 161, MaxDamage = 187, SpellDamageCoefficient = 0.1429f };
+            SpellData[2] = new SpellData() { Cost = (int)(0.07 * BaseMana[72]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[3] = new SpellData() { Cost = (int)(0.07 * BaseMana[73]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[4] = new SpellData() { Cost = (int)(0.07 * BaseMana[74]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[5] = new SpellData() { Cost = (int)(0.07 * BaseMana[75]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[6] = new SpellData() { Cost = (int)(0.07 * BaseMana[76]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[7] = new SpellData() { Cost = (int)(0.07 * BaseMana[77]), MinDamage = 182, MaxDamage = 210, SpellDamageCoefficient = 0.1429f };
+            SpellData[8] = new SpellData() { Cost = (int)(0.07 * BaseMana[78]), MinDamage = 221, MaxDamage = 255, SpellDamageCoefficient = 0.1429f };
+            SpellData[9] = new SpellData() { Cost = (int)(0.07 * BaseMana[79]), MinDamage = 221, MaxDamage = 255, SpellDamageCoefficient = 0.1429f };
+            SpellData[10] = new SpellData() { Cost = (int)(0.07 * BaseMana[80]), MinDamage = 223, MaxDamage = 258, SpellDamageCoefficient = 0.1429f };
+        }
+        private static SpellData GetMaxRankSpellData(CalculationOptionsMage options)
+        {
+            return SpellData[options.PlayerLevel - 70];
+        }
+
+        public IceLance(CastingState castingState)
+            : base("Ice Lance", false, false, true, false, 30, 0, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
+        {
+            base.Calculate(castingState);
+            SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
+            if (castingState.Frozen) SpellModifier *= 3;
             CalculateDerivedStats(castingState);
         }
     }
@@ -5226,6 +5260,105 @@ namespace Rawr.Mage
         {
             FrB.AddSpellContribution(dict, (1 - K) * FrB.CastTime / CastTime * duration);
             chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+        }
+    }
+
+    class FrBFBIL : Spell
+    {
+        Spell FrB, FrBS, FB, FBS, ILS;
+        float KFrB, KFrBS, KFB, KFBS, KILS;
+
+        public FrBFBIL(CastingState castingState)
+        {
+            Name = "FrBFBIL";
+
+            // S00: FOF0, BF0
+            // FrB => S21    fof * bf
+            //        S20    fof * (1-bf)
+            //        S01    (1-fof) * bf
+            //        S00    (1-fof)*(1-bf)
+
+            // S01: FOF0, BF1
+            // FrB => S22    fof
+            //        S02    (1-fof)
+
+            // S02: FOF0, BF2
+            // FB => S00    1
+
+            // S10: FOF1, BF0
+            // FrBS-ILS => S12    fof * bf
+            //             S10    fof * (1-bf)
+            //             S02    (1-fof) * bf
+            //             S00    (1-fof)*(1-bf)
+
+            // S11: FOF1, BF1
+            // FrBS-FBS => S10    fof
+            //             S00    (1-fof)
+
+            // S12 = S11
+
+            // S20: FOF0, BF0
+            // FrBS => S21    fof * bf
+            //         S20    fof * (1-bf)
+            //         S11    (1-fof) * bf
+            //         S10    (1-fof)*(1-bf)
+
+            // S21: FOF0, BF1
+            // FrBS => S22    fof
+            //         S12    (1-fof)
+
+            // S22 = S21
+
+            // S00 = (1-fof)*(1-bf) * S00 + S02 + (1-fof)*(1-bf) * S10 + (1-fof) * S11
+            // S01 = (1-fof) * bf * S00
+            // S02 = (1-fof) * S01 + (1-fof) * bf * S10
+            // S10 = fof * (1-bf) * S10 + fof * S11 + (1-fof)*(1-bf) * S20
+            // S11 = fof * bf * S10 + (1-fof) * bf * S20 + (1-fof) * S21
+            // S20 = fof * (1-bf) * S00 + fof * (1-bf) * S20
+            // S21 = fof * bf * S00 + fof * S01 + fof * bf * S20 + fof * S21
+            // S00 + S01 + S02 + S10 + S11 + S20 + S21 = 1
+
+            // solved symbolically
+
+            float bf = 0.05f * castingState.MageTalents.BrainFreeze;
+            float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+
+            float div = ((bf * bf * bf - bf) * fof * fof * fof * fof + (3 * bf - bf * bf * bf) * fof * fof * fof + (bf * bf * bf - 4 * bf + 1) * fof * fof * fof + (-bf * bf * bf - 2 * bf * bf + 2 * bf) * fof - 2 * bf - 1);
+            float S00 = ((bf * bf - bf) * fof * fof * fof + (-bf * bf + 3 * bf - 1) * fof * fof + (2 - 2 * bf) * fof - 1) / div;
+            float S01 = -((bf * bf * bf - bf * bf) * fof * fof * fof * fof + (-2 * bf * bf * bf + 4 * bf * bf - bf) * fof * fof * fof + (bf * bf * bf - 5 * bf * bf + 3 * bf) * fof * fof + (2 * bf * bf - 3 * bf) * fof + bf) / div;
+            float S02 = ((bf * bf - bf) * fof * fof * fof * fof + (-bf * bf * bf - bf * bf + 3 * bf) * fof * fof * fof + (2 * bf * bf * bf - 4 * bf) * fof * fof + (3 * bf - bf * bf * bf) * fof - bf) / div;
+            float S10 = ((bf * bf - bf) * fof * fof * fof * fof + (3 * bf - 2 * bf * bf) * fof * fof * fof + (2 * bf * bf - 5 * bf + 1) * fof * fof + (-bf * bf + 2 * bf - 1) * fof) / div;
+            float S11 = ((bf * bf * bf - 2 * bf * bf + bf) * fof * fof * fof * fof + (-bf * bf * bf + 4 * bf * bf - 3 * bf) * fof * fof * fof + (5 * bf - 4 * bf * bf) * fof * fof + (bf * bf - 3 * bf) * fof) / div;
+            float S20 = -((bf * bf - bf) * fof * fof * fof + (-bf * bf + 2 * bf - 1) * fof * fof + (1 - bf) * fof) / div;
+            float S21 = ((bf * bf * bf - bf * bf) * fof * fof * fof * fof + (-bf * bf * bf + 3 * bf * bf - bf) * fof * fof * fof + (2 * bf - 3 * bf * bf) * fof * fof - 2 * bf * fof) / div;
+
+            KFrB = S00 + S01;
+            KFB = S02;
+            KFrBS = S10 + S11 + S20 + S21;
+            KFBS = S11;
+            KILS = S10;
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FrBS = castingState.FrozenState.GetSpell(SpellId.Frostbolt);
+            FB = castingState.GetSpell(SpellId.FireballBF);
+            FBS = castingState.FrozenState.GetSpell(SpellId.FireballBF);
+            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            sequence = "Frostbolt";
+
+            CastTime = KFrB * FrB.CastTime + KFB * FB.CastTime + KFrBS * FrBS.CastTime + KFBS * FBS.CastTime + KILS * ILS.CastTime;
+            CostPerSecond = (KFrB * FrB.CastTime * FrB.CostPerSecond + KFB * FB.CastTime * FB.CostPerSecond + KFrBS * FrBS.CastTime * FrBS.CostPerSecond + KFBS * FBS.CastTime * FBS.CostPerSecond + KILS * ILS.CastTime * ILS.CostPerSecond) / CastTime;
+            DamagePerSecond = (KFrB * FrB.CastTime * FrB.DamagePerSecond + KFB * FB.CastTime * FB.DamagePerSecond + KFrBS * FrBS.CastTime * FrBS.DamagePerSecond + KFBS * FBS.CastTime * FBS.DamagePerSecond + KILS * ILS.CastTime * ILS.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (KFrB * FrB.CastTime * FrB.ThreatPerSecond + KFB * FB.CastTime * FB.ThreatPerSecond + KFrBS * FrBS.CastTime * FrBS.ThreatPerSecond + KFBS * FBS.CastTime * FBS.ThreatPerSecond + KILS * ILS.CastTime * ILS.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (KFrB * FrB.CastTime * FrB.ManaRegenPerSecond + KFB * FB.CastTime * FB.ManaRegenPerSecond + KFrBS * FrBS.CastTime * FrBS.ManaRegenPerSecond + KFBS * FBS.CastTime * FBS.ManaRegenPerSecond + KILS * ILS.CastTime * ILS.ManaRegenPerSecond) / CastTime;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            FrB.AddSpellContribution(dict, KFrB * FrB.CastTime / CastTime * duration);
+            FB.AddSpellContribution(dict, KFB * FB.CastTime / CastTime * duration);
+            FrBS.AddSpellContribution(dict, KFrBS * FrBS.CastTime / CastTime * duration);
+            FBS.AddSpellContribution(dict, KFBS * FBS.CastTime / CastTime * duration);
+            ILS.AddSpellContribution(dict, KILS * ILS.CastTime / CastTime * duration);
         }
     }
 

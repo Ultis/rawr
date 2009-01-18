@@ -886,7 +886,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false));
+                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false, false));
                     }
                     if (flameCapAvailable)
                     {
@@ -902,7 +902,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false));
+                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false, false));
                         }
                     }
                     if (moltenFuryAvailable)
@@ -919,7 +919,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false));
+                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false, false));
                         }
                         if (flameCapAvailable)
                         {
@@ -935,7 +935,7 @@ namespace Rawr.Mage
                             }
                             if (!found)
                             {
-                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false));
+                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false, false));
                             }
                         }
                     }
@@ -1029,7 +1029,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false));
+                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false, false));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
@@ -2316,6 +2316,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         list.Add(SpellId.FrostboltFOF);
                         if (character.MageTalents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
+                        if (character.MageTalents.FingersOfFrost > 0) list.Add(SpellId.FrBFBIL);
                         list.Add(SpellId.ArcaneBlastSpam);
                         list.Add(SpellId.ABAM);
                         if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
@@ -2404,7 +2405,7 @@ namespace Rawr.Mage
                                     {
                                         if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0 && index == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
-                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg));
+                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
                                             if (incrementalSetIndex == 0 && index == 0)
                                             {
                                                 calculationResult.BaseState = list[list.Count - 1];
@@ -2416,7 +2417,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false);
+                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
             }
             else
             {
@@ -2445,7 +2446,7 @@ namespace Rawr.Mage
                                 {
                                     if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                     {
-                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg));
+                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
                                         if (incrementalSetIndex == 0)
                                         {
                                             calculationResult.BaseState = list[list.Count - 1];
