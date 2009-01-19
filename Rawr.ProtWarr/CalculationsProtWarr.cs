@@ -238,8 +238,8 @@ threat and limited threat scaled by the threat scale.",
                                     stats.Block - levelDifference;
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
-            calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor(((stats.BlockValue + (float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue)) *
-                                         (1 + stats.BonusBlockValueMultiplier)) - 10f) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+            calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor(((stats.BlockValue + (float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue - 10f)) *
+                                         (1 + stats.BonusBlockValueMultiplier))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
