@@ -200,6 +200,7 @@ threat and limited threat scaled by the threat scale.",
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            GetTalents(character);
             int targetLevel = calcOpts.TargetLevel;
 
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -238,7 +239,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
             calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor(((stats.BlockValue + (float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue)) *
-                                         (1 + stats.BonusBlockValueMultiplier))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+                                         (1 + stats.BonusBlockValueMultiplier)) - 10f) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -274,7 +275,7 @@ threat and limited threat scaled by the threat scale.",
             float cappedResist = targetLevel * 5;
 
             float impDefStance = 0.9f *
-                (1f - character.WarriorTalents.ImprovedDefensiveStance * 0.02f);
+                (1f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
 
             calculatedStats.NatureSurvivalPoints = (float)(stats.Health / (((1f - (System.Math.Min(cappedResist, stats.NatureResistance + stats.AllResist) / cappedResist) * .75) * impDefStance)));
             calculatedStats.FrostSurvivalPoints = (float)(stats.Health / (((1f - (System.Math.Min(cappedResist, stats.FrostResistance + stats.AllResist) / cappedResist) * .75) * impDefStance)));
@@ -609,6 +610,7 @@ threat and limited threat scaled by the threat scale.",
         public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            WarriorTalents talents = calcOpts.talents;
 
             Stats statsRace = GetRaceStats(character);
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -687,16 +689,15 @@ threat and limited threat scaled by the threat scale.",
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;		
 			
-            statsTotal.Stamina *= (1 + statsTotal.BonusStaminaMultiplier);
-            statsTotal.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
-            statsTotal.Agility *= (1 + statsTotal.BonusAgilityMultiplier);
-            statsTotal.AttackPower += statsTotal.Strength * 2;
-            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
- //           statsTotal.BlockValue *= 1 + statsTotal.BonusBlockValueMultiplier;
+            statsTotal.AttackPower += statsTotal.Strength * 2 + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 180);
+            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -708,7 +709,6 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + (statsTotal.Strength * 2)) * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
@@ -1053,6 +1053,15 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage
                    ) != 0;
 		}
+        /// <summary>
+        /// Saves the talents for the character
+        /// </summary>
+        /// <param name="character">The character for whom the talents should be saved</param>
+        public void GetTalents(Character character)
+        {
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            calcOpts.talents = character.WarriorTalents;
+        }
     }
 
     public class ProtWarr

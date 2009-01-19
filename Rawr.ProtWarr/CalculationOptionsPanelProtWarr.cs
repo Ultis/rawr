@@ -127,5 +127,6 @@ namespace Rawr.ProtWarr
 		public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
 		public string ShattrathFaction = "Scryer";
+		public WarriorTalents talents = null;
 	}
 }
