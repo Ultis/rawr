@@ -394,8 +394,8 @@ namespace Rawr
 					break;
 
 				case "armorbonus":
-					item.Stats.Armor -= int.Parse(value);
-					item.Stats.BonusArmor = int.Parse(value);
+					item.Stats.Armor -= float.Parse(value);
+					item.Stats.BonusArmor = float.Parse(value);
 					break;
 				
 				case "healthrgn":

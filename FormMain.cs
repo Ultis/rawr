@@ -1195,7 +1195,14 @@ Here's a quick rundown of the status of each model:
 				StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
-					Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
+					try
+					{
+						Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show(string.Format("Unable to update '{0}' due to an error: {1}\r\n\r\n{2}", item.Name, ex.Message, ex.StackTrace));
+					}
 				}
 			}
 			StatusMessaging.UpdateStatusFinished("Update All Items");
