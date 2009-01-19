@@ -2166,7 +2166,7 @@ namespace Rawr.Mage
                             list.Add(SpellId.FBScLBPyro);
                             list.Add(SpellId.ScLBPyro);
                         }
-                        else if (character.MageTalents.HotStreak > 0)
+                        if (character.MageTalents.HotStreak > 0)
                         {
                             list.Add(SpellId.FBScPyro);
                         }
