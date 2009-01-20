@@ -238,8 +238,7 @@ threat and limited threat scaled by the threat scale.",
                                     stats.Block - levelDifference;
             calculatedStats.Block = Math.Min(100f - calculatedStats.Miss - calculatedStats.Dodge - calculatedStats.Parry, block);
             calculatedStats.BlockOverCap = ((block - calculatedStats.Block) > 0 ? (block - calculatedStats.Block) : 0.0f);
-            calculatedStats.BlockValue = (float)Math.Floor((float)Math.Floor(((stats.BlockValue + (float)Math.Floor(stats.Strength * ProtWarr.StrengthToBlockValue - 10f)) *
-                                         (1 + stats.BonusBlockValueMultiplier))) * (1f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+            calculatedStats.BlockValue = stats.BlockValue;
             calculatedStats.Mitigation = (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f;
             calculatedStats.CappedMitigation = Math.Min(75f, calculatedStats.Mitigation);
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -435,7 +434,7 @@ threat and limited threat scaled by the threat scale.",
             /*Human*/		{	174f,	    113f,	    159f,   },
             /*Orc*/			{	178f,		110f,		162f,	},
             /*Dwarf*/		{	176f,	    109f,	    162f,   },
-			/*Night Elf*/	{	142f,	    101f,	    132f,   },
+			/*Night Elf*/	{	172f,	    118f,	    159f,   },
 	        /*Undead*/		{	174f,	    111f,	    160f,   },
 			/*Tauren*/		{	180f,		108f,		162f,	},
 	        /*Gnome*/		{	170f,	    116f,	    159f,   },
@@ -689,14 +688,17 @@ threat and limited threat scaled by the threat scale.",
             Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;		
 			
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsEnchants.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsEnchants.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsEnchants.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 2 + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 180);
+            statsTotal.AttackPower += statsTotal.Strength * 2 + (float)Math.Floor(tree.ArmoredToTheTeeth * statsTotal.Armor / 180);
             statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
@@ -705,6 +707,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
             statsTotal.Block += (calcOpts.UseShieldBlock ? 75f : 0f);
+            statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtWarr.StrengthToBlockValue - 10f);
+            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
+            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + (tree.CriticalBlock * 0.1f))); //This is a quick and dirty way to add this talent, a better method is needed.
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
  
