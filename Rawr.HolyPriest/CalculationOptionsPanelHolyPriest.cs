@@ -199,8 +199,8 @@ namespace Rawr.HolyPriest
         public int ManaPot = 4;
         public int ManaAmt { get { return manaAmt[ManaPot]; } }
         public int Rotation = 0;
-        public float FSRRatio = 85f;
-        public float FightLength = 5f;
+        public float FSRRatio = 93f;
+        public float FightLength = 6f;
         public float Serendipity = 75f;
         public float Replenishment = 50f;
         public float Shadowfiend = 100f;

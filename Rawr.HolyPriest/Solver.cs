@@ -363,8 +363,10 @@ namespace Rawr.HolyPriest
                 }
                 if (simstats.ManaRestoreOnCrit_25 > 0)
                 {   // X mana back every 25%*critchance spell every 45seconds.
-                    float proc_50 = (float)Math.Log(0.5f) / (float)Math.Log(1f - avgcritcast * 0.25f);
-                    tmpregen = simstats.ManaRestoreOnCrit_25 * 0.5f / (45f + proc_50 * avgcastlen);
+                    float ProcChance = 0.25f * avgcritcast;
+                    float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+                    float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / avgcritcast / ProcActual;
+                    tmpregen = simstats.ManaRestoreOnCrit_25 / EffCooldown;
                     if (tmpregen > 0f)
                     {
                         ManaSources.Add(new ManaSource("Soul of the Dead" , tmpregen));
@@ -373,8 +375,10 @@ namespace Rawr.HolyPriest
                 }
                 if (simstats.ManaRestoreOnCast_10_45 > 0)
                 {
-                    float proc_50 = (float)Math.Log(0.5f) / (float)Math.Log(1f - 0.1f);
-                    tmpregen = simstats.ManaRestoreOnCast_10_45 * 0.5f / (45f + proc_50 * avgcastlen);
+                    float ProcChance = 0.1f;
+                    float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
+                    float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / avgcastlen / ProcActual; 
+                    tmpregen = simstats.ManaRestoreOnCast_10_45 / EffCooldown;
                     if (tmpregen > 0f)
                     {
                         ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
