@@ -63,7 +63,6 @@ namespace Rawr.Mage
                     "Spell Info:Wand",
                     "Spell Info:Arcane Missiles",
                     "Spell Info:MBAM*Missile Barrage Arcane Missiles",
-                    "Spell Info:Arcane Blast*Spammed",
                     "Spell Info:Arcane Blast(3)*Full debuff stack",
                     "Spell Info:Arcane Blast(0)*Non-debuffed",
                     "Spell Info:Arcane Barrage*Requires talent points",
@@ -88,18 +87,12 @@ namespace Rawr.Mage
                     "Spell Info:Ice Lance",
                     "Spell Info:FrBFB*Fireball on Brain Freeze",
                     "Spell Info:FrBFBIL*Fireball on Brain Freeze, Ice Lance on shatter combo, use Brain Freeze on shatter combo when available",
-                    "Spell Info:ABP*Pause to let debuff drop",
                     "Spell Info:ABAM",
                     "Spell Info:ABarAM",
                     "Spell Info:ABABar*AB-ABar, on Missile Barrage replace with MBAM-ABar",
-                    "Spell Info:ABABarX*AB-ABar, on Missile Barrage replace with AB-MBAM-ABar, only applies in 3.0.8 mode",
-                    "Spell Info:ABABarY*AB-ABar, on Missile Barrage replace with AB-MBAM, only applies in 3.0.8 mode",
-                    "Spell Info:AB2ABar*AB-AB-ABar, if any of the spells procs Missile Barrage replace next section with MBAM-AB-ABar",
-                    "Spell Info:AB2ABarMBAM*AB-AB-ABar, if first AB procs MB insert MBAM before ABar, otherwise add MBAM after ABar",
-                    "Spell Info:AB3ABar*AB-AB-AB-ABar, if MB on first 2 casts do MBAM as soon as you notice, followed by ABar, otherwise MBAM after ABar",
+                    "Spell Info:ABABarC*AB-ABar, on Missile Barrage replace with AB-MBAM-ABar",
+                    "Spell Info:AB2ABarC*AB-AB-ABar, on MB proc do MBAM-ABar at 2 stack",
                     "Spell Info:AB3ABarC*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
-                    "Spell Info:AB3ABarX*AB-AB-AB-ABar, always ramp to 3 AB, MBAM either before or after ABar based on when it procs",
-                    "Spell Info:AB3ABarY*AB-AB-AB-ABar, MBAM as soon as you notice proc, restart cycle on MBAM (don't follow with ABar)",
                     "Spell Info:ABABarSlow*Arcane Missiles on Missile Barrage (after Arcane Barrage), maintain Slow",
                     "Spell Info:ABAMABar*AB-AM-ABar regardless of procs",
                     "Spell Info:AB2AMABar*AB-AB-AM-ABar regardless of procs",
@@ -720,7 +713,7 @@ namespace Rawr.Mage
             }
 
             statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
-            if (calculationOptions.Mode308) statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.Pyromaniac;
+            statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.Pyromaniac;
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 

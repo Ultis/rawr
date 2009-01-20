@@ -290,7 +290,7 @@ namespace Rawr.Mage
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
                 waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
                 manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
-                calculationResult.EvocationCooldown = calculationOptions.Mode308 ? (240.0 - 60.0 * character.MageTalents.ArcaneFlows) : 300.0;
+                calculationResult.EvocationCooldown = (240.0 - 60.0 * character.MageTalents.ArcaneFlows);
                 calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
                 calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
@@ -2269,19 +2269,37 @@ namespace Rawr.Mage
                             }
                             if (character.MageTalents.ArcaneEmpowerment > 0)
                             {
-                                if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
-                                list.Add(SpellId.AB2ABar);
+                                if (character.MageTalents.MissileBarrage > 0)
+                                {
+                                    list.Add(SpellId.ABABarC);
+                                    list.Add(SpellId.AB2ABarC);
+                                    list.Add(SpellId.AB3ABarC);
+                                    list.Add(SpellId.ABAMABar);
+                                    list.Add(SpellId.AB2AMABar);
+                                    list.Add(SpellId.AB3AMABar);
+                                    list.Add(SpellId.AB32AMABar);
+                                    list.Add(SpellId.AB3MBAMABar);
+                                }
                             }
                             if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
                             {
                                 list.Add(SpellId.FrBABar);
                                 list.Add(SpellId.FBABar);
-                                if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                                 list.Add(SpellId.ABABar);
-                                list.Add(SpellId.AB2ABar);
                                 list.Add(SpellId.FB2ABar);
                                 list.Add(SpellId.FrB2ABar);
+                                if (character.MageTalents.MissileBarrage > 0)
+                                {
+                                    list.Add(SpellId.ABABarC);
+                                    list.Add(SpellId.AB2ABarC);
+                                    list.Add(SpellId.AB3ABarC);
+                                    list.Add(SpellId.ABAMABar);
+                                    list.Add(SpellId.AB2AMABar);
+                                    list.Add(SpellId.AB3AMABar);
+                                    list.Add(SpellId.AB32AMABar);
+                                    list.Add(SpellId.AB3MBAMABar);
+                                }
                             }
                         }
                         else
@@ -2290,7 +2308,6 @@ namespace Rawr.Mage
                             list.Add(SpellId.Fireball);
                             list.Add(SpellId.FrostboltFOF);
                             if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
-                            if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                         }
                     }
                     else
@@ -2317,11 +2334,9 @@ namespace Rawr.Mage
                         list.Add(SpellId.FrostboltFOF);
                         if (character.MageTalents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
                         if (character.MageTalents.FingersOfFrost > 0) list.Add(SpellId.FrBFBIL);
-                        list.Add(SpellId.ArcaneBlastSpam);
+                        list.Add(SpellId.ArcaneBlast33);
                         list.Add(SpellId.ABAM);
-                        if (!calculationOptions.Mode308) list.Add(SpellId.ABP);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.AB2ABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
                         if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABMBAM);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
@@ -2329,16 +2344,14 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
                         if (calculationOptions.PlayerLevel >= 75 && character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarX);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABABarY);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarC);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3ABarX);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.ABAMABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB2AMABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3AMABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB32AMABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0 && calculationOptions.Mode308) list.Add(SpellId.AB3MBAMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABarC);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB2ABarC);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3ABarC);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABAMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB2AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB32AMABar);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3MBAMABar);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

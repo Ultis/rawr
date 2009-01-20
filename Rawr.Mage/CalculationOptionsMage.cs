@@ -114,7 +114,6 @@ namespace Rawr.Mage
         public bool FarmingMode { get; set; }
         public float FocusMagicTargetCritRate { get; set; }
         public bool UnlimitedMana { get; set; }
-        public bool Mode308 { get; set; }
         public bool AllowLatencyCombos { get; set; }
         public float ComboReliability { get; set; }
 
@@ -235,7 +234,7 @@ namespace Rawr.Mage
         {
             TargetLevel = 83;
             AoeTargetLevel = 80;
-            Latency = 0.05f;
+            Latency = 0.1f;
             AoeTargets = 9;
             ArcaneResist = 0;
             FireResist = 0;
@@ -276,6 +275,7 @@ namespace Rawr.Mage
             FocusMagicTargetCritRate = 0.2f;
             AllowLatencyCombos = true;
             ComboReliability = 0.5f;
+            SnaredTime = 1f;
         }
 
         public CalculationOptionsMage(Character character)
