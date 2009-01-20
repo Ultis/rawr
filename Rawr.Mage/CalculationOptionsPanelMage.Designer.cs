@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -231,8 +232,6 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label92 = new System.Windows.Forms.Label();
-            this.checkBoxMode308 = new System.Windows.Forms.CheckBox();
             this.comboBoxMIPMethod = new System.Windows.Forms.ComboBox();
             this.label78 = new System.Windows.Forms.Label();
             this.label77 = new System.Windows.Forms.Label();
@@ -251,16 +250,15 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -322,6 +320,11 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2379,8 +2382,6 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.label92);
-            this.tabPage4.Controls.Add(this.checkBoxMode308);
             this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
             this.tabPage4.Controls.Add(this.label78);
             this.tabPage4.Controls.Add(this.label77);
@@ -2405,26 +2406,6 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // label92
-            // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(0, 67);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(71, 13);
-            this.label92.TabIndex = 176;
-            this.label92.Text = "3.0.8 Mode: *";
-            this.toolTipMage.SetToolTip(this.label92, "Change calculations to reflect changes in 3.0.8 patch.");
-            // 
-            // checkBoxMode308
-            // 
-            this.checkBoxMode308.AutoSize = true;
-            this.checkBoxMode308.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "Mode308", true));
-            this.checkBoxMode308.Location = new System.Drawing.Point(185, 67);
-            this.checkBoxMode308.Name = "checkBoxMode308";
-            this.checkBoxMode308.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxMode308.TabIndex = 175;
-            this.checkBoxMode308.UseVisualStyleBackColor = true;
             // 
             // comboBoxMIPMethod
             // 
@@ -2608,11 +2589,6 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
-            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2624,6 +2600,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2636,7 +2613,6 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2853,8 +2829,6 @@
         private System.Windows.Forms.CheckBox checkBoxUnlimitedMana;
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.CheckBox checkBoxPotionOfSpeed;
-        private System.Windows.Forms.Label label92;
-        private System.Windows.Forms.CheckBox checkBoxMode308;
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneBlast;
         private System.Windows.Forms.TextBox textBoxBonusCrit;
