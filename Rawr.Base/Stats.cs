@@ -226,6 +226,7 @@ namespace Rawr
 		BonusInsectSwarmDamage,
 		BonusNukeCritChance,
         BonusHoTOnDirectHeals,
+		TigersFuryCooldownReduction,
         #region Added by Rawr.Elemental
         BonusCritChance,
         BonusThunderCritChance,
@@ -2750,6 +2751,14 @@ namespace Rawr
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction]; }
 			set { _rawAdditiveData[(int)AdditiveStat.MangleCooldownReduction] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Tiger's Fury Cooldown Reduction")]
+		public float TigersFuryCooldownReduction
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.TigersFuryCooldownReduction]; }
+			set { _rawAdditiveData[(int)AdditiveStat.TigersFuryCooldownReduction] = value; }
 		}
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]

@@ -62,7 +62,7 @@ namespace Rawr.Cat
 
 		public CatRotationCalculation GetRotationCalculations(bool useShred, bool useRip, bool useFerociousBite, int roarCP)
 		{
-			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / 30f) * Stats.BonusEnergyOnTigersFury);
+			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			if (OmenOfClarity)
 			{
 				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made mor accurate than that, but that's close at least

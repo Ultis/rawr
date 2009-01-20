@@ -181,6 +181,7 @@ namespace Rawr
 			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/htmlTooltip")) { htmlTooltip = node.InnerText; }
 			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/json")) { json1 = node.InnerText; }
 			foreach (XmlNode node in docItem.SelectNodes("wowhead/item/jsonEquip")) { json2 = node.InnerText; }
+			if (htmlTooltip.Contains("Unique")) item.Unique = true;
 
 			if (filter && (int)item.Quality < 2) return null;
 
@@ -298,7 +299,6 @@ namespace Rawr
 			else if (htmlTooltip.Contains("Plagueheart Garb")) item.SetName = "Plagueheart Garb";
 			else if (htmlTooltip.Contains("Dreadnaught Battlegear")) item.SetName = "Dreadnaught Battlegear";
 			else if (htmlTooltip.Contains("Dreadnaught Plate")) item.SetName = "Dreadnaught Plate";
-
 
 			if (filter && item.Quality == Item.ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
 			return item;
@@ -564,6 +564,7 @@ namespace Rawr
 					break;
 
 				case "armorpen":
+				case "armorpenrtng":
 					item.Stats.ArmorPenetrationRating = int.Parse(value);
 					break;
                 

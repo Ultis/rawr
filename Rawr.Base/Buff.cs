@@ -1849,7 +1849,7 @@ namespace Rawr
 				Name = "Dreamwalker Battlegear 4 Piece Bonus",
 				Group = "Set Bonuses",
 				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { /*Increased Barkskin Duration*/ },
+				Stats = { TigersFuryCooldownReduction = 3f, /*Increased Barkskin Duration*/ },
 				SetName = "Dreamwalker Battlegear",
 				SetThreshold = 4
 			});

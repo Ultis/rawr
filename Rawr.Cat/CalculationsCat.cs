@@ -910,6 +910,7 @@ namespace Rawr.Cat
                     BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
+					TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					DrumsOfBattle = stats.DrumsOfBattle,
@@ -949,7 +950,7 @@ namespace Rawr.Cat
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BerserkingProc +
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
-				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
+				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 		}
