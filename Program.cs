@@ -33,16 +33,10 @@ namespace Rawr
                 //This line prevents the GC from collecting the object until the App closes.
                 GC.KeepAlive(oMutex);
             }
-            catch (TypeLoadException ex)
-            {
-                MessageBox.Show(ex.Message, "when cat durid is FITE do not ask for HEEL and NINIRVATE!"); //Heh
-            }
-#if !DEBUG
             catch (Exception ex)
             {
-                //MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+               MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
             }
-#endif
         }
 
 		//private static void RawrCatIntro()

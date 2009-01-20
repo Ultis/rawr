@@ -159,7 +159,7 @@ the Threat Scale defined on the Options tab.",
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
 					"Combat Table",
-					"Relative Stat Values",
+					//"Relative Stat Values",
 					"Rotation DPS",
 					"Rotation TPS"
 					};

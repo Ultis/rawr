@@ -121,8 +121,8 @@ namespace Rawr
 			return xml.ToString();
 		}
 
-		public int TargetLevel = 73;
-		public int TargetArmor = 7700;
+		public int TargetLevel = 83;
+		public int TargetArmor = 13083;
 		public int ExposeWeaknessAPValue = 200;
 		public int NumberOfFerociousInspirations = 2;
 		public float BloodlustUptime = 0.15f;

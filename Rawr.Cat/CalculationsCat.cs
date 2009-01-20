@@ -91,7 +91,7 @@ namespace Rawr.Cat
 			{
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
-					"Relative Stat Values",
+					//"Relative Stat Values",
 					};
 				return _customChartNames;
 			}
