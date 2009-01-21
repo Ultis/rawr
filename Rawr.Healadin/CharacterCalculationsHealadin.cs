@@ -161,7 +161,7 @@ namespace Rawr.Healadin
             dictValues.Add("BoL Mana Usage", string.Format("{0} mana", BoLUsage.ToString("N00")));
             // Judgement
             dictValues.Add("JotP Effective Haste", string.Format("{0}% haste", (JotPHaste * 100).ToString("N02")));
-            dictValues.Add("JotP Casts", string.Format("{0} gcds", JotPCasts.ToString("N00")));
+            dictValues.Add("JotP Casts", string.Format("{0} gcds", JotPCasts.ToString("N02")));
             dictValues.Add("JotP Mana Usage", string.Format("{0} mana", JotPUsage.ToString("N00")));
 
             return dictValues;
