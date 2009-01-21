@@ -509,7 +509,7 @@ namespace Rawr.Tree
             extraMana *= (calculatedStats.BasicStats.BonusManaPotion + 1f); float trinketRegen = DoTrinketManaRestoreCalcs(calculatedStats, calculatedStats.Simulation[7]);
             float manaRegen = ratio * calculatedStats.ManaRegInFSR + (1 - ratio) * calculatedStats.ManaRegOutFSR + trinketRegen;
 
-            calculatedStats.HpSPoints = HPS;
+            calculatedStats.BurstPoints = HPS;
 
             //Survival Points
             int health = (int)calculatedStats.BasicStats.Health;
@@ -521,7 +521,7 @@ namespace Rawr.Tree
             else calculatedStats.TimeUntilOOM = (extraMana+calculatedStats.BasicStats.Mana) / (MPS - manaRegen/5f);
             if (calculatedStats.TimeUntilOOM > calcOpts.FightDuration) 
                 calculatedStats.TimeUntilOOM = calcOpts.FightDuration;
-            calculatedStats.TotalHealing = calculatedStats.TimeUntilOOM * calculatedStats.HpSPoints;
+            calculatedStats.TotalHealing = calculatedStats.TimeUntilOOM * calculatedStats.BurstPoints;
             // Correct for mana returns
             calculatedStats.TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSRNoCasting;
             if (calcOpts.FightDuration > calculatedStats.TimeUntilOOM)
@@ -538,13 +538,18 @@ namespace Rawr.Tree
 
             calculatedStats.ManaRegen = manaRegen;
 
-            calculatedStats.HDPoints = calculatedStats.TotalHealing / calcOpts.FightDuration;
+            calculatedStats.SustainedPoints = calculatedStats.TotalHealing / calcOpts.FightDuration;
 
             calculatedStats.SurvivalPoints =
                 ((calcOpts.SurvScaleBelowTarget > 0) ? healthBelow / 10F * (calcOpts.SurvScaleBelowTarget / 100F) : 0) +
                 (healthAbove / 100F);
 
-            calculatedStats.OverallPoints = calculatedStats.HpSPoints + calculatedStats.HDPoints + calculatedStats.SurvivalPoints;
+            // ADJUST POINT VALUE (BURST SUSTAINED RATIO)
+            float bsRatio = ((float)calcOpts.BSRatio) * 0.01f;
+            calculatedStats.BurstPoints *= (1f-bsRatio) * 2;
+            calculatedStats.SustainedPoints *= bsRatio * 2;
+
+            calculatedStats.OverallPoints = calculatedStats.BurstPoints + calculatedStats.SustainedPoints + calculatedStats.SurvivalPoints;
 
             calcOpts.calculatedStats = calculatedStats;
             return calculatedStats;

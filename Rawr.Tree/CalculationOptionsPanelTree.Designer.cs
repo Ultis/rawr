@@ -38,6 +38,9 @@
             this.tbAverageProcUsage = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lblBSRatio = new System.Windows.Forms.Label();
+            this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -82,6 +85,8 @@
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -176,6 +181,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.groupBox1);
@@ -186,6 +192,37 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.lblBSRatio);
+            this.groupBox2.Controls.Add(this.tbBSRatio);
+            this.groupBox2.Location = new System.Drawing.Point(6, 183);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(276, 87);
+            this.groupBox2.TabIndex = 41;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Burst : Sustained Ratio";
+            // 
+            // lblBSRatio
+            // 
+            this.lblBSRatio.AutoSize = true;
+            this.lblBSRatio.Location = new System.Drawing.Point(6, 20);
+            this.lblBSRatio.Name = "lblBSRatio";
+            this.lblBSRatio.Size = new System.Drawing.Size(32, 13);
+            this.lblBSRatio.TabIndex = 41;
+            this.lblBSRatio.Text = "Ratio";
+            // 
+            // tbBSRatio
+            // 
+            this.tbBSRatio.Location = new System.Drawing.Point(9, 36);
+            this.tbBSRatio.Maximum = 100;
+            this.tbBSRatio.Name = "tbBSRatio";
+            this.tbBSRatio.Size = new System.Drawing.Size(262, 45);
+            this.tbBSRatio.TabIndex = 40;
+            this.tbBSRatio.TickFrequency = 5;
+            this.tbBSRatio.Value = 50;
+            this.tbBSRatio.Scroll += new System.EventHandler(this.tbBSRatio_Scroll);
             // 
             // groupBox6
             // 
@@ -676,6 +713,9 @@
             this.Size = new System.Drawing.Size(303, 582);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -755,5 +795,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.TextBox tbModuleNotes;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lblBSRatio;
+        private System.Windows.Forms.TrackBar tbBSRatio;
     }
 }

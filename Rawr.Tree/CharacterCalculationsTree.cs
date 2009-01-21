@@ -14,13 +14,13 @@ namespace Rawr.Tree
             set { subPoints = value; }
         }
 
-        public float HpSPoints
+        public float BurstPoints
         {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
         }
 
-        public float HDPoints
+        public float SustainedPoints
         {
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
@@ -80,8 +80,8 @@ namespace Rawr.Tree
             dictValues.Add("Time to regen full mana", Math.Round(TimeToRegenFull, 2).ToString());
             dictValues.Add("Cast% after OOM", Math.Round(CvRFraction, 2).ToString());
 
-            dictValues.Add("HealBurst", HpSPoints.ToString());
-            dictValues.Add("HealSustained", HDPoints.ToString());
+            dictValues.Add("HealBurst", BurstPoints.ToString());
+            dictValues.Add("HealSustained", SustainedPoints.ToString());
             dictValues.Add("Survival", SurvivalPoints.ToString());
             dictValues.Add("Overall", OverallPoints.ToString());
 

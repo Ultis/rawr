@@ -50,6 +50,10 @@ namespace Rawr.Tree
             tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
             tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
             chbLivingSeed.Checked = calcOpts.useLivingSeedAsCritMultiplicator;
+            tbBSRatio.Value = calcOpts.BSRatio;
+            int burst = 100 - tbBSRatio.Value;
+            int sust = tbBSRatio.Value;
+            lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
 
             cbRotation.SelectedIndex = calcOpts.Rotation;
             lblFSR.Text = trkTimeInFSR.Value + "% of fight spent in FSR.";
@@ -213,6 +217,17 @@ namespace Rawr.Tree
             calcOpts.averageSpellpowerUsage = parseFloat(tbAverageProcUsage.Text);
             Character.OnCalculationsInvalidated();
         }
+
+        private void tbBSRatio_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.BSRatio = tbBSRatio.Value;
+            int burst = 100 - tbBSRatio.Value;
+            int sust = tbBSRatio.Value;
+            lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -230,6 +245,8 @@ namespace Rawr.Tree
 
         //Add Average Spellpower to Calculation = 0.0f (% used)
         public float averageSpellpowerUsage = 80f;
+
+        public int BSRatio = 75; // goes from 0 to 100
 
         public int FightDuration = 300; //5 Minutes
         public int Rotation = 6; // default: group regrowth and heal 1 tank
