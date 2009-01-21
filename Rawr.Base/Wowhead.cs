@@ -602,6 +602,18 @@ namespace Rawr
 
 				//sourcemore keys
 				case "t":   //Source Type
+					/*
+					#define CTYPE_NPC            1
+					#define CTYPE_OBJECT         2
+					#define CTYPE_ITEM           3
+					#define CTYPE_ITEMSET        4
+					#define CTYPE_QUEST          5
+					#define CTYPE_SPELL          6
+					#define CTYPE_ZONE           7
+					#define CTYPE_FACTION        8
+					#define CTYPE_PET            9
+					#define CTYPE_ACHIEVEMENT    10
+					*/
 					switch (value)
 					{
 						case "1": //Dropped by a mob...
@@ -702,8 +714,11 @@ namespace Rawr
                     "".ToString();
                     break;
 
-				case "p":
-                    "".ToString();
+				case "p": //PvP
+					LocationFactory.Add(item.Id.ToString(), PvpItem.Construct());
+					(item.LocationInfo as PvpItem).Points = 0;
+					(item.LocationInfo as PvpItem).PointType = "PvP";
+					"".ToString();
                     break;
 
 
