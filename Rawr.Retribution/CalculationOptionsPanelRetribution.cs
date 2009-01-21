@@ -44,6 +44,12 @@ namespace Rawr.Retribution
 
             checkBoxConsecration.Checked = calcOpts.ConsecRank > 0;
             checkBoxExorcism.Checked = calcOpts.Exorcism;
+			cbAWGlyph.Checked = calcOpts.GlyphOfAW;
+			cbConsecGlyph.Checked = calcOpts.GlyphOfConsec;
+			cbCSGlyph.Checked = calcOpts.GlyphOfCS;
+			cbJudgeGlyph.Checked = calcOpts.GlyphOfJudge;
+			cbSenseGlyph.Checked = calcOpts.GlyphOfSenseUD;
+			cbSoCGlyph.Checked = calcOpts.GlyphOfSoC;
 
             nudTargetArmor.Value = calcOpts.BossArmor;
         }
