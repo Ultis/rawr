@@ -1698,19 +1698,19 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lightbringer Raiment 2 Piece",
+                Name = "Lightbringer Raiment 4 Piece",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { HolyLightCrit = .05f },
                 SetName = "Lightbringer Raiment",
-                SetThreshold = 2
+                SetThreshold = 4
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Lightbringer Raiment 4 Piece",
+                Name = "Lightbringer Raiment 2 Piece",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { FlashOfLightMultiplier = .05f },
                 SetName = "Lightbringer Raiment",
-                SetThreshold = 4
+                SetThreshold = 2
             });
             // Resto druid tier 4/5/6 sets
             defaultBuffs.Add(new Buff()
