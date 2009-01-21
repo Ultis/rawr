@@ -160,6 +160,9 @@ namespace Rawr.HolyPriest
                 case 4:     // Circle of Healing Spam
                     Role += "Circle of Healing";
                     sr.Add(coh);
+                    sr.Add(fh);
+                    sr.Add(fh);
+                    sr.Add(fh);
                     break;
                 case 5:     // Holy MT Healing, renew + prom + ghx5 repeat
                     Role += "Holy Tank";
@@ -175,11 +178,8 @@ namespace Rawr.HolyPriest
                     Role += "Holy Raid";
                     sr.Add(prom_max);   // 1.5s 1.5 -8.5
                     sr.Add(coh);        // 1.5s 3.0 -7.0
-                    sr.Add(coh);        // 1.5s 4.5 -5.5
+                    sr.Add(fh);        // 1.5s 4.5 -5.5
                     sr.Add(fh);         // 1.5s 6.0 -4.0
-                    sr.Add(coh);        // 1.5s 7.5 -2.5
-                    sr.Add(coh);        // 1.5s 9.0 -1.0
-                    sr.Add(fh);         // 1.5s 10.5 - ?
                     // Repeat
                     break;
                 case 7:     // Disc MT Healing, pws, penance, prom, gh, penance
