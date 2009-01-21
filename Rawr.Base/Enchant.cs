@@ -613,6 +613,10 @@ namespace Rawr
             // Tailoring enchant
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { LightweaveEmbroideryProc = 1 }));
 
+			//3.0.8 enchants
+			defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));
+			defaultEnchants.Add(new Enchant(3849, "Titanium Plating", Item.ItemSlot.OffHand, new Stats() { BlockValue = 40 }));
+            
             #region Enchants to Delete
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
 			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));

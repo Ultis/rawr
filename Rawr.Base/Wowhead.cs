@@ -255,6 +255,8 @@ namespace Rawr
                 else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
             }
 
+			if (item.LocationInfo is CraftedItem && htmlTooltip.Contains("Binds when picked up")) (item.LocationInfo as CraftedItem).Bind = BindsOn.BoP;
+
 			List<string> useLines = new List<string>();
 			List<string> equipLines = new List<string>();
 			while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
@@ -654,7 +656,11 @@ namespace Rawr
 					if (locationContinent is StaticDrop) (locationContinent as StaticDrop).Area = continentname;
 					else if (locationContinent is ContainerItem) (locationContinent as ContainerItem).Area = continentname;
 					else if (locationContinent is QuestItem) (locationContinent as QuestItem).Area = continentname;
-					else if (locationContinent is CraftedItem) (locationContinent as CraftedItem).Skill = value;
+					//else if (locationContinent is CraftedItem)
+					//{
+					//    if (value == "11")
+					//        (locationContinent as CraftedItem).Skill = "Jewelcrafting";
+					//}
 					break;
 
 				case "c2": //Don't care about continent
@@ -666,7 +672,30 @@ namespace Rawr
 					break;
 
 				case "s":   // Source (755 = Jewelcrafting apparently?)
-                    "".ToString();
+					if (item.LocationInfo is CraftedItem)
+					{
+						string profession = "";
+						switch (value)
+						{
+							case "171": profession = "Alchemy"; break;
+							case "164": profession = "Blacksmithing"; break;
+							case "333": profession = "Enchanting"; break;
+							case "202": profession = "Engineering"; break;
+							case "182": profession = "Herbalism"; break;
+							case "773": profession = "Inscription"; break;
+							case "755": profession = "Jewelcrafting"; break;
+							case "165": profession = "Leatherworking"; break;
+							case "186": profession = "Mining"; break;
+							case "393": profession = "Skinning"; break;
+							case "197": profession = "Tailoring"; break;
+
+							default:
+								"".ToString();
+								break;
+						}
+						if (!string.IsNullOrEmpty(profession)) (item.LocationInfo as CraftedItem).Skill = profession;
+					}
+					"".ToString();
                     break;
 
 				case "q":
