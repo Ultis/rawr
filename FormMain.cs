@@ -15,47 +15,37 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 14;
+		private const int INTRO_VERSION = 15;
 		private const string INTRO_TEXT =
-@" Welcome to Rawr 2.1.7. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+@" Welcome to Rawr 2.1.8. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
->>A NOTE ON ITEM DATA<<: Before each release, I refresh the data in the default itemcache with the latest data from Wowhead and the Armory. However, at the current time, neither has updated its data for 3.0.8. I've manually updated the DPS on feral weapons, but that's it. I suggest that you use Tools > Update Item Cache from Wowhead / Armory once one of them updates to 3.0.8 data. 
+v2.1.8:
+	Fixed a bug in the Optimizer that would stop it from equipping the optimized gearset when any item gemmings to be equipped weren't in the itemcache already.
+	Fixed several bugs with Wowhead parsing, and updated the default itemcache with the new 3.0.8 data from Wowhead.
+	Added the two new enchants from 3.0.8.
+	Rawr.Healadin: Removed profession benefits from Options since they are now all correctly modelled in there respective places. Support for Judgements missing, and effect of Hit rating. Fixed bug that capped HL too high incorrectly. Added support for FoL Glyph. Updated 2T6 and 4T6 bonuses.
+	Rawr.HolyPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
+	Rawr.Tankadin: Adjusted calculations for new Sacred Duty.
+	Rawr.Retribution: Fix for loading the saved glyphs.
+	Rawr.Tree: New custom chart for Spell Rotations. New feature to choose the ratio of burst vs sustained healing used in Overall ratings. 
+	Rawr.Mage: Added Arcane Scorch cycles.
+	Rawr.Cat: Added 4T7 calculations.
+	Rawr.ProtWarr: Tweak to the Vitality calculations to match WoW's rounding.
 
-Recent Changes:
-v2.1.7:
-	All models now contain a Relative Stat Values chart, which dynamically shows the value of various common stats to your current character. Some models had charts similar to this, and most of those still remain, in case they show any additional stats that this universal chart doesn't, but they will be removed in the next major version. As before, remember that these are only outputs from Rawr's calculations, not used internally by Rawr. Also, still remember that they will never be 100% accurate, and to always update whatever you use them for, whenver your gear/enchant/buffs change, in order to maintain as close to accurate as you can.
-	Fixed a couple more bugs with Wowhead parsing, and made it more resilient to errors (won't break your whole item cache update if it does hit an error).
-	Fixed a bug that would clear your available items on reload character from Armory.
-	You can now create filters that apply only to gems, or only to gear. (Not used by default filters yet, though)
-	Added support for several more trinket proc/effects.
-	Equipped items will always be shown in item listings, even if they would otherwise be filtered out.
-	Equipped items will now be marked as available, when re/loading from the Armory
-	Rawr.Cat/Bear: Adjusted calculations for the new FeralAP system. Weapon DPS is now counted as attack power, and items no longer show innate feral attack power. I've manually updated all feral weapons to have their new DPS values, but the actual stats on the items are still from 3.0.3 (ie, there's still Str on them, instead of plain AP). Please refresh the data on these items, once Wowhead/Armory update to 3.0.8.
-	Rawr.Tree: Major improvements all around. Still not fully complete.
-	Rawr.RestoSham: Major improvements all around. Still not fully complete.
-	Rawr.Retribution: Base miss chance lowered to 8%.
-	Rawr.Tankadin: Base miss chance lowered to 8%.
-	Rawr.ProtWarr: Block Value formula changed. Updates to armor calculations to account for Base vs Bonus Armor. Base racial stats updated. Support for the Armored to the Teeth talent.
-	Rawr.HolyPriest/ShadowPriest: Initial Glyph support.
-	Rawr.Mage: Significant updates to 3.0.8 support and to Arcane cycles. Added Rune of Razorice and Lightweave Embroidery. Enhanced hit rating tooltip. Fix for FBScPyro never being chosen when Global Optimizations were on. Added shatter combo cycles for Frost.
-	Rawr.DPSWarr: Initial draft of 3.0 version. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.DPSWarr in conjunction with other theorycrafting tools.
-	Rawr.TankDK: Fixed expertise calculations.
-	Rawr.Rogue/Warlock: Nothing new, yet, but wanted to mention that we have a ton of active development on these models lately, and new versions are coming soon.
-	Rawr.Enhance: Updated the default and available target levels from 70-73 to 80-83, and raised the maximum target armor.
 
 Here's a quick rundown of the status of each model:
-   •Rawr.Base: Fully functional. Still want to implement a global interface for glyphs, but they're left up to each model for now.
+   •Rawr.Base: Fully functional. Gemming system revamp is coming. Global interface for Glyphs is coming.
    •Rawr.Bear: Fully functional for level 80.
    •Rawr.Cat: Fully functional for level 80.
-   •Rawr.DPSDK: Fully functional for level 80, but still has a few problems since it's brand new.
-   •Rawr.DPSWarr: Not functional for 3.0.
-   •Rawr.Enhance: Fully functional for level 80, but still has a few problems since it's brand new.
+   •Rawr.DPSDK: Fully functional for 3.0 & level 80.
+   •Rawr.DPSWarr: Partially functional for 3.0 & level 80.
+   •Rawr.Enhance: Partially functional for 3.0 & level 80.
    •Rawr.Healadin: Fully functional for level 80.
    •Rawr.HolyPriest: Fully functional for level 80.
-   •Rawr.Hunter: Fully functional for level 80, but still has a few problems since it's brand new.
+   •Rawr.Hunter: Partially functional for 3.0 & level 80.
    •Rawr.Mage: Fully functional for level 80.
    •Rawr.Moonkin: Fully functional for level 80.
    •Rawr.ProtWarr: Partially functional for 3.0 & level 80.
@@ -63,9 +53,9 @@ Here's a quick rundown of the status of each model:
    •Rawr.Retribution: Fully functional for level 80.
    •Rawr.Rogue: Not functional for 3.0.
    •Rawr.ShadowPriest: Fully functional for level 80.
-   •Rawr.Tankadin: Fully functional for level 80.
    •Rawr.TankDK: Partially functional for 3.0 & level 80.
-   •Rawr.Tree: Partially functional for 3.0 & level 80.
+   •Rawr.Tankadin: Fully functional for 3.0 & level 80.
+   •Rawr.Tree: Fully functional for 3.0 & level 80.
    •Rawr.Warlock: Not functional for 3.0.
     
     

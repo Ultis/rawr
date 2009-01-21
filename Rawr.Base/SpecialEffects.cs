@@ -747,7 +747,7 @@ namespace Rawr
             {
                 stats.ManaRestoreOnCrit_25 = 900;
 			}
-            else if (line.StartsWith("Your spells have a chance to increase your spell power by 512 for 10 sec."))
+            else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
             {
                 // Forge Ember
                 stats.SpellPowerFor10SecOnHit_10_45 += 512;
