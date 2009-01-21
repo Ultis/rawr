@@ -172,7 +172,7 @@ namespace Rawr.Healadin
 
             calc.ManaBase = stats.Mana;
             calc.ManaLayOnHands = 1950 * ((calcOpts.Glyph_Divinity ? 1 : 0) + (calcOpts.LoHSelf ? 1 : 0)) * (calcOpts.Glyph_LoH ? 1.2f : 1f);
-            calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 60f - .25f) : 0);
+            calc.ManaArcaneTorrent = (character.Race == Character.CharacterRace.BloodElf ? stats.Mana * .06f * (float)Math.Ceiling(fight_length / 120f - .25f) : 0);
             calc.ManaDivinePlea = stats.Mana * .25f * divine_pleas;
             calc.ManaMp5 = fight_length * stats.Mp5 / 5;
             calc.ManaPotion = (1 + stats.BonusManaPotion) * calcOpts.ManaAmt;
