@@ -14,13 +14,13 @@ namespace Rawr.Tree
             set { subPoints = value; }
         }
 
-        public float HpSPoints
+        public float BurstPoints
         {
             get { return subPoints[0]; }
             set { subPoints[0] = value; }
         }
 
-        public float HDPoints
+        public float SustainedPoints
         {
             get { return subPoints[1]; }
             set { subPoints[1] = value; }
@@ -43,7 +43,7 @@ namespace Rawr.Tree
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S)", Name, OverallPoints, HpSPoints, HDPoints, SurvivalPoints);
+            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S)", Name, OverallPoints, BurstPoints, SustainedPoints, SurvivalPoints);
         }
     }
 }

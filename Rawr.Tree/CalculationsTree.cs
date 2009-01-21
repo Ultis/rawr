@@ -101,10 +101,19 @@ namespace Rawr.Tree
             }
         }
 
+        private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {
-            get { return new string[1]; }
+            get
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] {
+					"Spell rotations"
+					};
+                return _customChartNames;
+            }
         }
+
 
         private CalculationOptionsPanelTree _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -636,9 +645,58 @@ namespace Rawr.Tree
             return statsRace;
         }
 
+        private ComparisonCalculationTree getRotationData(Character character, int rotation, String rotationName)
+        {
+            CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
+            int old = calcOpts.Rotation;
+            calcOpts.Rotation = rotation;
+            CharacterCalculationsTree calcs = GetCharacterCalculations(character) as CharacterCalculationsTree;
+            calcOpts.Rotation = old;
+            return new ComparisonCalculationTree()
+            {
+                Character = character,
+                Name = rotationName,
+                OverallPoints = calcs.OverallPoints,
+                BurstPoints = calcs.BurstPoints,
+                SustainedPoints = calcs.SustainedPoints,
+                SurvivalPoints = calcs.SurvivalPoints
+            };
+        }
+
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            return null;
+            switch (chartName)
+            {
+                case "Spell rotations":
+                    List<ComparisonCalculationBase> comparisonsDPS = new List<ComparisonCalculationBase>();
+
+                    string[] rotations = new string[] {
+                        "Single target Nourish (plus RJ/RG/LB)",
+                        "Single target Nourish (2 Tanks RJ/RG/LB)",
+                        "Single target Healing Touch (plus RJ/RG/LB)",
+                        "Single target Healing Touch (2 Tanks RJ/RG/LB)",
+                        "Single target Regrowth (plus RJ/RG/LB)",
+                        "Single target Regrowth (2 Tanks RJ/RG/LB)",
+                        "Raid healing with Regrowth (1 Tank RJ/LB)",
+                        "Raid healing with Regrowth (2 Tanks RJ/LB)",
+                        "Raid healing with Rejuvenation (1 Tank RJ/LB)",
+                        "Raid healing with Rejuvenation (2 Tanks RJ/LB)",
+                        "Raid healing with Nourish (1 Tank RJ/LB)",
+                        "Raid healing with Nourish (2 Tanks RJ/LB)",
+                        "Nourish spam",
+                        "Healing Touch spam",
+                        "Regrowth spam"
+                    };
+
+                    for (int i = 0; i < rotations.Length; i++)
+                    {
+                        comparisonsDPS.Add(getRotationData(character, i, rotations[i]));
+                    }   
+
+                    return comparisonsDPS.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
         public override Stats GetRelevantStats(Stats stats)
