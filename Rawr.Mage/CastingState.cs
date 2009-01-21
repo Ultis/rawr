@@ -656,6 +656,24 @@ namespace Rawr.Mage
                 case SpellId.ScorchNoCC:
                     s = new Scorch(this, false);
                     break;
+                case SpellId.ABABarSc:
+                    s = new ABABarSc(this);
+                    break;
+                case SpellId.ABABarCSc:
+                    s = new ABABarCSc(this);
+                    break;
+                case SpellId.ABAMABarSc:
+                    s = new ABAMABarSc(this);
+                    break;
+                case SpellId.AB3ABarCSc:
+                    s = new AB3ABarCSc(this);
+                    break;
+                case SpellId.AB3AMABarSc:
+                    s = new AB3AMABarSc(this);
+                    break;
+                case SpellId.AB3MBAMABarSc:
+                    s = new AB3MBAMABarSc(this);
+                    break;
                 case SpellId.ArcaneBarrage:
                     s = new ArcaneBarrage(this, 0);
                     break;

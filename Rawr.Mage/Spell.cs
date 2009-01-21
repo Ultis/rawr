@@ -99,6 +99,12 @@ namespace Rawr.Mage
         ArcaneBlast1Miss,
         ArcaneBlast2Miss,
         ArcaneBlast3Miss,
+        ABABarSc,
+        ABABarCSc,
+        ABAMABarSc,
+        AB3AMABarSc,
+        AB3ABarCSc,
+        AB3MBAMABarSc,
         ABarAM,
         ABP,
         ABAM,
@@ -6388,6 +6394,336 @@ namespace Rawr.Mage
             FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
             Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
             Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+        }
+    }
+
+    class ABABarSc : Spell
+    {
+        Spell ABABar;
+        BaseSpell Sc;
+        float X;
+
+        public ABABarSc(CastingState castingState)
+        {
+            Name = "ABABarSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            ABABar = castingState.GetSpell(SpellId.ABABar);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = ABABar.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap));
+
+            CastTime = X * ABABar.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * ABABar.CastTime * ABABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * ABABar.CastTime * ABABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * ABABar.CastTime * ABABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * ABABar.CastTime * ABABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * ABABar.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            ABABar.AddSpellContribution(dict, X * ABABar.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+        }
+    }
+
+    class ABABarCSc : Spell
+    {
+        Spell ABABarC;
+        BaseSpell Sc;
+        float X;
+
+        public ABABarCSc(CastingState castingState)
+        {
+            Name = "ABABarCSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            ABABarC = castingState.GetSpell(SpellId.ABABarC);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = ABABarC.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABarC.CastTime * (1 - gap));
+
+            CastTime = X * ABABarC.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * ABABarC.CastTime * ABABarC.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * ABABarC.CastTime * ABABarC.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * ABABarC.CastTime * ABABarC.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * ABABarC.CastTime * ABABarC.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * ABABarC.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            ABABarC.AddSpellContribution(dict, X * ABABarC.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+        }
+    }
+
+    class ABAMABarSc : Spell
+    {
+        Spell ABAMABar;
+        BaseSpell Sc;
+        float X;
+
+        public ABAMABarSc(CastingState castingState)
+        {
+            Name = "ABAMABarSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            ABAMABar = castingState.GetSpell(SpellId.ABAMABar);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = ABAMABar.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + ABAMABar.CastTime * (1 - gap));
+
+            CastTime = X * ABAMABar.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * ABAMABar.CastTime * ABAMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * ABAMABar.CastTime * ABAMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * ABAMABar.CastTime * ABAMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * ABAMABar.CastTime * ABAMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * ABAMABar.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            ABAMABar.AddSpellContribution(dict, X * ABAMABar.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3AMABarSc : Spell
+    {
+        Spell AB3AMABar;
+        BaseSpell Sc;
+        float X;
+
+        public AB3AMABarSc(CastingState castingState)
+        {
+            Name = "AB3AMABarSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            AB3AMABar = castingState.GetSpell(SpellId.AB3AMABar);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = AB3AMABar.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3AMABar.CastTime * (1 - gap));
+
+            CastTime = X * AB3AMABar.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * AB3AMABar.CastTime * AB3AMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * AB3AMABar.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            AB3AMABar.AddSpellContribution(dict, X * AB3AMABar.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3ABarCSc : Spell
+    {
+        Spell AB3ABarC;
+        BaseSpell Sc;
+        float X;
+
+        public AB3ABarCSc(CastingState castingState)
+        {
+            Name = "AB3ABarCSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            AB3ABarC = castingState.GetSpell(SpellId.AB3ABarC);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = AB3ABarC.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3ABarC.CastTime * (1 - gap));
+
+            CastTime = X * AB3ABarC.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * AB3ABarC.CastTime * AB3ABarC.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * AB3ABarC.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            AB3ABarC.AddSpellContribution(dict, X * AB3ABarC.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+        }
+    }
+
+    class AB3MBAMABarSc : Spell
+    {
+        Spell AB3MBAMABar;
+        BaseSpell Sc;
+        float X;
+
+        public AB3MBAMABarSc(CastingState castingState)
+        {
+            Name = "AB3MBAMABarSc";
+            ProvidesScorch = true;
+            AffectedByFlameCap = true;
+
+            AB3MBAMABar = castingState.GetSpell(SpellId.AB3MBAMABar);
+            Sc = (BaseSpell)castingState.GetSpell(SpellId.Scorch);
+            sequence = AB3MBAMABar.Sequence;
+
+            int averageScorchesNeeded = (int)Math.Ceiling(3f / (float)castingState.MageTalents.ImprovedScorch);
+            int extraScorches = 1;
+            if (Sc.HitRate >= 1.0) extraScorches = 0;
+            if (castingState.CalculationOptions.GlyphOfImprovedScorch)
+            {
+                averageScorchesNeeded = 1;
+                extraScorches = 0;
+            }
+
+            float gap = (30.0f - (averageScorchesNeeded + extraScorches) * Sc.CastTime) / (30.0f - extraScorches * Sc.CastTime);
+            if (castingState.MageTalents.ImprovedScorch == 0)
+            {
+                ProvidesScorch = false;
+                gap = 1.0f;
+            }
+
+            // gap = X * ABABar.CastTime / (X * ABABar.CastTime + (1 - X) * Sc.CastTime)
+            // gap * (X * ABABar.CastTime + (1 - X) * Sc.CastTime) = X * ABABar.CastTime
+            // gap * X * ABABar.CastTime + gap * Sc.CastTime - gap * X * Sc.CastTime = X * ABABar.CastTime
+            // X * (gap * ABABar.CastTime - gap * Sc.CastTime - ABABar.CastTime) + gap * Sc.CastTime = 0
+            // X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap))
+
+            X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3MBAMABar.CastTime * (1 - gap));
+
+            CastTime = X * AB3MBAMABar.CastTime + (1 - X) * Sc.CastTime;
+            CostPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
+            DamagePerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
+            CastProcs = X * AB3MBAMABar.CastProcs + (1 - X) * Sc.CastProcs;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            AB3MBAMABar.AddSpellContribution(dict, X * AB3MBAMABar.CastTime / CastTime * duration);
+            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
         }
     }
 

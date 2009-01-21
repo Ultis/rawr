@@ -2135,7 +2135,16 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0)
+                        {
+                            list.Add(SpellId.ABABarSc);
+                            list.Add(SpellId.ABABarCSc);
+                            list.Add(SpellId.ABAMABarSc);
+                            list.Add(SpellId.AB3AMABarSc);
+                            list.Add(SpellId.AB3ABarCSc);
+                            list.Add(SpellId.AB3MBAMABarSc);
+                        }
+                        else if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                         {
                             if (character.MageTalents.LivingBomb > 0)
                             {
@@ -2183,6 +2192,15 @@ namespace Rawr.Mage
                             }
                         }
                         list.Add(SpellId.FBFBlast);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0)
+                        {
+                            list.Add(SpellId.ABABarSc);
+                            list.Add(SpellId.ABABarCSc);
+                            list.Add(SpellId.ABAMABarSc);
+                            list.Add(SpellId.AB3AMABarSc);
+                            list.Add(SpellId.AB3ABarCSc);
+                            list.Add(SpellId.AB3MBAMABarSc);
+                        }
                     }
                 }
                 else if (calculationOptions.MaintainSnare && character.MageTalents.Slow > 0)
