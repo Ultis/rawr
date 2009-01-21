@@ -365,11 +365,7 @@ namespace Rawr.Healadin
 
             Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
             Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
-            statsOther.Intellect += calcOpts.Prof_Int;
-            statsTotal.HasteRating += calcOpts.Prof_Haste;
-            statsTotal.CritRating += calcOpts.Prof_Crit;
-            statsTotal.Mp5 += calcOpts.Prof_Mp5;
-            statsTotal.SpellPower += calcOpts.Prof_SP;
+
 
             statsTotal.Stamina = (float)Math.Round(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsOther.Intellect * (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f))
