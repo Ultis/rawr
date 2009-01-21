@@ -301,8 +301,8 @@ namespace Rawr.Tree
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor15SecOnUse90Sec / 8;
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor20SecOnUse2Min / 6;
             // For 10% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 60-65 seconds, .17 to be optimistic
-            calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnCast_10_45 * .17f;
-            calculatedStats.BasicStats.HasteRating += calculatedStats.BasicStats.SpellHasteFor10SecOnHeal_10_45 * .17f;
+            calculatedStats.BasicStats.SpellHaste += calculatedStats.BasicStats.SpellHasteFor10SecOnCast_10_45 * .17f / TreeConstants.HasteRatingToHaste;
+            calculatedStats.BasicStats.SpellHaste += calculatedStats.BasicStats.SpellHasteFor10SecOnHeal_10_45 * .17f / TreeConstants.HasteRatingToHaste;
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnHeal_10_45 * .17f;
             // For 15% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 57-60 seconds, .18 to be optimistic
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnCast_15_45 * .18f;
@@ -713,6 +713,7 @@ namespace Rawr.Tree
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
+                SpellHaste = stats.SpellHaste,
                 #endregion
                 #region Alchemists Stone
                 BonusManaPotion = stats.BonusManaPotion,
@@ -772,11 +773,20 @@ namespace Rawr.Tree
             if (stats.HasteRating == 81.25)
                 return false;
 
-            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritChanceReduction + stats.HasteRating + stats.Mana + stats.CritRating
+            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating
+                + stats.CritChanceReduction + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
-                + stats.BonusManaPotion + stats.TrollDivinity + stats.ExtraSpiritWhileCasting + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
-                + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnHeal_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusHoTOnDirectHeals
-                + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost + stats.HealingTouchFinalHealBonus
+                + stats.BonusManaPotion + stats.TrollDivinity + stats.ExtraSpiritWhileCasting 
+                + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc 
+                + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast 
+                + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
+                + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45 
+                + stats.SpellPowerFor10SecOnHeal_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusHoTOnDirectHeals
+                + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
+                + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
+                + stats.HealingTouchFinalHealBonus 
+                // FOR DEVO AURA
+                + stats.BonusArmor
                 > 0)
                 return true;
 

@@ -63,9 +63,15 @@ namespace Rawr.Tree
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
             dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + replenishRegen.ToString() + " From Replenishment" + (hasSpiWhileCasting?"\n(values include extra Spirit while casting)":""));
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
-            float hr_from_trinkets = (BasicStats.SpellHasteFor10SecOnCast_10_45 + BasicStats.SpellHasteFor10SecOnHeal_10_45) * .17f;
-            dictValues.Add("Spell Haste", Math.Round(BasicStats.HasteRating / TreeConstants.HasteRatingToHaste * 100, 2) + "%" + (hr_from_trinkets>0?"*"+Math.Round(hr_from_trinkets,2).ToString()+" Haste from trinkets":""));
-            dictValues.Add("Global CD", Math.Round(1.5f / (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste), 2) + "sec");
+            float hr_from_trinkets = (BasicStats.SpellHasteFor10SecOnCast_10_45 + BasicStats.SpellHasteFor10SecOnHeal_10_45) * .17f / TreeConstants.HasteRatingToHaste;
+            float haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
+            float sp = 1 + BasicStats.SpellHaste;
+            float hard = (1.5f / (1f * sp) - 1) * TreeConstants.HasteRatingToHaste;
+            float soft = (1.5f / (1.3f * sp) - 1) * TreeConstants.HasteRatingToHaste;
+            float haste_until_hard_cap = hard - BasicStats.HasteRating;
+            float haste_until_soft_cap = soft - BasicStats.HasteRating;
+            dictValues.Add("Spell Haste", Math.Round(sp, 2) + "%" + (hr_from_trinkets > 0 ? "*" + Math.Round(100*hr_from_trinkets, 2).ToString() + " % Spell haste from trinkets" : ""));
+            dictValues.Add("Global CD", Math.Round(1.5f / (haste * sp), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
 
             dictValues.Add("Time until OOM", TimeUntilOOM.ToString());
             dictValues.Add("Total healing done", TotalHealing.ToString());

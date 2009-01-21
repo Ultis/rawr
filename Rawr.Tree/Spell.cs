@@ -86,7 +86,9 @@ namespace Rawr.Tree
 
         public void Initialize(CharacterCalculationsTree calcs)
         {
-            gcd = 1.5f / (1 + calcs.BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            gcd = 1.5f / (sp * haste);
             critModifier *= 1f + calcs.BasicStats.BonusCritHealMultiplier;
         }
     }
@@ -118,7 +120,10 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            gcd = 1.5f / (sp * haste);
+            castTime = (float)Math.Round(castTime / (haste * sp), 4);
 
             extraHealing = calcs.BasicStats.BonusHoTOnDirectHeals;
 
@@ -179,9 +184,9 @@ namespace Rawr.Tree
         public HealingTouchChain(CharacterCalculationsTree calcs) : base(calcs)
         {
             float d = 0.5f * critPercent * calcs.BasicStats.SpellHasteFor5SecOnCrit_50;
-            float hr = calcs.BasicStats.HasteRating;
-            float s = TreeConstants.HasteRatingToHaste;
-            castTime = (float)Math.Round(castTime * (1 + hr / s) / (1 + (hr + d)/s), 4);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = 1 + calcs.BasicStats.SpellHaste + d;
+            castTime = (float)Math.Round(castTime / (haste * sp), 4);
         }
     }
 
@@ -243,7 +248,9 @@ namespace Rawr.Tree
 
             /* Glyph of Regrowth is modelled in the constructor */
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            castTime = (float)Math.Round(castTime / (haste * sp), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -312,6 +319,10 @@ namespace Rawr.Tree
             periodicTicks = 5;
             #endregion
 
+            float haste = (1 + (calculatedStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calculatedStats.SpellHaste);
+            gcd = (float)Math.Round(gcd / (sp * haste), 4);
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols etc
@@ -321,15 +332,15 @@ namespace Rawr.Tree
             //z.B.: Idol of Budding Life (-36 Manacost)
             manaCost -= calculatedStats.ReduceRejuvenationCost;
             #endregion
-
-            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
         {
             periodicTicks += 1 * druidTalents.NaturesSplendor;
 
-            gcd *= 1 - 0.04f * druidTalents.GiftOfTheEarthmother;
+            //gcd *= 1 - 0.04f * druidTalents.GiftOfTheEarthmother;
+            // use base gcd
+            gcd -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= 1 - 0.2f * druidTalents.TreeOfLife;
 
@@ -391,6 +402,10 @@ namespace Rawr.Tree
             periodicTicks = 7;
             #endregion
 
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            gcd = (float)Math.Round(gcd / (haste * sp), 4);
+
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
             #region Idols
@@ -403,15 +418,15 @@ namespace Rawr.Tree
 
             if (calcOpts.glyphOfLifebloom)
                 periodicTicks += 1;
-
-            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
         {
             periodicTicks += 2 * druidTalents.NaturesSplendor;
 
-            gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+            //gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+            // use base gcd
+            gcd -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
 
@@ -495,14 +510,18 @@ namespace Rawr.Tree
             periodicTickTime = 1f;
             #endregion
 
-            calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            gcd = (float)Math.Round(gcd / (haste * sp), 4);
 
-            gcd = (float)Math.Round(gcd / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
+            calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
         {
-            gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+            //gcd *= (1 - 0.04f * druidTalents.GiftOfTheEarthmother);
+            // use base gcd
+            gcd -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
 
@@ -570,7 +589,9 @@ namespace Rawr.Tree
 
             calculateTalents(calcs.LocalCharacter.DruidTalents, calcOpts);
 
-            castTime = (float)Math.Round(castTime / (1 + calculatedStats.HasteRating / TreeConstants.HasteRatingToHaste), 4);
+            float haste = (1 + (calcs.BasicStats.HasteRating) / TreeConstants.HasteRatingToHaste);
+            float sp = (1 + calcs.BasicStats.SpellHaste);
+            castTime = (float)Math.Round(castTime / (haste * sp), 4);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
