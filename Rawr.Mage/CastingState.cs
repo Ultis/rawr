@@ -451,7 +451,7 @@ namespace Rawr.Mage
             {
                 ArcaneSpellModifier *= (1 + 0.06f * character.MageTalents.MoltenFury);
             }
-            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower);
+            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + characterStats.BonusDamageMultiplier);
             FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
             NatureSpellModifier = ArcaneSpellModifier;
             ShadowSpellModifier = ArcaneSpellModifier;
