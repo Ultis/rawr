@@ -898,11 +898,11 @@ namespace Rawr.Moonkin
             SpellRotation.Wrath.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             SpellRotation.InsectSwarm.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             // Judgement of Wisdom (now generic!)
-            if (calcs.BasicStats.ManaRestoreFromMaxManaPerHit > 0)
+            if (calcs.BasicStats.ManaRestoreFromBaseManaPerHit > 0)
             {
-                SpellRotation.Moonfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
-                SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
-                SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromMaxManaPerHit * calcs.BasicStats.Mana;
+                SpellRotation.Moonfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
+                SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
+                SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
             }
 
             float maxDPS = 0.0f;

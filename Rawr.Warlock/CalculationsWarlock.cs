@@ -516,7 +516,7 @@ namespace Rawr.Warlock
                 ShadowWordDeathCritIncrease = stats.ShadowWordDeathCritIncrease,
                 WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,*/
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                ManaRestoreFromMaxManaPerHit = stats.ManaRestoreFromMaxManaPerHit,
+                ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
                 SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
                 SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
@@ -567,7 +567,7 @@ namespace Rawr.Warlock
                 + stats.WarlockGrandSpellstone
                 + stats.WarlockGrandFirestone
                 + stats.ManaRestoreOnCast_5_15
-                + stats.ManaRestoreFromMaxManaPerHit
+                + stats.ManaRestoreFromBaseManaPerHit
                 + stats.SpellPowerFor15SecOnUse90Sec
                 + stats.SpellPowerFor15SecOnUse2Min
                 + stats.SpellPowerFor20SecOnUse2Min

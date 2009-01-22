@@ -468,7 +468,7 @@ namespace Rawr.Warlock
             tmpregen = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f);
             ManaSources.Add(new ManaSource("Replenishment", tmpregen));
             regen += tmpregen;
-            tmpregen = simStats.Mana * simStats.ManaRestoreFromMaxManaPerHit * HitsPerSecond * (CalculationOptions.JoW / 100f);
+            tmpregen = simStats.Mana * simStats.ManaRestoreFromBaseManaPerHit * HitsPerSecond * (CalculationOptions.JoW / 100f);
             if (tmpregen > 0)
             {
                 ManaSources.Add(new ManaSource("Judgement of Wisdom", tmpregen));
