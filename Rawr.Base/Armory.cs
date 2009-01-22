@@ -806,7 +806,7 @@ namespace Rawr
 				}
 				string desc = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText; }
-                if (desc.Contains("Matches any Socket"))
+                if (desc.ToLower().Contains("matches any socket"))
                 {
                     slot = Item.ItemSlot.Prismatic;
                 }
