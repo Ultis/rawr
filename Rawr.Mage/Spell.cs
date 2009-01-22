@@ -520,13 +520,15 @@ namespace Rawr.Mage
 
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
-            float InterruptFactor = castingState.CalculationOptions.InterruptFrequency;
+            // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
+            float InterruptFactor = Math.Min(castingState.CalculationOptions.InterruptFrequency, 2 * CastingSpeed / BaseCastTime);
 
             float Haste = castingState.SpellHasteRating;
             float levelScalingFactor;
             levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (castingState.CalculationOptions.PlayerLevel - 70) / 10f));
 
             float maxPushback = 0.5f * Math.Max(0, 1 - InterruptProtection);
+            if (Channeled) maxPushback = 0.0f;
             GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
             CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
             CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -684,6 +686,23 @@ namespace Rawr.Mage
                 }
                 DamagePerSecond = AverageDamage / CastTime;
                 ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+            }
+
+            // channeled pushback
+            if (Channeled && InterruptFactor > 0)
+            {
+                int maxLostTicks = (int)Math.Ceiling(HitProcs * 0.25f * Math.Max(0, 1 - InterruptProtection));
+                // pushbacks that happen up to pushbackCastTime cut the cast time to pushbackCastTime
+                // pushbacks that happen after just terminate the channel
+                // [---|---X---|---|---]
+                float tickFactor = 0;
+                for (int i = 0; i < maxLostTicks; i++)
+                {
+                    tickFactor += InterruptFactor * CastTime / HitProcs * (i + 1) / HitProcs;
+                }
+                tickFactor += InterruptFactor * (HitProcs - maxLostTicks) * CastTime / HitProcs * maxLostTicks / HitProcs;
+                CastTime *= (1 - tickFactor);
+                CostPerSecond /= (1 - tickFactor);
             }
 
             if (castingState.WaterElemental)
@@ -1877,7 +1896,7 @@ namespace Rawr.Mage
         }
 
         public Blizzard(CastingState castingState)
-            : base("Blizzard", true, false, false, true, 0, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions))
+            : base("Blizzard", true, false, false, true, 0, 8, 0, MagicSchool.Frost, GetMaxRankSpellData(castingState.CalculationOptions), 4, 1)
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + castingState.MageTalents.IceShards / 3.0f + 0.25f * castingState.MageTalents.SpellPower + castingState.BaseStats.CritBonusDamage)); // special case because it is not affected by Burnout
