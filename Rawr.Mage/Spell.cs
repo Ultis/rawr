@@ -660,6 +660,7 @@ namespace Rawr.Mage
             if (castingState.BaseStats.SpellPowerFor6SecOnCrit > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
             if (castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
             if (castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
+            if (castingState.BaseStats.SpellPowerFor10SecOnCast_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.BaseStats.SpellPowerFor10SecOnResist > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
             if (castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
             if (castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);

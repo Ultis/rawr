@@ -243,9 +243,15 @@ namespace Rawr
 				//if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
 				//if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 // TODO: for now just average, convert this to an actual proc effect
-				stats.AttackPower += 1000f / 6f;
+				stats.AttackPower += 1000f / 7f;
 			}
-			// Idol of the Raven Goddess (already added)
+            else if (line.StartsWith("Chance on melee or ranged hit to increase your attack power by 1000 for 10 secs."))
+            {
+                // Anvil of Titans
+                // TODO: for now just average, convert this to an actual proc effect
+                stats.AttackPower += 1000f / 6f;
+            }
+            // Idol of the Raven Goddess (already added)
 			else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
 			{
 				string moonkinline = line;
@@ -507,6 +513,11 @@ namespace Rawr
 			{
 				stats.SpellHasteFor6SecOnHit_10_45 += 320;
 			}
+            else if (line.StartsWith("Your spell casts have a chance to increase your spell power by 590 for 10 sec."))
+            {
+                // Flow of Knowledge
+                stats.SpellPowerFor10SecOnCast_10_45 += 590;
+            }
 			else if (line.StartsWith("Chance on spell critical hit to increase your spell power by 225 for 10 secs."))
 			{
 				// Shiffar's Nexus-Horn
