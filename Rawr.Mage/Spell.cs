@@ -1736,10 +1736,18 @@ namespace Rawr.Mage
 
         public override void Calculate(CastingState castingState)
         {
+            if (castingState.CalculationOptions.UseAMClipping && arcaneBlastDebuff > 0)
+            {
+                BaseCastTime = 4.0f;
+            }
             base.Calculate(castingState);
             if (barrage) BaseCastTime -= 2.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.2f : 0.15f) * arcaneBlastDebuff);
+            if (castingState.CalculationOptions.UseAMClipping && arcaneBlastDebuff > 0)
+            {
+                SpellModifier *= 4.0f / 5.0f;
+            }
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CalculateDerivedStats(castingState);
         }
@@ -1873,9 +1881,12 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + castingState.MageTalents.IceShards / 3.0f + 0.25f * castingState.MageTalents.SpellPower + castingState.BaseStats.CritBonusDamage)); // special case because it is not affected by Burnout
-            if (castingState.MageTalents.ImprovedBlizzard > 0 && castingState.MageTalents.Frostbite > 0)
+            if (castingState.MageTalents.ImprovedBlizzard > 0)
             {
-                CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+                float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
+                fof = Math.Max(fof, 0.05f * castingState.MageTalents.Frostbite);
+                CritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+                //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
             AoeDamageCap = 200000;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;

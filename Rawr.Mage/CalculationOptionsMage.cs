@@ -115,6 +115,7 @@ namespace Rawr.Mage
         public float FocusMagicTargetCritRate { get; set; }
         public bool UnlimitedMana { get; set; }
         public bool AllowLatencyCombos { get; set; }
+        public bool UseAMClipping { get; set; }
         public float ComboReliability { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }

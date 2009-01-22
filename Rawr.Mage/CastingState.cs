@@ -246,8 +246,8 @@ namespace Rawr.Mage
 
             if (potionOfWildMagic)
             {
-                SpellDamageRating += 180;
-                SpellCritRating += 60;
+                SpellDamageRating += 200;
+                SpellCritRating += 200;
             }
             if (potionOfSpeed)
             {
