@@ -594,7 +594,7 @@ namespace Rawr.Mage
                     s = new ArcaneMissilesCC(this);
                     break;
                 case SpellId.ArcaneMissilesNoProc:
-                    s = new ArcaneMissiles(this, false, true, false, false, 0);
+                    s = new ArcaneMissiles(this, false, true, false, false, 0, 5);
                     break;
                 /*case SpellId.ArcaneMissilesFTF:
                     s = new ArcaneMissiles(this);

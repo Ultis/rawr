@@ -1713,6 +1713,7 @@ namespace Rawr.Mage
     {
         private bool barrage;
         private int arcaneBlastDebuff;
+        private int ticks;
 
         public static SpellData[] SpellData = new SpellData[11];
         static ArcaneMissiles()
@@ -1734,7 +1735,7 @@ namespace Rawr.Mage
             return SpellData[options.PlayerLevel - 70];
         }
 
-        public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff)
+        public ArcaneMissiles(CastingState castingState, bool barrage, bool clearcastingAveraged, bool clearcastingActive, bool clearcastingProccing, int arcaneBlastDebuff, int ticks)
             : base("Arcane Missiles", true, false, false, false, 30, 5, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 5, 6)
         {
             ManualClearcasting = true;
@@ -1743,6 +1744,7 @@ namespace Rawr.Mage
             ClearcastingProccing = clearcastingProccing;
             this.barrage = barrage;
             this.arcaneBlastDebuff = arcaneBlastDebuff;
+            this.ticks = ticks;
             Calculate(castingState);
         }
 
@@ -1751,6 +1753,7 @@ namespace Rawr.Mage
         {
             this.barrage = barrage;
             this.arcaneBlastDebuff = arcaneBlastDebuff;
+            this.ticks = 5;
             Calculate(castingState);
         }
 
@@ -1761,7 +1764,7 @@ namespace Rawr.Mage
                 BaseCastTime = 4.0f;
             }
             base.Calculate(castingState);
-            if (barrage) BaseCastTime -= 2.5f;
+            if (barrage) BaseCastTime *= 0.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.2f : 0.15f) * arcaneBlastDebuff);
             if (castingState.CalculationOptions.UseAMClipping && arcaneBlastDebuff > 0)
@@ -2110,9 +2113,9 @@ namespace Rawr.Mage
 
             CC = 0.02f * castingState.MageTalents.ArcaneConcentration;
 
-            AMc1 = new ArcaneMissiles(castingState, false, true, false, true, 0);
-            AM10 = new ArcaneMissiles(castingState, false, false, true, false, 0);
-            AM11 = new ArcaneMissiles(castingState, false, false, true, true, 0);
+            AMc1 = new ArcaneMissiles(castingState, false, true, false, true, 0, 5);
+            AM10 = new ArcaneMissiles(castingState, false, false, true, false, 0, 5);
+            AM11 = new ArcaneMissiles(castingState, false, false, true, true, 0, 5);
 
             CastProcs = AMc1.CastProcs * (1 + 1 / (1 - CC));
             CastTime = AMc1.CastTime * (1 + 1 / (1 - CC));
@@ -7654,6 +7657,8 @@ namespace Rawr.Mage
             //AM        => AB0,MB0,ABar+    X02
             //AMABar    => AB0,MB0,ABar-    X03*(1-MB)
             //AMABar    => AB0,MB2,ABar-    X03*MB
+            //AMABar*   => AB0,MB0,ABar-    X04*(1-MB)
+            //AMABar*   => AB0,MB2,ABar-    X04*MB
 
             //AB0,MB0,ABar-: S01
             //AB0       => AB1,MB0,ABar+    X20*(1-MB)
@@ -7661,12 +7666,16 @@ namespace Rawr.Mage
             //AM        => AB0,MB0,ABar+    X22
             //AMABar    => AB0,MB0,ABar-    X23*(1-MB)
             //AMABar    => AB0,MB2,ABar-    X23*MB
+            //AMABar*   => AB0,MB0,ABar-    X24*(1-MB)
+            //AMABar*   => AB0,MB2,ABar-    X24*MB
 
             //AB0,MB2,ABar-: S02
             //AB0       => AB1,MB2,ABar+    X30
             //MBAM      => AB0,MB0,ABar+    X32
             //MBAMABar  => AB0,MB0,ABar-    X33*(1-MB)
             //MBAMABar  => AB0,MB2,ABar-    X33*MB
+            //MBAMABar* => AB0,MB0,ABar-    X34*(1-MB)
+            //MBAMABar* => AB0,MB2,ABar-    X34*MB
 
             //AB1,MB0,ABar+: S10
             //AB1       => AB2,MB0,ABar+    X10*(1-MB)
@@ -7676,6 +7685,8 @@ namespace Rawr.Mage
             //AM1       => AB0,MB0,ABar+    X12
             //AMABar1   => AB0,MB0,ABar-    X13*(1-MB)
             //AMABar1   => AB0,MB2,ABar-    X13*MB
+            //AMABar1*  => AB0,MB0,ABar-    X14*(1-MB)
+            //AMABar1*  => AB0,MB2,ABar-    X14*MB
 
             //AB1,MB1,ABar+: S11
             //AB1       => AB2,MB2,ABar+    X10
@@ -7683,6 +7694,8 @@ namespace Rawr.Mage
             //MBAM1     => AB0,MB0,ABar+    X12
             //MBAMABar1 => AB0,MB0,ABar-    X13*(1-MB)
             //MBAMABar1 => AB0,MB2,ABar-    X13*MB
+            //MBAMABar1*=> AB0,MB0,ABar-    X14*(1-MB)
+            //MBAMABar1*=> AB0,MB2,ABar-    X14*MB
 
             //AB1,MB2,ABar+: S12
             //AB1       => AB2,MB2,ABar+    X40
@@ -7690,6 +7703,8 @@ namespace Rawr.Mage
             //MBAM1     => AB0,MB0,ABar+    X42
             //MBAMABar1 => AB0,MB0,ABar-    X43*(1-MB)
             //MBAMABar1 => AB0,MB2,ABar-    X43*MB
+            //MBAMABar1*=> AB0,MB0,ABar-    X44*(1-MB)
+            //MBAMABar1*=> AB0,MB2,ABar-    X44*MB
 
             //AB2,MB0,ABar+: S20
             //AB2       => AB3,MB0,ABar+    X50*(1-MB)
@@ -7699,6 +7714,8 @@ namespace Rawr.Mage
             //AM2       => AB0,MB0,ABar+    X52
             //AMABar2   => AB0,MB0,ABar-    X53*(1-MB)
             //AMABar2   => AB0,MB2,ABar-    X53*MB
+            //AMABar2*  => AB0,MB0,ABar-    X54*(1-MB)
+            //AMABar2*  => AB0,MB2,ABar-    X54*MB
 
             //AB2,MB1,ABar+: S21
             //AB2       => AB3,MB2,ABar+    X50
@@ -7706,6 +7723,8 @@ namespace Rawr.Mage
             //MBAM2     => AB0,MB0,ABar+    X52
             //MBAMABar2 => AB0,MB0,ABar-    X53*(1-MB)
             //MBAMABar2 => AB0,MB2,ABar-    X53*MB
+            //MBAMABar2*=> AB0,MB0,ABar-    X54*(1-MB)
+            //MBAMABar2*=> AB0,MB2,ABar-    X54*MB
 
             //AB2,MB2,ABar+: S22
             //AB2       => AB3,MB2,ABar+    X60
@@ -7713,6 +7732,8 @@ namespace Rawr.Mage
             //MBAM2     => AB0,MB0,ABar+    X62
             //MBAMABar2 => AB0,MB0,ABar-    X63*(1-MB)
             //MBAMABar2 => AB0,MB2,ABar-    X63*MB
+            //MBAMABar2*=> AB0,MB0,ABar-    X64*(1-MB)
+            //MBAMABar2*=> AB0,MB2,ABar-    X64*MB
 
             //AB3,MB0,ABar+: S30
             //AB3       => AB3,MB0,ABar+    X70*(1-MB)
@@ -7722,6 +7743,8 @@ namespace Rawr.Mage
             //AM3       => AB0,MB0,ABar+    X72
             //AMABar3   => AB0,MB0,ABar-    X73*(1-MB)
             //AMABar3   => AB0,MB2,ABar-    X73*MB
+            //AMABar3*  => AB0,MB0,ABar-    X74*(1-MB)
+            //AMABar3*  => AB0,MB2,ABar-    X74*MB
 
             //AB3,MB1,ABar+: S31
             //AB3       => AB3,MB2,ABar+    X70
@@ -7729,6 +7752,8 @@ namespace Rawr.Mage
             //MBAM3     => AB0,MB0,ABar+    X72
             //MBAMABar3 => AB0,MB0,ABar-    X73*(1-MB)
             //MBAMABar3 => AB0,MB2,ABar-    X73*MB
+            //MBAMABar3*=> AB0,MB0,ABar-    X74*(1-MB)
+            //MBAMABar3*=> AB0,MB2,ABar-    X74*MB
 
             //AB3,MB2,ABar+: S32
             //AB3       => AB3,MB2,ABar+    X80
@@ -7736,6 +7761,8 @@ namespace Rawr.Mage
             //MBAM3     => AB0,MB0,ABar+    X82
             //MBAMABar3 => AB0,MB0,ABar-    X83*(1-MB)
             //MBAMABar3 => AB0,MB2,ABar-    X83*MB
+            //MBAMABar3*=> AB0,MB0,ABar-    X84*(1-MB)
+            //MBAMABar3*=> AB0,MB2,ABar-    X84*MB
 
             double MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
