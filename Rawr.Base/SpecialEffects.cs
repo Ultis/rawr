@@ -236,12 +236,14 @@ namespace Rawr
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
 				stats.AttackPower += ((float)int.Parse(line)) / 6f;
 			}
-			else if (line.StartsWith("Chance on hit to increase your attack power by "))
+            else if (line.StartsWith("Chance on melee critical strike to increase your attack power by 1000 for 10 secs."))
 			{
-				line = line.Substring("Chance on hit to increase your attack power by ".Length);
-				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.AttackPower += ((float)int.Parse(line)) / 6f;
+                // Mirror of Truth
+				//line = line.Substring("Chance on hit to increase your attack power by ".Length);
+				//if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
+				//if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
+                // TODO: for now just average, convert this to an actual proc effect
+				stats.AttackPower += 1000f / 6f;
 			}
 			// Idol of the Raven Goddess (already added)
 			else if (line.Contains(" critical strike rating to the Leader of the Pack aura"))
