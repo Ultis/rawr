@@ -215,10 +215,10 @@ namespace Rawr
 				stats.AttackPower += 120; //Crusade = 120ap
 				stats.SpellPower += 80;
 			}
-            else if (line.StartsWith("Each time you cast a spell you gain 26 spell power for the next 10 sec, stacking up to 10 times."))
+            else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 20 spell power for the next 10 sec, stacking up to 10 times."))
             {
                 // Illustration of the Dragon Soul
-                stats.SpellPower += 260;
+                stats.SpellPower += 200;
             }
             else if (line.StartsWith("Your melee and ranged attacks have a chance to inject poison"))
 				stats.WeaponDamage += 2f; //Romulo's = 4dmg
