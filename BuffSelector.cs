@@ -51,6 +51,7 @@ namespace Rawr
 		{
 			BuildControls();
 			LoadBuffsFromCharacter();
+            ScrollHook.hookRec(this);
 		}
 
 		//i want to be free... from desolation and despair

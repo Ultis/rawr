@@ -22,6 +22,7 @@ namespace Rawr
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			BuildControls();
+            ScrollHook.hookRec(this);
 		}
 
 		Dictionary<string, GroupBox> GroupBoxes = new Dictionary<string, GroupBox>();
