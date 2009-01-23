@@ -116,6 +116,7 @@ namespace Rawr.Mage
         public bool UnlimitedMana { get; set; }
         public bool AllowLatencyCombos { get; set; }
         public bool UseAMClipping { get; set; }
+        public bool UseMBAMClipping { get; set; }
         public float ComboReliability { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }

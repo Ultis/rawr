@@ -2735,6 +2735,7 @@ namespace Rawr.Mage
             Spell ABar1C = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
             Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
             Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
+            Spell MBAM1C = castingState.GetSpell(SpellId.ArcaneMissilesMB1Clipped);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
@@ -2771,19 +2772,41 @@ namespace Rawr.Mage
             //AB-MBAM1-ABar
             chain2 = new SpellCycle(3);
             chain2.AddSpell(AB, castingState);
-            chain2.AddSpell(MBAM1, castingState);
-            if (AB.CastTime + MBAM1.CastTime + ABar.CastTime < 3.0)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM1.CastTime - AB.CastTime - ABar.CastTime);
-                chain2.AddSpell(ABar, castingState);
-            }
-            else if (castingState.CalculationOptions.AllowLatencyCombos)
-            {
-                chain2.AddSpell(ABar1C, castingState);
+                if (AB.CastTime + MBAM1.CastTime + ABar.CastTime < 3.0)
+                {
+                    chain2.AddSpell(MBAM1, castingState);
+                    chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM1.CastTime - AB.CastTime - ABar.CastTime);
+                    chain2.AddSpell(ABar, castingState);
+                }
+                else if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(MBAM1C, castingState);
+                    chain2.AddSpell(ABar1, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(MBAM1, castingState);
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM1, castingState);
+                if (AB.CastTime + MBAM1.CastTime + ABar.CastTime < 3.0)
+                {
+                    chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM1.CastTime - AB.CastTime - ABar.CastTime);
+                    chain2.AddSpell(ABar, castingState);
+                }
+                else if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar1C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4414,8 +4437,10 @@ namespace Rawr.Mage
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
             AB3 = (BaseSpell)castingState.GetSpell(SpellId.ArcaneBlast33);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             S0 = MB / (MB + (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB));
@@ -4430,14 +4455,29 @@ namespace Rawr.Mage
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
             chain1.AddSpell(AB2, castingState);
-            chain1.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain1.AddSpell(ABar3, castingState);
+                chain1.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             chain1.Calculate(castingState);
 
@@ -4446,14 +4486,29 @@ namespace Rawr.Mage
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
             chain2.AddSpell(AB3, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar3, castingState);
+                chain2.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4466,14 +4521,29 @@ namespace Rawr.Mage
             chain4 = new SpellCycle(4);
             chain4.AddSpell(AB3, castingState);
             chain4.AddSpell(AB3, castingState);
-            chain4.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain4.AddSpell(ABar3, castingState);
+                chain4.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain4.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain4.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain4.AddSpell(ABar, castingState);
+                chain4.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain4.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain4.AddSpell(ABar, castingState);
+                }
             }
             chain4.Calculate(castingState);
 
@@ -4524,6 +4594,7 @@ namespace Rawr.Mage
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
             Spell ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
@@ -4543,14 +4614,29 @@ namespace Rawr.Mage
             chain2 = new SpellCycle(6);
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar2C, castingState);
+                chain2.AddSpell(MBAM2C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar2, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM2, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar2C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4600,6 +4686,7 @@ namespace Rawr.Mage
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
             Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
             Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
@@ -4621,14 +4708,29 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar3C, castingState);
+                chain2.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4663,9 +4765,12 @@ namespace Rawr.Mage
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
             Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+            Spell AM3C = castingState.GetSpell(SpellId.ArcaneMissiles3Clipped);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB);
@@ -4675,14 +4780,29 @@ namespace Rawr.Mage
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
             chain1.AddSpell(AB2, castingState);
-            chain1.AddSpell(AM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseAMClipping)
             {
-                chain1.AddSpell(ABar3, castingState);
+                chain1.AddSpell(AM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             chain1.Calculate(castingState);
 
@@ -4690,14 +4810,29 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar3, castingState);
+                chain2.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4734,11 +4869,16 @@ namespace Rawr.Mage
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
             Spell AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
+            Spell AM3C = castingState.GetSpell(SpellId.ArcaneMissiles3Clipped);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2Clipped);
             Spell MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
+            Spell MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
-            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
+            Spell ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
+            Spell ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
+            Spell ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = 1 - (1 - MB) * (1 - MB);
@@ -4748,14 +4888,29 @@ namespace Rawr.Mage
             chain1 = new SpellCycle(5);
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(MBAM2, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain1.AddSpell(ABar2, castingState);
+                chain1.AddSpell(MBAM2C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar2, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(MBAM2, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar2C, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             chain1.Calculate(castingState);
 
@@ -4763,14 +4918,29 @@ namespace Rawr.Mage
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
             chain2.AddSpell(AB2, castingState);
-            chain2.AddSpell(AM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseAMClipping)
             {
-                chain2.AddSpell(ABar3, castingState);
+                chain2.AddSpell(AM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(AM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4778,14 +4948,29 @@ namespace Rawr.Mage
             chain3.AddSpell(AB0, castingState);
             chain3.AddSpell(AB1, castingState);
             chain3.AddSpell(AB2, castingState);
-            chain3.AddSpell(MBAM3, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain3.AddSpell(ABar3, castingState);
+                chain3.AddSpell(MBAM3C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain3.AddSpell(ABar3, castingState);
+                }
+                else
+                {
+                    chain3.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain3.AddSpell(ABar, castingState);
+                chain3.AddSpell(MBAM3, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain3.AddSpell(ABar3C, castingState);
+                }
+                else
+                {
+                    chain3.AddSpell(ABar, castingState);
+                }
             }
             chain3.Calculate(castingState);
 
@@ -4820,9 +5005,12 @@ namespace Rawr.Mage
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast11);
             Spell AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
+            Spell AM2C = castingState.GetSpell(SpellId.ArcaneMissiles2Clipped);
             Spell MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
+            Spell MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
+            Spell ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
+            Spell ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB) * (1 - MB);
@@ -4831,28 +5019,58 @@ namespace Rawr.Mage
             chain1 = new SpellCycle(5);
             chain1.AddSpell(AB0, castingState);
             chain1.AddSpell(AB1, castingState);
-            chain1.AddSpell(AM2, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseAMClipping)
             {
-                chain1.AddSpell(ABar2, castingState);
+                chain1.AddSpell(AM2C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar2, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AM2, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar2C, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             chain1.Calculate(castingState);
 
             chain2 = new SpellCycle(6);
             chain2.AddSpell(AB0, castingState);
             chain2.AddSpell(AB1, castingState);
-            chain2.AddSpell(MBAM2, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar2, castingState);
+                chain2.AddSpell(MBAM2C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar2, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM2, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar2C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
@@ -4885,9 +5103,12 @@ namespace Rawr.Mage
 
             Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
             Spell AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
+            Spell AM1C = castingState.GetSpell(SpellId.ArcaneMissiles1Clipped);
             Spell MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
+            Spell MBAM1C = castingState.GetSpell(SpellId.ArcaneMissilesMB1Clipped);
             Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
-            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
+            Spell ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
+            Spell ABar1C = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
 
             MB = 0.04f * castingState.MageTalents.MissileBarrage;
             K1 = (1 - MB) * (1 - MB);
@@ -4895,27 +5116,57 @@ namespace Rawr.Mage
 
             chain1 = new SpellCycle(5);
             chain1.AddSpell(AB0, castingState);
-            chain1.AddSpell(AM1, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseAMClipping)
             {
-                chain1.AddSpell(ABar1, castingState);
+                chain1.AddSpell(AM1C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar1, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain1.AddSpell(ABar, castingState);
+                chain1.AddSpell(AM1, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain1.AddSpell(ABar1C, castingState);
+                }
+                else
+                {
+                    chain1.AddSpell(ABar, castingState);
+                }
             }
             chain1.Calculate(castingState);
 
             chain2 = new SpellCycle(6);
             chain2.AddSpell(AB0, castingState);
-            chain2.AddSpell(MBAM1, castingState);
-            if (castingState.CalculationOptions.AllowLatencyCombos)
+            if (castingState.CalculationOptions.UseMBAMClipping)
             {
-                chain2.AddSpell(ABar1, castingState);
+                chain2.AddSpell(MBAM1C, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar1, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             else
             {
-                chain2.AddSpell(ABar, castingState);
+                chain2.AddSpell(MBAM1, castingState);
+                if (castingState.CalculationOptions.AllowLatencyCombos)
+                {
+                    chain2.AddSpell(ABar1C, castingState);
+                }
+                else
+                {
+                    chain2.AddSpell(ABar, castingState);
+                }
             }
             chain2.Calculate(castingState);
 
