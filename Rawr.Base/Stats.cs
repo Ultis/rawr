@@ -64,9 +64,6 @@ namespace Rawr
         ExpertiseRating,
         ExposeWeakness,
         FireResistance,
-        FlashOfLightSpellPower,
-        FlashOfLightMultiplier,
-        FlashOfLightCrit,
         FrostResistance,
         HasteRating,
         HasteRatingOnPhysicalAttack,
@@ -74,11 +71,6 @@ namespace Rawr
         Health,
         PhysicalHit,
         HitRating,
-        HolyLightManaReduction,
-        HolyLightSpellPower,
-        HolyLightPercentManaReduction,
-        HolyLightCrit,
-        HolyShockCrit,
         Hp5,
         IdolCritRating,
         InnervateCooldownReduction,
@@ -241,7 +233,18 @@ namespace Rawr
         BonusFlametongueDamage,
         ShockManaCostReduction,
 		LightningBoltDamageModifier,
-		LightningBoltCostReduction
+		LightningBoltCostReduction,
+        #endregion
+        #region Rawr.Healadin
+        FlashOfLightSpellPower,
+        FlashOfLightMultiplier,
+        FlashOfLightCrit,
+        HolyLightManaReduction,
+        HolyLightSpellPower,
+        HolyLightPercentManaReduction,
+        HolyLightCrit,
+        HolyShockCrit,
+        GreatnessProc
         #endregion
     }
 
@@ -1969,6 +1972,14 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestore5min] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Greatness Proc")]
+        [Category("Equipment Procs")]
+        public float GreatnessProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.GreatnessProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.GreatnessProc] = value; }
+        }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Flash of Light Spell Power")]

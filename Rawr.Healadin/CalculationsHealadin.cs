@@ -190,6 +190,16 @@ namespace Rawr.Healadin
             {
                 calc.ManaOther += (float)Math.Ceiling((fight_length - 30f) / 300f) * stats.ManaRestore5min;
             }
+            if (stats.GreatnessProc > 0)
+            {
+                float intMultiple = (1f + (GetItemStats(character, additionalItem) + GetEnchantsStats(character) + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
+                    * (1 + .03f * talents.DivineIntellect);
+                float greatnessInt = stats.GreatnessProc * intMultiple;
+                float greatnessMana = greatnessInt * 15;
+                float greatnessProcs = (float)Math.Ceiling((fight_length - 15f) / 45f);
+                calc.ManaOther += stats.ManaRestoreFromMaxManaPerSecond * 15f * greatnessMana * calcOpts.Replenishment * greatnessProcs; // Replenishment
+                calc.ManaOther += (divine_pleas * 15f / fight_length) * greatnessMana * .25f * greatnessProcs; // Divine Plea
+            }
             calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + 
                 calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
 
@@ -321,9 +331,9 @@ namespace Rawr.Healadin
             if (calcOpts.Glyph_HL) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f * heal_multi *
                 ((1 - stats.SpellCrit - talents.HolyPower * .01f) + 1.5f * (1f + stats.BonusCritHealMultiplier) * (stats.SpellCrit + talents.HolyPower * .01f));
 
-            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed + calc.HLGlyph;
+            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed;
             if (talents.BeaconOfLight > 0) calc.TotalHealed += calc.BoLHealed = calcOpts.BoLEff * calcOpts.BoLUp * calc.TotalHealed;
-            calc.TotalHealed += calc.SSAbsorbed;
+            calc.TotalHealed += calc.SSAbsorbed + calc.HLGlyph;
 
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
             calc.AvgHPS = calc.TotalHealed / fight_length;
@@ -467,14 +477,15 @@ namespace Rawr.Healadin
                 ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                ManaRestore5min = stats.ManaRestore5min
+                ManaRestore5min = stats.ManaRestore5min,
+                GreatnessProc = stats.GreatnessProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
-                + stats.HitRating + stats.PhysicalHit
+                + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc
                 + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + stats.ManaRestoreOnCrit_25
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier

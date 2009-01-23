@@ -207,7 +207,7 @@ namespace Rawr
 			{ //Darkmoon Card: Greatness
 				stats.Strength *= 2f;
 				stats.Agility *= 2f;
-				stats.Intellect *= 2f;
+                if (stats.Intellect > 0) { stats.GreatnessProc = 300; }
 				stats.Spirit *= 2f;
 			}
 			else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
