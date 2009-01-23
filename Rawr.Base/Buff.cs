@@ -2261,21 +2261,14 @@ namespace Rawr
 				Name = "Toughness",
 				Group = "Profession Buffs",
 				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { Health = 500f }
+				Stats = { Stamina = 50f }
 			});
 			defaultBuffs.Add(new Buff()
 			{
 				Name = "Master of Anatomy",
 				Group = "Profession Buffs",
 				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { CritRating = 25f }
-			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Toughness",
-				Group = "Profession Buffs",
-				ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = { Health = 500f }
+				Stats = { CritRating = 32f }
 			});
 			#endregion
 
