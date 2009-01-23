@@ -578,6 +578,18 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissiles3:
                     s = new ArcaneMissiles(this, false, 3);
                     break;
+                case SpellId.ArcaneMissiles0Clipped:
+                    s = new ArcaneMissiles(this, false, 0, 4);
+                    break;
+                case SpellId.ArcaneMissiles1Clipped:
+                    s = new ArcaneMissiles(this, false, 1, 4);
+                    break;
+                case SpellId.ArcaneMissiles2Clipped:
+                    s = new ArcaneMissiles(this, false, 2, 4);
+                    break;
+                case SpellId.ArcaneMissiles3Clipped:
+                    s = new ArcaneMissiles(this, false, 3, 4);
+                    break;
                 case SpellId.ArcaneMissilesMB:
                     s = new ArcaneMissiles(this, true, 0);
                     break;
@@ -589,6 +601,18 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ArcaneMissilesMB3:
                     s = new ArcaneMissiles(this, true, 3);
+                    break;
+                case SpellId.ArcaneMissilesMB0Clipped:
+                    s = new ArcaneMissiles(this, true, 0, 4);
+                    break;
+                case SpellId.ArcaneMissilesMB1Clipped:
+                    s = new ArcaneMissiles(this, true, 1, 4);
+                    break;
+                case SpellId.ArcaneMissilesMB2Clipped:
+                    s = new ArcaneMissiles(this, true, 2, 4);
+                    break;
+                case SpellId.ArcaneMissilesMB3Clipped:
+                    s = new ArcaneMissiles(this, true, 3, 4);
                     break;
                 case SpellId.ArcaneMissilesCC:
                     s = new ArcaneMissilesCC(this);

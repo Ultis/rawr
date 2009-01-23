@@ -536,30 +536,30 @@ namespace Rawr.Mage
                 double maxdps = 0;
                 double mindpm = double.PositiveInfinity;
                 double maxdpm = 0;
-                double[] spellControl = new double[34];
-                for (int control0 = 0; control0 < 4; control0++)
-                for (int control1 = 0; control1 < 4; control1++)
-                for (int control2 = 0; control2 < 3; control2++)
-                for (int control3 = 0; control3 < 3; control3++)
-                for (int control4 = 0; control4 < 4; control4++)
-                for (int control5 = 0; control5 < 4; control5++)
-                for (int control6 = 0; control6 < 4; control6++)
-                for (int control7 = 0; control7 < 4; control7++)
-                for (int control8 = 0; control8 < 4; control8++)
+                double[] spellControl = new double[46];
+                for (int control0 = 0; control0 < 5; control0++)
+                for (int control1 = 0; control1 < 6; control1++)
+                for (int control2 = 0; control2 < 4; control2++)
+                for (int control3 = 0; control3 < 4; control3++)
+                for (int control4 = 0; control4 < 5; control4++)
+                for (int control5 = 0; control5 < 6; control5++)
+                for (int control6 = 0; control6 < 5; control6++)
+                for (int control7 = 0; control7 < 6; control7++)
+                for (int control8 = 0; control8 < 5; control8++)
                 {
-                    for (int i = 0; i < 34; i++) spellControl[i] = 0;
+                    for (int i = 0; i < 46; i++) spellControl[i] = 0;
                     spellControl[0 + control0] = 1;
-                    spellControl[4 + control1] = 1;
-                    spellControl[8 + control2] = 1;
-                    spellControl[11 + control3] = 1;
-                    spellControl[14 + control4] = 1;
-                    spellControl[18 + control5] = 1;
-                    spellControl[22 + control6] = 1;
-                    spellControl[26 + control7] = 1;
-                    spellControl[30 + control8] = 1;
-                    Spell generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33]);
+                    spellControl[5 + control1] = 1;
+                    spellControl[11 + control2] = 1;
+                    spellControl[15 + control3] = 1;
+                    spellControl[19 + control4] = 1;
+                    spellControl[24 + control5] = 1;
+                    spellControl[30 + control6] = 1;
+                    spellControl[35 + control7] = 1;
+                    spellControl[41 + control8] = 1;
+                    Spell generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33], spellControl[34], spellControl[35], spellControl[36], spellControl[37], spellControl[38], spellControl[39], spellControl[40], spellControl[41], spellControl[42], spellControl[43], spellControl[44], spellControl[45]);
                     // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 4852.069) / (generic.ManaPerSecond - 250.269913);
+                    double dpm = (generic.DamagePerSecond - 5298.673) / (generic.ManaPerSecond - 396.453583);
                     if (generic.DamagePerSecond > maxdps)
                     {
                         maxdps = generic.DamagePerSecond;
