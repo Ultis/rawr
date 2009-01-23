@@ -43,7 +43,12 @@ namespace Rawr.RestoSham
             txtOutsideFSR.Text = Math.Round(100 * options.OutsideFSRPct, 0).ToString();
             cboManaPotAmount.Text = options.ManaPotAmount.ToString();
             chkManaTide.Checked = options.ManaTideEveryCD;
+            chkManaTide2.Checked = options.ManaTidePlus;
             chkWaterShield.Checked = options.WaterShield;
+            chkWaterShield2.Checked = options.WaterShield2;
+            chkWaterShield3.Checked = options.WaterShield3;
+            chkLHW.Checked = options.LHWPlus;
+            chkMT.Checked = options.TankHeal;
             txtESInterval.Text = options.ESInterval.ToString();
 
             _bLoading = false;
@@ -179,11 +184,56 @@ namespace Rawr.RestoSham
             }
         }
 
+        private void chkManaTide2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["ManaTidePlus"] = chkManaTide2.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void chkWaterShield_CheckedChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
             {
                 this["WaterShield"] = chkWaterShield.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkWaterShield2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["WaterShield2"] = chkWaterShield2.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkWaterShield3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["WaterShield3"] = chkWaterShield3.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkLHW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["LHWPlus"] = chkLHW.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkMT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TankHeal"] = chkMT.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -243,9 +293,34 @@ namespace Rawr.RestoSham
         public bool ManaTideEveryCD = true;
 
         /// <summary>
+        /// Whether a Mana Tide totem is placed every time the cooldown is up.
+        /// </summary>
+        public bool ManaTidePlus = true;
+
+        /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
         public bool WaterShield = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool WaterShield2 = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool WaterShield3 = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool LHWPlus = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool TankHeal = true;
 
         /// <summary>
         /// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.

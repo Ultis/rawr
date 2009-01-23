@@ -35,6 +35,10 @@
             this.txtFightLength = new System.Windows.Forms.TextBox();
             this.chkManaTide = new System.Windows.Forms.CheckBox();
             this.txtESInterval = new System.Windows.Forms.TextBox();
+            this.chkManaTide2 = new System.Windows.Forms.CheckBox();
+            this.chkWaterShield2 = new System.Windows.Forms.CheckBox();
+            this.chkWaterShield3 = new System.Windows.Forms.CheckBox();
+            this.chkLHW = new System.Windows.Forms.CheckBox();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -47,6 +51,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.chkMT = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -92,7 +97,7 @@
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(3, 84);
+            this.chkManaTide.Location = new System.Drawing.Point(6, 84);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(184, 17);
             this.chkManaTide.TabIndex = 14;
@@ -110,12 +115,65 @@
             this.tipRestoSham.SetToolTip(this.txtESInterval, "How often you refresh Earth Shield, in seconds (enter 0 if you don\'t use Earth Sh" +
                     "ield)");
             // 
+            // chkManaTide2
+            // 
+            this.chkManaTide2.AutoSize = true;
+            this.chkManaTide2.Location = new System.Drawing.Point(6, 107);
+            this.chkManaTide2.Name = "chkManaTide2";
+            this.chkManaTide2.Size = new System.Drawing.Size(125, 17);
+            this.chkManaTide2.TabIndex = 21;
+            this.chkManaTide2.Text = "Glyphed Mana Tide?";
+            this.tipRestoSham.SetToolTip(this.chkManaTide2, "Check to indicate you are using the Glyph of Mana Tide Totem");
+            this.chkManaTide2.UseVisualStyleBackColor = true;
+            this.chkManaTide2.CheckedChanged += new System.EventHandler(this.chkManaTide2_CheckedChanged);
+            // 
+            // chkWaterShield2
+            // 
+            this.chkWaterShield2.AutoSize = true;
+            this.chkWaterShield2.Location = new System.Drawing.Point(6, 176);
+            this.chkWaterShield2.Name = "chkWaterShield2";
+            this.chkWaterShield2.Size = new System.Drawing.Size(140, 17);
+            this.chkWaterShield2.TabIndex = 20;
+            this.chkWaterShield2.Text = "Extra Water Shield Orb?";
+            this.tipRestoSham.SetToolTip(this.chkWaterShield2, "Check if you have the Glyph of Water Shield");
+            this.chkWaterShield2.UseVisualStyleBackColor = true;
+            this.chkWaterShield2.CheckedChanged += new System.EventHandler(this.chkWaterShield2_CheckedChanged);
+            // 
+            // chkWaterShield3
+            // 
+            this.chkWaterShield3.AutoSize = true;
+            this.chkWaterShield3.Location = new System.Drawing.Point(6, 199);
+            this.chkWaterShield3.Name = "chkWaterShield3";
+            this.chkWaterShield3.Size = new System.Drawing.Size(178, 17);
+            this.chkWaterShield3.TabIndex = 22;
+            this.chkWaterShield3.Text = "Increased Water Shield Regen?";
+            this.tipRestoSham.SetToolTip(this.chkWaterShield3, "Check if you have the Glyph of Water Mastery");
+            this.chkWaterShield3.UseVisualStyleBackColor = true;
+            this.chkWaterShield3.CheckedChanged += new System.EventHandler(this.chkWaterShield3_CheckedChanged);
+            // 
+            // chkLHW
+            // 
+            this.chkLHW.AutoSize = true;
+            this.chkLHW.Location = new System.Drawing.Point(6, 130);
+            this.chkLHW.Name = "chkLHW";
+            this.chkLHW.Size = new System.Drawing.Size(176, 17);
+            this.chkLHW.TabIndex = 23;
+            this.chkLHW.Text = "Glyphed Lesser Healing Wave?";
+            this.tipRestoSham.SetToolTip(this.chkLHW, "Check to indicate you are using the Glyph of Lesser Healing Wave");
+            this.chkLHW.UseVisualStyleBackColor = true;
+            this.chkLHW.CheckedChanged += new System.EventHandler(this.chkLHW_CheckedChanged);
+            // 
             // errorRestoSham
             // 
             this.errorRestoSham.ContainerControl = this;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chkMT);
+            this.tabPage1.Controls.Add(this.chkLHW);
+            this.tabPage1.Controls.Add(this.chkWaterShield3);
+            this.tabPage1.Controls.Add(this.chkManaTide2);
+            this.tabPage1.Controls.Add(this.chkWaterShield2);
             this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Controls.Add(this.chkWaterShield);
             this.tabPage1.Controls.Add(this.chkManaTide);
@@ -140,9 +198,9 @@
             this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.txtESInterval);
             this.groupBox3.Controls.Add(this.label18);
-            this.groupBox3.Location = new System.Drawing.Point(3, 130);
+            this.groupBox3.Location = new System.Drawing.Point(3, 222);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(198, 75);
+            this.groupBox3.Size = new System.Drawing.Size(198, 50);
             this.groupBox3.TabIndex = 19;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Earth Shield";
@@ -168,7 +226,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(3, 107);
+            this.chkWaterShield.Location = new System.Drawing.Point(6, 153);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -231,6 +289,19 @@
             this.tabControl1.Size = new System.Drawing.Size(212, 527);
             this.tabControl1.TabIndex = 14;
             // 
+            // chkMT
+            // 
+            this.chkMT.AutoSize = true;
+            this.chkMT.Location = new System.Drawing.Point(14, 278);
+            this.chkMT.Name = "chkMT";
+            this.chkMT.Size = new System.Drawing.Size(172, 17);
+            this.chkMT.TabIndex = 24;
+            this.chkMT.Text = "Are you healing the MT or OT?";
+            this.tipRestoSham.SetToolTip(this.chkMT, "Check to indicate you healing a single target exclusively and not worried about s" +
+                    "plash healing.");
+            this.chkMT.UseVisualStyleBackColor = true;
+            this.chkMT.CheckedChanged += new System.EventHandler(this.chkMT_CheckedChanged);
+            // 
             // CalculationOptionsPanelRestoSham
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,6 +339,11 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox txtESInterval;
         private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.CheckBox chkWaterShield2;
+        private System.Windows.Forms.CheckBox chkManaTide2;
+        private System.Windows.Forms.CheckBox chkWaterShield3;
+        private System.Windows.Forms.CheckBox chkLHW;
+        private System.Windows.Forms.CheckBox chkMT;
 
     }
 }

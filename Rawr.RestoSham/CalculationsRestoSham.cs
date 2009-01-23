@@ -169,7 +169,7 @@ namespace Rawr.RestoSham
                 onUse += (float)Math.Truncate(options.FightLength) * (options.ManaPotAmount * (1 + stats.BonusManaPotion));
             if (options.ManaTideEveryCD)
                 onUse += (((float)Math.Truncate(options.FightLength / 5.025f) + 1) *
-                    (stats.Mana * .24f)) * character.ShamanTalents.ManaTideTotem;
+                    (stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
 
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
             mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
@@ -184,28 +184,32 @@ namespace Rawr.RestoSham
             float CurrentMana = calcStats.TotalManaPool;
             if (options.ESInterval < 32)
                 options.ESInterval = 32;
+            float Awaken = (.1f * character.ShamanTalents.AncestralAwakening);
+            float TankCH = (options.TankHeal ? 1 : 1.75f);
+            float Orb = 400 * (1 + (character.ShamanTalents.ImprovedShields * .05f));
+            float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
             float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
-            float Critical = 1f + (calcStats.SpellCrit);
+            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
-            float ESC = (((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.1f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify;
-            float ESCMPS = ((Time / options.ESInterval) * (660f * Redux));
+            float ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify);
+            float ESCMPS = (((Time / options.ESInterval) * (660f * Redux)));
             float Hasted = 1 - (stats.HasteRating / 3279);
-            float LHWC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float HWC = (3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float LHWC = 1.5f + (((1.5f * Hasted) / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWC = (3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) + (((1.5f * Hasted) / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float CHC = 2.5f;
-            float RTC = 1.5f + ((.5f / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float LHWM = (550 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float HWM = (1099 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float RTC = 1.5f + (((1.5f * Hasted) / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float LHWM = (550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWM = (1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float CHM = (835 * Redux);
-            float RTM = (792 * Redux) - ((400 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float RTM = (792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float EFL = Time - (1.5f * (Time / options.ESInterval));
-            float LHWHeal = ((1720f + (Healing * (LHWC / 3.5f))) * Purify) * Critical;
-            float HWHeal = ((3250f + (Healing * (HWC / 3.5f))) * Purify);
-            float CHHeal = ((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical;
-            float CHRTHeal = ((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical;
-            float RTHeal = ((1670f + (Healing * .5f)) * Purify) * Critical;
+            float LHWHeal = (((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1));
+            float HWHeal = ((3250f + (Healing * (HWC / 3.5f))) * Purify) * (Critical + Awaken);
+            float CHHeal = (((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH;
+            float CHRTHeal = (((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH;
+            float RTHeal = ((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken);
             float RTHot = ((1670f + (Healing * .5f)) * Purify) / 15f;
             float ESLHWMPSMT = (ESCMPS + ((EFL / (LHWC * Hasted)) * LHWM)) / Time;
             float ESHWMPSMT = (ESCMPS + ((EFL / ((HWC) * Hasted)) * HWM)) / Time;
@@ -307,7 +311,8 @@ namespace Rawr.RestoSham
             // Fight options:
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-            statsTotal.Mp5 += (options.WaterShield ? 100 : 0);
+            float OrbRegen = (options.WaterShield3 ? 130 : 100);
+            statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0);
 
             return statsTotal;
         }
@@ -323,7 +328,7 @@ namespace Rawr.RestoSham
             // Unrelenting Storm: Gives 2% (per talent point) of intellect as mp5:
 
             //points = GetTalentPoints("Unrelenting Storm", "Elemental", talentTree);
-            statsTotal.Mp5 += (float)Math.Round((statsTotal.Intellect * .02f * talentTree.UnrelentingStorm), 0);
+            statsTotal.Mp5 += (float)Math.Round((statsTotal.Intellect * ((talentTree.UnrelentingStorm / 3) * .1f)), 0);
 
             // Tidal Mastery: Increases crit chance of heals by 1% per talent point:
 
@@ -333,7 +338,7 @@ namespace Rawr.RestoSham
             // Nature's Blessing: Adds 5% (per talent point) of intellect as bonus healing:
 
             //points = GetTalentPoints("Nature's Blessing", "Restoration", talentTree);
-            statsTotal.SpellPower += (float)Math.Round((statsTotal.Intellect * .05f * talentTree.NaturesBlessing), 0) / 1.88f;
+            statsTotal.SpellPower += (float)Math.Round((statsTotal.Intellect * .05f * talentTree.NaturesBlessing), 0);
 
             // Ancestral Knowledge: Increases total intellect by 2% per talent point.
 
@@ -396,7 +401,7 @@ namespace Rawr.RestoSham
                     StatRelativeWeight[] stats = new StatRelativeWeight[] {
                       new StatRelativeWeight("Int", new Stats() { Intellect = 1f }),
                       new StatRelativeWeight("Spirit", new Stats() { Spirit = 1f }),
-                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 1f / 1.88f}),
+                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 1f}),
                       new StatRelativeWeight("Mp5", new Stats() { Mp5 = 1f }),
                       new StatRelativeWeight("Spell Crit", new Stats() { CritRating = 1f })};
 
@@ -453,6 +458,7 @@ namespace Rawr.RestoSham
                 ManaSpringMp5Increase = stats.ManaSpringMp5Increase,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier
             };
         }
 
@@ -460,7 +466,7 @@ namespace Rawr.RestoSham
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.CritRating +
-                    stats.HasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier +
+                    stats.HasteRating + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier +
                     stats.BonusManaPotion + stats.ManaSpringMp5Increase + stats.ManaRestoreOnCast_5_15 + stats.ManaRestoreFromMaxManaPerSecond) > 0;
         }
 
