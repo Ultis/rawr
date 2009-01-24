@@ -179,7 +179,6 @@ namespace Rawr
 			this.updateItemCacheWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeAllGemmingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -1635,7 +1634,6 @@ namespace Rawr
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editItemsToolStripMenuItem,
             this.defaultGemControlToolStripMenuItem,
-            this.removeAllGemmingsToolStripMenuItem,
             this.refineEquipmentParametersToolStripMenuItem,
             this.toolStripMenuItem6,
             this.optimizeToolStripMenuItem,
@@ -1759,13 +1757,6 @@ namespace Rawr
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
 			this.optionsToolStripMenuItem.Text = "Options...";
 			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // removeAllGemmingsToolStripMenuItem
-            // 
-            this.removeAllGemmingsToolStripMenuItem.Name = "removeAllGemmingsToolStripMenuItem";
-            this.removeAllGemmingsToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.removeAllGemmingsToolStripMenuItem.Text = "Remove All Gemmings...";
-            this.removeAllGemmingsToolStripMenuItem.Click += new System.EventHandler(this.removeAllGemmingsToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -1955,7 +1946,6 @@ namespace Rawr
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ToolStripMenuItem removeAllGemmingsToolStripMenuItem;
         
     }
 }
