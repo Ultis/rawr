@@ -418,6 +418,8 @@ namespace Rawr.Tree
 
             if (calcOpts.glyphOfLifebloom)
                 periodicTicks += 1;
+
+            manaCost *= (1-calcs.BasicStats.LifebloomCostReduction);
         }
 
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts)
@@ -555,14 +557,14 @@ namespace Rawr.Tree
             InitializeNourish(calcs);
         }
 
-        public Nourish(CharacterCalculationsTree calcs, bool hotActive)
+        public Nourish(CharacterCalculationsTree calcs, int hotsActive)
         {
             InitializeNourish(calcs);
-            if (hotActive)
+            if (hotsActive>0)
             {
-                minHeal *= 1.2f;
-                maxHeal *= 1.2f;
-                coefDH *= 1.2f;
+                minHeal *= 1.2f + calcs.BasicStats.NourishBonusPerHoT * hotsActive;
+                maxHeal *= 1.2f + calcs.BasicStats.NourishBonusPerHoT * hotsActive;
+                coefDH *= 1.2f + calcs.BasicStats.NourishBonusPerHoT * hotsActive;
             }
         }
 

@@ -194,13 +194,17 @@ namespace Rawr.Tree
         protected float[] SimulateHealing(CharacterCalculationsTree calculatedStats, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal)
         {
             #region Spells
+            int hots = 0;
+            if (rejuvOnTank) hots++;
+            if (rgOnTank) hots++;
+            if (lbOnTank) hots++;
             Spell regrowth = new Regrowth(calculatedStats, false);
             Spell regrowthWhileActive = new Regrowth(calculatedStats, true);
             Spell lifebloom = new Lifebloom(calculatedStats);
             Spell stack = new LifebloomStack(calculatedStats);
             Spell rejuvenate = new Rejuvenation(calculatedStats);
             Spell nourish = new Nourish(calculatedStats);
-            Spell nourishWithHoT = new Nourish(calculatedStats, true);
+            Spell nourishWithHoT = new Nourish(calculatedStats, hots>0?hots:1);
             Spell healingTouch = new HealingTouch(calculatedStats);
             Spell wildGrowth = new WildGrowth(calculatedStats);
             #endregion
@@ -304,6 +308,7 @@ namespace Rawr.Tree
             calculatedStats.BasicStats.SpellHaste += calculatedStats.BasicStats.SpellHasteFor10SecOnCast_10_45 * .17f / TreeConstants.HasteRatingToHaste;
             calculatedStats.BasicStats.SpellHaste += calculatedStats.BasicStats.SpellHasteFor10SecOnHeal_10_45 * .17f / TreeConstants.HasteRatingToHaste;
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnHeal_10_45 * .17f;
+            calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnCast_10_45 * .17f;
             // For 15% chance, 10 second 45 icd trinkets, the uptime is 10 seconds per 57-60 seconds, .18 to be optimistic
             calculatedStats.BasicStats.AverageHeal += calculatedStats.BasicStats.SpellPowerFor10SecOnCast_15_45 * .18f;
             #endregion
@@ -321,7 +326,7 @@ namespace Rawr.Tree
                         calculatedStats.Simulation = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute, 
                             true, true, true, 1,
-                            new Nourish(calculatedStats, true));
+                            new Nourish(calculatedStats, 3));
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                         
@@ -333,7 +338,7 @@ namespace Rawr.Tree
                         calculatedStats.Simulation = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 2,
-                            new Nourish(calculatedStats, true));
+                            new Nourish(calculatedStats, 3));
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -434,7 +439,7 @@ namespace Rawr.Tree
                         calculatedStats.Simulation = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 1,
-                            new Nourish(calculatedStats, false));
+                            new Nourish(calculatedStats, 0));
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -445,7 +450,7 @@ namespace Rawr.Tree
                         calculatedStats.Simulation = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 2,
-                            new Nourish(calculatedStats, false));
+                            new Nourish(calculatedStats, 0));
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -735,6 +740,7 @@ namespace Rawr.Tree
                 SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                 SpellPowerFor10SecOnHeal_10_45 = stats.SpellPowerFor10SecOnHeal_10_45,
                 SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
                 BonusHoTOnDirectHeals = stats.BonusHoTOnDirectHeals,
                 #endregion
                 #region Neck
@@ -754,6 +760,8 @@ namespace Rawr.Tree
                 #region Sets
                 RegrowthExtraTicks = stats.RegrowthExtraTicks, //T5 (2) Bonus
                 BonusHealingTouchMultiplier = stats.BonusHealingTouchMultiplier,  //T6 (4) Bonus
+                LifebloomCostReduction = stats.LifebloomCostReduction,
+                NourishBonusPerHoT = stats.NourishBonusPerHoT,
                 //ReduceRejuvenationCost = stats.ReduceRejuvenationCost, //T7 (2) Set: the cost of your Rejuvenation is reduced by 5%.
                 //LvL70: Rejuv cost: 376 | 18,8 (~19) mana less
                 //LvL80: Rejuv cost: 683 | 34 (Idol of Budding Life reduces by 36 Mana)
@@ -780,13 +788,12 @@ namespace Rawr.Tree
                 + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc 
                 + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast 
                 + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
+                + stats.SpellPowerFor10SecOnCast_10_45
                 + stats.ShatteredSunRestoProc + stats.SpellHasteFor10SecOnHeal_10_45 + stats.SpellHasteFor10SecOnCast_10_45 
                 + stats.SpellPowerFor10SecOnHeal_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusHoTOnDirectHeals
                 + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
-                + stats.HealingTouchFinalHealBonus 
-                // FOR DEVO AURA
-                + stats.BonusArmor
+                + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT
                 > 0)
                 return true;
 

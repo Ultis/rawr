@@ -220,6 +220,8 @@ namespace Rawr
 		BonusNukeCritChance,
         BonusHoTOnDirectHeals,
 		TigersFuryCooldownReduction,
+        LifebloomCostReduction,
+        NourishBonusPerHoT,
         #region Added by Rawr.Elemental
         BonusCritChance,
         BonusThunderCritChance,
@@ -2245,7 +2247,21 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.BonusHoTOnDirectHeals] = value; }
         }
 
-        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Lifebloom cost reduction")]
+        public float LifebloomCostReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifebloomCostReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nourish bonus per HoT")]
+        public float NourishBonusPerHoT
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
+        }
 
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]

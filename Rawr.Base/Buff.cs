@@ -1853,25 +1853,44 @@ namespace Rawr
 				SetName = "Dreamwalker Battlegear",
 				SetThreshold = 4
 			});
-			// Moonkin Tier 7 set bonuses
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Dreamwalker Garb 2 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] {}),
-				Stats = { BonusInsectSwarmDamage = 0.1f },
-				SetName = "Dreamwalker Garb",
-				SetThreshold = 2
-			});
-			defaultBuffs.Add(new Buff()
-			{
-				Name = "Dreamwalker Garb 4 Piece Bonus",
-				Group = "Set Bonuses",
-				ConflictingBuffs = new List<string>(new string[] {}),
-				Stats = { BonusNukeCritChance = 0.05f },
-				SetName = "Dreamwalker Garb",
-				SetThreshold = 4
-			});
+            // Moonkin Tier 7 set bonuses
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusInsectSwarmDamage = 0.1f },
+                SetName = "Dreamwalker Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusNukeCritChance = 0.05f },
+                SetName = "Dreamwalker Garb",
+                SetThreshold = 4
+            });			
+            // Tree Tier 7 set bonuses
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { LifebloomCostReduction = 0.05f },
+                SetName = "Dreamwalker Regalia",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreamwalker Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { NourishBonusPerHoT = 0.05f },
+                SetName = "Dreamwalker Regalia",
+                SetThreshold = 4
+            });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Destroyer Armor 2 Piece Bonus",
