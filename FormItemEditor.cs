@@ -739,5 +739,43 @@ namespace Rawr
                 }
             }
         }
+
+        private void buttonDeleteAllDuplicates_Click(object sender, EventArgs e)
+        {
+            if (listViewItems.Items.Count > 0)
+            {
+				if (MessageBox.Show("Are you sure you want to delete all instances of duplicate items?", "Confirm Delete Duplicates", MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+                    _changingItemCache = true;
+                    Cursor = Cursors.WaitCursor;
+
+                    for(int i =0; i < listViewItems.Items.Count; i++)
+                    {
+
+                            Item itemToSave = listViewItems.Items[i].Tag as Item;
+
+                            List<Item> itemsToDelete = new List<Item>(ItemCache.Instance.FindAllItemsById(itemToSave.Id));
+                            Item itemUngemmed = ItemCache.FindItemById(itemToSave.Id.ToString() + ".0.0.0", false, false);
+                            if (itemsToDelete.Count > 1)
+                            {
+                                if (itemUngemmed != null) itemsToDelete.Add(itemUngemmed);
+                                if (itemsToDelete.Contains(itemToSave)) itemsToDelete.Remove(itemToSave);
+                                foreach (Item itemToDelete in itemsToDelete)
+                                    ItemCache.DeleteItem(itemToDelete);
+                                foreach (ListViewItem lvi in listViewItems.Items)
+                                    if (itemsToDelete.Contains(lvi.Tag as Item))
+                                        listViewItems.Items.Remove(lvi);
+                                Cursor = Cursors.Default;
+                                _changingItemCache = false;
+                            }
+
+                        
+                    }
+                    Cursor = Cursors.Default;
+                    _changingItemCache = false;
+				}
+			}
+        }
+    
     }
 }

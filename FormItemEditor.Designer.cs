@@ -115,6 +115,7 @@ namespace Rawr
             this.label19 = new System.Windows.Forms.Label();
             this.textBoxItemLevel = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.buttonDeleteAllDuplicates = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownId)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -476,7 +477,7 @@ namespace Rawr
             // 
             this.buttonFillSockets.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonFillSockets.AutoSize = true;
-            this.buttonFillSockets.Location = new System.Drawing.Point(361, 572);
+            this.buttonFillSockets.Location = new System.Drawing.Point(482, 572);
             this.buttonFillSockets.Name = "buttonFillSockets";
             this.buttonFillSockets.Size = new System.Drawing.Size(80, 23);
             this.buttonFillSockets.TabIndex = 12;
@@ -935,6 +936,18 @@ namespace Rawr
             this.label20.TabIndex = 25;
             this.label20.Text = "Item Level:";
             // 
+            // buttonDeleteAllDuplicates
+            // 
+            this.buttonDeleteAllDuplicates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDeleteAllDuplicates.AutoSize = true;
+            this.buttonDeleteAllDuplicates.Location = new System.Drawing.Point(361, 572);
+            this.buttonDeleteAllDuplicates.Name = "buttonDeleteAllDuplicates";
+            this.buttonDeleteAllDuplicates.Size = new System.Drawing.Size(115, 23);
+            this.buttonDeleteAllDuplicates.TabIndex = 27;
+            this.buttonDeleteAllDuplicates.Text = "Delete All Duplicates";
+            this.buttonDeleteAllDuplicates.UseVisualStyleBackColor = true;
+            this.buttonDeleteAllDuplicates.Click += new System.EventHandler(this.buttonDeleteAllDuplicates_Click);
+            // 
             // FormItemEditor
             // 
             this.AcceptButton = this.buttonOK;
@@ -942,6 +955,7 @@ namespace Rawr
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(672, 610);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonDeleteAllDuplicates);
             this.Controls.Add(this.textBoxItemLevel);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.groupBox2);
@@ -1063,5 +1077,6 @@ namespace Rawr
         private System.Windows.Forms.TextBox textBoxSource;
         private System.Windows.Forms.TextBox textBoxItemLevel;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button buttonDeleteAllDuplicates;
     }
 }
