@@ -1667,6 +1667,36 @@ Here's a quick rundown of the status of each model:
             return character;
         }
 
+        private void removeAllGemmingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to ungem all items?", "Confirm Delete Gemmings", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                List<string> toDelete = new List<string>();
+                List<int> toCreate = new List<int>();
+                foreach (string gemmedId in ItemCache.Items.Keys) {
+                    string[] ids = gemmedId.Split('.');
+                    int id = int.Parse(ids[0]);
+                    int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
+                    int id2 = ids.Length == 4 ? int.Parse(ids[2]) : 0;
+                    int id3 = ids.Length == 4 ? int.Parse(ids[3]) : 0;
+                    if (id1 != 0 || id2 != 0 || id3 != 0)
+                    {
+                        if (!toCreate.Contains(id)) toCreate.Add(id);
+                        toDelete.Add(gemmedId);
+                    }
+                }
+                foreach (int id in toCreate)
+                {
+                    ItemCache.FindItemById(id.ToString()+".0.0.0", true, false);
+                }
+                foreach (string gemmedId in toDelete)
+                {
+                    ItemCache.Items.Remove(gemmedId);
+                }
+                ItemCache.OnItemsChanged();
+            }
+
+        }
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
