@@ -761,17 +761,17 @@ namespace Rawr
                                 if (itemUngemmed != null) itemsToDelete.Add(itemUngemmed);
                                 if (itemsToDelete.Contains(itemToSave)) itemsToDelete.Remove(itemToSave);
                                 foreach (Item itemToDelete in itemsToDelete)
-                                    ItemCache.DeleteItem(itemToDelete);
+                                    ItemCache.DeleteItem(itemToDelete, false);
                                 foreach (ListViewItem lvi in listViewItems.Items)
                                     if (itemsToDelete.Contains(lvi.Tag as Item))
                                         listViewItems.Items.Remove(lvi);
                                 Cursor = Cursors.Default;
-                                _changingItemCache = false;
                             }
 
                         
                     }
                     Cursor = Cursors.Default;
+                    ItemCache.OnItemsChanged();
                     _changingItemCache = false;
 				}
 			}
