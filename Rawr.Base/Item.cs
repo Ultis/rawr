@@ -270,6 +270,8 @@ namespace Rawr
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void SetGemInternal(int index, Item value)
         {
+            // required for dynamic gemming!
+            _gemmedId = string.Empty;
             switch (index)
             {
                 case 1:

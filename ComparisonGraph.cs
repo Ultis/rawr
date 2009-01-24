@@ -307,7 +307,7 @@ namespace Rawr
 
                             g.DrawImageUnscaled(bmpDiamond, legendX, 2);
                             g.DrawString("=", this.Font, new SolidBrush(this.ForeColor), legendX + 12, 3);
-                            g.DrawString("Available for Optimizer", this.Font, new SolidBrush(this.ForeColor), legendX + 24, 4);
+                            g.DrawString("Available for Optimizer & Dynamic Gemming", this.Font, new SolidBrush(this.ForeColor), legendX + 24, 4);
                             #endregion
 
                             #region Graph Ticks

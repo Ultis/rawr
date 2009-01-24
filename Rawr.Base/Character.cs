@@ -488,6 +488,29 @@ namespace Rawr //O O . .
             return null;
         }    
 
+        public List<Item> GetAvailableGems(Item[] items)
+        {
+            List<Item> result = new List<Item>();
+            foreach (Item item in items)
+            {
+                if (item.Slot == Item.ItemSlot.Red ||
+                    item.Slot == Item.ItemSlot.Blue ||
+                    item.Slot == Item.ItemSlot.Green ||
+                    item.Slot == Item.ItemSlot.Yellow ||
+                    item.Slot == Item.ItemSlot.Purple ||
+                    item.Slot == Item.ItemSlot.Orange ||
+                    item.Slot == Item.ItemSlot.Prismatic ||
+                    item.Slot == Item.ItemSlot.Meta)
+                {
+                    if (_availableItems.FindIndex(x => x.StartsWith(item.Id.ToString())) >= 0)
+                    {
+                        result.Add(item);
+                    }
+                }
+            }
+            return result;
+        }
+
         public bool IsEquipped(Item itemToBeChecked)
         {
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
@@ -601,6 +624,8 @@ namespace Rawr //O O . .
                 }
             }
             OnAvailableItemsChanged();
+            // dynamic gemmings
+            if (item.IsGem) OnCalculationsInvalidated();
         }
 
         public void ToggleAvailableItemEnchantRestriction(Item item, Enchant enchant)
@@ -690,6 +715,8 @@ namespace Rawr //O O . .
                     break;
             }
             OnAvailableItemsChanged();
+            // dynamic gemmings
+            if (item.IsGem) OnCalculationsInvalidated();
         }
 
 		public void SerializeCalculationOptions()

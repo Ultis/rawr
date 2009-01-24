@@ -111,6 +111,7 @@
     <Compile Include="CustomControls\ExtendedToolTipLabel.designer.cs">
       <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="DynamicGemmer.cs" />
     <Compile Include="Enchant.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />

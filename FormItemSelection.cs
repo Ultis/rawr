@@ -45,6 +45,8 @@ namespace Rawr
 			set { _currentCalculations = value; }
 		}
 
+        private DynamicGemmer gemmer = new DynamicGemmer();
+
 		private ComparisonCalculationBase[] _itemCalculations;
 		public ComparisonCalculationBase[] ItemCalculations
 		{
@@ -118,12 +120,16 @@ namespace Rawr
 			}
 		}
 
+        private Boolean _changingItemCache = false;
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			Items = ItemCache.Instance.RelevantItems;
-			Character.CharacterSlot characterSlot = _characterSlot;
-			_characterSlot = Character.CharacterSlot.None;
-			LoadItemsBySlot(characterSlot);
+            if (!_changingItemCache)
+            {
+                Items = ItemCache.Instance.RelevantItems;
+                Character.CharacterSlot characterSlot = _characterSlot;
+                _characterSlot = Character.CharacterSlot.None;
+                LoadItemsBySlot(characterSlot);
+            }
 		}
 
         void _character_ItemsChanged(object sender, EventArgs e)
@@ -226,31 +232,10 @@ namespace Rawr
 			if (_characterSlot != slot)
 			{
 				_characterSlot = slot;
-				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-				if (this.Items != null && this.Character != null)
-				{
-                    bool seenEquippedItem = Character[slot] == null;
-					foreach (Item item in this.Items)
-					{
-                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-						if (item.FitsInSlot(slot, Character))
-						{
-							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
-						}
-					}
-                    if (!seenEquippedItem)
-                    {
-                        itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], this.Character, slot));
-                    }
-				}
-				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
-				emptyCalcs.Name = "Empty";
-				emptyCalcs.Item = new Item();
-				emptyCalcs.Item.Name = "Empty";
-				emptyCalcs.Equipped = this.Character[slot] == null;
-				itemCalculations.Add(emptyCalcs);
-				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
-				ItemCalculations = itemCalculations.ToArray();
+                _changingItemCache = true;
+                List<ComparisonCalculationBase> itemCalculations = gemmer.LoadItemsBySlot(slot, this.Items, this.Character, true, CompareItemCalculations);
+                _changingItemCache = false;
+                ItemCalculations = itemCalculations.ToArray();
 			}
 		}
 

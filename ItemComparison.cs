@@ -44,24 +44,15 @@ namespace Rawr
             InitializeComponent();
         }
 
+        private DynamicGemmer gemmer = new DynamicGemmer();
+
         public void LoadGearBySlot(Character.CharacterSlot slot)
         {
 			Calculations.ClearCache();
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             if (Items != null && Character != null)
             {
-                bool seenEquippedItem = (Character[slot]==null);
-                foreach (Item item in Items)
-                {
-                    if (item.FitsInSlot(slot, Character))
-                    {
-                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
-                    }
-                }
-                // add item
-                if (!seenEquippedItem)
-                    itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
+                itemCalculations = gemmer.LoadItemsBySlot(slot, Items, Character, false, null);
             }
 
             comparisonGraph1.RoundValues = true;
