@@ -609,7 +609,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", Item.ItemSlot.TwoHand, new Stats() { Defense = 25.0f, BonusStaminaMultiplier = 0.02f }));
 
             // Engineering enchant
-            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (22 + 2.0f / 3.0f) } ));
+            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (28 + 1.0f / 3.0f) } ));
 
             // Tailoring enchant
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { LightweaveEmbroideryProc = 1 }));
