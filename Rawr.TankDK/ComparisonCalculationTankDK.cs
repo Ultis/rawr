@@ -13,13 +13,13 @@ namespace Rawr.TankDK
             set { _name = value; }
         }
 
-        public float Mitigation 
+        public float Survival 
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float Avoidance
+        public float Mitigation
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -34,7 +34,7 @@ namespace Rawr.TankDK
 
         public override float OverallPoints
         {
-            get { return Mitigation + Avoidance + Threat; }
+            get { return Survival + Mitigation + Threat; }
             set { }
         }
 

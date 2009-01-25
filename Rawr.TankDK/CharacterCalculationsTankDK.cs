@@ -8,7 +8,7 @@ namespace Rawr.TankDK
     {
 
         public override float OverallPoints {
-            get { return Mitigation + Avoidance + Threat; }
+            get { return Survival * SurvivalWeight + Mitigation + Threat * ThreatWeight; }
             set {   } 
         }
 
@@ -19,9 +19,12 @@ namespace Rawr.TankDK
         public float Miss { get; set; }
         public float Parry { get; set; }
 
+        public float Survival { get; set; }
         public float Mitigation { get; set; }
-        public float Avoidance { get; set; }
         public float Threat { get; set; }
+
+        public float SurvivalWeight { get; set; }
+        public float ThreatWeight { get; set; }
 
         public float AvoidancePreDR { get; set; }
         public float AvoidancePostDR { get; set; }
@@ -50,7 +53,7 @@ namespace Rawr.TankDK
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
-            get { return new float[] { Avoidance, Mitigation, Threat }; }
+            get { return new float[] { Mitigation, Survival * SurvivalWeight, Threat * ThreatWeight }; }
             set { _subPoints = value; }
         }
 
@@ -89,9 +92,9 @@ namespace Rawr.TankDK
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
 
-            dict["TTL"] = (Mitigation + Avoidance).ToString("F1");
-            dict["TTL Avoidance"] = Avoidance.ToString("F1");
-            dict["TTL Mitigation"] = Mitigation.ToString("F1");
+            dict["Overall Points"] = String.Format("{0:0,0}", (Mitigation + Survival));
+            dict["Mitigation Points"] = String.Format("{0:0,0}", Mitigation);
+            dict["Survival Points"] = String.Format("{0:0,0}", Survival);
 
             dict["Crit"] = Crit.ToString("F2");
             dict["Defense"] = Defense.ToString("F0");

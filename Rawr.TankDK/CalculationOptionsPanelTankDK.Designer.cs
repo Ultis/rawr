@@ -33,9 +33,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numThreatWeight = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.numMitigationWeight = new System.Windows.Forms.NumericUpDown();
+            this.numSurvivalWeight = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMitigationWeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -100,37 +100,37 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 62);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
+            this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Mitigation Weight";
+            this.label3.Text = "Survival Weight";
             // 
-            // numMitigationWeight
+            // numSurvivalWeight
             // 
-            this.numMitigationWeight.DecimalPlaces = 2;
-            this.numMitigationWeight.Increment = new decimal(new int[] {
+            this.numSurvivalWeight.DecimalPlaces = 2;
+            this.numSurvivalWeight.Increment = new decimal(new int[] {
             5,
             0,
             0,
             131072});
-            this.numMitigationWeight.Location = new System.Drawing.Point(150, 62);
-            this.numMitigationWeight.Maximum = new decimal(new int[] {
+            this.numSurvivalWeight.Location = new System.Drawing.Point(150, 62);
+            this.numSurvivalWeight.Maximum = new decimal(new int[] {
             5,
             0,
             0,
             0});
-            this.numMitigationWeight.Name = "numMitigationWeight";
-            this.numMitigationWeight.Size = new System.Drawing.Size(105, 20);
-            this.numMitigationWeight.TabIndex = 5;
-            this.numMitigationWeight.Value = new decimal(new int[] {
+            this.numSurvivalWeight.Name = "numSurvivalWeight";
+            this.numSurvivalWeight.Size = new System.Drawing.Size(105, 20);
+            this.numSurvivalWeight.TabIndex = 5;
+            this.numSurvivalWeight.Value = new decimal(new int[] {
             125,
             0,
             0,
             131072});
-            this.numMitigationWeight.ValueChanged += new System.EventHandler(this.numMitigationWeight_ValueChanged);
+            this.numSurvivalWeight.ValueChanged += new System.EventHandler(this.numSurvivalWeight_ValueChanged);
             // 
             // CalculationOptionsPanelTankDK
             // 
-            this.Controls.Add(this.numMitigationWeight);
+            this.Controls.Add(this.numSurvivalWeight);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.numThreatWeight);
             this.Controls.Add(this.label2);
@@ -139,7 +139,7 @@
             this.Name = "CalculationOptionsPanelTankDK";
             this.Size = new System.Drawing.Size(258, 320);
             ((System.ComponentModel.ISupportInitialize)(this.numThreatWeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numMitigationWeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numSurvivalWeight)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,6 +152,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numThreatWeight;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown numMitigationWeight;
+        private System.Windows.Forms.NumericUpDown numSurvivalWeight;
     }
 }

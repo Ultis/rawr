@@ -25,8 +25,8 @@ namespace Rawr.TankDK
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Avoidance", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Yellow);
+                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Survival", System.Drawing.Color.Yellow);
                     _subPointNameColors.Add("Threat", System.Drawing.Color.Red);
                 }
                 return _subPointNameColors;
@@ -60,6 +60,9 @@ namespace Rawr.TankDK
                     List<string> labels = new List<string>(new string[]
                     {
 
+                        "Summary:Survival Points",
+                        "Summary:Mitigation Points",
+                        "Summary:Overall Points",
 
                         "Basic Stats:Strength",
 					    "Basic Stats:Agility",
@@ -87,10 +90,6 @@ namespace Rawr.TankDK
                         "Advanced Stats:Parry",
                         "Advanced Stats:Total Avoidance",
 
-                        "TTL:TTL Mitigation*Time To Live based on armor and health",
-                        "TTL:TTL Avoidance*TTL increase by avoidance",
-                        "TTL:TTL*Time To Live",
-
                         "Threat Stats:Target Miss*Chance to miss the target",
                         "Threat Stats:Target Dodge*Chance the target dodges",
                         "Threat Stats:Target Parry*Chance the target parries",
@@ -115,7 +114,8 @@ namespace Rawr.TankDK
                 if (_customChartNames == null)
                 {
                     //_customChartNames = new string[] { "Item Budget" };
-                    _customChartNames = new string[] { "Relative Stat Values" };
+                    //_customChartNames = new string[] { "Relative Stat Values" };
+                    _customChartNames = new string[] { };
                 }
                 return _customChartNames;
             }
@@ -271,8 +271,6 @@ namespace Rawr.TankDK
             calcs.Dodge = Math.Min(currentAvoidance, dodgeTotal); currentAvoidance -= Math.Min(currentAvoidance, dodgeTotal);
             calcs.Parry = Math.Min(currentAvoidance, parryTotal); currentAvoidance -= Math.Min(currentAvoidance, parryTotal);
 
-            float dps = 1000.0f;
-
             float critReduction = (stats.Defense + defSkill) * 0.04f + stats.Resilience / 81.97497559f;
 
             float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - critReduction);
@@ -281,9 +279,10 @@ namespace Rawr.TankDK
             calcs.DefenseRating = stats.DefenseRating;
             calcs.DefenseRatingNeeded = (attackerCrit / 0.04f) * 4.918498039f;
 
-            float critImpact = 4.0f;
+            float critImpact = 1.0f;
 
             float critHitBare = 100.0f - (dodgeNonDR + missNonDR + parryNonDR) + (5.0f + levelDifference) * critImpact;
+            //float critHitBare = 100.0f + (5.0f + levelDifference) * critImpact;
             float critHitAvoidance = currentAvoidance + attackerCrit * critImpact;
 
             float armor = stats.Armor * (1.0f + uaUptime * 0.25f);
@@ -291,23 +290,29 @@ namespace Rawr.TankDK
             float armor_dr = Math.Min(0.75f, armor / (armor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
 
             float ibfUptime = (12.0f + character.DeathKnightTalents.GuileOfGorefiend * 2.0f) / 60.0f;
-            float ibfDR = 0.5f * ibfUptime;
+            float ibfDR = (0.2f + (stats.Defense + defSkill)/140.0f * 0.15f) * ibfUptime;
+            //float ibfDR = (0.2f) * ibfUptime;
 
             float bsDR = 0.0f;
             if (character.DeathKnightTalents.BoneShield > 0)
             {
-                float bsUptime = ((8.0f * (100.0f - currentAvoidance) + 30.0f * currentAvoidance)) / (60.0f * 100.0f);
-                bsDR = 0.4f * bsUptime;
+                float bsUptime = ((10.0f * (100.0f - currentAvoidance) + 60.0f * currentAvoidance)) / (60.0f * 100.0f);
+                bsDR = 0.2f * bsUptime;
             }
             
             float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR);
 
             float hp = calcs.BasicStats.Health;
 
-            calcs.Mitigation = hp / (complete_dr * (dps * critHitBare / 100.0f)) * opts.MitigationWeight;
-            calcs.Avoidance = hp / (complete_dr * (dps * critHitAvoidance / 100.0f)) - calcs.Mitigation;
+            //calcs.Survival = hp / (complete_dr * (critHitBare / 100.0f));
+            calcs.Survival = hp / (complete_dr * (1.0f + attackerCrit/100.0f));
+            calcs.SurvivalWeight = opts.SurvivalWeight;
 
-            calcs.Avoidance = Math.Max(0.0f, calcs.Avoidance);
+            calcs.Mitigation = hp / (complete_dr * (critHitAvoidance / 100.0f));
+            //calcs.Mitigation = hp / (complete_dr * (critHitAvoidance / 100.0f)) -calcs.Survival;
+
+
+            calcs.Mitigation = Math.Max(0.0f, calcs.Mitigation);
 
             // ***** THREAT *****
 
@@ -319,8 +324,11 @@ namespace Rawr.TankDK
                 {
                     chanceMiss = Math.Max(0f, 0.05f + 0.005f * (opts.TargetLevel - 80f) - hitBonus);
                 }
-                float chanceParry = Math.Max(0.0f, 0.15f - (stats.ExpertiseRating / (32.78998947f * 100.0f) + stats.Expertise * 0.0025f));
-                float chanceDodge = Math.Max(0.0f, 0.065f - (stats.ExpertiseRating / (32.78998947f * 100.0f) + stats.Expertise * 0.0025f));
+
+                calcs.Expertise = stats.Expertise + (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) / 0.25f);
+
+                float chanceParry = Math.Max(0.0f, 0.15f - (stats.Expertise * 0.0025f));
+                float chanceDodge = Math.Max(0.0f, 0.065f - (stats.Expertise * 0.0025f));
                 float hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
 
                 calcs.TargetDodge = chanceDodge;
@@ -345,10 +353,12 @@ namespace Rawr.TankDK
 
                 calcs.Threat *= hitChance * (physCrits + 1.0f);
 
-                calcs.Threat *= opts.ThreatWeight;
+                calcs.ThreatWeight = 1000.0f * opts.ThreatWeight;
 
-                calcs.Expertise = stats.Expertise + (stats.ExpertiseRating / 32.78998947f) / 0.25f;
+                
             }
+
+            
 
             return calcs;
         }
@@ -406,10 +416,10 @@ namespace Rawr.TankDK
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
-                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead) + .02f * (float)(talents.ShadowOfDeath),
+                BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead + talents.VeteranOfTheThirdWar) + .02f * (float)(talents.ShadowOfDeath),
                 BonusArmorMultiplier = .03f * (float)(talents.Toughness),
-                BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath),
-                Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare),
+                BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
+                Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
                 BonusSpellPowerMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
                 Dodge = 0.01f * talents.Anticipation,
@@ -462,10 +472,12 @@ namespace Rawr.TankDK
             statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier));
-            statsTotal.Armor *= 1.60f; // Frost Presence
+            statsTotal.Armor *= 1.80f; // Frost Presence
             statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
+
+            statsTotal.Armor += statsTotal.BonusArmor;
 
             if (talents.BladedArmor > 0)
             {
@@ -529,33 +541,33 @@ namespace Rawr.TankDK
 
                     return new ComparisonCalculationBase[] {
                         new ComparisonCalculationTankDK() { Name = "+10 Strength",
+                            Survival = strCalc.Survival - baseCalc.Survival,
                             Mitigation = strCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = strCalc.Avoidance - baseCalc.Avoidance,
                             Threat = strCalc.Threat - baseCalc.Threat,
                         },
                         new ComparisonCalculationTankDK() { Name = "+10 Agility",
+                            Survival = agiCalc.Survival - baseCalc.Survival,
                             Mitigation = agiCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = agiCalc.Avoidance - baseCalc.Avoidance,
                             Threat = agiCalc.Threat - baseCalc.Threat,
                         },
                         new ComparisonCalculationTankDK() { Name = "+10 Stamina",
+                            Survival = stamCalc.Survival - baseCalc.Survival,
                             Mitigation = stamCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = stamCalc.Avoidance - baseCalc.Avoidance,
                             Threat = stamCalc.Threat - baseCalc.Threat,
                         },
                         new ComparisonCalculationTankDK() { Name = "+10 Defense Rating",
+                            Survival = defCalc.Survival - baseCalc.Survival,
                             Mitigation = defCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = defCalc.Avoidance - baseCalc.Avoidance,
                             Threat = defCalc.Threat - baseCalc.Threat,
                         },
                         new ComparisonCalculationTankDK() { Name = "+10 Dodge Rating",
+                            Survival = dodgeCalc.Survival - baseCalc.Survival,
                             Mitigation = dodgeCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = dodgeCalc.Avoidance - baseCalc.Avoidance,
                             Threat = dodgeCalc.Threat - baseCalc.Threat,
                         },
                         new ComparisonCalculationTankDK() { Name = "+10 Parry Rating",
+                            Survival = parryCalc.Survival - baseCalc.Survival,
                             Mitigation = parryCalc.Mitigation - baseCalc.Mitigation,
-                            Avoidance = parryCalc.Avoidance - baseCalc.Avoidance,
                             Threat = parryCalc.Threat - baseCalc.Threat,
                         },
 
@@ -635,6 +647,7 @@ namespace Rawr.TankDK
                 Intellect = stats.Intellect,
                 Spirit = stats.Spirit,
                 Armor = stats.Armor,
+                BonusArmor = stats.BonusArmor,
 
                 DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
@@ -682,7 +695,7 @@ namespace Rawr.TankDK
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
-                stats.CritRating + stats.HitRating + 
+                stats.CritRating + stats.HitRating + stats.BonusArmor +
                 stats.DodgeRating + stats.DefenseRating + stats.ParryRating + stats.Resilience +
                 stats.Dodge + stats.Parry + stats.Defense + stats.BonusArmorMultiplier +
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
