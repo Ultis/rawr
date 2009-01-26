@@ -37,24 +37,6 @@ namespace Rawr.ProtWarr
             private set { _damagePerSecond = value; }
         }
 
-        private float AbilityThreat(Ability ability)
-        {
-            // This is just a dummy overload to save some time as Character and Stats are always known in this context
-            return Lookup.AbilityThreat(Character, Stats, ability);
-        }
-
-        private float AbilityDamage(Ability ability)
-        {
-            // This is just a dummy overload to save some time as Character and Stats are always known in this context
-            return Lookup.AbilityDamage(Character, Stats, ability);
-        }
-
-        private float AttackTable(HitResult resultType, Ability ability)
-        {
-            // This is just a dummy overload to save some time as Character and Stats are always known in this context
-            return Lookup.AttackTable(Character, Stats, resultType, ability);
-        }
-
         public void Calculate()
         {
             // Almost everything here requires a weapon+shield, so no reason to bother if none is equipped
@@ -67,6 +49,17 @@ namespace Rawr.ProtWarr
             float modelDamage = 0.0f;
             float modelCrits = 0.0f;
 
+            AbilityModel WhiteAttack    = new AbilityModel(Character, Stats, Ability.None);
+            AbilityModel HeroicStrike   = new AbilityModel(Character, Stats, Ability.HeroicStrike);
+            AbilityModel ShieldSlam     = new AbilityModel(Character, Stats, Ability.ShieldSlam);
+            AbilityModel Revenge        = new AbilityModel(Character, Stats, Ability.Revenge);
+            AbilityModel SunderArmor    = new AbilityModel(Character, Stats, Ability.SunderArmor);
+            AbilityModel Devastate      = new AbilityModel(Character, Stats, Ability.Devastate);
+            AbilityModel Shockwave      = new AbilityModel(Character, Stats, Ability.Shockwave);
+            AbilityModel ConcussionBlow = new AbilityModel(Character, Stats, Ability.ConcussionBlow);
+            AbilityModel DeepWounds     = new AbilityModel(Character, Stats, Ability.DeepWounds);
+            AbilityModel DamageShield   = new AbilityModel(Character, Stats, Ability.DamageShield);
+
             switch (ThreatModelMode)
             {
                 case ThreatModelMode.Basic:
@@ -74,16 +67,9 @@ namespace Rawr.ProtWarr
                         // Basic Rotation
                         // Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor
                         modelLength = 6.0f;
-                        modelThreat =   AbilityThreat(Ability.ShieldSlam) + 
-                                        AbilityThreat(Ability.Revenge) + 
-                                        AbilityThreat(Ability.SunderArmor) * 2;
-
-                        modelDamage =   AbilityDamage(Ability.ShieldSlam) + 
-                                        AbilityDamage(Ability.Revenge) + 
-                                        AbilityDamage(Ability.SunderArmor) * 2;
-
-                        modelCrits  =   AttackTable(HitResult.Crit, Ability.ShieldSlam) + 
-                                        AttackTable(HitResult.Crit, Ability.Revenge);
+                        modelThreat = ShieldSlam.Threat + Revenge.Threat + SunderArmor.Threat * 2;
+                        modelDamage = ShieldSlam.Damage + Revenge.Damage;
+                        modelCrits  = ShieldSlam.CritPercentage + Revenge.CritPercentage;
                         break;
                     }
                 case ThreatModelMode.Devastate:
@@ -93,17 +79,9 @@ namespace Rawr.ProtWarr
                         if (Character.WarriorTalents.Devastate == 1)
                         {
                             modelLength =   6.0f;
-                            modelThreat =   AbilityThreat(Ability.ShieldSlam) + 
-                                            AbilityThreat(Ability.Revenge) + 
-                                            AbilityThreat(Ability.Devastate) * 2;
-
-                            modelDamage =   AbilityDamage(Ability.ShieldSlam) +
-                                            AbilityDamage(Ability.Revenge) +
-                                            AbilityDamage(Ability.Devastate) * 2;
-
-                            modelCrits  =   AttackTable(HitResult.Crit, Ability.ShieldSlam) + 
-                                            AttackTable(HitResult.Crit, Ability.Revenge) +
-                                            AttackTable(HitResult.Crit, Ability.Devastate) * 2;
+                            modelThreat =   ShieldSlam.Threat + Revenge.Threat + Devastate.Threat * 2;
+                            modelDamage =   ShieldSlam.Damage + Revenge.Damage + Devastate.Damage * 2;
+                            modelCrits  =   ShieldSlam.CritPercentage + Revenge.CritPercentage + Devastate.CritPercentage * 2;
                         }
                         break;
                     }
@@ -118,17 +96,15 @@ namespace Rawr.ProtWarr
                         if (Character.WarriorTalents.SwordAndBoard == 3)
                         {
                             modelLength =   4.7644f;
-                            modelThreat =   (1.0f * AbilityThreat(Ability.ShieldSlam)) +
-                                            (0.73f * AbilityThreat(Ability.Revenge)) +
-                                            (1.4596f * AbilityThreat(Ability.Devastate));
-                            
-                            modelDamage =   (1.0f * AbilityDamage(Ability.ShieldSlam)) +
-                                            (0.73f * AbilityDamage(Ability.Revenge)) +
-                                            (1.4596f * AbilityDamage(Ability.Devastate));
-
-                            modelCrits =    (1.0f * AttackTable(HitResult.Crit, Ability.ShieldSlam)) +
-                                            (0.73f * AttackTable(HitResult.Crit, Ability.Revenge)) +
-                                            (1.4596f * AttackTable(HitResult.Crit, Ability.Devastate));
+                            modelThreat =   (1.0f * ShieldSlam.Threat) +
+                                            (0.73f * Revenge.Threat) +
+                                            (1.4596f * Devastate.Threat);
+                            modelDamage =   (1.0f * ShieldSlam.Damage) +
+                                            (0.73f * Revenge.Damage) +
+                                            (1.4596f * Devastate.Damage);
+                            modelCrits =    (1.0f * ShieldSlam.CritPercentage) +
+                                            (0.73f * Revenge.CritPercentage) +
+                                            (1.4596f * Devastate.CritPercentage);
                         }
                         break;
                     }
@@ -142,60 +118,50 @@ namespace Rawr.ProtWarr
                         // The cycle length is 4.7844s, abilities per cycle is 3.1896
                         if (Character.WarriorTalents.SwordAndBoard == 3 && Character.WarriorTalents.ConcussionBlow == 1 && Character.WarriorTalents.Shockwave == 1)
                         {
-                            // Concussion Blow, Shockwave, and Devastate end up being about equal in the final spot
-                            float fillThreat = (AbilityThreat(Ability.ConcussionBlow) + 
-                                                AbilityThreat(Ability.Shockwave) + AbilityThreat(Ability.Devastate)) / 3;
-                            float fillDamage = (AbilityDamage(Ability.ConcussionBlow) +
-                                                AbilityDamage(Ability.Shockwave) + AbilityDamage(Ability.Devastate)) / 3;
-                            float fillCrits  = (AttackTable(HitResult.Crit, Ability.ConcussionBlow) +
-                                                AttackTable(HitResult.Crit, Ability.Shockwave) + AttackTable(HitResult.Crit, Ability.Devastate)) / 3;
-
                             modelLength =   4.7644f;
-                            modelThreat =   (1.0f * AbilityThreat(Ability.ShieldSlam)) +
-                                            (0.73f * AbilityThreat(Ability.Revenge)) +
-                                            (1.4596f * AbilityThreat(Ability.Devastate)) +
-                                            (0.3266f * fillThreat);
-
-                            modelDamage =   (1.0f * AbilityDamage(Ability.ShieldSlam)) +
-                                            (0.73f * AbilityDamage(Ability.Revenge)) +
-                                            (1.4596f * AbilityDamage(Ability.Devastate)) +
-                                            (0.3266f * fillDamage);
-
-                            modelCrits =    (1.0f * AttackTable(HitResult.Crit, Ability.ShieldSlam)) +
-                                            (0.73f * AttackTable(HitResult.Crit, Ability.Revenge)) +
-                                            (1.4596f * AttackTable(HitResult.Crit, Ability.Devastate)) +
-                                            (0.3266f * fillCrits);
+                            modelThreat =   (1.0f * ShieldSlam.Threat) +
+                                            (0.73f * Revenge.Threat) +
+                                            (1.133f * Devastate.Threat) +
+                                            (0.3266f * ((ConcussionBlow.Threat + Shockwave.Threat + Devastate.Threat) / 3));
+                            modelDamage =   (1.0f * ShieldSlam.Damage) +
+                                            (0.73f * Revenge.Damage) +
+                                            (1.133f * Devastate.Damage) +
+                                            (0.3266f * ((ConcussionBlow.Damage + Shockwave.Damage + Devastate.Damage) / 3));
+                            modelCrits =    (1.0f * ShieldSlam.CritPercentage) +
+                                            (0.73f * Revenge.CritPercentage) +
+                                            (1.133f * Devastate.CritPercentage) +
+                                            (0.3266f * ((ConcussionBlow.CritPercentage + Shockwave.CritPercentage + Devastate.CritPercentage) / 3));
                         }
                         break;
                     }
             }
 
             // White Damage
-            float weaponHits = modelLength / (Math.Max(1.0f, Character.MainHand.Speed / (1.0f + (Stats.HasteRating * ProtWarr.HasteRatingToHaste / 100.0f))));
+            float weaponHits = modelLength / Lookup.WeaponSpeed(Character, Stats);
             if (RageModelMode == RageModelMode.Infinite)
             {
                 // Convert all white hits to heroic strikes
-                modelThreat += AbilityThreat(Ability.HeroicStrike) * weaponHits;
-                modelDamage += AbilityDamage(Ability.HeroicStrike) * weaponHits;
-                modelCrits  += AttackTable(HitResult.Crit, Ability.HeroicStrike) * weaponHits;
+                modelThreat += HeroicStrike.Threat * weaponHits;
+                modelDamage += HeroicStrike.Damage * weaponHits;
+                modelCrits  += HeroicStrike.CritPercentage * weaponHits;
             }
             else
             {
                 // Normal white hits if we aren't using infinite rage, add some logic for a hybrid system later...
-                modelThreat += (Lookup.WeaponDPS(Character, Stats) * Lookup.StanceThreatMultipler(Character, Stats) * modelLength);
-                modelDamage += Lookup.WeaponDPS(Character, Stats) * modelLength;
-                modelCrits  += Lookup.AttackTable(Character, Stats, HitResult.Crit) * weaponHits;
+                modelThreat += WhiteAttack.Threat * weaponHits;
+                modelDamage += WhiteAttack.Damage * weaponHits;
+                modelCrits  += WhiteAttack.CritPercentage * weaponHits;
             }
 
             // Damage Shield, hardcoded at 2.0s attack speed... need to add attack speed as a character option
             float attackerHits = modelLength / 2.0f;
-            modelThreat += AbilityThreat(Ability.DamageShield) * attackerHits;
-            modelDamage += AbilityDamage(Ability.DamageShield) * attackerHits;
-            modelCrits  += AttackTable(HitResult.Crit, Ability.DamageShield) * attackerHits;
+            modelThreat += DamageShield.Threat * attackerHits;
+            modelDamage += DamageShield.Damage * attackerHits;
+            modelCrits  += DamageShield.CritPercentage * attackerHits;
 
             // Deep Wounds
-            modelThreat += AbilityThreat(Ability.DeepWounds) * modelCrits;
-            modelDamage += (AbilityDamage(Ability.DeepWounds) * modelCrits);
+            modelThreat += DeepWounds.Threat * modelCrits;
+            modelDamage += DeepWounds.Damage * modelCrits;
 
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;
@@ -203,10 +169,10 @@ namespace Rawr.ProtWarr
 
         public ThreatModel(Character character, Stats stats, ThreatModelMode threatModelMode, RageModelMode rageModelMode)
         {
-            Character       = character;
-            Stats           = stats;
-            ThreatModelMode = threatModelMode;
-            RageModelMode   = rageModelMode;
+            Character        = character;
+            Stats            = stats;
+            _threatModelMode = threatModelMode;
+            _rageModelMode   = rageModelMode;
             Calculate();
         }
     }

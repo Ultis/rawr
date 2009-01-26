@@ -7,7 +7,6 @@ namespace Rawr.ProtWarr
     public enum Ability
     {
         None,
-        Any,
         Cleave,
         ConcussionBlow,
         DamageShield,
