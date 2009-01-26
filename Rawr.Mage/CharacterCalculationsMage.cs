@@ -284,6 +284,8 @@ namespace Rawr.Mage
             }
         }
 
+        public static bool DebugCooldownSegmentation { get; set; }
+
         internal Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
@@ -359,7 +361,7 @@ namespace Rawr.Mage
             double drums = 0;
             double we = 0;
             double cmg = 0;
-            bool segmentedOutput = false;
+            bool segmentedOutput = DebugCooldownSegmentation;
             Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
             for (int i = 0; i < SolutionVariable.Count; i++)
             {

@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -254,15 +253,18 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.label99 = new System.Windows.Forms.Label();
+            this.checkBoxDebugCooldownSegmentation = new System.Windows.Forms.CheckBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -324,11 +326,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2433,6 +2430,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label99);
+            this.tabPage4.Controls.Add(this.checkBoxDebugCooldownSegmentation);
             this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
             this.tabPage4.Controls.Add(this.label78);
             this.tabPage4.Controls.Add(this.label77);
@@ -2640,6 +2639,31 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // label99
+            // 
+            this.label99.AutoSize = true;
+            this.label99.Location = new System.Drawing.Point(3, 226);
+            this.label99.Name = "label99";
+            this.label99.Size = new System.Drawing.Size(117, 13);
+            this.label99.TabIndex = 176;
+            this.label99.Text = "Debug Segmentation: *";
+            this.toolTipMage.SetToolTip(this.label99, "Will display the segmented spell cycle solution from the solver.");
+            // 
+            // checkBoxDebugCooldownSegmentation
+            // 
+            this.checkBoxDebugCooldownSegmentation.AutoSize = true;
+            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(188, 226);
+            this.checkBoxDebugCooldownSegmentation.Name = "checkBoxDebugCooldownSegmentation";
+            this.checkBoxDebugCooldownSegmentation.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDebugCooldownSegmentation.TabIndex = 175;
+            this.checkBoxDebugCooldownSegmentation.UseVisualStyleBackColor = true;
+            this.checkBoxDebugCooldownSegmentation.CheckedChanged += new System.EventHandler(this.checkBoxDebugCooldownSegmentation_CheckedChanged);
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2651,7 +2675,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2664,6 +2687,7 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2894,6 +2918,8 @@
         private System.Windows.Forms.CheckBox checkBoxUseAMClipping;
         private System.Windows.Forms.Label label98;
         private System.Windows.Forms.CheckBox checkBoxUseMBAMClipping;
+        private System.Windows.Forms.Label label99;
+        private System.Windows.Forms.CheckBox checkBoxDebugCooldownSegmentation;
 
     }
 }

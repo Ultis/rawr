@@ -64,5 +64,11 @@ namespace Rawr.Mage
             CustomSpellMixForm form = new CustomSpellMixForm(calculationOptions.CustomSpellMix);
             form.ShowDialog(this);
         }
+
+        private void checkBoxDebugCooldownSegmentation_CheckedChanged(object sender, EventArgs e)
+        {
+            CharacterCalculationsMage.DebugCooldownSegmentation = checkBoxDebugCooldownSegmentation.Checked;
+            Character.OnCalculationsInvalidated();
+        }
 	}
 }
