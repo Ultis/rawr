@@ -39,6 +39,7 @@ namespace Rawr.Healadin
 					"Cycle Stats:Total Mana",
 					"Cycle Stats:Average Healing per sec",
 					"Cycle Stats:Average Healing per mana",
+					"Cycle Stats:Other Heals*From Trinket Procs",
                     "Holy Light:HL Average Heal*Average non crit heal",
                     "Holy Light:HL Crit",
                     "Holy Light:HL Cast Time",
@@ -235,6 +236,11 @@ namespace Rawr.Healadin
             }
             #endregion
 
+            #region Trinket Procs
+            if (stats.Heal1Min > 0) { calc.HealedOther += stats.Heal1Min * (float)Math.Ceiling((fight_length - 15f) / 60f); }
+            if (stats.BonusHoTOnDirectHeals > 0) { calc.HealedOther += stats.BonusHoTOnDirectHeals * 60f * (float)Math.Ceiling((fight_length - 15f) / 55f); }
+            #endregion
+
             #region Flash of Light
             const float fol_coef = 1.5f / 3.5f * 66f / 35f * 1.25f;
             calc.FoLAvgHeal = (835.5f + (stats.SpellPower + stats.FlashOfLightSpellPower) * fol_coef) * (1f + talents.HealingLight * .04f) * (1f + stats.FlashOfLightMultiplier) * heal_multi;
@@ -333,7 +339,7 @@ namespace Rawr.Healadin
 
             calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed;
             if (talents.BeaconOfLight > 0) calc.TotalHealed += calc.BoLHealed = calcOpts.BoLEff * calcOpts.BoLUp * calc.TotalHealed;
-            calc.TotalHealed += calc.SSAbsorbed + calc.HLGlyph;
+            calc.TotalHealed += calc.SSAbsorbed + calc.HLGlyph + calc.HealedOther;
 
             calc.AvgHPM = calc.TotalHealed / calc.TotalMana;
             calc.AvgHPS = calc.TotalHealed / fight_length;
@@ -478,14 +484,16 @@ namespace Rawr.Healadin
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 ManaRestore5min = stats.ManaRestore5min,
-                GreatnessProc = stats.GreatnessProc
+                GreatnessProc = stats.GreatnessProc,
+                Heal1Min = stats.Heal1Min,
+                BonusHoTOnDirectHeals = stats.BonusHoTOnDirectHeals
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
             bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
-                + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc
+                + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals
                 + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + stats.ManaRestoreOnCrit_25
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier

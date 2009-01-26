@@ -1024,6 +1024,10 @@ namespace Rawr
             {
                 stats.ManaRestore5min = 2340;
             }
+            else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")
+            {
+                stats.Heal1Min = 2710;
+            }
 		}
 	}
 }

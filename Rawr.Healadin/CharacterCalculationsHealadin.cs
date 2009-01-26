@@ -37,6 +37,7 @@ namespace Rawr.Healadin
         public float AvgHPM { get; set; }
         public float TotalHealed { get; set; }
         public float TotalMana { get; set; }
+        public float HealedOther { get; set; }
 
         public float HLTime { get; set; }
         public float HLAvgHeal { get; set; }
@@ -120,6 +121,7 @@ namespace Rawr.Healadin
             dictValues.Add("Total Mana", string.Format("{0} mana", TotalMana.ToString("N00")));
             dictValues.Add("Average Healing per sec", string.Format("{0} hps", AvgHPS.ToString("N00")));
             dictValues.Add("Average Healing per mana", string.Format("{0} hpm", AvgHPM.ToString("N02")));
+            dictValues.Add("Other Heals", string.Format("{0} healed", HealedOther.ToString("N00")));
             // Flash of Light
             dictValues.Add("FoL Average Heal", string.Format("{0} healing", FoLAvgHeal.ToString("N00")));
             dictValues.Add("FoL Crit", string.Format("{0}%", (FoLCrit * 100).ToString("N02")));

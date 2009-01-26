@@ -246,7 +246,8 @@ namespace Rawr
         HolyLightPercentManaReduction,
         HolyLightCrit,
         HolyShockCrit,
-        GreatnessProc
+        GreatnessProc,
+        Heal1Min
         #endregion
     }
 
@@ -1981,6 +1982,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.GreatnessProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.GreatnessProc] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Healed every 1 min")]
+        [Category("Equipment Procs")]
+        public float Heal1Min
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Heal1Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Heal1Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
