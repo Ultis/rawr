@@ -9,7 +9,7 @@ namespace Rawr.ProtWarr
         public static float LevelModifier(Character character)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            return (calcOpts.TargetLevel - 80f) * 0.2f;
+            return (calcOpts.TargetLevel - character.Level) * 0.2f;
         }
 
         public static float TargetArmorReduction(Character character, Stats stats)
@@ -32,8 +32,8 @@ namespace Rawr.ProtWarr
             switch (avoidanceType)
             {
                 case HitResult.Miss:
-                    if ((calcOpts.TargetLevel - 80f) < 3)
-                        return 0.05f + 0.005f * (calcOpts.TargetLevel - 80f);
+                    if ((calcOpts.TargetLevel - character.Level) < 3)
+                        return 0.05f + 0.005f * (calcOpts.TargetLevel - character.Level);
                     else
                         return 0.08f;
 
@@ -41,7 +41,7 @@ namespace Rawr.ProtWarr
                     return 0.064f;
 
                 case HitResult.Parry:
-                    if ((calcOpts.TargetLevel - 80f) < 3)
+                    if ((calcOpts.TargetLevel - character.Level) < 3)
                         return 0.065f;
                     else
                         return 0.1375f;

@@ -63,7 +63,7 @@ namespace Rawr.ProtWarr
             if (Ability == Ability.None)
                 critMultiplier = (2.0f * (1.0f + Stats.BonusCritMultiplier));
             else
-                critMultiplier = ((2.0f * (1.0f + Stats.BonusCritMultiplier)) * (Talents.Impale * 0.1f));
+                critMultiplier = ((2.0f * (1.0f + Stats.BonusCritMultiplier)) * (1.0f + (Talents.Impale * 0.1f)));
 
             switch (Ability)
             {
