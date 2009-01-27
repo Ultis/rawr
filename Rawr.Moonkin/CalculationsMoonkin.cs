@@ -257,6 +257,23 @@ namespace Rawr.Moonkin
             // Create the total stats object
             Stats statsTotal = statsGearEnchantsBuffs + statsRace + statsTalents;
 
+            // Inserted by Trolando
+            if (statsTotal.GreatnessProc > 0)
+            {
+                float expectedInt = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
+			    float expectedSpi = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+                // Highest stat
+                if (expectedSpi > expectedInt)
+                {
+                    statsTotal.Spirit += statsTotal.GreatnessProc * .25f;
+                }
+                else
+                {
+                    statsTotal.Intellect += statsTotal.GreatnessProc * .25f;
+                }
+            }
+
+
             // Base stats: Intellect, Stamina, Spirit, Agility
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
 			statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
@@ -767,13 +784,14 @@ namespace Rawr.Moonkin
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc
+                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+                GreatnessProc = stats.GreatnessProc
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse5Min + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestorePerCrit + stats.ThunderCapacitorProc + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc + stats.DarkmoonCardDeathProc) > 0;
+			return stats.ToString().Equals("") || (stats.Stamina + stats.Intellect + stats.Spirit + stats.Agility + stats.Health + stats.Mp5 + stats.CritRating + stats.SpellCrit + stats.SpellPower + stats.SpellArcaneDamageRating + stats.SpellNatureDamageRating + stats.HasteRating + stats.SpellHaste + stats.HitRating + stats.SpellHit + +stats.BonusAgilityMultiplier + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusStaminaMultiplier + stats.BonusSpiritMultiplier + stats.Mana + stats.SpellCombatManaRegeneration + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.ManaRestorePerCast + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellDamageFromIntellectPercentage + stats.SpellDamageFromSpiritPercentage + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse5Min + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.StarfireDmg + stats.MoonfireDmg + stats.WrathDmg + stats.IdolCritRating + stats.UnseenMoonDamageBonus + stats.LightningCapacitorProc + stats.StarfireCritChance + stats.MoonfireExtension + stats.InnervateCooldownReduction + stats.StarfireBonusWithDot + stats.BonusManaPotion + stats.ShatteredSunAcumenProc + stats.TimbalsProc + stats.DruidAshtongueTrinket + stats.ThreatReductionMultiplier + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusDamageMultiplier + stats.ArmorPenetration + stats.Bloodlust + stats.DrumsOfBattle + stats.DrumsOfWar + stats.BonusNukeCritChance + stats.BonusInsectSwarmDamage + stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.ManaRestoreOnCast_10_45 + stats.ManaRestorePerCrit + stats.ThunderCapacitorProc + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc + stats.DarkmoonCardDeathProc + stats.GreatnessProc) > 0;
         }
     }
 }

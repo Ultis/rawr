@@ -205,10 +205,20 @@ namespace Rawr
 			}
 			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
 			{ //Darkmoon Card: Greatness
-				stats.Strength *= 2f;
+                // Trolando: fixed GreatnessProc, set to 300
+                // TODO for all module authors, it has 35% chance and 45 icd, 15s duration
+                // Meaning it wil proc after 3 spells on average, so 50-60 icd
+                // 15/50 ~ 30% on average, 15/60 ~ 25%
+				/* 
+                 * OLD CODE - originally all were just doubled
+                 * modified by Ermad for healadin
+                 * replaced by Trolando
+                stats.Strength *= 2f;
 				stats.Agility *= 2f;
                 if (stats.Intellect > 0) { stats.GreatnessProc = 300; }
 				stats.Spirit *= 2f;
+                 */
+                stats.GreatnessProc = 300;
 			}
 			else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
 			{

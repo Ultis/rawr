@@ -721,7 +721,23 @@ the Threat Scale defined on the Options tab.",
 			
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
 
-			Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
+            // Inserted by Trolando
+            if (statsTotal.GreatnessProc > 0)
+            {
+                float expectedAgi = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+                float expectedStr = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+                // Highest stat
+                if (expectedAgi > expectedStr)
+                {
+                    statsTotal.Agility += statsTotal.GreatnessProc * 15f / 48f;
+                }
+                else
+                {
+                    statsTotal.Strength += statsTotal.GreatnessProc * 15f / 48f;
+                }
+            }
+
+            Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
 			statsWeapon.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
 			statsWeapon.AttackPower += statsWeapon.Strength * 2;
 			if (character.MainHand != null)
@@ -1221,7 +1237,8 @@ the Threat Scale defined on the Options tab.",
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
-				ArmorPenetrationRating = stats.ArmorPenetrationRating
+				ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                GreatnessProc = stats.GreatnessProc
 			};
 		}
 
@@ -1237,7 +1254,7 @@ the Threat Scale defined on the Options tab.",
 				stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.MongooseProc
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
                  + stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage + stats.BonusCritMultiplier
-				 + stats.BonusRipDuration
+				 + stats.BonusRipDuration + stats.GreatnessProc
                  + stats.TerrorProc+stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier + stats.BonusSwipeDamageMultiplier
                  + stats.BloodlustProc + stats.BonusMangleBearDamage + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
                  + stats.DamageTakenMultiplier + stats.ArmorPenetrationRating) != 0;

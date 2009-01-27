@@ -595,7 +595,23 @@ namespace Rawr.Cat
 			
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
 
-			Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
+            // Inserted by Trolando
+            if (statsTotal.GreatnessProc > 0)
+            {
+                float expectedAgi = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
+                float expectedStr = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
+                // Highest stat
+                if (expectedAgi > expectedStr)
+                {
+                    statsTotal.Agility += statsTotal.GreatnessProc * 15f / 47f;
+                }
+                else
+                {
+                    statsTotal.Strength += statsTotal.GreatnessProc * 15f / 47f;
+                }
+            }
+            
+            Stats statsWeapon = character.MainHand == null ? new Stats() : character.MainHand.GetTotalStats(character).Clone();
 			statsWeapon.Strength *= (1 + statsTotal.BonusStrengthMultiplier);
 			statsWeapon.AttackPower += statsWeapon.Strength * 2f;
 			if (character.MainHand != null)
@@ -934,7 +950,8 @@ namespace Rawr.Cat
 					FireResistanceBuff = stats.FireResistanceBuff,
 					FrostResistanceBuff = stats.FrostResistanceBuff,
 					ShadowResistanceBuff = stats.ShadowResistanceBuff,
-					BonusRipDuration = stats.BonusRipDuration
+					BonusRipDuration = stats.BonusRipDuration,
+                    GreatnessProc = stats.GreatnessProc
 				};
 		}
 
@@ -950,7 +967,7 @@ namespace Rawr.Cat
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BerserkingProc +
 				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
-				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction +
+				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.GreatnessProc +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 		}
