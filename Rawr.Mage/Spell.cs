@@ -1541,7 +1541,7 @@ namespace Rawr.Mage
             : base("Arcane Barrage", false, false, true, false, 30, 0, 3, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
-            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.2f : 0.15f) * arcaneBlastDebuff);
+            SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f) * arcaneBlastDebuff);
             CalculateDerivedStats(castingState);
         }
     }
@@ -1619,7 +1619,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
             CostModifier += 2.00f * costDebuff + castingState.BaseStats.ArcaneBlastBonus;
-            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.2f : 0.15f) * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact); // TODO verify how spell impact stacks
+            SpellModifier *= (1 + castingState.BaseStats.ArcaneBlastBonus + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f) * timeDebuff + 0.02f * castingState.MageTalents.SpellImpact); // TODO verify how spell impact stacks
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
@@ -1785,7 +1785,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             if (barrage) BaseCastTime *= 0.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.2f : 0.15f) * arcaneBlastDebuff);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.15f : 0.15f) * arcaneBlastDebuff);
             /*if (castingState.CalculationOptions.UseAMClipping && arcaneBlastDebuff > 0)
             {
                 SpellModifier *= 4.0f / 5.0f;

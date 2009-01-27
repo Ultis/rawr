@@ -560,15 +560,15 @@ namespace Rawr.Mage
                     spellControl[35 + control7] = 1;
                     spellControl[41 + control8] = 1;
                     GenericArcane generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33], spellControl[34], spellControl[35], spellControl[36], spellControl[37], spellControl[38], spellControl[39], spellControl[40], spellControl[41], spellControl[42], spellControl[43], spellControl[44], spellControl[45]);
-                    if (!cycleDict.ContainsKey(generic.SpellDistribution))
-                    {
-                        //if (!(generic.SpellDistribution.Contains("AM0") || generic.SpellDistribution.Contains("AM1") || generic.SpellDistribution.Contains("AM2") || generic.SpellDistribution.Contains("AM3") || generic.SpellDistribution.Contains("Clip")))
-                        {
-                            cycleDict.Add(generic.SpellDistribution, control0.ToString() + control1.ToString() + control2.ToString() + control3.ToString() + control4.ToString() + control5.ToString() + control6.ToString() + control7.ToString() + control8.ToString());
-                        }
-                    }
+                    //if (!cycleDict.ContainsKey(generic.SpellDistribution))
+                    //{
+                    //    //if (!(generic.SpellDistribution.Contains("AM0") || generic.SpellDistribution.Contains("AM1") || generic.SpellDistribution.Contains("AM2") || generic.SpellDistribution.Contains("AM3") || generic.SpellDistribution.Contains("Clip")))
+                    //    //{
+                    //    //    cycleDict.Add(generic.SpellDistribution, control0.ToString() + control1.ToString() + control2.ToString() + control3.ToString() + control4.ToString() + control5.ToString() + control6.ToString() + control7.ToString() + control8.ToString());
+                    //    //}
+                    //}
                     // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 5202.23) / (generic.ManaPerSecond - 396.17);
+                    double dpm = (generic.DamagePerSecond - 4790.41) / (generic.ManaPerSecond - 243.87);
                     if (generic.DamagePerSecond > maxdps)
                     {
                         maxdps = generic.DamagePerSecond;
@@ -577,18 +577,18 @@ namespace Rawr.Mage
                     {
                         mindpm = dpm;
                     }
-                    if (generic.DamagePerSecond > 4957.64 && dpm > maxdpm)
+                    if (generic.DamagePerSecond > 4790.41 && dpm > maxdpm)
                     {
                         maxdpm = dpm;
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Distinct Count: " + cycleDict.Keys.Count);
-                System.Diagnostics.Debug.WriteLine("");
-                foreach (KeyValuePair<string, string> kvp in cycleDict)
-                {
-                    System.Diagnostics.Debug.Write(kvp.Value + ":\r\n" + kvp.Key + "\r\n");
-                }
+                //System.Diagnostics.Debug.WriteLine("Distinct Count: " + cycleDict.Keys.Count);
+                //System.Diagnostics.Debug.WriteLine("");
+                //foreach (KeyValuePair<string, string> kvp in cycleDict)
+                //{
+                //    System.Diagnostics.Debug.Write(kvp.Value + ":\r\n" + kvp.Key + "\r\n");
+                //}
             }*/
 
             fixed (double* pRowScale = SolverLP.rowScale, pColumnScale = SolverLP.columnScale, pCost = LP._cost, pData = SparseMatrix.data, pValue = SparseMatrix.value)
