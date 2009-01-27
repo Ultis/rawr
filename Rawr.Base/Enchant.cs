@@ -474,6 +474,7 @@ namespace Rawr
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
             defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", Item.ItemSlot.Chest, new Stats() { Mp5 = 8 }));
+            defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 250 }));
 
             defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
 			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
