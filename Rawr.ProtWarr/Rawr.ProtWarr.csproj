@@ -95,8 +95,9 @@
     <Compile Include="CalculationsProtWarr.cs" />
     <Compile Include="CharacterCalculationsProtWarr.cs" />
     <Compile Include="CombatTable.cs" />
-    <Compile Include="ThreatModel.cs" />
+    <Compile Include="AttackModel.cs" />
     <Compile Include="ComparisonCalculationsProtWarr.cs" />
+    <Compile Include="DefendModel.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Lookup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

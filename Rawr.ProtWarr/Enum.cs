@@ -37,7 +37,7 @@ namespace Rawr.ProtWarr
         Hit,
     }
 
-    public enum ThreatModelMode
+    public enum AttackModelMode
     {
         Basic,
         Devastate,

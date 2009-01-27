@@ -195,4 +195,33 @@ namespace Rawr.ProtWarr
             CalculateThreat();
         }
     }
+
+    public class AbilityModelList : System.Collections.DictionaryBase
+    {
+        public AbilityModel this[Ability ability]
+        {
+            get { return ((AbilityModel)(Dictionary[ability])); }
+            set { Dictionary[ability] = value; }
+        }
+
+        public void Add(Ability ability, AbilityModel abilityModel)
+        {
+            Dictionary.Add(ability, abilityModel);
+        }
+
+        public void Add(Ability ability, Character character, Stats stats)
+        {
+            Dictionary.Add(ability, new AbilityModel(character, stats, ability));
+        }
+
+        public void Remove(Ability ability)
+        {
+            Dictionary.Remove(ability);
+        }
+
+        public bool Contains(Ability ability)
+        {
+            return Dictionary.Contains(ability);
+        }
+    }
 }

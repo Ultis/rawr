@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Rawr.ProtWarr
 {
-    public class ThreatModel
+    public class AttackModel
     {
         private Character   Character;
         private Stats       Stats;
 
-        private ThreatModelMode _threatModelMode;
-        public ThreatModelMode ThreatModelMode
+        // Populate and use this for ability references in the future
+        public AbilityModelList Abilities;
+
+        private AttackModelMode _threatModelMode;
+        public AttackModelMode ThreatModelMode
         {
             get { return _threatModelMode; }
             set { _threatModelMode = value; Calculate(); }
@@ -62,7 +66,7 @@ namespace Rawr.ProtWarr
 
             switch (ThreatModelMode)
             {
-                case ThreatModelMode.Basic:
+                case AttackModelMode.Basic:
                     {
                         // Basic Rotation
                         // Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor
@@ -72,7 +76,7 @@ namespace Rawr.ProtWarr
                         modelCrits  = ShieldSlam.CritPercentage + Revenge.CritPercentage;
                         break;
                     }
-                case ThreatModelMode.Devastate:
+                case AttackModelMode.Devastate:
                     {
                         // Devastate Rotation
                         // Shield Slam -> Revenge -> Devastate -> Devastate
@@ -85,7 +89,7 @@ namespace Rawr.ProtWarr
                         }
                         break;
                     }
-                case ThreatModelMode.SwordAndBoard:
+                case AttackModelMode.SwordAndBoard:
                     {
                         // Sword And Board Rotation
                         // Requires 3 points in Sword and Board
@@ -108,7 +112,7 @@ namespace Rawr.ProtWarr
                         }
                         break;
                     }
-                case ThreatModelMode.Full:
+                case AttackModelMode.Full:
                     {
                         // Sword And Board + Shockwave/Concussion Blow Rotation
                         // Requires 3 points in Sword and Board, Shockwave, and Concussion Blow
@@ -167,7 +171,12 @@ namespace Rawr.ProtWarr
             DamagePerSecond = modelDamage / modelLength;
         }
 
-        public ThreatModel(Character character, Stats stats, ThreatModelMode threatModelMode, RageModelMode rageModelMode)
+        public AttackModel(Character character, Stats stats, AttackModelMode threatModelMode)
+            : this(character, stats, threatModelMode, RageModelMode.Infinite)
+        {
+        }
+
+        public AttackModel(Character character, Stats stats, AttackModelMode threatModelMode, RageModelMode rageModelMode)
         {
             Character        = character;
             Stats            = stats;

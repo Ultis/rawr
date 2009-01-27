@@ -15,9 +15,9 @@ namespace Rawr.ProtWarr
         public static float TargetArmorReduction(Character character, Stats stats)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-
-            // Needs Armor Penetration Support, but requires adding rating support into CalculationsProtWarrior
-            return Math.Max(0.0f, Math.Min(0.75f, calcOpts.TargetArmor / (calcOpts.TargetArmor + (467.5f * character.Level - 22167.5f))));
+            // Armor Penetration Rating multiplier needs to go into CalculationsProtWarr
+            float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) * (1.0f - (stats.ArmorPenetrationRating * (1.0f / 15.395298f) / 100.0f));
+            return Math.Max(0.0f, Math.Min(0.75f, targetArmor / (targetArmor + (467.5f * character.Level - 22167.5f))));
         }
 
         public static float TargetCritChance(Character character, Stats stats)
@@ -64,6 +64,12 @@ namespace Rawr.ProtWarr
         {
             // In Defensive Stance
             return (2.0735f * (1.0f + stats.ThreatIncreaseMultiplier));
+        }
+
+        public static float StanceDamageReduction(Character character, Stats stats)
+        {
+            // In Defensive Stance
+            return 0.9f;
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
@@ -170,6 +176,17 @@ namespace Rawr.ProtWarr
                 default:
                     return true;
             }
+        }
+
+        public static float ArmorReduction(Character character, Stats stats)
+        {
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
+        }
+
+        public static float BlockReduction(Character character, Stats stats)
+        {
+            return ((stats.BlockValue * (1.0f + stats.BonusBlockValueMultiplier)) * (1.0f + (character.WarriorTalents.CriticalBlock * 0.1f)));
         }
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
