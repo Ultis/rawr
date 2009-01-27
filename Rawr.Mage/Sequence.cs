@@ -2482,7 +2482,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     // don't wait for pot unless we'll still have room for gem after, just heuristic for now, do something more sophisticated
                     if (potTime > 0 && pot < maxtime && (gem < pot || gem - pot > 20)) maxtime = pot;
                     if (evoTime > 0 && evo < maxtime) maxtime = evo;
-                    if (time == 0) maxtime = fight; // assume that at start we want to activate SCB as soon as possible, in most cases we have to insert burn before activation to prevent overflow and that can cause pot to activate earlier recausing overflow
+                    if (time == 0 && gemTime > 1 + eps) maxtime = fight; // assume that at start we want to activate SCB as soon as possible, in most cases we have to insert burn before activation to prevent overflow and that can cause pot to activate earlier recausing overflow
                     t = 0;
                     for (i = 0; i < sequence.Count; i++)
                     {
