@@ -99,6 +99,7 @@ namespace Rawr.Mage
                     "Spell Info:AB32AMABar*AB-AB-AB-AM-ABar or AB-AB-MBAM-ABar if you notice proc at 2-stack",
                     "Spell Info:AB3AMABar*AB-AB-AB-AM-ABar regardless of procs",
                     "Spell Info:ABMBAM*Spam AB, MBAM as soon as you notice",
+                    "Spell Info:AB3MBAM*Spam AB, always ramp up to 3 stack before MBAM",
                     "Spell Info:AB3MBAMABar*Spam AB, always ramp up to 3 stack before MBAM-ABar",
                     "Spell Info:FBABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:FB2ABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",

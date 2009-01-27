@@ -275,8 +275,6 @@ namespace Rawr.Mage
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 80;
             FocusMagicTargetCritRate = 0.2f;
-            AllowLatencyCombos = true;
-            ComboReliability = 0.5f;
             SnaredTime = 1f;
         }
 
