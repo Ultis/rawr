@@ -41,6 +41,11 @@ namespace Rawr.Mage
                 return Type == VariableType.ManaPotion || Type == VariableType.ManaGem || Type == VariableType.ManaOverflow;
             }
         }
+
+        public bool IsMatch(Cooldown cooldown, VariableType cooldownType)
+        {
+            return ((cooldown != Cooldown.None && State != null && State.GetCooldown(cooldown)) || (Type == cooldownType));
+        }
     }
 
     public sealed class CharacterCalculationsMage : CharacterCalculationsBase
@@ -393,6 +398,9 @@ namespace Rawr.Mage
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
                             break;
                         case VariableType.TimeExtension:
+                            break;
+                        case VariableType.ManaOverflow:
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Overflow", Solution[i], SolutionVariable[i].Segment));
                             break;
                         case VariableType.AfterFightRegen:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));

@@ -125,6 +125,7 @@ namespace Rawr.Mage
         private int rowSegmentTrinket1 = -1;
         private int rowSegmentTrinket2 = -1;
         private int rowSegmentManaGemEffect = -1;
+        private int rowSegmentEvocation = -1;
         private int rowSegment = -1;
         private int rowSegmentManaOverflow = -1;
         private int rowSegmentManaUnderflow = -1;
@@ -752,6 +753,14 @@ namespace Rawr.Mage
                             {
                                 lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
                                 lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                            }
+                            for (int ss = 0; ss < segments; ss++)
+                            {
+                                double cool = calculationResult.EvocationCooldown;
+                                int maxs = (int)Math.Floor(ss + cool / segmentDuration) - 1;
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) maxs = segments - 1;
+                                if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentEvocation + ss, column, 1.0);
+                                if (ss * segmentDuration + cool >= calculationOptions.FightDuration) break;
                             }
                         }
                         if (restrictThreat)
@@ -1604,6 +1613,15 @@ namespace Rawr.Mage
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
+                if (calculationOptions.EvocationEnabled)
+                {
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        lp.SetRHSUnsafe(rowSegmentEvocation + seg, calculationResult.EvocationDuration);
+                        double cool = calculationResult.EvocationCooldown;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                }
                 // timing
                 for (int seg = 0; seg < segments; seg++)
                 {
@@ -1848,6 +1866,16 @@ namespace Rawr.Mage
                     {
                         rowCount++;
                         double cool = 120f;
+                        if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
+                    }
+                }
+                if (calculationOptions.EvocationEnabled)
+                {
+                    rowSegmentEvocation = rowCount;
+                    for (int seg = 0; seg < segments; seg++)
+                    {
+                        rowCount++;
+                        double cool = calculationResult.EvocationCooldown;
                         if (seg * segmentDuration + cool >= calculationOptions.FightDuration) break;
                     }
                 }
