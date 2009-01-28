@@ -166,14 +166,14 @@ namespace Rawr.RestoSham
 
             float onUse = 0.0f;
             if (options.ManaPotAmount > 0)
-                onUse += (float)Math.Truncate(options.FightLength) * (options.ManaPotAmount * (1 + stats.BonusManaPotion));
+                onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             if (options.ManaTideEveryCD)
                 onUse += (((float)Math.Truncate(options.FightLength / 5.025f) + 1) *
                     (stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
 
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
             mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
-
+            mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) +
                 ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * .85f);
             if (character.ActiveBuffsContains("Earthliving Weapon"))
@@ -190,7 +190,7 @@ namespace Rawr.RestoSham
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
             float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
-            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
+            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f) + (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + (character.ShamanTalents.BlessingOfTheEternals * 2)));
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
             float ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify);
@@ -247,7 +247,7 @@ namespace Rawr.RestoSham
                     if (calcStats.ESRTCHCHHPSMT > calcStats.ESCHHPSMT)
                         calcStats.FightHPS = calcStats.ESRTCHCHHPSMT;
 
-            calcStats.TotalHealed = calcStats.FightHPS * Time;
+            calcStats.TotalHealed = calcStats.FightHPS * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
@@ -298,15 +298,12 @@ namespace Rawr.RestoSham
                 statsTotal += statModifier;
 
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect)) * (1 + statsTotal.BonusIntellectMultiplier);
+            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect)) * (1 + (statsTotal.BonusIntellectMultiplier + (.02f * character.ShamanTalents.AncestralKnowledge)));
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower);
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower) + (float)Math.Round((statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing), 0);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
 
-            // Apply talents to stats:
-
-            ApplyTalents(statsTotal, character.ShamanTalents);
 
             // Fight options:
 
@@ -316,52 +313,6 @@ namespace Rawr.RestoSham
 
             return statsTotal;
         }
-
-
-        /// <summary>
-        /// Adjust a stats object according to any applicable talents.
-        /// </summary>
-        private void ApplyTalents(Stats statsTotal, ShamanTalents talentTree)
-        {
-            //int points;
-
-            // Unrelenting Storm: Gives 2% (per talent point) of intellect as mp5:
-
-            //points = GetTalentPoints("Unrelenting Storm", "Elemental", talentTree);
-            statsTotal.Mp5 += (float)Math.Round((statsTotal.Intellect * ((talentTree.UnrelentingStorm / 3) * .1f)), 0);
-
-            // Tidal Mastery: Increases crit chance of heals by 1% per talent point:
-
-            //points = GetTalentPoints("Tidal Mastery", "Restoration", talentTree);
-            statsTotal.SpellCrit += .01f * (talentTree.TidalMastery + talentTree.ThunderingStrikes + (talentTree.BlessingOfTheEternals * 2));
-
-            // Nature's Blessing: Adds 5% (per talent point) of intellect as bonus healing:
-
-            //points = GetTalentPoints("Nature's Blessing", "Restoration", talentTree);
-            statsTotal.SpellPower += (float)Math.Round((statsTotal.Intellect * .05f * talentTree.NaturesBlessing), 0);
-
-            // Ancestral Knowledge: Increases total intellect by 2% per talent point.
-
-            //points = GetTalentPoints("Ancestral Knowledge", "Enhancement", talentTree);
-            statsTotal.Intellect += statsTotal.Intellect * (.02f * talentTree.AncestralKnowledge);
-
-        }
-
-
-        /// <summary>
-        /// Search a talent tree for a specified talent and get the number of points invested in that talent.
-        /// </summary>
-        //public static int GetTalentPoints(string szName, string szTree, TalentTree talents)
-        //  {
-        //    if (!talents.Trees.ContainsKey(szTree))
-        //      return 0;
-
-        //    foreach (TalentItem ti in talents.Trees[szTree])
-        //      if (ti.Name.Trim().ToLower() == szName.ToLower())
-        //        return ti.PointsInvested;
-
-        //    return 0;
-        //  }
 
 
         //
