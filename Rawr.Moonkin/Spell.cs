@@ -764,8 +764,8 @@ namespace Rawr.Moonkin
 
             // Add spell-specific crit chance
             // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
-            SpellRotation.Wrath.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
-            SpellRotation.Starfire.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMastery;
+			SpellRotation.Wrath.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMajesty;
+			SpellRotation.Starfire.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMajesty;
 
             // Add spell-specific critical strike damage
             // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)

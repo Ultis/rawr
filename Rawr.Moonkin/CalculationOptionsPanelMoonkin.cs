@@ -215,7 +215,7 @@ namespace Rawr.Moonkin
                     character.DruidTalents.StarlightWrath = int.Parse(talentCode.Substring(0, 1));
                     character.DruidTalents.Genesis = int.Parse(talentCode.Substring(1, 1));
                     character.DruidTalents.Moonglow = int.Parse(talentCode.Substring(2, 1));
-                    character.DruidTalents.NaturesMastery = int.Parse(talentCode.Substring(3, 1));
+					character.DruidTalents.NaturesMajesty = int.Parse(talentCode.Substring(3, 1));
                     character.DruidTalents.ImprovedMoonfire = int.Parse(talentCode.Substring(4, 1));
                     character.DruidTalents.Brambles = int.Parse(talentCode.Substring(5, 1));
                     character.DruidTalents.NaturesGrace = int.Parse(talentCode.Substring(6, 1));

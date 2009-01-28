@@ -154,7 +154,7 @@ namespace Rawr.Tree
 
             castTime -= 0.1f * druidTalents.Naturalist;
 
-            critPercent += 2f * druidTalents.NaturesMastery;
+            critPercent += 2f * druidTalents.NaturesMajesty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             if (calcOpts.useLivingSeedAsCritMultiplicator)
@@ -600,7 +600,7 @@ namespace Rawr.Tree
         {
             manaCost *= (1 - druidTalents.TranquilSpirit * 0.02f);
 
-            critPercent += 2f * druidTalents.NaturesMastery;
+			critPercent += 2f * druidTalents.NaturesMajesty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             if (calcOpts.useLivingSeedAsCritMultiplicator)

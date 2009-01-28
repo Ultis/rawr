@@ -100,6 +100,8 @@ namespace Rawr
 				if (line.StartsWith("var className"))
 				{
 					className = GetTextBetween(line, "\"", "\"").Replace(" ", "");
+					if (className.Contains("-"))
+						className = className.Substring(0, className.IndexOf("-"));
 				}
 				else if (line.StartsWith("tree[i] = "))
 				{
@@ -149,8 +151,10 @@ namespace Rawr
 					{
 						string rankLine = lines[endLine];
 						while (rankLine.EndsWith("\\")) rankLine = rankLine.TrimEnd('\\') + lines[++endLine];
-						descRanks.Add(GetTextBetween(rankLine, "\"", "\"").Replace("<span style=text-align:left;float:left;>","").Replace("</span>",",")
-							.Replace("<span style=text-align:right;float:right;>", "").Replace("<br>", "\r\n").Replace("<BR>", "\r\n").Replace("&nbsp;"," "));
+						descRanks.Add(GetTextBetween(rankLine, "\"", "\"").Replace("<span style='text-align:left;float:left;'>","")
+							.Replace("<span style=text-align:left;float:left;>","").Replace("</span>",",").Replace("<span style=color:eb0504>","")
+							.Replace("<span style=text-align:right;float:right;>", "").Replace("<br>", "\r\n").Replace("<br/>", "\r\n")
+							.Replace("<BR/>", "\r\n").Replace("<BR>", "\r\n").Replace("&nbsp;"," ").Replace("<span>",""));
 					}
 					talents[descriptionIndex++].Description = descRanks.ToArray();
 				}
