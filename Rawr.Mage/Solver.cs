@@ -568,16 +568,16 @@ namespace Rawr.Mage
                     //    //}
                     //}
                     // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 4790.41) / (generic.ManaPerSecond - 243.87);
+                    double dpm = (generic.DamagePerSecond - 4103.66748) / (generic.ManaPerSecond - 101.676247);
                     if (generic.DamagePerSecond > maxdps)
                     {
                         maxdps = generic.DamagePerSecond;
                     }
-                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 300)
+                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 100)
                     {
                         mindpm = dpm;
                     }
-                    if (generic.DamagePerSecond > 4790.41 && dpm > maxdpm)
+                    if (generic.DamagePerSecond > 4103.66748 && dpm > maxdpm)
                     {
                         maxdpm = dpm;
                     }

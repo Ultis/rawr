@@ -1785,7 +1785,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             if (barrage) BaseCastTime *= 0.5f;
             SpellDamageCoefficient += 0.15f * castingState.MageTalents.ArcaneEmpowerment;
-            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.15f : 0.15f) * arcaneBlastDebuff);
+            SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f) * arcaneBlastDebuff);
             /*if (castingState.CalculationOptions.UseAMClipping && arcaneBlastDebuff > 0)
             {
                 SpellModifier *= 4.0f / 5.0f;
