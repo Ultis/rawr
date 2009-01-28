@@ -16,7 +16,8 @@ namespace Rawr.ProtWarr
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             // Armor Penetration Rating multiplier needs to go into CalculationsProtWarr
-            float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) * (1.0f - (stats.ArmorPenetrationRating * (1.0f / 15.395298f) / 100.0f));
+            float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) 
+                                * (1.0f - BonusArmorPenetrationPercentage(character, stats));
             return Math.Max(0.0f, Math.Min(0.75f, targetArmor / (targetArmor + (467.5f * character.Level - 22167.5f))));
         }
 
@@ -68,8 +69,30 @@ namespace Rawr.ProtWarr
 
         public static float StanceDamageReduction(Character character, Stats stats)
         {
+            return StanceDamageReduction(character, stats, DamageType.Physical);
+        }
+
+        public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType)
+        {
             // In Defensive Stance
-            return 0.9f;
+            switch (damageType)
+            {
+                case DamageType.Arcane:
+                case DamageType.Fire:
+                case DamageType.Frost:
+                case DamageType.Nature:
+                case DamageType.Shadow:
+                case DamageType.Holy:
+                    return 0.9f * (1.0f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
+                default:
+                    return 0.9f;
+
+            }
+        }
+
+        public static float BonusArmorPenetrationPercentage(Character character, Stats stats)
+        {
+            return ((stats.ArmorPenetrationRating * ProtWarr.ArPToArmorPenetration) / 100.0f);
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
@@ -78,16 +101,20 @@ namespace Rawr.ProtWarr
                     * ProtWarr.ExpertiseToDodgeParryReduction / 100.0f;
         }
 
+        public static float BonusHastePercentage(Character character, Stats stats)
+        {
+            return ((stats.HasteRating * ProtWarr.HasteRatingToHaste) / 100.0f) + stats.PhysicalHaste;
+        }
+
         public static float BonusHitPercentage(Character character, Stats stats)
         {
-            return ((stats.HitRating * ProtWarr.HitRatingToHit + stats.PhysicalHit) / 100.0f);
+            return ((stats.HitRating * ProtWarr.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
         }
 
         public static float BonusCritPercentage(Character character, Stats stats)
         {
-            // Not sure about how LotP is being integrated in here vs. other buffs or buffed crit rating, look into cleaning this up
-            return Math.Min(1.0f, (stats.PhysicalCrit + ((stats.CritRating + stats.LotPCritRating) * ProtWarr.CritRatingToCrit) +
-                                    (stats.Agility * ProtWarr.AgilityToCrit) - LevelModifier(character)) / 100.0f);
+            return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit) 
+                                    - LevelModifier(character)) / 100.0f) + stats.PhysicalCrit);
         }
 
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)
@@ -125,7 +152,7 @@ namespace Rawr.ProtWarr
 
         public static float WeaponDamage(Character character, Stats stats, bool normalized)
         {
-            float weaponDamage = 0.0f;
+            float weaponDamage = 1.0f;
 
             if (character.MainHand != null)
             {
@@ -152,7 +179,7 @@ namespace Rawr.ProtWarr
         public static float WeaponSpeed(Character character, Stats stats)
         {
             if (character.MainHand != null)
-                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + (stats.HasteRating * ProtWarr.HasteRatingToHaste / 100.0f)));
+                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusHastePercentage(character, stats)));
             else
                 return 1.0f;
         }
@@ -186,7 +213,26 @@ namespace Rawr.ProtWarr
 
         public static float BlockReduction(Character character, Stats stats)
         {
-            return ((stats.BlockValue * (1.0f + stats.BonusBlockValueMultiplier)) * (1.0f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+            return (stats.BlockValue * (1.0f + (character.WarriorTalents.CriticalBlock * 0.1f)));
+        }
+
+        public static float MagicReduction(Character character, Stats stats, DamageType school)
+        {
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+            float cappedResist = calcOpts.TargetLevel * 5.0f;
+            float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
+            
+            float schoolResist = 0.0f;
+            switch (school)
+            {
+                case DamageType.Arcane: schoolResist = stats.ArcaneResistance; break;
+                case DamageType.Fire: schoolResist = stats.FireResistance; break;
+                case DamageType.Frost: schoolResist = stats.FrostResistance; break;
+                case DamageType.Nature: schoolResist = stats.NatureResistance; break;
+                case DamageType.Shadow: schoolResist = stats.ShadowResistance; break;
+            }
+
+            return (1.0f - (Math.Min(cappedResist, schoolResist + stats.AllResist) / cappedResist) * 0.75f) * damageReduction;
         }
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)

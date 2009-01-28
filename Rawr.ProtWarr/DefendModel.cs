@@ -26,24 +26,49 @@ namespace Rawr.ProtWarr
             private set { _damagePerHit = value; }
         }
 
-        public float EffectiveHealth
+        private float _guaranteedReduction = 0.0f;
+        public float GuaranteedReduction
         {
-            get { return (Stats.Health / ((1.0f - Lookup.ArmorReduction(Character, Stats)) * 0.9f)); }
+            get { return _guaranteedReduction; }
+            private set { _guaranteedReduction = value; }
         }
 
+        private float _mitigation = 0.0f;
+        public float Mitigation
+        {
+            get { return _mitigation; }
+            private set { _mitigation = value; }
+        }
+
+        private float _tankPoints = 0.0f;
         public float TankPoints
         {
-            get { return (Stats.Health / (DamagePerHit / Options.BossAttackValue)); }
+            get { return _tankPoints; }
+            private set { _tankPoints = value; }
+        }
+
+        private float _effectiveHealth = 0.0f;
+        public float EffectiveHealth
+        {
+            get { return _effectiveHealth; }
+            private set { _effectiveHealth = value; }
         }
 
         public void Calculate()
         {
             float attackSpeed = 2.0f;
-            float hitDamage = Options.BossAttackValue * Lookup.StanceDamageReduction(Character, Stats) * Lookup.ArmorReduction(Character, Stats);
-            float blockDamage = (Math.Max(0.0f, hitDamage - Lookup.BlockReduction(Character, Stats)) * DefendTable.Block);
+            float armorReduction = (1.0f - Lookup.ArmorReduction(Character, Stats));
+            float guaranteedReduction = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
+            float hitDamage = Options.BossAttackValue * guaranteedReduction;
+            float blockDamage = Math.Max(0.0f, hitDamage - Lookup.BlockReduction(Character, Stats));
 
-            DamagePerHit = ((hitDamage * DefendTable.Hit) + (blockDamage * DefendTable.Block) + (2.0f * hitDamage * DefendTable.Critical));
-            DamagePerSecond = DamagePerHit / attackSpeed;
+            DamagePerHit        = ((hitDamage * DefendTable.Hit) + (blockDamage * DefendTable.Block) + (2.0f * hitDamage * DefendTable.Critical));
+            DamagePerSecond     = DamagePerHit / attackSpeed;
+
+            GuaranteedReduction = (1.0f - guaranteedReduction);
+            Mitigation          = (1.0f - (DamagePerHit / Options.BossAttackValue));
+            TankPoints          = (Stats.Health / (1.0f - Mitigation));
+            EffectiveHealth     = (Stats.Health / guaranteedReduction);
         }
 
         public DefendModel(Character character, Stats stats)

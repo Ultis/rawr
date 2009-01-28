@@ -50,4 +50,15 @@ namespace Rawr.ProtWarr
         Limited,
         Infinite,
     }
+
+    public enum DamageType
+    {
+        Physical,
+        Holy,
+        Fire,
+        Frost,
+        Arcane,
+        Shadow,
+        Nature,
+    }
 }

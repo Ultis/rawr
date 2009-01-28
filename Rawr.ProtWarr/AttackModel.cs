@@ -11,7 +11,7 @@ namespace Rawr.ProtWarr
         private Stats       Stats;
 
         // Populate and use this for ability references in the future
-        public AbilityModelList Abilities;
+        public AbilityModelList Abilities = new AbilityModelList();
 
         private AttackModelMode _threatModelMode;
         public AttackModelMode ThreatModelMode
@@ -45,8 +45,8 @@ namespace Rawr.ProtWarr
         {
             // Almost everything here requires a weapon+shield, so no reason to bother if none is equipped
             // Can add some fallbacks here later...
-            if (Character.MainHand == null || Character.OffHand == null)
-                return;
+            //if (Character.MainHand == null || Character.OffHand == null)
+            //    return;
 
             float modelLength = 0.0f;
             float modelThreat = 0.0f;
@@ -63,6 +63,17 @@ namespace Rawr.ProtWarr
             AbilityModel ConcussionBlow = new AbilityModel(Character, Stats, Ability.ConcussionBlow);
             AbilityModel DeepWounds     = new AbilityModel(Character, Stats, Ability.DeepWounds);
             AbilityModel DamageShield   = new AbilityModel(Character, Stats, Ability.DamageShield);
+            // Temporary until it's converted to all use this method
+            if(!Abilities.Contains(Ability.None))
+                Abilities.Add(Ability.None, WhiteAttack);
+            if (!Abilities.Contains(Ability.HeroicStrike))
+                Abilities.Add(Ability.HeroicStrike, HeroicStrike);
+            if (!Abilities.Contains(Ability.ShieldSlam))
+                Abilities.Add(Ability.ShieldSlam, ShieldSlam);
+            if (!Abilities.Contains(Ability.Revenge))
+                Abilities.Add(Ability.Revenge, Revenge);
+            if (!Abilities.Contains(Ability.Devastate))
+                Abilities.Add(Ability.Devastate, Devastate);
 
             switch (ThreatModelMode)
             {

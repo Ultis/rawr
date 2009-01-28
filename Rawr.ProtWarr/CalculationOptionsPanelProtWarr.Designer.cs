@@ -237,14 +237,13 @@ namespace Rawr.ProtWarr
             this.trackBarThreatScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarThreatScale.LargeChange = 50;
             this.trackBarThreatScale.Location = new System.Drawing.Point(75, 81);
-            this.trackBarThreatScale.Maximum = 1000;
+            this.trackBarThreatScale.Maximum = 50;
             this.trackBarThreatScale.Minimum = 1;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
             this.trackBarThreatScale.Size = new System.Drawing.Size(131, 45);
             this.trackBarThreatScale.TabIndex = 2;
-            this.trackBarThreatScale.TickFrequency = 50;
+            this.trackBarThreatScale.TickFrequency = 5;
             this.trackBarThreatScale.Value = 1;
             this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 

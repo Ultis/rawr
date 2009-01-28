@@ -78,7 +78,7 @@ namespace Rawr.ProtWarr
                     baseDamage = Stats.AttackPower * 0.75f;
                     break;
                 case Ability.DamageShield:
-                    baseDamage = (Stats.BlockValue * (1.0f + Stats.BonusBlockValueMultiplier)) * (Talents.DamageShield * 0.1f);
+                    baseDamage = Stats.BlockValue * (Talents.DamageShield * 0.1f);
                     break;
                 case Ability.DeepWounds:
                     // Currently double-dips from multipliers on the base damage, although Blizz will probably fix soon
@@ -106,7 +106,7 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f);
                     break;
                 case Ability.ShieldSlam:
-                    baseDamage = 1015.0f + (Stats.BlockValue * (1.0f + Stats.BonusBlockValueMultiplier));
+                    baseDamage = 1015.0f + Stats.BlockValue;
                     DamageMultiplier *= (1.0f + Stats.BonusShieldSlamDamage);
                     break;
                 case Ability.Shockwave:
