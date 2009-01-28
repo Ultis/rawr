@@ -67,7 +67,7 @@ namespace Rawr.Tree
         { get { return extraHealing + (minHeal + maxHeal) / 2 + HealingBonus * coefDH; } }
 
         public float AverageHealingwithCrit
-        { get { return extraHealing + (AverageHealing * (100 - critPercent) + (AverageHealing * critModifier) * critPercent) / 100; } }
+        { get { return (AverageHealing * (100 - critPercent) + (AverageHealing * critModifier) * critPercent) / 100; } }
 
         virtual public float PeriodicTick
         { get { return periodicTick + healingBonus * coefHoT; } }
