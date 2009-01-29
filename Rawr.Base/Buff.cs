@@ -1944,7 +1944,16 @@ namespace Rawr
                 SetName = "Dreadnaught Battlegear",
                 SetThreshold = 4
             });
-			defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Dreadnaught Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { BonusShieldSlamDamage = 0.1f },
+                SetName = "Dreadnaught Plate",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
 			{
 				Name = "Primalstrike 3 Piece Bonus",
 				Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
