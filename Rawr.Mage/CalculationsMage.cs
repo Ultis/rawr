@@ -87,20 +87,21 @@ namespace Rawr.Mage
                     "Spell Info:Ice Lance",
                     "Spell Info:FrBFB*Fireball on Brain Freeze",
                     "Spell Info:FrBFBIL*Fireball on Brain Freeze, Ice Lance on shatter combo, use Brain Freeze on shatter combo when available",
-                    "Spell Info:ABAM",
-                    "Spell Info:ABarAM",
-                    "Spell Info:ABABar*AB-ABar, on Missile Barrage replace with MBAM-ABar",
-                    "Spell Info:ABABarC*AB-ABar, on Missile Barrage replace with AB-MBAM-ABar",
-                    "Spell Info:AB2ABarC*AB-AB-ABar, on MB proc do MBAM-ABar at 2 stack",
-                    "Spell Info:AB3ABarC*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
+                    "Spell Info:ABAM*AB-AM regardless of procs",
+                    "Spell Info:ABABar*AB-ABar regardless of procs",
+                    "Spell Info:ABarAM*ABar-AM regardless of procs",
+                    "Spell Info:ABABar0C*AB-ABar, on Missile Barrage replace with MBAM-ABar",
+                    "Spell Info:ABABar1C*AB-ABar, on Missile Barrage replace with AB-MBAM-ABar",
+                    "Spell Info:ABABar0MBAM*AB-ABar, on MB proc insert MBAM after ABar and restart from AB",
+                    "Spell Info:AB2ABar2MBAM*AB-AB-ABar, on MB proc replace ABar with MBAM",
+                    "Spell Info:AB2ABar2C*AB-AB-ABar, on MB proc do MBAM-ABar at 2 stack",
+                    "Spell Info:AB2ABar3C*AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
+                    "Spell Info:AB3ABar3C*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
+                    "Spell Info:ABSpamMBAM*Spam AB, MBAM as soon as you notice",
+                    "Spell Info:ABSpam3MBAM*Spam AB, always ramp up to 3 stack before MBAM",
+                    "Spell Info:ABSpam3C*Spam AB, always ramp up to 3 stack before MBAM-ABar",
+                    "Spell Info:ABSpam03C*Spam AB, ramp up to 3 stack or before MBAM-ABar or immediately after ABar",
                     "Spell Info:ABABarSlow*Arcane Missiles on Missile Barrage (after Arcane Barrage), maintain Slow",
-                    "Spell Info:ABAMABar*AB-AM-ABar regardless of procs",
-                    "Spell Info:AB2AMABar*AB-AB-AM-ABar regardless of procs",
-                    "Spell Info:AB32AMABar*AB-AB-AB-AM-ABar or AB-AB-MBAM-ABar if you notice proc at 2-stack",
-                    "Spell Info:AB3AMABar*AB-AB-AB-AM-ABar regardless of procs",
-                    "Spell Info:ABMBAM*Spam AB, MBAM as soon as you notice",
-                    "Spell Info:AB3MBAM*Spam AB, always ramp up to 3 stack before MBAM",
-                    "Spell Info:AB3MBAMABar*Spam AB, always ramp up to 3 stack before MBAM-ABar",
                     "Spell Info:FBABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:FB2ABar*Arcane Missiles on Missile Barrage (after Arcane Barrage)",
                     "Spell Info:FBABarSlow*Arcane Missiles on Missile Barrage (after Arcane Barrage), maintain Slow",
@@ -761,7 +762,7 @@ namespace Rawr.Mage
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsMage baseCalc, currentCalc, calc;
+            CharacterCalculationsMage currentCalc, calc;
             ComparisonCalculationBase comparison;
             float[] subPoints;
 

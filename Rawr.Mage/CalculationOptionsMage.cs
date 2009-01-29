@@ -114,10 +114,6 @@ namespace Rawr.Mage
         public bool FarmingMode { get; set; }
         public float FocusMagicTargetCritRate { get; set; }
         public bool UnlimitedMana { get; set; }
-        public bool AllowLatencyCombos { get; set; }
-        public bool UseAMClipping { get; set; }
-        public bool UseMBAMClipping { get; set; }
-        public float ComboReliability { get; set; }
 
         public List<SpellWeight> CustomSpellMix { get; set; }
         public bool CustomSpellMixEnabled { get; set; }

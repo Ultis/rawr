@@ -220,7 +220,7 @@ namespace Rawr.Mage
                 }
                 else if (Character.MageTalents.SpellPower > 0)
                 {
-                    Spell s = BaseState.GetSpell(SpellId.ABABar);
+                    Spell s = BaseState.GetSpell(SpellId.ABABar0C);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
 
@@ -324,7 +324,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.ABAM, SpellId.FBSc, SpellId.FBFBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.ABABar, SpellId.FBABar, SpellId.FrBABar, SpellId.FFBABar, SpellId.ABarAM, SpellId.LivingBomb, SpellId.FBPyro, SpellId.FFBPyro, SpellId.FBScPyro, SpellId.FFBScPyro, SpellId.FBLBPyro, SpellId.FrBFB, SpellId.FBScLBPyro, SpellId.FB2ABar, SpellId.FrB2ABar, SpellId.ScLBPyro, SpellId.ABABarSlow, SpellId.FBABarSlow, SpellId.FrBABarSlow, SpellId.FFBLBPyro, SpellId.FFBScLBPyro, SpellId.ABABarC, SpellId.AB3MBAMABar, SpellId.ABAMABar, SpellId.AB2AMABar, SpellId.AB3AMABar, SpellId.AB32AMABar, SpellId.AB3ABarC, SpellId.IceLance, SpellId.FrBFBIL, SpellId.AB2ABarC, SpellId.AB3MBAM };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABSpamMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.ABAM, SpellId.FBSc, SpellId.FBFBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.ABABar0C, SpellId.FBABar, SpellId.FrBABar, SpellId.FFBABar, SpellId.ABarAM, SpellId.LivingBomb, SpellId.FBPyro, SpellId.FFBPyro, SpellId.FBScPyro, SpellId.FFBScPyro, SpellId.FBLBPyro, SpellId.FrBFB, SpellId.FBScLBPyro, SpellId.FB2ABar, SpellId.FrB2ABar, SpellId.ScLBPyro, SpellId.ABABarSlow, SpellId.FBABarSlow, SpellId.FrBABarSlow, SpellId.FFBLBPyro, SpellId.FFBScLBPyro, SpellId.ABABar1C, SpellId.ABSpam3C, SpellId.AB3ABar3C, SpellId.IceLance, SpellId.FrBFBIL, SpellId.AB2ABar2C, SpellId.ABSpam3MBAM, SpellId.ABSpam03C, SpellId.AB2ABar2MBAM, SpellId.ABABar0MBAM, SpellId.ABABar, SpellId.AB2ABar3C };
             Spell AB = BaseState.GetSpell(SpellId.ArcaneBlast33);
             BaseSpell bs;
             foreach (SpellId spell in spellList)

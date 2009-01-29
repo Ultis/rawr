@@ -711,13 +711,13 @@ namespace Rawr.Mage
                     s = new ArcaneBarrage(this, 3);
                     break;
                 case SpellId.ArcaneBarrage1Combo:
-                    s = new ArcaneBarrage(this, 1 * CalculationOptions.ComboReliability);
+                    s = new ArcaneBarrage(this, 0/* 1 * CalculationOptions.ComboReliability*/);
                     break;
                 case SpellId.ArcaneBarrage2Combo:
-                    s = new ArcaneBarrage(this, 2 * CalculationOptions.ComboReliability);
+                    s = new ArcaneBarrage(this, 0/* 2 * CalculationOptions.ComboReliability*/);
                     break;
                 case SpellId.ArcaneBarrage3Combo:
-                    s = new ArcaneBarrage(this, 3 * CalculationOptions.ComboReliability);
+                    s = new ArcaneBarrage(this, 0/* 3 * CalculationOptions.ComboReliability*/);
                     break;
                 case SpellId.ArcaneBlast33:
                     s = new ArcaneBlast(this, 3, 3);
@@ -794,14 +794,29 @@ namespace Rawr.Mage
                 case SpellId.ABAM:
                     s = new ABAM(this);
                     break;
-                case SpellId.ABMBAM:
-                    s = new ABMBAM(this);
+                case SpellId.ABSpamMBAM:
+                    s = new ABSpamMBAM(this);
                     break;
-                case SpellId.AB3MBAMABar:
-                    s = new AB3MBAMABar(this);
+                case SpellId.ABSpam3C:
+                    s = new ABSpam3C(this);
                     break;
-                case SpellId.AB3MBAM:
-                    s = new AB3MBAM(this);
+                case SpellId.ABSpam03C:
+                    s = new ABSpam03C(this);
+                    break;
+                case SpellId.AB2ABar3C:
+                    s = new AB2ABar3C(this);
+                    break;
+                case SpellId.AB2ABar2MBAM:
+                    s = new AB2ABar2MBAM(this);
+                    break;
+                case SpellId.ABABar0MBAM:
+                    s = new ABABar0MBAM(this);
+                    break;
+                case SpellId.ABABar:
+                    s = new ABABar(this);
+                    break;
+                case SpellId.ABSpam3MBAM:
+                    s = new ABSpam3MBAM(this);
                     break;
                 case SpellId.ABAMABar:
                     s = new ABAMABar(this);
@@ -815,14 +830,14 @@ namespace Rawr.Mage
                 case SpellId.AB32AMABar:
                     s = new AB32AMABar(this);
                     break;
-                case SpellId.AB3ABarC:
-                    s = new AB3ABarC(this);
+                case SpellId.AB3ABar3C:
+                    s = new AB3ABar3C(this);
                     break;
-                case SpellId.ABABar:
-                    s = new ABABar(this);
+                case SpellId.ABABar0C:
+                    s = new ABABar0C(this);
                     break;
-                case SpellId.ABABarC:
-                    s = new ABABarC(this);
+                case SpellId.ABABar1C:
+                    s = new ABABar1C(this);
                     break;
                 case SpellId.ABABarY:
                     s = new ABABarY(this);
@@ -830,8 +845,8 @@ namespace Rawr.Mage
                 case SpellId.AB2ABar:
                     s = new AB2ABar(this);
                     break;
-                case SpellId.AB2ABarC:
-                    s = new AB2ABarC(this);
+                case SpellId.AB2ABar2C:
+                    s = new AB2ABar2C(this);
                     break;
                 case SpellId.AB2ABarMBAM:
                     s = new AB2ABarMBAM(this);
