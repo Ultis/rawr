@@ -306,7 +306,7 @@ threat and limited threat scaled by the threat scale.",
                         ((character.MainHand.Type == Item.ItemType.OneHandSword) ||
                          (character.MainHand.Type == Item.ItemType.OneHandMace)))
                     {
-                        statsRace.Expertise += 5f;
+                        statsRace.Expertise += 3f;
                     }
                     break;
                 case Character.CharacterRace.Orc:
@@ -344,6 +344,11 @@ threat and limited threat scaled by the threat scale.",
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
                     };
+                    if ((character.MainHand != null) &&
+                        (character.MainHand.Type == Item.ItemType.OneHandMace))
+                    {
+                        statsRace.Expertise += 5f;
+                    }
                     break;
                 case Character.CharacterRace.NightElf:
                     statsRace = new Stats()
@@ -434,6 +439,7 @@ threat and limited threat scaled by the threat scale.",
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
+                        PhysicalHit = 0.01f,
                     };
                     break;
                 default:
@@ -804,6 +810,11 @@ threat and limited threat scaled by the threat scale.",
 					return new ComparisonCalculationBase[0];
 			}
 		}
+        //Hide the ranged weapon enchants. None of them apply to melee damage at all.
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            return enchant.Slot == Item.ItemSlot.Ranged ? false : base.EnchantFitsInSlot(enchant, character, slot);
+        }
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
