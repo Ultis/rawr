@@ -416,9 +416,9 @@ namespace Rawr
 			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
             defaultEnchants.Add(new Enchant(3843, "Diamond-cut Refractor Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 15 }));
-            defaultEnchants.Add(new Enchant(3608, "Heartseeker Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 40 }));
-            defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
-            defaultEnchants.Add(new Enchant(3607, "Sun Scope", Item.ItemSlot.Ranged, new Stats() { HasteRating = 40 }));
+            defaultEnchants.Add(new Enchant(3608, "Heartseeker Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 40 }));
+            defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 28 }));
+            defaultEnchants.Add(new Enchant(3607, "Sun Scope", Item.ItemSlot.Ranged, new Stats() { RangedHasteRating = 40 }));
 
             defaultEnchants.Add(new Enchant(2621, "Subtlety", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f }));
             defaultEnchants.Add(new Enchant(3296, "Wisdom", Item.ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }));
@@ -565,8 +565,8 @@ namespace Rawr
 			//scopes
 			defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
 			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
-			defaultEnchants.Add(new Enchant(2523, "Biznicks 247x128 Accurascope", Item.ItemSlot.Ranged, new Stats() { HitRating = 30 }));
-			defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { CritRating = 28 }));
+			defaultEnchants.Add(new Enchant(2523, "Biznicks 247x128 Accurascope", Item.ItemSlot.Ranged, new Stats() { RangedHitRating = 30 }));
+			defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 28 }));
 
 			//Sapphiron Enchants
 			defaultEnchants.Add(new Enchant(2721, "Power of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, SpellPower = 15 }));

@@ -247,6 +247,7 @@ namespace Rawr.Hunter
 				Agility = stats.Agility, 
 				ArmorPenetration = stats.ArmorPenetration,
 				AttackPower = stats.AttackPower,
+				RangedAttackPower = stats.RangedAttackPower,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -260,12 +261,15 @@ namespace Rawr.Hunter
 				LotPCritRating = stats.LotPCritRating,
 				PhysicalCrit = stats.PhysicalCrit,
 				CritRating = stats.CritRating,
+				RangedCritRating = stats.RangedCritRating,
 				DrumsOfBattle = stats.DrumsOfBattle,
 				DrumsOfWar = stats.DrumsOfWar,
 				ExposeWeakness = stats.ExposeWeakness,
 				HasteRating = stats.HasteRating,
+				RangedHasteRating = stats.RangedHasteRating,
 				PhysicalHit = stats.PhysicalHit,
 				HitRating = stats.HitRating,
+				RangedHitRating = stats.RangedHitRating,
 				Intellect = stats.Intellect,
 				Mana = stats.Mana,
 				Miss = stats.Miss,
@@ -285,6 +289,7 @@ namespace Rawr.Hunter
 			stats.ArmorPenetration +
             stats.ArmorPenetrationRating +
 			stats.AttackPower +
+			stats.RangedAttackPower +
 			stats.BonusAgilityMultiplier +
 			stats.BonusArmorMultiplier +
 			stats.BonusAttackPowerMultiplier +
@@ -297,14 +302,17 @@ namespace Rawr.Hunter
 			stats.BonusPetCritChance +
 			stats.PhysicalCrit +
 			stats.CritRating +
+			stats.RangedCritRating +
 			stats.DrumsOfBattle +
 			stats.DrumsOfWar +
 			stats.ExposeWeakness +
 			stats.HasteRating +
+			stats.RangedHasteRating +
             stats.PhysicalHaste +
 			stats.Health +
 			stats.PhysicalHit +
 			stats.HitRating +
+			stats.RangedHitRating +
 			stats.Intellect +
 			stats.Mp5 + 
 			stats.ScopeDamage +
@@ -607,13 +615,13 @@ namespace Rawr.Hunter
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
             statsTotal.BonusCritMultiplier = 0.0f; // ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.PhysicalCrit = statsBuffs.PhysicalCrit;
-			statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
-			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
+            statsTotal.CritRating = (float)Math.Floor((decimal)statsRace.CritRating + (decimal)statsGearEnchantsBuffs.CritRating + (decimal)statsGearEnchantsBuffs.RangedCritRating + (decimal)statsRace.LotPCritRating + (decimal)statsGearEnchantsBuffs.LotPCritRating);
+            statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating + statsGearEnchantsBuffs.RangedHasteRating;
             // Haste trinket (Meteorite Whetstone)
             statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.PhysicalHaste = statsGearEnchantsBuffs.PhysicalHaste;
 
-			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating);
+			statsTotal.HitRating = (float)Math.Floor((decimal)statsRace.HitRating + (decimal)statsGearEnchantsBuffs.HitRating + (decimal)statsGearEnchantsBuffs.RangedHitRating);
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;

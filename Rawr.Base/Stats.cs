@@ -121,6 +121,9 @@ namespace Rawr
         DarkmoonCardDeathProc,
         PVPTrinket,
 		RangedAttackPower,
+        RangedHitRating,
+        RangedCritRating,
+        RangedHasteRating,
         Resilience,
         ScopeDamage, 
         ShadowResistance,
@@ -819,6 +822,16 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
+        [DisplayName("Ranged Crit Rating")]
+        [Common]
+        public float RangedCritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedCritRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
         [DisplayName("Melee Crit")]
         [Common]
         public float CritMeleeRating
@@ -834,6 +847,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritBonusDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritBonusDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Ranged Hit Rating")]
+        [Common]
+        public float RangedHitRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHitRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -978,6 +1001,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.HasteRating] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Combat Ratings")]
+        [DisplayName("Ranged Haste Rating")]
+        [Common]
+        public float RangedHasteRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RangedHasteRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
