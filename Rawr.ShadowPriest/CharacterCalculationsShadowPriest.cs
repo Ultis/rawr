@@ -178,5 +178,31 @@ namespace Rawr.ShadowPriest
 
             return dictValues;
         }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health":
+                    return basicStats.Health;
+                case "Resilience":
+                    return basicStats.Resilience;
+                case "Mana":
+                    return basicStats.Mana;
+                case "Haste Rating":
+                    return basicStats.HasteRating;
+                case "Haste %":
+                    return basicStats.SpellHaste * 100f;
+                case "Crit Rating":
+                    return basicStats.CritRating;
+                case "MB Crit %":
+                    return new MindBlast(basicStats, character).CritChance * 100f;
+                case "Hit Rating":
+                    return basicStats.HitRating;
+                case "MF cast time (ms)":
+                    return new MindFlay(basicStats, character).CastTime * 1000f;
+            }
+            return 0f;
+        }
     }
 }

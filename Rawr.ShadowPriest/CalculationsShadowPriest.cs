@@ -82,6 +82,27 @@ namespace Rawr.ShadowPriest
             }
         }
 
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Resilience",
+                    "Mana",
+					"Haste Rating",
+                    "Haste %",
+                    "Crit Rating",
+                    "MB Crit %",
+                    "Hit Rating",
+                    "MF cast time (ms)"
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {

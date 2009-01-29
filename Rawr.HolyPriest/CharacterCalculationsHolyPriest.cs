@@ -136,5 +136,39 @@ namespace Rawr.HolyPriest
 
             return dictValues;
         }
+
+        public override float GetOptimizableCalculationValue(string calculation)
+		{
+			switch (calculation)
+			{
+                case "Health":
+                    return basicStats.Health;
+                case "Resilience":
+                    return basicStats.Resilience;
+                case "Mana":
+                    return basicStats.Mana;
+                case "InFSR Regen":
+                    return basicStats.Mp5 + RegenInFSR;
+                case "OutFSR Regen":
+                    return basicStats.Mp5 + RegenOutFSR;
+                case "Haste Rating":
+                    return basicStats.HasteRating;
+                case "Haste %":
+                    return basicStats.SpellHaste * 100f;
+                case "Crit Rating":
+                    return basicStats.CritRating;
+                case "Healing Crit %":
+                    return (basicStats.SpellCrit * 100f) + character.PriestTalents.HolySpecialization * 1f + character.PriestTalents.RenewedHope * 2f;
+                case "PW:Shield":
+                    return new PowerWordShield(basicStats, character).AvgHeal;
+                case "GHeal Avg":
+                    return new Heal(basicStats, character).AvgHeal;
+                case "FHeal Avg":
+                    return new FlashHeal(basicStats, character).AvgHeal;
+                case "CoH Avg":
+                    return new CircleOfHealing(basicStats, character).AvgHeal;
+			}
+			return 0f;
+		}
     }
 }

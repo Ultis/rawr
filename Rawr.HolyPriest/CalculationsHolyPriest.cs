@@ -79,6 +79,32 @@ namespace Rawr.HolyPriest
             }
         }
 
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+					"Health",
+                    "Resilience",
+                    "Mana",
+                    "InFSR Regen",
+                    "OutFSR Regen",
+					"Haste Rating",
+                    "Haste %",
+                    "Crit Rating",
+                    "Healing Crit %",
+                    "PW:Shield",
+                    "GHeal Avg",
+                    "FHeal Avg",
+                    "CoH Avg",
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
+
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {
