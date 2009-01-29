@@ -6,7 +6,9 @@ namespace Rawr.ProtWarr
 {
     public class CharacterCalculationsProtWarr : CharacterCalculationsBase
     {
-        #region Points
+        public Stats BasicStats { get; set; }
+        public List<Buff> ActiveBuffs { get; set; }
+
         private float _overallPoints = 0f;
         public override float OverallPoints
         {
@@ -38,268 +40,51 @@ namespace Rawr.ProtWarr
             get { return _subPoints[2]; }
             set { _subPoints[2] = value; }
         }
-        #endregion
 
-        #region Basic Stats and Scaling
-        private Stats _basicStats;
-        public Stats BasicStats
-        {
-            get { return _basicStats; }
-            set { _basicStats = value; }
-        }
+        public int TargetLevel { get; set; }
+        public float ThreatScale { get; set; }
 
-        private int _targetLevel;
-        public int TargetLevel
-        {
-            get { return _targetLevel; }
-            set { _targetLevel = value; }
-        }
+        public float Defense { get; set; } 
+        public float Dodge { get; set; }
+        public float Parry { get; set; }
+        public float Block { get; set; }
+        public float BlockOverCap { get; set; }
+        public float BlockValue { get; set; }
+        public float Miss { get; set; }
+        public float CritReduction { get; set; }
+        public float CritVulnerability { get; set; }
+        public float ArmorReduction { get; set; }
+        public float GuaranteedReduction { get; set; }
+        public float DodgePlusMissPlusParry { get; set; }
+        public float DodgePlusMissPlusParryPlusBlock { get; set; }
+        public float TotalMitigation { get; set; }
+        public float DamageTaken { get; set; }
 
-        private float _threatScale;
-        public float ThreatScale
-        {
-            get { return _threatScale; }
-            set { _threatScale = value; }
-        }
-        #endregion
-
-        #region Defensive Stats
-        private float _defense;
-        public float Defense
-        {
-            get { return _defense; }
-            set { _defense = value; }
-        }
-
-        private float _dodge;
-        public float Dodge
-        {
-            get { return _dodge; }
-            set { _dodge = value; }
-        }
-
-        private float _parry;
-        public float Parry
-        {
-            get { return _parry; }
-            set { _parry = value; }
-        }
-
-        private float _block;
-        public float Block
-        {
-            get { return _block; }
-            set { _block = value; }
-        }
-
-        private float _blockOverCap;
-        public float BlockOverCap
-        {
-            get { return _blockOverCap; }
-            set { _blockOverCap = value; }
-        }
-
-        private float _blockValue;
-        public float BlockValue
-        {
-            get { return _blockValue; }
-            set { _blockValue = value; }
-        }
-
-        private float _miss;
-        public float Miss
-        {
-            get { return _miss; }
-            set { _miss = value; }
-        }
-
-        private float _armorReduction;
-        public float ArmorReduction
-        {
-            get { return _armorReduction; }
-            set { _armorReduction = value; }
-        }
-
-        private float _guaranteedReduction;
-        public float GuaranteedReduction
-        {
-            get { return _guaranteedReduction; }
-            set { _guaranteedReduction = value; }
-        }
-
-        private float _dodgePlusMissPlusParry;
-        public float DodgePlusMissPlusParry
-        {
-            get { return _dodgePlusMissPlusParry; }
-            set { _dodgePlusMissPlusParry = value; }
-        }
-
-        private float _dodgePlusMissPlusParryPlusBlock;
-        public float DodgePlusMissPlusParryPlusBlock
-        {
-            get { return _dodgePlusMissPlusParryPlusBlock; }
-            set { _dodgePlusMissPlusParryPlusBlock = value; }
-        }
-
-        private float _totalMitigation;
-        public float TotalMitigation
-        {
-            get { return _totalMitigation; }
-            set { _totalMitigation = value; }
-        }
-
-        private float _damageTaken;
-        public float DamageTaken
-        {
-            get { return _damageTaken; }
-            set { _damageTaken = value; }
-        }
-
-        private float _critReduction;
-        public float CritReduction
-        {
-            get { return _critReduction; }
-            set { _critReduction = value; }
-        }
-
-        private float _critVulnerability;
-        public float CritVulnerability
-        {
-            get { return _critVulnerability; }
-            set { _critVulnerability = value; }
-        }
-
-        private float _missedAttacks;
-        public float MissedAttacks
-        {
-            get { return _missedAttacks; }
-            set { _missedAttacks = value; }
-        }
-
-        private float _avoidedAttacks;
-        public float AvoidedAttacks
-        {
-            get { return _avoidedAttacks; }
-            set { _avoidedAttacks = value; }
-        }
-
-        private float _dodgedAttacks;
-        public float DodgedAttacks
-        {
-            get { return _dodgedAttacks; }
-            set { _dodgedAttacks = value; }
-        }
-
-        private float _parriedAttacks;
-        public float ParriedAttacks
-        {
-            get { return _parriedAttacks; }
-            set { _parriedAttacks = value; }
-        }
-
-        private float _blockedAttacks;
-        public float BlockedAttacks
-        {
-            get { return _blockedAttacks; }
-            set { _blockedAttacks = value; }
-        }
-        #endregion
-
-        #region Offensive Stats
-        private float _hit;
-        public float Hit
-        {
-            get { return _hit; }
-            set { _hit = value; }
-        }
-
-        private float _crit;
-        public float Crit
-        {
-            get { return _crit; }
-            set { _crit = value; }
-        }
-
-        private float _expertise;
-        public float Expertise
-        {
-            get { return _expertise; }
-            set { _expertise = value; }
-        }
-
-        private float _haste;
-        public float Haste
-        {
-            get { return _haste; }
-            set { _haste = value; }
-        }
-
-        private float _armorPenetration;
-        public float ArmorPenetration
-        {
-            get { return _armorPenetration; }
-            set { _armorPenetration = value; }
-        }
-
-        private float _limitedThreat;
-        public float LimitedThreat
-        {
-            get { return _limitedThreat; }
-            set { _limitedThreat = value; }
-        }
-
-        private float _unlimitedThreat;
-        public float UnlimitedThreat
-        {
-            get { return _unlimitedThreat; }
-            set { _unlimitedThreat = value; }
-        }
-
-        private float _whiteThreat;
-        public float WhiteThreat
-        {
-            get { return _whiteThreat; }
-            set { _whiteThreat = value; }
-        }
-
-        private float _shieldSlamThreat;
-        public float ShieldSlamThreat
-        {
-            get { return _shieldSlamThreat; }
-            set { _shieldSlamThreat = value; }
-        }
-
-        private float _revengeThreat;
-        public float RevengeThreat
-        {
-            get { return _revengeThreat; }
-            set { _revengeThreat = value; }
-        }
-
-        private float _devastateThreat;
-        public float DevastateThreat
-        {
-            get { return _devastateThreat; }
-            set { _devastateThreat = value; }
-        }
-
-        private float _heroicStrikeThreat;
-        public float HeroicStrikeThreat
-        {
-            get { return _heroicStrikeThreat; }
-            set { _heroicStrikeThreat = value; }
-        }
-
-        #endregion
-
-        #region Resist and Buffs
         public float NatureSurvivalPoints { get; set; }
         public float FrostSurvivalPoints { get; set; }
         public float FireSurvivalPoints { get; set; }
         public float ShadowSurvivalPoints { get; set; }
-		public float ArcaneSurvivalPoints { get; set; }
-		public List<Buff> ActiveBuffs { get; set; }
-        #endregion
+        public float ArcaneSurvivalPoints { get; set; }
+
+        public float MissedAttacks { get; set; }
+        public float AvoidedAttacks { get; set; }
+        public float DodgedAttacks { get; set; }
+        public float ParriedAttacks { get; set; }
+        public float BlockedAttacks { get; set; }
+        public float Hit { get; set; }
+        public float Crit { get; set; }
+        public float Expertise { get; set; }
+        public float Haste { get; set; }
+        public float ArmorPenetration { get; set; }
+        public float TotalDamagePerSecond { get; set; }
+        
+        public float LimitedThreat { get; set; }
+        public float UnlimitedThreat { get; set; }
+        public float WhiteThreat { get; set; }
+        public float ShieldSlamThreat { get; set; }
+        public float RevengeThreat { get; set; }
+        public float DevastateThreat { get; set; }
+        public float HeroicStrikeThreat { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -364,6 +149,7 @@ namespace Rawr.ProtWarr
                 string.Format("{0:0.00%}*Out of 100 attacks:" + Environment.NewLine + "Attacks Missed: {1:0.00%}" + Environment.NewLine +
                                 "Attacks Dodged: {2:0.00%}" + Environment.NewLine + "Attacks Parried: {3:0.00%}",
                                 AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
+            dictValues.Add("Total DPS", string.Format("{0:0.0}", TotalDamagePerSecond));
 
             dictValues.Add("Limited Threat",
                 string.Format("{0:0.0}*White TPS: {1:0.00}" + Environment.NewLine + "Shield Slam Threat: {2:0.0}" + Environment.NewLine +
@@ -374,10 +160,10 @@ namespace Rawr.ProtWarr
                                 "Revenge Threat: {3:0.0}" + Environment.NewLine + "Devastate Threat: {4:0.0}",
                                 UnlimitedThreat, HeroicStrikeThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat));
 
-            dictValues.Add("Overall Points", OverallPoints.ToString());
-            dictValues.Add("Mitigation Points", MitigationPoints.ToString());
-            dictValues.Add("Survival Points", SurvivalPoints.ToString());
-            dictValues.Add("Threat Points", ThreatPoints.ToString());
+            dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));
+            dictValues.Add("Mitigation Points", string.Format("{0:0}", MitigationPoints));
+            dictValues.Add("Survival Points", string.Format("{0:0}", SurvivalPoints));
+            dictValues.Add("Threat Points", string.Format("{0:0}", ThreatPoints));
 
             return dictValues;
         }
@@ -387,9 +173,11 @@ namespace Rawr.ProtWarr
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Guaranteed Reduction %": return GuaranteedReduction;
-                case "Avoidance %": return DodgePlusMissPlusParry;
-                case "% Chance to be Crit": return (1.0f - CritVulnerability);
+                case "Unlimited Threat": return UnlimitedThreat;
+                case "Limited Threat": return LimitedThreat;
+                case "Guaranteed Reduction %": return GuaranteedReduction * 100.0f;
+                case "Avoidance %": return DodgePlusMissPlusParry * 100.0f;
+                case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "Nature Survival": return NatureSurvivalPoints;
                 case "Fire Survival": return FireSurvivalPoints;
                 case "Frost Survival": return FrostSurvivalPoints;

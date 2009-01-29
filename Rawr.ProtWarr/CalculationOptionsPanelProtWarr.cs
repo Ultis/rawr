@@ -27,8 +27,8 @@ namespace Rawr.ProtWarr
 			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
 			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
 			armorBosses.Add(8200, ": Midnight");
-			armorBosses.Add(8800, ": Void Reaver");            
-			armorBosses.Add(13083, ":Wrath Bosses");
+			armorBosses.Add(8800, ": Void Reaver");
+            armorBosses.Add(13100, ":Wrath Bosses"); // armorBosses.Add(13083, ":Wrath Bosses");
 		}
 
 		protected override void LoadCalculationOptions()
@@ -45,8 +45,8 @@ namespace Rawr.ProtWarr
             trackBarMitigationScale.Value = calcOpts.MitigationScale;
             trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
             checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
-			radioButtonAldor.Checked = calcOpts.ShattrathFaction == "Aldor";
-			radioButtonScryer.Checked = calcOpts.ShattrathFaction == "Scryer";
+            checkBoxUseTankPoints.Checked = calcOpts.UseTankPoints;
+            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = labelMitigationScaleText.Enabled = !checkBoxUseTankPoints.Checked;
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -76,7 +76,6 @@ namespace Rawr.ProtWarr
                 calcOpts.ThreatScale = trackBarThreatScale.Value;
                 calcOpts.MitigationScale = trackBarMitigationScale.Value;
                 calcOpts.ShieldBlockUptime = trackBarShieldBlockUptime.Value;
-				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
 				Character.OnCalculationsInvalidated();
 			}
@@ -89,21 +88,14 @@ namespace Rawr.ProtWarr
             Character.OnCalculationsInvalidated();
         }
 
-        private void buttonTalents_Click(object sender, EventArgs e)
+        private void checkBoxUseTankPoints_CheckedChanged(object sender, EventArgs e)
         {
-			//if ((Character.AllTalents != null) &&
-			//    (Character.AllTalents.Trees != null) &&
-			//    (Character.AllTalents.Trees.Count > 0))
-			//{
-			//    TalentForm tf = new TalentForm();
-			//    tf.SetParameters(Character);
-			//    tf.Show();
-			//}
-			//else
-			//{
-			//    MessageBox.Show("No talents found. Please reload from armory");
-			//}
+            CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+            calcOpts.UseTankPoints = checkBoxUseTankPoints.Checked;
+            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = labelMitigationScaleText.Enabled = !checkBoxUseTankPoints.Checked;
+            Character.OnCalculationsInvalidated();
         }
+
 	}
 
 	[Serializable]
@@ -120,13 +112,13 @@ namespace Rawr.ProtWarr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 13083;
+		public int TargetArmor = 13100;
 		public int BossAttackValue = 24000;
-		public float ThreatScale = 10;
-		public int MitigationScale = 3750;
+		public float ThreatScale = 25;
+		public int MitigationScale = 12000;
 		public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
-		public string ShattrathFaction = "Scryer";
+        public bool UseTankPoints = false;
 		public WarriorTalents talents = null;
 	}
 }

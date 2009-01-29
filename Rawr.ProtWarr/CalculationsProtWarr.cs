@@ -42,7 +42,6 @@ namespace Rawr.ProtWarr
                     "Defensive Stats:Miss",
                     "Defensive Stats:Block Value",
                     "Defensive Stats:Chance to be Crit",
-                    "Defensive Stats:Chance Crushed",
                     "Defensive Stats:Guaranteed Reduction",
 					"Defensive Stats:Avoidance",
                     "Defensive Stats:Avoidance + Block",
@@ -57,6 +56,7 @@ namespace Rawr.ProtWarr
 					"Offensive Stats:Crit",
 					"Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
+                    "Offensive Stats:Total DPS",
                     "Offensive Stats:Limited Threat*Shield Slam -> Revenge -> Devastate -> Devastate",
                     @"Offensive Stats:Unlimited Threat*Shield Slam -> Revenge -> Devastate -> Devastate.
 With Heroic Strikes every auto attack.",
@@ -104,16 +104,11 @@ threat and limited threat scaled by the threat scale.",
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
 					"Health",
-                    "Hit Rating",
-                    "Expertise Rating",
-					"Haste Rating",
-                    "Missed Attacks",
                     "Unlimited Threat",
                     "Limited Threat",
-					"Mitigation % from Armor",
+					"Guaranteed Reduction %",
 					"Avoidance %",
 					"% Chance to be Crit",
-                    "% to be Crushed",
                     "Nature Survival",
                     "Fire Survival",
                     "Frost Survival",
@@ -244,8 +239,10 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
 
-            calculatedStats.WhiteThreat = am.Abilities[Ability.None].Threat * Lookup.WeaponSpeed(character, stats);
-            calculatedStats.HeroicStrikeThreat = am.Abilities[Ability.HeroicStrike].Threat * Lookup.WeaponSpeed(character, stats);
+            calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
+
+            calculatedStats.WhiteThreat = am.Abilities[Ability.None].Threat / Lookup.WeaponSpeed(character, stats);
+            calculatedStats.HeroicStrikeThreat = am.Abilities[Ability.HeroicStrike].Threat / Lookup.WeaponSpeed(character, stats);
             calculatedStats.ShieldSlamThreat = am.Abilities[Ability.ShieldSlam].Threat;
             calculatedStats.RevengeThreat = am.Abilities[Ability.Revenge].Threat;
             calculatedStats.DevastateThreat = am.Abilities[Ability.Devastate].Threat;
@@ -254,10 +251,17 @@ threat and limited threat scaled by the threat scale.",
             am.RageModelMode = RageModelMode.Limited;
             calculatedStats.LimitedThreat   = am.ThreatPerSecond;
 
-            calculatedStats.SurvivalPoints      = dm.EffectiveHealth;
-            calculatedStats.MitigationPoints    = calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation));
-            calculatedStats.ThreatPoints        = calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f);
-
+            if (calcOpts.UseTankPoints)
+            {
+                calculatedStats.SurvivalPoints = dm.EffectiveHealth;
+                calculatedStats.MitigationPoints = dm.TankPoints - dm.EffectiveHealth;
+            }
+            else
+            {
+                calculatedStats.SurvivalPoints = dm.EffectiveHealth;
+                calculatedStats.MitigationPoints = calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation));
+            }
+            calculatedStats.ThreatPoints = calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f);
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 
             return calculatedStats;
@@ -457,14 +461,14 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTalents = new Stats()
                 {
                     Parry = tree.Deflection * 1.0f,
-                    PhysicalCrit = tree.Cruelty * 1.0f,
+                    PhysicalCrit = tree.Cruelty * 0.01f,
                     Dodge = tree.Anticipation * 1.0f,
                     Block = tree.ShieldSpecialization * 1.0f,
                     BonusBlockValueMultiplier = tree.ShieldMastery * 0.15f,
                     BonusDamageMultiplier = tree.OneHandedWeaponSpecialization * 0.02f,
                     BonusStaminaMultiplier = tree.Vitality * 0.02f,
                     BonusStrengthMultiplier = tree.Vitality * 0.02f,
-                    Expertise = tree.Vitality * 2f,
+                    Expertise = tree.Vitality * 2.0f,
                     BonusShieldSlamDamage = tree.GagOrder * 0.05f,
                     BaseArmorMultiplier = tree.Toughness * 0.02f,
                 };
@@ -567,7 +571,7 @@ threat and limited threat scaled by the threat scale.",
 			switch (chartName)
 			{
 				case "Combat Table":
-					CharacterCalculationsProtWarr currentCalculationsProtWarr = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
+					CharacterCalculationsProtWarr calculations = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
 					ComparisonCalculationProtWarr calcMiss = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcDodge = new ComparisonCalculationProtWarr();
                     ComparisonCalculationProtWarr calcParry = new ComparisonCalculationProtWarr();
@@ -575,27 +579,22 @@ threat and limited threat scaled by the threat scale.",
 					ComparisonCalculationProtWarr calcCrit = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcCrush = new ComparisonCalculationProtWarr();
 					ComparisonCalculationProtWarr calcHit = new ComparisonCalculationProtWarr();
-					if (currentCalculationsProtWarr != null)
+                    if (calculations != null)
 					{
-						calcMiss.Name = "    Miss    ";
-						calcDodge.Name = "   Dodge   ";
-                        calcParry.Name = "   Parry   ";
-                        calcBlock.Name = "   Block   ";
-						calcCrit.Name = "  Crit  ";
-						calcCrush.Name = " Crush ";
+						calcMiss.Name = "Miss";
+						calcDodge.Name = "Dodge";
+                        calcParry.Name = "Parry";
+                        calcBlock.Name = "Block";
+						calcCrit.Name = "Crit";
+						calcCrush.Name = "Crush";
 						calcHit.Name = "Hit";
 
-						float crits = 5f + (0.2f * (currentCalculationsProtWarr.TargetLevel - 80f)) - currentCalculationsProtWarr.CritVulnerability * 100.0f;
-                        float crushes = 0.0f;
-                        float hits = Math.Max(100f - (crits + crushes + (currentCalculationsProtWarr.DodgePlusMissPlusParry) + (currentCalculationsProtWarr.Block)), 0f);
-
-						calcMiss.OverallPoints = calcMiss.MitigationPoints = currentCalculationsProtWarr.Miss;
-						calcDodge.OverallPoints = calcDodge.MitigationPoints = currentCalculationsProtWarr.Dodge;
-                        calcParry.OverallPoints = calcParry.MitigationPoints = currentCalculationsProtWarr.Parry;
-                        calcBlock.OverallPoints = calcBlock.MitigationPoints = currentCalculationsProtWarr.Block;
-						calcCrit.OverallPoints = calcCrit.SurvivalPoints = crits;
-						calcCrush.OverallPoints = calcCrush.SurvivalPoints = crushes;
-						calcHit.OverallPoints = calcHit.SurvivalPoints = hits;
+						calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
+						calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
+                        calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
+                        calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
+                        calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
+                        calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
 					}
 					return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
 

@@ -257,7 +257,7 @@ namespace Rawr.ProtWarr
                 case HitResult.Miss:
                     baseAvoid = stats.Miss * 100f - LevelModifier(character);
                     modifiedAvoid = (defSkill * ProtWarr.DefenseToMiss);
-                    modifiedAvoid = 1.0f / (1.0f / 50.0f + 0.9560f / modifiedAvoid);
+                    modifiedAvoid = 1.0f / (1.0f / 16.0f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Block:
                     // The 5% base block should be moved into stats.Block as a base value like the others
