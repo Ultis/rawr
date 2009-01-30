@@ -348,16 +348,16 @@ namespace Rawr.DPSDK
             {
                 if (character.MainHand != null &&
                     (character.MainHand.Type == Item.ItemType.OneHandSword ||
-                     character.MainHand.Type == Item.ItemType.TwoHandSword) ||
-                     (character.MainHand.Type == Item.ItemType.OneHandMace ||
+                     character.MainHand.Type == Item.ItemType.TwoHandSword ||
+                     character.MainHand.Type == Item.ItemType.OneHandMace ||
                      character.MainHand.Type == Item.ItemType.TwoHandMace))
                 {
                     MHExpertise += 3f;
                 }
 
                 if (character.OffHand != null &&
-                    character.OffHand.Type == Item.ItemType.OneHandSword ||
-                    character.OffHand.Type == Item.ItemType.OneHandMace)
+                    (character.OffHand.Type == Item.ItemType.OneHandSword ||
+                    character.OffHand.Type == Item.ItemType.OneHandMace))
                 {
                     OHExpertise += 3f;
                 }
