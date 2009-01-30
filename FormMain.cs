@@ -15,25 +15,28 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 15;
+		private const int INTRO_VERSION = 16;
 		private const string INTRO_TEXT =
-@" Welcome to Rawr 2.1.8. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
+@" Welcome to Rawr 2.1.9. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
    •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
    •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
    •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
 
-v2.1.8:
-	Fixed a bug in the Optimizer that would stop it from equipping the optimized gearset when any item gemmings to be equipped weren't in the itemcache already.
-	Fixed several bugs with Wowhead parsing, and updated the default itemcache with the new 3.0.8 data from Wowhead.
-	Added the two new enchants from 3.0.8.
-	Rawr.Healadin: Removed profession benefits from Options since they are now all correctly modelled in there respective places. Support for Judgements missing, and effect of Hit rating. Fixed bug that capped HL too high incorrectly. Added support for FoL Glyph. Updated 2T6 and 4T6 bonuses.
-	Rawr.HolyPriest: Raid & CoH spam rotation changes for 3.0.8. Major tweak in Holy/Disc Priest mana consumption, should now actually become saturated at a point. Fiddled more with Trinkets.
-	Rawr.Tankadin: Adjusted calculations for new Sacred Duty.
-	Rawr.Retribution: Fix for loading the saved glyphs.
-	Rawr.Tree: New custom chart for Spell Rotations. New feature to choose the ratio of burst vs sustained healing used in Overall ratings. 
-	Rawr.Mage: Added Arcane Scorch cycles.
-	Rawr.Cat: Added 4T7 calculations.
-	Rawr.ProtWarr: Tweak to the Vitality calculations to match WoW's rounding.
+v2.1.9:
+	Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
+	Updated parsing for a large number of trinkets/gems whose wording changed in WoW 3.0.8.
+	Support for (or more accurate support for) a variety of additional trinkets, in many models.
+	Fixed the data for a few profession bonuses which changed.
+	Updated the tooltips on all talents.
+	Tweaked the Relative Stat Values chart a bit to avoid some anomalies with rounding and stats which provide multiple benefits (ie, both Crit and AP from Agi for Cats).
+	Rawr.Cat/Bear: Fix for crit chance reduction against bosses, and fix for display of crit chance debuffs.
+	Rawr.Tree: Fixes for haste calculations
+	Rawr.Mage: Updates for WoW 3.0.8/hotfix changes. Added Scaling vs Spirit chart.
+	Rawr.RestoSham: Support for some glyphs, and more customizable healing rotations. Also enabled cloth/leather.
+	Rawr.ProtWarr: Major updates. Threat should be accurate, and a variety of minor fixes and additional options
+	Rawr.TankDK/DPSDK: Updated for 3.0.8 changes. A wide variety of major fixes and improvements.
+	Rawr.HolyPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
+	Rawr.Elemental: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Elemental in conjunction with other theorycrafting tools.
 
 
 Here's a quick rundown of the status of each model:
@@ -42,6 +45,7 @@ Here's a quick rundown of the status of each model:
    •Rawr.Cat: Fully functional for level 80.
    •Rawr.DPSDK: Fully functional for 3.0 & level 80.
    •Rawr.DPSWarr: Partially functional for 3.0 & level 80.
+   •Rawr.Elemental: Partially functional for 3.0 & level 80.
    •Rawr.Enhance: Partially functional for 3.0 & level 80.
    •Rawr.Healadin: Fully functional for level 80.
    •Rawr.HolyPriest: Fully functional for level 80.
