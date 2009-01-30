@@ -191,20 +191,6 @@ namespace Rawr.ProtWarr
                     Math.Max(0.99f, 1.2f - (0.03f * (calcOpts.TargetLevel - character.Level) * 5.0f))) / 2;
         }
 
-        public static bool IsAvoidable(Ability ability)
-        {
-            switch (ability)
-            {
-                case Ability.DamageShield:
-                case Ability.DeepWounds:
-                case Ability.Shockwave:
-                case Ability.ThunderClap:
-                    return false;
-                default:
-                    return true;
-            }
-        }
-
         public static float ArmorReduction(Character character, Stats stats)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
@@ -273,6 +259,43 @@ namespace Rawr.ProtWarr
             // May want to look at making this more consistant in the future.
             return (baseAvoid + modifiedAvoid) / 100.0f;
         }
-        
+
+        public static bool IsAvoidable(Ability ability)
+        {
+            switch (ability)
+            {
+                case Ability.DamageShield:
+                case Ability.DeepWounds:
+                case Ability.Shockwave:
+                case Ability.ThunderClap:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public static string Name(Ability ability)
+        {
+            switch (ability)
+            {
+                case Ability.None: return "Swing";
+                case Ability.Cleave: return "Cleave";
+                case Ability.ConcussionBlow: return "Concussion Blow";
+                case Ability.DamageShield: return "Damage Shield";
+                case Ability.DeepWounds: return "Deep Wounds";
+                case Ability.Devastate: return "Devastate";
+                case Ability.HeroicStrike: return "Heroic Strike";
+                case Ability.HeroicThrow: return "Heroic Throw";
+                case Ability.Rend: return "Rend";
+                case Ability.Revenge: return "Revenge";
+                case Ability.ShieldBash: return "Shield Bash";
+                case Ability.ShieldSlam: return "Shield Slam";
+                case Ability.Shockwave: return "Shockwave";
+                case Ability.Slam: return "Slam";
+                case Ability.SunderArmor: return "Sunder Armor";
+                case Ability.ThunderClap: return "Thunder Clap";
+                default: return "";
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace Rawr.ProtWarr
     {
         public Stats BasicStats { get; set; }
         public List<Buff> ActiveBuffs { get; set; }
+        public AbilityModelList Abilities { get; set; }
 
         private float _overallPoints = 0f;
         public override float OverallPoints
@@ -23,13 +24,13 @@ namespace Rawr.ProtWarr
             set { _subPoints = value; }
         }
 
-        public float MitigationPoints
+        public float SurvivalPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SurvivalPoints
+        public float MitigationPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }
@@ -48,7 +49,6 @@ namespace Rawr.ProtWarr
         public float Dodge { get; set; }
         public float Parry { get; set; }
         public float Block { get; set; }
-        public float BlockOverCap { get; set; }
         public float BlockValue { get; set; }
         public float Miss { get; set; }
         public float CritReduction { get; set; }
@@ -59,6 +59,7 @@ namespace Rawr.ProtWarr
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float TotalMitigation { get; set; }
         public float DamageTaken { get; set; }
+        public float TankPoints { get; set; }
 
         public float NatureSurvivalPoints { get; set; }
         public float FrostSurvivalPoints { get; set; }
@@ -76,15 +77,11 @@ namespace Rawr.ProtWarr
         public float Expertise { get; set; }
         public float Haste { get; set; }
         public float ArmorPenetration { get; set; }
+        public float WeaponSpeed { get; set; }
         public float TotalDamagePerSecond { get; set; }
         
         public float LimitedThreat { get; set; }
         public float UnlimitedThreat { get; set; }
-        public float WhiteThreat { get; set; }
-        public float ShieldSlamThreat { get; set; }
-        public float RevengeThreat { get; set; }
-        public float DevastateThreat { get; set; }
-        public float HeroicStrikeThreat { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -122,7 +119,7 @@ namespace Rawr.ProtWarr
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
-
+            dictValues.Add("Tank Points", string.Format("{0:0}", TankPoints));
 
             dictValues["Nature Resist"] = (BasicStats.NatureResistance + BasicStats.AllResist).ToString();
             dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance + BasicStats.AllResist).ToString();
@@ -135,7 +132,8 @@ namespace Rawr.ProtWarr
             dictValues["Shadow Survival"] = ShadowSurvivalPoints.ToString();
             dictValues["Arcane Survival"] = ArcaneSurvivalPoints.ToString();
 
-            dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
+            dictValues.Add("Weapon Speed", string.Format("{0:0.00}*{1:0.00%} Haste", WeaponSpeed, Haste));
+            dictValues.Add("Attack Power", string.Format("{0}", BasicStats.AttackPower));
             dictValues.Add("Hit", string.Format("{0:0.00%}*Hit Rating {1}", Hit, BasicStats.HitRating));
             dictValues.Add("Expertise", 
                 string.Format("{0}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.", 
@@ -149,16 +147,10 @@ namespace Rawr.ProtWarr
                 string.Format("{0:0.00%}*Out of 100 attacks:" + Environment.NewLine + "Attacks Missed: {1:0.00%}" + Environment.NewLine +
                                 "Attacks Dodged: {2:0.00%}" + Environment.NewLine + "Attacks Parried: {3:0.00%}",
                                 AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
-            dictValues.Add("Total DPS", string.Format("{0:0.0}", TotalDamagePerSecond));
 
-            dictValues.Add("Limited Threat",
-                string.Format("{0:0.0}*White TPS: {1:0.00}" + Environment.NewLine + "Shield Slam Threat: {2:0.0}" + Environment.NewLine +
-                                "Revenge Threat: {3:0.0}" + Environment.NewLine + "Devastate Threat: {4:0.0}",
-                                LimitedThreat, WhiteThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat));
-            dictValues.Add("Unlimited Threat",
-                string.Format("{0:0.0}*Heroic Strike TPS: {1:0.00}" + Environment.NewLine + "Shield Slam Threat: {2:0.0}" + Environment.NewLine +
-                                "Revenge Threat: {3:0.0}" + Environment.NewLine + "Devastate Threat: {4:0.0}",
-                                UnlimitedThreat, HeroicStrikeThreat, ShieldSlamThreat, RevengeThreat, DevastateThreat));
+            dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond));
+            dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}",LimitedThreat));
+            dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat));
 
             dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));
             dictValues.Add("Mitigation Points", string.Format("{0:0}", MitigationPoints));

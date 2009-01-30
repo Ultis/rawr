@@ -42,7 +42,8 @@ namespace Rawr.ProtWarr
         Basic,
         Devastate,
         SwordAndBoard,
-        Full,
+        FullProtection,
+        UnrelentingAssault,
     }
 
     public enum RageModelMode

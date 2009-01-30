@@ -27,13 +27,13 @@ namespace Rawr.ProtWarr
             set { _subPoints = value; }
         }
 
-        public float MitigationPoints
+        public float SurvivalPoints
         {
             get { return _subPoints[0]; }
             set { _subPoints[0] = value; }
         }
 
-        public float SurvivalPoints
+        public float MitigationPoints
         {
             get { return _subPoints[1]; }
             set { _subPoints[1] = value; }

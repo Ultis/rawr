@@ -48,24 +48,25 @@ namespace Rawr.ProtWarr
 					"Defensive Stats:Total Mitigation",
 					"Defensive Stats:Damage Taken",
 
+                    "Offensive Stats:Weapon Speed",
                     "Offensive Stats:Attack Power",
                     "Offensive Stats:Hit",
-					"Offensive Stats:Expertise",
 					"Offensive Stats:Haste",
 					"Offensive Stats:Armor Penetration",
 					"Offensive Stats:Crit",
+                    "Offensive Stats:Expertise",
 					"Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
-                    "Offensive Stats:Total DPS",
-                    "Offensive Stats:Limited Threat*Shield Slam -> Revenge -> Devastate -> Devastate",
-                    @"Offensive Stats:Unlimited Threat*Shield Slam -> Revenge -> Devastate -> Devastate.
-With Heroic Strikes every auto attack.",
+                    "Offensive Stats:Total Damage/sec",
+                    "Offensive Stats:Limited Threat/sec",
+                    "Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
 
                     "Resistances:Nature Resist",
 					"Resistances:Fire Resist",
 					"Resistances:Frost Resist",
 					"Resistances:Shadow Resist",
 					"Resistances:Arcane Resist",
+                    "Complex Stats:Tank Points*The total average amount of base damage you can take without heals.",
 					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
@@ -126,6 +127,8 @@ threat and limited threat scaled by the threat scale.",
 			{
 				if (_customChartNames == null)
 					_customChartNames = new string[] {
+                    "Ability Damage",
+                    "Ability Threat",
 					"Combat Table",
 					"Item Budget",
 					};
@@ -141,8 +144,8 @@ threat and limited threat scaled by the threat scale.",
 				if (_subPointNameColors == null)
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
 					_subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
+                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
                     _subPointNameColors.Add("Threat", System.Drawing.Color.Green);
 				}
 				return _subPointNameColors;
@@ -199,11 +202,12 @@ threat and limited threat scaled by the threat scale.",
             Stats                           stats           = GetCharacterStats(character, additionalItem);
 
             DefendModel dm = new DefendModel(character, stats);
-            AttackModel am = new AttackModel(character, stats, AttackModelMode.Full);
+            AttackModel am = new AttackModel(character, stats, AttackModelMode.FullProtection);
 
             calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = calcOpts.TargetLevel;
 			calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
+            calculatedStats.Abilities = am.Abilities;
 
             calculatedStats.Miss = dm.DefendTable.Miss;
             calculatedStats.Dodge = dm.DefendTable.Dodge;
@@ -222,6 +226,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
             calculatedStats.DamageTaken = (1.0f - dm.Mitigation);
+            calculatedStats.TankPoints = dm.TankPoints;
 
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
             calculatedStats.FireSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
@@ -238,14 +243,8 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.DodgedAttacks = am.Abilities[Ability.None].AttackTable.Dodge;
             calculatedStats.ParriedAttacks = am.Abilities[Ability.None].AttackTable.Parry;
             calculatedStats.MissedAttacks = am.Abilities[Ability.None].AttackTable.Miss;
-
+            calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
-
-            calculatedStats.WhiteThreat = am.Abilities[Ability.None].Threat / Lookup.WeaponSpeed(character, stats);
-            calculatedStats.HeroicStrikeThreat = am.Abilities[Ability.HeroicStrike].Threat / Lookup.WeaponSpeed(character, stats);
-            calculatedStats.ShieldSlamThreat = am.Abilities[Ability.ShieldSlam].Threat;
-            calculatedStats.RevengeThreat = am.Abilities[Ability.Revenge].Threat;
-            calculatedStats.DevastateThreat = am.Abilities[Ability.Devastate].Threat;
 
             calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             am.RageModelMode = RageModelMode.Limited;
@@ -253,15 +252,15 @@ threat and limited threat scaled by the threat scale.",
 
             if (calcOpts.UseTankPoints)
             {
-                calculatedStats.SurvivalPoints = dm.EffectiveHealth;
-                calculatedStats.MitigationPoints = dm.TankPoints - dm.EffectiveHealth;
+                calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
+                calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth) / 100.0f;
             }
             else
             {
-                calculatedStats.SurvivalPoints = dm.EffectiveHealth;
-                calculatedStats.MitigationPoints = calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation));
+                calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
+                calculatedStats.MitigationPoints = (calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation))) / 100.0f;
             }
-            calculatedStats.ThreatPoints = calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f);
+            calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f)) / 100.0f;
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 
             return calculatedStats;
@@ -574,36 +573,60 @@ threat and limited threat scaled by the threat scale.",
 
 		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
+            CharacterCalculationsProtWarr calculations = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
+
 			switch (chartName)
 			{
-				case "Combat Table":
-					CharacterCalculationsProtWarr calculations = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
-					ComparisonCalculationProtWarr calcMiss = new ComparisonCalculationProtWarr();
-					ComparisonCalculationProtWarr calcDodge = new ComparisonCalculationProtWarr();
-                    ComparisonCalculationProtWarr calcParry = new ComparisonCalculationProtWarr();
-                    ComparisonCalculationProtWarr calcBlock = new ComparisonCalculationProtWarr();
-					ComparisonCalculationProtWarr calcCrit = new ComparisonCalculationProtWarr();
-					ComparisonCalculationProtWarr calcCrush = new ComparisonCalculationProtWarr();
-					ComparisonCalculationProtWarr calcHit = new ComparisonCalculationProtWarr();
-                    if (calculations != null)
-					{
-						calcMiss.Name = "Miss";
-						calcDodge.Name = "Dodge";
-                        calcParry.Name = "Parry";
-                        calcBlock.Name = "Block";
-						calcCrit.Name = "Crit";
-						calcCrush.Name = "Crush";
-						calcHit.Name = "Hit";
+                case "Ability Damage":
+                case "Ability Threat":
+                    {
+                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count];
+                        int j = 0;
+                        foreach (System.Collections.DictionaryEntry abilities in calculations.Abilities)
+                        {
+                            AbilityModel ability = (AbilityModel)abilities.Value;
+                            ComparisonCalculationProtWarr comparison = new ComparisonCalculationProtWarr();
 
-						calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
-						calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
-                        calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
-                        calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
-                        calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
-                        calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
-					}
-					return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
+                            comparison.Name = ability.Name;
+                            if(chartName == "Ability Damage")
+                                comparison.MitigationPoints = ability.Damage;
+                            if(chartName == "Ability Threat")
+                                comparison.ThreatPoints = ability.Threat;
+                            
+                            comparison.OverallPoints = comparison.SurvivalPoints + comparison.ThreatPoints + comparison.MitigationPoints;
+                            comparisons[j] = comparison;
+                            j++;
+                        }
+                        return comparisons;
+                    }
+                case "Combat Table":
+                    {
+                        ComparisonCalculationProtWarr calcMiss = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcDodge = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcParry = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcBlock = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcCrit = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcCrush = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcHit = new ComparisonCalculationProtWarr();
+                        if (calculations != null)
+                        {
+                            calcMiss.Name = "Miss";
+                            calcDodge.Name = "Dodge";
+                            calcParry.Name = "Parry";
+                            calcBlock.Name = "Block";
+                            calcCrit.Name = "Crit";
+                            calcCrush.Name = "Crush";
+                            calcHit.Name = "Hit";
 
+                            calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
+                            calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
+                            calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
+                            calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
+                            calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
+                            calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - (calculations.DodgePlusMissPlusParryPlusBlock + calculations.CritVulnerability)) * 100.0f;
+                        }
+                        return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
+                    }
                 case "Item Budget":
 					CharacterCalculationsProtWarr calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
 					CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtWarr;
@@ -867,7 +890,7 @@ threat and limited threat scaled by the threat scale.",
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
-                LotPCritRating = stats.LotPCritRating,
+                BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 WindfuryAPBonus = stats.WindfuryAPBonus,
 
                 MongooseProc = stats.MongooseProc,
@@ -899,7 +922,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.LotPCritRating + stats.WindfuryAPBonus +
+                    stats.BonusBleedDamageMultiplier + stats.WindfuryAPBonus +
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
                     stats.ExecutionerProc +
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage

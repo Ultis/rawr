@@ -14,46 +14,15 @@ namespace Rawr.ProtWarr
 
         public readonly AttackTable AttackTable;
 
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            private set { _name = value; }
-        }
-
-        private float _damage;
-        public float Damage
-        {
-            get { return _damage; }
-            private set { _damage = value; }
-        }
-
-        private float _threat;
-        public float Threat
-        {
-            get { return _threat; }
-            private set { _threat = value; }
-        }
-
-        private float _damageMultiplier;
-        public float DamageMultiplier
-        {
-            get { return _damageMultiplier; }
-            private set { _damageMultiplier = value; }
-        }
-
-        private float _armorReduction;
-        public float ArmorReduction
-        {
-            get { return _armorReduction; }
-            private set { _armorReduction = value; }
-        }
-
+        public string Name { get; private set; }
+        public float Damage { get; private set; }
+        public float Threat { get; private set; }
+        public float DamageMultiplier { get; private set; }
+        public float ArmorReduction { get; private set; }
         public float CritPercentage
         {
             get { return AttackTable.Critical; }
         }
-
 
         private void CalculateDamage()
         {
@@ -188,6 +157,7 @@ namespace Rawr.ProtWarr
             Talents     = Character.WarriorTalents;
             AttackTable = new AttackTable(character, stats, ability);
 
+            Name                = Lookup.Name(Ability);
             ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
 
