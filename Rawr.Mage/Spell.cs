@@ -530,16 +530,20 @@ namespace Rawr.Mage
 
         protected void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule)
         {
+            MageTalents mageTalents = castingState.MageTalents;
+            Stats baseStats = castingState.BaseStats;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+
             CastingSpeed = castingState.CastingSpeed;
 
             if (Instant) InterruptProtection = 1;
             if (castingState.IcyVeins) InterruptProtection = 1;
             // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
-            float InterruptFactor = Math.Min(castingState.CalculationOptions.InterruptFrequency, 2 * CastingSpeed / BaseCastTime);
+            float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * CastingSpeed / BaseCastTime);
 
             float Haste = castingState.SpellHasteRating;
             float levelScalingFactor;
-            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (castingState.CalculationOptions.PlayerLevel - 70) / 10f));
+            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
 
             float maxPushback = 0.5f * Math.Max(0, 1 - InterruptProtection);
             if (Channeled) maxPushback = 0.0f;
@@ -551,10 +555,10 @@ namespace Rawr.Mage
             CritRate = Math.Min(1.0f, CritRate);
 
             // Quagmirran
-            if (castingState.BaseStats.SpellHasteFor6SecOnHit_10_45 > 0 && HitProcs > 0)
+            if (baseStats.SpellHasteFor6SecOnHit_10_45 > 0 && HitProcs > 0)
             {
                 // hasted casttime
-                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor6SecOnHit_10_45) / 995f * levelScalingFactor);
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor6SecOnHit_10_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
                 cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -564,7 +568,7 @@ namespace Rawr.Mage
                 //discrete model
                 float castsAffected = 0;
                 for (int c = 0; c < HitProcs; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / HitProcs) / cast) / HitProcs;
-                Haste += castingState.BaseStats.SpellHasteFor6SecOnHit_10_45 * castsAffected * cast / (45f + CastTime / HitProcs / 0.1f);
+                Haste += baseStats.SpellHasteFor6SecOnHit_10_45 * castsAffected * cast / (45f + CastTime / HitProcs / 0.1f);
                 //continuous model
                 //Haste += castingState.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6f / (45f + CastTime / HitProcs / 0.1f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
@@ -576,10 +580,10 @@ namespace Rawr.Mage
             }
 
             // MSD
-            if (castingState.BaseStats.SpellHasteFor6SecOnCast_15_45 > 0 && CastProcs > 0)
+            if (baseStats.SpellHasteFor6SecOnCast_15_45 > 0 && CastProcs > 0)
             {
                 // hasted casttime
-                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor6SecOnCast_15_45) / 995f * levelScalingFactor);
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor6SecOnCast_15_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
                 cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -588,7 +592,7 @@ namespace Rawr.Mage
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
                 float castsAffected = 0;
                 for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / CastProcs) / cast) / CastProcs;
-                Haste += castingState.BaseStats.SpellHasteFor6SecOnCast_15_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.15f);
+                Haste += baseStats.SpellHasteFor6SecOnCast_15_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.15f);
                 //Haste += castingState.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
@@ -599,10 +603,10 @@ namespace Rawr.Mage
             }
 
             // Embrace of the Spider
-            if (castingState.BaseStats.SpellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
+            if (baseStats.SpellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
             {
                 // hasted casttime
-                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + castingState.BaseStats.SpellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
                 cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -611,7 +615,7 @@ namespace Rawr.Mage
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
                 float castsAffected = 0;
                 for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((10f - c * CastTime / CastProcs) / cast) / CastProcs;
-                Haste += castingState.BaseStats.SpellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
+                Haste += baseStats.SpellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
                 //Haste += castingState.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
@@ -622,12 +626,12 @@ namespace Rawr.Mage
             }
 
             // AToI, first cast after proc is not affected for non-instant
-            if (castingState.BaseStats.SpellHasteFor5SecOnCrit_50 > 0)
+            if (baseStats.SpellHasteFor5SecOnCrit_50 > 0)
             {
                 float rawHaste = Haste;
 
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
-                float proccedSpeed = CastingSpeed * (1 + (rawHaste + castingState.BaseStats.SpellHasteFor5SecOnCrit_50) / 995f * levelScalingFactor);
+                float proccedSpeed = CastingSpeed * (1 + (rawHaste + baseStats.SpellHasteFor5SecOnCrit_50) / 995f * levelScalingFactor);
                 float proccedGcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / proccedSpeed);
                 float proccedCastTime = BaseCastTime / proccedSpeed + castingState.Latency;
                 proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -635,7 +639,7 @@ namespace Rawr.Mage
                 int chancesToProc = (int)(((int)Math.Floor(5f / proccedCastTime) + 1) * HitProcs);
                 if (!Instant) chancesToProc -= 1;
                 chancesToProc *= (int)(TargetProcs / HitProcs);
-                Haste = rawHaste + castingState.BaseStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
+                Haste = rawHaste + baseStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
                 //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
                 GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
@@ -648,15 +652,15 @@ namespace Rawr.Mage
 
             CritRate = Math.Min(1, CritRate);
             CritProcs = HitProcs * CritRate;
-            //Cost *= (1f - CritRate * 0.1f * castingState.MageTalents.MasterOfElements);
-            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) Cost += CritRate * Cost * 0.01f * castingState.MageTalents.Burnout; // last I read Burnout works on final pre MOE cost
-            Cost -= CritRate * BaseCost * 0.1f * castingState.MageTalents.MasterOfElements; // from what I know MOE works on base cost
+            //Cost *= (1f - CritRate * 0.1f * mageTalents.MasterOfElements);
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) Cost += CritRate * Cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+            Cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements; // from what I know MOE works on base cost
 
             CostPerSecond = Cost / CastTime;
 
             if (!ManualClearcasting || ClearcastingAveraged)
             {
-                CostPerSecond *= (1 - 0.02f * castingState.MageTalents.ArcaneConcentration);
+                CostPerSecond *= (1 - 0.02f * mageTalents.ArcaneConcentration);
             }
             else if (ClearcastingActive)
             {
@@ -670,15 +674,15 @@ namespace Rawr.Mage
             MaxCritDamage = MaxHitDamage * CritBonus;
             DotDamage = (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier;
 
-            if (castingState.BaseStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += castingState.BaseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
-            if (castingState.BaseStats.SpellPowerFor6SecOnCrit > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
-            if (castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
-            if (castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
-            if (castingState.BaseStats.SpellPowerFor10SecOnCast_10_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
-            if (castingState.BaseStats.SpellPowerFor10SecOnResist > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
-            if (castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
-            if (castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 > 0) RawSpellDamage += castingState.BaseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
-            if (castingState.BaseStats.ShatteredSunAcumenProc > 0 && castingState.CalculationOptions.Aldor) RawSpellDamage += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            if (baseStats.SpellDamageFor10SecOnHit_5 > 0) RawSpellDamage += baseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
+            if (baseStats.SpellPowerFor6SecOnCrit > 0) RawSpellDamage += baseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(1 - (float)Math.Pow(1 - CritRate, HitProcs), 6, CastTime);
+            if (baseStats.SpellPowerFor10SecOnHit_10_45 > 0) RawSpellDamage += baseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            if (baseStats.SpellPowerFor10SecOnCast_15_45 > 0) RawSpellDamage += baseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
+            if (baseStats.SpellPowerFor10SecOnCast_10_45 > 0) RawSpellDamage += baseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
+            if (baseStats.SpellPowerFor10SecOnResist > 0) RawSpellDamage += baseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - (float)Math.Pow(HitRate, HitProcs), 10, CastTime);
+            if (baseStats.SpellPowerFor15SecOnCrit_20_45 > 0) RawSpellDamage += baseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (baseStats.SpellPowerFor10SecOnCrit_20_45 > 0) RawSpellDamage += baseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / HitProcs / 0.2f / CritRate);
+            if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) RawSpellDamage += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
 
             if (!ForceMiss)
             {
@@ -687,7 +691,7 @@ namespace Rawr.Mage
                 float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate - castingState.ResilienceCritRateReduction);
                 float resistMultiplier = (ForceHit ? 1.0f : HitRate) * PartialResistFactor;
                 int targets = 1;
-                if (AreaEffect) targets = castingState.CalculationOptions.AoeTargets;
+                if (AreaEffect) targets = calculationOptions.AoeTargets;
                 AverageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (ForceHit ? 1.0f : HitRate);
                 if (AreaEffect && AverageDamage > AoeDamageCap) AverageDamage = AoeDamageCap;
                 AverageDamage = AverageDamage * critMultiplier * PartialResistFactor;
@@ -725,7 +729,7 @@ namespace Rawr.Mage
                 waterbolt = new Waterbolt(castingState, RawSpellDamage); // TODO should be frost damage
                 DamagePerSecond += waterbolt.DamagePerSecond;
             }
-            if (!ForceMiss && !EffectProc && castingState.BaseStats.LightningCapacitorProc > 0)
+            if (!ForceMiss && !EffectProc && baseStats.LightningCapacitorProc > 0)
             {
                 BaseSpell LightningBolt = castingState.LightningBolt;
                 //discrete model
@@ -739,7 +743,7 @@ namespace Rawr.Mage
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
             }
-            if (!ForceMiss && !EffectProc && castingState.BaseStats.ThunderCapacitorProc > 0)
+            if (!ForceMiss && !EffectProc && baseStats.ThunderCapacitorProc > 0)
             {
                 BaseSpell ThunderBolt = castingState.ThunderBolt;
                 //discrete model
@@ -753,21 +757,21 @@ namespace Rawr.Mage
                 //continuous model
                 //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
             }
-            if (!ForceMiss && !EffectProc && castingState.BaseStats.ShatteredSunAcumenProc > 0 && !castingState.CalculationOptions.Aldor)
+            if (!ForceMiss && !EffectProc && baseStats.ShatteredSunAcumenProc > 0 && !calculationOptions.Aldor)
             {
                 BaseSpell ArcaneBolt = castingState.ArcaneBolt;
                 float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
                 DamagePerSecond += boltDps;
                 ThreatPerSecond += boltDps * castingState.ArcaneThreatMultiplier;
             }
-            if (!ForceMiss && !EffectProc && castingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
+            if (!ForceMiss && !EffectProc && baseStats.PendulumOfTelluricCurrentsProc > 0)
             {
                 BaseSpell PendulumOfTelluricCurrents = castingState.PendulumOfTelluricCurrents;
                 float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
                 DamagePerSecond += boltDps;
                 ThreatPerSecond += boltDps * castingState.ShadowThreatMultiplier;
             }
-            if (!ForceMiss && !EffectProc && castingState.BaseStats.LightweaveEmbroideryProc > 0)
+            if (!ForceMiss && !EffectProc && baseStats.LightweaveEmbroideryProc > 0)
             {
                 BaseSpell LightweaveBolt = castingState.LightweaveBolt;
                 float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
@@ -796,18 +800,18 @@ namespace Rawr.Mage
                 OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
             }*/
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritRate * HitProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime + baseStats.ManaRestorePerCrit * CritRate * HitProcs / CastTime + baseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + baseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.WaterElemental)
             {
-                ManaRegenPerSecond += 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
+                ManaRegenPerSecond += 0.002f * baseStats.Mana / 5.0f * mageTalents.ImprovedWaterElemental;
             }
-            ThreatPerSecond += (castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + castingState.BaseStats.ThreatIncreaseMultiplier) * (1 - castingState.BaseStats.ThreatReductionMultiplier);
+            ThreatPerSecond += (baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
 
             if (castingState.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
             {
                 float totalMana = castingState.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
-                ThreatPerSecond += totalMana / 20f * 0.5f * (1 + castingState.BaseStats.ThreatIncreaseMultiplier) * (1 - castingState.BaseStats.ThreatReductionMultiplier);
+                ThreatPerSecond += totalMana / 20f * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
             }
         }
 
