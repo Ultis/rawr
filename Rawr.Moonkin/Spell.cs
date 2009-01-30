@@ -889,9 +889,9 @@ namespace Rawr.Moonkin
                 SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
             }
 			// Mana restore per crit trinket
-			SpellRotation.Starfire.ManaCost -= (spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
-			SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
-			SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * calcs.BasicStats.ManaRestorePerCrit * spellHitRate;
+			SpellRotation.Starfire.ManaCost -= (spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
+			SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
+			SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
             // Generic mana restore per cast
             SpellRotation.Starfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
             SpellRotation.Moonfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;

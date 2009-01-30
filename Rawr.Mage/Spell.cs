@@ -800,7 +800,7 @@ namespace Rawr.Mage
                 OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
             }*/
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime + baseStats.ManaRestorePerCrit * CritRate * HitProcs / CastTime + baseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + baseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime + baseStats.ManaRestoreOnCrit_25_45 * CritRate * HitProcs / CastTime + baseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + baseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.WaterElemental)
             {
                 ManaRegenPerSecond += 0.002f * baseStats.Mana / 5.0f * mageTalents.ImprovedWaterElemental;
@@ -2123,7 +2123,7 @@ namespace Rawr.Mage
                 OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
             }
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 * CritProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {

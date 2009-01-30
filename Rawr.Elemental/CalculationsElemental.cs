@@ -308,7 +308,7 @@ namespace Rawr.Elemental
                 HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
                 ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
-                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
+                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 ManaRestore5min = stats.ManaRestore5min,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
@@ -387,7 +387,7 @@ namespace Rawr.Elemental
                 stats.HasteRatingFor20SecOnUse5Min +
                 stats.Mp5OnCastFor20SecOnUse2Min +
                 stats.ManaRestoreOnCast_10_45 +
-                stats.ManaRestoreOnCrit_25 +
+                stats.ManaRestoreOnCrit_25_45 +
                 stats.ManaRestore5min +
                 stats.FullManaRegenFor15SecOnSpellcast +
                 stats.ManaregenOver20SecOnUse3Min +

@@ -767,10 +767,6 @@ namespace Rawr
 			{
 				stats.ManacostReduceWithin15OnHealingCast += 450;
             }
-            else if (line == "Your spell critical strikes have a chance to restore 900 mana.")
-            {
-                stats.ManaRestoreOnCrit_25 = 900;
-			}
             else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
             {
                 // Forge Ember
@@ -816,9 +812,8 @@ namespace Rawr
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
                 // Soul of the Dead
-                // WARNING: Use ManaRestoreOnCrit_25 instead, someone changed something somewhere
-                stats.ManaRestorePerCrit += 0.25f * 900;
-            }
+                stats.ManaRestoreOnCrit_25_45 += 900f;
+			}
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
             {
                 // Pendulum of Telluric Currents

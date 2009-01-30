@@ -278,7 +278,7 @@ namespace Rawr.Elemental
             // For easy calculation, model this as a full stack for 20 seconds. Who cares?
             Mp5 += CalculateEffect(stats.Mp5OnCastFor20SecOnUse2Min*20f*HitsFraction, 20f, 120f, 0, FightDuration);
             Mp5 += CalculateEffect(5f / 15f * stats.ManaRestoreOnCast_10_45, 15f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Mp5 += CalculateEffect(stats.ManaRestoreOnCrit_25, 0f, 45f, 1 / (CritsFraction * .25f), FightDuration);
+            Mp5 += CalculateEffect(stats.ManaRestoreOnCrit_25_45, 0f, 45f, 1 / (CritsFraction * .25f), FightDuration);
             Mp5 += CalculateEffect(5f/12f*stats.ManaregenOver20SecOnUse3Min, 12f, 180f, 0, FightDuration);
             Mp5 += CalculateEffect(5f/12f*stats.ManaregenOver20SecOnUse5Min, 12f, 300f, 0, FightDuration);
             Mp5 += CalculateEffect(5f / 12f * stats.ManaRestore5min * 5f / 12f, 12f, 300f, 0, FightDuration);

@@ -183,9 +183,9 @@ namespace Rawr.Healadin
             {
                 calc.ManaOther += (float)Math.Ceiling(fight_length / 60f - .25f) * stats.ManaRestoreOnCast_10_45;
             }
-            if (stats.ManaRestoreOnCrit_25 > 0)
+            if (stats.ManaRestoreOnCrit_25_45 > 0)
             {
-                calc.ManaOther += (float)Math.Ceiling(fight_length / (45f + 6f / stats.SpellCrit)) * stats.ManaRestoreOnCrit_25;
+                calc.ManaOther += (float)Math.Ceiling(fight_length / (45f + 6f / stats.SpellCrit)) * stats.ManaRestoreOnCrit_25_45;
             }
             if (stats.ManaRestore5min > 0)
             {
@@ -480,7 +480,7 @@ namespace Rawr.Healadin
                 // Gear Procs
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
+                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 ManaRestore5min = stats.ManaRestore5min,
@@ -494,7 +494,7 @@ namespace Rawr.Healadin
         {
             bool wantedStats = (stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.SpellCrit + stats.SpellHaste
                 + stats.HitRating + stats.PhysicalHit + stats.GreatnessProc + stats.Heal1Min + stats.BonusHoTOnDirectHeals + stats.Mana
-                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + stats.ManaRestoreOnCrit_25
+                + stats.HasteRating + stats.BonusIntellectMultiplier + stats.HolyLightPercentManaReduction + stats.HolyShockCrit + stats.ManaRestoreOnCrit_25_45
                 + stats.BonusManaPotion + stats.FlashOfLightMultiplier + stats.FlashOfLightSpellPower + stats.FlashOfLightCrit + stats.HolyLightManaCostReduction
                 + stats.HolyLightCrit + stats.HolyLightSpellPower + stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreFromMaxManaPerSecond + stats.BonusManaMultiplier
                 + stats.HealingReceivedMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusCritHealMultiplier + stats.ManaRestore5min) > 0;

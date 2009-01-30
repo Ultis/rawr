@@ -94,12 +94,11 @@ namespace Rawr
         ManaSpringMp5Increase,
         ManaRestore5min,
         ManaRestorePerCast,
-        ManaRestorePerCrit,
         ManaRestoreOnCast_5_15,
         ManaRestoreOnCast_10_45,
         ManaRestoreFromBaseManaPerHit,
         ManaRestoreFromMaxManaPerSecond,
-        ManaRestoreOnCrit_25,
+        ManaRestoreOnCrit_25_45,
         MangleCostReduction,
 		RakeCostReduction,
 		ShredCostReduction,
@@ -1253,16 +1252,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCast_10_45] = value; }
         }
 
-        // 10% proc rate, 45 sec internal cooldown
-        [DisplayName("Mana Restore Per Crit")]
-        [Category("Equipment Procs")]
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float ManaRestorePerCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestorePerCrit] = value; }
-        }
-
         [Percentage]
         [DisplayName("% Max Mana / Sec")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1447,12 +1436,12 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana Restore on Crit (25%)")]
+        [DisplayName("Mana Restore on Crit (25%, 45sec)")]
         [Category("Equipment Procs")]
-        public float ManaRestoreOnCrit_25
+        public float ManaRestoreOnCrit_25_45
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaRestoreOnCrit_25_45] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

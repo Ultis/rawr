@@ -604,7 +604,7 @@ namespace Rawr.HolyPriest
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 BangleProc = stats.BangleProc,
                 SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
+                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
 
                 GLYPH_CircleOfHealing =  stats.GLYPH_CircleOfHealing,
@@ -652,7 +652,7 @@ namespace Rawr.HolyPriest
                 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
                 + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
-                + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25
+                + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45
                 + stats.ManaRestoreOnCast_10_45
 
                 + stats.GLYPH_CircleOfHealing + stats.GLYPH_Dispel + stats.GLYPH_FlashHeal
