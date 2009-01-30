@@ -228,6 +228,7 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.label99 = new System.Windows.Forms.Label();
             this.checkBoxDebugCooldownSegmentation = new System.Windows.Forms.CheckBox();
             this.comboBoxMIPMethod = new System.Windows.Forms.ComboBox();
@@ -248,7 +249,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2101,7 +2101,7 @@
             this.label93.Size = new System.Drawing.Size(119, 13);
             this.label93.TabIndex = 193;
             this.label93.Text = "Glyph of Arcane Blast: *";
-            this.toolTipMage.SetToolTip(this.label93, "Increases the damage from your Arcane Blast buff by 5%.");
+            this.toolTipMage.SetToolTip(this.label93, "Increases the damage from your Arcane Blast buff by 3%.");
             // 
             // checkBoxGlyphOfArcaneBlast
             // 
@@ -2367,6 +2367,16 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // buttonComputeOptimalArcaneCycles
+            // 
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 274);
+            this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
+            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
+            this.buttonComputeOptimalArcaneCycles.Text = "Compute Optimal Arcane Cycles";
+            this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
+            this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalArcaneCycles_Click);
+            // 
             // label99
             // 
             this.label99.AutoSize = true;
@@ -2568,16 +2578,6 @@
             this.toolTipMage.AutoPopDelay = 15000;
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
-            // 
-            // buttonComputeOptimalArcaneCycles
-            // 
-            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 274);
-            this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
-            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
-            this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
-            this.buttonComputeOptimalArcaneCycles.Text = "Compute Optimal Arcane Cycles";
-            this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
-            this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalArcaneCycles_Click);
             // 
             // CalculationOptionsPanelMage
             // 
