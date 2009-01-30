@@ -449,7 +449,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 80f)]
         public float Armor
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Armor]; }
@@ -458,7 +458,7 @@ namespace Rawr
 
 		[System.ComponentModel.DefaultValueAttribute(0f)]
 		[Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 80f)]
 		public float BonusArmor
 		{
 			get { return _rawAdditiveData[(int)AdditiveStat.BonusArmor]; }
