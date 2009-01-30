@@ -44,8 +44,9 @@ namespace Rawr.Elemental
                     "Attacks:Lightning Bolt",
 					"Attacks:Chain Lightning",
 					"Attacks:Lava Burst",
-					//"Attacks:Lava Burst (FS)",
                     "Attacks:Flame Shock",
+                    "Attacks:Earth Shock",
+                    "Attacks:Frost Shock",
 					
 					"Simulation:Simulation",
 				};
@@ -424,9 +425,12 @@ namespace Rawr.Elemental
 
         public Spell LightningBolt;
         public Spell ChainLightning;
-        public Spell LavaBurstFS;
+        public Spell ChainLightning3;
+        public Spell ChainLightning4;
         public Spell LavaBurst;
         public Spell FlameShock;
+        public Spell EarthShock;
+        public Spell FrostShock;
 
         public float ManaRegenInFSR;
         public float ManaRegenOutFSR;
@@ -490,10 +494,11 @@ namespace Rawr.Elemental
             dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString());
 
             dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %");
-            dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %");
+            dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %\n3 adds: " + Math.Round(ChainLightning3.MinHit).ToString() + "-" + Math.Round(ChainLightning3.MaxHit).ToString() + " / " + Math.Round(ChainLightning3.MinCrit).ToString() + "-" + Math.Round(ChainLightning3.MaxCrit).ToString() + "\n4 adds: " + Math.Round(ChainLightning4.MinHit).ToString() + "-" + Math.Round(ChainLightning4.MaxHit).ToString() + " / " + Math.Round(ChainLightning4.MinCrit).ToString() + "-" + Math.Round(ChainLightning4.MaxCrit).ToString());
             dictValues.Add("Lava Burst", Math.Round(LavaBurst.MinHit).ToString() + "-" + Math.Round(LavaBurst.MaxHit).ToString() + " / " + Math.Round(LavaBurst.MinCrit).ToString() + "-" + Math.Round(LavaBurst.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurst.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurst.MissChance, 2).ToString() + " %");
-            //dictValues.Add("Lava Burst (FS)", Math.Round(LavaBurstFS.MinHit).ToString() + "-" + Math.Round(LavaBurstFS.MaxHit).ToString() + " / " + Math.Round(LavaBurstFS.MinCrit).ToString() + "-" + Math.Round(LavaBurstFS.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurstFS.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurstFS.MissChance, 2).ToString() + " %");
-            dictValues.Add("Flame Shock", Math.Round(FlameShock.MinHit).ToString() + "-" + Math.Round(FlameShock.MaxHit).ToString() + " / " + Math.Round(FlameShock.MinCrit).ToString() + "-" + Math.Round(FlameShock.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %");
+            dictValues.Add("Flame Shock", Math.Round(FlameShock.AvgHit).ToString() + " / " + Math.Round(FlameShock.AvgCrit).ToString() + " + " + Math.Round(FlameShock.PeriodicTick).ToString() + " (every 3s)*Crit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %");
+            dictValues.Add("Earth Shock", Math.Round(EarthShock.MinHit).ToString() + "-" + Math.Round(EarthShock.MaxHit).ToString() + " / " + Math.Round(EarthShock.MinCrit).ToString() + "-" + Math.Round(EarthShock.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * EarthShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * EarthShock.MissChance, 2).ToString() + " %");
+            dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %");
 
             dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n");
 

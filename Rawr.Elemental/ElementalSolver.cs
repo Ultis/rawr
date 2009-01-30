@@ -205,10 +205,11 @@ namespace Rawr.Elemental
             float TimeToRegenFull = 5f * calculatedStats.BasicStats.Mana / ManaRegOutFSRNoCasting;
             float TimeToBurnAll = calculatedStats.BasicStats.Mana / effectiveMPS;
             float CastFraction = 1f;
-            if (FightDuration > TimeUntilOOM)
+            if (ManaRegOutFSRNoCasting > 0 && FightDuration > TimeUntilOOM)
             {
                 float timeLeft = FightDuration - TimeUntilOOM;
-                CastFraction = TimeToBurnAll / (TimeToRegenFull + TimeToBurnAll);
+                if (TimeToRegenFull + TimeToBurnAll == 0) CastFraction = 0;
+                else CastFraction = TimeToBurnAll / (TimeToRegenFull + TimeToBurnAll);
                 TotalDamage += timeLeft * rot.DPS * CastFraction;
             }
             #endregion
@@ -222,9 +223,12 @@ namespace Rawr.Elemental
             calculatedStats.ReplenishMP5 = replenishRegen;
             calculatedStats.LightningBolt = rot.LB;
             calculatedStats.ChainLightning = rot.CL;
+            calculatedStats.ChainLightning3 = rot.CL3;
+            calculatedStats.ChainLightning4 = rot.CL4;
             calculatedStats.FlameShock = rot.FS;
             calculatedStats.LavaBurst = rot.LvB;
-            calculatedStats.LavaBurstFS = rot.LvBFS;
+            calculatedStats.EarthShock = rot.ES;
+            calculatedStats.FrostShock = rot.FrS;
             calculatedStats.TimeToOOM = TimeUntilOOM;
             calculatedStats.CastRegenFraction = CastFraction;
             calculatedStats.CastFraction = rot.CastFraction;
