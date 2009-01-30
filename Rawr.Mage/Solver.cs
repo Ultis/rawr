@@ -2426,7 +2426,7 @@ namespace Rawr.Mage
                                 {
                                     if (!pos || !powm) // do not allow different potions at the same time
                                     {
-                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0 && index == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
+                                        if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
                                             list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
                                             if (incrementalSetIndex == 0 && index == 0)
@@ -2467,7 +2467,7 @@ namespace Rawr.Mage
                             {
                                 if (!pos || !powm) // do not allow different potions at the same time
                                 {
-                                    if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == 0)) || (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
+                                    if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                     {
                                         list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
                                         if (incrementalSetIndex == 0)
