@@ -61,8 +61,8 @@ namespace Rawr.Elemental
 				if (_subPointNameColors == null)
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("Burst DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-					_subPointNameColors.Add("Sustained DPS", System.Drawing.Color.FromArgb(64, 128, 32));
+					_subPointNameColors.Add("Burst DPS", System.Drawing.Color.FromArgb(255, 0, 0));
+					_subPointNameColors.Add("Sustained DPS", System.Drawing.Color.FromArgb(0, 0, 255));
 				}
 				return _subPointNameColors;
 			}

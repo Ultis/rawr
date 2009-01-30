@@ -16,7 +16,7 @@ namespace Rawr.Elemental
             tbModuleNotes.Text =
                 "Notes:\r\n" +
                 "It is assumed you use Flametongue weapon.\r\n" +
-                "The calculator is an theoretical estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
+                "The calculator is a theoretical estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
                 "Trinkets, Elemental Mastery and Clearcasting are modelled by calculating their average value during the fight.\r\n" +
                 "The simplified calculator assumes you use Glyph of Flame Shock, hence you cannot disable that glyph.";
         }
@@ -35,7 +35,6 @@ namespace Rawr.Elemental
             else
                 calcOpts = (CalculationOptionsElemental)Character.CalculationOptions;
 
-            tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
             tbBSRatio.Value = calcOpts.BSRatio;
             int burst = 100 - tbBSRatio.Value;
             int sust = tbBSRatio.Value;
@@ -136,14 +135,6 @@ namespace Rawr.Elemental
             CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
             calcOpts.ReplenishmentUptime = tkReplenishment.Value;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void tbAverageProcUsage_TextChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.averageSpellpowerUsage = parseFloat(tbAverageProcUsage.Text);
             Character.OnCalculationsInvalidated();
         }
 

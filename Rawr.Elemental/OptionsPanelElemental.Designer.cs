@@ -28,15 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tbAverageProcUsage = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
@@ -65,7 +61,6 @@
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
-            this.groupBox6.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
@@ -74,32 +69,6 @@
             this.groupBox10.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 16);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(178, 13);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "Average Usage of Spellpower Procs";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(256, 16);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(15, 13);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "%";
-            // 
-            // tbAverageProcUsage
-            // 
-            this.tbAverageProcUsage.Location = new System.Drawing.Point(220, 13);
-            this.tbAverageProcUsage.Name = "tbAverageProcUsage";
-            this.tbAverageProcUsage.Size = new System.Drawing.Size(35, 20);
-            this.tbAverageProcUsage.TabIndex = 18;
-            this.tbAverageProcUsage.TextChanged += new System.EventHandler(this.tbAverageProcUsage_TextChanged);
             // 
             // tabControl1
             // 
@@ -116,7 +85,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.groupBox6);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -129,7 +97,7 @@
             // 
             this.groupBox2.Controls.Add(this.lblBSRatio);
             this.groupBox2.Controls.Add(this.tbBSRatio);
-            this.groupBox2.Location = new System.Drawing.Point(6, 51);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(277, 87);
             this.groupBox2.TabIndex = 41;
@@ -155,18 +123,6 @@
             this.tbBSRatio.TickFrequency = 5;
             this.tbBSRatio.Value = 50;
             this.tbBSRatio.Scroll += new System.EventHandler(this.tbBSRatio_Scroll);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.label8);
-            this.groupBox6.Controls.Add(this.tbAverageProcUsage);
-            this.groupBox6.Controls.Add(this.label9);
-            this.groupBox6.Location = new System.Drawing.Point(6, 6);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(277, 39);
-            this.groupBox6.TabIndex = 26;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Trinkets and Procs";
             // 
             // tabPage2
             // 
@@ -455,8 +411,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
@@ -473,13 +427,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbAverageProcUsage;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.GroupBox groupBox10;
