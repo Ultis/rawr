@@ -93,7 +93,7 @@ namespace Rawr.ProtWarr
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 45);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Target Armor: ";
+            this.label2.Text = "Target Armor:  (Default: 13100)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // trackBarTargetArmor
@@ -132,7 +132,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 323);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 365);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -232,7 +232,7 @@ namespace Rawr.ProtWarr
             this.labelThreatScaleText.Name = "labelThreatScaleText";
             this.labelThreatScaleText.Size = new System.Drawing.Size(80, 45);
             this.labelThreatScaleText.TabIndex = 0;
-            this.labelThreatScaleText.Text = "Threat Scale: *";
+            this.labelThreatScaleText.Text = "Threat Scale: * (Default: 25)";
             this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
                 "e changes";
@@ -269,7 +269,7 @@ namespace Rawr.ProtWarr
             this.labelMitigationScaleText.Name = "labelMitigationScaleText";
             this.labelMitigationScaleText.Size = new System.Drawing.Size(77, 45);
             this.labelMitigationScaleText.TabIndex = 0;
-            this.labelMitigationScaleText.Text = "Mitigation Scale: *";
+            this.labelMitigationScaleText.Text = "Mitigation Scale: * (Default: 7500)";
             this.labelMitigationScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelMitigationScaleText.ToolTipText = "Mitigation Points scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows m" +
                 "ore accurate changes";
@@ -369,7 +369,7 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxWarriorSkills);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 434);
+            this.Size = new System.Drawing.Size(370, 494);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxWarriorSkills.ResumeLayout(false);
             this.groupBoxWarriorSkills.PerformLayout();

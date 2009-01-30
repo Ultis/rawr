@@ -258,7 +258,7 @@ threat and limited threat scaled by the threat scale.",
             else
             {
                 calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
-                calculatedStats.MitigationPoints = (calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation))) / 100.0f;
+                calculatedStats.MitigationPoints = (calcOpts.MitigationScale * (1.0f / (1.0f - dm.Mitigation))) / 100.0f * 3.0f;
             }
             calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f)) / 100.0f;
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
