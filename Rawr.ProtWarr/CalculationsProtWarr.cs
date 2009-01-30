@@ -536,6 +536,10 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsEnchants.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsEnchants.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
+            if (statsTotal.GreatnessProc > 0)
+            {
+                statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
+            }
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsEnchants.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += statsTotal.Stamina * 10f;
