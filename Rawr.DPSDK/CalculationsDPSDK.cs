@@ -743,7 +743,7 @@ namespace Rawr.DPSDK
                     dpsScourgeStrike = SSDmg / SSCD;
                     float SSCritDmgMult = 1f + (.15f * (float)talents.ViciousStrikes);
                     float SSCrit = 1f + ((physCrits + (.03f * (float)talents.ViciousStrikes) + (numt7 > 1 ? .05f : 0)) * SSCritDmgMult);
-                    dpsScourgeStrike += dpsScourgeStrike * SSCrit;
+                    dpsScourgeStrike = dpsScourgeStrike * SSCrit;
                 }
             }
             #endregion
@@ -767,7 +767,7 @@ namespace Rawr.DPSDK
                     dpsFrostStrike = FSDmg / FSCD;
                     float FSCritDmgMult = (.15f * (float)talents.GuileOfGorefiend);
                     float FSCrit = 1f + physCrits + addedCritFromKM;
-                    dpsFrostStrike += dpsFrostStrike * FSCrit;
+                    dpsFrostStrike += dpsFrostStrike * FSCrit * FSCritDmgMult;
                 }
             }
             #endregion
@@ -783,7 +783,7 @@ namespace Rawr.DPSDK
                     HBDmg *= 2 * (calcOpts.rotation.diseaseUptime / 100);
                     dpsHowlingBlast = HBDmg / HBCD;
                     float HBCrit = spellCrits + addedCritFromKM;
-                    dpsHowlingBlast += (dpsHowlingBlast * HBCritDmgMult) * HBCrit;
+                    dpsHowlingBlast = (dpsHowlingBlast * HBCritDmgMult) * HBCrit;
                 }
             }
             #endregion
@@ -805,7 +805,7 @@ namespace Rawr.DPSDK
                         (.03f * (float)talents.Subversion) +
                         (0.05f * (float)talents.Rime) +
                         (numt7 > 1 ? .05f : 0f)) * OblitCritDmgMult);
-                    dpsObliterate += dpsObliterate * OblitCrit;
+                    dpsObliterate = dpsObliterate * OblitCrit;
                     dpsObliterate *= (calcOpts.GlyphofOblit ? 1.2f : 1f);
                 }
             }
@@ -824,7 +824,7 @@ namespace Rawr.DPSDK
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                     BSCritDmgMult += (.15f * (float)talents.GuileOfGorefiend);
                     float BSCrit = 1f + ((physCrits + (.03f * (float)talents.Subversion)) * BSCritDmgMult);
-                    dpsBloodStrike += (dpsBloodStrike * BSCritDmgMult) * BSCrit;
+                    dpsBloodStrike = (dpsBloodStrike) * BSCrit;
 
                     dpsBloodStrike *= 1f + (.03f * (float)talents.BloodOfTheNorth);
                 }
@@ -845,7 +845,7 @@ namespace Rawr.DPSDK
                     //float HSCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
                     float HSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
                     float HSCrit = 1f + ((physCrits + (.03f * (float)talents.Subversion)) * HSCritDmgMult);
-                    dpsHeartStrike += (dpsHeartStrike * HSCritDmgMult) * HSCrit;
+                    dpsHeartStrike = (dpsHeartStrike) * HSCrit;
                 }
             }
             #endregion
