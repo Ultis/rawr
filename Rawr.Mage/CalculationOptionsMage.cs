@@ -62,6 +62,8 @@ namespace Rawr.Mage
         [XmlIgnore]
         public Rawr.Mage.SequenceReconstruction.Sequence SequenceReconstruction;
         [XmlIgnore]
+        public bool AdviseAdvancedSolver;
+        [XmlIgnore]
         public CharacterCalculationsMage Calculations;
 
         [XmlIgnore]

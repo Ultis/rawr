@@ -1183,6 +1183,11 @@ namespace Rawr.Mage
                             legendY += 16;
                         }
 
+                        if (calculationOptions.AdviseAdvancedSolver)
+                        {
+                            g.DrawString("Sequence Reconstruction was not fully successful, it is recommended that you enable advanced solver by using segment cooldowns and integral mana consumables options!", fontLegend, Brushes.Black, new RectangleF(5 + maxWidth, 40, width - maxWidth - 10, 100));
+                        }
+
                         g.DrawLine(Pens.Aqua, new Point(maxWidth + 40, 10), new Point(maxWidth + 80, 10));
                         g.DrawString("Mana", fontLegend, Brushes.Black, new Point(maxWidth + 90, 2));
                         g.DrawLine(Pens.Red, new Point(maxWidth + 40, 26), new Point(maxWidth + 80, 26));

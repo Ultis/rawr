@@ -151,6 +151,7 @@ namespace Rawr.Mage
         {
             CalculationOptions.SequenceReconstruction = null;
             CalculationOptions.Calculations = null;
+            CalculationOptions.AdviseAdvancedSolver = false;
             if (!CalculationOptions.ReconstructSequence) return "*Disabled";
             if (CalculationOptions.FightDuration > 900) return "*Unavailable";
 
@@ -266,6 +267,12 @@ namespace Rawr.Mage
             {
                 bestUnexplained = unexplained;
                 bestTiming = timing.ToString();
+            }
+
+            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana))
+            {
+                CalculationOptions.AdviseAdvancedSolver = true;
+                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns and integral mana consumables options!\r\n\r\n" + bestTiming.TrimStart('*');
             }
 
             return bestTiming;
