@@ -532,65 +532,6 @@ namespace Rawr.Mage
             double tps;
             calculationResult.SolutionVariable = new List<SolutionVariable>();
 
-            /*if (segmentCooldowns)
-            {
-                Dictionary<string, string> cycleDict = new Dictionary<string, string>();
-                double maxdps = 0;
-                double mindpm = double.PositiveInfinity;
-                double maxdpm = 0;
-                double[] spellControl = new double[46];
-                for (int control0 = 0; control0 < 3; control0++)
-                for (int control1 = 0; control1 < 3; control1++)
-                for (int control2 = 0; control2 < 2; control2++)
-                for (int control3 = 0; control3 < 2; control3++)
-                for (int control4 = 0; control4 < 3; control4++)
-                for (int control5 = 0; control5 < 3; control5++)
-                for (int control6 = 0; control6 < 3; control6++)
-                for (int control7 = 0; control7 < 3; control7++)
-                for (int control8 = 0; control8 < 3; control8++)
-                {
-                    for (int i = 0; i < 46; i++) spellControl[i] = 0;
-                    spellControl[0 + control0] = 1;
-                    spellControl[5 + control1] = 1;
-                    spellControl[11 + control2] = 1;
-                    spellControl[15 + control3] = 1;
-                    spellControl[19 + control4] = 1;
-                    spellControl[24 + control5] = 1;
-                    spellControl[30 + control6] = 1;
-                    spellControl[35 + control7] = 1;
-                    spellControl[41 + control8] = 1;
-                    GenericArcane generic = new GenericArcane(calculationResult.BaseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33], spellControl[34], spellControl[35], spellControl[36], spellControl[37], spellControl[38], spellControl[39], spellControl[40], spellControl[41], spellControl[42], spellControl[43], spellControl[44], spellControl[45]);
-                    //if (!cycleDict.ContainsKey(generic.SpellDistribution))
-                    //{
-                    //    //if (!(generic.SpellDistribution.Contains("AM0") || generic.SpellDistribution.Contains("AM1") || generic.SpellDistribution.Contains("AM2") || generic.SpellDistribution.Contains("AM3") || generic.SpellDistribution.Contains("Clip")))
-                    //    //{
-                    //    //    cycleDict.Add(generic.SpellDistribution, control0.ToString() + control1.ToString() + control2.ToString() + control3.ToString() + control4.ToString() + control5.ToString() + control6.ToString() + control7.ToString() + control8.ToString());
-                    //    //}
-                    //}
-                    // (cycledps - abdps) / (cyclemps - abmps)
-                    double dpm = (generic.DamagePerSecond - 4103.66748) / (generic.ManaPerSecond - 101.676247);
-                    if (generic.DamagePerSecond > maxdps)
-                    {
-                        maxdps = generic.DamagePerSecond;
-                    }
-                    if (dpm > 0 && dpm < mindpm && generic.ManaPerSecond < 100)
-                    {
-                        mindpm = dpm;
-                    }
-                    if (generic.DamagePerSecond > 4103.66748 && dpm > maxdpm)
-                    {
-                        maxdpm = dpm;
-                    }
-                }
-
-                //System.Diagnostics.Debug.WriteLine("Distinct Count: " + cycleDict.Keys.Count);
-                //System.Diagnostics.Debug.WriteLine("");
-                //foreach (KeyValuePair<string, string> kvp in cycleDict)
-                //{
-                //    System.Diagnostics.Debug.Write(kvp.Value + ":\r\n" + kvp.Key + "\r\n");
-                //}
-            }*/
-
             fixed (double* pRowScale = SolverLP.rowScale, pColumnScale = SolverLP.columnScale, pCost = LP._cost, pData = SparseMatrix.data, pValue = SparseMatrix.value)
             fixed (int* pRow = SparseMatrix.row, pCol = SparseMatrix.col)
             {
@@ -2330,15 +2271,14 @@ namespace Rawr.Mage
                             }
                             if (character.MageTalents.ArcaneEmpowerment > 0)
                             {
-                                list.Add(SpellId.ABABar);
+                                list.Add(SpellId.ABAM);
                                 if (character.MageTalents.MissileBarrage > 0)
                                 {
-                                    list.Add(SpellId.ABABar0C);
-                                    list.Add(SpellId.ABABar1C);
                                     list.Add(SpellId.ABABar0MBAM);
-                                    list.Add(SpellId.AB2ABar2MBAM);
-                                    list.Add(SpellId.AB2ABar2C);
-                                    list.Add(SpellId.AB2ABar3C);
+                                    list.Add(SpellId.ABABar1MBAM);
+                                    list.Add(SpellId.ABABar2MBAM);
+                                    list.Add(SpellId.ABABar2C);
+                                    list.Add(SpellId.ABABar3C);
                                     list.Add(SpellId.AB3ABar3C);
                                     list.Add(SpellId.ABSpam3C);
                                     list.Add(SpellId.ABSpam03C);
@@ -2352,14 +2292,13 @@ namespace Rawr.Mage
                                 list.Add(SpellId.ABABar0C);
                                 list.Add(SpellId.FB2ABar);
                                 list.Add(SpellId.FrB2ABar);
-                                list.Add(SpellId.ABABar);
+                                list.Add(SpellId.ABAM);
                                 if (character.MageTalents.MissileBarrage > 0)
                                 {
-                                    list.Add(SpellId.ABABar1C);
-                                    list.Add(SpellId.ABABar0MBAM);
-                                    list.Add(SpellId.AB2ABar2MBAM);
-                                    list.Add(SpellId.AB2ABar2C);
-                                    list.Add(SpellId.AB2ABar3C);
+                                    list.Add(SpellId.ABABar1MBAM);
+                                    list.Add(SpellId.ABABar2MBAM);
+                                    list.Add(SpellId.ABABar2C);
+                                    list.Add(SpellId.ABABar3C);
                                     list.Add(SpellId.AB3ABar3C);
                                     list.Add(SpellId.ABSpam3C);
                                     list.Add(SpellId.ABSpam03C);
@@ -2419,6 +2358,10 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam3C);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam03C);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam3MBAM);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar3C);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2C);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2MBAM);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar1MBAM);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

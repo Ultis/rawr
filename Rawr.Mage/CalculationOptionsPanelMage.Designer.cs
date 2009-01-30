@@ -248,6 +248,7 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2338,6 +2339,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.buttonComputeOptimalArcaneCycles);
             this.tabPage4.Controls.Add(this.label99);
             this.tabPage4.Controls.Add(this.checkBoxDebugCooldownSegmentation);
             this.tabPage4.Controls.Add(this.comboBoxMIPMethod);
@@ -2566,6 +2568,16 @@
             this.toolTipMage.AutoPopDelay = 15000;
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
+            // 
+            // buttonComputeOptimalArcaneCycles
+            // 
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 274);
+            this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
+            this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
+            this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
+            this.buttonComputeOptimalArcaneCycles.Text = "Compute Optimal Arcane Cycles";
+            this.buttonComputeOptimalArcaneCycles.UseVisualStyleBackColor = true;
+            this.buttonComputeOptimalArcaneCycles.Click += new System.EventHandler(this.buttonComputeOptimalArcaneCycles_Click);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2815,6 +2827,7 @@
         private System.Windows.Forms.Label label97;
         private System.Windows.Forms.Label label99;
         private System.Windows.Forms.CheckBox checkBoxDebugCooldownSegmentation;
+        private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
 
     }
 }
