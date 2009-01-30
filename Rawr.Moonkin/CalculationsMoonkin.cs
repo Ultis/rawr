@@ -298,6 +298,10 @@ namespace Rawr.Moonkin
             // Regen mechanic: mp5 +(0.04/0.07/0.10) * Int)
             statsTotal.Mp5 += (int)(statsTotal.Intellect * Math.Ceiling(character.DruidTalents.Dreamstate * 10 / 3.0f) / 100.0f);
 
+			// Astrylian: Adding Soul of the Dead support
+			// Averaging that it procs once every 60sec (ie, 15sec to get 4 crits)
+			statsTotal.Mp5 += statsTotal.ManaRestoreOnCrit_25_45 / 12f;
+
             // Hit rating
             // All spells: Hit% +(0.02 * Balance of Power)
             statsTotal.SpellHit += 0.02f * character.DruidTalents.BalanceOfPower;

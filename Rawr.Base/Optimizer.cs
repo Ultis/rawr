@@ -813,8 +813,9 @@ namespace Rawr
 
         Item[] metaGemItems;
         Item[] gemItems;
-        const int slotCount = 19;
-        int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
+		const int slotCount = 19;
+		const int characterSlotCount = 24;
+		int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
         int[] pairSlotMap;
         //SortedList<Item, bool> uniqueItems; not needed since we store the items themselves, we can just check Unique on the item
 		Item[] headItems, neckItems, shouldersItems, backItems, chestItems, wristItems, handsItems, waistItems,
@@ -1723,7 +1724,7 @@ namespace Rawr
                         }
                     }
 
-                    for (int slot = 0; slot < slotCount; slot++)
+					for (int slot = 0; slot < slotCount; slot++)
                     {
                         if (slotEnchants[slot] != null)
                         {
@@ -1915,7 +1916,7 @@ namespace Rawr
 
         private Character GeneratorBuildCharacter(GeneratorItemSelector itemSelector, GeneratorEnchantSelector enchantSelector)
 		{
-            Item[] item = new Item[slotCount];
+            Item[] item = new Item[characterSlotCount];
             Enchant[] enchant = new Enchant[slotCount];
             for (int slot = 0; slot < slotCount; slot++)
             {
@@ -1929,7 +1930,10 @@ namespace Rawr
                     GeneratorFillSlot(slot, item, enchant, itemSelector, enchantSelector);
                     GeneratorFillSlot(pairSlot, item, enchant, itemSelector, enchantSelector);
                 }
-            }
+			}
+			item[(int)Character.CharacterSlot.ExtraHandsSocket] = _character[Character.CharacterSlot.ExtraHandsSocket];
+			item[(int)Character.CharacterSlot.ExtraWaistSocket] = _character[Character.CharacterSlot.ExtraWaistSocket];
+			item[(int)Character.CharacterSlot.ExtraWristSocket] = _character[Character.CharacterSlot.ExtraWristSocket];
 
 			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2007,7 +2011,7 @@ namespace Rawr
         /// </summary>
         private Character GeneratorBuildSACharacter(Character parent)
         {
-            Item[] item = new Item[slotCount];
+            Item[] item = new Item[characterSlotCount];
             Enchant[] enchant = new Enchant[slotCount];
 
             for (int slot = 0; slot < slotCount; slot++)
@@ -2015,6 +2019,9 @@ namespace Rawr
                 item[slot] = parent[(Character.CharacterSlot)slot];
                 enchant[slot] = parent.GetEnchantBySlot((Character.CharacterSlot)slot);
             }
+			item[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+			item[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+			item[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
 
             double r = rand.NextDouble();
             bool successfull = false;
@@ -2129,7 +2136,7 @@ namespace Rawr
 
         private Character BuildReplaceGemMutantCharacter(Character parent, out bool successful)
         {
-            Item[] items = new Item[slotCount];
+            Item[] items = new Item[characterSlotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2148,8 +2155,11 @@ namespace Rawr
             items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
             items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
             items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
-            successful = false;
+			items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+			items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+			items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+			items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+			successful = false;
 
             // do the work
 
@@ -2228,7 +2238,7 @@ namespace Rawr
 
         private Character BuildSwapGemMutantCharacter(Character parent, out bool successful)
         {
-            Item[] items = new Item[slotCount];
+            Item[] items = new Item[characterSlotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2247,7 +2257,10 @@ namespace Rawr
             items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
             items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
             items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+			items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
+			items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+			items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+			items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
             successful = false;
 
             // do the work
