@@ -21,20 +21,20 @@ namespace Rawr.DPSDK
             cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
             cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Unholy.ToString());
 
-            txtBS.KeyPress += new KeyPressEventHandler(txtBS_KeyPress);
-            txtDC.KeyPress += new KeyPressEventHandler(txtDC_KeyPress);
-            txtDuration.KeyPress += new KeyPressEventHandler(txtDuration_KeyPress);
-            txtFS.KeyPress += new KeyPressEventHandler(txtFS_KeyPress);
-            txtHB.KeyPress += new KeyPressEventHandler(txtHB_KeyPress);
-            txtHS.KeyPress += new KeyPressEventHandler(txtHS_KeyPress);
-            txtIT.KeyPress += new KeyPressEventHandler(txtIT_KeyPress);
-            txtNumDisease.KeyPress += new KeyPressEventHandler(txtNumDisease_KeyPress);
-            txtOblit.KeyPress += new KeyPressEventHandler(txtOblit_KeyPress);
-            txtPS.KeyPress += new KeyPressEventHandler(txtPS_KeyPress);
-            txtSS.KeyPress += new KeyPressEventHandler(txtSS_KeyPress);
-            txtUB.KeyPress += new KeyPressEventHandler(txtUB_KeyPress);
-            txtUptime.KeyPress += new KeyPressEventHandler(txtUptime_KeyPress);
-            txtGargoyleDuration.KeyPress += new KeyPressEventHandler(txtGargoyleDuration_KeyPress);
+            txtBS.KeyUp += new KeyEventHandler(txtBS_KeyUp);
+            txtDC.KeyUp += new KeyEventHandler(txtDC_KeyUp);
+            txtDuration.KeyUp += new KeyEventHandler(txtDuration_KeyUp);
+            txtFS.KeyUp += new KeyEventHandler(txtFS_KeyUp);
+            txtHB.KeyUp += new KeyEventHandler(txtHB_KeyUp);
+            txtHS.KeyUp += new KeyEventHandler(txtHS_KeyUp);
+            txtIT.KeyUp += new KeyEventHandler(txtIT_KeyUp);
+            txtNumDisease.KeyUp += new KeyEventHandler(txtNumDisease_KeyUp);
+            txtOblit.KeyUp += new KeyEventHandler(txtOblit_KeyUp);
+            txtPS.KeyUp += new KeyEventHandler(txtPS_KeyUp);
+            txtSS.KeyUp += new KeyEventHandler(txtSS_KeyUp);
+            txtUB.KeyUp += new KeyEventHandler(txtUB_KeyUp);
+            txtUptime.KeyUp += new KeyEventHandler(txtUptime_KeyUp);
+            txtGargoyleDuration.KeyUp += new KeyEventHandler(txtGargoyleDuration_KeyUp);
         }
 
         private void loadCurRotation()
@@ -115,7 +115,7 @@ namespace Rawr.DPSDK
         {
             if (rbUnholy.Checked)
             {
-                lockTxt();
+                unLockTxt();
                 rotation.setRotation(Rotation.Type.Unholy);
                 loadCurRotation();
             }
@@ -125,7 +125,7 @@ namespace Rawr.DPSDK
         {
             if (rbFrost.Checked)
             {
-                lockTxt();
+                unLockTxt();
                 rotation.setRotation(Rotation.Type.Frost);
                 loadCurRotation();
             }
@@ -145,7 +145,7 @@ namespace Rawr.DPSDK
         {
             if (rbBlood.Checked)
             {
-                lockTxt();
+                unLockTxt();
                 rotation.setRotation(Rotation.Type.Blood);
                 loadCurRotation();
             }
@@ -153,7 +153,7 @@ namespace Rawr.DPSDK
 
         //text changes, commits VALID entries into memory
 
-        void txtDC_KeyPress(object sender, KeyPressEventArgs e)
+        void txtDC_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -164,11 +164,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.DeathCoil = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtBS_KeyPress(object sender, KeyPressEventArgs e)
+        void txtBS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -179,11 +180,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.BloodStrike = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtDuration_KeyPress(object sender, KeyPressEventArgs e)
+        void txtDuration_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -194,11 +196,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.curRotationDuration = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtFS_KeyPress(object sender, KeyPressEventArgs e)
+        void txtFS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -209,11 +212,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.FrostStrike = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtHB_KeyPress(object sender, KeyPressEventArgs e)
+        void txtHB_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -224,11 +228,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.HowlingBlast = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtHS_KeyPress(object sender, KeyPressEventArgs e)
+        void txtHS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -239,11 +244,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.HeartStrike = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtIT_KeyPress(object sender, KeyPressEventArgs e)
+        void txtIT_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -254,11 +260,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.IcyTouch = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtNumDisease_KeyPress(object sender, KeyPressEventArgs e)
+        void txtNumDisease_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -269,11 +276,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.numDisease = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtOblit_KeyPress(object sender, KeyPressEventArgs e)
+        void txtOblit_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -284,11 +292,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.Obliterate = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtPS_KeyPress(object sender, KeyPressEventArgs e)
+        void txtPS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -299,11 +308,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.PlagueStrike = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtSS_KeyPress(object sender, KeyPressEventArgs e)
+        void txtSS_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -314,11 +324,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.ScourgeStrike = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtUB_KeyPress(object sender, KeyPressEventArgs e)
+        void txtUB_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -329,11 +340,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.UnholyBlight = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtUptime_KeyPress(object sender, KeyPressEventArgs e)
+        void txtUptime_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -344,11 +356,12 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.diseaseUptime = 0f;
+                t.Text = "0";
             }
         }
 
-        void txtGargoyleDuration_KeyPress(object sender, KeyPressEventArgs e)
+        void txtGargoyleDuration_KeyUp(object sender, KeyEventArgs e)
         {
             TextBox t = (TextBox)sender;
             try
@@ -360,9 +373,9 @@ namespace Rawr.DPSDK
                 {
                     f = 0f;
                 }
-                else if (f > 60f)
+                else if (f > 30f)
                 {
-                    f = 60f;
+                    f = 30f;
                 }
                 t.Text = f.ToString();
 
@@ -370,7 +383,8 @@ namespace Rawr.DPSDK
             }
             catch
             {
-                t.Text = "";
+                rotation.GargoyleDuration = 0f;
+                t.Text = "0";
             }
         }
     }

@@ -30,7 +30,7 @@ namespace Rawr.DPSDK
         public float BloodStrike = 0f;
         public float HeartStrike = 0f;
         public float DancingRuneWeapon = 0f;
-        
+
         public enum Type
         {            
             Custom, Blood, Frost, Unholy
@@ -48,7 +48,7 @@ namespace Rawr.DPSDK
             {
                 case Type.Blood:
                     numDisease = 2f;
-                    diseaseUptime = 1f;
+                    diseaseUptime = 100f;
                     DeathCoil = 3f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
@@ -65,26 +65,26 @@ namespace Rawr.DPSDK
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Frost:
-                    numDisease = 2f;
-                    diseaseUptime = 1f;
+                    numDisease = 1f;
+                    diseaseUptime = 100f;
                     DeathCoil = 0f;
-                    IcyTouch = 2f;
-                    PlagueStrike = 2f;
+                    IcyTouch = 1f;
+                    PlagueStrike = 0f;
                     ScourgeStrike = 0f;
                     UnholyBlight = 0f;
                     FrostStrike = 3f;
-                    HowlingBlast = 1f;
-                    Obliterate = 3f;
-                    BloodStrike = 2f;
+                    HowlingBlast = 0f;
+                    Obliterate = 2f;
+                    BloodStrike = 1f;
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
-                    curRotationDuration = 20f;
+                    curRotationDuration = 10f;
                     GargoyleDuration = 0f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Unholy:
                     numDisease = 3f;
-                    diseaseUptime = 1f;
+                    diseaseUptime = 100f;
                     DeathCoil = 1f;
                     IcyTouch = 1f;
                     PlagueStrike = 1f;
@@ -97,7 +97,7 @@ namespace Rawr.DPSDK
                     HeartStrike = 0f;
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 20f;
-                    GargoyleDuration = 50f;
+                    GargoyleDuration = 30f;
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:
@@ -119,8 +119,6 @@ namespace Rawr.DPSDK
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
             }
-
-            avgDiseaseMult = numDisease * diseaseUptime;
         }
     }
 }

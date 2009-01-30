@@ -32,7 +32,7 @@ namespace Rawr.DPSDK
 
             #region Attack Speed
             {
-                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 3278f));
+                hastedSpeed = baseSpeed / (1f + (stats.HasteRating / 3278f) + stats.PhysicalHaste);
                 hastedSpeed /= 1f + .05f * (float)calcOpts.talents.ImprovedIcyTalons;
 
                 if (calcOpts.Bloodlust)

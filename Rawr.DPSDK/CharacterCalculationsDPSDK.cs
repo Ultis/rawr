@@ -229,6 +229,13 @@ namespace Rawr.DPSDK
             set { _dodgedOHAttacks = value; }
         }
 
+        private float _dodgedAttacks;
+        public float DodgedAttacks
+        {
+            get { return _dodgedAttacks; }
+            set { _dodgedAttacks = value; }
+        }
+
         private float _missedAttacks;
         public float MissedAttacks
         {
@@ -242,7 +249,12 @@ namespace Rawr.DPSDK
             get { return _enemyMitigation; }
             set { _enemyMitigation = value; }
         }
-
+        private float _effectiveArmor;
+        public float EffectiveArmor
+        {
+            get { return _effectiveArmor; }
+            set { _effectiveArmor = value; }
+        }
         private float _MHExpertise;
         public float MHExpertise
         {
@@ -283,34 +295,30 @@ namespace Rawr.DPSDK
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             float critRating = BasicStats.CritRating;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
+       /*     if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
                 critRating -= 3444f / 52f;
             if (ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack")))
-                critRating -= 22.08f * 5;
+                critRating -= 22.08f * 5;*/
 
             float hitRating = BasicStats.HitRating;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
-                hitRating -= 47.3077f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-                hitRating -= 15.769f;
+          /*  if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
+                hitRating -= 47.3077f;*/
+         /*   if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
+                hitRating -= 15.769f;*/
 
             float armorPenetration = BasicStats.ArmorPenetration;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")))
-                armorPenetration -= 610f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")))
-                armorPenetration -= 2600f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")))
-                armorPenetration -= 800f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
-                armorPenetration -= 2050f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")))
-                armorPenetration -= 1025f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")) ||
+                ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")) ||
+                ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
+                armorPenetration -= 3925f;
+            if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")) ||
+                ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) ||
+                ActiveBuffs.Contains(Buff.GetBuffByName("Sting")))
+                armorPenetration -= 1260f;
 
             float attackPower = BasicStats.AttackPower;
             if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
                 attackPower -= 110f * (1f + BasicStats.BonusAttackPowerMultiplier);
-
-            float effectiveArmor = 10557.5f / ((1f / EnemyMitigation) - 1f);
 
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("Health", BasicStats.Health.ToString("N0"));
@@ -318,18 +326,18 @@ namespace Rawr.DPSDK
             dictValues.Add("Agility", string.Format("{0:0}*Provides {1:P} crit chance", BasicStats.Agility, ( BasicStats.Agility / 6250f )));
             dictValues.Add("Attack Power", attackPower.ToString("N0"));
             dictValues.Add("Crit Rating", string.Format("{0:0}*Provides {1:P} crit chance", critRating, ( critRating / 4591f )));
-            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} miss chance", hitRating, ( hitRating / 3279f )));
+            dictValues.Add("Hit Rating", string.Format("{0:0}*Negates {1:P} melee miss / {2:P} spell miss", hitRating, (hitRating / 3279f), (hitRating / 2624)));
             dictValues.Add("Expertise", string.Format("{0:0} // {1:0}*Negates {2:P} / {3:P} dodge chance", MHExpertise, OHExpertise, (MHExpertise / 400), (OHExpertise / 400)));
             dictValues.Add("Haste Rating", string.Format("{0:0}*Increases attack speed by {1:P}", BasicStats.HasteRating, ( BasicStats.HasteRating / 3278f )));
-            dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
+            //dictValues.Add("Armor Penetration", armorPenetration.ToString("N0"));
             dictValues.Add("Armor", BasicStats.Armor.ToString("N0"));
 
 
             dictValues.Add("Weapon Damage", MHWeaponDamage.ToString("N2") + " / " + OHWeaponDamage.ToString("N2"));
             dictValues.Add("Attack Speed", MHAttackSpeed.ToString("N2") + " / " + OHAttackSpeed.ToString("N2"));
             dictValues.Add("Crit Chance", string.Format("{0:P}", CritChance));
-            dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedMHAttacks + DodgedOHAttacks, MissedAttacks));
-            dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, effectiveArmor));
+            dictValues.Add("Avoided Attacks", string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Enemy Mitigation", string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, EffectiveArmor));
 
             dictValues.Add("BCB", BCBDPS.ToString("N2"));
             dictValues.Add("Blood Plague", BloodPlagueDPS.ToString("N2"));

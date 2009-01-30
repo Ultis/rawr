@@ -87,7 +87,7 @@ namespace Rawr.DPSDK
                 Color.FromArgb(127,121,72,210), //Expertise Rating
                 Color.FromArgb(127,217,100,54), // Haste Rating
                 Color.FromArgb(127,210,72,195), // Armor Penetration
-                Color.FromArgb(127,206,189,191), // Spell Damage
+                // Color.FromArgb(127,206,189,191), // Spell Damage
             };
             Stats[] statsList = new Stats[] {
                 new Stats() { Strength = 10 },
@@ -97,8 +97,8 @@ namespace Rawr.DPSDK
                 new Stats() { HitRating = 10 },
                 new Stats() { ExpertiseRating = 10 },
                 new Stats() { HasteRating = 10 },
-                new Stats() { ArmorPenetration = 66.667f },
-                new Stats() { SpellPower = 11.17f },
+                new Stats() { ArmorPenetrationRating = 10 },
+                //new Stats() { SpellPower = 11.17f },
             };
 
             for (int index = 0; index < statsList.Length; index++)
@@ -335,8 +335,8 @@ namespace Rawr.DPSDK
             Blood, Unholy
         }
 
-        public int TargetLevel = 73;
-		public int BossArmor = 7700;
+        public int TargetLevel = 83;
+		public int BossArmor = 13083;
 		public int FightLength = 10;
 		public bool EnforceMetagemRequirements = false;
         public bool Bloodlust = false;
