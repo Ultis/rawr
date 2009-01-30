@@ -800,7 +800,7 @@ namespace Rawr.Mage
                 OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
             }*/
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime + baseStats.ManaRestoreOnCrit_25_45 * CritRate * HitProcs / CastTime + baseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + baseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + baseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + baseStats.ManaRestorePerCast * CastProcs / CastTime + baseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / HitProcs / CritRate / 0.25f) + baseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + baseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.WaterElemental)
             {
                 ManaRegenPerSecond += 0.002f * baseStats.Mana / 5.0f * mageTalents.ImprovedWaterElemental;
@@ -2123,7 +2123,7 @@ namespace Rawr.Mage
                 OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
             }
 
-            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 * CritProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {
@@ -8339,7 +8339,7 @@ namespace Rawr.Mage
             ThreatPerSecond = (KAB0 * AB0.CastTime * AB0.ThreatPerSecond + KABar0 * ABar0.CastTime * ABar0.ThreatPerSecond + KAM0 * AM0.CastTime * AM0.ThreatPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ThreatPerSecond + KAB1 * AB1.CastTime * AB1.ThreatPerSecond + KABar1 * ABar1.CastTime * ABar1.ThreatPerSecond + KAM1 * AM1.CastTime * AM1.ThreatPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ThreatPerSecond + KAB2 * AB2.CastTime * AB2.ThreatPerSecond + KABar2 * ABar2.CastTime * ABar2.ThreatPerSecond + KAM2 * AM2.CastTime * AM2.ThreatPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ThreatPerSecond + KAB3 * AB3.CastTime * AB3.ThreatPerSecond + KABar3 * ABar3.CastTime * ABar3.ThreatPerSecond + KAM3 * AM3.CastTime * AM3.ThreatPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ThreatPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ThreatPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ThreatPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ThreatPerSecond + KAM0C * AM0C.CastTime * AM0C.ThreatPerSecond + KAM1C * AM1C.CastTime * AM1C.ThreatPerSecond + KAM2C * AM2C.CastTime * AM2C.ThreatPerSecond + KAM3C * AM3C.CastTime * AM3C.ThreatPerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.ThreatPerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.ThreatPerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.ThreatPerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.ThreatPerSecond) / CastTime;
             ManaRegenPerSecond = (KAB0 * AB0.CastTime * AB0.ManaRegenPerSecond + KABar0 * ABar0.CastTime * ABar0.ManaRegenPerSecond + KAM0 * AM0.CastTime * AM0.ManaRegenPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ManaRegenPerSecond + KAB1 * AB1.CastTime * AB1.ManaRegenPerSecond + KABar1 * ABar1.CastTime * ABar1.ManaRegenPerSecond + KAM1 * AM1.CastTime * AM1.ManaRegenPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ManaRegenPerSecond + KAB2 * AB2.CastTime * AB2.ManaRegenPerSecond + KABar2 * ABar2.CastTime * ABar2.ManaRegenPerSecond + KAM2 * AM2.CastTime * AM2.ManaRegenPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ManaRegenPerSecond + KAB3 * AB3.CastTime * AB3.ManaRegenPerSecond + KABar3 * ABar3.CastTime * ABar3.ManaRegenPerSecond + KAM3 * AM3.CastTime * AM3.ManaRegenPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ManaRegenPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ManaRegenPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ManaRegenPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ManaRegenPerSecond + KAM0C * AM0C.CastTime * AM0C.ManaRegenPerSecond + KAM1C * AM1C.CastTime * AM1C.ManaRegenPerSecond + KAM2C * AM2C.CastTime * AM2C.ManaRegenPerSecond + KAM3C * AM3C.CastTime * AM3C.ManaRegenPerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.ManaRegenPerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.ManaRegenPerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.ManaRegenPerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.ManaRegenPerSecond) / CastTime;
 
-            /*StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             AppendFormat(sb, "AB0:\t{0:F}%\r\n", 100.0 * (S00 * X00 + S01 * X20 + S02 * X30));
             AppendFormat(sb, "ABar0:\t{0:F}%\r\n", 100.0 * (S00 * X01));
             AppendFormat(sb, "AM0:\t{0:F}%\r\n", 100.0 * (S00 * X02 + S01 * X22));
@@ -8376,7 +8376,7 @@ namespace Rawr.Mage
             AppendFormat(sb, "MBAMABar3:\t{0:F}%\r\n", 100.0 * (S31 * X73 + S31 * X75 + S32 * X83));
             AppendFormat(sb, "MBAMABarClip3:\t{0:F}%\r\n", 100.0 * (S31 * X74 + S32 * X84));
 
-            SpellDistribution = sb.ToString();*/
+            SpellDistribution = sb.ToString();
         }
 
         private SpellCycle commonChain;
