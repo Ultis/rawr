@@ -187,7 +187,7 @@ Here's a quick rundown of the status of each model:
 							latestVersion), "New Version Released!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 						if (result == DialogResult.Yes)
 						{
-							Help.ShowHelp(null, "http://www.codeplex.com/Rawr");
+							Help.ShowHelp(null, "http://rawr.codeplex.com/");
 						}
 					}
 				}
@@ -1453,7 +1453,7 @@ Here's a quick rundown of the status of each model:
 
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (item.Slot == Item.ItemSlot.TwoHand)
+					if (item.Slot == Item.ItemSlot.Trinket)
 					{
 						ItemCache.DeleteItem(item, false);
 						Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
@@ -1463,53 +1463,53 @@ Here's a quick rundown of the status of each model:
 							ItemCache.AddItem(item, true, false);
 							continue;
 						}
-						float dps = 0f;
-						if (newItem.Quality == Item.ItemQuality.Epic)
-							switch (newItem.ItemLevel)
-							{
-								case 226: dps = 222.9f; break;
-								case 213: dps = 203.7f; break;
-								case 200: dps = 186.6f; break;
-								case 154: dps = 140.3f; break;
-								case 146: dps = 134.1f; break;
-								case 141: dps = 130.4f; break;
-								case 136: dps = 126.9f; break;
-								case 134: dps = 125.5f; break;
-								case 132: dps = 124.3f; break;
-								case 125: dps = 119.9f; break;
-								case 123: dps = 118.6f; break;
-								case 120: dps = 116.9f; break;
-								case 115: dps = 114.1f; break;
-								case 107: dps = 109.6f; break;
-								case 105: dps = 108.5f; break;
-								case 100: dps = 105.7f; break;
-								default:
-									dps = 0f;
-									break;
-							}
-						if (newItem.Quality == Item.ItemQuality.Rare)
-							switch (newItem.ItemLevel)
-							{
-								case 200: dps = 169.2f; break;
-								case 187: dps = 156.1f; break;
-								case 179: dps = 148.8f; break;
-								case 175: dps = 145.1f; break;
-								case 159: dps = 132.5f; break;
-								case 158: dps = 113.9f; break;
-								case 155: dps = 129.7f; break;
-								case 146: dps = 123.7f; break;
-								case 138: dps = 118.6f; break;
-								case 115: dps = 93.2f; break;
-								case 112: dps = 90.3f; break;
-								case 109: dps = 87.3f; break;
-								case 103: dps = 81.5f; break;
-								case 100: dps = 78.6f; break;
-								default:
-									dps = 0f;
-									break;
-							}
-						if (newItem.DPS + 10f < dps)
-							newItem.MinDamage = newItem.MaxDamage = (int)Math.Round(dps * newItem.Speed);
+						//float dps = 0f;
+						//if (newItem.Quality == Item.ItemQuality.Epic)
+						//    switch (newItem.ItemLevel)
+						//    {
+						//        case 226: dps = 222.9f; break;
+						//        case 213: dps = 203.7f; break;
+						//        case 200: dps = 186.6f; break;
+						//        case 154: dps = 140.3f; break;
+						//        case 146: dps = 134.1f; break;
+						//        case 141: dps = 130.4f; break;
+						//        case 136: dps = 126.9f; break;
+						//        case 134: dps = 125.5f; break;
+						//        case 132: dps = 124.3f; break;
+						//        case 125: dps = 119.9f; break;
+						//        case 123: dps = 118.6f; break;
+						//        case 120: dps = 116.9f; break;
+						//        case 115: dps = 114.1f; break;
+						//        case 107: dps = 109.6f; break;
+						//        case 105: dps = 108.5f; break;
+						//        case 100: dps = 105.7f; break;
+						//        default:
+						//            dps = 0f;
+						//            break;
+						//    }
+						//if (newItem.Quality == Item.ItemQuality.Rare)
+						//    switch (newItem.ItemLevel)
+						//    {
+						//        case 200: dps = 169.2f; break;
+						//        case 187: dps = 156.1f; break;
+						//        case 179: dps = 148.8f; break;
+						//        case 175: dps = 145.1f; break;
+						//        case 159: dps = 132.5f; break;
+						//        case 158: dps = 113.9f; break;
+						//        case 155: dps = 129.7f; break;
+						//        case 146: dps = 123.7f; break;
+						//        case 138: dps = 118.6f; break;
+						//        case 115: dps = 93.2f; break;
+						//        case 112: dps = 90.3f; break;
+						//        case 109: dps = 87.3f; break;
+						//        case 103: dps = 81.5f; break;
+						//        case 100: dps = 78.6f; break;
+						//        default:
+						//            dps = 0f;
+						//            break;
+						//    }
+						//if (newItem.DPS + 10f < dps)
+						//    newItem.MinDamage = newItem.MaxDamage = (int)Math.Round(dps * newItem.Speed);
 					}
 				}
 
@@ -1666,6 +1666,16 @@ Here's a quick rundown of the status of each model:
             }
             return character;
         }
+
+		private void rawrWebsiteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Help.ShowHelp(null, "http://rawr.codeplex.com/");
+		}
+
+		private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Help.ShowHelp(null, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
+		}
 
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)

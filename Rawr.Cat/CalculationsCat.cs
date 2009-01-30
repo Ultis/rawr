@@ -211,7 +211,8 @@ namespace Rawr.Cat
 			float glanceMultiplier = .7f;
 			float chanceAvoided = chanceMiss + chanceDodge;
 			float chanceGlance = 0.24f;
-			float chanceCrit = (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit;
+			float chanceCrit = (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+				- (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
 			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
 			float chanceNonAvoided = 1f - chanceAvoided;
@@ -938,6 +939,7 @@ namespace Rawr.Cat
 					MongooseProc = stats.MongooseProc,
 					BerserkingProc = stats.BerserkingProc,
 					BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
+					PhysicalCrit = stats.PhysicalCrit,
 
 					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,
@@ -957,7 +959,7 @@ namespace Rawr.Cat
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc +
+			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.PhysicalCrit +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +

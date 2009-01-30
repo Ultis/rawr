@@ -365,8 +365,8 @@ the Threat Scale defined on the Options tab.",
             float glanceMultiplier = .7f;
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
-			float chanceCrit = Math.Min(0.75f, 
-				(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit);
+			float chanceCrit = Math.Min(0.75f, (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+				stats.PhysicalCrit) - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 
             calculatedStats.DodgedAttacks = chanceDodge * 100;
             calculatedStats.ParriedAttacks = chanceParry * 100;
@@ -1218,6 +1218,7 @@ the Threat Scale defined on the Options tab.",
 				FrostResistanceBuff = stats.FrostResistanceBuff,
 				ShadowResistanceBuff = stats.ShadowResistanceBuff,
 				MongooseProc = stats.MongooseProc,
+				PhysicalCrit = stats.PhysicalCrit,
 
                 Strength = stats.Strength,
                 AttackPower = stats.AttackPower,
@@ -1249,7 +1250,7 @@ the Threat Scale defined on the Options tab.",
 				stats.Miss + stats.Resilience + stats.Stamina + stats.TerrorProc + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-				stats.NatureResistanceBuff + stats.FireResistanceBuff +
+				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
 				stats.ArmorPenetrationRating + stats.PhysicalHaste + stats.MongooseProc
                  + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating

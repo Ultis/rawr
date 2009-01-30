@@ -130,8 +130,8 @@ namespace Rawr
 			this.currentGearEnchantsBuffsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.directUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparatorRelativeStats = new System.Windows.Forms.ToolStripSeparator();
-            this.relativeStatValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.relativeStatValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparatorRelativeStats = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
 			this.toolStripDropDownButtonSort = new System.Windows.Forms.ToolStripDropDownButton();
 			this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -179,6 +179,9 @@ namespace Rawr
 			this.updateItemCacheWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.rawrWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -1340,19 +1343,19 @@ namespace Rawr
 			// 
 			this.toolStripSeparator9.Name = "toolStripSeparator9";
 			this.toolStripSeparator9.Size = new System.Drawing.Size(223, 6);
-            //
-            // toolStripSeparator12
-            //
-            this.toolStripSeparatorRelativeStats.Name = "toolStripSeparator12";
-            this.toolStripSeparatorRelativeStats.Size = new System.Drawing.Size(223, 6);
-            //
-            // relativeStatValuesToolStripMenuItem
-            //
-            this.relativeStatValuesToolStripMenuItem.Name = "relativeStatValuesToolStripMenuItem";
-            this.relativeStatValuesToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.relativeStatValuesToolStripMenuItem.Tag = "Relative Stat Values";
-            this.relativeStatValuesToolStripMenuItem.Text = "Relative Stat Values";
-            this.relativeStatValuesToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// relativeStatValuesToolStripMenuItem
+			// 
+			this.relativeStatValuesToolStripMenuItem.Name = "relativeStatValuesToolStripMenuItem";
+			this.relativeStatValuesToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+			this.relativeStatValuesToolStripMenuItem.Tag = "Relative Stat Values";
+			this.relativeStatValuesToolStripMenuItem.Text = "Relative Stat Values";
+			this.relativeStatValuesToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+			// 
+			// toolStripSeparatorRelativeStats
+			// 
+			this.toolStripSeparatorRelativeStats.Name = "toolStripSeparatorRelativeStats";
+			this.toolStripSeparatorRelativeStats.Size = new System.Drawing.Size(223, 6);
 			// 
 			// toolStripLabel2
 			// 
@@ -1455,7 +1458,8 @@ namespace Rawr
 			this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
-            this.toolsToolStripMenuItem});
+            this.toolsToolStripMenuItem,
+            this.helpToolStripMenuItem});
 			this.menuStripMain.Location = new System.Drawing.Point(0, 0);
 			this.menuStripMain.Name = "menuStripMain";
 			this.menuStripMain.Size = new System.Drawing.Size(888, 24);
@@ -1576,20 +1580,20 @@ namespace Rawr
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
 			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			// 
 			// redoToolStripMenuItem
 			// 
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
 			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.redoToolStripMenuItem.Text = "&Redo";
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
 			// 
 			// cutToolStripMenuItem
 			// 
@@ -1597,7 +1601,7 @@ namespace Rawr
 			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
 			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.cutToolStripMenuItem.Text = "Cu&t";
 			// 
 			// copyToolStripMenuItem
@@ -1606,7 +1610,7 @@ namespace Rawr
 			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
 			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.copyToolStripMenuItem.Text = "&Copy";
 			// 
 			// pasteToolStripMenuItem
@@ -1615,18 +1619,18 @@ namespace Rawr
 			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
 			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.pasteToolStripMenuItem.Text = "&Paste";
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(149, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
 			// 
 			// selectAllToolStripMenuItem
 			// 
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
 			this.selectAllToolStripMenuItem.Text = "Select &All";
 			// 
 			// toolsToolStripMenuItem
@@ -1757,6 +1761,29 @@ namespace Rawr
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
 			this.optionsToolStripMenuItem.Text = "Options...";
 			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rawrWebsiteToolStripMenuItem,
+            this.donateToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.helpToolStripMenuItem.Text = "&Help";
+			// 
+			// rawrWebsiteToolStripMenuItem
+			// 
+			this.rawrWebsiteToolStripMenuItem.Name = "rawrWebsiteToolStripMenuItem";
+			this.rawrWebsiteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.rawrWebsiteToolStripMenuItem.Text = "Rawr Website...";
+			this.rawrWebsiteToolStripMenuItem.Click += new System.EventHandler(this.rawrWebsiteToolStripMenuItem_Click);
+			// 
+			// donateToolStripMenuItem
+			// 
+			this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
+			this.donateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.donateToolStripMenuItem.Text = "Donate...";
+			this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -1946,6 +1973,9 @@ namespace Rawr
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem rawrWebsiteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         
     }
 }
