@@ -220,7 +220,7 @@ namespace Rawr.Mage
                 }
                 else if (Character.MageTalents.SpellPower > 0)
                 {
-                    Spell s = BaseState.GetSpell(SpellId.ABABar0C);
+                    Spell s = BaseState.GetSpell(SpellId.AB3ABar3C);
                     manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
                 }
 

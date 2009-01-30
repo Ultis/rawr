@@ -3109,7 +3109,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ABABar0C);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
             if (icyVeinsAvailable)
@@ -3369,7 +3369,7 @@ namespace Rawr.Mage
             }
             else if (character.MageTalents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ABABar0C);
+                Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
 

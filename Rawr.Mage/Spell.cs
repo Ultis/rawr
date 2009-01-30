@@ -528,7 +528,7 @@ namespace Rawr.Mage
                 return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
         }
 
-        protected void CalculateDerivedStats(CastingState castingState)
+        protected void CalculateDerivedStats(CastingState castingState, bool outOfFiveSecondRule)
         {
             CastingSpeed = castingState.CastingSpeed;
 
@@ -784,16 +784,17 @@ namespace Rawr.Mage
                 OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance, Name, casttimeHash);
             }*/
 
-            float OO5SR;
+            float OO5SR = 0;
 
-            if (Cost > 0)
-            {
-                OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
-            }
-            else
+            if (outOfFiveSecondRule)
             {
                 OO5SR = 1;
             }
+
+            /*if (Cost > 0)
+            {
+                OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
+            }*/
 
             ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritRate * HitProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
             if (castingState.WaterElemental)
@@ -979,7 +980,7 @@ namespace Rawr.Mage
                     SpellModifier *= (1 + castingState.BaseStats.BonusShadowDamageMultiplier);
                     break;
             }
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, true);
         }
     }
 
@@ -1017,7 +1018,7 @@ namespace Rawr.Mage
             Cooldown -= 1.0f * castingState.MageTalents.ImprovedFireBlast;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1063,7 +1064,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1095,7 +1096,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             AoeDamageCap = 37500;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames ;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1125,7 +1126,7 @@ namespace Rawr.Mage
             : base("Conjure Mana Gem", false, false, false, false, 30, 3, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions), 0, 1)
         {
             base.Calculate(castingState);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1162,7 +1163,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             //Cooldown -= 2 * castingState.CalculationOptions.ImprovedFrostNova;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1232,7 +1233,7 @@ namespace Rawr.Mage
                 float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
                 CritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1285,7 +1286,7 @@ namespace Rawr.Mage
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
             SpellModifier *= (1 + castingState.BaseStats.BonusMageNukeMultiplier);
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower) * (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1337,7 +1338,7 @@ namespace Rawr.Mage
                 float fof = (castingState.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * castingState.MageTalents.FingersOfFrost);
                 CritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
             }
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1376,7 +1377,7 @@ namespace Rawr.Mage
             SpammedDot = false;
             DotDuration = 12;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1412,7 +1413,7 @@ namespace Rawr.Mage
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             SpellModifier /= (1 + 0.02f * castingState.MageTalents.FirePower); // Living Bomb dot does not benefit from Fire Power
             DirectDamageModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1443,7 +1444,7 @@ namespace Rawr.Mage
             : base("Slow", false, false, true, false, 30, 0f, 0, MagicSchool.Arcane, GetMaxRankSpellData(castingState.CalculationOptions))
         {
             Calculate(castingState);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1484,7 +1485,7 @@ namespace Rawr.Mage
             int ImprovedConeOfCold = castingState.MageTalents.ImprovedConeOfCold;
             SpellModifier *= (1 + ((ImprovedConeOfCold > 0) ? (0.05f + 0.1f * ImprovedConeOfCold) : 0)) * (1 + 0.02f * castingState.MageTalents.SpellImpact);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1516,7 +1517,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             if (castingState.Frozen) SpellModifier *= 3;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1547,7 +1548,7 @@ namespace Rawr.Mage
         {
             Calculate(castingState);
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + (castingState.CalculationOptions.GlyphOfArcaneBlast ? 0.18f : 0.15f) * arcaneBlastDebuff);
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1628,7 +1629,7 @@ namespace Rawr.Mage
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime);
             SpellDamageCoefficient += 0.03f * castingState.MageTalents.ArcaneEmpowerment;
             CritRate += 0.02f * castingState.MageTalents.Incineration;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1797,7 +1798,7 @@ namespace Rawr.Mage
             }*/
             SpellModifier *= ticks / 5.0f;
             InterruptProtection += 0.2f * castingState.MageTalents.ArcaneStability;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1831,7 +1832,7 @@ namespace Rawr.Mage
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact);
             AoeDamageCap = 37500;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1865,7 +1866,7 @@ namespace Rawr.Mage
             AoeDamageCap = 37500;
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1898,7 +1899,7 @@ namespace Rawr.Mage
             base.Calculate(castingState);
             AoeDamageCap = 37500;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1938,7 +1939,7 @@ namespace Rawr.Mage
             }
             AoeDamageCap = 200000;
             CritRate += 0.02f * castingState.MageTalents.WorldInFlames;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1956,7 +1957,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1974,7 +1975,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -1992,7 +1993,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -2010,7 +2011,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
 
@@ -2028,7 +2029,7 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1)) * castingState.ResilienceCritDamageReduction;
-            CalculateDerivedStats(castingState);
+            CalculateDerivedStats(castingState, false);
         }
     }
     #endregion
@@ -2048,6 +2049,7 @@ namespace Rawr.Mage
         public float AverageThreat;
         public float Cost;
         public float SpellCount = 0;
+        public bool recalc5SR;
 
         private List<Spell> spellList;
         private FSRCalc fsr;
@@ -2055,18 +2057,32 @@ namespace Rawr.Mage
         public SpellCycle()
         {
             spellList = new List<Spell>();
-            fsr = new FSRCalc();
+            //fsr = new FSRCalc();
         }
 
         public SpellCycle(int capacity)
         {
             spellList = new List<Spell>(capacity);
-            fsr = new FSRCalc(capacity);
+            //fsr = new FSRCalc(capacity);
+        }
+
+        public SpellCycle(int capacity, bool recalcFiveSecondRule)
+        {
+            spellList = new List<Spell>(capacity);
+            recalc5SR = recalcFiveSecondRule;
+            if (recalc5SR)
+            {
+                fsr = new FSRCalc(capacity);
+            }
         }
 
         public void AddSpell(Spell spell, CastingState castingState)
         {
-            fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
+            if (recalc5SR)
+            {
+                fsr.AddSpell(spell.CastTime - castingState.Latency, castingState.Latency, spell.Channeled);
+            }
+            CastTime += spell.CastTime;
             HitProcs += spell.HitProcs;
             CastProcs += spell.CastProcs;
             CritProcs += spell.CritProcs;
@@ -2080,25 +2096,34 @@ namespace Rawr.Mage
 
         public void AddPause(float duration)
         {
-            fsr.AddPause(duration);
+            if (recalc5SR)
+            {
+                fsr.AddPause(duration);
+            }
+            CastTime += duration;
             spellList.Add(null);
         }
 
         public void Calculate(CastingState castingState)
         {
-            CastTime = fsr.Duration;
+            //CastTime = fsr.Duration;
 
             CostPerSecond = Cost / CastTime;
             DamagePerSecond = AverageDamage / CastTime;
             ThreatPerSecond = AverageThreat / CastTime;
 
-            float OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
+            float OO5SR = 0;
+
+            if (recalc5SR)
+            {
+                OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance);
+            }
 
             ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestorePerCrit * CritProcs / CastTime + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {
-                float averageCastTime = fsr.Duration / SpellCount;
+                float averageCastTime = CastTime / SpellCount;
                 float totalMana = castingState.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
                 ManaRegenPerSecond += totalMana / 20f;
             }
@@ -2212,7 +2237,7 @@ namespace Rawr.Mage
             if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to AB-AM
-                chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2, true);
                 chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
@@ -2226,7 +2251,7 @@ namespace Rawr.Mage
             else
             {
                 //AB-AM 0.85
-                chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2, true);
                 chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
@@ -2278,7 +2303,7 @@ namespace Rawr.Mage
             if (MB == 0.0)
             {
                 // if we don't have barrage then this degenerates to ABar-AM
-                chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2, true);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
@@ -2292,7 +2317,7 @@ namespace Rawr.Mage
             else
             {
                 //AB-AM 0.85
-                chain1 = new SpellCycle(2);
+                chain1 = new SpellCycle(2, true);
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
