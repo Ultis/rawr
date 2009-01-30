@@ -496,11 +496,11 @@ namespace Rawr
 				line = line.Substring(0, line.IndexOf(" mana"));
 				stats.Mp5 += int.Parse(line);
 			}
-			else if (line.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike.  When you reach 3 Electrical Charges, they will release, firing a Lightning Bolt for 694 to 806 damage.  Electrical Charge cannot be gained more often than once every 2.5 sec."))
+			else if (line.StartsWith("You gain an Electrical Charge each time you cause a damaging spell critical strike."))
 			{
 				stats.LightningCapacitorProc = 1;
 			}
-            else if (line.StartsWith("You gain a Thunder Charge each time you cause a damaging spell critical strike. When you reach 4 Thunder Charges, they will release, firing a Lightning Bolt for 1181 to 1371 damage. Thunder Charge cannot be gained more often than once every 2.5 sec."))
+            else if (line.StartsWith("You gain a Thunder Charge each time you cause a damaging spell critical strike."))
             {
                 // Thunder Capacitor
                 stats.ThunderCapacitorProc = 1;
@@ -788,7 +788,7 @@ namespace Rawr
                 // Dying Curse
                 stats.SpellPowerFor10SecOnCast_15_45 += 765;
             }
-            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
+            else if (line.StartsWith("Each time you cast a damaging or healing spell, there is chance you will gain up to 176 mana per 5 for 15 sec."))
             {
                 // Spark of Life
                 stats.ManaRestoreOnCast_10_45 += 176 * 3;
@@ -816,6 +816,7 @@ namespace Rawr
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {
                 // Soul of the Dead
+                // WARNING: Use ManaRestoreOnCrit_25 instead, someone changed something somewhere
                 stats.ManaRestorePerCrit += 0.25f * 900;
             }
             else if (line.StartsWith("Your harmful spells have a chance to strike your enemy, dealing 1168 to 1752 shadow damage."))
@@ -846,6 +847,27 @@ namespace Rawr
                     // lets say 60 seconds
                     stats.BonusHoTOnDirectHeals += hot / 60f;
                 }
+            }
+            else if (line.StartsWith("Increases spell power of Chain Lightning and Lightning Bolt by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases spell power of Chain Lightning and Lightning Bolt by ".Length);
+                stats.LightningSpellPower = float.Parse(line);
+            }
+            else if (line.StartsWith("Your Lightning Bolt spell has a chance to grant "))
+            {
+                Regex r = new Regex("Your Lightning Bolt spell has a chance to grant (?<haste>\\d*) haste rating for 10 sec.");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    stats.LightningBoltHasteProc_15_45 += (float)int.Parse(m.Groups["haste"].Value);
+                }
+            }
+            else if (line.StartsWith("Increases the damage dealt by your Lava Burst by "))
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
+                stats.LavaBurstBonus = float.Parse(line);
             }
         }
 
@@ -1038,6 +1060,6 @@ namespace Rawr
             {
                 stats.Heal1Min = 2710;
             }
-		}
+        }
 	}
 }

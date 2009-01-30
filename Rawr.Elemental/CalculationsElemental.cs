@@ -7,7 +7,6 @@ namespace Rawr.Elemental
 	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", Character.CharacterClass.Shaman)]
 	public class CalculationsElemental : CalculationsBase
 	{
-
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
@@ -28,9 +27,9 @@ namespace Rawr.Elemental
 			{
 				if (_characterDisplayCalculationLabels == null)
 					_characterDisplayCalculationLabels = new string[] {
-					"Summary:Overall Points*Sum of your DPS Points and Survivability Points",
-					"Summary:DPS Points*DPS Points is your theoretical DPS.",
-					"Summary:Sustainability Points*How long you can keep casting.",
+					"Summary:Overall Points*Sum of burst and sustained points",
+					"Summary:Burst Points*DPS until you go out of mana",
+					"Summary:Sustained Points*Total DPS of the fight",
 
 					"Basic Stats:Health",
                     "Basic Stats:Mana",
@@ -41,54 +40,16 @@ namespace Rawr.Elemental
 					"Basic Stats:Crit Rating",
                     "Basic Stats:Haste Rating",
 					"Basic Stats:Mana Regen",
-					
-					"Complex Stats:Crit Chance*General/Lightning Spells",
-                    "Complex Stats:Miss Chance",
-					
-					"Attacks:Lightning Bolt*Avg Dmg/Avg Crit",
-					"Attacks:Chain Lightning*Avg Dmg/Avg Crit",
-					"Attacks:Lava Burst*Avg Dmg/Avg Crit",
-                    "Attacks:Flame Shock(DD)*Avg Dmg/Avg Crit",
-					"Attacks:Flame Shock(DoT)",
 
-
-					"Rotation:Optimal",
-					"Rotation:Optimal DPS",
-					"Rotation:Custom DPS",
+                    "Attacks:Lightning Bolt",
+					"Attacks:Chain Lightning",
+					"Attacks:Lava Burst",
+					"Attacks:Lava Burst (FS)",
+                    "Attacks:Flame Shock",
+					
+					"Simulation:Simulation",
 				};
 				return _characterDisplayCalculationLabels;
-			}
-		}
-
-		private string[] _optimizableCalculationLabels = null;
-		public override string[] OptimizableCalculationLabels
-		{
-			get
-			{
-				if (_optimizableCalculationLabels == null)
-					_optimizableCalculationLabels = new string[] {
-					"Custom Rotation DPS",
-					"Health",
-                    "Nature Resist",
-                    "Fire Resist",
-                    "Frost Resist",
-                    "Shadow Resist",
-                    "Arcane Resist",
-					};
-				return _optimizableCalculationLabels;
-			}
-		}
-
-		private string[] _customChartNames = null;
-		public override string[] CustomChartNames
-		{
-			get
-			{
-				if (_customChartNames == null)
-					_customChartNames = new string[] {
-					"Relative Stat Values",
-					};
-				return _customChartNames;
 			}
 		}
 
@@ -100,8 +61,8 @@ namespace Rawr.Elemental
 				if (_subPointNameColors == null)
 				{
 					_subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-					_subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-					_subPointNameColors.Add("Sustainability", System.Drawing.Color.FromArgb(64, 128, 32));
+					_subPointNameColors.Add("Burst DPS", System.Drawing.Color.FromArgb(160, 0, 224));
+					_subPointNameColors.Add("Sustained DPS", System.Drawing.Color.FromArgb(64, 128, 32));
 				}
 				return _subPointNameColors;
 			}
@@ -139,6 +100,23 @@ namespace Rawr.Elemental
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationElemental(); }
 		public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
 
+        private string[] _customChartNames = null;
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                    _customChartNames = new string[] {
+					};
+                return _customChartNames;
+            }
+        }
+
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+            return new ComparisonCalculationBase[0];
+        }
+
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
 		{
 			System.Xml.Serialization.XmlSerializer serializer =
@@ -148,464 +126,283 @@ namespace Rawr.Elemental
 			return calcOpts;
 		}
 
-		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			//_cachedCharacter = character;
 			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 			if (calcOpts == null) calcOpts = new CalculationOptionsElemental();
-			int targetLevel = calcOpts.TargetLevel;
-            float CritDamage = 0f;
-            float LvBCritDamage = 0f;
 			Stats stats = GetCharacterStats(character, additionalItem);
+
 			CharacterCalculationsElemental calculatedStats = new CharacterCalculationsElemental();
 			calculatedStats.BasicStats = stats;
-			calculatedStats.TargetLevel = targetLevel;
+            calculatedStats.LocalCharacter = character;
+            calcOpts.calculatedStats = calculatedStats;
 
-            #region Spell Coefficients
-
-            float LightningBoltCoEff = (2.5f/3.5f);
-            float ChainLightningCoEff = 57.14f / 100f;
-            float FlameShockDDCoeff = 21.4f / 100f;
-            float FlameShockDoTCoeff = 10.0f / 100f;
-            float LavaBurstCoEff = (2.0f/3.5f);
-            float ThunderstormCoeff = 0.0f / 100f;
-
-            #endregion
-
-            #region Basic Chances and Constants
-
-            float BaseCrit = 2.2f;
-
-            float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
-            float hitBonus = stats.HitRating / 26.23199272f / 100f;
-
-			float chanceMiss = Math.Max(0f, 0.17f - hitBonus);
-			if ((targetLevel - 80f) < 3)
-			{
-				chanceMiss = Math.Max(0f, 0.04f + (0.01f * (targetLevel - 80f)) - hitBonus);
-			}
-
-			float chanceCrit = (stats.CritRating / 45.90598679f) + (stats.Intellect / 166.6666709f);
-
-			
-			#endregion
-
-			#region Attack Damages
-
-            float LightningBoltDamage = 807.0f;
-            float ChainLightningDamage = 1094.0f;
-            float LavaBurstDamage = 1230.0f;
-            float FlameShockDDDamage = 500.0f;
-            float FlameShockDoTDamage = 139.0f;
-
-			#endregion
-
-			#region Mana Costs
-			float LightningBoltManaRaw = 0.10f;
-            float ChainLightningManaRaw = 0.26f;
-            float LavaBurstManaRaw = 0.10f;
-            float FlameShockManaRaw = 0.17f;
-
-            #endregion
-
-			#region Rotations
-			ElementalRotationCalculator.ElementalRotationCalculation rotationCalculationDPS = new ElementalRotationCalculator.ElementalRotationCalculation();
-
-/*			StringBuilder rotations = new StringBuilder();
-			for (int roarCP = 1; roarCP < 6; roarCP++)
-				for (int useShred = 0; useShred < 2; useShred++)
-					for (int useRip = 0; useRip < 2; useRip++)
-						for (int useFerociousBite = 0; useFerociousBite < 2; useFerociousBite++)
-						{
-						}
-*/
-
-			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
-			#endregion
-
-
-            #region Display Stat Calculations
-            calculatedStats.CritChance = BaseCrit + chanceCrit + stats.BonusCritChance;
-            calculatedStats.LightningCritChance = calculatedStats.CritChance + (stats.BonusThunderCritChance * 100f);
-            calculatedStats.MissChance = (chanceMiss - stats.BonusShamanHit) * 100f;
-
-            calculatedStats.LBDamage = (LightningBoltDamage + (LightningBoltCoEff * stats.SpellPower)) * (1 + stats.BonusNatureDamageMultiplier);
-            calculatedStats.CLDamage = (ChainLightningDamage + (ChainLightningCoEff * stats.SpellPower)) * (1 + stats.BonusNatureDamageMultiplier);
-            calculatedStats.LvBDamage = (LavaBurstDamage + (LavaBurstCoEff * stats.SpellPower)) * (1 + stats.BonusFireDamageMultiplier + stats.BonusLavaBurstDamage);
-            calculatedStats.FSDDDamage = (FlameShockDDDamage + (FlameShockDDCoeff * stats.SpellPower)) * (1 + stats.BonusFireDamageMultiplier);
-            calculatedStats.FSDoTDamage = (FlameShockDoTDamage + (FlameShockDoTCoeff * stats.SpellPower)) * (1 + stats.BonusFireDamageMultiplier + stats.BonusFlameShockDoTDamage);
-
-
-
-            calculatedStats.CritLBDamage = calculatedStats.LBDamage;
-            calculatedStats.CritCLDamage = calculatedStats.CLDamage;
-            calculatedStats.CritLvBDamage = calculatedStats.LvBDamage;
-            calculatedStats.CritFSDDDamage = calculatedStats.FSDDDamage;
-
-			calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS;
-			calculatedStats.SustainabilityPoints = stats.Health / 100f;
-			calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SustainabilityPoints;
-
-            #endregion
+            Solver.solve(calculatedStats, calcOpts);
 
             return calculatedStats;
 			
 		}
 
-		public override Stats GetCharacterStats(Character character, Item additionalItem)
-		{
-            Stats statsRace; 
+        public Stats GetRaceStats(Character character)
+        {
+            Stats statsRace;
             switch (character.Race)
             {
+                // I know only the Str/Agi values for Draenei, just assuming the others are the same (should be close enough)
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 135, Intellect = 128, Spirit = 145 };
+                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 135, Intellect = 128, Spirit = 145 };
                     break;
                 case Character.CharacterRace.Orc:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 138, Intellect = 125, Spirit = 146 };
+                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 138, Intellect = 125, Spirit = 146 };
                     break;
                 case Character.CharacterRace.Tauren:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 138, Intellect = 126, Spirit = 145 };
+                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 138, Intellect = 126, Spirit = 145 };
                     statsRace.BonusHealthMultiplier = 0.05f;
                     break;
                 case Character.CharacterRace.Troll:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 137, Intellect = 124, Spirit = 144 };
+                    statsRace = new Stats() { Health = 6485, Mana = 4396, Strength = 121, Agility = 71, Stamina = 137, Intellect = 124, Spirit = 144 };
                     break;
-                default :
-                    statsRace = new Stats() { Health = 0, Mana = 0, Stamina = 0, Intellect = 0, Spirit = 0 };
+                default:
+                    statsRace = new Stats() { Health = 0, Mana = 0, Strength = 0, Agility = 0, Stamina = 0, Intellect = 0, Spirit = 0 };
                     break;
             }
+            return statsRace;
+        }
 
-
-
-			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
-			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
-
-			ShamanTalents talents = character.ShamanTalents;
-			Stats statsTalents = new Stats()
+        public Stats GetTalentStats(ShamanTalents talents)
+        {
+            Stats statsTalents = new Stats()
             {
                 #region Elemental
-                BonusFireDamageMultiplier = 0.01f * talents.Concussion,
-                BonusFrostDamageMultiplier = 0.01f * talents.Concussion,
-                BonusNatureDamageMultiplier = 0.01f * talents.Concussion,
-                BonusLavaBurstDamage = 0.02f * talents.CallOfFlame,
                 BonusSpellCritMultiplier = 0.20f * talents.ElementalFury,
-                BonusThunderCritChance = 0.05f * talents.CallOfThunder,
-                BonusShamanHit = 0.01f * talents.ElementalPrecision,
-                ThreatReductionMultiplier = 0.10f * talents.ElementalPrecision,
-                ManaRegenIntPer5 = 0.02f * talents.UnrelentingStorm,
-                ShamanCastTimeReduction = 0.1f * talents.LightningMastery,
-                LightningOverloadProc = 0.04f * talents.LightningOverload,
-                BonusLavaBurstCritDamage = 0f,
-                ChainLightningCooldownReduction = 0.5f * talents.StormEarthAndFire,
-                BonusFlameShockDoTDamage = 0.10f * talents.StormEarthAndFire,
+                SpellHit = 0.01f * talents.ElementalPrecision,
+                ManaRegenIntPer5 = 0.04f * talents.UnrelentingStorm,
                 #endregion
                 #region Enhancement
                 BonusIntellectMultiplier = 0.02f * talents.AncestralKnowledge,
-                BonusCritChance = 1.00f * talents.ThunderingStrikes,
+                BonusCritChance = 0.01f * talents.ThunderingStrikes,
                 BonusFlametongueDamage = 0.10f * talents.ElementalWeapons,
-                ShockManaCostReduction = 0.45f * talents.ShamanisticFocus,
+                SpellPowerFromAttackPowerPercentage = 0.1f * talents.MentalQuickness,
                 #endregion
+            };
+            return statsTalents;
+        }
 
-                
-			};
-
-            switch (talents.LavaFlows)
-            {
-                case 1:
-                    statsTalents.BonusLavaBurstCritDamage = 0.06f;
-                    break;
-                case 2:
-                    statsTalents.BonusLavaBurstCritDamage = 0.12f;
-                    break;
-                case 3:
-                    statsTalents.BonusLavaBurstCritDamage = 0.24f;
-                    break;
-                default:
-                    statsTalents.BonusLavaBurstCritDamage = 0.0f;
-                    break;
-            }
+		public override Stats GetCharacterStats(Character character, Item additionalItem)
+		{
+            Stats statsRace = GetRaceStats(character);
+			Stats statsItems = GetItemStats(character, additionalItem);
+			Stats statsEnchants = GetEnchantsStats(character);
+			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsTalents = GetTalentStats(character.ShamanTalents);
 
 			Stats statsGearEnchantsBuffs = statsItems + statsEnchants + statsBuffs;
 
 			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 
-            statsRace.Intellect *= (1 + statsTalents.BonusIntellectMultiplier);
-            statsRace.Intellect = (int)statsRace.Intellect;
-            statsItems.Intellect *= (1 + statsTalents.BonusIntellectMultiplier);
-            statsItems.Intellect = (int)statsItems.Intellect;
-
-            statsRace.Stamina *= (1 + statsTalents.BonusStaminaMultiplier);
-            statsRace.Stamina = (int)statsRace.Stamina;
-            statsItems.Stamina *= (1 + statsTalents.BonusStaminaMultiplier);
-            statsItems.Stamina = (int)statsItems.Stamina;
-
 			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
 
-			statsTotal.Health += (statsTotal.Stamina * 10f) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f);
-            if (statsTotal.Intellect != 0)
+            statsTotal.Strength *= 1 + statsTotal.BonusStrengthMultiplier;
+            statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
+            statsTotal.Stamina *= 1 + statsTotal.BonusStaminaMultiplier;
+            statsTotal.Intellect *= 1 + statsTotal.BonusIntellectMultiplier;
+            statsTotal.Spirit *= 1 + statsTotal.BonusSpiritMultiplier;
+
+            if (statsTotal.GreatnessProc > 0)
             {
-                statsTotal.Mana += ((statsTotal.Intellect - 20) * 15f) + 20;
+                if (statsTotal.Spirit > statsTotal.Intellect)
+                {
+                    statsTotal.Spirit += (statsTotal.GreatnessProc * 15f / 50f) * (1 + statsTotal.BonusSpiritMultiplier);
+                }
+                else
+                {
+                    statsTotal.Intellect += (statsTotal.GreatnessProc * 15f / 50f) * (1 + statsTotal.BonusIntellectMultiplier);
+                }
             }
-                    
-            statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
-			statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
-			statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
-			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
-			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
+            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength);
+            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Agility);
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.AttackPower * statsTotal.SpellPowerFromAttackPowerPercentage);
 
-			return statsTotal;
-		}
+            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
 
-		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-		{
-			switch (chartName)
-			{
-				case "Hit Test":
-					float dpsBaseHit = GetCharacterCalculations(character).OverallPoints;
-					float dps1 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBaseHit);
-					float dps2 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 2 } }).OverallPoints - dpsBaseHit);
-					float dps3 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 3 } }).OverallPoints - dpsBaseHit);
-					float dps4 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 4 } }).OverallPoints - dpsBaseHit);
-					float dps5 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 5 } }).OverallPoints - dpsBaseHit);
-					float dps10 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10 } }).OverallPoints - dpsBaseHit);
-					float dps15 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 15 } }).OverallPoints - dpsBaseHit);
-					float dps20 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 20 } }).OverallPoints - dpsBaseHit);
-					float dps25 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 25 } }).OverallPoints - dpsBaseHit);
-					float dps50 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 50 } }).OverallPoints - dpsBaseHit);
-					float dps75 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 75 } }).OverallPoints - dpsBaseHit);
-					float dps83 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 83 } }).OverallPoints - dpsBaseHit);
-					float dps100 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 100 } }).OverallPoints - dpsBaseHit);
-					float dps200 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 200 } }).OverallPoints - dpsBaseHit);
-					float dps300 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 300 } }).OverallPoints - dpsBaseHit);
-					float dps400 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 400 } }).OverallPoints - dpsBaseHit);
-					float dps500 = (GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 500 } }).OverallPoints - dpsBaseHit);
+            statsTotal.Health = (float)Math.Round((statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f)*(1+statsTotal.BonusHealthMultiplier));
+            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * statsTotal.ManaRegenIntPer5);
 
-					return new ComparisonCalculationBase[] { 
-						new ComparisonCalculationElemental() { Name = "dps1", OverallPoints = dps1, DPSPoints = dps1 },
-						new ComparisonCalculationElemental() { Name = "dps2", OverallPoints = dps2, DPSPoints = dps2 },
-						new ComparisonCalculationElemental() { Name = "dps3", OverallPoints = dps3, DPSPoints = dps3 },
-						new ComparisonCalculationElemental() { Name = "dps4", OverallPoints = dps4, DPSPoints = dps4 },
-						new ComparisonCalculationElemental() { Name = "dps5", OverallPoints = dps5, DPSPoints = dps5 },
-						new ComparisonCalculationElemental() { Name = "dps10", OverallPoints = dps10, DPSPoints = dps10 },
-						new ComparisonCalculationElemental() { Name = "dps15", OverallPoints = dps15, DPSPoints = dps15 },
-						new ComparisonCalculationElemental() { Name = "dps20", OverallPoints = dps20, DPSPoints = dps20 },
-						new ComparisonCalculationElemental() { Name = "dps25", OverallPoints = dps25, DPSPoints = dps25 },
-						new ComparisonCalculationElemental() { Name = "dps50", OverallPoints = dps50, DPSPoints = dps50 },
-						new ComparisonCalculationElemental() { Name = "dps75", OverallPoints = dps75, DPSPoints = dps75 },
-						new ComparisonCalculationElemental() { Name = "dps83", OverallPoints = dps83, DPSPoints = dps83 },
-						new ComparisonCalculationElemental() { Name = "dps100", OverallPoints = dps100, DPSPoints = dps100 },
-						new ComparisonCalculationElemental() { Name = "dps200", OverallPoints = dps200, DPSPoints = dps200 },
-						new ComparisonCalculationElemental() { Name = "dps300", OverallPoints = dps300, DPSPoints = dps300 },
-						new ComparisonCalculationElemental() { Name = "dps400", OverallPoints = dps400, DPSPoints = dps400 },
-						new ComparisonCalculationElemental() { Name = "dps500", OverallPoints = dps500, DPSPoints = dps500 },
-					};
-					
-					break;
+            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f;
+            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f;
+            statsTotal.PhysicalCrit += statsTotal.BonusCritChance;
+            statsTotal.SpellCrit += statsTotal.BonusCritChance;
+            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
+            statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
 
-				case "Relative Stat Values":
-					float dpsBase =		GetCharacterCalculations(character).OverallPoints;
-					//float dpsStr =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 10 } }).OverallPoints - dpsBase) / 10f;
-					//float dpsAgi =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }).OverallPoints - dpsBase) / 10f;
-					//float dpsAP  =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = 1 } }).OverallPoints - dpsBase) / 10f;
-					float dpsCrit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 1 } }).OverallPoints - dpsBase);
-					float dpsExp =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 1 } }).OverallPoints - dpsBase);
-					float dpsHaste =	(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 1 } }).OverallPoints - dpsBase);
-					float dpsHit =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 1 } }).OverallPoints - dpsBase);
-					float dpsDmg =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { WeaponDamage = 1 } }).OverallPoints - dpsBase);
-					float dpsPen =		(GetCharacterCalculations(character, new Item() { Stats = new Stats() { ArmorPenetration = 1 } }).OverallPoints - dpsBase);
+            statsTotal.SpellPower += 211; // Flametongue
+            if (calcOpts.glyphOfFlametongue) statsTotal.SpellCrit += .02f;
 
-					//Differential Calculations for Agi
-					float dpsAtAdd = dpsBase;
-					float agiToAdd = 0f;
-					while (dpsBase == dpsAtAdd && agiToAdd < 2)
-					{
-						agiToAdd += 0.01f;
-						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToAdd } }).OverallPoints;
-					}
-
-					float dpsAtSubtract = dpsBase;
-					float agiToSubtract = 0f;
-					while (dpsBase == dpsAtSubtract && agiToSubtract > -2)
-					{
-						agiToSubtract -= 0.01f;
-						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToSubtract } }).OverallPoints;
-					}
-					agiToSubtract += 0.01f;
-
-					ComparisonCalculationElemental comparisonAgi = new ComparisonCalculationElemental()
-					{
-						Name = "Agility",
-						OverallPoints = (dpsAtAdd - dpsBase) / (agiToAdd - agiToSubtract),
-						DPSPoints = (dpsAtAdd - dpsBase) / (agiToAdd - agiToSubtract),
-					};
-
-
-					//Differential Calculations for Str
-					dpsAtAdd = dpsBase;
-					float strToAdd = 0f;
-					while (dpsBase == dpsAtAdd && strToAdd < 2)
-					{
-						strToAdd += 0.01f;
-						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToAdd } }).OverallPoints;
-					}
-
-					dpsAtSubtract = dpsBase;
-					float strToSubtract = 0f;
-					while (dpsBase == dpsAtSubtract && strToSubtract > -2)
-					{
-						strToSubtract -= 0.01f;
-						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToSubtract } }).OverallPoints;
-					}
-					strToSubtract += 0.01f;
-
-					ComparisonCalculationElemental comparisonStr = new ComparisonCalculationElemental()
-					{
-						Name = "Strength",
-						OverallPoints = (dpsAtAdd - dpsBase) / (strToAdd - strToSubtract),
-						DPSPoints = (dpsAtAdd - dpsBase) / (strToAdd - strToSubtract),
-					};
-
-
-					//Differential Calculations for AP
-					dpsAtAdd = dpsBase;
-					float apToAdd = 0f;
-					while (dpsBase == dpsAtAdd && apToAdd < 2)
-					{
-						apToAdd += 0.01f;
-						dpsAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = apToAdd } }).OverallPoints;
-					}
-
-					dpsAtSubtract = dpsBase;
-					float apToSubtract = 0f;
-					while (dpsBase == dpsAtSubtract && apToSubtract > -2)
-					{
-						apToSubtract -= 0.01f;
-						dpsAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { AttackPower = apToSubtract } }).OverallPoints;
-					}
-					apToSubtract += 0.01f;
-
-					ComparisonCalculationElemental comparisonAP = new ComparisonCalculationElemental()
-					{
-						Name = "Attack Power",
-						OverallPoints = (dpsAtAdd - dpsBase) / (apToAdd - apToSubtract),
-						DPSPoints = (dpsAtAdd - dpsBase) / (apToAdd - apToSubtract),
-					};
-
-
-
-					return new ComparisonCalculationBase[] { 
-						comparisonAgi,
-						comparisonStr,
-						comparisonAP,
-						new ComparisonCalculationElemental() { Name = "Crit Rating", OverallPoints = dpsCrit, DPSPoints = dpsCrit },
-						new ComparisonCalculationElemental() { Name = "Haste Rating", OverallPoints = dpsHaste, DPSPoints = dpsHaste },
-						new ComparisonCalculationElemental() { Name = "Hit Rating", OverallPoints = dpsHit, DPSPoints = dpsHit },
-					};
-
-				default:
-					return new ComparisonCalculationBase[0];
-			}
+            return statsTotal;
 		}
 
 		public override bool IsItemRelevant(Item item)
 		{
-			if ((item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Totem) ||
-				(item.Slot == Item.ItemSlot.TwoHand && item.Stats.SpellPower < 100)) 
-				return false;
-			return base.IsItemRelevant(item);
+            if ((item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Totem))
+                return false;
+            return base.IsItemRelevant(item);
 		}
 
 		public override Stats GetRelevantStats(Stats stats)
 		{
 			return new Stats()
 				{
-                    AllResist = stats.AllResist,
-                    ArcaneResistance = stats.ArcaneResistance,
-                    FireResistance = stats.FireResistance,
-                    FrostResistance = stats.FrostResistance,
-                    NatureResistance = stats.NatureResistance,
-                    ShadowResistance = stats.ShadowResistance,
-                    Stamina = stats.Stamina,
-                    Intellect = stats.Intellect,
-                    Spirit = stats.Spirit,
-                    DodgeRating = stats.DodgeRating,
-                    Health = stats.Health,
-                    Mp5 = stats.Mp5,
-                    Resilience = stats.Resilience,
-                    CritRating = stats.CritRating,
-                    SpellPower = stats.SpellPower,
-                    HasteRating = stats.HasteRating,
-                    HitRating = stats.HitRating,
-                    BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                    BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
-                    BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                    BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-                    BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                    Mana = stats.Mana,
-                    SpellPenetration = stats.SpellPenetration,
-                    Armor = stats.Armor,
-                    Hp5 = stats.Hp5,
-                    SpellHit = stats.SpellHit,
-                    SpellCrit = stats.SpellCrit,
-                    SpellHaste = stats.SpellHaste,
-                    BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-                    BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                    BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
-                    LightningBoltDamageModifier = stats.LightningBoltDamageModifier,
-                    LightningBoltCostReduction = stats.LightningBoltCostReduction,
-                    BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
-                    ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
-                    SpellDamageFromIntellectPercentage = stats.SpellDamageFromIntellectPercentage,
-                    BonusManaPotion = stats.BonusManaPotion,
-                    ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
-                    ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                    InterruptProtection = stats.InterruptProtection,
-                    ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
-                    FireResistanceBuff = stats.FireResistanceBuff,
-                    FrostResistanceBuff = stats.FrostResistanceBuff,
-                    ShadowResistanceBuff = stats.ShadowResistanceBuff,
-                    NatureResistanceBuff = stats.NatureResistanceBuff,
-                    MovementSpeed = stats.MovementSpeed,
-                    CritBonusDamage = stats.CritBonusDamage,
-                    #region Trinkets
-                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
-                    ThunderCapacitorProc = stats.ThunderCapacitorProc,
-                    PVPTrinket = stats.PVPTrinket,
-                    SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
-                    ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
-                    SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                    SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
-                    SpellPowerFor6SecOnCrit = stats.SpellPowerFor6SecOnCrit,
-                    LightningCapacitorProc = stats.LightningCapacitorProc,
-                    SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
-                    HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                    Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
-                    HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
-                    SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
-                    ShatteredSunAcumenProc = stats.ShatteredSunAcumenProc,
-                    ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                    SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                    SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
-                    SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
-                    SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                    SpellHasteFor5SecOnCrit_50 = stats.SpellHasteFor5SecOnCrit_50,
-                    SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
-                    SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
-                    SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
-                    SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
-                    #endregion
+            #region Basic stats
+                Intellect = stats.Intellect,
+                Mana = stats.Mana,
+                Spirit= stats.Spirit,
+                SpellCrit = stats.SpellCrit,
+                SpellHit = stats.SpellHit,
+                SpellHaste = stats.SpellHaste,
+                SpellPower = stats.SpellPower,
+                CritRating = stats.CritRating,
+                HasteRating = stats.HasteRating,
+                HitRating = stats.HitRating,
+                SpellFireDamageRating = stats.SpellFireDamageRating,
+                SpellNatureDamageRating = stats.SpellNatureDamageRating,
+                SpellFrostDamageRating = stats.SpellFrostDamageRating,
+                Mp5 = stats.Mp5,
+            #endregion
+            #region Multipliers
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+            #endregion
+            #region Totems
+                LightningSpellPower = stats.LightningSpellPower,
+                LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
+                LavaBurstBonus = stats.LavaBurstBonus,
+            #endregion
+            #region Sets
+                LightningBoltCostReduction = stats.LightningBoltCostReduction,
+                LightningBoltDamageModifier = stats.LightningBoltDamageModifier,
+                BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
+            #endregion
+                #region Trinkets
+                SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
+                SpellPowerFor10SecOnResist = stats.SpellPowerFor10SecOnResist,
+                SpellPowerFor15SecOnCrit_20_45 = stats.SpellPowerFor15SecOnCrit_20_45,
+                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
+                SpellPowerFor15SecOnUse2Min = stats.SpellPowerFor15SecOnUse2Min,
+                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
+                SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
+                SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
+                SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
+                SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                SpellHasteFor6SecOnCast_15_45 = stats.SpellHasteFor6SecOnCast_15_45,
+                SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
+                BonusManaPotion = stats.BonusManaPotion,
+                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
+                Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
+                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
+                ManaRestoreOnCrit_25 = stats.ManaRestoreOnCrit_25,
+                ManaRestore5min = stats.ManaRestore5min,
+                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
+                ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
+                ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
+                PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                ThunderCapacitorProc = stats.ThunderCapacitorProc,
+                LightningCapacitorProc = stats.LightningCapacitorProc,
+                ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
+                ExtraSpiritWhileCasting = stats.ExtraSpiritWhileCasting,
+                SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
+                MementoProc = stats.MementoProc,
+                GreatnessProc = stats.GreatnessProc,
+                DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
+            #endregion
                 };
 		}
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-
-            float elementalStats = stats.Intellect + stats.CritRating + stats.SpellPower + stats.SpellFireDamageRating + stats.HasteRating + stats.HitRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpellPowerMultiplier + stats.SpellFrostDamageRating + stats.SpellPenetration + stats.Mana + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + stats.LightningCapacitorProc + stats.SpellPowerFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaRestoreFromBaseManaPerHit + stats.SpellPowerFor10SecOnHit_10_45 + stats.SpellPowerFor10SecOnResist + stats.SpellPowerFor15SecOnCrit_20_45 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellHasteFor5SecOnCrit_50 + stats.SpellHasteFor6SecOnCast_15_45 + stats.SpellHasteFor6SecOnHit_10_45 + stats.SpellPowerFor10SecOnCrit_20_45 + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.AllResist + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.HasteRatingFor20SecOnUse5Min + stats.SpellPowerFor15SecOnUse2Min + stats.ShatteredSunAcumenProc + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.PVPTrinket + stats.MovementSpeed + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellHit + stats.SpellHaste + stats.SpellPowerFor10SecOnCast_15_45 + stats.ManaRestoreOnCast_10_45 + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestorePerCrit + stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + stats.SpellPowerFor20SecOnUse5Min + stats.CritBonusDamage + stats.BonusLavaBurstCritDamage + stats.LightningBoltCostReduction + stats.LightningBoltDamageModifier;
-            float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + +stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Expertise + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.CatFormStrength;
-            return (elementalStats > 0 || ((stats.Health + stats.Stamina + stats.Armor) > 0 && ignoreStats == 0.0f));
+            float elementalStats = 0;
+            #region Basic stats
+            elementalStats +=
+                stats.Intellect +
+                stats.Mana +
+                stats.Spirit +
+                stats.SpellCrit +
+                stats.SpellHit +
+                stats.SpellHaste +
+                stats.SpellPower +
+                stats.CritRating +
+                stats.HasteRating +
+                stats.HitRating +
+                stats.SpellFireDamageRating +
+                stats.SpellNatureDamageRating +
+                stats.SpellFrostDamageRating +
+                stats.Mp5;
+            #endregion
+            #region Multipliers
+            elementalStats +=
+                stats.BonusIntellectMultiplier +
+                stats.BonusSpiritMultiplier +
+                stats.BonusSpellCritMultiplier +
+                stats.BonusSpellPowerMultiplier +
+                stats.BonusFireDamageMultiplier +
+                stats.BonusNatureDamageMultiplier +
+                stats.BonusFrostDamageMultiplier;
+            #endregion
+            #region Totems
+            elementalStats +=
+                stats.LightningSpellPower +
+                stats.LightningBoltHasteProc_15_45 +
+                stats.LavaBurstBonus;
+            #endregion
+            #region Sets
+            elementalStats += 
+                stats.BonusLavaBurstCritDamage +
+                stats.LightningBoltCostReduction +
+                stats.LightningBoltDamageModifier;
+            #endregion
+            #region Trinkets
+            elementalStats +=
+                stats.SpellPowerFor10SecOnResist +
+                stats.SpellPowerFor15SecOnCrit_20_45 +
+                stats.SpellPowerFor15SecOnUse90Sec +
+                stats.SpellPowerFor15SecOnUse2Min +
+                stats.SpellPowerFor20SecOnUse2Min +
+                stats.SpellPowerFor20SecOnUse5Min +
+                stats.SpellPowerFor10SecOnCrit_20_45 +
+                stats.SpellPowerFor10SecOnCast_15_45 +
+                stats.SpellPowerFor10SecOnCast_10_45 +
+                stats.SpellHasteFor10SecOnCast_10_45 +
+                stats.SpellHasteFor6SecOnCast_15_45 +
+                stats.SpellHasteFor6SecOnHit_10_45 +
+                stats.SpellPowerFor10SecOnHit_10_45 +
+                stats.BonusManaPotion +
+                stats.HasteRatingFor20SecOnUse5Min +
+                stats.Mp5OnCastFor20SecOnUse2Min +
+                stats.ManaRestoreOnCast_10_45 +
+                stats.ManaRestoreOnCrit_25 +
+                stats.ManaRestore5min +
+                stats.FullManaRegenFor15SecOnSpellcast +
+                stats.ManaregenOver20SecOnUse3Min +
+                stats.ManaregenOver20SecOnUse5Min +
+                stats.PendulumOfTelluricCurrentsProc +
+                stats.ThunderCapacitorProc +
+                stats.LightningCapacitorProc +
+                stats.ExtraSpiritWhileCasting +
+                stats.SpiritFor20SecOnUse2Min +
+                stats.MementoProc +
+                stats.DarkmoonCardDeathProc +
+                stats.ExtractOfNecromanticPowerProc +
+                stats.GreatnessProc;
+            #endregion
+            return (elementalStats > 0);
 
 		}
 	}
@@ -617,105 +414,84 @@ namespace Rawr.Elemental
 
         public Stats BasicStats { get; set; }
         public int TargetLevel { get; set; }
-        public float CritChance { get; set; }
-        public float LightningCritChance { get; set; }
-        public float MissChance { get; set; }
-        public float LBDamage { get; set; }
-        public float CLDamage { get; set; }
-        public float LvBDamage { get; set; }
-        public float FSDDDamage { get; set; }
-        public float FSDoTDamage { get; set; }
-        public float CritLBDamage { get; set; }
-        public float CritCLDamage { get; set; }
-        public float CritLvBDamage { get; set; }
-        public float CritFSDDDamage { get; set; }
 
-        public string Rotations { get; set; }
+        public Spell LightningBolt;
+        public Spell ChainLightning;
+        public Spell LavaBurstFS;
+        public Spell LavaBurst;
+        public Spell FlameShock;
 
+        public float ManaRegenInFSR;
+        public float ManaRegenOutFSR;
+        public float ReplenishMP5;
 
-        public ElementalRotationCalculator.ElementalRotationCalculation HighestDPSRotation { get; set; }
-        public ElementalRotationCalculator.ElementalRotationCalculation CustomRotation { get; set; }
+        public float TimeToOOM;
+        public float CastRegenFraction;
+        public float RotationDPS;
+        public float TotalDPS;
+        public float RotationMPS;
+        public float CastFraction;
+        public float CritFraction;
+        public float MissFraction;
 
-		private float _overallPoints = 0f;
-		public override float OverallPoints
-		{
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-		}
+        public Character LocalCharacter { get; set; }
 
-		private float[] _subPoints = new float[] { 0f, 0f };
-		public override float[] SubPoints
-		{
-			get { return _subPoints; }
-			set { _subPoints = value; }
-		}
+        private float _overallPoints = 0f;
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
 
-		public float DPSPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
 
-		public float SustainabilityPoints
-		{
-			get { return _subPoints[1]; }
-			set { _subPoints[1] = value; }
-		}
+        public float BurstPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
+
+        public float SustainedPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
 
         #endregion
-		
-		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-		{
-			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-			dictValues.Add("Overall Points", OverallPoints.ToString());
-			dictValues.Add("DPS Points", DPSPoints.ToString());
-            dictValues.Add("Sustainability Points", SustainabilityPoints.ToString());
-			
-			dictValues.Add("Health", BasicStats.Health.ToString());
-			dictValues.Add("Mana", BasicStats.Mana.ToString());
+
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> dictValues = new Dictionary<string, string>();
+
+            dictValues.Add("Overall Points", OverallPoints.ToString());
+            dictValues.Add("Burst Points", BurstPoints.ToString());
+            dictValues.Add("Sustained Points", SustainedPoints.ToString());
+
+            dictValues.Add("Health", BasicStats.Health.ToString());
+            dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-			dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
-			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
+            dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
             dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
-			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-			dictValues.Add("Mana Regen", BasicStats.ManaRestore5min.ToString());
-			
+            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+            dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString());
 
-			dictValues.Add("Crit Chance", CritChance.ToString() + "%/" + LightningCritChance.ToString() + "%");
-            dictValues.Add("Miss Chance", MissChance.ToString() + "%");
+            dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %");
+            dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %");
+            dictValues.Add("Lava Burst", Math.Round(LavaBurst.MinHit).ToString() + "-" + Math.Round(LavaBurst.MaxHit).ToString() + " / " + Math.Round(LavaBurst.MinCrit).ToString() + "-" + Math.Round(LavaBurst.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurst.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurst.MissChance, 2).ToString() + " %");
+            dictValues.Add("Lava Burst (FS)", Math.Round(LavaBurstFS.MinHit).ToString() + "-" + Math.Round(LavaBurstFS.MaxHit).ToString() + " / " + Math.Round(LavaBurstFS.MinCrit).ToString() + "-" + Math.Round(LavaBurstFS.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurstFS.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurstFS.MissChance, 2).ToString() + " %");
+            dictValues.Add("Flame Shock", Math.Round(FlameShock.MinHit).ToString() + "-" + Math.Round(FlameShock.MaxHit).ToString() + " / " + Math.Round(FlameShock.MinCrit).ToString() + "-" + Math.Round(FlameShock.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %");
 
-			
-			dictValues.Add("Lightning Bolt", LBDamage.ToString() + "/" + CritLBDamage.ToString());
-			dictValues.Add("Chain Lightning", CLDamage.ToString() + "/" + CritCLDamage.ToString());
-            dictValues.Add("Lava Burst", LvBDamage.ToString() + "/" + CritLvBDamage.ToString());
-            dictValues.Add("Flame Shock(DD)", FSDDDamage.ToString() + "/" + CritFSDDDamage.ToString());
-			dictValues.Add("Flame Shock(DoT)", FSDoTDamage.ToString());
+            dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n");
 
-
-
-
-            dictValues.Add("Optimal", "TODO");
-            dictValues.Add("Optimal DPS", "TODO");
-            dictValues.Add("Custom DPS", "TODO");
-			
-			return dictValues;
-		}
-
-		public override float GetOptimizableCalculationValue(string calculation)
-		{
-			switch (calculation)
-			{
-				case "Health": return BasicStats.Health;
-				case "Nature Resist": return BasicStats.NatureResistance;
-				case "Fire Resist": return BasicStats.FireResistance;
-				case "Frost Resist": return BasicStats.FrostResistance;
-				case "Shadow Resist": return BasicStats.ShadowResistance;
-				case "Arcane Resist": return BasicStats.ArcaneResistance;
-				case "Custom Rotation DPS": return CustomRotation.DPS;
-			}
-			return 0f;
-		}
+            return dictValues;
+        }
     }
 
 	public class ComparisonCalculationElemental : ComparisonCalculationBase
@@ -734,20 +510,26 @@ namespace Rawr.Elemental
 			set { _overallPoints = value; }
 		}
 
-		private float[] _subPoints = new float[] { 0f };
+		private float[] _subPoints = new float[] { 0f, 0f };
 		public override float[] SubPoints
 		{
 			get { return _subPoints; }
 			set { _subPoints = value; }
 		}
 
-		public float DPSPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
+        public float BurstPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
 
-		private Item _item = null;
+        public float SustainedPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
+
+        private Item _item = null;
 		public override Item Item
 		{
 			get { return _item; }
@@ -763,7 +545,14 @@ namespace Rawr.Elemental
 
 		public override string ToString()
 		{
-			return string.Format("{0}: ({1}O {2}DPS)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints));
+			return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
 		}
 	}
+    
+    public static class Constants
+    {
+        // Source: http://www.wowwiki.com/Base_mana
+        public static float BaseMana = 4396;
+        public static float HasteRatingToHaste = 3279f;
+    }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -85,27 +85,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculationOptionsPanelElemental.cs">
+    <Compile Include="ElementalSolver.cs" />
+    <Compile Include="OptionsPanelElemental.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CalculationOptionsPanelElemental.Designer.cs">
-      <DependentUpon>CalculationOptionsPanelElemental.cs</DependentUpon>
+    <Compile Include="OptionsPanelElemental.Designer.cs">
+      <DependentUpon>OptionsPanelElemental.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsElemental.cs" />
-    <Compile Include="ElementalRotationCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CalculationOptionsPanelElemental.resx">
-      <DependentUpon>CalculationOptionsPanelElemental.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="Spells.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{842B74C7-EE94-44D9-A02F-4074166EF506}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OptionsPanelElemental.resx">
+      <DependentUpon>OptionsPanelElemental.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

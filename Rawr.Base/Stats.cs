@@ -150,6 +150,7 @@ namespace Rawr
         SpellPowerFor6SecOnCrit,
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
+        SpellPowerFromAttackPowerPercentage,
         SpellDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
@@ -239,6 +240,9 @@ namespace Rawr
         ShockManaCostReduction,
 		LightningBoltDamageModifier,
 		LightningBoltCostReduction,
+        LightningSpellPower,
+        LightningBoltHasteProc_15_45,
+        LavaBurstBonus,
         #endregion
         #region Rawr.Healadin
         FlashOfLightSpellPower,
@@ -1339,6 +1343,13 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float SpellPowerFromAttackPowerPercentage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFromAttackPowerPercentage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Spell Power Increase for 6 sec on Crit")]
         public float SpellPowerFor6SecOnCrit
         {
@@ -2395,6 +2406,24 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier]; }
             set { _rawAdditiveData[(int)AdditiveStat.LightningBoltDamageModifier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LightningSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningSpellPower] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LightningBoltHasteProc_15_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LightningBoltHasteProc_15_45] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float LavaBurstBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus] = value; }
         }
 
         #endregion
