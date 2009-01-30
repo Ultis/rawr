@@ -829,7 +829,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Crit Rating")]
-        [Common]
+        [CommonStat]
         public float RangedCritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
@@ -858,7 +858,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Hit Rating")]
-        [Common]
+        [CommonStat]
         public float RangedHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
@@ -1012,7 +1012,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Haste Rating")]
-        [Common]
+        [CommonStat]
         public float RangedHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
