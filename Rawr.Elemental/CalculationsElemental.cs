@@ -44,7 +44,7 @@ namespace Rawr.Elemental
                     "Attacks:Lightning Bolt",
 					"Attacks:Chain Lightning",
 					"Attacks:Lava Burst",
-					"Attacks:Lava Burst (FS)",
+					//"Attacks:Lava Burst (FS)",
                     "Attacks:Flame Shock",
 					
 					"Simulation:Simulation",
@@ -221,14 +221,21 @@ namespace Rawr.Elemental
                 }
             }
 
-            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength);
-            statsTotal.AttackPower += (float)Math.Floor(statsTotal.Agility);
+            statsTotal.Strength = (float)Math.Floor(statsTotal.Strength);
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility);
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina);
+            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect);
+            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
+
+            statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + statsTotal.AttackPower * statsTotal.SpellPowerFromAttackPowerPercentage);
 
-            statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
+            statsTotal.Mana += Math.Max(0f, (statsTotal.Intellect - 20f) * 15f + 20f);
             statsTotal.Mana *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
 
-            statsTotal.Health = (float)Math.Round((statsTotal.Health + (statsTotal.Stamina - 20f) * 10f + 20f)*(1+statsTotal.BonusHealthMultiplier));
+            statsTotal.Health += Math.Max(0f, (statsTotal.Stamina - 20f) * 10f + 20f);
+            statsTotal.Health *= (float)Math.Round(1f + statsTotal.BonusManaMultiplier);
+
             statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * statsTotal.ManaRegenIntPer5);
 
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f;
@@ -485,7 +492,7 @@ namespace Rawr.Elemental
             dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %");
             dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %");
             dictValues.Add("Lava Burst", Math.Round(LavaBurst.MinHit).ToString() + "-" + Math.Round(LavaBurst.MaxHit).ToString() + " / " + Math.Round(LavaBurst.MinCrit).ToString() + "-" + Math.Round(LavaBurst.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurst.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurst.MissChance, 2).ToString() + " %");
-            dictValues.Add("Lava Burst (FS)", Math.Round(LavaBurstFS.MinHit).ToString() + "-" + Math.Round(LavaBurstFS.MaxHit).ToString() + " / " + Math.Round(LavaBurstFS.MinCrit).ToString() + "-" + Math.Round(LavaBurstFS.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurstFS.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurstFS.MissChance, 2).ToString() + " %");
+            //dictValues.Add("Lava Burst (FS)", Math.Round(LavaBurstFS.MinHit).ToString() + "-" + Math.Round(LavaBurstFS.MaxHit).ToString() + " / " + Math.Round(LavaBurstFS.MinCrit).ToString() + "-" + Math.Round(LavaBurstFS.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * LavaBurstFS.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurstFS.MissChance, 2).ToString() + " %");
             dictValues.Add("Flame Shock", Math.Round(FlameShock.MinHit).ToString() + "-" + Math.Round(FlameShock.MaxHit).ToString() + " / " + Math.Round(FlameShock.MinCrit).ToString() + "-" + Math.Round(FlameShock.MaxCrit).ToString() + "*Crit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %");
 
             dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n");

@@ -240,8 +240,7 @@ namespace Rawr.Elemental
             if (ecd + icd > FightDuration) return 0f;
             if (duration == 0)
             {
-                float activity = (float)Math.Floor(FightDuration / (ecd + icd))/* +
-                    Math.Min(Math.Max(0,(FightDuration % (ecd + icd)) - ecd), 0)*/;
+                float activity = (float)Math.Floor(FightDuration / (ecd + icd));
                 activity /= FightDuration;
                 return value * activity;
             }
