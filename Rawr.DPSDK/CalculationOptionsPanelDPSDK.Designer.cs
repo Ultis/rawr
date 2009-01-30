@@ -117,7 +117,7 @@
             0});
             this.nudTargetArmor.Location = new System.Drawing.Point(87, 43);
             this.nudTargetArmor.Maximum = new decimal(new int[] {
-            10000,
+            15000,
             0,
             0,
             0});
