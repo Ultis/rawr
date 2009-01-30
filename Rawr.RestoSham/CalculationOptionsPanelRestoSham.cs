@@ -16,18 +16,15 @@ namespace Rawr.RestoSham
     {
         private bool _bLoading = false;
 
-
         public CalculationOptionsPanelRestoSham()
         {
             InitializeComponent();
 
-            txtFightLength.Tag = new NumericField("FightLength", 1f, 60f, false);
+            txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
             txtOutsideFSR.Tag = new NumericField("OutsideFSRPct", 0f, 75f, true);
             txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 3000f, true);
-
         }
-
 
         protected override void LoadCalculationOptions()
         {
@@ -238,6 +235,29 @@ namespace Rawr.RestoSham
             }
         }
 
+        private void OnTrackBarScroll(object sender, EventArgs e)
+        {
+            TrackBar trackBar = sender as TrackBar;
+            if (trackBar.Tag == null)
+                return;
+
+            NumericField f = trackBar.Tag as NumericField;
+            if (trackBar.Value == 0 && !f.CanBeZero)
+            {
+                errorRestoSham.SetError(sender as Control, "Value cannot be zero.");
+                return;
+            }
+
+            if (trackBar.Value > f.MaxValue || trackBar.Value < f.MinValue)
+            {
+                string err = string.Format("Value must be between {0} and {1}.", f.MinValue, f.MaxValue);
+                errorRestoSham.SetError(sender as Control, err);
+                return;
+            }
+
+            this[f.PropertyName] = trackBar.Value;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
 
