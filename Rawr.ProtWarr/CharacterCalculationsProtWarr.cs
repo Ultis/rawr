@@ -59,6 +59,8 @@ namespace Rawr.ProtWarr
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float TotalMitigation { get; set; }
         public float DamageTaken { get; set; }
+        public float DamageTakenPerHit { get; set; }
+        public float DamageTakenPerBlockedHit { get; set; }
         public float TankPoints { get; set; }
 
         public float NatureSurvivalPoints { get; set; }
@@ -102,7 +104,9 @@ namespace Rawr.ProtWarr
             dictValues.Add("Avoidance", string.Format("{0:0.00%}", DodgePlusMissPlusParry));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.00%}", DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
-            dictValues.Add("Damage Taken", string.Format("{0:0.00%}", DamageTaken));
+            dictValues.Add("Damage Taken", 
+                string.Format("{0:0.0} DPS*{1:0} damage per successful attack" + Environment.NewLine +
+                                "{2:0} damage per blocked attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlockedHit));
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
                                 "Reduces the effect of mana-drains and the damage of critical strikes by {2}%.",
@@ -119,7 +123,6 @@ namespace Rawr.ProtWarr
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
-            dictValues.Add("Tank Points", string.Format("{0:0}", TankPoints));
 
             dictValues["Nature Resist"] = (BasicStats.NatureResistance + BasicStats.AllResist).ToString();
             dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance + BasicStats.AllResist).ToString();
@@ -144,14 +147,13 @@ namespace Rawr.ProtWarr
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
             dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
             dictValues.Add("Missed Attacks",
-                string.Format("{0:0.00%}*Out of 100 attacks:" + Environment.NewLine + "Attacks Missed: {1:0.00%}" + Environment.NewLine +
-                                "Attacks Dodged: {2:0.00%}" + Environment.NewLine + "Attacks Parried: {3:0.00%}",
-                                AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
-
+                string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
+                                "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
             dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond));
             dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}",LimitedThreat));
             dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat));
 
+            dictValues.Add("Tank Points", string.Format("{0:0}", TankPoints));
             dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));
             dictValues.Add("Mitigation Points", string.Format("{0:0}", MitigationPoints));
             dictValues.Add("Survival Points", string.Format("{0:0}", SurvivalPoints));
@@ -165,11 +167,12 @@ namespace Rawr.ProtWarr
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Unlimited Threat": return UnlimitedThreat;
-                case "Limited Threat": return LimitedThreat;
-                case "Guaranteed Reduction %": return GuaranteedReduction * 100.0f;
-                case "Avoidance %": return DodgePlusMissPlusParry * 100.0f;
+                case "Unlimited TPS": return UnlimitedThreat;
+                case "Limited TPS": return LimitedThreat;
+                case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
+                case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
+                case "% Chance to be Avoided": return AvoidedAttacks;
                 case "Nature Survival": return NatureSurvivalPoints;
                 case "Fire Survival": return FireSurvivalPoints;
                 case "Frost Survival": return FrostSurvivalPoints;

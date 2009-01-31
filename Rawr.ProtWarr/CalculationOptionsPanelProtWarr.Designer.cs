@@ -51,6 +51,9 @@ namespace Rawr.ProtWarr
             this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.checkBoxUseTankPoints = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.labelBossAttackSpeed = new System.Windows.Forms.Label();
+            this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxWarriorSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
@@ -59,6 +62,7 @@ namespace Rawr.ProtWarr
             ((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -89,7 +93,7 @@ namespace Rawr.ProtWarr
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(3, 94);
+            this.label2.Location = new System.Drawing.Point(3, 142);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 45);
             this.label2.TabIndex = 0;
@@ -102,22 +106,21 @@ namespace Rawr.ProtWarr
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 94);
-            this.trackBarTargetArmor.Maximum = 15000;
-            this.trackBarTargetArmor.Minimum = 3000;
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 142);
+            this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
             this.trackBarTargetArmor.Size = new System.Drawing.Size(272, 45);
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 2;
-            this.trackBarTargetArmor.TickFrequency = 300;
-            this.trackBarTargetArmor.Value = 7700;
+            this.trackBarTargetArmor.TickFrequency = 1000;
+            this.trackBarTargetArmor.Value = 13100;
             this.trackBarTargetArmor.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelTargetArmorDescription
             // 
             this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 131);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 179);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(266, 34);
             this.labelTargetArmorDescription.TabIndex = 0;
@@ -132,7 +135,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 365);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 367);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -194,9 +197,9 @@ namespace Rawr.ProtWarr
             this.labelBossAttack.Name = "labelBossAttack";
             this.labelBossAttack.Size = new System.Drawing.Size(83, 45);
             this.labelBossAttack.TabIndex = 0;
-            this.labelBossAttack.Text = "Boss Attack: *";
+            this.labelBossAttack.Text = "Base Attack: * (Default: 25000)";
             this.labelBossAttack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelBossAttack.ToolTipText = "Boss attack value before armor. Used to determine the value of Block Value.";
+            this.labelBossAttack.ToolTipText = "Base attacker damage before armor.";
             // 
             // trackBarBossAttackValue
             // 
@@ -205,14 +208,14 @@ namespace Rawr.ProtWarr
             this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarBossAttackValue.LargeChange = 5000;
             this.trackBarBossAttackValue.Location = new System.Drawing.Point(86, 43);
-            this.trackBarBossAttackValue.Maximum = 500000;
+            this.trackBarBossAttackValue.Maximum = 100000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
             this.trackBarBossAttackValue.Size = new System.Drawing.Size(272, 45);
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 2;
-            this.trackBarBossAttackValue.TickFrequency = 2500;
-            this.trackBarBossAttackValue.Value = 20000;
+            this.trackBarBossAttackValue.TickFrequency = 5000;
+            this.trackBarBossAttackValue.Value = 25000;
             this.trackBarBossAttackValue.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelBossAttackValue
@@ -224,7 +227,7 @@ namespace Rawr.ProtWarr
             this.labelBossAttackValue.Name = "labelBossAttackValue";
             this.labelBossAttackValue.Size = new System.Drawing.Size(37, 13);
             this.labelBossAttackValue.TabIndex = 0;
-            this.labelBossAttackValue.Text = "20000";
+            this.labelBossAttackValue.Text = "25000";
             // 
             // labelThreatScaleText
             // 
@@ -232,7 +235,7 @@ namespace Rawr.ProtWarr
             this.labelThreatScaleText.Name = "labelThreatScaleText";
             this.labelThreatScaleText.Size = new System.Drawing.Size(80, 45);
             this.labelThreatScaleText.TabIndex = 0;
-            this.labelThreatScaleText.Text = "Threat Scale: * (Default: 25)";
+            this.labelThreatScaleText.Text = "Threat Scale: * (Default: 1.0)";
             this.labelThreatScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelThreatScaleText.ToolTipText = "Threat scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows more accurat" +
                 "e changes";
@@ -243,13 +246,11 @@ namespace Rawr.ProtWarr
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarThreatScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
-            this.trackBarThreatScale.Maximum = 50;
+            this.trackBarThreatScale.Maximum = 30;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
             this.trackBarThreatScale.Size = new System.Drawing.Size(272, 45);
-            this.trackBarThreatScale.SmallChange = 5;
             this.trackBarThreatScale.TabIndex = 2;
-            this.trackBarThreatScale.TickFrequency = 5;
-            this.trackBarThreatScale.Value = 25;
+            this.trackBarThreatScale.Value = 10;
             this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelThreatScale
@@ -259,9 +260,9 @@ namespace Rawr.ProtWarr
             this.labelThreatScale.AutoSize = true;
             this.labelThreatScale.Location = new System.Drawing.Point(92, 48);
             this.labelThreatScale.Name = "labelThreatScale";
-            this.labelThreatScale.Size = new System.Drawing.Size(13, 13);
+            this.labelThreatScale.Size = new System.Drawing.Size(22, 13);
             this.labelThreatScale.TabIndex = 0;
-            this.labelThreatScale.Text = "1";
+            this.labelThreatScale.Text = "1.0";
             // 
             // labelMitigationScaleText
             // 
@@ -269,7 +270,7 @@ namespace Rawr.ProtWarr
             this.labelMitigationScaleText.Name = "labelMitigationScaleText";
             this.labelMitigationScaleText.Size = new System.Drawing.Size(77, 45);
             this.labelMitigationScaleText.TabIndex = 0;
-            this.labelMitigationScaleText.Text = "Mitigation Scale: * (Default: 7500)";
+            this.labelMitigationScaleText.Text = "Mitigation Scale: * (Default: 1.0)";
             this.labelMitigationScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelMitigationScaleText.ToolTipText = "Mitigation Points scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows m" +
                 "ore accurate changes";
@@ -279,15 +280,12 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarMitigationScale.LargeChange = 1000;
             this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
-            this.trackBarMitigationScale.Maximum = 15000;
+            this.trackBarMitigationScale.Maximum = 30;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
             this.trackBarMitigationScale.Size = new System.Drawing.Size(272, 45);
-            this.trackBarMitigationScale.SmallChange = 100;
             this.trackBarMitigationScale.TabIndex = 2;
-            this.trackBarMitigationScale.TickFrequency = 1000;
-            this.trackBarMitigationScale.Value = 12000;
+            this.trackBarMitigationScale.Value = 10;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // labelMitigationScale
@@ -297,9 +295,9 @@ namespace Rawr.ProtWarr
             this.labelMitigationScale.AutoSize = true;
             this.labelMitigationScale.Location = new System.Drawing.Point(92, 99);
             this.labelMitigationScale.Name = "labelMitigationScale";
-            this.labelMitigationScale.Size = new System.Drawing.Size(31, 13);
+            this.labelMitigationScale.Size = new System.Drawing.Size(22, 13);
             this.labelMitigationScale.TabIndex = 0;
-            this.labelMitigationScale.Text = "4000";
+            this.labelMitigationScale.Text = "1.0";
             // 
             // groupBox1
             // 
@@ -313,7 +311,7 @@ namespace Rawr.ProtWarr
             this.groupBox1.Controls.Add(this.labelThreatScaleText);
             this.groupBox1.Controls.Add(this.labelMitigationScaleText);
             this.groupBox1.Controls.Add(this.trackBarMitigationScale);
-            this.groupBox1.Location = new System.Drawing.Point(3, 177);
+            this.groupBox1.Location = new System.Drawing.Point(3, 221);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(364, 140);
             this.groupBox1.TabIndex = 5;
@@ -345,6 +343,9 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.labelBossSpeed);
+            this.groupBox2.Controls.Add(this.labelBossAttackSpeed);
+            this.groupBox2.Controls.Add(this.trackBarBossAttackSpeed);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.comboBoxTargetLevel);
             this.groupBox2.Controls.Add(this.labelBossAttack);
@@ -355,10 +356,46 @@ namespace Rawr.ProtWarr
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(364, 168);
+            this.groupBox2.Size = new System.Drawing.Size(364, 212);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Ranking System";
+            this.groupBox2.Text = "Attacker Stats";
+            // 
+            // labelBossSpeed
+            // 
+            this.labelBossSpeed.Location = new System.Drawing.Point(3, 94);
+            this.labelBossSpeed.Name = "labelBossSpeed";
+            this.labelBossSpeed.Size = new System.Drawing.Size(83, 45);
+            this.labelBossSpeed.TabIndex = 4;
+            this.labelBossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
+            this.labelBossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelBossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+            // 
+            // labelBossAttackSpeed
+            // 
+            this.labelBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelBossAttackSpeed.AutoSize = true;
+            this.labelBossAttackSpeed.Location = new System.Drawing.Point(92, 126);
+            this.labelBossAttackSpeed.Name = "labelBossAttackSpeed";
+            this.labelBossAttackSpeed.Size = new System.Drawing.Size(28, 13);
+            this.labelBossAttackSpeed.TabIndex = 3;
+            this.labelBossAttackSpeed.Text = "2.00";
+            // 
+            // trackBarBossAttackSpeed
+            // 
+            this.trackBarBossAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarBossAttackSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarBossAttackSpeed.LargeChange = 4;
+            this.trackBarBossAttackSpeed.Location = new System.Drawing.Point(86, 94);
+            this.trackBarBossAttackSpeed.Maximum = 20;
+            this.trackBarBossAttackSpeed.Minimum = 1;
+            this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
+            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(272, 45);
+            this.trackBarBossAttackSpeed.TabIndex = 5;
+            this.trackBarBossAttackSpeed.Value = 8;
+            this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
             // CalculationOptionsPanelProtWarr
             // 
@@ -381,6 +418,7 @@ namespace Rawr.ProtWarr
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -410,5 +448,8 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.CheckBox checkBoxUseTankPoints;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private Rawr.CustomControls.ExtendedToolTipLabel labelBossSpeed;
+        private System.Windows.Forms.Label labelBossAttackSpeed;
+        private System.Windows.Forms.TrackBar trackBarBossAttackSpeed;
 	}
 }

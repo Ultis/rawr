@@ -7,8 +7,9 @@ namespace Rawr.ProtWarr
 {
     public class AttackModel
     {
-        private Character   Character;
-        private Stats       Stats;
+        private Character Character;
+        private CalculationOptionsProtWarr Options;
+        private Stats Stats;
         
         public AbilityModelList Abilities = new AbilityModelList();
 
@@ -32,7 +33,6 @@ namespace Rawr.ProtWarr
 
         private void Calculate()
         {
-            AbilityModel[] model;
             float modelLength = 0.0f;
             float modelThreat = 0.0f;
             float modelDamage = 0.0f;
@@ -199,7 +199,7 @@ namespace Rawr.ProtWarr
             }
 
             // Damage Shield, hardcoded at 2.0s attack speed... need to add attack speed as a character option
-            float attackerHits = modelLength / 2.0f;
+            float attackerHits = modelLength / Options.BossAttackSpeed;
             modelThreat += Abilities[Ability.DamageShield].Threat * attackerHits;
             modelDamage += Abilities[Ability.DamageShield].Damage * attackerHits;
             modelCrits  += Abilities[Ability.DamageShield].CritPercentage * attackerHits;
@@ -220,6 +220,7 @@ namespace Rawr.ProtWarr
         public AttackModel(Character character, Stats stats, AttackModelMode attackModelMode, RageModelMode rageModelMode)
         {
             Character        = character;
+            Options          = Character.CalculationOptions as CalculationOptionsProtWarr;
             Stats            = stats;
             _attackModelMode = attackModelMode;
             _rageModelMode   = rageModelMode;
