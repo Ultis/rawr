@@ -151,7 +151,7 @@ namespace Rawr.Mage
                     foreach (GenericArcane cycle in cycleDict.Values)
                     {
                         double dpm = (cycle.DamagePerSecond - mindpmCycle.DamagePerSecond) / (cycle.ManaPerSecond - mindpmCycle.ManaPerSecond);
-                        if (cycle.DamagePerSecond > mindpmCycle.DamagePerSecond && dpm > mindpm)
+                        if (cycle != highdpsCycle && cycle.DamagePerSecond > mindpmCycle.DamagePerSecond && dpm > mindpm + 0.000001)
                         {
                             highdpsCycle = cycle;
                             goto RESTART;
@@ -167,9 +167,14 @@ namespace Rawr.Mage
             foreach (GenericArcane cycle in cyclePalette)
             {
                 sb.Append(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
-                //sb.Append(cycle.Name + ":\r\n" + cycle.DamagePerSecond + " dps\r\n" + cycle.ManaPerSecond + " mps\r\n" + cycle.SpellDistribution + "\r\n");
+                //System.Diagnostics.Debug.Write(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
             }
             MessageBox.Show(sb.ToString());
+
+            /*foreach (GenericArcane cycle in cycleDict.Values)
+            {
+                System.Diagnostics.Debug.Write(cycle.Name + ":\r\n" + cycle.DamagePerSecond + " dps\r\n" + cycle.ManaPerSecond + " mps\r\n" + cycle.SpellDistribution + "\r\n");
+            }*/
         }
 	}
 }
