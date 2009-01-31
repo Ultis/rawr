@@ -205,7 +205,7 @@ namespace Rawr.ProtWarr
             this.trackBarBossAttackValue.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarBossAttackValue.LargeChange = 5000;
             this.trackBarBossAttackValue.Location = new System.Drawing.Point(86, 43);
-            this.trackBarBossAttackValue.Maximum = 50000;
+            this.trackBarBossAttackValue.Maximum = 500000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
             this.trackBarBossAttackValue.Size = new System.Drawing.Size(272, 45);
