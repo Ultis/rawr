@@ -37,7 +37,7 @@ namespace Rawr
 				}
 				else if (gemBonus == "2% Increased Armor Value from Items")
 				{
-					stats.BonusArmorMultiplier = 0.02f; // IED
+					stats.BaseArmorMultiplier = 0.02f; // IED
 				}
                 else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                 {

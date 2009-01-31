@@ -654,7 +654,7 @@ namespace Rawr
                         }
 						else if (gemBonus == "2% Increased Armor Value from Items")
 						{
-							stats.BonusArmorMultiplier = 0.02f;
+							stats.BaseArmorMultiplier = 0.02f;
 						}
                         else if (gemBonus == "Stamina +6")
                         {
