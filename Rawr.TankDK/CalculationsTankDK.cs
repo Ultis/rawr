@@ -417,7 +417,7 @@ namespace Rawr.TankDK
             Stats statsTalents = new Stats()
             {
                 BonusStrengthMultiplier = .01f * (float)(talents.AbominationsMight + talents.RavenousDead + talents.VeteranOfTheThirdWar) + .02f * (float)(talents.ShadowOfDeath),
-                BonusArmorMultiplier = .03f * (float)(talents.Toughness),
+                BaseArmorMultiplier = .03f * (float)(talents.Toughness),
                 BonusStaminaMultiplier = .02f * (float)(talents.ShadowOfDeath + talents.VeteranOfTheThirdWar),
                 Expertise = (float)(talents.TundraStalker + talents.BloodGorged + talents.RageOfRivendare) + talents.VeteranOfTheThirdWar*0.02f,
                 BonusPhysicalDamageMultiplier = .02f * (float)(talents.BloodGorged + talents.RageOfRivendare + talents.TundraStalker),
@@ -464,6 +464,7 @@ namespace Rawr.TankDK
             statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;
             statsTotal.BonusStrengthMultiplier = statsGearEnchantsBuffs.BonusStrengthMultiplier;
             statsTotal.BonusStaminaMultiplier = statsGearEnchantsBuffs.BonusStaminaMultiplier;
+            statsTotal.BaseArmorMultiplier = statsGearEnchantsBuffs.BaseArmorMultiplier;
 
             statsTotal.Agility = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier));
@@ -471,8 +472,11 @@ namespace Rawr.TankDK
             statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
-            statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier));
+            statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier));
             statsTotal.Armor *= 1.80f; // Frost Presence
+
+            statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
+
             statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
