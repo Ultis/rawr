@@ -157,7 +157,7 @@ namespace Rawr.Elemental
             totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
             spCoef *= 1f + .02f * shamanTalents.Shamanism;
             crit += .05f * shamanTalents.TidalMastery;
-            manaCost -= stats.LightningBoltCostReduction;
+            manaCost *= 1 - stats.LightningBoltCostReduction / 100f;
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
             if (calcOpts.glyphOfLightningBolt) totalCoef *= 1.04f;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
@@ -183,7 +183,7 @@ namespace Rawr.Elemental
             // jumps
             if (additionalTargets < 0) additionalTargets = 0;
             if (additionalTargets > 4) additionalTargets = 4;
-            totalCoef *= 1 + new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
+            totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef *= 1f + .01f * shamanTalents.Concussion;
@@ -222,7 +222,7 @@ namespace Rawr.Elemental
             totalCoef *= 1f + .4f * shamanTalents.LightningOverload * .5f;
             crit += .05f * shamanTalents.TidalMastery;
             critModifier += .5f * new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
-            critModifier += .5f * stats.BonusLavaBurstCritDamage;
+            critModifier += .5f * stats.BonusLavaBurstCritDamage / 100f;
             baseMinDamage += stats.LavaBurstBonus;
             baseMaxDamage += stats.LavaBurstBonus;
             spellPower += stats.SpellFireDamageRating;
