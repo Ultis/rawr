@@ -442,7 +442,7 @@ namespace Rawr.Mage
             GlobalCooldownLimit = 1f;
             GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier);
+            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + characterStats.BonusDamageMultiplier);
             if (arcanePower)
             {
                 ArcaneSpellModifier *= 1.3f;
@@ -451,7 +451,7 @@ namespace Rawr.Mage
             {
                 ArcaneSpellModifier *= (1 + 0.06f * character.MageTalents.MoltenFury);
             }
-            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + characterStats.BonusDamageMultiplier);
+            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower);
             FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
             NatureSpellModifier = ArcaneSpellModifier;
             ShadowSpellModifier = ArcaneSpellModifier;
