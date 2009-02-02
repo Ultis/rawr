@@ -10,6 +10,7 @@ namespace Rawr.ProtWarr
         private Character Character;
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
+        private DefendTable DefendTable;
         private ParryModel ParryModel;
 
         public AbilityModelList Abilities = new AbilityModelList();
@@ -200,7 +201,7 @@ namespace Rawr.ProtWarr
             }
 
             // Damage Shield
-            float attackerHits = modelLength / Options.BossAttackSpeed;
+            float attackerHits = DefendTable.AnyHit * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
             modelThreat += Abilities[Ability.DamageShield].Threat * attackerHits;
             modelDamage += Abilities[Ability.DamageShield].Damage * attackerHits;
             modelCrits  += Abilities[Ability.DamageShield].CritPercentage * attackerHits;
@@ -223,6 +224,7 @@ namespace Rawr.ProtWarr
             Character        = character;
             Options          = Character.CalculationOptions as CalculationOptionsProtWarr;
             Stats            = stats;
+            DefendTable      = new DefendTable(character, stats);
             ParryModel       = new ParryModel(character, stats);
             _attackModelMode = attackModelMode;
             _rageModelMode   = rageModelMode;
