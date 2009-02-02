@@ -42,6 +42,15 @@ namespace Rawr.RestoSham
         public float ESHWMPSMT { get; set; }
         public float ESCHMPSMT { get; set; }
         public float ESRTCHCHMPSMT { get; set; }
+        public float BurstHPS { get; set; }
+        public float RTLWH2CHRTHPSMT { get; set; }
+        public float RTWH2CHRTHPSMT { get; set; }
+        public float RTLWH4HPSMT { get; set; }
+        public float RTWH3HPSMT { get; set; }
+        public float RTLWH2CHRTMPSMT { get; set; }
+        public float RTWH2CHRTMPSMT { get; set; }
+        public float RTLWH4MPSMT { get; set; }
+        public float RTWH3MPSMT { get; set; }
 
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -69,6 +78,15 @@ namespace Rawr.RestoSham
             values.Add("ES + CH OOM", Math.Round(ESCHMPSMT, 0).ToString());
             values.Add("ES + RT + CHx2 HPS", Math.Round(ESRTCHCHHPSMT, 0).ToString());
             values.Add("ES + RT + CHx2 OOM", Math.Round(ESRTCHCHMPSMT, 0).ToString());
+            values.Add("Burst HPS", Math.Round(BurstHPS, 0).ToString());
+            values.Add("RT + LHWx2 + CH HPS", Math.Round(RTLWH2CHRTHPSMT, 0).ToString());
+            values.Add("RT + LHWx2 + CH OOM", Math.Round(RTLWH2CHRTMPSMT, 0).ToString());
+            values.Add("RT + HWx2 + CH HPS", Math.Round(RTWH2CHRTHPSMT, 0).ToString());
+            values.Add("RT + HWx2 + CH OOM", Math.Round(RTWH2CHRTMPSMT, 0).ToString());
+            values.Add("RT + LHWx4 HPS", Math.Round(RTLWH4HPSMT, 0).ToString());
+            values.Add("RT + LHWx4 OOM", Math.Round(RTLWH4MPSMT, 0).ToString());
+            values.Add("RT + LHWx3 HPS", Math.Round(RTWH3HPSMT, 0).ToString());
+            values.Add("RT + LHWx3 OOM", Math.Round(RTWH3MPSMT, 0).ToString());
 
             return values;
         }

@@ -56,7 +56,16 @@ namespace Rawr.RestoSham
                           "Fight Details:ES + CH HPS",
                           "Fight Details:ES + CH OOM*Seconds into the fight you are expected to go Out of Mana",
                           "Fight Details:ES + RT + CHx2 HPS",
-                          "Fight Details:ES + RT + CHx2 OOM*Seconds into the fight you are expected to go Out of Mana" };
+                          "Fight Details:ES + RT + CHx2 OOM*Seconds into the fight you are expected to go Out of Mana",
+                          "Burst Details:Burst HPS",
+                          "Burst Details:RT + LHWx2 + CH HPS",
+                          "Burst Details:RT + LHWx2 + CH OOM*Longest time you can keep this burst up",
+                          "Burst Details:RT + HWx2 + CH HPS",
+                          "Burst Details:RT + HWx2 + CH OOM*Longest time you can keep this burst up",
+                          "Burst Details:RT + LHWx4 HPS",
+                          "Burst Details:RT + LHWx4 OOM*Longest time you can keep this burst up",
+                          "Burst Details:RT + LHWx3 HPS",
+                          "Burst Details:RT + LHWx3 OOM*Longest time you can keep this burst up" };
                 }
                 return _characterDisplayCalcLabels;
             }
@@ -111,6 +120,7 @@ namespace Rawr.RestoSham
                          Item.ItemType.OneHandAxe,
                          Item.ItemType.Shield,
                          Item.ItemType.Staff,
+                         Item.ItemType.FistWeapon,
                          Item.ItemType.Dagger });
                 }
                 return _relevantItemTypes;
@@ -180,56 +190,94 @@ namespace Rawr.RestoSham
                 stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .01f * 150f);
 
 
-            // This is my new calcs, still testing:
+            // Stats, Talents, and Options
             float CurrentMana = calcStats.TotalManaPool;
-            if (options.ESInterval < 32)
-                options.ESInterval = 32;
             float Awaken = (.1f * character.ShamanTalents.AncestralAwakening);
             float TankCH = (options.TankHeal ? 1 : 1.75f);
-            float Orb = 400 * (1 + (character.ShamanTalents.ImprovedShields * .05f));
-            float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
             float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
+            float EFL = Time - (1.5f * (Time / options.ESInterval));
             float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f) + (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + (character.ShamanTalents.BlessingOfTheEternals * 2)));
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
-            float ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify);
-            float ESCMPS = (((Time / options.ESInterval) * (660f * Redux)));
             float Hasted = 1 - (stats.HasteRating / 3279);
-            float LHWC = 1.5f + (((1.5f * Hasted) / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float HWC = (3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) + (((1.5f * Hasted) / 3 * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
-            float CHC = 2.5f;
-            float RTC = 1.5f + (((1.5f * Hasted) / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
-            float LHWM = (550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
-            float HWM = (1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
-            float CHM = (835 * Redux);
-            float RTM = (792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
-            float EFL = Time - (1.5f * (Time / options.ESInterval));
-            float LHWHeal = (((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1));
-            float HWHeal = ((3250f + (Healing * (HWC / 3.5f))) * Purify) * (Critical + Awaken);
-            float CHHeal = (((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH;
-            float CHRTHeal = (((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH;
-            float RTHeal = ((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken);
-            float RTHot = ((1670f + (Healing * .5f)) * Purify) / 15f;
+            float OverHeal = .35f;
+            float Burst = .25f;
+            float Sustained = .60f;
+            float Activity = 1;
+            if ((Burst + Sustained) > 1)
+                Sustained = 1f - Burst;
+            if ((Burst + Sustained) < 1)
+                Activity = (Burst + Sustained);
+            float TrueHealing = (1 - OverHeal) * Activity;
+
+            // Water Shield Variables
+            float Orb = 400 * (1 + (character.ShamanTalents.ImprovedShields * .05f));
+            float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
+
+            // Spell Casting Times
+            float WSC = 1.5f * Hasted;
+            float LHWC = (1.5f * Hasted) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            float HWC = ((3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) * Hasted) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float CHC = 2.5f * Hasted;
+            float RTC = (1.5f * Hasted) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            if (WSC < 1)
+                WSC = 1;
+            if (LHWC < (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f))))
+                LHWC = 1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            if (HWC < (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))))
+                HWC = (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            if (CHC < 1.5f)
+                CHC = 1.5f;
+            if (RTC < (1 + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))))
+                RTC = 1 + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float TidalWaves = 1 - ((.2f * character.ShamanTalents.TidalWaves) * .3f);
+            float LHWTC = LHWC * TidalWaves;
+            float HWTC = HWC * TidalWaves;
+            if (LHWTC < (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f))))
+                LHWTC = 1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
+            if (HWTC < (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))))
+                HWTC = (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+
+            // Spell Mana Costs
+            float LHWM = ((550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f))) * Activity;
+            float HWM = ((1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))) * Activity;
+            float CHM = ((835 * Redux)) * Activity;
+            float RTM = ((792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))) * Activity;
+
+            // Spell Healing Amounts
+            float LHWHeal = ((((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
+            float HWHeal = (((3250f + (Healing * (HWC / 3.5f))) * Purify) * (Critical + Awaken)) * TrueHealing;
+            float CHHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing;
+            float CHRTHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing;
+            float RTHeal = (((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken)) * TrueHealing;
+            float RTHot = (((1670f + (Healing * .5f)) * Purify) / 15f) * TrueHealing;
+
+            // Earth Shield Specific Calcs
+            if (options.ESInterval < 32)
+                options.ESInterval = 32;
+            float ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify) * TrueHealing;
+            float ESCMPS = (((Time / options.ESInterval) * (660f * Redux))) * Activity;
+
+            // MPS Calculation Variables
+            float RTLWH2CHRTMPSMT = (((RTM / RTC) + ((LHWM / LHWTC) * 2) + (CHM / CHC)) / 4);
+            float RTWH2CHRTMPSMT = (((RTM / RTC) + ((HWM / HWC) * 2) + (CHM / CHC)) / 4);
+            float RTLWH4MPSMT = (((RTM / RTC) + ((LHWM / LHWTC) * 2) + ((LHWM / LHWC) * 2)) / 5);
+            float RTWH3MPSMT = (((RTM / RTC) + ((HWM / HWTC) * 2) + ((HWM / HWC))) / 4);
             float ESLHWMPSMT = (ESCMPS + ((EFL / (LHWC * Hasted)) * LHWM)) / Time;
             float ESHWMPSMT = (ESCMPS + ((EFL / ((HWC) * Hasted)) * HWM)) / Time;
             float ESCHMPSMT = (ESCMPS + ((EFL / (CHC * Hasted)) * CHM)) / Time;
-            float RTMPSMT = (ESCMPS + ((EFL / (RTC * Hasted)) * RTM)) / Time; ;
+            float RTMPSMT = (ESCMPS + ((EFL / (RTC * Hasted)) * RTM)) / Time;
 
-            // HPS Calcs
+            // Calculate Best HPS
+            calcStats.RTLWH2CHRTHPSMT = (((RTHeal / RTC) + ((LHWHeal / LHWC) * 2) + (CHRTHeal / CHC)) / 4) * (Math.Min(((CurrentMana / RTLWH2CHRTMPSMT) / Time), 1));
+            calcStats.RTWH2CHRTHPSMT = (((RTHeal / RTC) + ((HWHeal / HWC) * 2) + (CHRTHeal / CHC)) / 4) * (Math.Min(((CurrentMana / RTLWH2CHRTMPSMT) / Time), 1));
+            calcStats.RTLWH4HPSMT = (((RTHeal / RTC) + ((LHWHeal / LHWC) * 4)) / 5) * (Math.Min(((CurrentMana / RTLWH2CHRTMPSMT) / Time), 1));
+            calcStats.RTWH3HPSMT = (((RTHeal / RTC) + ((HWHeal / HWC) * 3)) / 4) * (Math.Min(((CurrentMana / RTLWH2CHRTMPSMT) / Time), 1));
             calcStats.ESLHWHPSMT = (ESC + ((LHWHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESLHWMPSMT) / Time), 1));
             calcStats.ESHWHPSMT = (ESC + ((HWHeal * (EFL / ((HWC) * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESHWMPSMT) / Time), 1));
             calcStats.ESCHHPSMT = (ESC + ((CHHeal * (EFL / (CHC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESCHMPSMT) / Time), 1));
             calcStats.ESRTCHCHHPSMT = ((ESC + ((RTHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / RTMPSMT) / Time), 1)) / 3) + (calcStats.ESCHHPSMT / 3 * 2);
-
-            // MPS Calcs
-            calcStats.ESLHWMPSMT = CurrentMana / ESLHWMPSMT;
-            calcStats.ESHWMPSMT = CurrentMana / ESHWMPSMT;
-            calcStats.ESCHMPSMT = CurrentMana / ESCHMPSMT;
-            calcStats.ESRTCHCHMPSMT = CurrentMana / ((RTMPSMT + ESCHMPSMT + ESCHMPSMT) / 3);
-
-
-            // Calculate Best HPS
             if (calcStats.ESCHHPSMT > calcStats.ESHWHPSMT)
                 if (calcStats.ESCHHPSMT > calcStats.ESLHWHPSMT)
                     if (calcStats.ESCHHPSMT > calcStats.ESRTCHCHHPSMT)
@@ -246,8 +294,37 @@ namespace Rawr.RestoSham
                 if (calcStats.ESRTCHCHHPSMT > calcStats.ESLHWHPSMT)
                     if (calcStats.ESRTCHCHHPSMT > calcStats.ESCHHPSMT)
                         calcStats.FightHPS = calcStats.ESRTCHCHHPSMT;
+            if (calcStats.RTLWH2CHRTHPSMT > calcStats.RTWH2CHRTHPSMT)
+                if (calcStats.RTLWH2CHRTHPSMT > calcStats.RTLWH4HPSMT)
+                    if (calcStats.RTLWH2CHRTHPSMT > calcStats.RTWH3HPSMT)
+                        calcStats.BurstHPS = calcStats.RTLWH2CHRTHPSMT;
+            if (calcStats.RTWH2CHRTHPSMT > calcStats.RTLWH2CHRTHPSMT)
+                if (calcStats.RTWH2CHRTHPSMT > calcStats.RTLWH4HPSMT)
+                    if (calcStats.RTWH2CHRTHPSMT > calcStats.RTWH3HPSMT)
+                        calcStats.BurstHPS = calcStats.RTWH2CHRTHPSMT;
+            if (calcStats.RTLWH4HPSMT > calcStats.RTLWH2CHRTHPSMT)
+                if (calcStats.RTLWH4HPSMT > calcStats.RTWH2CHRTHPSMT)
+                    if (calcStats.RTLWH4HPSMT > calcStats.RTWH3HPSMT)
+                        calcStats.BurstHPS = calcStats.RTLWH4HPSMT;
+            if (calcStats.RTWH3HPSMT > calcStats.RTWH2CHRTHPSMT)
+                if (calcStats.RTWH3HPSMT > calcStats.RTLWH4HPSMT)
+                    if (calcStats.RTWH3HPSMT > calcStats.RTLWH2CHRTHPSMT)
+                        calcStats.BurstHPS = calcStats.RTWH3HPSMT;
 
-            calcStats.TotalHealed = calcStats.FightHPS * (options.FightLength * 60f);
+            
+            // Calculate Tim till OOM
+            calcStats.ESLHWMPSMT = CurrentMana / ESLHWMPSMT;
+            calcStats.ESHWMPSMT = CurrentMana / ESHWMPSMT;
+            calcStats.ESCHMPSMT = CurrentMana / ESCHMPSMT;
+            calcStats.ESRTCHCHMPSMT = CurrentMana / ((RTMPSMT + ESCHMPSMT + ESCHMPSMT) / 3);
+            calcStats.RTLWH2CHRTMPSMT = CurrentMana / RTLWH2CHRTMPSMT;
+            calcStats.RTWH2CHRTMPSMT = CurrentMana / RTWH2CHRTMPSMT;
+            calcStats.RTLWH4MPSMT = CurrentMana / RTLWH4MPSMT;
+            calcStats.RTWH3MPSMT = CurrentMana / RTWH3MPSMT;
+
+            // Final Stats
+            float AllHealing = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS);
+            calcStats.TotalHealed = AllHealing * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
