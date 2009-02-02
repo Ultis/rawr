@@ -137,6 +137,30 @@ namespace Rawr.Elemental
         }
     }
 
+    public class Thunderstorm : Spell
+    {
+        public Thunderstorm(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        {
+            #region Base Values
+            baseMinDamage = 1450;
+            baseMaxDamage = 1656;
+            castTime = 0f;
+            spCoef = .193f; // NOT CORRECT YET, assuming 1.5f/7f * 0.9f (aoe with additional effect)
+            manaCost = 0f;
+            cooldown = 45f;
+            #endregion
+
+            totalCoef *= 1f + .01f * shamanTalents.Concussion;
+            crit += .05f * shamanTalents.CallOfThunder;
+            crit += .05f * shamanTalents.TidalMastery;
+            spellPower += stats.SpellNatureDamageRating;
+            totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
+            totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
+
+            base.Initialize(stats);
+        }
+    }
+
     public class LightningBolt : Spell
     {
         public LightningBolt(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
@@ -153,8 +177,6 @@ namespace Rawr.Elemental
             manaCost *= 1f - .02f * shamanTalents.Convection;
             totalCoef *= 1f + .01f * shamanTalents.Concussion;
             crit += .05f * shamanTalents.CallOfThunder;
-            // emulate lightning overload by increasing crit chance
-            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
             spCoef *= 1f + .02f * shamanTalents.Shamanism;
             crit += .05f * shamanTalents.TidalMastery;
             manaCost *= 1 - stats.LightningBoltCostReduction / 100f;
@@ -162,6 +184,10 @@ namespace Rawr.Elemental
             if (calcOpts.glyphOfLightningBolt) totalCoef *= 1.04f;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
+
+            /* emulate lightning overload by increasing crit chance
+            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
+            crit *= 1 + .04f * shamanTalents.LightningOverload;*/
 
             base.Initialize(stats);
         }
@@ -190,8 +216,8 @@ namespace Rawr.Elemental
             crit += .05f * shamanTalents.CallOfThunder;
             castTime -= .1f * shamanTalents.LightningMastery;
             cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[shamanTalents.StormEarthAndFire];
-            // emulate lightning overload by increasing crit chance
-            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
+            /* emulate lightning overload by increasing crit chance
+            totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;*/
             crit += .05f * shamanTalents.TidalMastery;
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
@@ -219,7 +245,6 @@ namespace Rawr.Elemental
             castTime -= .1f * shamanTalents.LightningMastery;
             spCoef += .04f * shamanTalents.Shamanism;
             // emulate lightning overload by increasing crit chance
-            totalCoef *= 1f + .4f * shamanTalents.LightningOverload * .5f;
             crit += .05f * shamanTalents.TidalMastery;
             critModifier += .5f * new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
             critModifier += .5f * stats.BonusLavaBurstCritDamage / 100f;

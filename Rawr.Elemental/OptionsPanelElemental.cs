@@ -56,6 +56,8 @@ namespace Rawr.Elemental
             chbGlyphLightningBolt.Checked = calcOpts.glyphOfLightningBolt;
             chbGlyphShocking.Checked = calcOpts.glyphOfShocking;
 
+            cbThunderstorm.Checked = calcOpts.UseThunderstorm;
+
             loading = false;
 
             //Enable/Disable Glyph Checkboxes
@@ -148,6 +150,14 @@ namespace Rawr.Elemental
             lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
             Character.OnCalculationsInvalidated();
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseThunderstorm = cbThunderstorm.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -156,23 +166,12 @@ namespace Rawr.Elemental
         [System.Xml.Serialization.XmlIgnore]
         public CharacterCalculationsElemental calculatedStats = null;
 
-        public string ShattrathFaction = "Aldor";
-        public bool useLivingSeedAsCritMultiplicator = true;
-
-        public float SurvTargetLife = 12000f;
-        public float SurvScaleBelowTarget = 100f;
-
-        //Add Average Spellpower to Calculation = 0.0f (% used)
-        public float averageSpellpowerUsage = 80f;
-
         public int BSRatio = 75; // goes from 0 to 100
 
         public int FightDuration = 300; //5 Minutes
-        public int Rotation = 6; // default: group regrowth and heal 1 tank
         public int ManaPot = 0; // none
-        public int FSRRatio = 90;
         public int ReplenishmentUptime = 30;
-        public int WildGrowthPerMinute = 4;
+        public bool UseThunderstorm = true;
 
         public bool glyphOfFlameShock = true;
         public bool glyphOfElementalMastery = false;

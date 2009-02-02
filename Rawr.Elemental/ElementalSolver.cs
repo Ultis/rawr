@@ -10,6 +10,10 @@ namespace Rawr.Elemental
         public float DPS;
         public float MPS;
 
+        public float CC_FS;
+        public float CC_LvB;
+        public float CC_LB;
+
         public Spell LB;
         public Spell CL;
         public Spell CL3;
@@ -35,6 +39,7 @@ namespace Rawr.Elemental
             Spell FS = new FlameShock(stats, talents, calcOpts);
             Spell ES = new EarthShock(stats, talents, calcOpts);
             Spell FrS = new FrostShock(stats, talents, calcOpts);
+            Spell TS = new Thunderstorm(stats, talents, calcOpts);
             #endregion
             #region Elemental Mastery
             if (talents.ElementalMastery > 0)
@@ -52,31 +57,42 @@ namespace Rawr.Elemental
             }
             #endregion
             #region Rotation
+            float timeBetweenTS = TS.CDRefreshTime;
             float timeBetweenFS = FS.PeriodicRefreshTime; // cast whenever DoT drops
             float timeBetweenLvB = LvB.CDRefreshTime; // cast whenever available
+            float castFractionTS = TS.CastTime / timeBetweenTS;
+            if (!calcOpts.UseThunderstorm) castFractionTS = 0f;
             float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
             float castFractionLvBFS = LvBFS.CastTime / timeBetweenLvB; // LvB casting time per second
-            float castFractionLB = 1f - castFractionFS - castFractionLvBFS; // LB casting time per second
+            float castFractionLB = 1f - castFractionFS - castFractionLvBFS - castFractionTS; // LB casting time per second
+            float dpsFromTS = 0f; // assume no targets hit
             float dpsFromFS = FS.HitChance * FS.TotalDamage / timeBetweenFS;
             float dpsFromLvB = LvBFS.HitChance * LvBFS.TotalDamage / timeBetweenLvB;
             float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
+            float mpsFromTS = TS.ManaCost / timeBetweenTS;
+            if (!calcOpts.UseThunderstorm) mpsFromTS = 0f; // 0 anyway but whatever
             float mpsFromFS = FS.ManaCost / timeBetweenFS;
             float mpsFromLvB = LvBFS.ManaCost / timeBetweenLvB;
             float mpsFromLB = castFractionLB * LB.ManaCost / LB.CastTime;
             float castsPerLvB = timeBetweenLvB * castFractionLB;
             #endregion
+            #region Lightning Overload
+            float critLB = LB.CritChance * (1f + .04f * talents.LightningOverload);
+            dpsFromLB *= 1f + .04f * talents.LightningOverload * .5f;
+            #endregion
             #region Clearcasting
+            float clearcastingFS=0f, clearcastingLvB=0f, clearcastingLB=0f;
             if (talents.ElementalFocus > 0)
             {
-                float CCchance2LB = 1 - ((1 - LB.CritChance * LB.HitChance) * (1 - LB.CritChance * LB.HitChance));
-                float CCchanceLvBLB = 1 - ((1 - LvBFS.HitChance) * (1 - LB.CritChance * LB.HitChance));
-                float clearcastingLB = (
+                float CCchance2LB = 1 - ((1 - critLB * LB.HitChance) * (1 - critLB * LB.HitChance));
+                float CCchanceLvBLB = 1 - ((1 - LvBFS.HitChance) * (1 - critLB * LB.HitChance));
+                clearcastingLB = (
                     Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
                     Math.Min(1, castsPerLvB) * CCchanceLvBLB +
                     Math.Min(LvBFS.HitChance, castsPerLvB - 1) * CCchanceLvBLB
                     ) / castsPerLvB;
-                float clearcastingFS = CCchance2LB;
-                float clearcastingLvB = CCchance2LB;
+                clearcastingFS = CCchance2LB;
+                clearcastingLvB = CCchance2LB;
                 mpsFromLB *= 1 - .4f * clearcastingLB;
                 mpsFromLvB *= 1 - .4f * clearcastingLvB;
                 mpsFromFS *= 1 - .4f * clearcastingFS;
@@ -88,17 +104,20 @@ namespace Rawr.Elemental
 
             return new Rotation()
             {
-                DPS = dpsFromFS + dpsFromLvB + dpsFromLB,
-                MPS = mpsFromFS + mpsFromLvB + mpsFromLB,
+                DPS = dpsFromFS + dpsFromLvB + dpsFromLB + dpsFromTS,
+                MPS = mpsFromFS + mpsFromLvB + mpsFromLB + mpsFromTS,
                 CastFraction = (
+                    castFractionTS / TS.CastTime +
                     castFractionFS / FS.CastTime +
                     castFractionLvBFS / LvBFS.CastTime +
                     castFractionLB / LB.CastTime),
                 CritFraction = (
+                    TS.CritChance * castFractionTS / TS.CastTime +
                     FS.CritChance * castFractionFS / FS.CastTime +
                     LvBFS.CritChance * castFractionLvBFS / LvBFS.CastTime +
-                    LB.CritChance * castFractionLB / LB.CastTime),
+                    critLB * castFractionLB / LB.CastTime),
                 MissFraction = (
+                    TS.MissChance * castFractionTS / TS.CastTime +
                     FS.MissChance * castFractionFS / FS.CastTime +
                     LvBFS.MissChance * castFractionLvBFS / LvBFS.CastTime +
                     LB.MissChance * castFractionLB / LB.CastTime),
@@ -110,7 +129,10 @@ namespace Rawr.Elemental
                 LvBFS = LvBFS,
                 FS = FS,
                 ES = ES,
-                FrS = FrS
+                FrS = FrS,
+                CC_FS = clearcastingFS,
+                CC_LvB = clearcastingLvB,
+                CC_LB = clearcastingLB
             };
 
         }
@@ -170,6 +192,12 @@ namespace Rawr.Elemental
             float extraMana = new float[] { 0f, 1800f, 2200, 2400, 4300 }[calcOpts.ManaPot];
             extraMana *= (stats.BonusManaPotion + 1f);
             #endregion
+
+            // Thunderstorm usage
+            #region Thunderstorm
+            // THUNDERSTORM
+            if (calcOpts.UseThunderstorm) rot.MPS -= CalculateEffect(.08f * stats.Mana, 0f, 45f, 0f, calcOpts.FightDuration);
+            #endregion
             
             // TotalDamage, CastFraction, TimeUntilOOM
             #region Calculate total damage in the fight
@@ -180,7 +208,7 @@ namespace Rawr.Elemental
             else TimeUntilOOM = (calculatedStats.BasicStats.Mana + extraMana) / effectiveMPS;
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
-            #region Effect from Darkmoon card: Death and Pendulum
+            #region Effect from Darkmoon card: Death and Pendulum and Thunder/Lightning Capacitor
             rot.DPS += CalculateEffect(stats.DarkmoonCardDeathProc, 0f, 45f, 1 / (rot.CastFraction * .35f), TimeUntilOOM);
             if (stats.PendulumOfTelluricCurrentsProc > 0)
             {
@@ -237,6 +265,9 @@ namespace Rawr.Elemental
             calculatedStats.RotationDPS = rot.DPS;
             calculatedStats.RotationMPS = rot.MPS;
             calculatedStats.TotalDPS = TotalDamage / FightDuration;
+            calculatedStats.ClearCast_FlameShock = rot.CC_FS;
+            calculatedStats.ClearCast_LavaBurst = rot.CC_LvB;
+            calculatedStats.ClearCast_LightningBolt = rot.CC_LB;
         }
 
         private static float CalculateEffect(float value, float duration, float icd, float ecd, float FightDuration)

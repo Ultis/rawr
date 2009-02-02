@@ -57,6 +57,7 @@
             this.extendedToolTipLabel6 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -137,6 +138,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.cbThunderstorm);
             this.groupBox7.Controls.Add(this.tkReplenishment);
             this.groupBox7.Controls.Add(this.lblReplenishment);
             this.groupBox7.Controls.Add(this.label10);
@@ -145,7 +147,7 @@
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 183);
+            this.groupBox7.Size = new System.Drawing.Size(277, 212);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
@@ -398,6 +400,17 @@
             this.tbModuleNotes.Size = new System.Drawing.Size(276, 537);
             this.tbModuleNotes.TabIndex = 0;
             // 
+            // cbThunderstorm
+            // 
+            this.cbThunderstorm.AutoSize = true;
+            this.cbThunderstorm.Location = new System.Drawing.Point(9, 177);
+            this.cbThunderstorm.Name = "cbThunderstorm";
+            this.cbThunderstorm.Size = new System.Drawing.Size(208, 17);
+            this.cbThunderstorm.TabIndex = 51;
+            this.cbThunderstorm.Text = "Use Thunderstorm whenever available";
+            this.cbThunderstorm.UseVisualStyleBackColor = true;
+            this.cbThunderstorm.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // CalculationOptionsPanelElemental
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -456,5 +469,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblBSRatio;
         private System.Windows.Forms.TrackBar tbBSRatio;
+        private System.Windows.Forms.CheckBox cbThunderstorm;
     }
 }
