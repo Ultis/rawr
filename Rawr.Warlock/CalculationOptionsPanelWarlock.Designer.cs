@@ -38,8 +38,13 @@
             this.trkDelay = new System.Windows.Forms.TrackBar();
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.chbUseDoomguard = new System.Windows.Forms.CheckBox();
+            this.trkLT = new System.Windows.Forms.TrackBar();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
+            this.chbLTOnFiller = new System.Windows.Forms.CheckBox();
+            this.tbAffEffects = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.lblLT = new System.Windows.Forms.Label();
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblFSR = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
@@ -64,6 +69,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkLT)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
             this.tabChar.SuspendLayout();
@@ -73,7 +79,7 @@
             // 
             // trkJoW
             // 
-            this.trkJoW.Location = new System.Drawing.Point(9, 274);
+            this.trkJoW.Location = new System.Drawing.Point(9, 308);
             this.trkJoW.Maximum = 100;
             this.trkJoW.Name = "trkJoW";
             this.trkJoW.Size = new System.Drawing.Size(270, 42);
@@ -84,7 +90,7 @@
             // 
             // trkReplenishment
             // 
-            this.trkReplenishment.Location = new System.Drawing.Point(9, 226);
+            this.trkReplenishment.Location = new System.Drawing.Point(9, 260);
             this.trkReplenishment.Maximum = 100;
             this.trkReplenishment.Name = "trkReplenishment";
             this.trkReplenishment.Size = new System.Drawing.Size(270, 42);
@@ -95,7 +101,7 @@
             // 
             // trkFightLength
             // 
-            this.trkFightLength.Location = new System.Drawing.Point(9, 128);
+            this.trkFightLength.Location = new System.Drawing.Point(9, 162);
             this.trkFightLength.Maximum = 20;
             this.trkFightLength.Minimum = 1;
             this.trkFightLength.Name = "trkFightLength";
@@ -107,7 +113,7 @@
             // 
             // trkFSR
             // 
-            this.trkFSR.Location = new System.Drawing.Point(9, 80);
+            this.trkFSR.Location = new System.Drawing.Point(9, 114);
             this.trkFSR.Maximum = 100;
             this.trkFSR.Name = "trkFSR";
             this.trkFSR.Size = new System.Drawing.Size(270, 42);
@@ -118,7 +124,7 @@
             // 
             // trkDelay
             // 
-            this.trkDelay.Location = new System.Drawing.Point(9, 177);
+            this.trkDelay.Location = new System.Drawing.Point(9, 211);
             this.trkDelay.Maximum = 1000;
             this.trkDelay.Name = "trkDelay";
             this.trkDelay.Size = new System.Drawing.Size(270, 42);
@@ -151,6 +157,18 @@
             this.chbUseDoomguard.UseVisualStyleBackColor = true;
             this.chbUseDoomguard.CheckedChanged += new System.EventHandler(this.chbUseDoomguard_CheckedChanged);
             // 
+            // trkLT
+            // 
+            this.trkLT.Location = new System.Drawing.Point(9, 356);
+            this.trkLT.Maximum = 100;
+            this.trkLT.Name = "trkLT";
+            this.trkLT.Size = new System.Drawing.Size(270, 42);
+            this.trkLT.TabIndex = 72;
+            this.trkLT.TickFrequency = 5;
+            this.toolTip1.SetToolTip(this.trkLT, "Percentage of Mana on which to use Life Tap. 0% is when needed to cast a spell, 1" +
+                    "00% is as soon as no mana return is wasted.");
+            this.trkLT.Scroll += new System.EventHandler(this.trkLT_Scroll);
+            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabFight);
@@ -164,6 +182,11 @@
             // 
             // tabFight
             // 
+            this.tabFight.Controls.Add(this.chbLTOnFiller);
+            this.tabFight.Controls.Add(this.tbAffEffects);
+            this.tabFight.Controls.Add(this.label2);
+            this.tabFight.Controls.Add(this.trkLT);
+            this.tabFight.Controls.Add(this.lblLT);
             this.tabFight.Controls.Add(this.lblDelay);
             this.tabFight.Controls.Add(this.lblFSR);
             this.tabFight.Controls.Add(this.trkJoW);
@@ -186,10 +209,52 @@
             this.tabFight.Text = "Fight";
             this.tabFight.UseVisualStyleBackColor = true;
             // 
+            // chbLTOnFiller
+            // 
+            this.chbLTOnFiller.AutoSize = true;
+            this.chbLTOnFiller.Location = new System.Drawing.Point(14, 392);
+            this.chbLTOnFiller.Name = "chbLTOnFiller";
+            this.chbLTOnFiller.Size = new System.Drawing.Size(222, 17);
+            this.chbLTOnFiller.TabIndex = 75;
+            this.chbLTOnFiller.Text = "Use Life Tap only to replace the filler spell";
+            this.toolTip1.SetToolTip(this.chbLTOnFiller, "Check this to only replace the last spell in your rotation with Life Tap. Warning" +
+                    ": if you set the slider to low you\'ll be left standing around to regen mana!");
+            this.chbLTOnFiller.UseVisualStyleBackColor = true;
+            this.chbLTOnFiller.CheckedChanged += new System.EventHandler(this.chbLTOnFiller_CheckedChanged);
+            // 
+            // tbAffEffects
+            // 
+            this.tbAffEffects.Location = new System.Drawing.Point(179, 69);
+            this.tbAffEffects.Name = "tbAffEffects";
+            this.tbAffEffects.Size = new System.Drawing.Size(100, 20);
+            this.tbAffEffects.TabIndex = 74;
+            this.tbAffEffects.Text = "5";
+            this.toolTip1.SetToolTip(this.tbAffEffects, "Enter how many Affliction effects are on the target except your own.");
+            this.tbAffEffects.TextChanged += new System.EventHandler(this.tbAffEffects_Changed);
+            this.tbAffEffects.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAffEffects_KeyPress);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(130, 13);
+            this.label2.TabIndex = 73;
+            this.label2.Text = "Affliction effects on target:";
+            // 
+            // lblLT
+            // 
+            this.lblLT.AutoSize = true;
+            this.lblLT.Location = new System.Drawing.Point(6, 340);
+            this.lblLT.Name = "lblLT";
+            this.lblLT.Size = new System.Drawing.Size(69, 13);
+            this.lblLT.TabIndex = 71;
+            this.lblLT.Text = "Life Tap at %";
+            // 
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(6, 161);
+            this.lblDelay.Location = new System.Drawing.Point(6, 195);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(34, 13);
             this.lblDelay.TabIndex = 70;
@@ -198,7 +263,7 @@
             // lblFSR
             // 
             this.lblFSR.AutoSize = true;
-            this.lblFSR.Location = new System.Drawing.Point(6, 64);
+            this.lblFSR.Location = new System.Drawing.Point(6, 98);
             this.lblFSR.Name = "lblFSR";
             this.lblFSR.Size = new System.Drawing.Size(101, 13);
             this.lblFSR.TabIndex = 67;
@@ -207,7 +272,7 @@
             // lblJoW
             // 
             this.lblJoW.AutoSize = true;
-            this.lblJoW.Location = new System.Drawing.Point(6, 258);
+            this.lblJoW.Location = new System.Drawing.Point(6, 292);
             this.lblJoW.Name = "lblJoW";
             this.lblJoW.Size = new System.Drawing.Size(123, 13);
             this.lblJoW.TabIndex = 65;
@@ -242,7 +307,7 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(6, 210);
+            this.lblReplenishment.Location = new System.Drawing.Point(6, 244);
             this.lblReplenishment.Name = "lblReplenishment";
             this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
             this.lblReplenishment.TabIndex = 63;
@@ -275,7 +340,7 @@
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Location = new System.Drawing.Point(6, 112);
+            this.lblFightLength.Location = new System.Drawing.Point(6, 146);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(66, 13);
             this.lblFightLength.TabIndex = 59;
@@ -397,6 +462,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkFSR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trkLT)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabFight.ResumeLayout(false);
             this.tabFight.PerformLayout();
@@ -439,6 +505,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chbUseDoomguard;
         private System.Windows.Forms.CheckBox chbPetSacrificed;
+        private System.Windows.Forms.TrackBar trkLT;
+        private System.Windows.Forms.Label lblLT;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox tbAffEffects;
+        private System.Windows.Forms.CheckBox chbLTOnFiller;
     }
 }
 

@@ -22,7 +22,7 @@ namespace Rawr.Warlock
                 switch (_currentChartName)
                 {
                     case "Mana Sources":
-                        _subPointNameColors.Add(string.Format("MP5 Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
+                        _subPointNameColors.Add(string.Format("Mana Sources ({0} Total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
                         break;
                     case "DPS Sources":
                         _subPointNameColors.Add(string.Format("DPS Sources ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Red);
@@ -111,7 +111,7 @@ namespace Rawr.Warlock
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Stat Values", "Mana Sources", "DPS Sources", "Mana Usage", "Haste Rating Gain" };
+                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", "Haste Rating Gain" };
                 return _customChartNames;
             }
         }
@@ -155,7 +155,7 @@ namespace Rawr.Warlock
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = Source.Name;
-                        comparison.SubPoints[0] = Source.Value * 5;
+                        comparison.SubPoints[0] = (float)Source.Value;
                         _currentChartTotal += comparison.SubPoints[0];
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
@@ -185,7 +185,7 @@ namespace Rawr.Warlock
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = spell.Name;
-                        comparison.SubPoints[0] = spell.SpellStatistics.ManaUsed * 5;
+                        comparison.SubPoints[0] = spell.SpellStatistics.ManaUsed;
                         _currentChartTotal += comparison.SubPoints[0];
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
@@ -205,73 +205,6 @@ namespace Rawr.Warlock
                         comparisonList.Add(comparison);
                     }
                     return comparisonList.ToArray();
-                case "Stat Values":
-                    CharacterCalculationsWarlock calcsBase = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsIntellect = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Intellect = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsSpirit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Spirit = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsMP5 = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Mp5 = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsSpellPower = GetCharacterCalculations(character, new Item() { Stats = new Stats() { SpellPower = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsHaste = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsCrit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { CritRating = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsHit = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsSta = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 50 } }) as CharacterCalculationsWarlock;
-                    CharacterCalculationsWarlock calcsRes = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 50 } }) as CharacterCalculationsWarlock;
-
-                    return new ComparisonCalculationBase[] {
-                        new ComparisonCalculationWarlock() { Name = "1 Intellect",
-                            OverallPoints = (calcsIntellect.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsIntellect.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsIntellect.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsIntellect.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Spirit",
-                            OverallPoints = (calcsSpirit.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsSpirit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSpirit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsSpirit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 MP5",
-                            OverallPoints = (calcsMP5.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsMP5.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsMP5.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsMP5.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Spell Power",
-                            OverallPoints = (calcsSpellPower.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsSpellPower.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSpellPower.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsSpellPower.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Haste",
-                            OverallPoints = (calcsHaste.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsHaste.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsHaste.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsHaste.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Crit",
-                            OverallPoints = (calcsCrit.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsCrit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsCrit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsCrit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Hit",
-                            OverallPoints = (calcsHit.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsHit.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsHit.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsHit.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Stamina",
-                            OverallPoints = (calcsSta.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsSta.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsSta.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsSta.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        },
-                        new ComparisonCalculationWarlock() { Name = "1 Resilience",
-                            OverallPoints = (calcsRes.OverallPoints - calcsBase.OverallPoints) / 50,
-                            DpsPoints = (calcsRes.SubPoints[0] - calcsBase.SubPoints[0]) / 50,
-                            SustainPoints = (calcsRes.SubPoints[1] - calcsBase.SubPoints[1]) / 50,
-                            SurvivalPoints = (calcsRes.SubPoints[2] - calcsBase.SubPoints[2]) / 50
-                        }};
                 default:
                     //_customChartNames = null;
                     _currentChartName = null;

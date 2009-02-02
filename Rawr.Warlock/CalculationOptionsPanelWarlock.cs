@@ -136,6 +136,17 @@ namespace Rawr.Warlock
             }
         }
 
+        private void trkLT_Scroll(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.LTUsePercent = trkLT.Value;
+                lblLT.Text = "Life Tap at " + trkLT.Value + "%";
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             if (!loading)
@@ -175,22 +186,51 @@ namespace Rawr.Warlock
                 calcOpts.PetSacrificed = chbPetSacrificed.Checked;
                 Character.OnCalculationsInvalidated();
             }
+        }
 
+        private void tbAffEffects_Changed(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.AffEffectsNumber = System.Convert.ToInt32(tbAffEffects.Text);
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void tbAffEffects_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!loading)
+                if (char.IsNumber(e.KeyChar) == false && char.IsControl(e.KeyChar) == false)
+                    e.Handled = true;
+        }
+
+        private void chbLTOnFiller_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.LTOnFiller = chbLTOnFiller.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
     }
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
 	{
         public int TargetLevel { get; set; }
+        public int AffEffectsNumber { get; set; }
         public float FightLength { get; set; }
         public float FSRRatio { get; set; }
         public float Delay { get; set; }
         public float Replenishment { get; set; }
         public float JoW { get; set; }
+        public float LTUsePercent { get; set; }
         public float Survivability { get; set; }
         public String Pet { get; set; }
         public bool PetSacrificed { get; set; }
         public bool UseDoomguard { get; set; }
+        public bool LTOnFiller { get; set; }
 
         public List<string> SpellPriority { get; set; }
 

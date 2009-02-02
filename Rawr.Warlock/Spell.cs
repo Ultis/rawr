@@ -110,7 +110,7 @@ namespace Rawr.Warlock
         public float CritCount { get; set; }
         public float MissCount { get; set; }
         public float HitCount { get; set; }
-        public float CooldownReset { get; set; }
+        public double CooldownReset { get; set; }
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
     }
@@ -182,6 +182,22 @@ namespace Rawr.Warlock
             }
         }
 
+        public virtual float AvgDirectDamage
+        {
+            get
+            {
+                return AvgHit * (1f - CritChance) + AvgCrit * CritChance;
+            }
+        }
+
+        public virtual float AvgDotDamage
+        {
+            get
+            {
+                return DotDamage / (DebuffDuration / TimeBetweenTicks);
+            }
+        }
+
         public virtual float AvgDamage
         {
             get
@@ -243,7 +259,6 @@ namespace Rawr.Warlock
                 return MinDamage * CritCoef;
             }
         }
-
         #endregion
 
         public Spell(string name, Stats stats, Character character, List<SpellData> SpellRankTable, int manaCost, float castTime, float critCoef, float dotDuration, float damageCoef, int range, float cooldown, Color col, MagicSchool magicSchool, SpellTree spelltree)
@@ -268,9 +283,11 @@ namespace Rawr.Warlock
             BaseRange = Range = range;
             CritChance = 0f;
             BaseCritCoef = CritCoef = critCoef;
-            GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
             Cooldown = cooldown;
             SpellStatistics = new SpellStatistics();
+            if (character.WarlockTalents.AmplifyCurse > 0 && Name.StartsWith("Curse of"))
+                GlobalCooldown = (float)Math.Max(0.5f, 1.0f / (1 + stats.SpellHaste));
+            else GlobalCooldown = (float)Math.Max(1.0f, 1.5f / (1 + stats.SpellHaste));
             MagicSchool = magicSchool;
             SpellTree = spelltree;
             if (character.Level >= 70 && character.Level <= 80)
@@ -364,6 +381,9 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
@@ -396,6 +416,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
             
@@ -601,7 +623,7 @@ namespace Rawr.Warlock
         }
     }
 
-    //Drain Soul: Channeled - 710 dmg over 15 sec, ticks every 3 sec. If target <25% health Drain Soul causes 4 times the dmg. < 25% multiplier, Ticks and Shard gained not implemented.
+    //Drain Soul: Shard gained not implemented.
     public class DrainSoul : Spell
     {
         static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
@@ -718,7 +740,8 @@ namespace Rawr.Warlock
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier);
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             CritChance = stats.SpellCrit;
 
@@ -758,6 +781,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -789,6 +814,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -822,9 +849,8 @@ namespace Rawr.Warlock
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
 
-            CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.1f) / (1 + stats.SpellHaste));
-
-            CritCoef = BaseCritCoef + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             CritChance = stats.SpellCrit;
 
@@ -861,10 +887,12 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
-            TimeBetweenTicks = 1f / (1 + stats.SpellHaste);
+            TimeBetweenTicks = 1f;
         }
     }
 
@@ -891,7 +919,7 @@ namespace Rawr.Warlock
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
-            TimeBetweenTicks = 1f / (1 + stats.SpellHaste);
+            TimeBetweenTicks = 1f;
         }
     }
 
@@ -923,6 +951,8 @@ namespace Rawr.Warlock
             if (character.WarlockTalents.ImprovedSearingPain == 1) CritChance += 4f;
             else if (character.WarlockTalents.ImprovedSearingPain == 2) CritChance += 7f;
             else if (character.WarlockTalents.ImprovedSearingPain == 3) CritChance += 10f;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -953,6 +983,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.4f));
 
@@ -985,6 +1017,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -1015,6 +1049,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit /*+ character.PriestTalents.MindMelt * 0.02f*/;
+            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
+                     * (1 + character.WarlockTalents.Ruin * 0.2f);
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.1f));
 

@@ -65,7 +65,7 @@ namespace Rawr.Warlock
 
         public SolverBase GetSolver(Character character, Stats stats)
         {
-                return new SolverShadow(stats, character);
+                return new SolverNew(stats, character);
         }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
