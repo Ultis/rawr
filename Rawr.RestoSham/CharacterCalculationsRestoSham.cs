@@ -33,6 +33,10 @@ namespace Rawr.RestoSham
         public float SpellCrit { get; set; }
         public float TotalManaPool { get; set; }
         public float TotalHealed { get; set; }
+        public float FightMPS { get; set; }
+        public float BurstMPS { get; set; }
+        public float TotalHPS { get; set; }
+        public float TillOOM { get; set; }
         public float FightHPS { get; set; }
         public float ESLHWHPSMT { get; set; }
         public float ESHWHPSMT { get; set; }
@@ -69,6 +73,9 @@ namespace Rawr.RestoSham
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
                        Math.Round(BasicStats.HasteRating / 15.7, 2), BasicStats.HasteRating.ToString()));
+            values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
+            values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
+            values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
             values.Add("Fight HPS", Math.Round(FightHPS, 0).ToString());
             values.Add("ES + LHW HPS", Math.Round(ESLHWHPSMT, 0).ToString());
             values.Add("ES + LHW OOM", Math.Round(ESLHWMPSMT, 0).ToString());

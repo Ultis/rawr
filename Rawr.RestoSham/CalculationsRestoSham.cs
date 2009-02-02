@@ -48,6 +48,9 @@ namespace Rawr.RestoSham
                           "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
                           "Basic Stats:Heal Spell Crit",
                           "Basic Stats:Spell Haste",
+                          "Totals:Total HPS*Includes Burst and Sustained",
+                          "Totals:Time to OOM*In Seconds",
+                          "Totals:Total Healed*Includes Burst and Sustained",
                           "Fight Details:Fight HPS" ,
                           "Fight Details:ES + LHW HPS",
                           "Fight Details:ES + LHW OOM*Seconds into the fight you are expected to go Out of Mana",
@@ -264,10 +267,10 @@ namespace Rawr.RestoSham
             float RTWH2CHRTMPSMT = (((RTM / RTC) + ((HWM / HWC) * 2) + (CHM / CHC)) / 4);
             float RTLWH4MPSMT = (((RTM / RTC) + ((LHWM / LHWTC) * 2) + ((LHWM / LHWC) * 2)) / 5);
             float RTWH3MPSMT = (((RTM / RTC) + ((HWM / HWTC) * 2) + ((HWM / HWC))) / 4);
-            float ESLHWMPSMT = (ESCMPS + ((EFL / (LHWC * Hasted)) * LHWM)) / Time;
-            float ESHWMPSMT = (ESCMPS + ((EFL / ((HWC) * Hasted)) * HWM)) / Time;
-            float ESCHMPSMT = (ESCMPS + ((EFL / (CHC * Hasted)) * CHM)) / Time;
-            float RTMPSMT = (ESCMPS + ((EFL / (RTC * Hasted)) * RTM)) / Time;
+            float ESLHWMPSMT = (ESCMPS + ((EFL / LHWC) * LHWM)) / Time;
+            float ESHWMPSMT = (ESCMPS + ((EFL / (HWC)) * HWM)) / Time;
+            float ESCHMPSMT = (ESCMPS + ((EFL / CHC) * CHM)) / Time;
+            float RTMPSMT = (ESCMPS + ((EFL / RTC) * RTM)) / Time;
 
             // Calculate Best HPS
             calcStats.RTLWH2CHRTHPSMT = (((RTHeal / RTC) + ((LHWHeal / LHWC) * 2) + (CHRTHeal / CHC)) / 4) * (Math.Min(((CurrentMana / RTLWH2CHRTMPSMT) / Time), 1));
@@ -277,7 +280,7 @@ namespace Rawr.RestoSham
             calcStats.ESLHWHPSMT = (ESC + ((LHWHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESLHWMPSMT) / Time), 1));
             calcStats.ESHWHPSMT = (ESC + ((HWHeal * (EFL / ((HWC) * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESHWMPSMT) / Time), 1));
             calcStats.ESCHHPSMT = (ESC + ((CHHeal * (EFL / (CHC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / ESCHMPSMT) / Time), 1));
-            calcStats.ESRTCHCHHPSMT = ((ESC + ((RTHeal * (EFL / (LHWC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / RTMPSMT) / Time), 1)) / 3) + (calcStats.ESCHHPSMT / 3 * 2);
+            calcStats.ESRTCHCHHPSMT = ((ESC + ((RTHeal * (EFL / (RTC * Hasted))) / EFL)) * (Math.Min(((CurrentMana / RTMPSMT) / Time), 1)) / 3) + (calcStats.ESCHHPSMT / 3 * 2);
             if (calcStats.ESCHHPSMT > calcStats.ESHWHPSMT)
                 if (calcStats.ESCHHPSMT > calcStats.ESLHWHPSMT)
                     if (calcStats.ESCHHPSMT > calcStats.ESRTCHCHHPSMT)
@@ -321,10 +324,43 @@ namespace Rawr.RestoSham
             calcStats.RTWH2CHRTMPSMT = CurrentMana / RTWH2CHRTMPSMT;
             calcStats.RTLWH4MPSMT = CurrentMana / RTLWH4MPSMT;
             calcStats.RTWH3MPSMT = CurrentMana / RTWH3MPSMT;
+            if (calcStats.ESCHMPSMT > calcStats.ESHWMPSMT)
+                if (calcStats.ESCHMPSMT > calcStats.ESLHWMPSMT)
+                    if (calcStats.ESCHMPSMT > calcStats.ESRTCHCHMPSMT)
+                        calcStats.FightMPS = calcStats.ESCHMPSMT;
+            if (calcStats.ESHWMPSMT > calcStats.ESCHMPSMT)
+                if (calcStats.ESHWMPSMT > calcStats.ESLHWMPSMT)
+                    if (calcStats.ESHWMPSMT > calcStats.ESRTCHCHMPSMT)
+                        calcStats.FightMPS = calcStats.ESHWMPSMT;
+            if (calcStats.ESLHWMPSMT > calcStats.ESCHMPSMT)
+                if (calcStats.ESLHWMPSMT > calcStats.ESHWMPSMT)
+                    if (calcStats.ESLHWMPSMT > calcStats.ESRTCHCHMPSMT)
+                        calcStats.FightMPS = calcStats.ESLHWMPSMT;
+            if (calcStats.ESRTCHCHMPSMT > calcStats.ESHWMPSMT)
+                if (calcStats.ESRTCHCHMPSMT > calcStats.ESLHWMPSMT)
+                    if (calcStats.ESRTCHCHMPSMT > calcStats.ESCHMPSMT)
+                        calcStats.FightMPS = calcStats.ESRTCHCHMPSMT;
+            if (calcStats.RTLWH2CHRTMPSMT > calcStats.RTWH2CHRTMPSMT)
+                if (calcStats.RTLWH2CHRTMPSMT > calcStats.RTLWH4MPSMT)
+                    if (calcStats.RTLWH2CHRTMPSMT > calcStats.RTWH3MPSMT)
+                        calcStats.BurstMPS = calcStats.RTLWH2CHRTMPSMT;
+            if (calcStats.RTWH2CHRTMPSMT > calcStats.RTLWH2CHRTMPSMT)
+                if (calcStats.RTWH2CHRTMPSMT > calcStats.RTLWH4MPSMT)
+                    if (calcStats.RTWH2CHRTMPSMT > calcStats.RTWH3MPSMT)
+                        calcStats.BurstMPS = calcStats.RTWH2CHRTMPSMT;
+            if (calcStats.RTLWH4MPSMT > calcStats.RTLWH2CHRTMPSMT)
+                if (calcStats.RTLWH4MPSMT > calcStats.RTWH2CHRTMPSMT)
+                    if (calcStats.RTLWH4MPSMT > calcStats.RTWH3MPSMT)
+                        calcStats.BurstMPS = calcStats.RTLWH4MPSMT;
+            if (calcStats.RTWH3MPSMT > calcStats.RTWH2CHRTMPSMT)
+                if (calcStats.RTWH3MPSMT > calcStats.RTLWH4MPSMT)
+                    if (calcStats.RTWH3MPSMT > calcStats.RTLWH2CHRTMPSMT)
+                        calcStats.BurstMPS = calcStats.RTWH3MPSMT;
 
             // Final Stats
-            float AllHealing = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS);
-            calcStats.TotalHealed = AllHealing * (options.FightLength * 60f);
+            calcStats.TillOOM = (Burst * calcStats.BurstMPS) + (Sustained * calcStats.FightMPS);
+            calcStats.TotalHPS = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS);
+            calcStats.TotalHealed = calcStats.TotalHPS * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
