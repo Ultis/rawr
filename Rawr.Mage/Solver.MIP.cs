@@ -445,12 +445,12 @@ namespace Rawr.Mage
                 // potion of wild magic
                 if (valid && potionOfWildMagicAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.PotionOfWildMagic, 15, 120);
+                    valid = ValidateCooldown(Cooldown.PotionOfWildMagic, 15, calculationOptions.FightDuration);
                 }
                 // potion of speed
-                if (valid && potionOfWildMagicAvailable)
+                if (valid && potionOfSpeedAvailable)
                 {
-                    valid = ValidateCooldown(Cooldown.PotionOfSpeed, 15, 120);
+                    valid = ValidateCooldown(Cooldown.PotionOfSpeed, 15, calculationOptions.FightDuration);
                 }
                 // t1
                 if (valid && trinket1Available)
@@ -2068,6 +2068,93 @@ namespace Rawr.Mage
             return valid;
         }
 
+        private void EnforceRemoteEffectCooldown(int seg1, int seg3, int cooldowns, Cooldown effect, double effectCooldown, double effectDuration)
+        {
+            const double eps = 0.000001;
+            // example case:
+            // activations at seg1, seg2, seg3
+            // we know that activations are ok consecutively
+            // (seg2 - seg1 + 1) * segmentDuration - segCount[seg2] >= effectCooldown +? (segmentDuration - segCount[seg1])
+            // (seg3 - seg2 + 1) * segmentDuration - segCount[seg3] >= effectCooldown +? (segmentDuration - segCount[seg2])
+            // from this it follows that
+            // (seg3 - seg1 + 2) * segmentDuration - segCount[seg2] - segCount[seg3] >= 2 * effectCooldown +? (segmentDuration - segCount[seg1]) +? (segmentDuration - segCount[seg2])
+            // (seg3 - seg1 + 1) * segmentDuration - segCount[seg3] + (segmentDuration - segCount[seg2]) >= 2 * effectCooldown +? (segmentDuration - segCount[seg1]) +? (segmentDuration - segCount[seg2])
+            // (seg3 - seg1 + 1) * segmentDuration - segCount[seg3] >= 2 * effectCooldown +? (segmentDuration - segCount[seg1]) +? (segmentDuration - segCount[seg2]) - (segmentDuration - segCount[seg2])
+            // if seg2 is a free segment then we're loose by (segmentDuration - segCount[seg2])
+            // on more remote activations each loose activation in between increases the gap and can increase over one segmentDuration
+            // however if all less remote activations are satisfied then the looseness is hard-limited to the least free segment (if there is at least one right bound activation in between then this is auto satisfied)
+            // 1 >= (1 - segCount[seg2] / segmentDuration) >= 2 * effectCooldown / segmentDuration +? (1 - segCount[seg1] / segmentDuration) - (seg3 - seg1 + 1) + segCount[seg3] / segmentDuration >= 0
+
+            // if seg1 free then seg2 starting late gives
+            // (seg2 - seg1) * segmentDuration >= ([effectCooldown / segmentDuration] + 1) * segmentDuration
+            // (seg3 - seg2 + 1) * segmentDuration - segCount[seg3] >= effectCooldown +? (segmentDuration - segCount[seg2])
+            // (seg3 - seg1 + 1) * segmentDuration - segCount[seg3] >= (effectCooldown + ([effectCooldown / segmentDuration] + 1) * segmentDuration) +? (segmentDuration - segCount[seg2]) >=? 2 * effectCooldown +? (segmentDuration - segCount[seg1])
+            // so its auto satisfied
+            // if seg1 is right bound then
+            // (seg2 - seg1) * segmentDuration >= 2 * segmentDuration + [(effectCooldown - segCount[seg1]) / segmentDuration] * segmentDuration
+            // (seg3 - seg2 + 1) * segmentDuration - segCount[seg3] >= effectCooldown +? (segmentDuration - segCount[seg2])
+            // (seg3 - seg1 + 1) * segmentDuration - segCount[seg3] >= effectCooldown +? (segmentDuration - segCount[seg2]) + 2 * segmentDuration + [(effectCooldown - segCount[seg1]) / segmentDuration] * segmentDuration >=? 2 * effectCooldown + segmentDuration - segCount[seg1]
+            // segmentDuration + [(effectCooldown - segCount[seg1]) / segmentDuration] * segmentDuration >=? effectCooldown - segCount[seg1]
+            // in all cases seg2 activation has to happen exactly in that segment for this situation to happen
+
+            // to eliminate this situation therefore we have the following branches
+            // seg1 is not free and we restrict the distance
+            // seg1 is free and we restrict the distance
+            // no activation at seg1
+            // no activation at seg2
+            // no activation at seg3
+
+            SolverLP branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict remote activation of " + effect + " at " + seg1);
+            // make sure there is enough distance between the activations
+            // t1 = (seg1 + 1) * segmentDuration - count[seg1]
+            // t2 = (seg3 + 1) * segmentDuration - count[seg3]
+            // count[seg3] - count[seg1] <= (seg3 - seg1) * segmentDuration - c
+            int row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, seg1, -1.0);
+            SetCooldownElements(branchlp, row, effect, seg3, 1.0);
+            branchlp.SetConstraintRHS(row, (seg3 - seg1) * segmentDuration - cooldowns * effectCooldown);
+            branchlp.ForceRecalculation(true);
+            HeapPush(branchlp);
+            if (effectDuration < segmentDuration - eps)
+            {
+                double buffer = 0.0;
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict remote activation of " + effect + " at " + seg1 + ", version for short effects");
+                // make sure seg1 is actually a free activation
+                DisableCooldown(branchlp, effect, seg1 + 1);
+                // make sure there is enough distance between the activations
+                // t1 = seg1 * segmentDuration
+                // t2 = (seg3 + 1) * segmentDuration - count[seg3]
+                // count[seg3] <= (seg3 - seg1 + 1) * segmentDuration - c
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg3, 1.0);
+                branchlp.SetConstraintRHS(row, (seg3 - seg1 + 1) * segmentDuration - cooldowns * effectCooldown - buffer);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            // if first activation moves to seg1 - 1
+            if (seg1 >= 1) RestrictConsecutiveActivation(effect, effectCooldown, effectDuration, seg1 - 1);
+            // if seg1 is disabled
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce remote cooldown after " + effect + " at " + seg1 + ", remove effect at " + seg1);
+            DisableCooldown(branchlp, effect, seg1);
+            HeapPush(branchlp);
+            // if seg3 is disabled
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce remote cooldown after " + effect + " at " + seg1 + ", remove effect at " + seg3);
+            DisableCooldown(branchlp, effect, seg3);
+            HeapPush(branchlp);
+            // restrict intermediate activations
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce remote cooldown after " + effect + " at " + seg1 + ", remove intermediate effects");
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, seg1, seg3 - 1, 1.0);
+            branchlp.SetConstraintRHS(row, (cooldowns - 1) * effectDuration);
+            branchlp.ForceRecalculation(true);
+            HeapPush(branchlp);
+        }
+
         private void EnforceEffectCooldown(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration)
         {
             const double eps = 0.000001;
@@ -3001,7 +3088,7 @@ namespace Rawr.Mage
 
             if (cooldown != Cooldown.None && (!coldsnapAvailable || (cooldown != Cooldown.WaterElemental && cooldown != Cooldown.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
             {
-                double lastStart = double.NegativeInfinity;
+                /*double lastStart = double.NegativeInfinity;
                 double effectCooldown = 0.0;
                 bool effectActive = false;
                 for (int seg = 0; seg < segments; seg++)
@@ -3044,6 +3131,46 @@ namespace Rawr.Mage
                 {
                     EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration);
                     return false;
+                }*/
+
+                List<int> activations = new List<int>();
+                // validate consecutive activations
+                double lastStart = double.NegativeInfinity;
+                for (int seg = 0; seg < segments; seg++)
+                {
+                    if (segCount[seg] > eps && (seg == 0 || segCount[seg - 1] < eps))
+                    {
+                        activations.Add(seg);
+                        // activation at the latest (seg + 1) * segmentDuration - segCount[seg]
+                        // make sure (seg + 1) * segmentDuration - segCount[seg] - lastStart >= cooldownDuration
+                        if ((seg + 1) * segmentDuration - segCount[seg] - lastStart < cooldownDuration - eps)
+                        {
+                            EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration);
+                            return false;
+                        }
+                        lastStart = seg * segmentDuration;
+                        if (seg + 1 < segments && segCount[seg + 1] > eps) lastStart = (seg + 1) * segmentDuration - segCount[seg];
+                    }
+                }
+
+                for (int cooldowns = 2; cooldowns < activations.Count; cooldowns++)
+                {
+                    for (int act = 0; act < activations.Count - cooldowns; act++)
+                    {
+                        int seg1 = activations[act];
+                        int seg3 = activations[act + cooldowns];
+                        // first activation at seg1 * segmentDuration or (seg1 + 1) * segmentDuration - segCount[seg1] if activation is right bound
+                        double firstActivation = seg1 * segmentDuration;
+                        if (seg1 + 1 < segments && segCount[seg1 + 1] > eps) firstActivation = (seg1 + 1) * segmentDuration - segCount[seg1];
+                        // remote activation at (seg3 + 1) * segmentDuration - segCount[seg3]
+                        // make sure (seg3 + 1) * segmentDuration - segCount[seg3] - firstActivation >= cooldowns * cooldownDuration
+                        if ((seg3 + 1) * segmentDuration - segCount[seg3] - firstActivation < cooldowns * cooldownDuration - eps)
+                        {
+                            EnforceRemoteEffectCooldown(seg1, seg3, cooldowns, cooldown, cooldownDuration, effectDuration);
+                            return false;
+                        }
+
+                    }
                 }
             }
 

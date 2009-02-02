@@ -203,30 +203,23 @@ namespace Rawr.Mage
             List<SequenceGroup> list = sequence.GroupManaGemEffect();
             if (list != null && BaseStats.SpellPowerFor15SecOnManaGem > 0 && CalculationOptions.DisplaySegmentCooldowns && ColumnManaOverflow != -1)
             {
-                float manaBurn = 80;
-                if (CalculationOptions.AoeDuration > 0)
+                float manaBurn = 0;
+                for (int i = 0; i < SolutionVariable.Count; i++)
                 {
-                    Spell s = BaseState.GetSpell(SpellId.ArcaneExplosion);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (Character.MageTalents.EmpoweredFire > 0)
-                {
-                    Spell s = BaseState.GetSpell(SpellId.Fireball);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (Character.MageTalents.EmpoweredFrostbolt > 0)
-                {
-                    Spell s = BaseState.GetSpell(SpellId.FrostboltFOF);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-                }
-                else if (Character.MageTalents.SpellPower > 0)
-                {
-                    Spell s = BaseState.GetSpell(SpellId.AB3ABar3C);
-                    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                    if (Solution[i] > 0.01 && SolutionVariable[i].Segment == 0 && SolutionVariable[i].Type == VariableType.Spell)
+                    {
+                        CastingState state = SolutionVariable[i].State;
+                        if (state != null && !state.GetCooldown(Cooldown.ManaGemEffect))
+                        {
+                            float burn = SolutionVariable[i].Spell.ManaPerSecond;
+                            if (burn > manaBurn) manaBurn = burn;
+                        }
+                    }
                 }
 
                 double overflow = Solution[ColumnManaOverflow];
-                double tmin = (ManaGemValue * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
+                double tmin = 0;
+                if (manaBurn > 0) tmin = (ManaGemValue * (1 + BaseStats.BonusManaGem) - overflow) / manaBurn;
 
                 foreach (SequenceGroup g in list)
                 {
