@@ -11,54 +11,13 @@ namespace Rawr.ProtWarr
         protected Stats Stats;
         protected Ability Ability;
 
-        private float _miss;
-        public float Miss
-        {
-            get { return _miss; }
-            protected set { _miss = value; }
-        }
-
-        private float _dodge;
-        public float Dodge
-        {
-            get { return _dodge; }
-            protected set { _dodge = value; }
-        }
-
-        private float _parry;
-        public float Parry
-        {
-            get { return _parry; }
-            protected set { _parry = value; }
-        }
-
-        private float _block;
-        public float Block
-        {
-            get { return _block; }
-            protected set { _block = value; }
-        }
-
-        private float _glance;
-        public float Glance
-        {
-            get { return _glance; }
-            protected set { _glance = value; }
-        }
-
-        private float _critical;
-        public float Critical
-        {
-            get { return _critical; }
-            protected set { _critical = value; }
-        }
-
-        private float _hit;
-        public float Hit
-        {
-            get { return _hit; }
-            protected set { _hit = value; }
-        }
+        public float Miss { get; protected set; }
+        public float Dodge { get; protected set; }
+        public float Parry { get; protected set; }
+        public float Block { get; protected set; }
+        public float Glance { get; protected set; }
+        public float Critical { get; protected set; }
+        public float Hit { get; protected set; }
 
         public float AnyHit
         {

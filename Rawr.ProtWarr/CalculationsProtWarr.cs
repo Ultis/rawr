@@ -46,6 +46,7 @@ namespace Rawr.ProtWarr
 					"Defensive Stats:Avoidance",
                     "Defensive Stats:Avoidance + Block",
 					"Defensive Stats:Total Mitigation",
+                    "Defensive Stats:Attacker Speed",
 					"Defensive Stats:Damage Taken",
 
                     "Offensive Stats:Weapon Speed",
@@ -226,6 +227,8 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats);
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
+            calculatedStats.BaseAttackerSpeed = calcOpts.BossAttackSpeed;
+            calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
             calculatedStats.DamageTaken = dm.DamagePerSecond;
             calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
             calculatedStats.DamageTakenPerBlockedHit = dm.DamagePerBlockedHit;
@@ -259,6 +262,17 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
                 calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth) / 100.0f;
                 calculatedStats.ThreatPoints *= 3.0f;
+            }
+            else if (calcOpts.UseBurstPoints)
+            {
+                double a = Convert.ToDouble(dm.DefendTable.AnyMiss);
+                double h = Convert.ToDouble(stats.Health);
+                double H = Convert.ToDouble(dm.DamagePerHit);
+                double s = Convert.ToDouble(dm.ParryModel.BossAttackSpeed / calcOpts.BossAttackSpeed);
+
+                calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) * s - 1.0d)) * 10.0f;
+                calculatedStats.MitigationPoints = 0.0f;
+                calculatedStats.ThreatPoints *= 1.15f;
             }
             else
             {

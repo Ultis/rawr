@@ -38,11 +38,18 @@ namespace Rawr.ProtWarr
 				Character.CalculationOptions = new CalculationOptionsProtWarr();
 
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+            calcOpts.UseBurstPoints = false;
+
             // Attacker Stats
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
 			trackBarTargetArmor.Value = calcOpts.TargetArmor;
             trackBarBossAttackValue.Value = calcOpts.BossAttackValue;
             trackBarBossAttackSpeed.Value = (int)(calcOpts.BossAttackSpeed / 0.25f);
+            checkBoxUseParryHaste.Checked = calcOpts.UseParryHaste;
+            // Stupid hack since you can't put in newlines into the VS editor properties
+            extendedToolTipUseParryHaste.ToolTipText =
+                extendedToolTipUseParryHaste.ToolTipText.Replace("May not", Environment.NewLine + "May not");
+
             // Ranking System
             if (calcOpts.ThreatScale > 24.0f) // Old scale value being saved, reset to default
                 calcOpts.ThreatScale = 8.0f;
@@ -96,10 +103,10 @@ namespace Rawr.ProtWarr
 			}
 		}
 
-		private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxUseParryHaste_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
+            CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+            calcOpts.UseParryHaste = checkBoxUseParryHaste.Checked;
             Character.OnCalculationsInvalidated();
         }
 
@@ -111,6 +118,12 @@ namespace Rawr.ProtWarr
             Character.OnCalculationsInvalidated();
         }
 
+		private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
+        {
+			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
+            Character.OnCalculationsInvalidated();
+        }
 	}
 
 	[Serializable]
@@ -130,9 +143,11 @@ namespace Rawr.ProtWarr
 		public int TargetArmor = 13100;
 		public int BossAttackValue = 25000;
         public float BossAttackSpeed = 2.0f;
+        public bool UseParryHaste = false;
 		public float ThreatScale = 8.0f;
         public float MitigationScale = 0.125f;
         public bool UseTankPoints = false;
+        public bool UseBurstPoints = false;
         public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
 		public WarriorTalents talents = null;

@@ -10,7 +10,8 @@ namespace Rawr.ProtWarr
         private Character Character;
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
-        
+        private ParryModel ParryModel;
+
         public AbilityModelList Abilities = new AbilityModelList();
 
         private AttackModelMode _attackModelMode;
@@ -182,7 +183,7 @@ namespace Rawr.ProtWarr
             }
 
             // White Damage
-            float weaponHits = modelLength / Lookup.WeaponSpeed(Character, Stats);
+            float weaponHits = modelLength / ParryModel.WeaponSpeed; //Lookup.WeaponSpeed(Character, Stats);
             if (RageModelMode == RageModelMode.Infinite)
             {
                 // Convert all white hits to heroic strikes
@@ -198,7 +199,7 @@ namespace Rawr.ProtWarr
                 modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;
             }
 
-            // Damage Shield, hardcoded at 2.0s attack speed... need to add attack speed as a character option
+            // Damage Shield
             float attackerHits = modelLength / Options.BossAttackSpeed;
             modelThreat += Abilities[Ability.DamageShield].Threat * attackerHits;
             modelDamage += Abilities[Ability.DamageShield].Damage * attackerHits;
@@ -222,23 +223,24 @@ namespace Rawr.ProtWarr
             Character        = character;
             Options          = Character.CalculationOptions as CalculationOptionsProtWarr;
             Stats            = stats;
+            ParryModel       = new ParryModel(character, stats);
             _attackModelMode = attackModelMode;
             _rageModelMode   = rageModelMode;
 
-            Abilities.Add(Ability.None, new AbilityModel(Character, Stats, Ability.None));
-            Abilities.Add(Ability.Cleave, new AbilityModel(Character, Stats, Ability.Cleave));
-            Abilities.Add(Ability.ConcussionBlow, new AbilityModel(Character, Stats, Ability.ConcussionBlow));
-            Abilities.Add(Ability.DamageShield, new AbilityModel(Character, Stats, Ability.DamageShield));
-            Abilities.Add(Ability.DeepWounds, new AbilityModel(Character, Stats, Ability.DeepWounds));
-            Abilities.Add(Ability.Devastate, new AbilityModel(Character, Stats, Ability.Devastate));
-            Abilities.Add(Ability.HeroicStrike, new AbilityModel(Character, Stats, Ability.HeroicStrike));
-            Abilities.Add(Ability.HeroicThrow, new AbilityModel(Character, Stats, Ability.HeroicThrow));
-            Abilities.Add(Ability.Rend, new AbilityModel(Character, Stats, Ability.Rend));
-            Abilities.Add(Ability.Revenge, new AbilityModel(Character, Stats, Ability.Revenge));
-            Abilities.Add(Ability.ShieldSlam, new AbilityModel(Character, Stats, Ability.ShieldSlam));
-            Abilities.Add(Ability.Shockwave, new AbilityModel(Character, Stats, Ability.Shockwave));
-            Abilities.Add(Ability.Slam, new AbilityModel(Character, Stats, Ability.Slam));
-            Abilities.Add(Ability.SunderArmor, new AbilityModel(Character, Stats, Ability.SunderArmor));
+            Abilities.Add(Ability.None, character, stats);
+            Abilities.Add(Ability.Cleave, character, stats);
+            Abilities.Add(Ability.ConcussionBlow, character, stats);
+            Abilities.Add(Ability.DamageShield, character, stats);
+            Abilities.Add(Ability.DeepWounds, character, stats);
+            Abilities.Add(Ability.Devastate, character, stats);
+            Abilities.Add(Ability.HeroicStrike, character, stats);
+            Abilities.Add(Ability.HeroicThrow, character, stats);
+            Abilities.Add(Ability.Rend, character, stats);
+            Abilities.Add(Ability.Revenge, character, stats);
+            Abilities.Add(Ability.ShieldSlam, character, stats);
+            Abilities.Add(Ability.Shockwave, character, stats);
+            Abilities.Add(Ability.Slam, character, stats);
+            Abilities.Add(Ability.SunderArmor, character, stats);
 
             Calculate();
         }

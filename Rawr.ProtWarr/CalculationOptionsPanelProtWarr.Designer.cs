@@ -51,7 +51,9 @@ namespace Rawr.ProtWarr
             this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.checkBoxUseTankPoints = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.extendedToolTipUseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
             this.labelBossAttackSpeed = new System.Windows.Forms.Label();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
@@ -93,7 +95,7 @@ namespace Rawr.ProtWarr
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(3, 142);
+            this.label2.Location = new System.Drawing.Point(3, 165);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 45);
             this.label2.TabIndex = 0;
@@ -106,7 +108,7 @@ namespace Rawr.ProtWarr
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 142);
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 165);
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
             this.trackBarTargetArmor.Size = new System.Drawing.Size(272, 45);
@@ -120,7 +122,7 @@ namespace Rawr.ProtWarr
             // 
             this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 179);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 202);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(266, 34);
             this.labelTargetArmorDescription.TabIndex = 0;
@@ -135,7 +137,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 367);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 391);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -311,7 +313,7 @@ namespace Rawr.ProtWarr
             this.groupBox1.Controls.Add(this.labelThreatScaleText);
             this.groupBox1.Controls.Add(this.labelMitigationScaleText);
             this.groupBox1.Controls.Add(this.trackBarMitigationScale);
-            this.groupBox1.Location = new System.Drawing.Point(3, 221);
+            this.groupBox1.Location = new System.Drawing.Point(3, 245);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(364, 140);
             this.groupBox1.TabIndex = 5;
@@ -320,7 +322,7 @@ namespace Rawr.ProtWarr
             // 
             // extendedToolTipLabel1
             // 
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(102, 117);
+            this.extendedToolTipLabel1.Location = new System.Drawing.Point(111, 117);
             this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
             this.extendedToolTipLabel1.Size = new System.Drawing.Size(134, 14);
             this.extendedToolTipLabel1.TabIndex = 6;
@@ -331,7 +333,7 @@ namespace Rawr.ProtWarr
             // checkBoxUseTankPoints
             // 
             this.checkBoxUseTankPoints.AutoSize = true;
-            this.checkBoxUseTankPoints.Location = new System.Drawing.Point(86, 118);
+            this.checkBoxUseTankPoints.Location = new System.Drawing.Point(95, 118);
             this.checkBoxUseTankPoints.Name = "checkBoxUseTankPoints";
             this.checkBoxUseTankPoints.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.checkBoxUseTankPoints.Size = new System.Drawing.Size(15, 14);
@@ -343,7 +345,9 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.extendedToolTipUseParryHaste);
             this.groupBox2.Controls.Add(this.labelBossSpeed);
+            this.groupBox2.Controls.Add(this.checkBoxUseParryHaste);
             this.groupBox2.Controls.Add(this.labelBossAttackSpeed);
             this.groupBox2.Controls.Add(this.trackBarBossAttackSpeed);
             this.groupBox2.Controls.Add(this.label1);
@@ -356,10 +360,21 @@ namespace Rawr.ProtWarr
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(364, 212);
+            this.groupBox2.Size = new System.Drawing.Size(364, 236);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Attacker Stats";
+            // 
+            // extendedToolTipUseParryHaste
+            // 
+            this.extendedToolTipUseParryHaste.Location = new System.Drawing.Point(111, 144);
+            this.extendedToolTipUseParryHaste.Name = "extendedToolTipUseParryHaste";
+            this.extendedToolTipUseParryHaste.Size = new System.Drawing.Size(134, 14);
+            this.extendedToolTipUseParryHaste.TabIndex = 8;
+            this.extendedToolTipUseParryHaste.Text = "Use Parry Haste *";
+            this.extendedToolTipUseParryHaste.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipUseParryHaste.ToolTipText = "Calculates the adjusted attacker speed based on parry hasting. May not be applica" +
+                "ble on all bosses. (e.g. Patchwerk does not parry haste.)";
             // 
             // labelBossSpeed
             // 
@@ -370,6 +385,17 @@ namespace Rawr.ProtWarr
             this.labelBossSpeed.Text = "Attack Speed: * (Default: 2.00s)";
             this.labelBossSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelBossSpeed.ToolTipText = "How often (in seconds) the boss attacks with the damage above.";
+            // 
+            // checkBoxUseParryHaste
+            // 
+            this.checkBoxUseParryHaste.AutoSize = true;
+            this.checkBoxUseParryHaste.Location = new System.Drawing.Point(95, 145);
+            this.checkBoxUseParryHaste.Name = "checkBoxUseParryHaste";
+            this.checkBoxUseParryHaste.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.checkBoxUseParryHaste.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxUseParryHaste.TabIndex = 7;
+            this.checkBoxUseParryHaste.UseVisualStyleBackColor = true;
+            this.checkBoxUseParryHaste.CheckedChanged += new System.EventHandler(this.checkBoxUseParryHaste_CheckedChanged);
             // 
             // labelBossAttackSpeed
             // 
@@ -451,5 +477,7 @@ namespace Rawr.ProtWarr
         private Rawr.CustomControls.ExtendedToolTipLabel labelBossSpeed;
         private System.Windows.Forms.Label labelBossAttackSpeed;
         private System.Windows.Forms.TrackBar trackBarBossAttackSpeed;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipUseParryHaste;
+        private System.Windows.Forms.CheckBox checkBoxUseParryHaste;
 	}
 }

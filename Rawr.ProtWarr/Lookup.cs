@@ -39,7 +39,7 @@ namespace Rawr.ProtWarr
                         return 0.08f;
 
                 case HitResult.Dodge:
-                    return 0.064f;
+                    return 0.065f;
 
                 case HitResult.Parry:
                     if ((calcOpts.TargetLevel - character.Level) < 3)
@@ -48,7 +48,7 @@ namespace Rawr.ProtWarr
                         return 0.1375f;
 
                 case HitResult.Glance:
-                    return 0.1f + ((calcOpts.TargetLevel - character.Level) * 0.05f);
+                    return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);
 
                 default:
                     return 0.0f;
@@ -113,8 +113,16 @@ namespace Rawr.ProtWarr
 
         public static float BonusCritPercentage(Character character, Stats stats)
         {
-            return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit) 
+            CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
+
+            if ((calcOpts.TargetLevel - character.Level) < 3)
+                // This formula may or may not be accurate anymore, as the modifier on +1/2 mobs is untested
+                return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit)
                                     - LevelModifier(character)) / 100.0f) + stats.PhysicalCrit);
+            else
+                // 4.8% chance to crit reduction as tested on bosses
+                return Math.Min(1.0f, (((stats.CritRating * ProtWarr.CritRatingToCrit) + (stats.Agility * ProtWarr.AgilityToCrit)
+                                    - 4.8f) / 100.0f) + stats.PhysicalCrit);
         }
 
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability)

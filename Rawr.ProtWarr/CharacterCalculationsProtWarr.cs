@@ -58,6 +58,8 @@ namespace Rawr.ProtWarr
         public float DodgePlusMissPlusParry { get; set; }
         public float DodgePlusMissPlusParryPlusBlock { get; set; }
         public float TotalMitigation { get; set; }
+        public float BaseAttackerSpeed { get; set; }
+        public float AttackerSpeed { get; set; }
         public float DamageTaken { get; set; }
         public float DamageTakenPerHit { get; set; }
         public float DamageTakenPerBlockedHit { get; set; }
@@ -104,15 +106,23 @@ namespace Rawr.ProtWarr
             dictValues.Add("Avoidance", string.Format("{0:0.00%}", DodgePlusMissPlusParry));
             dictValues.Add("Avoidance + Block", string.Format("{0:0.00%}", DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
+            
+            if(AttackerSpeed == BaseAttackerSpeed)
+                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s", AttackerSpeed));
+            else
+                dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (reduced by parry haste)", AttackerSpeed, BaseAttackerSpeed));
+            
             dictValues.Add("Damage Taken", 
                 string.Format("{0:0.0} DPS*{1:0} damage per successful attack" + Environment.NewLine +
                                 "{2:0} damage per blocked attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlockedHit));
+            
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
                                 "Reduces the effect of mana-drains and the damage of critical strikes by {2}%.",
                                 BasicStats.Resilience,
                                 BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction,
                                 BasicStats.Resilience * ProtWarr.ResilienceRatingToCritReduction * 2));
+            
             if (CritVulnerability > 0.0001f)
             {
                 double defenseNeeded = Math.Ceiling((CritVulnerability / (ProtWarr.DefenseToCritReduction / 100.0f)) / ProtWarr.DefenseRatingToDefense);
