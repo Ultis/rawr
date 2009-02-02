@@ -3470,6 +3470,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
                 if (potionOfWildMagicActive && 15 - (time - potionOfWildMagicTime) <= eps) potionOfWildMagicActive = false;
+                if (potionOfSpeedActive && 15 - (time - potionOfSpeedTime) <= eps) potionOfSpeedActive = false;
                 if (flameCapActive && 60 - (time - flameCapTime) <= eps) flameCapActive = false;
                 if (trinket1Active && Trinket1Duration - (time - trinket1time) <= eps) trinket1Active = false;
                 if (trinket2Active && Trinket2Duration - (time - trinket2time) <= eps) trinket2Active = false;
