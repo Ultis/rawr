@@ -107,6 +107,9 @@ namespace Rawr.TankDK
 
             dict["Threat"] = Threat.ToString("F1");
             dict["Overall"] = OverallPoints.ToString("F1");
+            dict["Modified Survival"] = (Survival * SurvivalWeight).ToString("F1");
+            dict["Modified Mitigation"] = (Mitigation).ToString("F1");
+            dict["Modified Threat"] = (Threat * ThreatWeight).ToString("F1");
 
             return dict;
         }

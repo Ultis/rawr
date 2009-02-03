@@ -94,7 +94,11 @@ namespace Rawr.TankDK
                         "Threat Stats:Target Dodge*Chance the target dodges",
                         "Threat Stats:Target Parry*Chance the target parries",
                         "Threat Stats:Threat",
+
                         "Overall Stats:Overall",
+                        "Overall Stats:Modified Survival",
+                        "Overall Stats:Modified Mitigation",
+                        "Overall Stats:Modified Threat",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -275,9 +279,9 @@ namespace Rawr.TankDK
 
             float attackerCrit = Math.Max(0.0f, 5.0f + levelDifference - critReduction);
             calcs.Crit = 5.0f + levelDifference - critReduction;
-            calcs.Defense = defSkill;
+            calcs.Defense = defSkill + stats.Defense;
             calcs.DefenseRating = stats.DefenseRating;
-            calcs.DefenseRatingNeeded = (attackerCrit / 0.04f) * 4.918498039f;
+            calcs.DefenseRatingNeeded = (calcs.Crit / 0.04f) * 4.918498039f;
 
             float critImpact = 1.0f;
 
@@ -308,7 +312,7 @@ namespace Rawr.TankDK
             calcs.Survival = hp / (complete_dr * (1.0f + attackerCrit/100.0f));
             calcs.SurvivalWeight = opts.SurvivalWeight;
 
-            calcs.Mitigation = hp / (complete_dr * (critHitAvoidance / 100.0f));
+            calcs.Mitigation = 10000.0f / (complete_dr * (critHitAvoidance / 100.0f));
             //calcs.Mitigation = hp / (complete_dr * (critHitAvoidance / 100.0f)) -calcs.Survival;
 
 
@@ -472,12 +476,11 @@ namespace Rawr.TankDK
             statsTotal.Intellect = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
-            statsTotal.Armor = (float)Math.Floor((statsGearEnchantsBuffs.Armor + 2f * statsTotal.Agility) * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier));
-            statsTotal.Armor *= 1.80f; // Frost Presence
+            statsTotal.Armor = (float)Math.Floor(statsGearEnchantsBuffs.Armor * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier) * 1.80f + 2f * statsTotal.Agility);
 
             statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
 
-            statsTotal.Health = (float)Math.Floor(statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) *  1.10f);
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
 
@@ -587,34 +590,35 @@ namespace Rawr.TankDK
             switch (character.Race)
             {
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 146f, Health = 2169f };
+                    statsRace = new Stats() { Strength = 108f, Agility = 73f, Stamina = 99f, Intellect = 29f, Spirit = 46f, Armor = 0f, Health = 2169f };
                     break;
                 case Character.CharacterRace.Dwarf:
-                    statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 138f, Health = 2199f };
+                    statsRace = new Stats() { Strength = 110f, Agility = 69f, Stamina = 102f, Intellect = 28f, Spirit = 41f, Armor = 0f, Health = 2199f };
                     break;
                 case Character.CharacterRace.NightElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 156f, Health = 2159f };
+                    statsRace = new Stats() { Strength = 105f, Agility = 78f, Stamina = 98f, Intellect = 29f, Spirit = 42f, Armor = 0f, Health = 2159f,
+                                                Miss = 0.02f};
                     break;
                 case Character.CharacterRace.Gnome:
-                    statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 152f, Health = 2159f };
+                    statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 0f, Health = 2159f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 140f, Health = 2159f };
+                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 0f, Health = 2159f };
                     break;
                 case Character.CharacterRace.Orc:
-                    statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 140f, Health = 2189f };
+                    statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 0f, Health = 2189f };
                     break;
                 case Character.CharacterRace.Troll:
-                    statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 150f, Health = 2179f };
+                    statsRace = new Stats() { Strength = 109f, Agility = 75f, Stamina = 100f, Intellect = 25f, Spirit = 43f, Armor = 0f, Health = 2179f };
                     break;
                 case Character.CharacterRace.Undead:
-                    statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 142f, Health = 2179f };
+                    statsRace = new Stats() { Strength = 107f, Agility = 71f, Stamina = 100f, Intellect = 27f, Spirit = 47f, Armor = 0f, Health = 2179f };
                     break;
                 case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 150f, Health = 2149f };
+                    statsRace = new Stats() { Strength = 105f, Agility = 75f, Stamina = 97f, Intellect = 33f, Spirit = 41f, Armor = 0f, Health = 2149f };
                     break;
                 case Character.CharacterRace.Tauren:
-                    statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 136f, Health = 2298f };
+                    statsRace = new Stats() { Strength = 113f, Agility = 68f, Stamina = 101f, Intellect = 24f, Spirit = 34f, Armor = 0f, Health = 2298f };
                     break;
 
                 default:
@@ -627,8 +631,8 @@ namespace Rawr.TankDK
             statsRace.Stamina += 61f;
             statsRace.Intellect += 6f;
             statsRace.Spirit += 17f;
-            // armor doesn't matter, its always 2x agility + items, then modifiers
-            statsRace.Health += 8328f;
+
+            statsRace.Health += 5792;
             statsRace.AttackPower = 202f + (67f * 2);
 
             return statsRace;
