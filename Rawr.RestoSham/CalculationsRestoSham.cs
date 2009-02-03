@@ -44,8 +44,8 @@ namespace Rawr.RestoSham
                           "Basic Stats:Intellect",
                           "Basic Stats:Spirit",
                           "Basic Stats:Spell Power",
-                          "Basic Stats:MP5 (in FSR)*Mana regeneration while casting (inside the 5-second rule)",
-                          "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
+                          "Basic Stats:MP5*Mana regeneration while casting",
+                          // "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
                           "Basic Stats:Heal Spell Crit",
                           "Basic Stats:Spell Haste",
                           "Totals:Total HPS*Includes Burst and Sustained",
@@ -171,7 +171,9 @@ namespace Rawr.RestoSham
 
             calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit;
+                + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit + 
+                (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + 
+                (character.ShamanTalents.BlessingOfTheEternals * 2)));
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
 
@@ -185,12 +187,13 @@ namespace Rawr.RestoSham
                     (stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
 
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
-            mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
+            // Out of Five Second Rule regen currently removed.
+            // mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
             mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) +
                 ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * .85f);
             if (character.ActiveBuffsContains("Earthliving Weapon"))
-                stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .01f * 150f);
+                stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .1f * 150f);
 
 
             // Stats, Talents, and Options
@@ -200,7 +203,7 @@ namespace Rawr.RestoSham
             float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
             float EFL = Time - (1.5f * (Time / options.ESInterval));
-            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f) + (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + (character.ShamanTalents.BlessingOfTheEternals * 2)));
+            float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
             float Hasted = 1 - (stats.HasteRating / 3279);
@@ -395,7 +398,7 @@ namespace Rawr.RestoSham
                     break;
 
                 case Character.CharacterRace.Troll:
-                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 137, Intellect = 136, Spirit = 144 };
+                    statsRace = new Stats() { Health = 6485, Mana = 4396, Stamina = 137, Intellect = 124, Spirit = 144 };
                     break;
 
                 default:
@@ -411,9 +414,11 @@ namespace Rawr.RestoSham
                 statsTotal += statModifier;
 
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect)) * (1 + (statsTotal.BonusIntellectMultiplier + (.02f * character.ShamanTalents.AncestralKnowledge)));
+            float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
+            statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) + 
+                (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect + statsEnchants.Intellect) * IntMultiplier);
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower) + (float)Math.Round((statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing), 0);
+            statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
 
