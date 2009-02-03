@@ -23,6 +23,7 @@ namespace Rawr.Warlock
         public string Name { get; protected set; }
         public string Rotation { get; protected set; }
 
+        public int BackdraftCounter { get; protected set; }
         public int LTUsePercent { get; protected set; }
         public bool LTOnFiller { get; protected set; }
         public double currentMana { get; protected set; }
@@ -659,6 +660,18 @@ namespace Rawr.Warlock
                             }
                             break;
                         }
+                    case "Conflagrate":
+                        {
+                            bool immolateIsUp = false;
+                            for (int index = 0; index < events.Count; index++)
+                                if (events.Values[index].name == "Immolate")
+                                {
+                                    immolateIsUp = true;
+                                    break;
+                                }
+                            if (immolateIsUp) return spell;
+                            break;
+                        }
                     default:
                         {
                             if ((spell.DebuffDuration > 0) && (getCastTime(spell) > 0) && (spell.SpellStatistics.CooldownReset < (getCastTime(spell) + timer)))
@@ -708,6 +721,7 @@ namespace Rawr.Warlock
 
             Spell fillerSpell = SpellPriority[SpellPriority.Count - 1];
             bool HauntIsUp = false;
+            bool ImmolateIsUp = false;
             LTOnFiller = CalculationOptions.LTOnFiller;
             int AffEffectsNumber = CalculationOptions.AffEffectsNumber;
             int ShadowEmbrace = 0;
@@ -721,8 +735,8 @@ namespace Rawr.Warlock
 
             currentMana = simStats.Mana;
             ManaSources.Add(new ManaSource("Intellect", currentMana));
-            ManaSources.Add(new ManaSource("MP5", 0f));
             ManaSources.Add(new ManaSource("Life Tap", 0f));
+            ManaSources.Add(new ManaSource("MP5", 0f));
             if (CalculationOptions.FSRRatio < 100)
                 ManaSources.Add(new ManaSource("OutFSR", 0f));
             if (CalculationOptions.PetSacrificed == true && CalculationOptions.Pet == "Felhunter")
@@ -811,25 +825,6 @@ namespace Rawr.Warlock
                         events.Add((time + Math.Max(getCastTime(spell), spell.GlobalCooldown) + CalculationOptions.Delay / 1000f), new DoneCastingEvent(spell));
 
                         float damage = spell.AvgDirectDamage * (1f + PlayerStats.BonusDamageMultiplier);
-                        if (spell.MagicSchool == MagicSchool.Fire) damage *= (1f + PlayerStats.BonusFireDamageMultiplier);
-                        else if (spell.MagicSchool == MagicSchool.Shadow) damage *= (1f + PlayerStats.BonusShadowDamageMultiplier);
-
-                        if (spell.DebuffDuration > 0f)
-                        {
-                            float debuff = spell.TimeBetweenTicks;
-                            while (debuff <= spell.DebuffDuration)
-                            {
-                                events.Add(time + getCastTime(spell) + debuff, new DotTickEvent(spell));
-                                debuff += spell.TimeBetweenTicks;
-                            }
-                            if (spell.SpellTree == SpellTree.Affliction)
-                            {
-                                AffEffectsNumber++;
-                                if (spell.Name == "Corruption") events.Add(time + spell.DebuffDuration, new DebuffEndEvent("AffEffectCorruption"));
-                                else events.Add(time + spell.DebuffDuration, new DebuffEndEvent("AffEffect"));
-                            }
-                        }
-
                         switch (spell.Name)
                         {
                             case "Haunt":
@@ -891,6 +886,49 @@ namespace Rawr.Warlock
                                     damage *= 1 + Math.Max(0.60f,character.WarlockTalents.SoulSiphon * 0.04f * AffEffectsNumber);
                                 break;
                             }
+                            case "Conflagrate":
+                            {
+                                double immEnd = 0f;
+                                for (int index = 0; index < events.Count; index++)
+                                    if (events.Values[index].name == "Immolate")
+                                        immEnd = events.Keys[index];
+                                if (immEnd - time <= 5)
+                                    damage = spell.AvgHit * (1f - (spell.CritChance + character.WarlockTalents.FireAndBrimstone * 0.05f)) + spell.AvgCrit * (spell.CritChance +  character.WarlockTalents.FireAndBrimstone * 0.05f);
+                                removeEvent("Immolate");
+                                ImmolateIsUp = false;
+                                BackdraftCounter = 3;
+                                events.Add(time + 15, new DebuffEndEvent("Backdraft"));
+                                break;
+                            }
+                            case "Incinerate":
+                            {
+                                if(ImmolateIsUp) damage = spell.AvgBuffedDamage * (1f + PlayerStats.BonusDamageMultiplier);
+                                break;
+                            }
+                            case "Immolate":
+                            {
+                                ImmolateIsUp = true;
+                                events.Add(time + 15, new DebuffEndEvent("Immolate"));
+                                break;
+                            }
+                        }
+                        if (spell.MagicSchool == MagicSchool.Fire) damage *= (1f + PlayerStats.BonusFireDamageMultiplier);
+                        else if (spell.MagicSchool == MagicSchool.Shadow) damage *= (1f + PlayerStats.BonusShadowDamageMultiplier);
+
+                        if (spell.DebuffDuration > 0f)
+                        {
+                            float debuff = spell.TimeBetweenTicks;
+                            while (debuff <= spell.DebuffDuration)
+                            {
+                                events.Add(time + getCastTime(spell) + debuff, new DotTickEvent(spell));
+                                debuff += spell.TimeBetweenTicks;
+                            }
+                            if (spell.SpellTree == SpellTree.Affliction)
+                            {
+                                AffEffectsNumber++;
+                                if (spell.Name == "Corruption") events.Add(time + spell.DebuffDuration, new DebuffEndEvent("AffEffectCorruption"));
+                                else events.Add(time + spell.DebuffDuration, new DebuffEndEvent("AffEffect"));
+                            }
                         }
                         if (time >= CalculationOptions.FightLength * 60f * 0.65f && spell.MagicSchool == MagicSchool.Shadow)
                             damage *= 1 + character.WarlockTalents.DeathsEmbrace * 0.04f;
@@ -925,16 +963,21 @@ namespace Rawr.Warlock
                                 AffEffectsNumber--;
                                 break;
                             }
-                            case "ISBProcsLeft":
-                            {
-                                ISBProcsLeft = 0;
-                                break;
-                            }
                             case "AffEffectHaunt":
                             case "AffEffectCorruption":
                             case "AffEffect":
                             {
                                 AffEffectsNumber--;
+                                break;
+                            }
+                            case "Backdraft":
+                            {
+                                BackdraftCounter = 0;
+                                break;
+                            }
+                            case "Immolate":
+                            {
+                                ImmolateIsUp = false;
                                 break;
                             }
                         }
@@ -1157,7 +1200,6 @@ namespace Rawr.Warlock
                     break;
                 }
             }
-
 /*            if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)
             {   // Arcane Torrent is 6% max mana every 2 minutes.
                 tmpregen = simStats.Mana * 0.06f / 120f;
@@ -1177,7 +1219,13 @@ namespace Rawr.Warlock
 
         public float getCastTime (Spell spell)
         {
-            return Math.Max(spell.CastTime / (1 + (simStats.HasteRating / 32.79f) / 100), Math.Max(1.0f, spell.GlobalCooldown / (1 + (simStats.HasteRating / 32.79f) / 100)));
+            float castTime = Math.Max(spell.CastTime / (1 + (simStats.HasteRating / 32.79f) / 100), Math.Max(1.0f, spell.GlobalCooldown / (1 + (simStats.HasteRating / 32.79f) / 100)));
+            if (BackdraftCounter > 0)
+            {
+                castTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;
+                BackdraftCounter--;
+            }
+            return castTime;
         }
     }
 }
