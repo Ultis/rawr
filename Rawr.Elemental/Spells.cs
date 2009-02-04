@@ -57,12 +57,15 @@ namespace Rawr.Elemental
             {
                 if (castTime > gcd)
                     return castTime;
-                else if (gcd > 1)
+                else if (gcd > 1 || gcd==0)
                     return gcd;
                 else
                     return 1;
             }
         }
+
+        public float CastTimeWithoutGCD
+        { get { return castTime; } }
 
         public float CritChance
         { get { return Math.Min(1f, crit); } }
@@ -87,6 +90,9 @@ namespace Rawr.Elemental
 
         public float PeriodicDpS
         { get { return PeriodicTick / periodicTickTime; } }
+
+        public float PeriodicTickTime
+        { get { return periodicTickTime; } }
 
         public float DpM
         { get { return TotalDamage / manaCost; } }
@@ -120,7 +126,7 @@ namespace Rawr.Elemental
 
         public void Initialize(Stats stats)
         {
-            gcd = (float)Math.Round(1.5f / (1 + stats.SpellHaste), 4);
+            gcd = (float)Math.Round(gcd / (1 + stats.SpellHaste), 4);
             castTime = (float)Math.Round(castTime / (1 + stats.SpellHaste), 4);
             critModifier += .5f*stats.BonusSpellCritMultiplier;
             spellPower += stats.SpellPower;
@@ -191,6 +197,11 @@ namespace Rawr.Elemental
 
             base.Initialize(stats);
         }
+
+        public void increaseCritFromOverload(int ranks)
+        {
+            crit *= (1f + .04f * ranks);
+        }
     }
 
     public class ChainLightning : Spell
@@ -224,11 +235,16 @@ namespace Rawr.Elemental
 
             base.Initialize(stats);
         }
+
+        public void increaseCritFromOverload(int ranks)
+        {
+            crit *= (1f + .04f * ranks);
+        }
     }
 
     public class LavaBurst : Spell
     {
-        public LavaBurst(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts, bool fs)
+        public LavaBurst(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts, float fs)
         {
             #region Base Values
             baseMinDamage = 1192;
@@ -256,7 +272,7 @@ namespace Rawr.Elemental
 
             base.Initialize(stats);
 
-            if (fs) crit = 1f;
+            crit = (1-fs)*crit + fs;
         }
     }
 
@@ -283,8 +299,9 @@ namespace Rawr.Elemental
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellFireDamageRating;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
-            
+
             if (calcOpts.glyphOfFlameShock) periodicTicks += 2;
+            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
             base.Initialize(stats);
         }
@@ -308,6 +325,7 @@ namespace Rawr.Elemental
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
+            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
             base.Initialize(stats);
         }
@@ -331,8 +349,24 @@ namespace Rawr.Elemental
             cooldown -= .2f * shamanTalents.Reverberation;
             spellPower += stats.SpellFrostDamageRating;
             totalCoef *= 1 + stats.BonusFrostDamageMultiplier;
+            if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
             base.Initialize(stats);
         }
     }
+
+    public class ElementalMastery : Spell
+    {
+        public ElementalMastery(Stats stats, ShamanTalents shamanTalents, CalculationOptionsElemental calcOpts)
+        {
+            #region Base Values
+            missChance = 0;
+            cooldown = 180f - (calcOpts.glyphOfElementalMastery?30f:0f);
+            gcd = 0; // no global cooldown ;)
+            #endregion
+
+            base.Initialize(stats);
+        }
+    }
+
 }

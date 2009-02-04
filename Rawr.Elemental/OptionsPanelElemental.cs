@@ -15,10 +15,10 @@ namespace Rawr.Elemental
             // Set about text
             tbModuleNotes.Text =
                 "Notes:\r\n" +
-                "It is assumed you use Flametongue weapon.\r\n" +
-                "The calculator is a theoretical estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
+                "For the estimator, it is assumed you use Flametongue weapon.\r\n" +
+                "The estimator is a theoretical estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
                 "Trinkets, Elemental Mastery and Clearcasting are modelled by calculating their average value during the fight.\r\n" +
-                "The simplified calculator assumes you use Glyph of Flame Shock, hence you cannot disable that glyph.";
+                "The estimator assumes you use Glyph of Flame Shock.";
         }
 
         protected override void LoadCalculationOptions()
@@ -48,15 +48,17 @@ namespace Rawr.Elemental
             tkReplenishment.Value = calcOpts.ReplenishmentUptime;
             lblReplenishment.Text = tkReplenishment.Value + "% of fight spent with Replenishment.";
 
-            calcOpts.glyphOfFlameShock = true;
-            chbGlyphFS.Checked = true;
-            chbGlyphEM.Checked = calcOpts.glyphOfElementalMastery;
-            chbGlyphFT.Checked = calcOpts.glyphOfFlametongue;
-            chbGlyphLava.Checked = calcOpts.glyphOfLava;
-            chbGlyphLightningBolt.Checked = calcOpts.glyphOfLightningBolt;
-            chbGlyphShocking.Checked = calcOpts.glyphOfShocking;
+            cbFlameshock.Checked = calcOpts.glyphOfFlameShock;
+            cbElementalMastery.Checked = calcOpts.glyphOfElementalMastery;
+            cbFlametongue.Checked = calcOpts.glyphOfFlametongue;
+            cbLava.Checked = calcOpts.glyphOfLava;
+            cbLightningBolt.Checked = calcOpts.glyphOfLightningBolt;
+            cbShocking.Checked = calcOpts.glyphOfShocking;
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
+            cbFS.Checked = calcOpts.UseFSalways;
+            cbLvB.Checked = !calcOpts.UseLvBalways;
+            cbSimulate.Checked = calcOpts.UseSimulator;
 
             loading = false;
 
@@ -69,32 +71,32 @@ namespace Rawr.Elemental
             if (!loading)
             {
                 CalculationOptionsElemental calcOpts = (CalculationOptionsElemental)Character.CalculationOptions;
-                calcOpts.glyphOfShocking = chbGlyphShocking.Checked;
-                calcOpts.glyphOfFlameShock = true;
-                calcOpts.glyphOfLava = chbGlyphLava.Checked;
-                calcOpts.glyphOfElementalMastery = chbGlyphEM.Checked;
-                calcOpts.glyphOfFlametongue = chbGlyphFT.Checked;
-                calcOpts.glyphOfLightningBolt = chbGlyphLightningBolt.Checked;
+                calcOpts.glyphOfShocking = cbShocking.Checked;
+                calcOpts.glyphOfFlameShock = cbFlameshock.Checked;
+                calcOpts.glyphOfLava = cbLava.Checked;
+                calcOpts.glyphOfElementalMastery = cbElementalMastery.Checked;
+                calcOpts.glyphOfFlametongue = cbFlametongue.Checked;
+                calcOpts.glyphOfLightningBolt = cbLightningBolt.Checked;
 
                 //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
                 int maxGlyphs = 3;
-                if ((chbGlyphLightningBolt.Checked ? 1 : 0) + (chbGlyphFT.Checked ? 1 : 0) + (chbGlyphEM.Checked ? 1 : 0) + (chbGlyphLava.Checked ? 1 : 0) + (chbGlyphShocking.Checked ? 1 : 0) + (chbGlyphFS.Checked ? 1 : 0) >= maxGlyphs)
+                if ((cbLightningBolt.Checked ? 1 : 0) + (cbFlametongue.Checked ? 1 : 0) + (cbElementalMastery.Checked ? 1 : 0) + (cbLava.Checked ? 1 : 0) + (cbFlameshock.Checked ? 1 : 0) + (cbShocking.Checked ? 1 : 0) >= maxGlyphs)
                 {
-                    chbGlyphFS.Enabled = false;
-                    chbGlyphShocking.Enabled = chbGlyphShocking.Checked;
-                    chbGlyphEM.Enabled = chbGlyphEM.Checked;
-                    chbGlyphFT.Enabled = chbGlyphFT.Checked;
-                    chbGlyphLightningBolt.Enabled = chbGlyphLightningBolt.Checked;
-                    chbGlyphLava.Enabled = chbGlyphLava.Checked;
+                    cbFlameshock.Enabled = cbFlameshock.Checked;
+                    cbShocking.Enabled = cbShocking.Checked;
+                    cbElementalMastery.Enabled = cbElementalMastery.Checked;
+                    cbFlametongue.Enabled = cbFlametongue.Checked;
+                    cbLightningBolt.Enabled = cbLightningBolt.Checked;
+                    cbLava.Enabled = cbLava.Checked;
                 }
                 else
                 {
-                    chbGlyphFS.Enabled = false;
-                    chbGlyphShocking.Enabled = true;
-                    chbGlyphEM.Enabled = true;
-                    chbGlyphFT.Enabled = true;
-                    chbGlyphLightningBolt.Enabled = true;
-                    chbGlyphLava.Enabled = true;
+                    cbFlameshock.Enabled = true;
+                    cbShocking.Enabled = true;
+                    cbElementalMastery.Enabled = true;
+                    cbFlametongue.Enabled = true;
+                    cbLightningBolt.Enabled = true;
+                    cbLava.Enabled = true;
                 }
 
                 Character.OnCalculationsInvalidated();
@@ -158,6 +160,30 @@ namespace Rawr.Elemental
             calcOpts.UseThunderstorm = cbThunderstorm.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbFS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseFSalways = cbFS.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseLvBalways = !cbLvB.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbSimulate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            calcOpts.UseSimulator = cbSimulate.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -172,6 +198,10 @@ namespace Rawr.Elemental
         public int ManaPot = 0; // none
         public int ReplenishmentUptime = 30;
         public bool UseThunderstorm = true;
+        public bool UseFSalways = true;
+        public bool UseLvBalways = true;
+
+        public bool UseSimulator = false;
 
         public bool glyphOfFlameShock = true;
         public bool glyphOfElementalMastery = false;
@@ -180,6 +210,91 @@ namespace Rawr.Elemental
         public bool glyphOfLava = false;
         public bool glyphOfLightningBolt = false;
         public bool glyphOfShocking = false;
+
+        public void SetGlyph(int index, bool value)
+        {
+            switch (index)
+            {
+                case 0:
+                    glyphOfFlameShock = value;
+                    break;
+                case 1:
+                    glyphOfElementalMastery = value;
+                    break;
+                case 2:
+                    glyphOfFlametongue = value;
+                    break;
+                case 3:
+                    glyphOfLava = value;
+                    break;
+                case 4:
+                    glyphOfLightningBolt = value;
+                    break;
+                case 5:
+                    glyphOfShocking = value;
+                    break;
+            }
+        }
+
+        public bool GetGlyph(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return glyphOfFlameShock;
+                case 1:
+                    return glyphOfElementalMastery;
+                case 2:
+                    return glyphOfFlametongue;
+                case 3:
+                    return glyphOfLava;
+                case 4:
+                    return glyphOfLightningBolt;
+                case 5:
+                    return glyphOfShocking;
+            }
+            return false;
+        }
+
+        public string getGlyphName(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return "Glyph of Flame Shock";
+                case 1:
+                    return "Glyph of Elemental Mastery";
+                case 2:
+                    return "Glyph of Flametongue";
+                case 3:
+                    return "Glyph of Lava";
+                case 4:
+                    return "Glyph of Lightning Bolt";
+                case 5:
+                    return "Glyph of Shocking";
+            }
+            return "";
+        }
+
+        public string getShortGlyphName(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return "Flame Shock";
+                case 1:
+                    return "Elemental Mastery";
+                case 2:
+                    return "Flametongue";
+                case 3:
+                    return "Lava";
+                case 4:
+                    return "Lightning Bolt";
+                case 5:
+                    return "Shocking";
+            }
+            return "";
+        }
 
         public string GetXml()
         {

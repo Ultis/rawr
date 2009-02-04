@@ -108,6 +108,7 @@ namespace Rawr.Elemental
             {
                 if (_customChartNames == null)
                     _customChartNames = new string[] {
+                        "Glyphs", "Glyph combinations"
 					};
                 return _customChartNames;
             }
@@ -115,7 +116,107 @@ namespace Rawr.Elemental
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            return new ComparisonCalculationBase[0];
+            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            CharacterCalculationsElemental currentCalc, calc;
+            ComparisonCalculationBase comparison;
+            CalculationOptionsElemental calculationOptions;
+            float[] subPoints;
+
+            switch (chartName)
+            {
+                case "Glyphs":
+                    calculationOptions = character.CalculationOptions as CalculationOptionsElemental;
+
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
+
+                    for (int index = 0; index < 6; index++)
+                    {
+                        bool glyphEnabled = calculationOptions.GetGlyph(index);
+
+                        if (glyphEnabled)
+                        {
+                            calculationOptions.SetGlyph(index, false);
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = calculationOptions.getGlyphName(index);
+                            comparison.Equipped = true;
+                            comparison.OverallPoints = (currentCalc.OverallPoints - calc.OverallPoints);
+                            subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (currentCalc.SubPoints[i] - calc.SubPoints[i]);
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+                        else
+                        {
+                            calculationOptions.SetGlyph(index, true);
+                            calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = calculationOptions.getGlyphName(index);
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
+                            subPoints = new float[calc.SubPoints.Length];
+                            for (int i = 0; i < calc.SubPoints.Length; i++)
+                            {
+                                subPoints[i] = (calc.SubPoints[i] - currentCalc.SubPoints[i]);
+                            }
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+
+                        calculationOptions.SetGlyph(index, glyphEnabled);
+                    }
+
+                    return comparisonList.ToArray();
+                case "Glyph combinations":
+                    calculationOptions = character.CalculationOptions as CalculationOptionsElemental;
+
+                    bool[] currentGlyphs = new bool[6];
+                    for (int index = 0; index < 6; index++) currentGlyphs[index] = calculationOptions.GetGlyph(index);
+                    for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, false);
+                    currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        for (int j = 0; j < i; j++)
+                        {
+                            for (int k = 0; k < j; k++)
+                            {
+                                for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, false);
+                                calculationOptions.SetGlyph(i, true);
+                                calculationOptions.SetGlyph(j, true);
+                                calculationOptions.SetGlyph(k, true);
+
+                                calc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
+
+                                comparison = CreateNewComparisonCalculation();
+                                comparison.Name = calculationOptions.getShortGlyphName(i) + " + " + calculationOptions.getShortGlyphName(j) + " + " + calculationOptions.getShortGlyphName(k);
+                                comparison.Equipped = true;
+                                comparison.OverallPoints = (calc.OverallPoints - currentCalc.OverallPoints);
+                                subPoints = new float[calc.SubPoints.Length];
+                                for (int n = 0; n < calc.SubPoints.Length; n++)
+                                {
+                                    subPoints[n] = (calc.SubPoints[n] - currentCalc.SubPoints[n]);
+                                }
+                                comparison.SubPoints = subPoints;
+
+                                comparisonList.Add(comparison);
+                            }
+                        }
+                    }
+
+                    for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, currentGlyphs[index]);
+
+                    return comparisonList.ToArray();
+                default:
+                    return new ComparisonCalculationBase[0];
+            }
         }
 
 		public override ICalculationOptionBase DeserializeDataObject(string xml)
@@ -139,7 +240,14 @@ namespace Rawr.Elemental
             calculatedStats.LocalCharacter = character;
             calcOpts.calculatedStats = calculatedStats;
 
-            Solver.solve(calculatedStats, calcOpts);
+            if (calcOpts.UseSimulator)
+            {
+                Simulator.solve(stats, character.ShamanTalents, calcOpts);
+            }
+            else
+            {
+                Solver.solve(calculatedStats, calcOpts);
+            }
 
             return calculatedStats;
 			

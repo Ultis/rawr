@@ -3229,6 +3229,40 @@ namespace Rawr
             return c;
         }
 
+        /// <summary>
+        /// Multiplies every stat in a stats by a float, when using a * operator.
+        /// </summary>
+        /// <param name="a">The Stats object to multiply.</param>
+        /// <param name="b">The float by which to multiply every stat.</param>
+        /// <returns>The new Stats object.</returns>
+        public static Stats operator *(Stats a, float b)
+        {
+            Stats c = new Stats();
+           
+            int i = c._rawAdditiveData.Length;
+            while(--i >=0)
+            {
+                c._rawAdditiveData[i] = a._rawAdditiveData[i] * b;
+            }
+            i = c._rawMultiplicativeData.Length;
+            while(--i >=0)
+            {
+                c._rawMultiplicativeData[i] = a._rawMultiplicativeData[i] * b;
+            }
+            i = c._rawInverseMultiplicativeData.Length;
+            while(--i >=0)
+            {
+                c._rawInverseMultiplicativeData[i] = a._rawInverseMultiplicativeData[i] * b;
+            }
+            
+            i = c._rawNoStackData.Length;
+            while(--i >=0)
+            {
+                c._rawNoStackData[i] = a._rawNoStackData[i] * b;
+            }
+            return c;
+        }
+        
         public void Accumulate(Stats data)
         {
             float[] add = data._rawAdditiveData;
