@@ -160,12 +160,12 @@ namespace Rawr
             int TS = character.ShamanTalents.ThunderingStrikes;
             int DWS = character.ShamanTalents.DualWieldSpecialization;
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
-            float spellMultiplier = 1f + .1f * character.ShamanTalents.Concussion;
+            float spellMultiplier = 1f + .01f * character.ShamanTalents.Concussion;
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
-            float windfuryTotemHaste = .16f + (.1f * character.ShamanTalents.ImprovedWindfuryTotem);
-            float windfuryWeaponBonus = 445;
+            float windfuryTotemHaste = .16f + (.02f * character.ShamanTalents.ImprovedWindfuryTotem);
+            float windfuryWeaponBonus = 1250;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
                     windfuryWeaponBonus = windfuryWeaponBonus * .13f;
@@ -177,10 +177,11 @@ namespace Rawr
                     windfuryWeaponBonus = windfuryWeaponBonus * .4f;
                     break;
             }
+            float flametongueBonus = 211 * .1f * character.ShamanTalents.ElementalWeapons;
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2;
-            float critMultiplierSpell = 1.5f + .01f * character.ShamanTalents.ElementalFury;
+            float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
             float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon;
             int stormstrikeSpeed = 10 - (1 * character.ShamanTalents.ImprovedStormstrike);
             float weaponMastery = 1f;
@@ -210,31 +211,31 @@ namespace Rawr
 
             //work it girl
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-            float modPercentDecrease = stats.ArmorPenetrationRating / 740.740740741f;
+            float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
             baseArmor = baseArmor * (1 - modPercentDecrease);
-            float modArmor = (baseArmor / (baseArmor + 10557.5f));
+            float modArmor = (baseArmor / (baseArmor + 10557.5f)); // Levva - 10557.5 comes from???
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
-            float hitBonus = stats.HitRating * 52f / 82f / 1000f;
-            float expertiseBonus = Math.Abs(stats.ExpertiseRating * 52f / 82f / 2.5f) * 0.0025f;
+            float hitBonus = stats.HitRating / 3278.998947f;
+            float expertiseBonus = Math.Abs(stats.ExpertiseRating * 52f / 82f / 2.5f) * 0.0025f;  // Levva - this one needs updating not sure to what yet 
 
             float glancingRate = 0.25f;
 
-            float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 2208f + stats.Agility / 4000f + .01f * TS);
+            float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS);
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
-            float chanceYellowMiss = Math.Max(0f, 0.09f - hitBonus - .02f * DWS) + chanceDodge;
+            float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
-            float hitBonusSpell = stats.HitRating / 1261.3f;
+            float hitBonusSpell = stats.HitRating / 2623.199272f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 2208f + stats.Intellect / 8000f + .01f * TS);
+            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS);
             float spellDamage = stats.SpellPower;
 
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = stats.HasteRating / 1576f;
+            float hasteBonus = stats.HasteRating / 3278.998947f;
             float unhastedMHSpeed = 0.0f;
             float wdpsMH = 0.0f;
             if (character != null && character.MainHand != null)
@@ -368,7 +369,7 @@ namespace Rawr
             //9: Flametongue DPS
             float damageFTBase = 35 * hastedOHSpeed;
             float damageFTCoef = .1f;
-            float damageFT = damageFTBase + damageFTCoef * stats.SpellPower;
+            float damageFT = damageFTBase + damageFTCoef * stats.SpellPower * flametongueBonus;
             float dpsFT = hitRollMultiplier * damageFT * hitsPerSOH;
 
             //10: Doggies!  Assuming 240 dps while the dogs are up
