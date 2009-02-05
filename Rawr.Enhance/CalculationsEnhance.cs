@@ -177,7 +177,6 @@ namespace Rawr
                     windfuryWeaponBonus = windfuryWeaponBonus * .4f;
                     break;
             }
-            float flametongueBonus = 211 * .1f * character.ShamanTalents.ElementalWeapons;
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2;
@@ -336,7 +335,7 @@ namespace Rawr
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
 
             //4: Earth Shock DPS
-            float stormstrikeMultiplier = 1.2f; // TODO + glyph adds 8% if equipped
+            float stormstrikeMultiplier = 1.2f; // TODO glyph adds 8% if equipped
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * stats.SpellPower);
@@ -360,22 +359,23 @@ namespace Rawr
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * stats.SpellPower);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS;
 
-            //8: Little Wooden Imp DPS
-            float damageSTBase = 65;
+            //8: Searing Totem DPS
+            float damageSTBase = 105;
             float damageSTCoef = .1667f;
             float damageST = damageSTBase + damageSTCoef * totemBonus;
             float dpsST = hitRollMultiplier * damageST / 2;
 
-            //9: Flametongue DPS
-            float damageFTBase = 35 * hastedOHSpeed;
+            //9: Flametongue Weapon DPS
+            float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
+                                                    // however that figure "varies according to weapon speed"
             float damageFTCoef = .1f;
-            float damageFT = damageFTBase + damageFTCoef * stats.SpellPower * flametongueBonus;
+            float damageFT = damageFTBase + damageFTCoef * stats.SpellPower;
             float dpsFT = hitRollMultiplier * damageFT * hitsPerSOH;
 
             //10: Doggies!  Assuming 240 dps while the dogs are up
-            float dogDPS = (240f * 45) / (3 * 60);
+            float dpsDogs = (240f * 45) / (3 * 60); // TODO - need to get better base figures and calcs for exactly how they scale
 
-            calculatedStats.DPSPoints = dogDPS + dpsMelee + dpsSS + dpsLL + dpsWF + dpsST + dpsES + dpsLS + dpsFT + dpsLB;
+            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
 			calculatedStats.OverallPoints = calculatedStats.DPSPoints;
 			calculatedStats.AvoidedAttacks = chanceWhiteMiss * 100f;
@@ -470,8 +470,7 @@ namespace Rawr
             statsTotal.CritMeleeRating = statsRace.CritMeleeRating + statsGearEnchantsBuffs.CritMeleeRating;
 
             int MQ = character.ShamanTalents.MentalQuickness;
-            int ET = character.ShamanTalents.ElementalWeapons;
-            float FT = 124f * (1 + ET * .05f);
+            float FT = 211f * (1 + character.ShamanTalents.ElementalWeapons * .1f);
 
             statsTotal.SpellPower = (statsTotal.AttackPower * .1f * MQ) + FT + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower;
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
