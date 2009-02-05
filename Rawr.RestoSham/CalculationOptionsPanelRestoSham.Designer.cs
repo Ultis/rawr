@@ -77,7 +77,8 @@
             "0",
             "1500",
             "1800",
-            "2400"});
+            "2400",
+            "4300"});
             this.cboManaPotAmount.Location = new System.Drawing.Point(87, 58);
             this.cboManaPotAmount.Name = "cboManaPotAmount";
             this.cboManaPotAmount.Size = new System.Drawing.Size(75, 21);

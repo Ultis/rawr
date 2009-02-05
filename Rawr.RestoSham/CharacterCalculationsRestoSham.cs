@@ -64,7 +64,7 @@ namespace Rawr.RestoSham
             values.Add("Health", Math.Round(BasicStats.Health, 0).ToString());
             values.Add("Stamina", Math.Round(BasicStats.Stamina, 0).ToString());
             values.Add("Intellect", Math.Round(BasicStats.Intellect, 0).ToString());
-            values.Add("Spirit", BasicStats.Spirit.ToString());
+            // values.Add("Spirit", BasicStats.Spirit.ToString());
             values.Add("Spell Power", Math.Round(BasicStats.SpellPower, 0).ToString());
             values.Add("Mana", Math.Round(BasicStats.Mana, 0).ToString());
             values.Add("MP5", BasicStats.Mp5.ToString());
