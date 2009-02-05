@@ -258,6 +258,8 @@ namespace Rawr.DPSDK
             calcOpts.rotation.avgDiseaseMult = calcOpts.rotation.numDisease * (calcOpts.rotation.diseaseUptime / 100);
             float commandMult = 0f;
 
+            calcOpts.presence = calcOpts.rotation.presence;
+
             int numt7 = 0;
 
             #region T7setbonus
@@ -315,54 +317,58 @@ namespace Rawr.DPSDK
             }
             #endregion
 
-            if (character.Race == Character.CharacterRace.Dwarf)
+            #region racials
             {
-                if (character.MainHand != null &&
-                    (character.MainHand.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Type == Item.ItemType.TwoHandMace))
+                if (character.Race == Character.CharacterRace.Dwarf)
                 {
-                    MHExpertise += 5f;
-                }
+                    if (character.MainHand != null &&
+                        (character.MainHand.Type == Item.ItemType.OneHandMace ||
+                         character.MainHand.Type == Item.ItemType.TwoHandMace))
+                    {
+                        MHExpertise += 5f;
+                    }
 
-                if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandMace)
+                    if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandMace)
+                    {
+                        OHExpertise += 5f;
+                    }
+                }
+                else if (character.Race == Character.CharacterRace.Orc)
                 {
-                    OHExpertise += 5f;
+                    if (character.MainHand != null &&
+                        (character.MainHand.Type == Item.ItemType.OneHandAxe ||
+                         character.MainHand.Type == Item.ItemType.TwoHandAxe))
+                    {
+                        MHExpertise += 5f;
+                    }
+
+                    if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandAxe)
+                    {
+                        OHExpertise += 5f;
+                    }
+                    commandMult += .05f;
+                }
+                if (character.Race == Character.CharacterRace.Human)
+                {
+                    if (character.MainHand != null &&
+                        (character.MainHand.Type == Item.ItemType.OneHandSword ||
+                         character.MainHand.Type == Item.ItemType.TwoHandSword ||
+                         character.MainHand.Type == Item.ItemType.OneHandMace ||
+                         character.MainHand.Type == Item.ItemType.TwoHandMace))
+                    {
+                        MHExpertise += 3f;
+                    }
+
+                    if (character.OffHand != null &&
+                        (character.OffHand.Type == Item.ItemType.OneHandSword ||
+                        character.OffHand.Type == Item.ItemType.OneHandMace))
+                    {
+                        OHExpertise += 3f;
+                    }
                 }
             }
-            else if (character.Race == Character.CharacterRace.Orc)
-            {
-                if (character.MainHand != null &&
-                    (character.MainHand.Type == Item.ItemType.OneHandAxe ||
-                     character.MainHand.Type == Item.ItemType.TwoHandAxe))
-                {
-                    MHExpertise += 5f;
-                }
-
-                if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandAxe)
-                {
-                    OHExpertise += 5f;
-                }
-                commandMult += .05f;
-            }
-            if (character.Race == Character.CharacterRace.Human)
-            {
-                if (character.MainHand != null &&
-                    (character.MainHand.Type == Item.ItemType.OneHandSword ||
-                     character.MainHand.Type == Item.ItemType.TwoHandSword ||
-                     character.MainHand.Type == Item.ItemType.OneHandMace ||
-                     character.MainHand.Type == Item.ItemType.TwoHandMace))
-                {
-                    MHExpertise += 3f;
-                }
-
-                if (character.OffHand != null &&
-                    (character.OffHand.Type == Item.ItemType.OneHandSword ||
-                    character.OffHand.Type == Item.ItemType.OneHandMace))
-                {
-                    OHExpertise += 3f;
-                }
-            }
-
+            #endregion 
+            
             Weapon MH = new Weapon(null, null, null, 0f), OH = new Weapon(null, null, null, 0f);
 
             if (character.MainHand != null)
@@ -505,9 +511,10 @@ namespace Rawr.DPSDK
                 totalMHMiss = calcs.DodgedMHAttacks + chanceMiss;
                 totalOHMiss = calcs.DodgedOHAttacks + chanceMiss;
                 realDuration = calcOpts.rotation.curRotationDuration;
-                realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * 1.5f) +
-                    ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * 1.5f) +
-                    ((calcOpts.rotation.IcyTouch * spellResist * 1.5f));
+                float foo = (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)));
+                realDuration += ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceDodged * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
+                    ((totalMeleeAbilities - calcOpts.rotation.FrostStrike) * chanceMiss * (calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)) +
+                    ((calcOpts.rotation.IcyTouch * spellResist * (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)) <= 1.0f ? 1.0f : (((calcOpts.rotation.presence == CalculationOptionsDPSDK.Presence.Blood ? 1.5f : 1.0f)/(1 + (stats.HasteRating/3278f) + stats.SpellHaste)))))); //still need to implement spellhaste here
             }
             #endregion
 
@@ -630,7 +637,7 @@ namespace Rawr.DPSDK
                 if (calcOpts.rotation.DeathCoil > 0f)
                 {
                     float DCCD = realDuration / calcOpts.rotation.DeathCoil;
-                    float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) + 
+                    float DCDmg = 443f + (DeathCoilAPMult * stats.AttackPower) +
                         (character.Ranged != null && character.Ranged.Id == 40867 ? 80 : 0);     // Sigil of the Wild Buck
                     dpsDeathCoil = DCDmg / DCCD;
                     dpsDeathCoil *= 1f + spellCrits;
@@ -656,7 +663,7 @@ namespace Rawr.DPSDK
                 {
                     float addedCritFromKM = KMRatio;
                     float ITCD = realDuration / calcOpts.rotation.IcyTouch;
-                    float ITDmg = 236f + (IcyTouchAPMult * stats.AttackPower) + 
+                    float ITDmg = 236f + (IcyTouchAPMult * stats.AttackPower) +
                         (character.Ranged != null && character.Ranged.Id == 40822 ? 203 : 0);     // Sigil of Frozen Conscience
                     ITDmg *= 1f + .1f * (float)talents.ImprovedIcyTouch;
                     dpsIcyTouch = ITDmg / ITCD;
@@ -794,7 +801,7 @@ namespace Rawr.DPSDK
                 {
                     // this is missing +crit chance from rime
                     float OblitCD = realDuration / calcOpts.rotation.Obliterate;
-                    float OblitDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) + 292f + 
+                    float OblitDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) + 292f +
                         (character.Ranged != null && character.Ranged.Id == 40207 ? 420 : 0) + (146f * calcOpts.rotation.avgDiseaseMult);   // Sigil of Awareness
                     dpsObliterate = OblitDmg / OblitCD;
                     //float OblitCrit = 1f + physCrits + ( .03f * (float)talents.Subversion );
@@ -817,8 +824,8 @@ namespace Rawr.DPSDK
                 {
                     float BSCD = realDuration / calcOpts.rotation.BloodStrike;
                     float BSDiseaseDmg = 95.5f * (1f + 0.2f * (float)talents.BloodyStrikes);
-                    float BSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 
-                        (.5f * (1f + (.1f * (float)talents.BloodyStrikes))) + 
+                    float BSDmg = (MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) *
+                        (.5f * (1f + (.1f * (float)talents.BloodyStrikes))) +
                         191f + (character.Ranged != null && character.Ranged.Id == 39208 ? 90 : 0) + (BSDiseaseDmg * calcOpts.rotation.avgDiseaseMult);        // Sigil of the Dark Rider
                     dpsBloodStrike = BSDmg / BSCD;
                     float BSCritDmgMult = 1f + (.15f * (float)talents.MightOfMograine);
@@ -837,7 +844,7 @@ namespace Rawr.DPSDK
                 {
                     float HSCD = realDuration / calcOpts.rotation.HeartStrike;
                     float HSDiseaseDmg = 110.4f * (1f + 0.2f * (float)talents.BloodyStrikes);
-                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 0.6f + 220.8f + 
+                    float HSDmg = ((MH.baseDamage + ((stats.AttackPower / 14f) * (DW ? 2.4f : 3.3f))) * 0.6f + 220.8f +
                         (character.Ranged != null && character.Ranged.Id == 39208 ? 90 : 0)) *         // Sigil of the Dark Rider
                         (1f + 0.1f * (float)talents.BloodyStrikes) +
                         (HSDiseaseDmg * calcOpts.rotation.avgDiseaseMult);
@@ -992,14 +999,14 @@ namespace Rawr.DPSDK
             #region Apply Physical Mitigation
             {
                 float physMit = mitigation;
-              //  physMit *= physPowerMult;
+                //  physMit *= physPowerMult;
                 physMit *= 1f + (!DW ? .02f * talents.TwoHandedWeaponSpecialization : 0f);
 
                 dpsBCB *= physMit;
                 dpsBloodStrike *= physMit;
                 dpsHeartStrike *= physMit;
                 dpsObliterate *= physMit;
-                dpsPlagueStrike *= physMit;               
+                dpsPlagueStrike *= physMit;
 
                 WhiteMult += physPowerMult - 1f;
                 BCBMult += physPowerMult - 1f;
@@ -1374,7 +1381,8 @@ namespace Rawr.DPSDK
             }
             else if (calcOpts.presence == CalculationOptionsDPSDK.Presence.Unholy)  // a final, multiplicative component
             {
-                statsTotal.PhysicalHaste *= 1.15f;
+                statsTotal.PhysicalHaste += 0.15f;
+                statsTotal.SpellHaste += 0.15f;
             }
 
             return (statsTotal);

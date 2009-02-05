@@ -245,7 +245,7 @@ namespace Rawr.DPSDK
             CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             RotationViewer RV = new RotationViewer(calcOpts.rotation);
             RV.ShowDialog();
-            Character.OnCalculationsInvalidated();
+            
 
             if (calcOpts.rotation.curRotationType == Rotation.Type.Blood)
             {
@@ -282,6 +282,8 @@ namespace Rawr.DPSDK
                 cbMagicVuln.Enabled = true;
                 cbCryptFever.Enabled = true;
             }
+            
+            Character.OnCalculationsInvalidated();
         }
 
         private void cbGlyphOblit_CheckedChanged(object sender, EventArgs e)

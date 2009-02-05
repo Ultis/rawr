@@ -66,7 +66,8 @@
             this.txtGargoyleDuration = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.cbPresence = new System.Windows.Forms.ComboBox();
+            this.rbUnholyPresence = new System.Windows.Forms.RadioButton();
+            this.rbBloodPresence = new System.Windows.Forms.RadioButton();
             this.gbRotation.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -424,22 +425,39 @@
             this.label18.Text = "Presence:";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // cbPresence
+            // rbUnholyPresence
             // 
-            this.cbPresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbPresence.FormattingEnabled = true;
-            this.cbPresence.Location = new System.Drawing.Point(76, 204);
-            this.cbPresence.Name = "cbPresence";
-            this.cbPresence.Size = new System.Drawing.Size(112, 23);
-            this.cbPresence.TabIndex = 70;
+            this.rbUnholyPresence.AutoSize = true;
+            this.rbUnholyPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbUnholyPresence.Location = new System.Drawing.Point(129, 205);
+            this.rbUnholyPresence.Name = "rbUnholyPresence";
+            this.rbUnholyPresence.Size = new System.Drawing.Size(63, 19);
+            this.rbUnholyPresence.TabIndex = 70;
+            this.rbUnholyPresence.TabStop = true;
+            this.rbUnholyPresence.Text = "Unholy";
+            this.rbUnholyPresence.UseVisualStyleBackColor = true;
+            this.rbUnholyPresence.CheckedChanged += new System.EventHandler(this.rbUnholyPresence_CheckedChanged);
+            // 
+            // rbBloodPresence
+            // 
+            this.rbBloodPresence.AutoSize = true;
+            this.rbBloodPresence.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbBloodPresence.Location = new System.Drawing.Point(66, 205);
+            this.rbBloodPresence.Name = "rbBloodPresence";
+            this.rbBloodPresence.Size = new System.Drawing.Size(57, 19);
+            this.rbBloodPresence.TabIndex = 38;
+            this.rbBloodPresence.TabStop = true;
+            this.rbBloodPresence.Text = "Blood";
+            this.rbBloodPresence.UseVisualStyleBackColor = true;
+            this.rbBloodPresence.CheckedChanged += new System.EventHandler(this.rbBloodPresence_CheckedChanged);
             // 
             // RotationViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(209, 516);
-            this.Controls.Add(this.cbPresence);
+            this.Controls.Add(this.rbBloodPresence);
+            this.Controls.Add(this.rbUnholyPresence);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.txtGargoyleDuration);
@@ -524,6 +542,7 @@
         private System.Windows.Forms.TextBox txtGargoyleDuration;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.ComboBox cbPresence;
+        private System.Windows.Forms.RadioButton rbUnholyPresence;
+        private System.Windows.Forms.RadioButton rbBloodPresence;
     }
 }

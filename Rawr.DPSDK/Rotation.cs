@@ -101,7 +101,7 @@ namespace Rawr.DPSDK
                     presence = CalculationOptionsDPSDK.Presence.Blood;
                     break;
                 case Type.Custom:
-                    numDisease = 0f;
+                   /* numDisease = 0f;
                     diseaseUptime = 0f;
                     DeathCoil = 0f;
                     IcyTouch = 0f;
@@ -116,7 +116,7 @@ namespace Rawr.DPSDK
                     DancingRuneWeapon = 0f;
                     curRotationDuration = 0f;
                     GargoyleDuration = 0f;
-                    presence = CalculationOptionsDPSDK.Presence.Blood;
+                    presence = CalculationOptionsDPSDK.Presence.Blood;*/
                     break;
             }
         }

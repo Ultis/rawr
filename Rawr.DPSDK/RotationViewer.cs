@@ -17,9 +17,9 @@ namespace Rawr.DPSDK
             InitializeComponent();
             rotation = r;
 
-            cbPresence.Items.Clear();
-            cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
-            cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Unholy.ToString());
+         //   cbPresence.Items.Clear();
+         //   cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Blood.ToString());
+         //   cbPresence.Items.Add(CalculationOptionsDPSDK.Presence.Unholy.ToString());
 
             txtBS.KeyUp += new KeyEventHandler(txtBS_KeyUp);
             txtDC.KeyUp += new KeyEventHandler(txtDC_KeyUp);
@@ -53,6 +53,14 @@ namespace Rawr.DPSDK
             txtUB.Text = rotation.UnholyBlight.ToString();
             txtUptime.Text = rotation.diseaseUptime.ToString();
             txtGargoyleDuration.Text = rotation.GargoyleDuration.ToString();
+            if (rotation.presence == CalculationOptionsDPSDK.Presence.Unholy)
+            {
+                rbUnholyPresence.Checked = true;
+            }
+            else if (rotation.presence == CalculationOptionsDPSDK.Presence.Blood)
+            {
+                rbBloodPresence.Checked = true;
+            }
         }
 
         private void lockTxt()
@@ -148,6 +156,20 @@ namespace Rawr.DPSDK
                 unLockTxt();
                 rotation.setRotation(Rotation.Type.Blood);
                 loadCurRotation();
+            }
+        }
+        private void rbUnholyPresence_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbUnholyPresence.Checked)
+            {
+                rotation.presence = CalculationOptionsDPSDK.Presence.Unholy;
+            }
+        }
+        private void rbBloodPresence_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBloodPresence.Checked)
+            {
+                rotation.presence = CalculationOptionsDPSDK.Presence.Blood;
             }
         }
 
