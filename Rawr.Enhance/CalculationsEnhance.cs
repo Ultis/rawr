@@ -213,12 +213,12 @@ namespace Rawr
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
             baseArmor = baseArmor * (1 - modPercentDecrease);
-            float modArmor = (baseArmor / (baseArmor + 10557.5f)); // Levva - 10557.5 comes from???
+            float modArmor = (baseArmor / (baseArmor + 10557.5f)); // TODO - old value is 10557.5 this comes from???
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
             float hitBonus = stats.HitRating / 3278.998947f;
-            float expertiseBonus = Math.Abs(stats.ExpertiseRating * 52f / 82f / 2.5f) * 0.0025f;  // Levva - this one needs updating not sure to what yet 
+            float expertiseBonus = Math.Abs(stats.ExpertiseRating / 3278.998947f) * 0.0025f; 
 
             float glancingRate = 0.25f;
 
@@ -336,16 +336,16 @@ namespace Rawr
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
 
             //4: Earth Shock DPS
-            float stormstrikeMultiplier = 1.2f;
-            float damageESBase = 675f;
-            float coefES = .4286f;
+            float stormstrikeMultiplier = 1.2f; // TODO + glyph adds 8% if equipped
+            float damageESBase = 872f;
+            float coefES = .3858f;
             float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * stats.SpellPower);
             float hitRollMultiplier = (1 - chanceSpellMiss) + chanceSpellCrit * (critMultiplierSpell - 1);
             float dpsES =  hitRollMultiplier * damageES / shockSpeed;
 
             //5: Lightning Bolt DPS
-            float damageLBBase = 603f;
-            float coefLB = .794f;
+            float damageLBBase = 765f;
+            float coefLB = .7143f;
             float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * stats.SpellPower);
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
 
@@ -355,14 +355,14 @@ namespace Rawr
 
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
-            float damageLSBase = 232;
-            float damageLSCoef = .3f; //really unsure of this.  i mean like, really.
+            float damageLSBase = 380;
+            float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * stats.SpellPower);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS;
 
             //8: Little Wooden Imp DPS
             float damageSTBase = 65;
-            float damageSTCoef = .2f;
+            float damageSTCoef = .1667f;
             float damageST = damageSTBase + damageSTCoef * totemBonus;
             float dpsST = hitRollMultiplier * damageST / 2;
 
@@ -396,14 +396,14 @@ namespace Rawr
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			Stats statsRace = new Stats() { 
-					Health = 2979f,
-                    Mana = 2678f,
-					Strength = 103f,
-					Agility = 66f,
-					Stamina = 115f,
-                    Intellect = 120f,
-                    AttackPower = 150f,
-                    SpellCritRating = 48.576f,
+					Health = 6305f,
+                    Mana = 4396f,
+					Strength = 121f,
+					Agility = 71f,
+					Stamina = 185f,
+                    Intellect = 134f,
+                    AttackPower = 1250f,
+                    SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
                     CritMeleeRating = 64.4736f}; 
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
