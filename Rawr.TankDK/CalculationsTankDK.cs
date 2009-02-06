@@ -357,7 +357,7 @@ namespace Rawr.TankDK
 
                 calcs.Threat *= hitChance * (physCrits + 1.0f);
 
-                calcs.Threat *= 1.0 + stats.ThreatIncreaseMultiplier;
+                calcs.Threat *= 1.0f + stats.ThreatIncreaseMultiplier;
 
                 calcs.ThreatWeight = 1000.0f * opts.ThreatWeight;
 
