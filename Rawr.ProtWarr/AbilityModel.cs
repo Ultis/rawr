@@ -50,8 +50,7 @@ namespace Rawr.ProtWarr
                     baseDamage = Stats.BlockValue * (Talents.DamageShield * 0.1f);
                     break;
                 case Ability.DeepWounds:
-                    // Currently double-dips from multipliers on the base damage, although Blizz will probably fix soon
-                    baseDamage = (Lookup.WeaponDamage(Character, Stats, false) * DamageMultiplier) * (Talents.DeepWounds * 0.16f);
+                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) * (Talents.DeepWounds * 0.16f);
                     DamageMultiplier *= (1.0f + Stats.BonusBleedDamageMultiplier);
                     ArmorReduction = 0.0f;
                     break;
