@@ -493,17 +493,14 @@ namespace Rawr.Mage
             // do not include molten fury (molten fury relates to boss), instead amplify all by average
             if (AreaEffect)
             {
-                SpellModifier = (1 + 0.01f * castingState.MageTalents.ArcaneInstability) * (1 + 0.01f * castingState.MageTalents.PlayingWithFire);
-                if (castingState.ArcanePower)
+                if (castingState.MoltenFury)
                 {
-                    SpellModifier *= 1.3f;
+                    SpellModifier /= (1 + 0.06f * castingState.MageTalents.MoltenFury);
                 }
                 if (castingState.MageTalents.MoltenFury > 0)
                 {
                     SpellModifier *= (1 + 0.06f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
                 }
-                if (MagicSchool == MagicSchool.Fire) SpellModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
-                if (MagicSchool == MagicSchool.Frost) SpellModifier *= (1 + 0.02f * castingState.MageTalents.PiercingIce);
 
                 float maxHitRate = 1.00f;
                 int playerLevel = castingState.CalculationOptions.PlayerLevel;
