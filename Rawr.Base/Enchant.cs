@@ -618,6 +618,7 @@ namespace Rawr
 			//3.0.8 enchants
 			defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));
 			defaultEnchants.Add(new Enchant(3849, "Titanium Plating", Item.ItemSlot.OffHand, new Stats() { BlockValue = 40 }));
+			defaultEnchants.Add(new Enchant(3852, "Greater Inscription of the Gladiator", Item.ItemSlot.Shoulders, new Stats() { Stamina = 30, Resilience = 15 }));
             
             #region Enchants to Delete
 			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
