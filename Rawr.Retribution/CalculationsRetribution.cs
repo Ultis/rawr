@@ -182,10 +182,10 @@ namespace Rawr.Retribution
             float critBonus = 2f * (1f + stats.BonusCritMultiplier);
             float spellCritBonus = 1.5f * (1f + stats.BonusSpellCritMultiplier);
             float aow = 1f + .05f * talents.TheArtOfWar;
-            float rightVen = 1f + .08f * talents.RighteousVengeance;
+            float rightVen = .08f * talents.RighteousVengeance;
 
-            float spellPowerMulti = 1f + stats.BonusSpellPowerMultiplier;
-            float physPowerMulti = 1f + stats.BonusDamageMultiplier;
+            float spellPowerMulti = (1f + stats.BonusHolyDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
+            float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             const float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
 
             float toMiss = (float)Math.Max(0.08f - stats.PhysicalHit, 0f);
@@ -210,13 +210,13 @@ namespace Rawr.Retribution
             const float glancingAmount = 1f - 0.35f;
             const float glanceChance = .24f;
 
-            float avgWhiteHit = weaponDamage * (glanceChance * glancingAmount + stats.PhysicalCrit * critBonus + (1f - stats.PhysicalCrit - glanceChance - toMiss - toDodge));
+            float avgWhiteHit = whiteDamage * (glanceChance * glancingAmount + stats.PhysicalCrit * critBonus + (1f - stats.PhysicalCrit - glanceChance - toMiss - toDodge));
             calc.WhiteDPS = avgWhiteHit / actualSpeed;
             #endregion
 
             #region Seal
             float sobDamage = weaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
-            float sobAvgHit = sobDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit);
+            float sobAvgHit = sobDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
             calc.SealDPS = sobAvgHit / actualSpeed * (1f - toMiss - toDodge);
             #endregion
 
@@ -235,17 +235,20 @@ namespace Rawr.Retribution
             {
                 float dsCD = 11f;
                 float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow;
-                float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus * rightVen - stats.PhysicalCrit - toMiss - toDodge);
-                calc.DivineStormDPS = dsAvgHit / dsCD;
+                float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
+                float dsRightVen = dsDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit;
+                calc.DivineStormDPS = (dsAvgHit + dsRightVen) / dsCD;
             }
             #endregion
 
             #region Judgement
             float judgeCD = 8.5f;
+            float judgeCrit = stats.PhysicalCrit + .05f * talents.Fanaticism;
             float judgeDamage = (normalizedWeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower)
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
-            float judgeAvgHit = judgeDamage * (1f + stats.PhysicalCrit * critBonus * rightVen - stats.PhysicalCrit - toMiss);
-            calc.JudgementDPS = judgeAvgHit / judgeCD;
+            float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - toMiss);
+            float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
+            calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / judgeCD;
             #endregion
 
             #region Consecration
@@ -304,14 +307,14 @@ namespace Rawr.Retribution
                         statsRace.Expertise = 5f;
                     break;
             }
-            statsRace.Strength += 151f;
+            statsRace.Strength += 129f;
             statsRace.Agility += 70f;
             statsRace.Stamina += 122f;
             statsRace.Intellect += 78f;
             statsRace.Spirit += 82f;
             statsRace.Dodge = .032685f;
             statsRace.Parry = .05f;
-            statsRace.AttackPower = 190f;
+            statsRace.AttackPower = 258f;
             statsRace.Health = 6754f;
             statsRace.Mana = 4114;
 
@@ -444,8 +447,9 @@ namespace Rawr.Retribution
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier
             };
         }
 
@@ -454,8 +458,8 @@ namespace Rawr.Retribution
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
                 stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
-                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusSpellCritMultiplier
+                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
+                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier
                 ) != 0;
         }
     }
