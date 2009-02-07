@@ -95,7 +95,7 @@ namespace Rawr.Retribution
             {
                 if (_customChartNames == null)
                 {
-                    _customChartNames = new string[] { "Item Budget" };
+                    _customChartNames = new string[] { };
                 }
                 return _customChartNames;
             }
@@ -202,8 +202,8 @@ namespace Rawr.Retribution
             float baseSpeed = character.MainHand == null ? 3.5f : character.MainHand.Speed;
             float baseWeaponDamage = character.MainHand == null ? 371.5f : (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f;
             float actualSpeed = baseSpeed / ( 1f + stats.PhysicalHaste );
-            float weaponDamage = baseWeaponDamage + stats.WeaponDamage + stats.AttackPower * baseSpeed / 14f;
-            float normalizedWeaponDamage = weaponDamage * 2.4f / baseSpeed;
+            float weaponDamage = baseWeaponDamage + stats.AttackPower * baseSpeed / 14f;
+            float normalizedWeaponDamage = weaponDamage * 3.3f / baseSpeed;
 
             float whiteDamage = weaponDamage * talentMulti * physPowerMulti * armorReduction;
 
@@ -215,9 +215,9 @@ namespace Rawr.Retribution
             #endregion
 
             #region Seal
-            float sobDamage = weaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
-            float sobAvgHit = sobDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
-            calc.SealDPS = sobAvgHit / actualSpeed * (1f - toMiss - toDodge);
+            float sealDamage = weaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
+            float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
+            calc.SealDPS = sealAvgHit / actualSpeed * (1f - toMiss - toDodge);
             #endregion
 
             #region Crusader Strike
@@ -244,7 +244,7 @@ namespace Rawr.Retribution
             #region Judgement
             float judgeCD = 8.5f;
             float judgeCrit = stats.PhysicalCrit + .05f * talents.Fanaticism;
-            float judgeDamage = (normalizedWeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower)
+            float judgeDamage = (weaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower)
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - toMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
@@ -352,60 +352,60 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            CharacterCalculationsRetribution baseCalc, calc;
-            ComparisonCalculationBase comparison;
-            float[] subPoints;
+            //List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
+            //CharacterCalculationsRetribution baseCalc, calc;
+            //ComparisonCalculationBase comparison;
+            //float[] subPoints;
 
-            switch (chartName)
-            {
-                case "Item Budget":
-                    Item[] itemList = new Item[] {
-                        new Item() { Stats = new Stats() { Strength = 10 } },
-                        new Item() { Stats = new Stats() { Agility = 10 } },
-                        new Item() { Stats = new Stats() { AttackPower = 20 } },
-                        new Item() { Stats = new Stats() { CritRating = 10 } },
-                        new Item() { Stats = new Stats() { HitRating = 10 } },
-                        new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
-                        new Item() { Stats = new Stats() { HasteRating = 10 } },
-                        new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
-                        new Item() { Stats = new Stats() { SpellPower = 11.7f } },
-                    };
-                    string[] statList = new string[] {
-                        "Strength",
-                        "Agility",
-                        "Attack Power",
-                        "Crit Rating",
-                        "Hit Rating",
-                        "Expertise Rating",
-                        "Haste Rating",
-                        "Armor Penetration",
-                        "Spell Damage",
-                    };
+            //switch (chartName)
+            //{
+            //    case "Item Budget":
+            //        Item[] itemList = new Item[] {
+            //            new Item() { Stats = new Stats() { Strength = 10 } },
+            //            new Item() { Stats = new Stats() { Agility = 10 } },
+            //            new Item() { Stats = new Stats() { AttackPower = 20 } },
+            //            new Item() { Stats = new Stats() { CritRating = 10 } },
+            //            new Item() { Stats = new Stats() { HitRating = 10 } },
+            //            new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
+            //            new Item() { Stats = new Stats() { HasteRating = 10 } },
+            //            new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
+            //            new Item() { Stats = new Stats() { SpellPower = 11.7f } },
+            //        };
+            //        string[] statList = new string[] {
+            //            "Strength",
+            //            "Agility",
+            //            "Attack Power",
+            //            "Crit Rating",
+            //            "Hit Rating",
+            //            "Expertise Rating",
+            //            "Haste Rating",
+            //            "Armor Penetration",
+            //            "Spell Damage",
+            //        };
 
-                    baseCalc = GetCharacterCalculations(character) as CharacterCalculationsRetribution;
+            //        baseCalc = GetCharacterCalculations(character) as CharacterCalculationsRetribution;
 
-                    for (int index = 0; index < itemList.Length; index++)
-                    {
-                        calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsRetribution;
+            //        for (int index = 0; index < itemList.Length; index++)
+            //        {
+            //            calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsRetribution;
 
-                        comparison = CreateNewComparisonCalculation();
-                        comparison.Name = statList[index];
-                        comparison.Equipped = false;
-                        comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-                        subPoints = new float[calc.SubPoints.Length];
-                        for (int i = 0; i < calc.SubPoints.Length; i++)
-                        {
-                            subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-                        }
-                        comparison.SubPoints = subPoints;
+            //            comparison = CreateNewComparisonCalculation();
+            //            comparison.Name = statList[index];
+            //            comparison.Equipped = false;
+            //            comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
+            //            subPoints = new float[calc.SubPoints.Length];
+            //            for (int i = 0; i < calc.SubPoints.Length; i++)
+            //            {
+            //                subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
+            //            }
+            //            comparison.SubPoints = subPoints;
 
-                        comparisonList.Add(comparison);
-                    }
-                    return comparisonList.ToArray();
-                default:
+            //            comparisonList.Add(comparison);
+            //        }
+            //        return comparisonList.ToArray();
+            //    default:
                     return new ComparisonCalculationBase[0];
-            }
+ //           }
         }
 
         public override bool IsItemRelevant(Item item)
@@ -434,7 +434,6 @@ namespace Rawr.Retribution
 				ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
-                WeaponDamage = stats.WeaponDamage,
                 PhysicalCrit = stats.PhysicalCrit,
                 PhysicalHaste = stats.PhysicalHaste,
 				PhysicalHit = stats.PhysicalHit,
@@ -456,7 +455,7 @@ namespace Rawr.Retribution
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower +
-                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating + stats.WeaponDamage +
+                stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating +
                 stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier
