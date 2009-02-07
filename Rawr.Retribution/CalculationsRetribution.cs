@@ -212,12 +212,7 @@ namespace Rawr.Retribution
 
             float avgWhiteHit = whiteDamage * (glanceChance * glancingAmount + stats.PhysicalCrit * critBonus + (1f - stats.PhysicalCrit - glanceChance - toMiss - toDodge));
             calc.WhiteDPS = avgWhiteHit / actualSpeed;
-            #endregion
-
-            #region Seal
-            float sealDamage = weaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
-            float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
-            calc.SealDPS = sealAvgHit / actualSpeed * (1f - toMiss - toDodge);
+            float sealProcs = 1f / actualSpeed * (1f - toDodge - toMiss);
             #endregion
 
             #region Crusader Strike
@@ -227,6 +222,7 @@ namespace Rawr.Retribution
                 float csDamage = normalizedWeaponDamage * 1.1f * talentMulti * physPowerMulti * armorReduction * aow;
                 float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
                 calc.CrusaderDPS = csAvgHit / csCD;
+                sealProcs += 1f / csCD * (1f - toDodge - toMiss);
             }
             #endregion
 
@@ -238,6 +234,7 @@ namespace Rawr.Retribution
                 float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
                 float dsRightVen = dsDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit;
                 calc.DivineStormDPS = (dsAvgHit + dsRightVen) / dsCD;
+                sealProcs += 1f / dsCD * (1f - toDodge - toMiss);
             }
             #endregion
 
@@ -249,6 +246,12 @@ namespace Rawr.Retribution
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - toMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
             calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / judgeCD;
+            #endregion
+
+            #region Seal
+            float sealDamage = weaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
+            float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
+            calc.SealDPS = sealAvgHit * sealProcs * (1f - toMiss - toDodge);
             #endregion
 
             #region Consecration
