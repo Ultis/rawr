@@ -44,18 +44,21 @@ namespace Rawr.ProtWarr
             this.labelThreatScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarThreatScale = new System.Windows.Forms.TrackBar();
             this.labelThreatScale = new System.Windows.Forms.Label();
-            this.labelMitigationScaleText = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.checkBoxUseTankPoints = new System.Windows.Forms.CheckBox();
+            this.radioButtonBurstTime = new System.Windows.Forms.RadioButton();
+            this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
+            this.radioButtonMitigationScale = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.extendedToolTipUseParryHaste = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.labelBossSpeed = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
             this.labelBossAttackSpeed = new System.Windows.Forms.Label();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
+            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxWarriorSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
@@ -137,7 +140,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 391);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 436);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -266,17 +269,6 @@ namespace Rawr.ProtWarr
             this.labelThreatScale.TabIndex = 0;
             this.labelThreatScale.Text = "1.0";
             // 
-            // labelMitigationScaleText
-            // 
-            this.labelMitigationScaleText.Location = new System.Drawing.Point(9, 67);
-            this.labelMitigationScaleText.Name = "labelMitigationScaleText";
-            this.labelMitigationScaleText.Size = new System.Drawing.Size(77, 45);
-            this.labelMitigationScaleText.TabIndex = 0;
-            this.labelMitigationScaleText.Text = "Mitigation Scale: * (Default: 1.0)";
-            this.labelMitigationScaleText.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelMitigationScaleText.ToolTipText = "Mitigation Points scaling factor. PageUp/PageDown/Left Arrow/Right Arrow allows m" +
-                "ore accurate changes";
-            // 
             // trackBarMitigationScale
             // 
             this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -305,41 +297,58 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.extendedToolTipLabel3);
+            this.groupBox1.Controls.Add(this.extendedToolTipLabel2);
             this.groupBox1.Controls.Add(this.extendedToolTipLabel1);
-            this.groupBox1.Controls.Add(this.checkBoxUseTankPoints);
+            this.groupBox1.Controls.Add(this.radioButtonBurstTime);
+            this.groupBox1.Controls.Add(this.radioButtonTankPoints);
             this.groupBox1.Controls.Add(this.labelThreatScale);
             this.groupBox1.Controls.Add(this.trackBarThreatScale);
             this.groupBox1.Controls.Add(this.labelMitigationScale);
             this.groupBox1.Controls.Add(this.labelThreatScaleText);
-            this.groupBox1.Controls.Add(this.labelMitigationScaleText);
             this.groupBox1.Controls.Add(this.trackBarMitigationScale);
+            this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
             this.groupBox1.Location = new System.Drawing.Point(3, 245);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 140);
+            this.groupBox1.Size = new System.Drawing.Size(364, 185);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
             // 
-            // extendedToolTipLabel1
+            // radioButtonBurstTime
             // 
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(111, 117);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(134, 14);
-            this.extendedToolTipLabel1.TabIndex = 6;
-            this.extendedToolTipLabel1.Text = "Use TankPoints Instead *";
-            this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel1.ToolTipText = "Uses TankPoints for overall rankings instead of Mitigation vs. Survival";
+            this.radioButtonBurstTime.AutoSize = true;
+            this.radioButtonBurstTime.Location = new System.Drawing.Point(95, 164);
+            this.radioButtonBurstTime.Name = "radioButtonBurstTime";
+            this.radioButtonBurstTime.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonBurstTime.TabIndex = 10;
+            this.radioButtonBurstTime.Text = "Burst Time";
+            this.radioButtonBurstTime.UseVisualStyleBackColor = true;
+            this.radioButtonBurstTime.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // checkBoxUseTankPoints
+            // radioButtonTankPoints
             // 
-            this.checkBoxUseTankPoints.AutoSize = true;
-            this.checkBoxUseTankPoints.Location = new System.Drawing.Point(95, 118);
-            this.checkBoxUseTankPoints.Name = "checkBoxUseTankPoints";
-            this.checkBoxUseTankPoints.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.checkBoxUseTankPoints.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxUseTankPoints.TabIndex = 6;
-            this.checkBoxUseTankPoints.UseVisualStyleBackColor = true;
-            this.checkBoxUseTankPoints.CheckedChanged += new System.EventHandler(this.checkBoxUseTankPoints_CheckedChanged);
+            this.radioButtonTankPoints.AutoSize = true;
+            this.radioButtonTankPoints.Location = new System.Drawing.Point(95, 141);
+            this.radioButtonTankPoints.Name = "radioButtonTankPoints";
+            this.radioButtonTankPoints.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonTankPoints.TabIndex = 9;
+            this.radioButtonTankPoints.Text = "TankPoints";
+            this.radioButtonTankPoints.UseVisualStyleBackColor = true;
+            this.radioButtonTankPoints.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            // 
+            // radioButtonMitigationScale
+            // 
+            this.radioButtonMitigationScale.AutoSize = true;
+            this.radioButtonMitigationScale.Checked = true;
+            this.radioButtonMitigationScale.Location = new System.Drawing.Point(95, 118);
+            this.radioButtonMitigationScale.Name = "radioButtonMitigationScale";
+            this.radioButtonMitigationScale.Size = new System.Drawing.Size(100, 17);
+            this.radioButtonMitigationScale.TabIndex = 8;
+            this.radioButtonMitigationScale.TabStop = true;
+            this.radioButtonMitigationScale.Text = "Mitigation Scale";
+            this.radioButtonMitigationScale.UseVisualStyleBackColor = true;
+            this.radioButtonMitigationScale.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -423,6 +432,39 @@ namespace Rawr.ProtWarr
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
+            // extendedToolTipLabel1
+            // 
+            this.extendedToolTipLabel1.Location = new System.Drawing.Point(168, 141);
+            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
+            this.extendedToolTipLabel1.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel1.TabIndex = 9;
+            this.extendedToolTipLabel1.Text = "*";
+            this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel1.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
+                "layer.";
+            // 
+            // extendedToolTipLabel2
+            // 
+            this.extendedToolTipLabel2.Location = new System.Drawing.Point(188, 118);
+            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
+            this.extendedToolTipLabel2.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel2.TabIndex = 11;
+            this.extendedToolTipLabel2.Text = "*";
+            this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel2.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
+                "fault)";
+            // 
+            // extendedToolTipLabel3
+            // 
+            this.extendedToolTipLabel3.Location = new System.Drawing.Point(164, 164);
+            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
+            this.extendedToolTipLabel3.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel3.TabIndex = 12;
+            this.extendedToolTipLabel3.Text = "*";
+            this.extendedToolTipLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel3.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
+                "own the player.";
+            // 
             // CalculationOptionsPanelProtWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,7 +474,7 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxWarriorSkills);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 494);
+            this.Size = new System.Drawing.Size(370, 535);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxWarriorSkills.ResumeLayout(false);
             this.groupBoxWarriorSkills.PerformLayout();
@@ -462,8 +504,7 @@ namespace Rawr.ProtWarr
 		private System.Windows.Forms.Label labelBossAttackValue;
         private Rawr.CustomControls.ExtendedToolTipLabel labelThreatScaleText;
 		private System.Windows.Forms.TrackBar trackBarThreatScale;
-		private System.Windows.Forms.Label labelThreatScale;
-        private Rawr.CustomControls.ExtendedToolTipLabel labelMitigationScaleText;
+        private System.Windows.Forms.Label labelThreatScale;
 		private System.Windows.Forms.TrackBar trackBarMitigationScale;
 		private System.Windows.Forms.Label labelMitigationScale;
         private System.Windows.Forms.Label label9;
@@ -471,13 +512,17 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.TrackBar trackBarShieldBlockUptime;
         private System.Windows.Forms.CheckBox checkBoxUseShieldBlock;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox checkBoxUseTankPoints;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private Rawr.CustomControls.ExtendedToolTipLabel labelBossSpeed;
         private System.Windows.Forms.Label labelBossAttackSpeed;
         private System.Windows.Forms.TrackBar trackBarBossAttackSpeed;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipUseParryHaste;
         private System.Windows.Forms.CheckBox checkBoxUseParryHaste;
+        private System.Windows.Forms.RadioButton radioButtonMitigationScale;
+        private System.Windows.Forms.RadioButton radioButtonBurstTime;
+        private System.Windows.Forms.RadioButton radioButtonTankPoints;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
 	}
 }

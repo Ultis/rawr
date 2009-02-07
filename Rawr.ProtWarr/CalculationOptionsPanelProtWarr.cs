@@ -38,7 +38,6 @@ namespace Rawr.ProtWarr
 				Character.CalculationOptions = new CalculationOptionsProtWarr();
 
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-            calcOpts.UseBurstPoints = false;
 
             // Attacker Stats
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
@@ -57,8 +56,11 @@ namespace Rawr.ProtWarr
             if (calcOpts.MitigationScale > 1.0f) // Old scale value being saved, reset to default
                 calcOpts.MitigationScale = (1.0f / 8.0f);
             trackBarMitigationScale.Value = Convert.ToInt32((calcOpts.MitigationScale * 8.0f / 0.1f));
-            checkBoxUseTankPoints.Checked = calcOpts.UseTankPoints;
-            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = labelMitigationScaleText.Enabled = !checkBoxUseTankPoints.Checked;
+            radioButtonMitigationScale.Checked = (calcOpts.RankingMode == 1);
+            radioButtonTankPoints.Checked = (calcOpts.RankingMode == 2);
+            radioButtonBurstTime.Checked = (calcOpts.RankingMode == 3);
+            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
+
             // Warrior Abilities
             trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
             checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
@@ -110,11 +112,16 @@ namespace Rawr.ProtWarr
             Character.OnCalculationsInvalidated();
         }
 
-        private void checkBoxUseTankPoints_CheckedChanged(object sender, EventArgs e)
+        private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
             CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-            calcOpts.UseTankPoints = checkBoxUseTankPoints.Checked;
-            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = labelMitigationScaleText.Enabled = !checkBoxUseTankPoints.Checked;
+            if (radioButtonTankPoints.Checked)
+                calcOpts.RankingMode = 2;
+            else if (radioButtonBurstTime.Checked)
+                calcOpts.RankingMode = 3;
+            else
+                calcOpts.RankingMode = 1;
+            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
             Character.OnCalculationsInvalidated();
         }
 
@@ -123,7 +130,7 @@ namespace Rawr.ProtWarr
 			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
 			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
             Character.OnCalculationsInvalidated();
-        }
+        }   
 	}
 
 	[Serializable]
@@ -146,8 +153,7 @@ namespace Rawr.ProtWarr
         public bool UseParryHaste = false;
 		public float ThreatScale = 8.0f;
         public float MitigationScale = 0.125f;
-        public bool UseTankPoints = false;
-        public bool UseBurstPoints = false;
+        public int RankingMode = 1;
         public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
 		public WarriorTalents talents = null;

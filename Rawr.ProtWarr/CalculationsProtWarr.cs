@@ -231,7 +231,8 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
             calculatedStats.DamageTaken = dm.DamagePerSecond;
             calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
-            calculatedStats.DamageTakenPerBlockedHit = dm.DamagePerBlockedHit;
+            calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
+            calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
             calculatedStats.TankPoints = dm.TankPoints;
 
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
@@ -257,22 +258,25 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.LimitedThreat = am.ThreatPerSecond;
 
             calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f)) / 100.0f;
-            if (calcOpts.UseTankPoints)
+            if (calcOpts.RankingMode == 2)
             {
+                // Tank Points Mode
                 calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
                 calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth) / 100.0f;
                 calculatedStats.ThreatPoints *= 3.0f;
             }
-            else if (calcOpts.UseBurstPoints)
+            else if (calcOpts.RankingMode == 3)
             {
+                // Burst Time Mode
                 double a = Convert.ToDouble(dm.DefendTable.AnyMiss);
                 double h = Convert.ToDouble(stats.Health);
-                double H = Convert.ToDouble(dm.DamagePerHit);
+                double H = Convert.ToDouble(dm.AverageDamagePerHit);
                 double s = Convert.ToDouble(dm.ParryModel.BossAttackSpeed / calcOpts.BossAttackSpeed);
+                float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
 
-                calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) * s - 1.0d)) * 10.0f;
+                calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
                 calculatedStats.MitigationPoints = 0.0f;
-                calculatedStats.ThreatPoints *= 1.15f;
+                calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
             }
             else
             {

@@ -62,7 +62,8 @@ namespace Rawr.ProtWarr
         public float AttackerSpeed { get; set; }
         public float DamageTaken { get; set; }
         public float DamageTakenPerHit { get; set; }
-        public float DamageTakenPerBlockedHit { get; set; }
+        public float DamageTakenPerBlock { get; set; }
+        public float DamageTakenPerCrit { get; set; }
         public float TankPoints { get; set; }
 
         public float NatureSurvivalPoints { get; set; }
@@ -113,8 +114,9 @@ namespace Rawr.ProtWarr
                 dictValues.Add("Attacker Speed", string.Format("{0:0.00}s*Base speed of {1:0.00}s (reduced by parry haste)", AttackerSpeed, BaseAttackerSpeed));
             
             dictValues.Add("Damage Taken", 
-                string.Format("{0:0.0} DPS*{1:0} damage per successful attack" + Environment.NewLine +
-                                "{2:0} damage per blocked attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlockedHit));
+                string.Format("{0:0.0} DPS*{1:0} damage per normal attack" + Environment.NewLine +
+                                "{2:0} damage per blocked attack" + Environment.NewLine +
+                                "{3:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit));
             
             dictValues.Add("Resilience",
                 string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1}%." + Environment.NewLine +
@@ -152,8 +154,10 @@ namespace Rawr.ProtWarr
                 string.Format("{0}*Expertise Rating {1}" + Environment.NewLine + "Reduces chance to be dodged or parried by {2:0.00%}.", 
                                 Math.Round(BasicStats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise + BasicStats.Expertise),
                                 BasicStats.ExpertiseRating, Expertise));
-            dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1}", Haste, BasicStats.HasteRating));
-            dictValues.Add("Armor Penetration", string.Format("{0:0.00%}*Armor Penetration Rating {1}", ArmorPenetration, BasicStats.ArmorPenetration));
+            dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
+            dictValues.Add("Armor Penetration", 
+                string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}", 
+                                ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
             dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
             dictValues.Add("Missed Attacks",
