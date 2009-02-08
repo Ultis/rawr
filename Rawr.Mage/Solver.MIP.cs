@@ -2240,6 +2240,22 @@ namespace Rawr.Mage
             // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
             branchlp.ForceRecalculation(true);
             HeapPush(branchlp);
+            // there is another case if cooldown duration is funny (i.e. IV)
+            // this case has a minimum difference of (int)(effectCooldown / segmentDuration) * segmentDuration
+            // t1 = (seg1 + 1) * segmentDuration - count[seg1]
+            // t2 = (seg2 + 2) * segmentDuration - count[seg2]
+            // 
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", long distance");
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, seg2, 1.0);
+            branchlp.SetConstraintRHS(row, effectDuration);
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, -1.0);
+            SetCooldownElements(branchlp, row, effect, seg2 + 1, 1.0);
+            branchlp.SetConstraintRHS(row, (seg2 + 1 - firstActivationSegment) * segmentDuration - effectCooldown);
+            branchlp.ForceRecalculation(true);
+            HeapPush(branchlp);
             if (effectDuration < segmentDuration - eps)
             {
                 // the effect has some room for movement, but we have to be careful because it can't be moved
@@ -3478,7 +3494,7 @@ namespace Rawr.Mage
                 }
             }
 
-            float manaBurn = 80;
+            /*double manaBurn = 80;
             if (calculationOptions.AoeDuration > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
@@ -3498,11 +3514,36 @@ namespace Rawr.Mage
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
+            }*/
 
             // check border case if we have mana gem in first or last segment
             if (manaGem[0] > 0 && trinketCount[0] > 0)
             {
+                // make accurate prediction about mana burn if you can, assume all non-effect comes in front
+                // TODO evaluate what effect this has as the burn rate changes between solutions compared to a static burn value
+                double manaBeforeGem = 0;
+                double time = 0;
+                for (int i = 0; i < calculationResult.SolutionVariable.Count; i++)
+                {
+                    if (solution[i] > 0.01 && calculationResult.SolutionVariable[i].Segment == 0 && calculationResult.SolutionVariable[i].Type == VariableType.Spell)
+                    {
+                        CastingState state = calculationResult.SolutionVariable[i].State;
+                        if (state != null && !state.GetCooldown(Cooldown.ManaGemEffect))
+                        {
+                            manaBeforeGem += calculationResult.SolutionVariable[i].Spell.ManaPerSecond * solution[i];
+                            time += solution[i];
+                        }
+                    }
+                }
+                /*if (time > 0)
+                {
+                    manaBurn = mana / time;
+                }*/
+
+                // mana used before gem <= sum x[i] * mps[i]
+                // overflow >= gemValue - mana used before gem
+                // (sum x[i] * mps[i]) + overflow >= gemValue
+
                 // either no activation at 0 or make sure it starts late enough
                 // tgem <= 30 - trinketCount[0]
                 // overflow >= 2400 - tgem * manaBurn
@@ -3514,7 +3555,7 @@ namespace Rawr.Mage
 
                 double overflow = solution[calculationResult.ColumnManaOverflow];
 
-                if (trinketCount[0] - overflow / manaBurn > segmentDuration - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn + eps)
+                if (manaBeforeGem + overflow < calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - eps)
                 {
                     // no gem/trinket at 0
                     SolverLP nogem = lp.Clone();
@@ -3535,12 +3576,13 @@ namespace Rawr.Mage
                     // restrict SCB/overflow
                     if (lp.Log != null) lp.Log.AppendLine("Restrict SCB at 0");
                     int row = lp.AddConstraint(false);
-                    lp.SetConstraintRHS(row, segmentDuration - calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) / manaBurn);
+                    lp.SetConstraintRHS(row, double.PositiveInfinity);
+                    lp.SetConstraintLHS(row, calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem));
                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                     {
                         CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, -1.0 / manaBurn);
-                        else if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, 1.0);
+                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, 1.0);
+                        else if (state != null && calculationResult.SolutionVariable[index].Type == VariableType.Spell && !state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, calculationResult.SolutionVariable[index].Spell.ManaPerSecond);
                     }
                     lp.ForceRecalculation(true);
                     HeapPush(lp);
