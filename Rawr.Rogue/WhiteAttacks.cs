@@ -2,15 +2,11 @@
 {
     public class WhiteAttacks
     {
-        public WhiteAttacks(RogueTalents talents, Stats stats, CombatFactors combatFactors)
+        public WhiteAttacks(CombatFactors combatFactors)
         {
-            _talents = talents;
-            _stats = stats;
             _combatFactors = combatFactors;
         }
 
-        private readonly RogueTalents _talents;
-        private readonly Stats _stats;
         private readonly CombatFactors _combatFactors;
 
         public float MhHits
@@ -41,12 +37,12 @@
 
         private float MhSwingsPerSecond
         {
-            get { return _combatFactors.TotalHaste / _combatFactors.MainHand.Speed; }
+            get { return _combatFactors.BaseHaste / _combatFactors.MainHand.Speed; }
         }
 
         private float OhSwingsPerSecond
         {
-            get { return _combatFactors.TotalHaste / _combatFactors.OffHand.Speed; }
+            get { return _combatFactors.BaseHaste / _combatFactors.OffHand.Speed; }
         }
     }
 }

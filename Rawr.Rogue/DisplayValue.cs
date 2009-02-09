@@ -32,6 +32,7 @@ namespace Rawr.Rogue
         public static readonly DisplayValue BaseExpertise = new DisplayValue("Base Stats", "Base Expertise");
 
         public static readonly DisplayValue CPG = new DisplayValue("DPS Breakdown", "CPG");
+        public static readonly DisplayValue EnergyRegen = new DisplayValue("DPS Breakdown", "Energy Regen");
         public static readonly DisplayValue CpgCrit = new DisplayValue("DPS Breakdown", "CPG Crit %");
         public static readonly DisplayValue CycleTime = new DisplayValue("DPS Breakdown", "Cycle Time (in seconds)");
         public static readonly DisplayValue CPGDPS = new DisplayValue("DPS Breakdown", "CPG DPS");

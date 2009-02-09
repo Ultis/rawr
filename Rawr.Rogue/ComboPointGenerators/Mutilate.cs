@@ -29,8 +29,6 @@ namespace Rawr.Rogue.ComboPointGenerators
         private static float BaseAttackDamage(CombatFactors combatFactors)
         {
             var damage = combatFactors.MhNormalizedDamage + 181;
-
-            //Strange:  the rogueCalc spreadsheet has the offhand +181 damage increased by DualWieldSpecialization
             damage += combatFactors.OhNormalizedDamage + (181 * 2 *combatFactors.OffHandDamagePenalty);
             return damage;
         }

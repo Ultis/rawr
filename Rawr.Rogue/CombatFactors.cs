@@ -87,7 +87,7 @@ namespace Rawr.Rogue
 
         public float OffHandDamagePenalty
         {
-            get { return 0.5f + _talents.DualWieldSpecialization*0.05f; }
+            get { return 0.5f + Talents.DualWieldSpecialization.Bonus; }
         }
 
         public float YellowMissChance
@@ -184,24 +184,22 @@ namespace Rawr.Rogue
         {
             get
             {
-                var energyRegen = 10f;
-                if (_talents.AdrenalineRush > 0)
-                {
-                    energyRegen += .5f;
-                }
+                var energyRegen = 10f*(1 + Talents.Vitality.Bonus);
+                energyRegen += Talents.AdrenalineRush.Bonus;
+                energyRegen += Talents.HungerForBlood.Bonus;
+                
                 return energyRegen;
             }
         }
 
-        public float TotalHaste
+        public float BaseHaste
         {
             get
             {
-                //TODO:  Add WindFury Totem (a straight haste bonus as of patch 3.0)
                 var totalHaste = 1f;
                 totalHaste *= (1f + .3f * (1f + _stats.BonusSnDHaste));
                 totalHaste *= (1f + (_stats.HasteRating * RogueConversions.HasteRatingToHaste) / 100);
-                totalHaste *= (1f + .2f * 15f / 120f * _talents.BladeFlurry);
+                totalHaste *= Talents.BladeFlurry.Bonus;
                 return totalHaste;
             }
         }
