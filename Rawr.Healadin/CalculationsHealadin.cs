@@ -168,7 +168,7 @@ namespace Rawr.Healadin
 
             float divine_pleas = (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
             float glyph_sow = (calcOpts.Glyph_SoW ? .95f : 1f);
-            float heal_multi = (calcOpts.Glyph_SoL ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier) * (1f - .2f * divine_pleas * 15f / fight_length);
+            float heal_multi = (calcOpts.Glyph_SoL ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier) * (1f - .5f * divine_pleas * 15f / fight_length);
 
 
             calc.ManaBase = stats.Mana;
@@ -213,9 +213,9 @@ namespace Rawr.Healadin
                 float oldhaste = fight_length * (1f + stats.SpellHaste);
                 stats.SpellHaste = ((1 + stats.SpellHaste) * (1 + talents.JudgementsOfThePure * .03f)) - 1;
 
-                float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
-                calc.JotPCasts += seals_cast;
-                calc.JotPUsage += ((float)Math.Round(base_mana * .14f) - ied) * seals_cast;
+//              float seals_cast = (float)Math.Ceiling((fight_length - 60f) / 120f);
+//              calc.JotPCasts += seals_cast;
+//              calc.JotPUsage += ((float)Math.Round(base_mana * .14f) - ied) * seals_cast;
 
                 float miss_chance = (float)Math.Max(0f, .09f - talents.EnlightenedJudgements * .02f - stats.PhysicalHit);
                 float average_casts = 1 / (1f - miss_chance);
