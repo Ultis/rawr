@@ -2254,6 +2254,10 @@ namespace Rawr.Mage
             SetCooldownElements(branchlp, row, effect, firstActivationSegment, -1.0);
             SetCooldownElements(branchlp, row, effect, seg2 + 1, 1.0);
             branchlp.SetConstraintRHS(row, (seg2 + 1 - firstActivationSegment) * segmentDuration - effectCooldown);
+            row = branchlp.AddConstraint(false);
+            SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
+            branchlp.SetConstraintRHS(row, 2 * segmentDuration);
+            branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentDuration));
             branchlp.ForceRecalculation(true);
             HeapPush(branchlp);
             if (effectDuration < segmentDuration - eps)
