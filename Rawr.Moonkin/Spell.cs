@@ -11,260 +11,66 @@ namespace Rawr.Moonkin
     }
     class Spell
     {
-        private static float gcd = 1.5f;
-        public static float GlobalCooldown
-        {
-            get
-            {
-                return gcd;
-            }
-            set
-            {
-                if (value < 1.0f)
-                    gcd = 1.0f;
-                else if (value > 1.5f)
-                    gcd = 1.5f;
-                else
-                    gcd = value;
-            }
-        }
-
-        protected string name = "";
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-            }
-        }
-
-        protected SpellSchool school = SpellSchool.Arcane;
-        public SpellSchool School
-        {
-            get
-            {
-                return school;
-            }
-            set
-            {
-                school = value;
-            }
-        }
-
-        protected float baseDamage = 0.0f;
-        public float DamagePerHit
-        {
-            get
-            {
-                return baseDamage;
-            }
-            set
-            {
-                baseDamage = value;
-            }
-        }
-        protected float spellDamageMultiplier = 1.0f;
-        public float SpellDamageModifier
-        {
-            get
-            {
-                return spellDamageMultiplier;
-            }
-            set
-            {
-                spellDamageMultiplier = value;
-            }
-        }
-        protected float specialDamageModifier = 1.0f;
-        public float SpecialDamageModifier
-        {
-            get
-            {
-                return specialDamageModifier;
-            }
-            set
-            {
-                specialDamageModifier = value;
-            }
-        }
-        protected float idolExtraSpellPower = 0.0f;
-        public float IdolExtraSpellPower
-        {
-            get
-            {
-                return idolExtraSpellPower;
-            }
-            set
-            {
-                idolExtraSpellPower = value;
-            }
-        }
-        protected float baseCriticalMultiplier = 0.5f;
-        public float CriticalHitMultiplier
-        {
-            get
-            {
-                return baseCriticalMultiplier;
-            }
-            set
-            {
-                baseCriticalMultiplier = value;
-            }
-        }
-        protected float baseCriticalChance = 0.0f;
-        public float SpecialCriticalModifier
-        {
-            get
-            {
-                return baseCriticalChance;
-            }
-            set
-            {
-                baseCriticalChance = value;
-            }
-        }
-
-        protected float baseCastTime = Spell.GlobalCooldown;
-        public float CastTime
-        {
-            get
-            {
-                return baseCastTime;
-            }
-            set
-            {
-                baseCastTime = value;
-            }
-        }
-
-        protected float manaCost = 0.0f;
-        public float ManaCost
-        {
-            get
-            {
-                return manaCost;
-            }
-            set
-            {
-                manaCost = value;
-            }
-        }
-
-        public float DPS(float spellDamage, float hitRate, float critRate)
-        {
-            float damageCoefficient = (baseDamage + spellDamageMultiplier * (spellDamage + idolExtraSpellPower)) * specialDamageModifier;
-            float critDamageCoefficient = baseCriticalMultiplier;
-            float critChanceCoefficient = baseCriticalChance + critRate;
-            float hitCoefficient = hitRate;
-
-            return (damageCoefficient * (1 + critDamageCoefficient * critChanceCoefficient) * hitCoefficient) / (dotEffect == null ? baseCastTime : dotEffect.Duration) + (dotEffect == null ? 0 : dotEffect.DPS(spellDamage + idolExtraSpellPower, hitRate));
-        }
-        protected DotEffect dotEffect = null;
-        public DotEffect DoT
-        {
-            get
-            {
-                return dotEffect;
-            }
-            set
-            {
-                dotEffect = value;
-            }
-        }
+        public Spell() { AllDamageModifier = 1.0f; CriticalDamageModifier = 1.0f; }
+        public string Name { get; set; }
+        public float BaseDamage { get; set; }
+        public SpellSchool School { get; set; }
+        public float SpellDamageModifier { get; set; }
+        public float AllDamageModifier { get; set; }
+        public float IdolExtraSpellPower { get; set; }
+        public float CriticalDamageModifier { get; set; }
+        public float CriticalChanceModifier { get; set; }
+        public float BaseCastTime { get; set; }
+        public float BaseManaCost { get; set; }
+        public DotEffect DotEffect { get; set; }
+        // Section for variables which get filled in during rotation calcs
+        public float DamagePerHit { get; set; }
+        public float CastTime { get; set; }
+        public float ManaCost { get; set; }
     }
     class DotEffect
     {
-        private float totalDuration = 0.0f;
-        public float Duration
-        {
-            get
-            {
-                return totalDuration;
-            }
-            set
-            {
-                totalDuration = value;
-            }
-        }
-        private float tickDuration = 0.0f;
-        public float TickDuration
-        {
-            get
-            {
-                return tickDuration;
-            }
-            set
-            {
-                tickDuration = value;
-            }
-        }
-        private float damagePerTick = 0.0f;
-        public float DamagePerTick
-        {
-            get
-            {
-                return damagePerTick;
-            }
-            set
-            {
-                damagePerTick = value;
-            }
-        }
-        private float spellDamageMultiplier = 0.0f;
-        public float SpellDamageMultiplier
-        {
-            get
-            {
-                return spellDamageMultiplier;
-            }
-            set
-            {
-                spellDamageMultiplier = value;
-            }
-        }
-        private float specialDamageMultiplier = 1.0f;
-        public float SpecialDamageMultiplier
-        {
-            get
-            {
-                return specialDamageMultiplier;
-            }
-            set
-            {
-                specialDamageMultiplier = value;
-            }
-        }
+        public DotEffect() { AllDamageModifier = 1.0f; }
+        public float Duration { get; set; }
+        public float TickLength { get; set; }
+        public float TickDamage { get; set; }
+        public float SpellDamageModifier { get; set; }
+        public float AllDamageModifier { get; set; }
         public float NumberOfTicks
         {
             get
             {
-                return totalDuration / tickDuration;
+                return Duration / TickLength;
             }
         }
-        public float SpellDamageMultiplierPerTick
+        public float SpellDamageModifierPerTick
         {
             get
             {
-                return SpellDamageMultiplier / NumberOfTicks;
+                return SpellDamageModifier / NumberOfTicks;
             }
             set
             {
-                SpellDamageMultiplier += value * NumberOfTicks;
+                SpellDamageModifier += value * NumberOfTicks;
             }
         }
-        public float DPS(float spellDamage, float hitRate)
+        public float BaseDamage
         {
-            return NumberOfTicks * (DamagePerTick + SpellDamageMultiplierPerTick * spellDamage) * SpecialDamageMultiplier / Duration;
+            get
+            {
+                return NumberOfTicks * TickDamage;
+            }
+            set
+            {
+                TickDamage += value / NumberOfTicks;
+            }
         }
+        // Section for variables which get filled in during rotation calcs
+        public float DamagePerHit { get; set; }
     }
-
     class RotationData
     {
-        public float RawDPS = 0.0f;
+        public float BurstDPS = 0.0f;
         public float DPS = 0.0f;
         public float DPM = 0.0f;
         public float ManaUsed = 0.0f;
@@ -272,8 +78,474 @@ namespace Rawr.Moonkin
         public TimeSpan TimeToOOM = new TimeSpan(0, 0, 0);
     }
 
+    // Define delegate types for proc effect class
+    // Enable and disable the effect of the proc.  These two delegates should perform exact opposite operations.
+    delegate void Activate(CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    delegate void Deactivate(CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    // Calculate the uptime of the effect.  This will be used to weight the proc when calculating the rotational DPS.
+    delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
+    // Optional calculations for complicated proc effects like Eclipse or trinkets that proc additional damage.
+    // The return value of this calculation will be ADDED to the rotational DPS.
+    delegate float CalculateDPS(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+    // The return value of this calculation will be used to adjust the mana statistics of the rotation.
+    delegate float CalculateMP5(SpellRotation rotation, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste);
+
+    // The proc effect class itself.
+    class ProcEffect
+    {
+        public Activate Activate { get; set; }
+        public Deactivate Deactivate { get; set; }
+        public UpTime UpTime { get; set; }
+        public CalculateDPS CalculateDPS { get; set; }
+        public CalculateMP5 CalculateMP5 { get; set; }
+    }
+
+    // Our old friend the spell rotation.
     class SpellRotation
     {
+        public static float NGReduction { get; set; }
+        private Spell LocateSpell(string name)
+        {
+            return Array.Find<Spell>(MoonkinSolver.SpellData, delegate(Spell sp) { return sp.Name == name; });
+        }
+        public List<string> SpellsUsed;
+        public RotationData RotationData = new RotationData();
+        public string Name { get; set; }
+        public float Duration { get; set; }
+        public float ManaUsed { get; set; }
+        public float ManaGained { get; set; }
+        public float CastCount { get; set; }
+        public float DotTicks { get; set; }
+
+        // Calculate damage and casting time for a single, direct-damage spell.
+        private void DoMainNuke(Character character, CharacterCalculationsMoonkin calcs, ref Spell mainNuke, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            float latency = calcs.Latency;
+
+            mainNuke.CastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+            float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
+            float baseCastTime = (float)Math.Max(1.0f, mainNuke.CastTime / (1 + spellHaste)) + latency;
+            float NGCastTime = (float)Math.Max(1.0f, (mainNuke.CastTime - NGReduction) / (1 + spellHaste)) + latency;
+            if (mainNuke.Name == "W")
+                NGCastTime += latency;    // Additional penalty for clipping GCD
+            else
+                NGCastTime += 0.0f;       // No-op for debugging purposes.
+            mainNuke.CastTime = totalCritChance * NGCastTime + (1 - totalCritChance) * baseCastTime;
+            // Damage calculations
+            float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
+            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
+            mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
+        }
+
+        // Calculate damage and casting time for a damage-over-time effect.
+        private void DoDotSpell(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            if (dotSpell.Name == "MF")
+                DoMoonfire(character, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+            else
+                DoInsectSwarm(character, calcs, ref dotSpell, spellPower, spellHit, spellCrit, spellHaste);
+        }
+
+        // Calculate damage and casting time for the Moonfire effect.
+        private void DoMoonfire(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f);
+            float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.AllDamageModifier;
+            float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
+            float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
+            dotSpell.DamagePerHit = totalCritChance * mfCritDamage + (1 - totalCritChance) * mfDirectDamage * spellHit;
+            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
+            dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
+        }
+
+        // Calculate damage and casting time for the Insect Swarm effect.
+        private void DoInsectSwarm(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f);
+            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
+            dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
+        }
+
+        // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
+        public float DamageDone(Character character, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            // No support for 1 dot + Eclipse rotations
+            if (character.DruidTalents.Eclipse > 0 && (SpellsUsed.Count == 1 || SpellsUsed.Count == 3))
+            {
+                return DoEclipseCalcs(character, calcs, spellPower, spellHit, spellCrit, spellHaste);
+            }
+            float latency = calcs.Latency;
+
+            float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
+            float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            bool starfireGlyph = calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire";
+
+            switch (SpellsUsed.Count)
+            {
+                // Nuke only
+                case 1:
+                    Spell mainNuke = LocateSpell(SpellsUsed[0]);
+                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+
+                    float omenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 3.5f / 60f * mainNuke.BaseCastTime : 0;
+                    mainNuke.ManaCost = mainNuke.BaseManaCost - 0.25f * JoWProc * spellHit - (spellCrit + mainNuke.CriticalChanceModifier) * moonkinFormProc - mainNuke.BaseManaCost * omenProcChance * spellHit;
+                    Duration = mainNuke.CastTime;
+                    RotationData.ManaUsed = ManaUsed = mainNuke.ManaCost;
+                    RotationData.ManaGained = ManaGained = mainNuke.BaseManaCost - mainNuke.ManaCost;
+                    RotationData.DPM = mainNuke.DamagePerHit / mainNuke.ManaCost;
+                    CastCount = 1.0f;
+                    DotTicks = 0.0f;
+
+                    return mainNuke.DamagePerHit;
+                // Nuke + 1 DotEffect
+                case 2:
+                    // Find the spells
+                    Spell DotEffectSpell = LocateSpell(SpellsUsed[0]);
+                    mainNuke = LocateSpell(SpellsUsed[1]);
+                    // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
+                    if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration += 9.0f;
+                    DoDotSpell(character, calcs, ref DotEffectSpell, spellPower, spellHit, spellCrit, spellHaste);
+
+                    // Do iIS calculations, if applicable
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF" && DotEffectSpell.Name == "MF")
+                            mainNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        else if (mainNuke.Name == "W" && DotEffectSpell.Name == "IS")
+                            mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                    }
+                    // Calculate main nuke damage
+                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+
+                    // Set rotation duration
+                    Duration = DotEffectSpell.DotEffect.Duration;
+
+                    // Calculate mana usage and damage done for this rotation
+                    float timeSpentCastingNuke = Duration - DotEffectSpell.CastTime;
+                    float nukeDamageDone = mainNuke.DamagePerHit / mainNuke.CastTime * timeSpentCastingNuke;
+                    
+                    float numNukeCasts = timeSpentCastingNuke / mainNuke.CastTime;
+                    float nukeManaSpent = mainNuke.BaseManaCost * numNukeCasts;
+                    float totalManaSpent = nukeManaSpent + DotEffectSpell.BaseManaCost;
+                    CastCount = numNukeCasts + 1.0f;
+                    DotTicks = DotEffectSpell.DotEffect.NumberOfTicks;
+
+                    float manaFromJoW = (numNukeCasts + 1) / 4 * JoWProc * spellHit;
+                    float manaFromOoC = ((3.5f / 60.0f * 1.5f) * mainNuke.BaseManaCost
+                        + (numNukeCasts - 1) * (3.5f / 60.0f * mainNuke.BaseCastTime) * mainNuke.BaseManaCost
+                        + (3.5f / 60.0f * 3.5f) * DotEffectSpell.BaseManaCost) * spellHit;
+                    float manaFromMoonkin = moonkinFormProc * spellHit * ((spellCrit + mainNuke.CriticalChanceModifier) * numNukeCasts + DotEffectSpell.CriticalChanceModifier);
+
+                    float actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (character.DruidTalents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
+
+                    RotationData.ManaUsed = ManaUsed = actualManaSpent;
+                    RotationData.ManaGained = ManaGained = totalManaSpent - actualManaSpent;
+                    RotationData.DPM = (nukeDamageDone + DotEffectSpell.DamagePerHit + DotEffectSpell.DotEffect.DamagePerHit) / totalManaSpent;
+                    
+                    // Undo iIS, if applicable
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF" && DotEffectSpell.Name == "MF")
+                            mainNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        else if (mainNuke.Name == "W" && DotEffectSpell.Name == "IS")
+                            mainNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                    }
+                    // Undo SF glyph, if applicable
+                    if (starfireGlyph && mainNuke.Name == "SF" && DotEffectSpell.Name == "MF") DotEffectSpell.DotEffect.Duration -= 9.0f;
+                    // Return the damage done per rotation
+                    return nukeDamageDone + DotEffectSpell.DamagePerHit + DotEffectSpell.DotEffect.DamagePerHit;
+                // Nuke + both DotEffects
+                case 3:
+                    // Find the spells
+                    Spell moonFire = LocateSpell(SpellsUsed[0]);
+                    Spell insectSwarm = LocateSpell(SpellsUsed[1]);
+                    mainNuke = LocateSpell(SpellsUsed[2]);
+                    // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
+                    if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration += 9.0f;
+                    DoDotSpell(character, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+
+                    // Do iIS calculations, if applicable
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF")
+                            mainNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        else if (mainNuke.Name == "W")
+                            mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                    }
+                    // Calculate main nuke damage
+                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+
+                    // Set rotation duration
+                    Duration = moonFire.DotEffect.Duration;
+
+                    // Calculate mana usage and damage done for this rotation
+                    float timeSpentCastingIS = insectSwarm.CastTime * moonFire.DotEffect.Duration / insectSwarm.DotEffect.Duration;
+                    float insectSwarmDamage = insectSwarm.DotEffect.DamagePerHit * moonFire.DotEffect.Duration / insectSwarm.DotEffect.Duration;
+                    timeSpentCastingNuke = Duration - timeSpentCastingIS - moonFire.CastTime;
+                    nukeDamageDone = mainNuke.DamagePerHit / mainNuke.CastTime * timeSpentCastingNuke;
+
+                    numNukeCasts = timeSpentCastingNuke / mainNuke.CastTime;
+                    float numISCasts = timeSpentCastingIS / insectSwarm.CastTime;
+                    nukeManaSpent = mainNuke.BaseManaCost * numNukeCasts;
+                    totalManaSpent = nukeManaSpent + moonFire.BaseManaCost + numISCasts * insectSwarm.BaseManaCost;
+                    CastCount = numNukeCasts + numISCasts + 1.0f;
+                    DotTicks = moonFire.DotEffect.NumberOfTicks + numISCasts * insectSwarm.DotEffect.NumberOfTicks;
+
+                    manaFromJoW = (numNukeCasts + 1 + numISCasts) / 4 * JoWProc * spellHit;
+                    manaFromOoC = ((3.5f / 60.0f * 1.5f) * mainNuke.BaseManaCost
+                        + (numNukeCasts - 1 - numISCasts) * (3.5f / 60.0f * mainNuke.BaseCastTime) * mainNuke.BaseManaCost
+                        + (3.5f / 60.0f * mainNuke.BaseCastTime) * moonFire.BaseManaCost
+                        + (3.5f / 60.0f * mainNuke.BaseCastTime) * numISCasts * insectSwarm.BaseManaCost
+                        + (3.5f / 60.0f * 1.5f) * numISCasts * mainNuke.BaseManaCost) * spellHit;
+                    manaFromMoonkin = moonkinFormProc * spellHit * ((spellCrit + mainNuke.CriticalChanceModifier) * numNukeCasts + moonFire.CriticalChanceModifier);
+
+                    actualManaSpent = totalManaSpent - manaFromJoW - manaFromMoonkin - (character.DruidTalents.OmenOfClarity == 1 ? manaFromOoC : 0.0f);
+
+                    RotationData.ManaUsed = ManaUsed = actualManaSpent;
+                    RotationData.ManaGained = ManaGained = totalManaSpent - actualManaSpent;
+                    RotationData.DPM = (nukeDamageDone + moonFire.DamagePerHit + moonFire.DotEffect.DamagePerHit + insectSwarm.DotEffect.DamagePerHit) / totalManaSpent;
+
+                    // Undo iIS, if applicable
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF")
+                            mainNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        else if (mainNuke.Name == "W")
+                            mainNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                    }
+                    // Undo SF glyph
+                    if (starfireGlyph && mainNuke.Name == "SF") moonFire.DotEffect.Duration -= 9.0f;
+                    // Return the damage done per rotation
+                    return nukeDamageDone + moonFire.DamagePerHit + moonFire.DotEffect.DamagePerHit + insectSwarmDamage;
+                default:
+                    throw new Exception("Invalid rotation specified in rotation solver.");
+            }
+        }
+
+        private float DoEclipseCalcs(Character character, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
+        {
+            float latency = calcs.Latency;
+
+            float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
+            float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            bool starfireGlyph = calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire";
+
+            switch (SpellsUsed.Count)
+            {
+                // Nuke only
+                case 1:
+                    Spell mainNuke = LocateSpell(SpellsUsed[0]);
+                    Spell offNuke = LocateSpell(SpellsUsed[0] == "SF" ? "W" : "SF");
+                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    float preEclipseTime = 0.0f;
+                    float preEclipseDPS = 0.0f;
+                    float eclipseTime = 0.0f;
+                    float eclipseDPS = 0.0f;
+                    float postEclipseTime = 0.0f;
+                    float postEclipseDPS = 0.0f;
+                    float timeToProc = 0.0f;
+                    if (calcOpts.SmartSwitching)
+                    {
+                        float eclipseProcChance = (spellCrit + offNuke.CriticalChanceModifier) * spellHit * (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
+                        float effectiveCritRate = (1.0f - (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + offNuke.CriticalChanceModifier) * spellHit;
+                        float castsToProc = 1.0f / eclipseProcChance;
+                        float unhastedCastTime = offNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+                        float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
+                        float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (offNuke.Name == "W" ? latency : 0.0f);
+                        float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
+                        timeToProc = effectiveCastTime * (castsToProc - 0.5f);
+                        float rotationLength = 30.0f + timeToProc;
+
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier += 0.2f;
+                        DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier -= 0.2f;
+
+                        preEclipseTime = timeToProc + NGCastTime;
+                        preEclipseDPS = offNuke.DamagePerHit / effectiveCastTime;
+
+                        eclipseTime = 15.0f - NGCastTime - 0.5f * mainNuke.CastTime;
+                        eclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        postEclipseTime = 30.0f - 15.0f + 0.5f * mainNuke.CastTime;
+                        float eclipseCastTime = mainNuke.CastTime;
+                        DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                        postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        DotTicks = 0.0f;
+                        CastCount = castsToProc + (eclipseTime / eclipseCastTime) + (postEclipseTime / mainNuke.CastTime);
+                    }
+                    else
+                    {
+                        float eclipseProcChance = (spellCrit + mainNuke.CriticalChanceModifier) * spellHit * (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
+                        float effectiveCritRate = (1.0f - (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + mainNuke.CriticalChanceModifier) * spellHit;
+                        float castsToProc = 1.0f / eclipseProcChance;
+                        float unhastedCastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+                        float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
+                        float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (mainNuke.Name == "W" ? latency : 0.0f);
+                        float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
+                        timeToProc = effectiveCastTime * (castsToProc - 0.5f);
+                        float rotationLength = 30.0f + timeToProc;
+
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier += 0.2f;
+                        DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier -= 0.2f;
+
+                        preEclipseTime = timeToProc + NGCastTime;
+                        preEclipseDPS = mainNuke.DamagePerHit / effectiveCastTime;
+
+                        eclipseTime = 15.0f - NGCastTime - 0.5f * offNuke.CastTime;
+                        eclipseDPS = offNuke.DamagePerHit / offNuke.CastTime;
+
+                        postEclipseTime = 30.0f - 15.0f + 0.5f * offNuke.CastTime;
+                        postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        DotTicks = 0.0f;
+                        CastCount = castsToProc + (eclipseTime / offNuke.CastTime) + (postEclipseTime / mainNuke.CastTime);
+                        DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    }
+                    return preEclipseDPS * preEclipseTime + eclipseDPS * eclipseTime + postEclipseDPS * postEclipseTime;
+                // Nuke + both DotEffects
+                case 3:
+                    mainNuke = LocateSpell(SpellsUsed[2]);
+                    offNuke = LocateSpell(SpellsUsed[2] == "SF" ? "W" : "SF");
+                    Spell moonFire = LocateSpell("MF");
+                    Spell insectSwarm = LocateSpell("IS");
+                    // Do Starfire glyph calculations, if applicable; then do DoT spell calculations
+                    if (starfireGlyph) moonFire.DotEffect.Duration += 9.0f;
+                    // Do iIS calculations, if applicable
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF")
+                        {
+                            mainNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            offNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        }
+                        else if (mainNuke.Name == "W")
+                        {
+                            mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            offNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        }
+                    }
+                    DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(character, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
+                    DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+                    preEclipseTime = 0.0f;
+                    preEclipseDPS = 0.0f;
+                    eclipseTime = 0.0f;
+                    eclipseDPS = 0.0f;
+                    postEclipseTime = 0.0f;
+                    postEclipseDPS = 0.0f;
+                    timeToProc = 0.0f;
+                    float moonfireCasts = 0.0f;
+                    float insectSwarmCasts = 0.0f;
+                    if (calcOpts.SmartSwitching)
+                    {
+                        float eclipseProcChance = (spellCrit + offNuke.CriticalChanceModifier) * spellHit * (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
+                        float effectiveCritRate = (1.0f - (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + offNuke.CriticalChanceModifier) * spellHit;
+                        float castsToProc = 1.0f / eclipseProcChance;
+                        float unhastedCastTime = offNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+                        float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
+                        float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (offNuke.Name == "W" ? latency : 0.0f);
+                        float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
+                        timeToProc = effectiveCastTime * (castsToProc - 0.5f);
+
+                        moonfireCasts = (30.0f + timeToProc) / moonFire.DotEffect.Duration;
+                        insectSwarmCasts = (30.0f + timeToProc) / insectSwarm.DotEffect.Duration;
+                        float timeCastingDots = (moonfireCasts * moonFire.CastTime) + (insectSwarmCasts * insectSwarm.CastTime);
+
+                        float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
+
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier += 0.2f;
+                        DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier -= 0.2f;
+
+                        preEclipseTime = timeToProc + NGCastTime;
+                        preEclipseDPS = offNuke.DamagePerHit / effectiveCastTime;
+
+                        eclipseTime = 15.0f - NGCastTime - 0.5f * mainNuke.CastTime - (timeCastingDots * (15.0f / (30.0f + timeToProc)));
+                        eclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        postEclipseTime = 30.0f - 15.0f + 0.5f * mainNuke.CastTime - (timeCastingDots * ((30.0f - 15.0f) / (30.0f + timeToProc)));
+                        float eclipseCastTime = mainNuke.CastTime;
+                        DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
+                        postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        CastCount = castsToProc + (eclipseTime / eclipseCastTime) + (postEclipseTime / mainNuke.CastTime);
+                    }
+                    else
+                    {
+                        float eclipseProcChance = (spellCrit + mainNuke.CriticalChanceModifier) * spellHit * (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
+                        float effectiveCritRate = (1.0f - (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + mainNuke.CriticalChanceModifier) * spellHit;
+                        float castsToProc = 1.0f / eclipseProcChance;
+                        float unhastedCastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
+                        float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
+                        float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (mainNuke.Name == "W" ? latency : 0.0f);
+                        float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
+                        timeToProc = effectiveCastTime * (castsToProc - 0.5f);
+
+                        moonfireCasts = (30.0f + timeToProc) / moonFire.DotEffect.Duration;
+                        insectSwarmCasts = (30.0f + timeToProc) / insectSwarm.DotEffect.Duration;
+                        float timeCastingDots = (moonfireCasts * moonFire.CastTime) + (insectSwarmCasts * insectSwarm.CastTime);
+
+                        float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
+
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier += 0.2f;
+                        DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier -= 0.2f;
+
+                        preEclipseTime = timeToProc + NGCastTime;
+                        preEclipseDPS = mainNuke.DamagePerHit / effectiveCastTime;
+
+                        eclipseTime = 15.0f - NGCastTime - 0.5f * offNuke.CastTime - (timeCastingDots * (15.0f / (30.0f + timeToProc)));
+                        eclipseDPS = offNuke.DamagePerHit / offNuke.CastTime;
+
+                        postEclipseTime = 30.0f - 15.0f + 0.5f * offNuke.CastTime - (timeCastingDots * ((30.0f - 15.0f) / (30.0f + timeToProc)));
+                        postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
+
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        CastCount = castsToProc + (eclipseTime / offNuke.CastTime) + (postEclipseTime / mainNuke.CastTime);
+                        DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
+                    }
+                    DotTicks = moonFire.DotEffect.NumberOfTicks * moonfireCasts + insectSwarm.DotEffect.NumberOfTicks * insectSwarmCasts;
+                    CastCount += moonfireCasts + insectSwarmCasts;
+                    // Undo SF glyph
+                    if (starfireGlyph) moonFire.DotEffect.Duration -= 9.0f;
+                    // Undo iIS calculations
+                    if (character.DruidTalents.ImprovedInsectSwarm > 0)
+                    {
+                        if (mainNuke.Name == "SF")
+                        {
+                            mainNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            offNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        }
+                        else if (mainNuke.Name == "W")
+                        {
+                            mainNuke.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                            offNuke.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                        }
+                    }
+                    return preEclipseDPS * preEclipseTime + eclipseDPS * eclipseTime + postEclipseDPS * postEclipseTime +
+                        moonfireCasts * (moonFire.DamagePerHit + moonFire.DotEffect.DamagePerHit) + insectSwarmCasts * insectSwarm.DotEffect.DamagePerHit;
+                default:
+                    throw new Exception("Invalid rotation specified in rotation solver.");
+            }
+        }
+    }
+
+    // The interface class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
+    static class MoonkinSolver
+    {
+        // A list of all currently active proc effects.
+        public static List<ProcEffect> procEffects;
+        // A list of all the damage spells
         private static Spell[] _spellData = null;
         public static Spell[] SpellData
         {
@@ -281,59 +553,60 @@ namespace Rawr.Moonkin
             {
                 if (_spellData == null)
                 {
-                    // For Moonfire calculations
-                    float baseDamage = (406.0f + 476.0f) / 2.0f;
-
                     _spellData = new Spell[] {
                         new Spell()
                         {
                             Name = "SF",
-                            DamagePerHit = (1028.0f + 1212.0f) / 2.0f,
+                            BaseDamage = (1038.0f + 1222.0f) / 2.0f,
                             SpellDamageModifier = 1.0f,
+                            BaseCastTime = 3.5f,
                             CastTime = 3.5f,
-                            ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f),
-                            DoT = null,
+                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.16f),
+                            DotEffect = null,
                             School = SpellSchool.Arcane
                         },
                         new Spell()
                         {
                             Name = "MF",
-                            DamagePerHit = (406.0f + 476.0f) / 2.0f,
-                            SpellDamageModifier = (1.5f/3.5f) * (baseDamage / (baseDamage + 200.0f*4.0f)),
-                            CastTime = Spell.GlobalCooldown,
-                            ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.21f),
-                            DoT = new DotEffect()
+                            BaseDamage = (406.0f + 476.0f) / 2.0f,
+                            SpellDamageModifier = (1.5f / 3.5f) * (1.5f / 3.5f) / (1.5f / 3.5f + 12f / 15f),
+                            BaseCastTime = 1.5f,
+                            CastTime = 1.5f,
+                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.21f),
+                            DotEffect = new DotEffect()
                                 {
                                     Duration = 12.0f,
-                                    TickDuration = 3.0f,
-                                    DamagePerTick = 200.0f,
-                                    SpellDamageMultiplier = (12.0f/15.0f) * (200.0f*4.0f / (baseDamage + 200.0f*4.0f))
+                                    TickLength = 3.0f,
+                                    TickDamage = 200.0f,
+                                    SpellDamageModifier = (12f / 15f) * (12f / 15f) / (1.5f / 3.5f + 12f / 15f)
                                 },
                             School = SpellSchool.Arcane
                         },
                         new Spell()
                         {
                             Name = "W",
-                            DamagePerHit = (553.0f + 623.0f) / 2.0f,
+                            BaseDamage = (558.0f + 628.0f) / 2.0f,
                             SpellDamageModifier = 2.0f/3.5f,
-                            CastTime = 2.0f,
-                            ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
-                            DoT = null,
+                            BaseCastTime = 2.0f,
+                            CastTime = 1.5f,
+                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.11f),
+                            DotEffect = null,
                             School = SpellSchool.Nature
                         },
                         new Spell()
                         {
                             Name = "IS",
-                            DamagePerHit = 0.0f,
+                            BaseDamage = 0.0f,
                             SpellDamageModifier = 0.0f,
-                            CastTime = Spell.GlobalCooldown,
-                            ManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.08f),
-                            DoT = new DotEffect()
+                            BaseCastTime = 1.5f,
+                            CastTime = 1.5f,
+                            BaseManaCost = (float)(int)(CalculationsMoonkin.BaseMana * 0.08f),
+                            DotEffect = new DotEffect()
                             {
                                 Duration = 12.0f,
-                                TickDuration = 2.0f,
-                                DamagePerTick = 1290.0f / 6.0f,
-                                SpellDamageMultiplier = 0.76f
+                                TickLength = 2.0f,
+                                TickDamage = 1290.0f / 6.0f,
+                                SpellDamageModifier = 0.76f
                             },
                             School = SpellSchool.Nature
                         }
@@ -370,290 +643,293 @@ namespace Rawr.Moonkin
                 return SpellData[3];
             }
         }
-        public static void RecreateSpells()
+        public static void ResetSpellList()
         {
             // Since the property rebuilding the array is based on this variable being null, this effectively forces a refresh
             _spellData = null;
         }
 
-        private string _name;
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
-        private List<Spell> spells = new List<Spell>();
-        public List<Spell> Spells
-        {
-            get
-            {
-                return spells;
-            }
-            set
-            {
-                spells = value;
-            }
-        }
-        public float DPS(float arcaneDamage, float natureDamage, float spellHit, float spellCrit, float manaPool, float fightLength, float T54pcBonus)
-        {
-            float accumulatedDamage = 0.0f;
-            float accumulatedManaUsed = 0.0f;
-            float accumulatedDuration = 0.0f;
-            Dictionary<string, KeyValuePair<float, float>> activeDots = new Dictionary<string, KeyValuePair<float, float>>();
-            foreach (Spell sp in spells)
-            {
-                float currentSpellDPS = 0.0f;
-                float timeSpentCasting = 0.0f;
-                int numberOfCasts = 0;
-                float timeSpentCastingIn4T5 = 0.0f;
-                if (sp.School == SpellSchool.Arcane)
-                {
-                    currentSpellDPS = sp.DPS(arcaneDamage, spellHit, spellCrit);
-                }
-                else
-                {
-                    currentSpellDPS = sp.DPS(natureDamage, spellHit, spellCrit);
-                }
-                if (sp.DoT == null)
-                {
-                    float dotDuration = sp.CastTime;
-                    foreach (KeyValuePair<string, KeyValuePair<float, float>> pair in activeDots)
-                    {
-                        if (pair.Value.Value > dotDuration)
-                            dotDuration = pair.Value.Value;
-                    }
-                    while (timeSpentCasting < dotDuration)
-                    {
-                        // Nordrassil Regalia (4T5 bonus)
-                        // This should handle the case where a DoT tick falls off before the last cast completes (I hope)
-                        if (T54pcBonus > 0.0f && sp.Name == "SF" && activeDots.Count != 0 && dotDuration - timeSpentCasting >= sp.CastTime)
-                        {
-                            timeSpentCastingIn4T5 += sp.CastTime;
-                        }
-                        timeSpentCasting += sp.CastTime;
-                        ++numberOfCasts;
-                    }
-                }
-                else
-                {
-                    ++numberOfCasts;
-                    timeSpentCasting = sp.CastTime;
-                    activeDots.Add(sp.Name, new KeyValuePair<float,float>(currentSpellDPS, sp.DoT.Duration));
-                }
-                Dictionary<string, float> dotsToDecrement = new Dictionary<string,float>();
-                foreach (KeyValuePair<string, KeyValuePair<float, float>> pair in activeDots)
-                {
-                    if (pair.Value.Value > 0)
-                    {
-                        // Handle the case where the DoT tick may fall off
-                        accumulatedDamage += pair.Value.Key * (timeSpentCasting > pair.Value.Value ? pair.Value.Value : timeSpentCasting);
-                        dotsToDecrement.Add(pair.Key, pair.Value.Key);
-                    }
-                }
-                foreach (KeyValuePair<string, float> pair in dotsToDecrement)
-                {
-                    activeDots[pair.Key] = new KeyValuePair<float,float>(activeDots[pair.Key].Key, activeDots[pair.Key].Value - timeSpentCasting);
-                }
-                // Prevent double-counting of DoT spells
-                if (sp.DoT == null)
-                {
-                    accumulatedDamage += (currentSpellDPS * timeSpentCastingIn4T5 * (1+T54pcBonus)) + (currentSpellDPS * (timeSpentCasting - timeSpentCastingIn4T5));
-                }
-                accumulatedManaUsed += sp.ManaCost * numberOfCasts;
-                accumulatedDuration += sp.CastTime * numberOfCasts;
-            }
-            RawDPS = accumulatedDamage / accumulatedDuration;
-            DPM = accumulatedDamage / accumulatedManaUsed;
-            float secsToOOM = manaPool / (accumulatedManaUsed / accumulatedDuration);
-            if (secsToOOM > fightLength)
-                TimeToOOM = new TimeSpan(0, 0, 0);
-            else
-                TimeToOOM = new TimeSpan(0, (int)secsToOOM / 60, (int)secsToOOM % 60);
-            return accumulatedDamage / accumulatedDuration * (secsToOOM >= fightLength ? fightLength : secsToOOM) / fightLength;
-        }
-        public void CalculateRotationalVariables()
-        {
-            ResetRotationalVariables();
-            _castCount = (HasMoonfire ? 1 : 0);
-            _castCount += (HasInsectSwarm ? 1 : 0);
-            Spell iSw = spells.Find(delegate(Spell sp)
-            {
-                return sp.Name == "IS";
-            });
-            Spell mf = spells.Find(delegate(Spell sp)
-            {
-                return sp.Name == "MF";
-            });
-            _duration = 0.0f;
-            // Figure out which one lasts longer, MF or IS
-            // This will be used in calculations for nukes
-            if (iSw != null)
-            {
-                _duration = iSw.DoT.Duration;
-                _dotTicks += (int)iSw.DoT.NumberOfTicks;
-                _manaUsed += iSw.ManaCost;
-            }
-            if (mf != null)
-            {
-                if (mf.DoT.Duration >= _duration)
-                    _duration = mf.DoT.Duration;
-                _dotTicks += (int)mf.DoT.NumberOfTicks;
-                _avgCritChance += mf.SpecialCriticalModifier;
-                _manaUsed += mf.ManaCost;
-            }
-            foreach (Spell sp in spells)
-            {
-                // We found our main nuke, do calculations
-                if (sp.DoT == null)
-                {
-                    if (iSw == null && mf == null)
-                    {
-                        _duration = sp.CastTime;
-                    }
-                    float numCasts = _duration / sp.CastTime;
-                    _avgCritChance = (_avgCritChance + numCasts * sp.SpecialCriticalModifier) / (numCasts + _castCount);
-                    _castCount += numCasts;
-                    if (sp.Name == "SF")
-                        _starfireCount = numCasts;
-                    else
-                        _wrathCount = numCasts;
-                    _manaUsed += numCasts * sp.ManaCost;
-                }
-            }
-        }
-        private float _avgCritChance = 0.0f;
-        private float _castCount = 0.0f;
-        private float _duration = 0.0f;
-        private int _dotTicks = 0;
-        private float _manaUsed = 0.0f;
-        public float AverageCritChance
-        {
-            get
-            {
-                if (_duration == 0.0f)
-                    CalculateRotationalVariables();
-                return _avgCritChance;
-            }
-        }
-        public float ManaUsed
-        {
-            get
-            {
-                if (_duration == 0.0f)
-                    CalculateRotationalVariables();
-                return _manaUsed;
-            }
-            set
-            {
-                // Add an accessor for this property for the calculation of the Starfire glyph
-                _manaUsed = value;
-            }
-        }
-        public float ManaGained { get; set; }
-        public float Duration
-        {
-            get
-            {
-                if (_duration == 0.0f)
-                    CalculateRotationalVariables();
-                return _duration;
-            }
-            set
-            {
-                // Add an accessor for this property for the calculation of NG+Moonfire
-                _duration = value;
-            }
-        }
-        public float CastCount
-        {
-            get
-            {
-                if (_duration == 0.0f)
-                    CalculateRotationalVariables();
-                return _castCount;
-            }
-        }
-        public int TotalDotTicks
-        {
-            get
-            {
-                if (_duration == 0)
-                    CalculateRotationalVariables();
-                return _dotTicks;
-            }
-        }
-        public bool HasMoonfire
-        {
-            get
-            {
-                foreach (Spell sp in spells)
-                {
-                    if (sp.Name == "MF")
-                        return true;
-                }
-                return false;
-            }
-        }
-        public bool HasInsectSwarm
-        {
-            get
-            {
-                foreach (Spell sp in spells)
-                {
-                    if (sp.Name == "IS")
-                        return true;
-                }
-                return false;
-            }
-        }
-        private float _starfireCount = 0;
-        public float StarfireCount
-        {
-            get
-            {
-                if (_duration == 0)
-                    CalculateRotationalVariables();
-                return _starfireCount;
-            }
-        }
-        private float _wrathCount = 0;
-        public float WrathCount
-        {
-            get
-            {
-                if (_duration == 0)
-                    CalculateRotationalVariables();
-                return _wrathCount;
-            }
-        }
-        // These fields get filled in only after the DPS calculations are done
-        public float DPM { get; set; }
-        public TimeSpan TimeToOOM { get; set; }
-        public float RawDPS { get; set; }
+        // The spell rotations themselves.
+        public static List<SpellRotation> rotations = null;
 
-        public void ResetRotationalVariables()
-        {
-            _avgCritChance = 0.0f;
-            _castCount = 0.0f;
-            _dotTicks = 0;
-            _duration = 0.0f;
-            _manaUsed = 0.0f;
-            _starfireCount = 0;
-            _wrathCount = 0;
-        }
-    }
-
-    static class MoonkinSolver
-    {
+        // Results data from the calculations, which will be sent to the UI.
         static Dictionary<string, RotationData> cachedResults = new Dictionary<string, RotationData>();
-        static List<SpellRotation> SpellRotations = null;
 
+        public static void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
+        {
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            procEffects = new List<ProcEffect>();
+            RecreateSpells(character, ref calcs);
+            cachedResults = new Dictionary<string, RotationData>();
+
+            float trinketDPS = 0.0f;
+            float baseHit = 1.0f;
+            switch (calcs.TargetLevel)
+            {
+                case 80:
+                    baseHit -= 0.04f;
+                    break;
+                case 81:
+                    baseHit -= 0.05f;
+                    break;
+                case 82:
+                    baseHit -= 0.06f;
+                    break;
+                case 83:
+                    baseHit -= 0.17f;
+                    break;
+                default:
+                    baseHit -= 0.17f;
+                    break;
+            }
+            baseHit = (float)Math.Min(1.0f, baseHit + calcs.SpellHit);
+            float baseSpellPower = calcs.SpellPower;
+            float baseCrit = calcs.SpellCrit;
+            float baseHaste = calcs.SpellHaste;
+            DoOnUseTrinketCalcs(calcs, baseHit, ref baseSpellPower, ref baseCrit, ref baseHaste, ref trinketDPS);
+            BuildProcList(calcs);
+
+            float maxDamageDone = 0.0f;
+            float maxBurstDamageDone = 0.0f;
+            SpellRotation maxBurstRotation = rotations[0];
+            SpellRotation maxRotation = rotations[0];
+
+            float manaPool = GetEffectiveManaPool(character, calcs);
+            float manaGained = manaPool - calcs.BasicStats.Mana;
+
+            // Do tree calculations: Calculate damage per cast.
+            float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, 0.0f, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
+            // Extend that to number of casts per fight.  Round down and ensure that only complete tree casts are counted.
+            treeDamage *= (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1;
+            // Multiply by raid-wide damage increases.
+            treeDamage *= 1 + calcs.BasicStats.BonusDamageMultiplier;
+            // Calculate the DPS averaged over the fight length.
+            float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
+
+            foreach (SpellRotation rot in rotations)
+            {
+
+                float accumulatedDamage = 0.0f;
+                float totalUpTime = 0.0f;
+                foreach (ProcEffect proc in procEffects)
+                {
+                    if (proc.CalculateDPS != null)
+                    {
+                        if (rot.Duration == 0.0f)
+                            rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                        accumulatedDamage += proc.CalculateDPS(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) * rot.Duration;
+                    }
+                    else if (proc.Activate != null)
+                    {
+                        proc.Activate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                        float tempDamage = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                        float tempUpTime = proc.UpTime(rot, calcs);
+                        proc.Deactivate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
+                        accumulatedDamage += tempDamage * tempUpTime;
+                        totalUpTime += tempUpTime;
+                    }
+                    if (proc.CalculateMP5 != null)
+                    {
+                        manaGained += proc.CalculateMP5(rot, calcs, baseSpellPower, baseHit, baseCrit, baseHaste) / 5.0f * calcs.FightLength * 60.0f;
+                    }
+                }
+                accumulatedDamage += (1 - totalUpTime) * rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
+                float burstDPS = accumulatedDamage / rot.Duration;
+                float sustainedDPS = burstDPS;
+                float timeToOOM = (manaPool / rot.RotationData.ManaUsed) * rot.Duration;
+                if (timeToOOM < calcs.FightLength * 60.0f)
+                {
+                    rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
+                    sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
+                }
+                burstDPS += trinketDPS + treeDPS;
+                sustainedDPS += trinketDPS + treeDPS;
+                rot.RotationData.BurstDPS = burstDPS;
+                rot.RotationData.DPS = sustainedDPS;
+                if ((calcOpts.userRotation == "None" && sustainedDPS > maxDamageDone) || calcOpts.userRotation == rot.Name)
+                {
+                    maxDamageDone = sustainedDPS;
+                    maxRotation = rot;
+                }
+                if (burstDPS > maxBurstDamageDone)
+                {
+                    maxBurstDamageDone = burstDPS;
+                    maxBurstRotation = rot;
+                }
+                rot.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.Duration;
+                rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.Duration;
+                cachedResults[rot.Name] = rot.RotationData;
+            }
+            // Present the findings to the user.
+            calcs.SelectedRotation = maxRotation;
+            calcs.BurstDPSRotation = maxBurstRotation;
+            calcs.SubPoints = new float[] { maxDamageDone, maxBurstDamageDone };
+            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
+            calcs.Rotations = cachedResults;
+        }
+
+        // Create proc effect calculations for proc-based trinkets.
+        private static void BuildProcList(CharacterCalculationsMoonkin calcs)
+        {
+            // Sundial of the Exiled, et al. (Spell power 10 sec on hit, 10% chance, 45s cooldown)
+            if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp += c.BasicStats.SpellPowerFor10SecOnHit_10_45;
+                    },
+                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp -= c.BasicStats.SpellPowerFor10SecOnHit_10_45;
+                    },
+                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                    {
+                        float timeToProc = r.Duration / (r.CastCount * 0.1f) + 45.0f;
+                        return 10.0f / (10.0f + timeToProc);
+                    }
+                });
+            }
+            // Dying Curse, et al. (Spell power for 10 sec on cast, 15% chance, 45s cooldown)
+            if (calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp += c.BasicStats.SpellPowerFor10SecOnCast_15_45;
+                    },
+                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp -= c.BasicStats.SpellPowerFor10SecOnCast_15_45;
+                    },
+                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                    {
+                        float timeToProc = r.Duration / (r.CastCount * 0.15f) + 45.0f;
+                        return 10.0f / (10.0f + timeToProc);
+                    }
+                });
+            }
+            // Flow of Knowledge, et al. (Spell power for 10 sec on cast, 10% chance, 45s cooldown)
+            if (calcs.BasicStats.SpellPowerFor10SecOnCast_10_45 > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp += c.BasicStats.SpellPowerFor10SecOnCast_10_45;
+                    },
+                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sp -= c.BasicStats.SpellPowerFor10SecOnCast_10_45;
+                    },
+                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                    {
+                        float timeToProc = r.Duration / (r.CastCount * 0.10f) + 45.0f;
+                        return 10.0f / (10.0f + timeToProc);
+                    }
+                });
+            }
+            // Embrace of the Spider (505 haste/10 sec, 45s internal cooldown, 10% chance on cast)
+            if (calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    Activate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sHa += c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
+                    },
+                    Deactivate = delegate(CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                    {
+                        sHa -= c.BasicStats.SpellHasteFor10SecOnCast_10_45 / CalculationsMoonkin.hasteRatingConversionFactor;
+                    },
+                    UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
+                    {
+                        float timeToProc = (r.Duration / r.CastCount) / 0.1f + 45.0f;
+                        return 10.0f / (10.0f + timeToProc);
+                    }
+                });
+            }
+            // Thunder Capacitor
+            if (calcs.BasicStats.ThunderCapacitorProc > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float baseDamage = (1181 + 1371) / 2.0f;
+                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
+                        float timeBetweenProcs = r.Duration / (sHi * sc * r.CastCount);
+                        if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 4.0f + 2.5f;
+                        else timeBetweenProcs *= 4.0f;
+                        return averageDamage / timeBetweenProcs;
+                    }
+                });
+            }
+            // Pendulum of Telluric Currents
+            if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float baseDamage = (1168 + 1752) / 2.0f;
+                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
+                        float timeBetweenProcs = r.Duration / (sHi * r.CastCount * 0.15f) + 45f;
+                        return averageDamage / timeBetweenProcs;
+                    }
+                });
+            }
+            // Extract of Necromantic Power (10% proc on a DoT tick, 15s internal cooldown)
+            if (calcs.BasicStats.ExtractOfNecromanticPowerProc > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        if (r.DotTicks == 0) return 0.0f;
+                        float specialDamageModifier = (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float baseDamage = (788 + 1312) / 2.0f;
+                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
+                        float timeBetweenProcs = 1 / (r.DotTicks / r.Duration * 0.1f) + 15.0f;
+                        return averageDamage / timeBetweenProcs;
+                    }
+                });
+            }
+            // Darkmoon Card: Death (35% proc from any damage source, 45s internal cooldown)
+            if (calcs.BasicStats.DarkmoonCardDeathProc > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                        float baseDamage = (744 + 956) / 2.0f;
+                        float averageDamage = sHi * baseDamage * (1 + 0.5f * sc) * specialDamageModifier;
+                        float timeBetweenProcs = r.Duration / ((r.CastCount + r.DotTicks) * 0.35f) + 45.0f;
+                        return averageDamage / timeBetweenProcs;
+                    }
+                });
+            }
+            // Je'Tze's Bell (10% chance of 100 mp5 for 15 sec)
+            if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
+            {
+                procEffects.Add(new ProcEffect()
+                {
+                    CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                    {
+                        float procsPerRotation = 0.1f * r.CastCount;
+                        float timeBetweenProcs = r.Duration / procsPerRotation + 45.0f;
+                        return 300.0f / timeBetweenProcs * 5.0f;
+                    }
+                });
+            }
+        }
+
+        // Non-rotation-specific mana calculations
         private static float GetEffectiveManaPool(Character character, CharacterCalculationsMoonkin calcs)
         {
             float fightLength = calcs.FightLength * 60.0f;
@@ -663,7 +939,7 @@ namespace Rawr.Moonkin
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen5SR * fightLength;
 
-			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             // Mana pot calculations
             int numPots = calcOpts.ManaPots ? 1 : 0;
             float manaRestoredByPots = 0.0f;
@@ -685,7 +961,7 @@ namespace Rawr.Moonkin
 
             // Innervate calculations
             float innervateDelay = calcOpts.InnervateDelay * 60.0f;
-            int numInnervates = calcOpts.Innervate && fightLength - innervateDelay > 0 ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
+            int numInnervates = (calcOpts.Innervate && fightLength - innervateDelay > 0) ? ((int)(fightLength - innervateDelay) / (int)innervateCooldown + 1) : 0;
             float totalInnervateMana = 0.0f;
             if (numInnervates > 0)
             {
@@ -715,829 +991,34 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
-        private static void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
+        // Now returns damage per cast to allow adjustments for fight length
+        private static float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float bloodLust, float treantLifespan, int bramblesLevel)
         {
-            Stats stats = calcs.BasicStats;
-			CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            // Add (possibly talented) +spelldmg
-            // Starfire: Damage +(0.04 * Wrath of Cenarius)
-            // Wrath: Damage +(0.02 * Wrath of Cenarius)
-            SpellRotation.Wrath.SpellDamageModifier += 0.02f * character.DruidTalents.WrathOfCenarius;
-            SpellRotation.Starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
-
-            // Add spell damage from idols
-            SpellRotation.Starfire.IdolExtraSpellPower += stats.StarfireDmg;
-            SpellRotation.Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
-            SpellRotation.Wrath.DamagePerHit += stats.WrathDmg;
-
-            // Add spell-specific damage
-            // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
-            SpellRotation.Wrath.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
-            SpellRotation.Moonfire.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
-            SpellRotation.Starfire.SpecialDamageModifier += (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
-            // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
-            SpellRotation.Moonfire.DoT.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
-            SpellRotation.InsectSwarm.DoT.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
-            // Moonfire: Damage, Crit chance +(0.05 * Imp Moonfire)
-            SpellRotation.Moonfire.SpecialDamageModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.05f * character.DruidTalents.ImprovedMoonfire;
-            SpellRotation.Moonfire.SpecialCriticalModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
-            // Moonfire, Insect Swarm: Damage +(0.01 * Genesis)
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.01f * character.DruidTalents.Genesis;
-            SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier += 0.01f * character.DruidTalents.Genesis;
-
-            // Wrath, Insect Swarm: Nature spell damage multipliers
-            SpellRotation.Wrath.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            // Starfire, Moonfire: Arcane damage multipliers
-            SpellRotation.Starfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.Moonfire.SpecialDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier));
-
-            // Level-based partial resistances
-            SpellRotation.Wrath.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            SpellRotation.Starfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            SpellRotation.Moonfire.SpecialDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            SpellRotation.Moonfire.DoT.SpecialDamageMultiplier *= 1 - 0.02f * (calcs.TargetLevel - 80);
-            // Insect Swarm is a binary spell
-
-            // Add spell-specific crit chance
-            // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
-			SpellRotation.Wrath.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMajesty;
-			SpellRotation.Starfire.SpecialCriticalModifier += 0.02f * character.DruidTalents.NaturesMajesty;
-
-            // Add spell-specific critical strike damage
-            // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
-            SpellRotation.Starfire.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
-            SpellRotation.Moonfire.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
-            SpellRotation.Wrath.CriticalHitMultiplier *= 1 + 0.2f * character.DruidTalents.Vengeance;
-            // Chaotic Skyfire Diamond
-            SpellRotation.Starfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
-            SpellRotation.Moonfire.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
-            SpellRotation.Wrath.CriticalHitMultiplier *= 1.0f + 1.5f / 0.5f * stats.BonusSpellCritMultiplier;
-
-            // Reduce spell-specific mana costs
-            // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
-            SpellRotation.Starfire.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
-            SpellRotation.Moonfire.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
-            SpellRotation.Wrath.ManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
-
-            // Reduce spell-specific cast times
-            // Wrath, Starfire: Cast time -(0.1 * Starlight Wrath)
-            SpellRotation.Wrath.CastTime -= 0.1f * character.DruidTalents.StarlightWrath;
-            SpellRotation.Starfire.CastTime -= 0.1f * character.DruidTalents.StarlightWrath;
-
-            // Add set bonuses
-            SpellRotation.Moonfire.DoT.Duration += stats.MoonfireExtension;
-            SpellRotation.Starfire.SpecialCriticalModifier += stats.StarfireCritChance;
-			SpellRotation.InsectSwarm.SpecialDamageModifier *= 1.0f + stats.BonusInsectSwarmDamage;
-			SpellRotation.Starfire.SpecialCriticalModifier += stats.BonusNukeCritChance;
-			SpellRotation.Wrath.SpecialCriticalModifier += stats.BonusNukeCritChance;
-        }
-
-        public static void Solve(Character character, ref CharacterCalculationsMoonkin calcs)
-        {
-            // Reset all spells to their base status
-            RecreateSpells(character, ref calcs);
-            Spell.GlobalCooldown = 1.5f;
-            // Pull out the calculation options (may not be necessary?)
-            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            // Try to reset the cached results dictionary on each call
-            cachedResults = new Dictionary<string, RotationData>();
-
-            // Spell ratings once the trinket calculator is done with them
-            float effectiveSpellHit = calcs.SpellHit * CalculationsMoonkin.hitRatingConversionFactor;
-            float effectiveArcaneDamage = calcs.ArcaneDamage;
-            float effectiveNatureDamage = calcs.NatureDamage;
-            float effectiveSpellCrit = calcs.SpellCrit * CalculationsMoonkin.critRatingConversionFactor;
-            float effectiveSpellHaste = calcs.SpellHaste * CalculationsMoonkin.hasteRatingConversionFactor;
-            // Mana pool without Pendant of the Violet Eye
-            float effectiveMana = GetEffectiveManaPool(character, calcs);
-
-            // Utility variables
-            int naturesGrace = character.DruidTalents.NaturesGrace;
-            float fightLength = calcs.FightLength * 60.0f;
-            float trinketExtraDPS = 0.0f;
-
-            // Casting trees?  Remove from effective mana
-            if (character.DruidTalents.ForceOfNature > 0)
-            {
-                int numTreeCasts = ((int)fightLength / 180) + 1;
-                effectiveMana -= numTreeCasts * CalculationsMoonkin.BaseMana * 0.12f;
-            }
-
-            float baseHitRate = 0.83f;
-
-            switch (calcs.TargetLevel)
-            {
-                case 80:
-                    baseHitRate = 0.96f;
-                    break;
-                case 81:
-                    baseHitRate = 0.95f;
-                    break;
-                case 82:
-                    baseHitRate = 0.94f;
-                    break;
-                case 83:
-                    baseHitRate = 0.83f;
-                    break;
-                default:
-                    baseHitRate = 0.83f;
-                    break;
-            }
-            if (baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor > 1.0f)
-            {
-                effectiveSpellHit = CalculationsMoonkin.hitRatingConversionFactor * (1.0f - baseHitRate);
-            }
-
-            float spellHitRate = baseHitRate + effectiveSpellHit / CalculationsMoonkin.hitRatingConversionFactor;
-            DoOnUseTrinketCalcs(calcs, spellHitRate, ref effectiveArcaneDamage, ref effectiveNatureDamage, ref effectiveSpellCrit,
-                ref effectiveSpellHaste, ref trinketExtraDPS);
-
-            // Convenience calculations
-            float spellCritRate = effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor;
-            float spellHaste = effectiveSpellHaste / CalculationsMoonkin.hasteRatingConversionFactor;
-
-            // Calculate average global cooldown based on effective haste rating (includes trinkets)
-            Spell.GlobalCooldown = 1.5f / (1 + spellHaste) + calcs.Latency;
-            // Update spell cast times with new haste
-            foreach (Spell sp in SpellRotation.SpellData)
-            {
-                // Direct nukes, subject to Nature's Grace
-                if (sp.DoT == null)
-                {
-                    float castTimeNoNG = Math.Max(sp.CastTime / (1 + spellHaste), 1.0f) + calcs.Latency;
-                    float castTimeNG = Math.Max((sp.CastTime - 0.5f) / (1 + spellHaste), 1.0f) + calcs.Latency;
-                    if (castTimeNG == 1 + calcs.Latency) castTimeNG += calcs.Latency;
-                    float NGProcChance = (spellCritRate + sp.SpecialCriticalModifier) * spellHitRate * naturesGrace / 3.0f;
-                    sp.CastTime = castTimeNG * NGProcChance + castTimeNoNG * (1 - NGProcChance);
-                }
-                else
-                {
-                    sp.CastTime = Math.Max(sp.CastTime / (1 + spellHaste), 1.0f) + calcs.Latency;
-                }
-            }
-
-            // Spell-specific mana cost reductions
-            // Moonkin Form
-            if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
-            {
-                SpellRotation.Starfire.ManaCost -= (spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
-                SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
-                SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * 0.02f * calcs.BasicStats.Mana * spellHitRate;
-            }
-			// Mana restore per crit trinket
-			//SpellRotation.Starfire.ManaCost -= (spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
-			//SpellRotation.Moonfire.ManaCost -= (spellCritRate + SpellRotation.Moonfire.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
-			//SpellRotation.Wrath.ManaCost -= (spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier) * calcs.BasicStats.ManaRestoreOnCrit_25_45 * spellHitRate;
-            // Generic mana restore per cast
-            SpellRotation.Starfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
-            SpellRotation.Moonfire.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
-            SpellRotation.Wrath.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
-            SpellRotation.InsectSwarm.ManaCost -= calcs.BasicStats.ManaRestorePerCast;
-            // Judgement of Wisdom (now generic!)
-            if (calcs.BasicStats.ManaRestoreFromBaseManaPerHit > 0)
-            {
-                SpellRotation.Moonfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
-                SpellRotation.Starfire.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
-                SpellRotation.Wrath.ManaCost -= spellHitRate * calcs.BasicStats.ManaRestoreFromBaseManaPerHit * calcs.BasicStats.Mana;
-            }
-
-            float maxDPS = 0.0f;
-            float maxRawDPS = 0.0f;
-            // Save the on-use trinket DPS to be restored every new rotation
-            float baselineTrinketDPS = trinketExtraDPS;
-            foreach (SpellRotation rotation in SpellRotations)
-            {
-                // Temporary variables that will get reset with every rotation
-                // These are the variables that change with procs and such
-                float tempArcaneDamage = effectiveArcaneDamage;
-                float tempNatureDamage = effectiveNatureDamage;
-                float tempHit = spellHitRate;
-                float tempCritRating = effectiveSpellCrit;
-                float tempCrit = tempCritRating / CalculationsMoonkin.critRatingConversionFactor;
-                float tempHasteRating = effectiveSpellHaste;
-                // Reset trinket DPS to the on-use baseline
-                trinketExtraDPS = baselineTrinketDPS;
-
-                // Do additional spell stuff here, so that CalculateRotationalVariables() grabs all the correct parameters
-                // Improved Insect Swarm
-                if (rotation.HasInsectSwarm && rotation.WrathCount > 0)
-                {
-                    SpellRotation.Wrath.SpecialDamageModifier *= 1 + (0.01f * character.DruidTalents.ImprovedInsectSwarm);
-                }
-                else if (rotation.HasMoonfire && rotation.StarfireCount > 0)
-                {
-                    SpellRotation.Starfire.SpecialCriticalModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
-                }
-                // Haste trinket calculations
-                DoHasteProcCalcs(calcs, rotation, spellHitRate, ref tempHasteRating);
-                float tempHaste = tempHasteRating / CalculationsMoonkin.hasteRatingConversionFactor;
-				// Recalculate spell cast times (!)
-                float hasteDiff = tempHaste - spellHaste;
-                Dictionary<string, float> oldCastTimes = new Dictionary<string, float>();
-                if (hasteDiff > 0)
-                {
-                    oldCastTimes.Add("GlobalCooldown", Spell.GlobalCooldown);
-                    Spell.GlobalCooldown = Spell.GlobalCooldown / (1 + hasteDiff);
-                    // Update spell cast times with new haste
-                    foreach (Spell sp in SpellRotation.SpellData)
-                    {
-                        oldCastTimes.Add(sp.Name, sp.CastTime);
-                        sp.CastTime = Math.Max((sp.CastTime - calcs.Latency) / (1 + hasteDiff), 1.0f) + calcs.Latency;
-                    }
-                }
-                // Recalculate all variables
-                rotation.CalculateRotationalVariables();
-                
-                // Incorporate Nature's Grace with Moonfire into the rotational calculations
-                if (naturesGrace > 0 && rotation.HasMoonfire)
-                {
-                    if (rotation.StarfireCount > 0)
-                    {
-                        SpellRotation.Starfire.CastTime -= ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.StarfireCount;
-                    }
-                    else if (rotation.WrathCount > 0)
-                    {
-                        SpellRotation.Wrath.CastTime -= ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
-                    }
-                    rotation.CalculateRotationalVariables();
-                }
-
-                DoProcTrinketCalcs(calcs, rotation, tempHit, tempCritRating, ref tempArcaneDamage, ref tempNatureDamage, ref trinketExtraDPS);
-
-                // Average cast time for main nuke, including non-nuke spells
-                float starfireAverageCastTime = 0.0f;
-                if (rotation.StarfireCount > 0)
-                    starfireAverageCastTime = (rotation.CastCount / rotation.StarfireCount) * SpellRotation.Starfire.CastTime;
-                float wrathAverageCastTime = 0.0f;
-                if (rotation.WrathCount > 0)
-                    wrathAverageCastTime = (rotation.CastCount / rotation.WrathCount) * SpellRotation.Wrath.CastTime;
-
-                // Omen of Clarity
-                if (character.DruidTalents.OmenOfClarity > 0)
-                {
-                    // Starfire
-                    if (starfireAverageCastTime > 0)
-                    {
-                        float expectedProcChance = (3.5f / 60.0f) * starfireAverageCastTime;
-                        SpellRotation.Starfire.ManaCost -= SpellRotation.Starfire.ManaCost * expectedProcChance;
-                    }
-                    // Wrath
-                    if (wrathAverageCastTime > 0)
-                    {
-                        float expectedProcChance = (3.5f / 60.0f) * wrathAverageCastTime;
-                        SpellRotation.Wrath.ManaCost -= SpellRotation.Wrath.ManaCost * expectedProcChance;
-                    }
-                    rotation.CalculateRotationalVariables();
-                }
-                // Pendant of the Violet Eye
-                effectiveMana += DoTrinketManaRestoreCalcs(calcs, rotation) * (fightLength / rotation.Duration);
-                rotation.ManaGained = effectiveMana;
-
-                // The heart of the matter.  Calculate rotation DPS based on previously calculated stats.
-                float treeDPS = (character.DruidTalents.ForceOfNature > 0) ? DoTreeCalcs(tempNatureDamage, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0;
-                float currentDPS = rotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
-                float currentRawDPS = rotation.RawDPS + trinketExtraDPS + treeDPS;
-
-                // Handle the Starfire glyph
-                if ((calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire") && rotation.HasMoonfire)
-                {
-                    if (rotation.StarfireCount > 0)
-                    {
-                        Spell newMoonfire = new Spell()
-                        {
-                            Name = "MF",
-                            School = SpellSchool.Arcane,
-                            CastTime = SpellRotation.Moonfire.CastTime,
-                            CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
-                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit,
-                            ManaCost = SpellRotation.Moonfire.ManaCost,
-                            SpecialCriticalModifier = SpellRotation.Moonfire.SpecialCriticalModifier,
-                            SpecialDamageModifier = SpellRotation.Moonfire.SpecialDamageModifier,
-                            SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
-                            DoT = new DotEffect()
-                            {
-                                Duration = SpellRotation.Moonfire.DoT.Duration + 3.0f * Math.Min(rotation.StarfireCount, 3),
-                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
-                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
-                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
-                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
-                            }
-                        };
-                        SpellRotation newRotation = null;
-                        if (rotation.HasInsectSwarm)
-                        {
-                            newRotation = new SpellRotation()
-                            {
-                                Spells = new List<Spell>()
-                                {
-                                    newMoonfire,
-                                    SpellRotation.InsectSwarm,
-                                    SpellRotation.Starfire
-                                }
-                            };
-                        }
-                        else
-                        {
-                            newRotation = new SpellRotation()
-                            {
-                                Spells = new List<Spell>()
-                                {
-                                    newMoonfire,
-                                    SpellRotation.Starfire
-                                }
-                            };
-                        }
-                        newRotation.CalculateRotationalVariables();
-                        currentDPS = newRotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
-                        currentRawDPS = newRotation.RawDPS + trinketExtraDPS + treeDPS;
-                        rotation.ManaUsed = newRotation.ManaUsed;
-                        rotation.TimeToOOM = newRotation.TimeToOOM;
-                        rotation.RawDPS = newRotation.RawDPS;
-                        rotation.DPM = newRotation.DPM;
-                    }
-                    else
-                    {
-                        Spell newMoonfireFirst = new Spell()
-                        {
-                            Name = "MF1",
-                            School = SpellSchool.Arcane,
-                            CastTime = SpellRotation.Moonfire.CastTime,
-                            CriticalHitMultiplier = SpellRotation.Moonfire.CriticalHitMultiplier,
-                            DamagePerHit = SpellRotation.Moonfire.DamagePerHit,
-                            ManaCost = 0.0f,
-                            SpecialCriticalModifier = SpellRotation.Moonfire.SpecialCriticalModifier,
-                            SpecialDamageModifier = SpellRotation.Moonfire.SpecialDamageModifier,
-                            SpellDamageModifier = SpellRotation.Moonfire.SpellDamageModifier,
-                            DoT = new DotEffect()
-                            {
-                                Duration = 3 * SpellRotation.Starfire.CastTime + SpellRotation.Moonfire.CastTime,
-                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
-                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
-                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
-                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
-                            },
-                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
-                        };
-                        Spell newMoonfireSecond = new Spell()
-                        {
-                            Name = "MF2",
-                            School = SpellSchool.Arcane,
-                            CastTime = 0.0f,
-                            CriticalHitMultiplier = 0.0f,
-                            DamagePerHit = 0.0f,
-                            ManaCost = 0.0f,
-                            SpecialCriticalModifier = 0.0f,
-                            SpecialDamageModifier = 0.0f,
-                            SpellDamageModifier = 0.0f,
-                            DoT = new DotEffect()
-                            {
-                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f - 3 * SpellRotation.Starfire.CastTime - SpellRotation.Moonfire.CastTime,
-                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
-                                DamagePerTick = SpellRotation.Moonfire.DoT.DamagePerTick,
-                                SpellDamageMultiplier = SpellRotation.Moonfire.DoT.SpellDamageMultiplier,
-                                SpecialDamageMultiplier = SpellRotation.Moonfire.DoT.SpecialDamageMultiplier
-                            },
-                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
-                        };
-                        // The above two spells actually do damage.  This spell is a placeholder for calculating rotation duration and the like.
-                        Spell newMoonfire = new Spell()
-                        {
-                            Name = "MF",
-                            School = SpellSchool.Arcane,
-                            CastTime = 0.0f,
-                            CriticalHitMultiplier = 0.0f,
-                            DamagePerHit = 0.0f,
-                            ManaCost = SpellRotation.Moonfire.ManaCost,
-                            SpecialCriticalModifier = 0.0f,
-                            SpecialDamageModifier = 0.0f,
-                            SpellDamageModifier = 0.0f,
-                            DoT = new DotEffect()
-                            {
-                                Duration = SpellRotation.Moonfire.DoT.Duration + 9.0f,
-                                TickDuration = SpellRotation.Moonfire.DoT.TickDuration,
-                                DamagePerTick = 0.0f,
-                                SpellDamageMultiplier = 0.0f,
-                                SpecialDamageMultiplier = 0.0f
-                            },
-                            IdolExtraSpellPower = SpellRotation.Moonfire.IdolExtraSpellPower
-                        };
-                        SpellRotation newRotation = null;
-                        if (rotation.HasInsectSwarm)
-                        {
-                            newRotation = new SpellRotation()
-                            {
-                                Spells = new List<Spell>()
-                                {
-                                    newMoonfire,
-                                    newMoonfireFirst,
-                                    SpellRotation.Starfire,
-                                    newMoonfireSecond,
-                                    SpellRotation.InsectSwarm,
-                                    SpellRotation.Wrath
-                                }
-                            };
-                        }
-                        else
-                        {
-                            newRotation = new SpellRotation()
-                            {
-                                Spells = new List<Spell>()
-                                {
-                                    newMoonfire,
-                                    newMoonfireFirst,
-                                    SpellRotation.Starfire,
-                                    newMoonfireSecond,
-                                    SpellRotation.Wrath
-                                }
-                            };
-                        }
-                        newRotation.CalculateRotationalVariables();
-                        currentDPS = newRotation.DPS(tempArcaneDamage, tempNatureDamage, spellHitRate, spellCritRate, effectiveMana, fightLength, calcs.BasicStats.StarfireBonusWithDot) + trinketExtraDPS + treeDPS;
-                        currentRawDPS = newRotation.RawDPS + trinketExtraDPS + treeDPS;
-                        rotation.ManaUsed = newRotation.ManaUsed;
-                        rotation.TimeToOOM = newRotation.TimeToOOM;
-                        rotation.RawDPS = newRotation.RawDPS;
-                        rotation.DPM = newRotation.DPM;
-                    }
-                }
-
-                // After the DPS calculations are done, we can make a stab at Eclipse calculations
-                // Please note that the numbers on this are going to be EXTREMELY rough
-                // Only one main nuke per rotation, thankfully
-                if (character.DruidTalents.Eclipse > 0)
-                {
-                    if (calcOpts.SmartSwitching)
-                    {
-                        if (rotation.StarfireCount > 0)
-                        {
-                            float eclipseProcChance = spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier;
-                            eclipseProcChance *= spellHitRate;
-                            eclipseProcChance *= 0.2f * character.DruidTalents.Eclipse / 3.0f;
-                            float expectedCastsToProc = 1 / eclipseProcChance;
-
-                            // This will be time spent trying to proc Eclipse
-                            float timeToProc = expectedCastsToProc * SpellRotation.Wrath.CastTime;
-                            float procPeriodDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) + trinketExtraDPS + treeDPS;
-
-                            float timeInEclipse = 15.0f - SpellRotation.Wrath.CastTime;
-                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f) + trinketExtraDPS + treeDPS;
-
-                            float rotationLength = 30.0f;
-                            float nonProcTime = rotationLength - timeInEclipse;
-
-                            float totalDamageDone = timeToProc * procPeriodDPS + timeInEclipse * eclipseDPS + nonProcTime * currentDPS;
-                            float totalMaxDamageDone = timeToProc * procPeriodDPS + timeInEclipse * eclipseDPS + nonProcTime * currentRawDPS;
-
-                            currentDPS = totalDamageDone / (rotationLength + timeToProc);
-                            currentRawDPS = totalMaxDamageDone / (rotationLength + timeToProc);
-                        }
-                        else
-                        {
-                            float eclipseProcChance = spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier;
-                            eclipseProcChance *= spellHitRate;
-                            eclipseProcChance *= character.DruidTalents.Eclipse / 3.0f;
-                            float expectedCastsToProc = 1 / eclipseProcChance;
-
-                            // This will be time spent trying to proc Eclipse
-                            float timeToProc = expectedCastsToProc * SpellRotation.Starfire.CastTime;
-                            float procPeriodDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate) + trinketExtraDPS + treeDPS;
-
-                            float timeInEclipse = 15.0f - SpellRotation.Starfire.CastTime;
-                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f + trinketExtraDPS + treeDPS;
-
-                            float rotationLength = 30.0f;
-                            float nonProcTime = rotationLength - timeInEclipse;
-
-                            float totalDamageDone = timeToProc * procPeriodDPS + timeInEclipse * eclipseDPS + nonProcTime * currentDPS;
-                            float totalMaxDamageDone = timeToProc * procPeriodDPS + timeInEclipse * eclipseDPS + nonProcTime * currentRawDPS;
-
-                            currentDPS = totalDamageDone / (rotationLength + timeToProc);
-                            currentRawDPS = totalMaxDamageDone / (rotationLength + timeToProc);
-                        }
-                    }
-                    else
-                    {
-                        if (rotation.StarfireCount > 0)
-                        {
-                            float eclipseProcChance = spellCritRate + SpellRotation.Starfire.SpecialCriticalModifier;
-                            eclipseProcChance *= spellHitRate;
-                            eclipseProcChance *= character.DruidTalents.Eclipse / 3.0f;
-                            eclipseProcChance *= rotation.StarfireCount / rotation.CastCount;   // Percentage of casts that are Starfire
-
-                            float expectedCastsToProc = 1 / eclipseProcChance;
-
-                            float timeToProc = expectedCastsToProc * starfireAverageCastTime;
-
-                            float rotationLength = 30.0f + timeToProc;
-                            float normalLength = rotationLength - 15.0f + starfireAverageCastTime;
-
-                            float timeInEclipse = 15.0f - starfireAverageCastTime;
-                            float eclipseDPS = SpellRotation.Wrath.DPS(tempNatureDamage, spellHitRate, spellCritRate) * 1.2f + trinketExtraDPS + treeDPS;
-
-                            float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
-                            float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
-
-                            currentDPS = totalDamageDone / rotationLength;
-                            currentRawDPS = totalMaxDamageDone / rotationLength;
-                        }
-                        else
-                        {
-                            float eclipseProcChance = spellCritRate + SpellRotation.Wrath.SpecialCriticalModifier;
-                            eclipseProcChance *= spellHitRate;
-                            eclipseProcChance *= 0.2f * character.DruidTalents.Eclipse / 3.0f;
-                            eclipseProcChance *= rotation.WrathCount / rotation.CastCount;   // Percentage of casts that are Starfire
-
-                            float expectedCastsToProc = 1 / eclipseProcChance;
-
-                            float timeToProc = expectedCastsToProc * wrathAverageCastTime;
-
-                            float rotationLength = 30.0f + timeToProc;
-                            float normalLength = rotationLength - 15.0f + wrathAverageCastTime;
-
-                            float timeInEclipse = 15.0f - wrathAverageCastTime;
-                            float eclipseDPS = SpellRotation.Starfire.DPS(tempArcaneDamage, spellHitRate, spellCritRate + 0.3f) + trinketExtraDPS + treeDPS;
-
-                            float totalDamageDone = eclipseDPS * timeInEclipse + normalLength * currentDPS;
-                            float totalMaxDamageDone = eclipseDPS * timeInEclipse + normalLength * currentRawDPS;
-
-                            currentDPS = totalDamageDone / rotationLength;
-                            currentRawDPS = totalMaxDamageDone / rotationLength;
-                        }
-                    }
-                }
-
-                // Undo Improved Insect Swarm
-                if (rotation.HasInsectSwarm && rotation.WrathCount > 0)
-                {
-                    SpellRotation.Wrath.SpecialDamageModifier /= 1 + (0.01f * character.DruidTalents.ImprovedInsectSwarm);
-                }
-                else if (rotation.HasMoonfire && rotation.StarfireCount > 0)
-                {
-                    SpellRotation.Starfire.SpecialCriticalModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
-                }
-                // Undo Omen of Clarity
-                if (character.DruidTalents.OmenOfClarity > 0)
-                {
-                    // Starfire
-                    if (starfireAverageCastTime > 0)
-                    {
-                        float expectedProcChance = (3.5f / 60.0f) * starfireAverageCastTime;
-                        SpellRotation.Starfire.ManaCost += SpellRotation.Starfire.ManaCost * expectedProcChance;
-                    }
-                    // Wrath
-                    if (wrathAverageCastTime > 0)
-                    {
-                        float expectedProcChance = (3.5f / 60.0f) * wrathAverageCastTime;
-                        SpellRotation.Wrath.ManaCost += SpellRotation.Wrath.ManaCost * expectedProcChance;
-                    }
-                }
-
-                // Restore Starfire/Wrath's cast time because the objects are reused
-                if (naturesGrace > 0 && rotation.HasMoonfire)
-                {
-                    if (rotation.StarfireCount > 0)
-                    {
-                        SpellRotation.Starfire.CastTime += ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.StarfireCount;
-                    }
-                    else if (rotation.WrathCount > 0)
-                    {
-                        SpellRotation.Wrath.CastTime += ((1 - (rotation.AverageCritChance + spellCritRate)) * (SpellRotation.Moonfire.SpecialCriticalModifier + spellCritRate) * 0.5f * (naturesGrace / 3)) / rotation.WrathCount;
-                    }
-                }
-                // Undo haste trinkets (!)
-                if (hasteDiff > 0)
-                {
-                    Spell.GlobalCooldown = oldCastTimes["GlobalCooldown"];
-                    // Update spell cast times with new haste
-                    foreach (Spell sp in SpellRotation.SpellData)
-                    {
-                        sp.CastTime = oldCastTimes[sp.Name];
-                    }
-                }
-                // All damage multiplier
-                currentDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
-                currentRawDPS *= 1 + calcs.BasicStats.BonusDamageMultiplier;
-
-                // Save maximum mana-limited and non-mana limited DPS rotations
-                if (calcOpts.userRotation == "None" && currentDPS > maxDPS)
-                {
-                    calcs.SelectedRotation = rotation;
-                    maxDPS = currentDPS;
-                }
-                else if (calcOpts.userRotation != "None" && rotation.Name == calcOpts.userRotation)
-                {
-                    calcs.SelectedRotation = rotation;
-                    maxDPS = currentDPS;
-                }
-                if (currentRawDPS > maxRawDPS)
-                {
-                    calcs.MaxDPSRotation = rotation;
-                    maxRawDPS = currentRawDPS;
-                }
-                cachedResults[rotation.Name] = new RotationData()
-                {
-                    RawDPS = currentRawDPS,
-                    DPS = currentDPS,
-                    DPM = rotation.DPM,
-                    ManaUsed = rotation.ManaUsed,
-                    ManaGained = rotation.ManaGained,
-                    TimeToOOM = rotation.TimeToOOM
-                };
-            }
-            calcs.SubPoints = new float[] { maxDPS, maxRawDPS };
-            calcs.OverallPoints = calcs.SubPoints[0] + calcs.SubPoints[1];
-            calcs.Rotations = cachedResults;
-        }
-
-        // Let there be TREES.
-        private static float DoTreeCalcs(float effectiveNatureDamage, float treantLifespan, int bramblesLevel)
-        {
-            float damagePerHit = (450.0f + 0.052f * effectiveNatureDamage) * (2.0f * 1.02f) * (1.0f);
-            float attackSpeed = 1.8f / (1 + 0f);
+            // 642 = base AP, 5.7% spell power scaling
+            float attackPower = 642.0f + (float)Math.Floor(0.057f * effectiveNatureDamage);
+            // 238.0 = base DPS, 1.7 = best observed swing speed
+            float damagePerHit = (238.0f + attackPower / 14.0f) * 1.7f;
+            float attackSpeed = 1.7f / (1 + meleeHaste) / (1 + bloodLust);
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
-            return 3 * damagePerTree / 180.0f;
+            return 3 * damagePerTree;
         }
 
-        private static float DoTrinketManaRestoreCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation)
-        {
-            float manaFromTrinket = 0.0f;
-            // Pendant of the Violet Eye - stacking mp5 buff for 20 sec
-            if (calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min > 0)
-            {
-                float averageCastsIn20Sec = 20.0f / (rotation.CastCount / rotation.Duration);
-                float averageTrinketMp5 = calcs.BasicStats.Mp5OnCastFor20SecOnUse2Min * (rotation.Duration / rotation.CastCount) / 20.0f;
-                manaFromTrinket += averageTrinketMp5 * 4.0f / 120.0f * rotation.Duration;
-            }
-			// Mp5 on cast for 10 sec, 45 sec cooldown
-			if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
-			{
-				float procsPerRotation = 0.1f * rotation.CastCount;
-				float timeBetweenProcs = rotation.Duration / procsPerRotation;
-				manaFromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / (45.0f + timeBetweenProcs) * rotation.Duration;
-			}
-            return manaFromTrinket;
-        }
-        private static void DoHasteProcCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, ref float effectiveSpellHaste)
-        {
-            // 15% chance of spell haste on cast, 45-second cooldown (Mystical Skyfire Diamond)
-            if (calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 > 0)
-            {
-                float procsPerRotation = 0.15f * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveSpellHaste += calcs.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6.0f / (45.0f + timeBetweenProcs);
-            }
-            // 10% chance of spell haste on hit, 45-second cooldown (Quagmirran's Eye)
-            if (calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 > 0)
-            {
-                float procsPerRotation = 0.1f * hitRate * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveSpellHaste += calcs.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6.0f / (45.0f + timeBetweenProcs);
-            }
-			// 10% chance of spell haste on cast, 45s cooldown
-			if (calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 > 0)
-			{
-                float procsPerRotation = 0.1f * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveSpellHaste += calcs.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10.0f / (45.0f + timeBetweenProcs);
-			}
-        }
-        private static void DoProcTrinketCalcs(CharacterCalculationsMoonkin calcs, SpellRotation rotation, float hitRate, float effectiveSpellCrit, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float trinketExtraDPS)
-        {
-            // Unseen Moon proc
-            if (rotation.HasMoonfire && calcs.BasicStats.UnseenMoonDamageBonus > 0)
-            {
-                float numberOfProcs = 0.5f;    // 50% proc chance
-                float timeBetweenProcs = rotation.Duration / numberOfProcs;
-                effectiveArcaneDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
-                effectiveNatureDamage += calcs.BasicStats.UnseenMoonDamageBonus * 10.0f / timeBetweenProcs;
-            }
-            // Ashtongue Talisman of Equilibrium (Moonkin version)
-            if (rotation.StarfireCount > 0 && calcs.BasicStats.DruidAshtongueTrinket > 0)
-            {
-                double starfireCastsIn8Sec = 8.0 / SpellRotation.Starfire.CastTime;
-                double uptime = 1 - Math.Pow((1 - 0.25), starfireCastsIn8Sec);
-                effectiveArcaneDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
-                effectiveNatureDamage += calcs.BasicStats.DruidAshtongueTrinket * (float)uptime;
-            }
-            // The Lightning Capacitor
-            if (calcs.BasicStats.LightningCapacitorProc > 0)
-            {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
-                float baseDamage = (694 + 806) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-                float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
-                if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 3.0f + 2.5f;
-                else timeBetweenProcs *= 3.0f;
-                trinketExtraDPS += averageDamage / timeBetweenProcs;
-            }
-            // The Thunder Capacitor
-            if (calcs.BasicStats.ThunderCapacitorProc > 0)
-            {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
-                float baseDamage = (1181 + 1371) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-                float timeBetweenProcs = rotation.Duration / (hitRate * (calcs.SpellCrit + rotation.AverageCritChance) * rotation.CastCount);
-                if (timeBetweenProcs < 2.5f) timeBetweenProcs = timeBetweenProcs * 4.0f + 2.5f;
-                else timeBetweenProcs *= 4.0f;
-                trinketExtraDPS += averageDamage / timeBetweenProcs;
-            }
-			// Pendulum of Telluric Currents (15% proc, 45s internal cooldown)
-			if (calcs.BasicStats.PendulumOfTelluricCurrentsProc > 0)
-			{
-				float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusShadowDamageMultiplier);
-				float baseDamage = (1168 + 1752) / 2.0f;
-				float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-				float timeBetweenProcs = rotation.Duration / (hitRate * rotation.CastCount * 0.15f) + 45f;
-				trinketExtraDPS += averageDamage / timeBetweenProcs;
-			}
-            // Timbal's Focusing Crystal (10% proc on a DoT tick, 15s internal cooldown)
-            if (calcs.BasicStats.TimbalsProc > 0 && rotation.TotalDotTicks > 0)
-            {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
-                float baseDamage = (285 + 475) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-                float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
-                trinketExtraDPS += averageDamage / timeBetweenProcs;
-            }
-            // Extract of Necromantic Power (10% proc on a DoT tick, 15s internal cooldown)
-            if (calcs.BasicStats.ExtractOfNecromanticPowerProc > 0 && rotation.TotalDotTicks > 0)
-            {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusShadowDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier);
-                float baseDamage = (788 + 1312) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-                float timeBetweenProcs = 1 / (rotation.TotalDotTicks / rotation.Duration * 0.1f) + 15.0f;
-                trinketExtraDPS += averageDamage / timeBetweenProcs;
-            }
-            // Darkmoon Card: Death (35% proc, 45s internal cooldown)
-            if (calcs.BasicStats.DarkmoonCardDeathProc > 0)
-            {
-                float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusShadowDamageMultiplier);
-                float baseDamage = (744 + 956) / 2.0f;
-                float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
-                float timeBetweenProcs = rotation.Duration / (hitRate * rotation.CastCount * 0.35f) + 45f;
-                trinketExtraDPS += averageDamage / timeBetweenProcs;
-            }
-            // Spell damage for 10 seconds on resist
-            if (calcs.BasicStats.SpellPowerFor10SecOnResist > 0)
-            {
-                float procsPerRotation = (1 - hitRate) * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnResist * 10.0f / timeBetweenProcs;
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnResist * 10.0f / timeBetweenProcs;
-            }
-            // 5% chance of spell damage on hit, no cooldown.
-            if (calcs.BasicStats.SpellDamageFor10SecOnHit_5 > 0)
-            {
-                float procsPerRotation = 0.05f * hitRate * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5  * 10.0f / timeBetweenProcs;
-                effectiveNatureDamage += calcs.BasicStats.SpellDamageFor10SecOnHit_5  * 10.0f / timeBetweenProcs;
-            }
-            // 10% chance of spell damage on hit, 45 second cooldown.
-            if (calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 > 0)
-            {
-                float procsPerRotation = 0.1f * hitRate * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnHit_10_45 * 10.0f / (45.0f + timeBetweenProcs);
-            }
-            // 20% chance of spell damage on crit, 45 second cooldown.
-            if (calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 > 0)
-            {
-                float procsPerRotation = 0.2f * hitRate * (effectiveSpellCrit / CalculationsMoonkin.critRatingConversionFactor) * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnCrit_20_45 * 10.0f / (45.0f + timeBetweenProcs);
-            }
-			// 15% chance of spell power for 10 seconds on cast, 45s cooldown.
-			if (calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 > 0)
-			{
-				float procsPerRotation = 0.15f * rotation.CastCount;
-                float timeBetweenProcs = rotation.Duration / procsPerRotation;
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 * 10.0f / (45.0f + timeBetweenProcs);
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor10SecOnCast_15_45 * 10.0f / (45.0f + timeBetweenProcs);
-			}
-        }
-        private static void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float effectiveArcaneDamage, ref float effectiveNatureDamage, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
+        // Clicky trinket calculations
+        private static void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float spellPower, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
         {
             // Shatterered Sun Pendant (45s internal CD)
             if (calcs.BasicStats.ShatteredSunAcumenProc > 0)
             {
                 if (calcs.Scryer)
                 {
-                    float specialDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
+                    float AllDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
                     float baseDamage = (333 + 367) / 2.0f;
-                    float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * specialDamageModifier;
+                    float averageDamage = hitRate * baseDamage * (1 + 0.5f * calcs.SpellCrit) * AllDamageModifier;
                     trinketExtraDPS += averageDamage / 45.0f;
                 }
                 else
                 {
-                    effectiveArcaneDamage += 120.0f * 10.0f / 45.0f;
-                    effectiveNatureDamage += 120.0f * 10.0f / 45.0f;
+                    spellPower += 120.0f * 10.0f / 45.0f;
                 }
             }
             // Haste trinkets
@@ -1548,113 +1029,157 @@ namespace Rawr.Moonkin
             // Spell damage trinkets
             if (calcs.BasicStats.SpellPowerFor15SecOnUse90Sec > 0)
             {
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
+                spellPower += calcs.BasicStats.SpellPowerFor15SecOnUse90Sec * 15.0f / 90.0f;
             }
             if (calcs.BasicStats.SpellPowerFor20SecOnUse2Min > 0)
             {
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
+                spellPower += calcs.BasicStats.SpellPowerFor20SecOnUse2Min * 20.0f / 120.0f;
             }
             if (calcs.BasicStats.SpellPowerFor20SecOnUse5Min > 0)
             {
-                effectiveArcaneDamage += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
-                effectiveNatureDamage += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
+                spellPower += calcs.BasicStats.SpellPowerFor20SecOnUse5Min * 20.0f / 300.0f;
             }
         }
 
+        // Redo the spell calculations
         private static void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
-            SpellRotation.RecreateSpells();
+            ResetSpellList();
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            // Moonfire glyph
-            if (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire")
-            {
-                SpellRotation.Moonfire.SpecialDamageModifier -= 0.9f;
-                SpellRotation.Moonfire.DoT.SpecialDamageMultiplier += 0.75f;
-            }
-            // Insect swarm glyph
-            if (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm" || calcOpts.glyph3 == "Insect Swarm")
-            {
-                SpellRotation.InsectSwarm.DoT.SpecialDamageMultiplier += 0.3f;
-            }
-            SpellRotations = new List<SpellRotation>(new SpellRotation[]
+            rotations = new List<SpellRotation>(new SpellRotation[]
             {
             new SpellRotation()
             {
                 Name = "MF/SF",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.Moonfire,
-                    SpellRotation.Starfire
-                })
+                SpellsUsed = new List<string>(new string[]{ "MF", "SF" })
             },
             new SpellRotation()
             {
                 Name = "MF/W",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.Moonfire,
-                    SpellRotation.Wrath
-                })
+                SpellsUsed = new List<string>(new string[]{ "MF", "W" })
             },
             new SpellRotation()
             {
                 Name = "IS/SF",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.InsectSwarm,
-                    SpellRotation.Starfire
-                })
+                SpellsUsed = new List<string>(new string[]{ "IS", "SF" })
             },
             new SpellRotation()
             {
                 Name = "IS/W",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.InsectSwarm,
-                    SpellRotation.Wrath
-                })
+                SpellsUsed = new List<string>(new string[]{ "IS", "W" })
             },
             new SpellRotation()
             {
                 Name = "IS/MF/SF",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.InsectSwarm,
-                    SpellRotation.Moonfire,
-                    SpellRotation.Starfire
-                })
+                SpellsUsed = new List<string>(new string[]{ "IS", "MF", "SF" })
             },
             new SpellRotation()
             {
                 Name = "IS/MF/W",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.InsectSwarm,
-                    SpellRotation.Moonfire,
-                    SpellRotation.Wrath
-                })
+                SpellsUsed = new List<string>(new string[]{ "IS", "MF", "W" })
             },
             new SpellRotation()
             {
                 Name = "SF Spam",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.Starfire
-                })
+                SpellsUsed = new List<string>(new string[]{ "SF" })
             },
             new SpellRotation()
             {
                 Name = "W Spam",
-                Spells = new List<Spell>(new Spell[]
-                {
-                    SpellRotation.Wrath
-                })
+                SpellsUsed = new List<string>(new string[]{ "W" })
             }
             });
 
             UpdateSpells(character, ref calcs);
         }
+
+        // Add talented effects to the spells
+        private static void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
+        {
+            Stats stats = calcs.BasicStats;
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            // Add (possibly talented) +spelldmg
+            // Starfire: Damage +(0.04 * Wrath of Cenarius)
+            // Wrath: Damage +(0.02 * Wrath of Cenarius)
+            Wrath.SpellDamageModifier += 0.02f * character.DruidTalents.WrathOfCenarius;
+            Starfire.SpellDamageModifier += 0.04f * character.DruidTalents.WrathOfCenarius;
+
+            // Add spell damage from idols
+            Starfire.IdolExtraSpellPower += stats.StarfireDmg;
+            Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
+            Wrath.IdolExtraSpellPower += stats.WrathDmg;
+
+            float moonfireDDGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? -0.75f : 0.0f;
+            float moonfireDotGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? 0.9f : 0.0f;
+            float insectSwarmGlyph = (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm" || calcOpts.glyph3 == "Insect Swarm") ? 0.3f : 0.0f;
+            // Add spell-specific damage
+            // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
+            // Moonfire: Damage +(0.05 * Imp Moonfire) (Additive with Moonfury/Genesis/Glyph)
+            // Moonfire, Insect Swarm: Dot Damage +(0.01 * Genesis) (Additive with Moonfury/Imp. Moonfire/Glyph/Set bonus)
+            Wrath.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            Moonfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f
+                                            + 0.05f * character.DruidTalents.ImprovedMoonfire
+                                            + moonfireDDGlyph;
+            Moonfire.DotEffect.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f
+                                                      + 0.01f * character.DruidTalents.Genesis
+                                                      + 0.05f * character.DruidTalents.ImprovedMoonfire
+                                                      + moonfireDotGlyph;
+            Starfire.AllDamageModifier *= 1 + (float)Math.Floor(character.DruidTalents.Moonfury * 10 / 3.0f) / 100.0f;
+            InsectSwarm.DotEffect.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.Genesis
+                                                         + insectSwarmGlyph
+                                                         + stats.BonusInsectSwarmDamage;
+
+            // Moonfire, Insect Swarm: One extra tick (Nature's Splendor)
+            Moonfire.DotEffect.Duration += 3.0f * character.DruidTalents.NaturesSplendor;
+            InsectSwarm.DotEffect.Duration += 2.0f * character.DruidTalents.NaturesSplendor;
+            // Moonfire: Crit chance +(0.05 * Imp Moonfire)
+            Moonfire.CriticalChanceModifier += 0.05f * character.DruidTalents.ImprovedMoonfire;
+
+            // Wrath, Insect Swarm: Nature spell damage multipliers
+            Wrath.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            InsectSwarm.DotEffect.AllDamageModifier *= ((1 + calcs.BasicStats.BonusNatureDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            // Starfire, Moonfire: Arcane damage multipliers
+            Starfire.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            Moonfire.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+            Moonfire.DotEffect.AllDamageModifier *= ((1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier));
+
+            // Level-based partial resistances
+            Wrath.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            Starfire.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            Moonfire.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            Moonfire.DotEffect.AllDamageModifier *= 1 - 0.02f * (calcs.TargetLevel - 80);
+            // Insect Swarm is a binary spell
+
+            // Add spell-specific crit chance
+            // Wrath, Starfire: Crit chance +(0.02 * Nature's Majesty)
+            Wrath.CriticalChanceModifier += 0.02f * character.DruidTalents.NaturesMajesty;
+            Starfire.CriticalChanceModifier += 0.02f * character.DruidTalents.NaturesMajesty;
+
+            // Add spell-specific critical strike damage
+            // Chaotic Skyfire Diamond
+            Starfire.CriticalDamageModifier = stats.BonusCritMultiplier > 0 ? 1.5f * (1+stats.BonusCritMultiplier) : 1.5f;
+            Wrath.CriticalDamageModifier = stats.BonusCritMultiplier > 0 ? 1.5f * (1 + stats.BonusCritMultiplier) : 1.5f;
+            Moonfire.CriticalDamageModifier = stats.BonusCritMultiplier > 0 ? 1.5f * (1 + stats.BonusCritMultiplier) : 1.5f;
+            // Starfire, Moonfire, Wrath: Crit damage +(0.2 * Vengeance)
+            Starfire.CriticalDamageModifier = (Starfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
+            Wrath.CriticalDamageModifier = (Wrath.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
+            Moonfire.CriticalDamageModifier = (Moonfire.CriticalDamageModifier - 1.0f) * (1 + 0.2f * character.DruidTalents.Vengeance) + 1.0f;
+
+            // Reduce spell-specific mana costs
+            // Starfire, Moonfire, Wrath: Mana cost -(0.03 * Moonglow)
+            Starfire.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+            Moonfire.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+            Wrath.BaseManaCost *= 1.0f - (0.03f * character.DruidTalents.Moonglow);
+
+            // Add set bonuses
+            Moonfire.DotEffect.Duration += stats.MoonfireExtension;
+            Starfire.CriticalChanceModifier += stats.StarfireCritChance;
+            Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
+            Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
+
+            // Nature's Grace
+            SpellRotation.NGReduction = character.DruidTalents.NaturesGrace / 3.0f * 0.5f;
+        }
+
     }
 }

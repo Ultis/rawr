@@ -36,8 +36,7 @@ namespace Rawr.Moonkin
         public float SpellHit { get; set; }
         public float SpellCrit { get; set; }
         public float SpellHaste { get; set; }
-        public float ArcaneDamage { get; set; }
-        public float NatureDamage { get; set; }
+        public float SpellPower { get; set; }
         public float ManaRegen { get; set; }
         public float ManaRegen5SR { get; set; }
         public float Latency { get; set; }
@@ -45,7 +44,7 @@ namespace Rawr.Moonkin
         public float FightLength { get; set; }
         public bool Scryer { get; set; }
         public SpellRotation SelectedRotation { get; set; }
-        public SpellRotation MaxDPSRotation { get; set; }
+        public SpellRotation BurstDPSRotation { get; set; }
         public string RotationName
         {
             get
@@ -57,7 +56,7 @@ namespace Rawr.Moonkin
         {
             get
             {
-                return MaxDPSRotation.Name;
+                return BurstDPSRotation.Name;
             }
         }
         public Dictionary<string, RotationData> Rotations { get; set; }
@@ -84,20 +83,19 @@ namespace Rawr.Moonkin
             retVal.Add("Stamina", baseStats.Stamina.ToString());
             retVal.Add("Intellect", baseStats.Intellect.ToString());
             retVal.Add("Spirit", baseStats.Spirit.ToString());
+            retVal.Add("Spell Power", SpellPower.ToString());
             retVal.Add("Spell Hit", String.Format("{0:F}%*{1} Hit Rating", 100 * SpellHit, baseStats.HitRating));
             retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating", 100 * SpellCrit, baseStats.CritRating));
             retVal.Add("Spell Haste", String.Format("{0:F}%*{1} Haste Rating", 100 * SpellHaste, baseStats.HasteRating));
-            retVal.Add("Arcane Damage", ArcaneDamage.ToString());
-            retVal.Add("Nature Damage", NatureDamage.ToString());
             retVal.Add("O5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen, ManaRegen * 5.0f));
             retVal.Add("I5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen5SR, ManaRegen5SR * 5.0f));
-            retVal.Add("Selected Rotation", RotationName);
-            retVal.Add("Max DPS Rotation", DpsRotationName);
+            retVal.Add("Sustained DPS Rotation", RotationName);
+            retVal.Add("Burst DPS Rotation", DpsRotationName);
             foreach (KeyValuePair<string, RotationData> pair in Rotations)
             {
                 RotationData r = pair.Value;
                 string name = pair.Key;
-                retVal.Add(name + " RDPS", String.Format("{0:F}", r.RawDPS));
+                retVal.Add(name + " BDPS", String.Format("{0:F}", r.BurstDPS));
                 retVal.Add(name + " DPS", String.Format("{0:F}", r.DPS));
                 retVal.Add(name + " DPM", String.Format("{0:F}", r.DPM));
                 retVal.Add(name + " OOM", String.Format(r.TimeToOOM > new TimeSpan(0, 0, 0) ? "{0} m {1} s" : "Not during fight", r.TimeToOOM.Minutes, r.TimeToOOM.Seconds));

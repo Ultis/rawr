@@ -45,7 +45,7 @@ namespace Rawr.Moonkin
             cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
             cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();
             chkSmartSwitching.Checked = calcOpts.SmartSwitching;
-            cmbUserRotation.SelectedItem = calcOpts.SmartSwitching;
+            cmbUserRotation.SelectedItem = calcOpts.userRotation;
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -204,7 +204,7 @@ namespace Rawr.Moonkin
             try
             {
                 WebRequestWrapper wrw = new WebRequestWrapper();
-                if (character.Class == Character.CharacterClass.Druid && character.Name != null && character.Region != null && character.Realm != null)
+                if (character.Class == Character.CharacterClass.Druid && character.Name != null && character.Realm != null)
                 {
                     XmlDocument docTalents = wrw.DownloadCharacterTalentTree(character.Name, character.Region, character.Realm);
 
@@ -215,7 +215,7 @@ namespace Rawr.Moonkin
                     character.DruidTalents.StarlightWrath = int.Parse(talentCode.Substring(0, 1));
                     character.DruidTalents.Genesis = int.Parse(talentCode.Substring(1, 1));
                     character.DruidTalents.Moonglow = int.Parse(talentCode.Substring(2, 1));
-					character.DruidTalents.NaturesMajesty = int.Parse(talentCode.Substring(3, 1));
+                    character.DruidTalents.NaturesMajesty = int.Parse(talentCode.Substring(3, 1));
                     character.DruidTalents.ImprovedMoonfire = int.Parse(talentCode.Substring(4, 1));
                     character.DruidTalents.Brambles = int.Parse(talentCode.Substring(5, 1));
                     character.DruidTalents.NaturesGrace = int.Parse(talentCode.Substring(6, 1));
@@ -297,7 +297,7 @@ namespace Rawr.Moonkin
                     character.DruidTalents.WildGrowth = int.Parse(talentCode.Substring(82, 1));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             #endregion
