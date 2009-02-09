@@ -97,8 +97,8 @@ namespace Rawr.ProtWarr
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
         {
-            return (float)Math.Round((stats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise + stats.Expertise))
-                    * ProtWarr.ExpertiseToDodgeParryReduction / 100.0f;
+            return (((stats.ExpertiseRating * ProtWarr.ExpertiseRatingToExpertise) + stats.Expertise)
+                    * ProtWarr.ExpertiseToDodgeParryReduction) / 100.0f;
         }
 
         public static float BonusHastePercentage(Character character, Stats stats)
