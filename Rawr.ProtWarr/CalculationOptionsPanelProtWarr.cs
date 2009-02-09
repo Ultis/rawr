@@ -107,29 +107,48 @@ namespace Rawr.ProtWarr
 
         private void checkBoxUseParryHaste_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-            calcOpts.UseParryHaste = checkBoxUseParryHaste.Checked;
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                calcOpts.UseParryHaste = checkBoxUseParryHaste.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
 
         private void radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-            if (radioButtonTankPoints.Checked)
-                calcOpts.RankingMode = 2;
-            else if (radioButtonBurstTime.Checked)
-                calcOpts.RankingMode = 3;
-            else
-                calcOpts.RankingMode = 1;
-            trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                if (radioButtonTankPoints.Checked)
+                {
+                    calcOpts.RankingMode = 2;
+                    trackBarThreatScale.Value = 10;
+                }
+                else if (radioButtonBurstTime.Checked)
+                {
+                    calcOpts.RankingMode = 3;
+                    trackBarThreatScale.Value = 0;
+                }
+                else
+                {
+                    calcOpts.RankingMode = 1;
+                    trackBarThreatScale.Value = 10;
+                }
+                trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
+
+                Character.OnCalculationsInvalidated();
+            }
         }
 
 		private void checkBoxUseShieldBlock_CheckedChanged(object sender, EventArgs e)
         {
-			CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
-			calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
-            Character.OnCalculationsInvalidated();
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }   
 	}
 
