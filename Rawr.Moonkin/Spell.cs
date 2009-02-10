@@ -360,9 +360,9 @@ namespace Rawr.Moonkin
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
                         float rotationLength = 30.0f + timeToProc;
 
-                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier += 0.2f;
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier *= 1.2f;
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
-                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier -= 0.2f;
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier /= 1.2f;
 
                         preEclipseTime = timeToProc + NGCastTime;
                         preEclipseDPS = offNuke.DamagePerHit / effectiveCastTime;
@@ -391,9 +391,9 @@ namespace Rawr.Moonkin
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
                         float rotationLength = 30.0f + timeToProc;
 
-                        if (offNuke.Name == "W") offNuke.AllDamageModifier += 0.2f;
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier *= 1.2f;
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
-                        if (offNuke.Name == "W") offNuke.AllDamageModifier -= 0.2f;
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier /= 1.2f;
 
                         preEclipseTime = timeToProc + NGCastTime;
                         preEclipseDPS = mainNuke.DamagePerHit / effectiveCastTime;
@@ -462,9 +462,9 @@ namespace Rawr.Moonkin
 
                         float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
 
-                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier += 0.2f;
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier *= 1.2f;
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
-                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier -= 0.2f;
+                        if (mainNuke.Name == "W") mainNuke.AllDamageModifier /= 1.2f;
 
                         preEclipseTime = timeToProc + NGCastTime;
                         preEclipseDPS = offNuke.DamagePerHit / effectiveCastTime;
@@ -477,7 +477,7 @@ namespace Rawr.Moonkin
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                         postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
 
-                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime + timeCastingDots;
                         CastCount = castsToProc + (eclipseTime / eclipseCastTime) + (postEclipseTime / mainNuke.CastTime);
                     }
                     else
@@ -497,9 +497,9 @@ namespace Rawr.Moonkin
 
                         float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
 
-                        if (offNuke.Name == "W") offNuke.AllDamageModifier += 0.2f;
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier *= 1.2f;
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
-                        if (offNuke.Name == "W") offNuke.AllDamageModifier -= 0.2f;
+                        if (offNuke.Name == "W") offNuke.AllDamageModifier /= 1.2f;
 
                         preEclipseTime = timeToProc + NGCastTime;
                         preEclipseDPS = mainNuke.DamagePerHit / effectiveCastTime;
@@ -510,7 +510,7 @@ namespace Rawr.Moonkin
                         postEclipseTime = 30.0f - 15.0f + 0.5f * offNuke.CastTime - (timeCastingDots * ((30.0f - 15.0f) / (30.0f + timeToProc)));
                         postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
 
-                        Duration = preEclipseTime + eclipseTime + postEclipseTime;
+                        Duration = preEclipseTime + eclipseTime + postEclipseTime + timeCastingDots;
                         CastCount = castsToProc + (eclipseTime / offNuke.CastTime) + (postEclipseTime / mainNuke.CastTime);
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     }
