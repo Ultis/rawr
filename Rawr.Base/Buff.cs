@@ -2280,6 +2280,16 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DivineStormMultiplier = .1f },
+                SetName = "Redemption Battlegear",
+                SetThreshold = 2
+            });
+
             
 			#endregion
 

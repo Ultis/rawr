@@ -62,11 +62,11 @@ namespace Rawr.Retribution
 					    "Basic Stats:Agility",
 					    "Basic Stats:Attack Power",
 					    "Basic Stats:Crit Chance",
-					    "Basic Stats:Hit Rating",
-					    "Basic Stats:Expertise",
-					    "Basic Stats:Haste Rating",
-					    "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
-					    "Advanced Stats:Attack Speed",
+					    "Basic Stats:Miss Chance",
+					    "Basic Stats:Dodge Chance",
+					    "Basic Stats:Melee Haste",
+					    "Basic Stats:Weapon Damage",
+					    "Basic Stats:Attack Speed",
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
 					    "DPS Breakdown:Crusader Strike",
@@ -184,9 +184,9 @@ namespace Rawr.Retribution
             float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             const float partialResist = 0.953f; // Average of 4.7% damage lost to partial resists on spells
 
-            float toMiss = (float)Math.Max(0.08f - stats.PhysicalHit, 0f);
-            float toDodge = (float)Math.Max(0.065f - stats.Expertise * .0025f, 0f);
-            float toResist = (float)Math.Max(0.17f - stats.SpellHit, 0f);
+            calc.ToMiss = (float)Math.Max(0.08f - stats.PhysicalHit, 0f);
+            calc.ToDodge = (float)Math.Max(0.065f - stats.Expertise * .0025f, 0f);
+            calc.ToResist = (float)Math.Max(0.17f - stats.SpellHit, 0f);
 
             #region Mitigation
             float targetArmor = (13083 - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
@@ -206,49 +206,49 @@ namespace Rawr.Retribution
             const float glancingAmount = 1f - 0.35f;
             const float glanceChance = .24f;
 
-            float avgWhiteHit = whiteDamage * (glanceChance * glancingAmount + stats.PhysicalCrit * critBonus + (1f - stats.PhysicalCrit - glanceChance - toMiss - toDodge));
+            float avgWhiteHit = whiteDamage * (glanceChance * glancingAmount + stats.PhysicalCrit * critBonus + (1f - stats.PhysicalCrit - glanceChance - calc.ToMiss - calc.ToDodge));
             calc.WhiteDPS = avgWhiteHit / calc.AttackSpeed;
-            float sealProcs = 1f / calc.AttackSpeed * (1f - toDodge - toMiss);
-            float sealProcs20 = 1f / calc.AttackSpeed * (1f - toDodge - toMiss);
+            float sealProcs = 1f / calc.AttackSpeed * (1f - calc.ToDodge - calc.ToMiss);
+            float sealProcs20 = 1f / calc.AttackSpeed * (1f - calc.ToDodge - calc.ToMiss);
             #endregion
 
             #region Crusader Strike
             if ( talents.CrusaderStrike > 0 )
             {
                 float csDamage = normalizedWeaponDamage * 1.1f * talentMulti * physPowerMulti * armorReduction * aow;
-                float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
+                float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
                 calc.CrusaderStrikeDPS = csAvgHit / calcOpts.CrusaderStrikeCD;
-                sealProcs += 1f / calcOpts.CrusaderStrikeCD * (1f - toDodge - toMiss);
+                sealProcs += 1f / calcOpts.CrusaderStrikeCD * (1f - calc.ToDodge - calc.ToMiss);
                 calc.CrusaderStrikeDPS20 = csAvgHit / calcOpts.CrusaderStrikeCD20;
-                sealProcs20 += 1f / calcOpts.CrusaderStrikeCD20 * (1f - toDodge - toMiss);
+                sealProcs20 += 1f / calcOpts.CrusaderStrikeCD20 * (1f - calc.ToDodge - calc.ToMiss);
             }
             #endregion
 
             #region Divine Storm
             if ( talents.DivineStorm > 0 )
             {
-                float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow;
-                float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
+                float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier);
+                float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
                 float dsRightVen = dsDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit;
                 calc.DivineStormDPS = (dsAvgHit + dsRightVen) / calcOpts.DivineStormCD;
-                sealProcs += 1f / calcOpts.DivineStormCD * (1f - toDodge - toMiss);
+                sealProcs += 1f / calcOpts.DivineStormCD * (1f - calc.ToDodge - calc.ToMiss);
                 calc.DivineStormDPS20 = (dsAvgHit + dsRightVen) / calcOpts.DivineStormCD20;
-                sealProcs20 += 1f / calcOpts.DivineStormCD20 * (1f - toDodge - toMiss);
+                sealProcs20 += 1f / calcOpts.DivineStormCD20 * (1f - calc.ToDodge - calc.ToMiss);
             }
             #endregion
             
             #region Seal
             float sealDamage = calc.WeaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
-            float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - toMiss - toDodge);
-            calc.SealDPS = sealAvgHit * sealProcs * (1f - toMiss - toDodge);
-            calc.SealDPS20 = sealAvgHit * sealProcs20 * (1f - toMiss - toDodge);
+            float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
+            calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge);
+            calc.SealDPS20 = sealAvgHit * sealProcs20 * (1f - calc.ToMiss - calc.ToDodge);
             #endregion
 
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .05f * talents.Fanaticism;
             float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower)
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
-            float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - toMiss);
+            float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
             calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / calcOpts.JudgementCD;
             calc.JudgementDPS20 = (judgeAvgHit + judgeRightVen) / calcOpts.JudgementCD20;
@@ -265,14 +265,14 @@ namespace Rawr.Retribution
             {
                 float exoCrit = (calcOpts.Mode31 && calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
                 float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist;
-                float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - toResist);
+                float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - calc.ToResist);
                 calc.ExorcismDPS = exoAvgHit / calcOpts.ExorcismCD;
                 calc.ExorcismDPS20 = exoAvgHit / calcOpts.ExorcismCD20;
             }
             #endregion
             float howCrit = stats.PhysicalCrit + .25f * talents.SanctifiedRetribution;
             float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist;
-            float howAvgHit = howDamage * (1f + howCrit * critBonus - howCrit - toMiss);
+            float howAvgHit = howDamage * (1f + howCrit * critBonus - howCrit - calc.ToMiss);
             calc.HammerOfWrathDPS20 = howAvgHit / calcOpts.HammerOfWrathCD20;
             #region HammerOfWrath
 
@@ -464,13 +464,14 @@ namespace Rawr.Retribution
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
-                BonusDamageMultiplier = stats.BonusDamageMultiplier
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                DivineStormMultiplier = stats.DivineStormMultiplier
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower + stats.SpellCrit +
+            return (stats.Health + stats.Strength + stats.Agility + stats.Stamina + stats.Spirit + stats.AttackPower + stats.SpellCrit + stats.DivineStormMultiplier +
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating +
                 stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +

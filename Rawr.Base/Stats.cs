@@ -253,7 +253,10 @@ namespace Rawr
         HolyLightCrit,
         HolyShockCrit,
         GreatnessProc,
-        Heal1Min
+        Heal1Min,
+        #endregion
+        #region Rawr.Retribution
+        DivineStormMultiplier
         #endregion
     }
 
@@ -2046,6 +2049,17 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
         }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Divine Storm Damage")]
+        [Category("Equipment Procs")]
+        public float DivineStormMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
