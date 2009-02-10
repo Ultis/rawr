@@ -409,7 +409,6 @@ namespace Rawr.Moonkin
                     CharacterCalculationsMoonkin calcsManaBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
                     SpellRotation manaGainsRot = calcsManaBase.SelectedRotation;
                     Character c2 = character.Clone();
-                    float runningTotal = 0.0f;
 
                     List<ComparisonCalculationMoonkin> manaGainsList = new List<ComparisonCalculationMoonkin>();
 
@@ -421,7 +420,6 @@ namespace Rawr.Moonkin
                     {
                         if (pairs.Key == manaGainsRot.Name)
                         {
-                            runningTotal += (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f;
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Moonkin Form",
@@ -450,7 +448,6 @@ namespace Rawr.Moonkin
                     {
                         if (pairs.Key == manaGainsRot.Name)
                         {
-                            runningTotal += (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f;
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Judgement of Wisdom",
@@ -471,7 +468,6 @@ namespace Rawr.Moonkin
                     {
                         if (pairs.Key == manaGainsRot.Name)
                         {
-                            runningTotal += (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f;
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Replenishment",
@@ -489,7 +485,6 @@ namespace Rawr.Moonkin
                     calcOpts.Innervate = innervate;
                     foreach (KeyValuePair<string, RotationData> pairs in calcsManaInnervate.Rotations)
                     {
-                        runningTotal += (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f;
                         if (pairs.Key == manaGainsRot.Name)
                         {
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
@@ -520,7 +515,6 @@ namespace Rawr.Moonkin
                     {
                         if (pairs.Key == manaGainsRot.Name)
                         {
-                            runningTotal += (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f;
                             manaGainsList.Add(new ComparisonCalculationMoonkin()
                             {
                                 Name = "Mana Spring Totem",
