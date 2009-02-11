@@ -559,6 +559,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff + statsTotal.AllResist;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
+            // Glyph of Blocking has 100% uptime for any normal fight
+            if (calcOpts.GlyphOfBlocking)
+                statsTotal.BonusBlockValueMultiplier += 0.1f;
             statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtWarr.StrengthToBlockValue - 10f);
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
  

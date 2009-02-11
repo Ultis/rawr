@@ -61,6 +61,10 @@ namespace Rawr.ProtWarr
             radioButtonBurstTime.Checked = (calcOpts.RankingMode == 3);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
 
+            // Glyphs
+            checkBoxGlyphOfBlocking.Checked = calcOpts.GlyphOfBlocking;
+            checkBoxGlyphOfDevastate.Checked = calcOpts.GlyphOfDevastate;
+
             // Warrior Abilities
             trackBarShieldBlockUptime.Value = (int)calcOpts.ShieldBlockUptime;
             checkBoxUseShieldBlock.Checked = calcOpts.UseShieldBlock;
@@ -149,7 +153,27 @@ namespace Rawr.ProtWarr
                 calcOpts.UseShieldBlock = checkBoxUseShieldBlock.Checked;
                 Character.OnCalculationsInvalidated();
             }
-        }   
+        }
+
+        private void checkBoxGlyphOfBlocking_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                calcOpts.GlyphOfBlocking = checkBoxGlyphOfBlocking.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfDevastate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtWarr calcOpts = Character.CalculationOptions as CalculationOptionsProtWarr;
+                calcOpts.GlyphOfDevastate = checkBoxGlyphOfDevastate.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 	}
 
 	[Serializable]
@@ -175,6 +199,8 @@ namespace Rawr.ProtWarr
         public int RankingMode = 1;
         public float ShieldBlockUptime = 100;
 		public bool UseShieldBlock = false;
+        public bool GlyphOfBlocking = false;
+        public bool GlyphOfDevastate = false;
 		public WarriorTalents talents = null;
 	}
 }

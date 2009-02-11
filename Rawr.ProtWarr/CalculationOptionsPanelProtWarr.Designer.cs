@@ -47,6 +47,9 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.radioButtonBurstTime = new System.Windows.Forms.RadioButton();
             this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
             this.radioButtonMitigationScale = new System.Windows.Forms.RadioButton();
@@ -56,9 +59,9 @@ namespace Rawr.ProtWarr
             this.checkBoxUseParryHaste = new System.Windows.Forms.CheckBox();
             this.labelBossAttackSpeed = new System.Windows.Forms.Label();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxGlyphOfDevastate = new System.Windows.Forms.CheckBox();
+            this.checkBoxGlyphOfBlocking = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxWarriorSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarShieldBlockUptime)).BeginInit();
@@ -68,6 +71,7 @@ namespace Rawr.ProtWarr
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -140,7 +144,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 436);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 506);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -315,6 +319,39 @@ namespace Rawr.ProtWarr
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
             // 
+            // extendedToolTipLabel3
+            // 
+            this.extendedToolTipLabel3.Location = new System.Drawing.Point(164, 164);
+            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
+            this.extendedToolTipLabel3.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel3.TabIndex = 12;
+            this.extendedToolTipLabel3.Text = "*";
+            this.extendedToolTipLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel3.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
+                "own the player.";
+            // 
+            // extendedToolTipLabel2
+            // 
+            this.extendedToolTipLabel2.Location = new System.Drawing.Point(188, 118);
+            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
+            this.extendedToolTipLabel2.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel2.TabIndex = 11;
+            this.extendedToolTipLabel2.Text = "*";
+            this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel2.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
+                "fault)";
+            // 
+            // extendedToolTipLabel1
+            // 
+            this.extendedToolTipLabel1.Location = new System.Drawing.Point(168, 141);
+            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
+            this.extendedToolTipLabel1.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel1.TabIndex = 9;
+            this.extendedToolTipLabel1.Text = "*";
+            this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel1.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
+                "layer.";
+            // 
             // radioButtonBurstTime
             // 
             this.radioButtonBurstTime.AutoSize = true;
@@ -432,49 +469,52 @@ namespace Rawr.ProtWarr
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
-            // extendedToolTipLabel1
+            // groupBox3
             // 
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(168, 141);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel1.TabIndex = 9;
-            this.extendedToolTipLabel1.Text = "*";
-            this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel1.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
-                "layer.";
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.checkBoxGlyphOfDevastate);
+            this.groupBox3.Controls.Add(this.checkBoxGlyphOfBlocking);
+            this.groupBox3.Location = new System.Drawing.Point(3, 436);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(364, 64);
+            this.groupBox3.TabIndex = 6;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Glyphs";
             // 
-            // extendedToolTipLabel2
+            // checkBoxGlyphOfDevastate
             // 
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(188, 118);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel2.TabIndex = 11;
-            this.extendedToolTipLabel2.Text = "*";
-            this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel2.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
-                "fault)";
+            this.checkBoxGlyphOfDevastate.AutoSize = true;
+            this.checkBoxGlyphOfDevastate.Location = new System.Drawing.Point(95, 42);
+            this.checkBoxGlyphOfDevastate.Name = "checkBoxGlyphOfDevastate";
+            this.checkBoxGlyphOfDevastate.Size = new System.Drawing.Size(117, 17);
+            this.checkBoxGlyphOfDevastate.TabIndex = 6;
+            this.checkBoxGlyphOfDevastate.Text = "Glyph of Devastate";
+            this.checkBoxGlyphOfDevastate.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfDevastate.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfDevastate_CheckedChanged);
             // 
-            // extendedToolTipLabel3
+            // checkBoxGlyphOfBlocking
             // 
-            this.extendedToolTipLabel3.Location = new System.Drawing.Point(164, 164);
-            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
-            this.extendedToolTipLabel3.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel3.TabIndex = 12;
-            this.extendedToolTipLabel3.Text = "*";
-            this.extendedToolTipLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel3.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
-                "own the player.";
+            this.checkBoxGlyphOfBlocking.AutoSize = true;
+            this.checkBoxGlyphOfBlocking.Location = new System.Drawing.Point(95, 19);
+            this.checkBoxGlyphOfBlocking.Name = "checkBoxGlyphOfBlocking";
+            this.checkBoxGlyphOfBlocking.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxGlyphOfBlocking.TabIndex = 5;
+            this.checkBoxGlyphOfBlocking.Text = "Glyph of Blocking";
+            this.checkBoxGlyphOfBlocking.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfBlocking.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfBlocking_CheckedChanged);
             // 
             // CalculationOptionsPanelProtWarr
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxWarriorSkills);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 535);
+            this.Size = new System.Drawing.Size(370, 603);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxWarriorSkills.ResumeLayout(false);
             this.groupBoxWarriorSkills.PerformLayout();
@@ -487,6 +527,8 @@ namespace Rawr.ProtWarr
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -524,5 +566,8 @@ namespace Rawr.ProtWarr
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfDevastate;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfBlocking;
 	}
 }

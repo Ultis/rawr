@@ -45,7 +45,7 @@ namespace Rawr.ProtWarr
                     if ((calcOpts.TargetLevel - character.Level) < 3)
                         return 0.065f;
                     else
-                        return 0.1375f;
+                        return 0.14f;
 
                 case HitResult.Glance:
                     return 0.06f + ((calcOpts.TargetLevel - character.Level) * 0.06f);

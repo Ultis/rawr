@@ -114,7 +114,10 @@ namespace Rawr.ProtWarr
                     abilityThreat += 225.0f;
                     break;
                 case Ability.Devastate:
-                    abilityThreat += (Stats.AttackPower * 0.05f);
+                    if(Options.GlyphOfDevastate)
+                        abilityThreat += (Stats.AttackPower * 0.1f);
+                    else
+                        abilityThreat += (Stats.AttackPower * 0.05f);
                     break;
                 case Ability.HeroicStrike:
                     abilityThreat += 259.0f;
