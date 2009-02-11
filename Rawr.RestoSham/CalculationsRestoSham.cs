@@ -46,7 +46,7 @@ namespace Rawr.RestoSham
                           "Basic Stats:Spell Power",
                           "Basic Stats:MP5*Mana regeneration while casting",
                           // "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
-                          "Basic Stats:Heal Spell Crit",
+                          "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
                           "Basic Stats:Spell Haste",
                           "Totals:Total HPS*Includes Burst and Sustained",
                           "Totals:Time to OOM*In Seconds",
@@ -174,10 +174,7 @@ namespace Rawr.RestoSham
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit + 
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + 
                 (character.ShamanTalents.BlessingOfTheEternals * 2)));
-            if (character.ShamanTalents.TidalForce > 0)
-                calcStats.SpellCrit += 1.2f / 180;
-
-
+            
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
 
             // Total Mana Pool for the fight:
@@ -209,6 +206,8 @@ namespace Rawr.RestoSham
             float Time = (options.FightLength * 60f);
             float EFL = Time - (1.5f * (Time / options.ESInterval));
             float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
+            if (character.ShamanTalents.TidalForce > 0)
+                Critical += (1.2f / 180) / 2;
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
             float Hasted = 1 - (stats.HasteRating / 3279);
