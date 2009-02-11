@@ -547,6 +547,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Health += statsTotal.Stamina * 10f;
             if (character.ActiveBuffsContains("Commanding Shout"))
                 statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
+            statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -866,7 +867,8 @@ threat and limited threat scaled by the threat scale.",
 				BaseArmorMultiplier = stats.BaseArmorMultiplier,
 				BonusArmorMultiplier = stats.BonusArmorMultiplier,
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
-				Health = stats.Health,
+                Health = stats.Health,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
 				Miss = stats.Miss,
 				CritChanceReduction = stats.CritChanceReduction,
 				AllResist = stats.AllResist,
@@ -917,7 +919,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier +
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
-                    stats.BlockRating + stats.BlockValue + stats.Health + 
+                    stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
 				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
 				    stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 					stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +

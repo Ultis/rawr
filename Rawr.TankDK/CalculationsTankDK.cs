@@ -482,7 +482,9 @@ namespace Rawr.TankDK
 
             statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
 
-            statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) *  1.10f);
+            statsTotal.Health = (float)Math.Floor((statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * 1.10f);
+            statsTotal.Health *= (1f + statsGearEnchantsBuffs.BonusHealthMultiplier);
+
             statsTotal.Mana = (float)Math.Floor(statsGearEnchantsBuffs.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsGearEnchantsBuffs.AttackPower + statsTotal.Strength * 2);
 
@@ -680,6 +682,7 @@ namespace Rawr.TankDK
                 //PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
 
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -708,7 +711,7 @@ namespace Rawr.TankDK
                 stats.CritRating + stats.HitRating + stats.BonusArmor +
                 stats.DodgeRating + stats.DefenseRating + stats.ParryRating + stats.Resilience +
                 stats.Dodge + stats.Parry + stats.Defense + stats.BonusArmorMultiplier +
-                stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
+                stats.BonusHealthMultiplier + stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusSpellPowerMultiplier +
                 stats.CritMeleeRating + stats.LotPCritRating + stats.WindfuryAPBonus + stats.Bloodlust) != 0;
         }

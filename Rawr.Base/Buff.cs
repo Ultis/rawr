@@ -2390,6 +2390,13 @@ namespace Rawr
 			});
             defaultBuffs.Add(new Buff()
             {
+                Name = "Power of Vesperon",
+                Group = "Temporary Buffs",
+                Stats = { BonusHealthMultiplier = -0.25f },
+                ConflictingBuffs = new List<string>(new string[] { })
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Improved Lay On Hands",
                 Group = "Temporary Buffs",
 				Stats = { BonusArmorMultiplier = 0.3f },

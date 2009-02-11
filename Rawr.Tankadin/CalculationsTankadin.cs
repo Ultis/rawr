@@ -345,6 +345,7 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
                 + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
+            stats.Health *= (1f + stats.BonusHealthMultiplier);
             stats.Armor = (float)Math.Round((stats.Armor * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
@@ -406,6 +407,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 Health = stats.Health,
+                BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 Miss = stats.Miss,
                 SpellPower = stats.SpellPower,
                 HitRating = stats.HitRating,
@@ -422,10 +424,10 @@ you are being killed by burst damage, focus on Survival Points.",
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier + stats.BonusAttackPowerMultiplier +
-                stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHolyDamageMultiplier +
+                stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue + stats.BaseArmorMultiplier +
                 stats.SpellHitRating + stats.SpellPower + stats.HitRating + stats.ExpertiseRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
-                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit) > 0;
+                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit) != 0;
         }
     }
 
