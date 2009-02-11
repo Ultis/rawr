@@ -445,7 +445,7 @@ namespace Rawr.Mage
             ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + characterStats.BonusDamageMultiplier);
             if (arcanePower)
             {
-                ArcaneSpellModifier *= 1.3f;
+                ArcaneSpellModifier *= 1.2f;
             }
             if (moltenFury)
             {
@@ -817,6 +817,15 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ABABar3C:
                     s = new ABABar3C(this);
+                    break;
+                case SpellId.AB3ABar3MBAM:
+                    s = new AB3ABar3MBAM(this);
+                    break;
+                case SpellId.AB3AM:
+                    s = new AB3AM(this);
+                    break;
+                case SpellId.AB3AM2MBAM:
+                    s = new AB3AM2MBAM(this);
                     break;
                 case SpellId.AB2ABar2MBAM:
                     s = new AB2ABar2MBAM(this);

@@ -293,7 +293,7 @@ namespace Rawr.Mage
                 manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
                 calculationResult.EvocationCooldown = (240.0 - 60.0 * character.MageTalents.ArcaneFlows);
                 calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
-                calculationResult.ArcanePowerCooldown = 180.0 - 30.0 * character.MageTalents.ArcaneFlows;
+                calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * character.MageTalents.ArcaneFlows);
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
                 calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * character.MageTalents.IceFloes + (character.MageTalents.IceFloes == 3 ? 0.01 : 0.00));
                 calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * character.MageTalents.ColdAsIce);
@@ -2272,16 +2272,13 @@ namespace Rawr.Mage
                             if (character.MageTalents.ArcaneEmpowerment > 0)
                             {
                                 list.Add(SpellId.ABAM);
+                                list.Add(SpellId.AB3AM2MBAM);
+                                list.Add(SpellId.AB3AM);
                                 if (character.MageTalents.MissileBarrage > 0)
                                 {
-                                    list.Add(SpellId.ABABar0MBAM);
                                     list.Add(SpellId.ABABar1MBAM);
                                     list.Add(SpellId.ABABar2MBAM);
-                                    list.Add(SpellId.ABABar2C);
-                                    list.Add(SpellId.ABABar3C);
-                                    list.Add(SpellId.AB3ABar3C);
-                                    list.Add(SpellId.ABSpam3C);
-                                    list.Add(SpellId.ABSpam03C);
+                                    list.Add(SpellId.AB3ABar3MBAM);
                                     list.Add(SpellId.ABSpam3MBAM);
                                 }
                             }
@@ -2293,15 +2290,13 @@ namespace Rawr.Mage
                                 list.Add(SpellId.FB2ABar);
                                 list.Add(SpellId.FrB2ABar);
                                 list.Add(SpellId.ABAM);
+                                list.Add(SpellId.AB3AM2MBAM);
+                                list.Add(SpellId.AB3AM);
                                 if (character.MageTalents.MissileBarrage > 0)
                                 {
                                     list.Add(SpellId.ABABar1MBAM);
                                     list.Add(SpellId.ABABar2MBAM);
-                                    list.Add(SpellId.ABABar2C);
-                                    list.Add(SpellId.ABABar3C);
-                                    list.Add(SpellId.AB3ABar3C);
-                                    list.Add(SpellId.ABSpam3C);
-                                    list.Add(SpellId.ABSpam03C);
+                                    list.Add(SpellId.AB3ABar3MBAM);
                                     list.Add(SpellId.ABSpam3MBAM);
                                 }
                             }
@@ -2343,6 +2338,8 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar0C);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
                         if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpamMBAM);
+                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3AM);
+                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3AM2MBAM);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FB2ABar);
                         if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
@@ -2362,6 +2359,7 @@ namespace Rawr.Mage
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2C);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2MBAM);
                         if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar1MBAM);
+                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3MBAM);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)

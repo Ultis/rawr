@@ -100,6 +100,9 @@ namespace Rawr.Mage
                     "Spell Info:AB2ABar2MBAM*AB-AB-ABar, on MB proc replace ABar with MBAM",
                     "Spell Info:AB2ABar2C*AB-AB-ABar, on MB proc do MBAM-ABar at 2 stack",
                     "Spell Info:AB2ABar3C*AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
+                    "Spell Info:AB3AM2MBAM*AB-AB-AB-AM, if first AB procs MB do MBAM at 2 stack",
+                    "Spell Info:AB3AM*AB-AB-AB-AM regardless of procs",
+                    "Spell Info:AB3ABar3MBAM*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:AB3ABar3C*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:ABSpamMBAM*Spam AB, MBAM as soon as you notice",
                     "Spell Info:ABSpam3MBAM*Spam AB, always ramp up to 3 stack before MBAM",
@@ -760,8 +763,8 @@ namespace Rawr.Mage
             return statsTotal;
         }
          
-        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire", "GlyphOfArcaneBlast" };
-        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire", "Glyph of Arcane Blast" };
+        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire", "GlyphOfArcaneBlast", "GlyphOfArcaneMissiles" };
+        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire", "Glyph of Arcane Blast", "Glyph of Arcane Missiles" };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {

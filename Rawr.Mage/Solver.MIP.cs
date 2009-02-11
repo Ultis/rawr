@@ -2244,7 +2244,6 @@ namespace Rawr.Mage
             // this case has a minimum difference of (int)(effectCooldown / segmentDuration) * segmentDuration
             // t1 = (seg1 + 1) * segmentDuration - count[seg1]
             // t2 = (seg2 + 2) * segmentDuration - count[seg2]
-            // 
             branchlp = lp.Clone();
             if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", long distance");
             row = branchlp.AddConstraint(false);
@@ -3195,6 +3194,194 @@ namespace Rawr.Mage
             }
 
             return valid;
+        }
+
+        private struct ActivationConstraints
+        {
+            public int Segment;
+            public bool Loose;
+            public double MinTime;
+            public double MaxTime;
+            public Cooldown JointEffect;
+            public Cooldown LeftLink;
+            public Cooldown RightLink;
+            public double LeftPaddding;
+            public double RightPadding;
+        }
+
+        private ActivationConstraints GetActivationConstraints(Cooldown effect, int segment, double effectInSegment)
+        {
+            ActivationConstraints result = new ActivationConstraints();
+            result.Segment = segment;
+            if (segment < segments - 1 && (hexMask[segment + 1] & (int)effect) == (int)effect)
+            {
+                result.MinTime = result.MaxTime = (segment + 1) * segmentDuration - effectInSegment;
+                return result;
+            }
+            result.Loose = true;
+            int hex = (int)effect;
+            int N = hexList[segment].Count;
+            for (int i = 0; i < N; i++)
+            {
+                if (((int)effect & hexList[segment][i]) != 0)
+                {
+                    hex |= hexList[segment][i];
+                }
+            }
+            result.JointEffect = (Cooldown)hex;
+            if (segment < segments - 1)
+            {
+                result.RightLink = (Cooldown)(hex & hexMask[segment + 1]);
+            }
+            if (segment > 0)
+            {
+                result.LeftLink = (Cooldown)(hex & hexMask[segment - 1]);
+            }
+            result.MaxTime = (segment + 1) * segmentDuration - effectInSegment;
+            result.MinTime = segment * segmentDuration;
+            // things that are linked, but don't include the full link have to be on the other side of the link
+            // things that are linked and include the full link and link some more have to be on the link
+            // things that are linked and include the full link and don't link anything else can be on either side
+            // things that are not linked have to be on the other side if there is a link
+            // things that are not linked can be on either side if there is no link
+            const double eps = 0.00001;
+            for (int index = segmentColumn[segment]; index < segmentColumn[segment + 1]; index++)
+            {
+                if (solution[index] > eps)
+                {
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && !state.GetCooldown(effect))
+                    {
+                        Cooldown leftLink = state.Cooldown & result.LeftLink;
+                        Cooldown leftFullLink = (segment > 0) ? state.Cooldown & (Cooldown)hexMask[segment - 1] : Cooldown.None;
+                        Cooldown rightLink = state.Cooldown & result.RightLink;
+                        Cooldown rightFullLink = (segment < segments - 1) ? state.Cooldown & (Cooldown)hexMask[segment + 1] : Cooldown.None;
+                        bool hasToBeLeft = false;
+                        bool hasToBeRight = false;
+                        if (leftLink != Cooldown.None)
+                        {
+                            if ((leftLink & result.LeftLink) != result.LeftLink)
+                            {
+                                hasToBeRight = true;
+                            }
+                            else if (leftFullLink != result.LeftLink)
+                            {
+                                hasToBeLeft = true;
+                            }
+                        }
+                        else if (leftFullLink != Cooldown.None)
+                        {
+                            // cycle
+                            hasToBeLeft = true;
+                            hasToBeRight = true;
+                        }
+                        else if (result.LeftLink != Cooldown.None)
+                        {
+                            hasToBeRight = true;
+                        }
+                        if (rightLink != Cooldown.None)
+                        {
+                            if ((rightLink & result.RightLink) != result.RightLink)
+                            {
+                                hasToBeLeft = true;
+                            }
+                            else if (rightFullLink != result.RightLink)
+                            {
+                                hasToBeRight = true;
+                            }
+                        }
+                        else if (rightFullLink != Cooldown.None)
+                        {
+                            // cycle
+                            hasToBeLeft = true;
+                            hasToBeRight = true;
+                        }
+                        else if (result.RightLink != Cooldown.None)
+                        {
+                            hasToBeLeft = true;
+                        }
+                        if (hasToBeLeft)
+                        {
+                            result.MinTime += solution[index];
+                            result.LeftPaddding += solution[index];
+                        }
+                        if (hasToBeRight)
+                        {
+                            result.MaxTime -= solution[index];
+                            result.RightPadding += solution[index];
+                        }
+                    }
+                }
+            }
+            for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
+            {
+                if (solution[index] > eps && calculationResult.SolutionVariable[index].Segment == segment && calculationResult.SolutionVariable[index].Type != VariableType.ManaGem && calculationResult.SolutionVariable[index].Type != VariableType.ManaPotion && calculationResult.SolutionVariable[index].Type != VariableType.ManaOverflow)
+                {
+                    CastingState state = calculationResult.SolutionVariable[index].State;
+                    if (state != null && !state.GetCooldown(effect))
+                    {
+                        Cooldown leftLink = state.Cooldown & result.LeftLink;
+                        Cooldown leftFullLink = (segment > 0) ? state.Cooldown & (Cooldown)hexMask[segment - 1] : Cooldown.None;
+                        Cooldown rightLink = state.Cooldown & result.RightLink;
+                        Cooldown rightFullLink = (segment < segments - 1) ? state.Cooldown & (Cooldown)hexMask[segment + 1] : Cooldown.None;
+                        bool hasToBeLeft = false;
+                        bool hasToBeRight = false;
+                        if (leftLink != Cooldown.None)
+                        {
+                            if ((leftLink & result.LeftLink) != result.LeftLink)
+                            {
+                                hasToBeRight = true;
+                            }
+                            else if (leftFullLink != result.LeftLink)
+                            {
+                                hasToBeLeft = true;
+                            }
+                        }
+                        else if (leftFullLink != Cooldown.None)
+                        {
+                            // cycle
+                            hasToBeLeft = true;
+                            hasToBeRight = true;
+                        }
+                        else if (result.LeftLink != Cooldown.None)
+                        {
+                            hasToBeRight = true;
+                        }
+                        if (rightLink != Cooldown.None)
+                        {
+                            if ((rightLink & result.RightLink) != result.RightLink)
+                            {
+                                hasToBeLeft = true;
+                            }
+                            else if (rightFullLink != result.RightLink)
+                            {
+                                hasToBeRight = true;
+                            }
+                        }
+                        else if (rightFullLink != Cooldown.None)
+                        {
+                            // cycle
+                            hasToBeLeft = true;
+                            hasToBeRight = true;
+                        }
+                        else if (result.RightLink != Cooldown.None)
+                        {
+                            hasToBeLeft = true;
+                        }
+                        if (hasToBeLeft)
+                        {
+                            result.MinTime += solution[index];
+                            result.LeftPaddding += solution[index];
+                        }
+                        if (hasToBeRight)
+                        {
+                            result.MaxTime -= solution[index];
+                            result.RightPadding += solution[index];
+                        }
+                    }
+                }
+            }
+            return result;
         }
 
         private bool ValidateFlamecap()
