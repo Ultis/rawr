@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -149,7 +149,8 @@ namespace Rawr.Moonkin
         // Calculate damage and casting time for the Moonfire effect.
         private void DoMoonfire(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
-            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f);
+            float latency = calcs.Latency;
+            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f) + 2 * latency;
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.AllDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
@@ -161,7 +162,8 @@ namespace Rawr.Moonkin
         // Calculate damage and casting time for the Insect Swarm effect.
         private void DoInsectSwarm(Character character, CharacterCalculationsMoonkin calcs, ref Spell dotSpell, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
-            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f);
+            float latency = calcs.Latency;
+            dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f) + 2 * latency;
             float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
@@ -1190,10 +1192,10 @@ namespace Rawr.Moonkin
             // Add spell damage from idols
             Starfire.IdolExtraSpellPower += stats.StarfireDmg;
             Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
-            Wrath.IdolExtraSpellPower += stats.WrathDmg;
+            Wrath.BaseDamage += stats.WrathDmg;
 
-            float moonfireDDGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? -0.75f : 0.0f;
-            float moonfireDotGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? 0.9f : 0.0f;
+            float moonfireDDGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? -0.9f : 0.0f;
+            float moonfireDotGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? 0.75f : 0.0f;
             float insectSwarmGlyph = (calcOpts.glyph1 == "Insect Swarm" || calcOpts.glyph2 == "Insect Swarm" || calcOpts.glyph3 == "Insect Swarm") ? 0.3f : 0.0f;
             // Add spell-specific damage
             // Starfire, Moonfire, Wrath: Damage +(0.03 * Moonfury)
