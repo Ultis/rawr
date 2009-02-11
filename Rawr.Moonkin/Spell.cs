@@ -152,7 +152,7 @@ namespace Rawr.Moonkin
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.AllDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
             float totalCritChance = spellCrit + dotSpell.CriticalChanceModifier;
-            dotSpell.DamagePerHit = totalCritChance * mfCritDamage + (1 - totalCritChance) * mfDirectDamage * spellHit;
+            dotSpell.DamagePerHit = (totalCritChance * mfCritDamage + (1 - totalCritChance) * mfDirectDamage) * spellHit;
             float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
