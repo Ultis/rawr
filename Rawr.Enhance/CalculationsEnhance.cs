@@ -397,7 +397,7 @@ namespace Rawr
 		{
 			Stats statsRace = new Stats() { 
 					Health = 6305f,
-                    Mana = 4396f,
+                    Mana = 4116f,
 					Strength = 121f,
 					Agility = 71f,
 					Stamina = 185f,
@@ -431,7 +431,7 @@ namespace Rawr
 			Stats statsTotal = new Stats();
 			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             int AK = character.ShamanTalents.AncestralKnowledge;
-            statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) * (1 + .01f * AK)) - 1;
+            statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier) * (1 + .02f * AK)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
 			statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
