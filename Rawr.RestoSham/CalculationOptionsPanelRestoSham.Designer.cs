@@ -40,6 +40,8 @@
             this.chkManaTide2 = new System.Windows.Forms.CheckBox();
             this.chkWaterShield2 = new System.Windows.Forms.CheckBox();
             this.chkWaterShield3 = new System.Windows.Forms.CheckBox();
+            this.chkELWGlyph = new System.Windows.Forms.CheckBox();
+            this.chkGlyphCH = new System.Windows.Forms.CheckBox();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label2 = new System.Windows.Forms.Label();
@@ -79,7 +81,7 @@
             "1800",
             "2400",
             "4300"});
-            this.cboManaPotAmount.Location = new System.Drawing.Point(87, 58);
+            this.cboManaPotAmount.Location = new System.Drawing.Point(81, 58);
             this.cboManaPotAmount.Name = "cboManaPotAmount";
             this.cboManaPotAmount.Size = new System.Drawing.Size(75, 21);
             this.cboManaPotAmount.TabIndex = 10;
@@ -90,7 +92,7 @@
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(6, 85);
+            this.chkManaTide.Location = new System.Drawing.Point(6, 154);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(184, 17);
             this.chkManaTide.TabIndex = 14;
@@ -111,7 +113,7 @@
             // chkMT
             // 
             this.chkMT.AutoSize = true;
-            this.chkMT.Location = new System.Drawing.Point(6, 177);
+            this.chkMT.Location = new System.Drawing.Point(6, 131);
             this.chkMT.Name = "chkMT";
             this.chkMT.Size = new System.Drawing.Size(172, 17);
             this.chkMT.TabIndex = 24;
@@ -134,50 +136,76 @@
             // chkLHW
             // 
             this.chkLHW.AutoSize = true;
-            this.chkLHW.Location = new System.Drawing.Point(6, 28);
+            this.chkLHW.Location = new System.Drawing.Point(6, 52);
             this.chkLHW.Name = "chkLHW";
-            this.chkLHW.Size = new System.Drawing.Size(170, 17);
+            this.chkLHW.Size = new System.Drawing.Size(199, 17);
             this.chkLHW.TabIndex = 25;
-            this.chkLHW.Text = "Glyph of Lesser Healing Wave";
-            this.tipRestoSham.SetToolTip(this.chkLHW, "Check to indicate you are using the Glyph of Lesser Healing Wave");
+            this.chkLHW.Text = "Major Glyph of Lesser Healing Wave";
+            this.tipRestoSham.SetToolTip(this.chkLHW, "Check to indicate you are using the Major Glyph of Lesser Healing Wave");
             this.chkLHW.UseVisualStyleBackColor = true;
             this.chkLHW.CheckedChanged += new System.EventHandler(this.chkLHW_CheckedChanged);
             // 
             // chkManaTide2
             // 
             this.chkManaTide2.AutoSize = true;
-            this.chkManaTide2.Location = new System.Drawing.Point(6, 6);
+            this.chkManaTide2.Location = new System.Drawing.Point(6, 75);
             this.chkManaTide2.Name = "chkManaTide2";
-            this.chkManaTide2.Size = new System.Drawing.Size(152, 17);
+            this.chkManaTide2.Size = new System.Drawing.Size(181, 17);
             this.chkManaTide2.TabIndex = 24;
-            this.chkManaTide2.Text = "Glyph of Mana Tide Totem";
-            this.tipRestoSham.SetToolTip(this.chkManaTide2, "Check to indicate you are using the Glyph of Mana Tide Totem");
+            this.chkManaTide2.Text = "Major Glyph of Mana Tide Totem";
+            this.tipRestoSham.SetToolTip(this.chkManaTide2, "Check to indicate you are using the Major Glyph of Mana Tide Totem");
             this.chkManaTide2.UseVisualStyleBackColor = true;
             this.chkManaTide2.CheckedChanged += new System.EventHandler(this.chkManaTide2_CheckedChanged);
             // 
             // chkWaterShield2
             // 
             this.chkWaterShield2.AutoSize = true;
-            this.chkWaterShield2.Location = new System.Drawing.Point(6, 51);
+            this.chkWaterShield2.Location = new System.Drawing.Point(6, 121);
             this.chkWaterShield2.Name = "chkWaterShield2";
-            this.chkWaterShield2.Size = new System.Drawing.Size(129, 17);
+            this.chkWaterShield2.Size = new System.Drawing.Size(158, 17);
             this.chkWaterShield2.TabIndex = 26;
-            this.chkWaterShield2.Text = "Glyph of Water Shield";
-            this.tipRestoSham.SetToolTip(this.chkWaterShield2, "Check if you have the Glyph of Water Shield");
+            this.chkWaterShield2.Text = "Minor Glyph of Water Shield";
+            this.tipRestoSham.SetToolTip(this.chkWaterShield2, "Check if you have the Minor Glyph of Water Shield");
             this.chkWaterShield2.UseVisualStyleBackColor = true;
             this.chkWaterShield2.CheckedChanged += new System.EventHandler(this.chkWaterShield2_CheckedChanged);
             // 
             // chkWaterShield3
             // 
             this.chkWaterShield3.AutoSize = true;
-            this.chkWaterShield3.Location = new System.Drawing.Point(6, 74);
+            this.chkWaterShield3.Location = new System.Drawing.Point(6, 98);
             this.chkWaterShield3.Name = "chkWaterShield3";
-            this.chkWaterShield3.Size = new System.Drawing.Size(137, 17);
+            this.chkWaterShield3.Size = new System.Drawing.Size(166, 17);
             this.chkWaterShield3.TabIndex = 27;
-            this.chkWaterShield3.Text = "Glyph of Water Mastery";
-            this.tipRestoSham.SetToolTip(this.chkWaterShield3, "Check if you have the Glyph of Water Mastery");
+            this.chkWaterShield3.Text = "Major Glyph of Water Mastery";
+            this.tipRestoSham.SetToolTip(this.chkWaterShield3, "Check if you have the Major Glyph of Water Mastery");
             this.chkWaterShield3.UseVisualStyleBackColor = true;
             this.chkWaterShield3.CheckedChanged += new System.EventHandler(this.chkWaterShield3_CheckedChanged);
+            // 
+            // chkELWGlyph
+            // 
+            this.chkELWGlyph.AutoSize = true;
+            this.chkELWGlyph.Location = new System.Drawing.Point(6, 6);
+            this.chkELWGlyph.Name = "chkELWGlyph";
+            this.chkELWGlyph.Size = new System.Drawing.Size(190, 17);
+            this.chkELWGlyph.TabIndex = 28;
+            this.chkELWGlyph.TabStop = false;
+            this.chkELWGlyph.Text = "Major Glyph of Earthliving Weapon";
+            this.tipRestoSham.SetToolTip(this.chkELWGlyph, "Check to indicate you are using the Major Glyph of Earthliving Weapon");
+            this.chkELWGlyph.UseVisualStyleBackColor = true;
+            this.chkELWGlyph.CheckedChanged += new System.EventHandler(this.chkELWGlyph_CheckedChanged);
+            // 
+            // chkGlyphCH
+            // 
+            this.chkGlyphCH.AutoSize = true;
+            this.chkGlyphCH.Location = new System.Drawing.Point(6, 29);
+            this.chkGlyphCH.Name = "chkGlyphCH";
+            this.chkGlyphCH.Size = new System.Drawing.Size(144, 17);
+            this.chkGlyphCH.TabIndex = 29;
+            this.chkGlyphCH.TabStop = false;
+            this.chkGlyphCH.Text = "Major Glyph of Chainheal";
+            this.tipRestoSham.SetToolTip(this.chkGlyphCH, "Check to indicate you are using the Major Glyph of Chainheal");
+            this.chkGlyphCH.UseVisualStyleBackColor = true;
+            this.chkGlyphCH.CheckedChanged += new System.EventHandler(this.chkGlyphCH_CheckedChanged);
             // 
             // errorRestoSham
             // 
@@ -208,7 +236,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(146, 9);
+            this.label2.Location = new System.Drawing.Point(141, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(23, 13);
             this.label2.TabIndex = 26;
@@ -219,7 +247,7 @@
             this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.txtESInterval);
             this.groupBox3.Controls.Add(this.label18);
-            this.groupBox3.Location = new System.Drawing.Point(6, 131);
+            this.groupBox3.Location = new System.Drawing.Point(6, 85);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(192, 40);
             this.groupBox3.TabIndex = 19;
@@ -247,7 +275,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(6, 108);
+            this.chkWaterShield.Location = new System.Drawing.Point(6, 177);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -285,7 +313,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(146, 35);
+            this.label4.Location = new System.Drawing.Point(141, 35);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(15, 13);
             this.label4.TabIndex = 5;
@@ -304,6 +332,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.chkGlyphCH);
+            this.tabPage2.Controls.Add(this.chkELWGlyph);
             this.tabPage2.Controls.Add(this.chkWaterShield3);
             this.tabPage2.Controls.Add(this.chkWaterShield2);
             this.tabPage2.Controls.Add(this.chkLHW);
@@ -361,6 +391,8 @@
         private System.Windows.Forms.CheckBox chkLHW;
         private System.Windows.Forms.CheckBox chkManaTide2;
         private System.Windows.Forms.CheckBox chkWaterShield3;
+        private System.Windows.Forms.CheckBox chkGlyphCH;
+        private System.Windows.Forms.CheckBox chkELWGlyph;
 
     }
 }

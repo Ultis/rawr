@@ -18,9 +18,7 @@ namespace Rawr.RestoSham
                 {
                     _subpointColors = new Dictionary<string, System.Drawing.Color>();
                     _subpointColors.Add("Healing", System.Drawing.Color.Green);
-                    _subpointColors.Add("CH Target 2", System.Drawing.Color.Blue);
-                    _subpointColors.Add("CH Target 3", System.Drawing.Color.Red);
-                    _subpointColors.Add("Healing Way", System.Drawing.Color.Magenta);
+                    _subpointColors.Add("Till OOM", System.Drawing.Color.Blue);
                 }
                 return _subpointColors;
             }
@@ -74,7 +72,6 @@ namespace Rawr.RestoSham
             }
         }
 
-
         //
         // Custom chart names:
         //
@@ -82,7 +79,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[]{"Healing Spell Ranks",
+                return new string[]{"Time to OOM",
                                       "Stat Relative Weights"};
             }
         }
@@ -201,7 +198,8 @@ namespace Rawr.RestoSham
             // Stats, Talents, and Options
             float CurrentMana = calcStats.TotalManaPool;
             float Awaken = (.1f * character.ShamanTalents.AncestralAwakening);
-            float TankCH = (options.TankHeal ? 1 : 1.75f);
+            float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
+            float ExtraELW = (options.TankHeal ? 0 : 1) + (options.ELWGlyph ? .5f : 0);
             float Redux = (1f - ((character.ShamanTalents.TidalFocus) * .01f));
             float Time = (options.FightLength * 60f);
             float EFL = Time - (1.5f * (Time / options.ESInterval));
@@ -220,6 +218,9 @@ namespace Rawr.RestoSham
             if ((Burst + Sustained) < 1)
                 Activity = (Burst + Sustained);
             float TrueHealing = (1 - OverHeal) * Activity;
+            float ELWHPS = 0;
+            if (character.ActiveBuffsContains("Earthliving Weapon"))
+                ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * Purify;
 
             // Water Shield Variables
             float Orb = 400 * (1 + (character.ShamanTalents.ImprovedShields * .05f));
@@ -261,10 +262,10 @@ namespace Rawr.RestoSham
             // Spell Healing Amounts
             float LHWHeal = ((((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
             float HWHeal = ((((3250f + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
-            float CHHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing;
+            float CHHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC);
             float CHRTHeal = 0;
             if (character.ShamanTalents.Riptide > 0)
-                CHRTHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing;
+                CHRTHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC);
             if (character.ShamanTalents.Riptide < 1)
                 CHRTHeal = CHHeal;
             float RTHeal = ((((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken)) * TrueHealing) * character.ShamanTalents.Riptide;
@@ -390,7 +391,7 @@ namespace Rawr.RestoSham
 
             // Final Stats
             calcStats.TillOOM = (Burst * calcStats.BurstMPS) + (Sustained * calcStats.FightMPS);
-            calcStats.TotalHPS = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS);
+            calcStats.TotalHPS = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS) + ELWHPS;
             calcStats.TotalHealed = calcStats.TotalHPS * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
@@ -524,6 +525,7 @@ namespace Rawr.RestoSham
                     }
 
                     break;
+
 
 
             }

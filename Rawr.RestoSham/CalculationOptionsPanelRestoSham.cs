@@ -46,6 +46,8 @@ namespace Rawr.RestoSham
             chkWaterShield3.Checked = options.WaterShield3;
             chkLHW.Checked = options.LHWPlus;
             chkMT.Checked = options.TankHeal;
+            chkELWGlyph.Checked = options.ELWGlyph;
+            chkGlyphCH.Checked = options.GlyphCH;
             txtESInterval.Text = options.ESInterval.ToString();
 
             _bLoading = false;
@@ -235,6 +237,24 @@ namespace Rawr.RestoSham
             }
         }
 
+        private void chkELWGlyph_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["ELWGlyph"] = chkELWGlyph.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGlyphCH_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["GlyphCH"] = chkGlyphCH.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
         private void OnTrackBarScroll(object sender, EventArgs e)
         {
             TrackBar trackBar = sender as TrackBar;
@@ -341,6 +361,16 @@ namespace Rawr.RestoSham
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
         public bool TankHeal = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool GlyphCH = false;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool ELWGlyph = false;
 
         /// <summary>
         /// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.
