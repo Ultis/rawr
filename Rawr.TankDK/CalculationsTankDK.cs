@@ -87,8 +87,9 @@ namespace Rawr.TankDK
 
                         "Advanced Stats:Miss",
                         "Advanced Stats:Dodge",
-                        "Advanced Stats:Parry",
+                        "Advanced Stats:Parry*With Blade Barrier",
                         "Advanced Stats:Total Avoidance",
+                        "Advanced Stats:Armor Damage Reduction",
 
                         "Threat Stats:Target Miss*Chance to miss the target",
                         "Threat Stats:Target Dodge*Chance the target dodges",
@@ -117,8 +118,6 @@ namespace Rawr.TankDK
             {
                 if (_customChartNames == null)
                 {
-                    //_customChartNames = new string[] { "Item Budget" };
-                    //_customChartNames = new string[] { "Relative Stat Values" };
                     _customChartNames = new string[] { };
                 }
                 return _customChartNames;
@@ -209,7 +208,14 @@ namespace Rawr.TankDK
         /// will be available to the optimizer
         /// </summary>
         public override string[] OptimizableCalculationLabels { get { return new string[] {
-            "Crit",
+            "Crit Reduction",
+            "Avoidance",
+            "Damage Reduction",
+            "Target Miss",
+            "Target Parry",
+            "Target Dodge",
+            "Armor",
+
             }; } 
         }
 
@@ -305,6 +311,7 @@ namespace Rawr.TankDK
             }
             
             float complete_dr = (1.0f - armor_dr) * (1.0f - ibfDR) * (1.0f - bsDR);
+            calcs.ArmorDamageReduction = armor_dr;
 
             float hp = calcs.BasicStats.Health;
 
@@ -331,8 +338,26 @@ namespace Rawr.TankDK
 
                 calcs.Expertise = stats.Expertise + (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) / 0.25f);
 
-                float chanceParry = Math.Max(0.0f, 0.15f - (stats.Expertise * 0.0025f));
-                float chanceDodge = Math.Max(0.0f, 0.065f - (stats.Expertise * 0.0025f));
+                if (character.Race == Character.CharacterRace.Dwarf && 
+                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace))
+                {
+                    calcs.Expertise += 5;
+                }
+                if (character.Race == Character.CharacterRace.Human &&
+                    (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.OneHandMace ||
+                    character.MainHand.Type == Item.ItemType.TwoHandSword || character.MainHand.Type == Item.ItemType.OneHandSword))
+                {
+                    calcs.Expertise += 3;
+                }
+                if (character.Race == Character.CharacterRace.Orc &&
+                    (character.MainHand.Type == Item.ItemType.TwoHandAxe || character.MainHand.Type == Item.ItemType.OneHandAxe))
+                {
+                    calcs.Expertise += 5;
+                }
+
+
+                float chanceParry = Math.Max(0.0f, 0.15f - (calcs.Expertise * 0.0025f));
+                float chanceDodge = Math.Max(0.0f, 0.065f - (calcs.Expertise * 0.0025f));
                 float hitChance = 1.0f - (chanceMiss + chanceDodge + chanceParry);
 
                 calcs.TargetDodge = chanceDodge;
@@ -511,6 +536,8 @@ namespace Rawr.TankDK
 
             statsTotal.CritRating = statsGearEnchantsBuffs.CritRating;
             statsTotal.CritRating += statsGearEnchantsBuffs.CritMeleeRating + statsGearEnchantsBuffs.LotPCritRating;
+            statsTotal.SpellHit = statsGearEnchantsBuffs.SpellHit;
+            statsTotal.PhysicalHit = statsGearEnchantsBuffs.PhysicalHit;
             statsTotal.HitRating = statsGearEnchantsBuffs.HitRating;
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.Expertise = statsGearEnchantsBuffs.Expertise;
@@ -538,52 +565,6 @@ namespace Rawr.TankDK
         /// <returns>The data for the custom chart.</returns>
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            switch (chartName)
-            {
-                case "Relative Stat Values":
-                    CharacterCalculationsTankDK baseCalc = GetCharacterCalculations(character) as CharacterCalculationsTankDK;
-                    CharacterCalculationsTankDK strCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 10 } }) as CharacterCalculationsTankDK;
-                    CharacterCalculationsTankDK agiCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 10 } }) as CharacterCalculationsTankDK;
-                    CharacterCalculationsTankDK stamCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 10 } }) as CharacterCalculationsTankDK;
-
-                    CharacterCalculationsTankDK defCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = 10 } }) as CharacterCalculationsTankDK;
-                    CharacterCalculationsTankDK dodgeCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10 } }) as CharacterCalculationsTankDK;
-                    CharacterCalculationsTankDK parryCalc = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 10 } }) as CharacterCalculationsTankDK;
-
-                    return new ComparisonCalculationBase[] {
-                        new ComparisonCalculationTankDK() { Name = "+10 Strength",
-                            Survival = strCalc.Survival - baseCalc.Survival,
-                            Mitigation = strCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = strCalc.Threat - baseCalc.Threat,
-                        },
-                        new ComparisonCalculationTankDK() { Name = "+10 Agility",
-                            Survival = agiCalc.Survival - baseCalc.Survival,
-                            Mitigation = agiCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = agiCalc.Threat - baseCalc.Threat,
-                        },
-                        new ComparisonCalculationTankDK() { Name = "+10 Stamina",
-                            Survival = stamCalc.Survival - baseCalc.Survival,
-                            Mitigation = stamCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = stamCalc.Threat - baseCalc.Threat,
-                        },
-                        new ComparisonCalculationTankDK() { Name = "+10 Defense Rating",
-                            Survival = defCalc.Survival - baseCalc.Survival,
-                            Mitigation = defCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = defCalc.Threat - baseCalc.Threat,
-                        },
-                        new ComparisonCalculationTankDK() { Name = "+10 Dodge Rating",
-                            Survival = dodgeCalc.Survival - baseCalc.Survival,
-                            Mitigation = dodgeCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = dodgeCalc.Threat - baseCalc.Threat,
-                        },
-                        new ComparisonCalculationTankDK() { Name = "+10 Parry Rating",
-                            Survival = parryCalc.Survival - baseCalc.Survival,
-                            Mitigation = parryCalc.Mitigation - baseCalc.Mitigation,
-                            Threat = parryCalc.Threat - baseCalc.Threat,
-                        },
-
-                    };
-            };
             return new ComparisonCalculationBase[0];
         }
 
@@ -607,7 +588,8 @@ namespace Rawr.TankDK
                     statsRace = new Stats() { Strength = 103f, Agility = 76f, Stamina = 98f, Intellect = 33f, Spirit = 42f, Armor = 0f, Health = 2159f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 0f, Health = 2159f };
+                    statsRace = new Stats() { Strength = 109f, Agility = 70f, Stamina = 98f, Intellect = 30f, Spirit = 44f, Armor = 0f, Health = 2159f,
+                                                PhysicalHit = 0.01f, SpellHit = 0.01f};
                     break;
                 case Character.CharacterRace.Orc:
                     statsRace = new Stats() { Strength = 111f, Agility = 70f, Stamina = 101f, Intellect = 26f, Spirit = 45f, Armor = 0f, Health = 2189f };

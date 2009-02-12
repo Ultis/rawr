@@ -33,6 +33,8 @@ namespace Rawr.TankDK
         public float CritReduction { get; set; }
         public float CappedCritReduction { get; set; }
 
+        public float ArmorDamageReduction { get; set; }
+
         public float DRDefense { get; set; }
         public float DRParry { get; set; }
         public float DRDodge { get; set; }
@@ -61,7 +63,13 @@ namespace Rawr.TankDK
         {
             switch (calculation)
             {
-                case "Crit": return Crit;
+                case "Crit Reduction": return Crit;
+                case "Avoidance": return Miss + Parry + Dodge;
+                case "Target Miss": return TargetMiss * 100.0f;
+                case "Target Parry": return TargetParry * 100.0f;
+                case "Target Dodge": return TargetDodge * 100.0f;
+                case "Armor Damage Reduction": return ArmorDamageReduction * 100.0f;
+                case "Armor": return Armor;
                 default:
                     return 0.0f;
             }
@@ -78,6 +86,7 @@ namespace Rawr.TankDK
             dict["Miss"] = Miss.ToString("F2");
             dict["Dodge"] = Dodge.ToString("F2");
             dict["Parry"] = Parry.ToString("F2");
+            dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("F2") + "%";
 
             dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2");
 
