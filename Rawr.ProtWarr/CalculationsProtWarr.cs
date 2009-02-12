@@ -67,7 +67,7 @@ namespace Rawr.ProtWarr
 					"Resistances:Frost Resist",
 					"Resistances:Shadow Resist",
 					"Resistances:Arcane Resist",
-                    "Complex Stats:Tank Points*The total average amount of base damage you can take without heals.",
+                    "Complex Stats:Ranking Mode*The currently selected ranking mode. Ranking modes can be changed in the Options tab.",
 					@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
@@ -233,8 +233,12 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
             calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
             calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
-            calculatedStats.TankPoints = dm.TankPoints;
 
+            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Arcane));
+            calculatedStats.FireReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Fire));
+            calculatedStats.FrostReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Frost));
+            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Nature));
+            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(character, stats, DamageType.Shadow));
             calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Arcane);
             calculatedStats.FireSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Fire);
             calculatedStats.FrostSurvivalPoints = stats.Health / Lookup.MagicReduction(character, stats, DamageType.Frost);
@@ -257,31 +261,39 @@ threat and limited threat scaled by the threat scale.",
             am.RageModelMode = RageModelMode.Limited;
             calculatedStats.LimitedThreat = am.ThreatPerSecond;
 
-            calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f)) / 100.0f;
-            if (calcOpts.RankingMode == 2)
+            calculatedStats.RankingMode = calcOpts.RankingMode;
+            calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f));
+            switch (calcOpts.RankingMode)
             {
-                // Tank Points Mode
-                calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
-                calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth) / 100.0f;
-                calculatedStats.ThreatPoints *= 3.0f;
-            }
-            else if (calcOpts.RankingMode == 3)
-            {
-                // Burst Time Mode
-                double a = Convert.ToDouble(dm.DefendTable.AnyMiss);
-                double h = Convert.ToDouble(stats.Health);
-                double H = Convert.ToDouble(dm.AverageDamagePerHit);
-                double s = Convert.ToDouble(dm.ParryModel.BossAttackSpeed / calcOpts.BossAttackSpeed);
-                float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
+                case 2:
+                    // Tank Points Mode
+                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
+                    calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth);
+                    calculatedStats.ThreatPoints *= 3.0f;
+                    break;
+                case 3:
+                    // Burst Time Mode
+                    double a = Convert.ToDouble(dm.DefendTable.AnyMiss);
+                    double h = Convert.ToDouble(stats.Health);
+                    double H = Convert.ToDouble(dm.AverageDamagePerHit);
+                    double s = Convert.ToDouble(dm.ParryModel.BossAttackSpeed / calcOpts.BossAttackSpeed);
+                    float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
 
-                calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
-                calculatedStats.MitigationPoints = 0.0f;
-                calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
-            }
-            else
-            {
-                calculatedStats.SurvivalPoints = (dm.EffectiveHealth) / 100.0f;
-                calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * calcOpts.MitigationScale;
+                    calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s) * 100.0f;
+                    calculatedStats.MitigationPoints = 0.0f;
+                    calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
+                    break;
+                case 4:
+                    // Damage Output Mode
+                    calculatedStats.SurvivalPoints = 0.0f;
+                    calculatedStats.MitigationPoints = 0.0f;
+                    calculatedStats.ThreatPoints = calculatedStats.TotalDamagePerSecond;
+                    break;
+                default:
+                    // Mitigation Scale Mode
+                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
+                    calculatedStats.MitigationPoints = dm.Mitigation * calcOpts.BossAttackValue * calcOpts.MitigationScale * 100.0f;
+                    break;
             }
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 

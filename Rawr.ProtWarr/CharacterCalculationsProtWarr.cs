@@ -43,6 +43,7 @@ namespace Rawr.ProtWarr
         }
 
         public int TargetLevel { get; set; }
+        public int RankingMode { get; set; }
         public float ThreatScale { get; set; }
 
         public float Defense { get; set; } 
@@ -66,6 +67,11 @@ namespace Rawr.ProtWarr
         public float DamageTakenPerCrit { get; set; }
         public float TankPoints { get; set; }
 
+        public float NatureReduction { get; set; }
+        public float FrostReduction { get; set; }
+        public float FireReduction { get; set; }
+        public float ShadowReduction { get; set; }
+        public float ArcaneReduction { get; set; }
         public float NatureSurvivalPoints { get; set; }
         public float FrostSurvivalPoints { get; set; }
         public float FireSurvivalPoints { get; set; }
@@ -136,11 +142,11 @@ namespace Rawr.ProtWarr
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
 
-            dictValues["Nature Resist"] = (BasicStats.NatureResistance + BasicStats.AllResist).ToString();
-            dictValues["Arcane Resist"] = (BasicStats.ArcaneResistance + BasicStats.AllResist).ToString();
-            dictValues["Frost Resist"] = (BasicStats.FrostResistance + BasicStats.AllResist).ToString();
-            dictValues["Fire Resist"] = (BasicStats.FireResistance + BasicStats.AllResist).ToString();
-            dictValues["Shadow Resist"] = (BasicStats.ShadowResistance + BasicStats.AllResist).ToString();
+            dictValues.Add("Nature Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.NatureResistance + BasicStats.AllResist, NatureReduction));
+            dictValues.Add("Arcane Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ArcaneResistance + BasicStats.AllResist, ArcaneReduction));
+            dictValues.Add("Frost Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FrostResistance + BasicStats.AllResist, FrostReduction));
+            dictValues.Add("Fire Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.FireResistance + BasicStats.AllResist, FireReduction));
+            dictValues.Add("Shadow Resist", string.Format("{0:0}*{1:0.00%} Total Reduction in Defensive Stance", BasicStats.ShadowResistance + BasicStats.AllResist, ShadowReduction));
             dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();
             dictValues["Frost Survival"] = FrostSurvivalPoints.ToString();
             dictValues["Fire Survival"] = FireSurvivalPoints.ToString();
@@ -167,10 +173,27 @@ namespace Rawr.ProtWarr
             dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}",LimitedThreat));
             dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat));
 
-            dictValues.Add("Tank Points", string.Format("{0:0}", TankPoints));
+            switch (RankingMode)
+            {
+                case 2: 
+                    dictValues.Add("Ranking Mode", "TankPoints*The average amount of unmitigated damage which can be taken before dying");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
+                    break;
+                case 3: 
+                    dictValues.Add("Ranking Mode", "Burst Time*The average amount of time between events which have a chance to result in a burst death");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*{1:0.00} seconds between events", SurvivalPoints, SurvivalPoints / 100.0f));
+                    break;
+                case 4:
+                    dictValues.Add("Ranking Mode", "Damage Output*The average amount of DPS which can be produced");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivalPoints, SurvivalPoints / 100.0f));
+                    break;
+                default: 
+                    dictValues.Add("Ranking Mode", "Mitigation Scale*Customizable scale which allows you to weight mitigation vs. effective health.");
+                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
+                    break;
+            }
             dictValues.Add("Overall Points", string.Format("{0:0}", OverallPoints));
             dictValues.Add("Mitigation Points", string.Format("{0:0}", MitigationPoints));
-            dictValues.Add("Survival Points", string.Format("{0:0}", SurvivalPoints));
             dictValues.Add("Threat Points", string.Format("{0:0}", ThreatPoints));
 
             return dictValues;

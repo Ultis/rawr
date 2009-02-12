@@ -47,6 +47,8 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.radioButtonDamageOutput = new System.Windows.Forms.RadioButton();
             this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -144,7 +146,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 506);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 533);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -301,6 +303,8 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.extendedToolTipLabel4);
+            this.groupBox1.Controls.Add(this.radioButtonDamageOutput);
             this.groupBox1.Controls.Add(this.extendedToolTipLabel3);
             this.groupBox1.Controls.Add(this.extendedToolTipLabel2);
             this.groupBox1.Controls.Add(this.extendedToolTipLabel1);
@@ -314,10 +318,30 @@ namespace Rawr.ProtWarr
             this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
             this.groupBox1.Location = new System.Drawing.Point(3, 245);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 185);
+            this.groupBox1.Size = new System.Drawing.Size(364, 212);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
+            // 
+            // extendedToolTipLabel4
+            // 
+            this.extendedToolTipLabel4.Location = new System.Drawing.Point(188, 184);
+            this.extendedToolTipLabel4.Name = "extendedToolTipLabel4";
+            this.extendedToolTipLabel4.Size = new System.Drawing.Size(10, 17);
+            this.extendedToolTipLabel4.TabIndex = 14;
+            this.extendedToolTipLabel4.Text = "*";
+            this.extendedToolTipLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipLabel4.ToolTipText = "Scale based only on potential DPS output.";
+            // 
+            // radioButtonDamageOutput
+            // 
+            this.radioButtonDamageOutput.AutoSize = true;
+            this.radioButtonDamageOutput.Location = new System.Drawing.Point(95, 187);
+            this.radioButtonDamageOutput.Name = "radioButtonDamageOutput";
+            this.radioButtonDamageOutput.Size = new System.Drawing.Size(100, 17);
+            this.radioButtonDamageOutput.TabIndex = 13;
+            this.radioButtonDamageOutput.Text = "Damage Output";
+            this.radioButtonDamageOutput.UseVisualStyleBackColor = true;
             // 
             // extendedToolTipLabel3
             // 
@@ -475,7 +499,7 @@ namespace Rawr.ProtWarr
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.checkBoxGlyphOfDevastate);
             this.groupBox3.Controls.Add(this.checkBoxGlyphOfBlocking);
-            this.groupBox3.Location = new System.Drawing.Point(3, 436);
+            this.groupBox3.Location = new System.Drawing.Point(3, 463);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(364, 64);
             this.groupBox3.TabIndex = 6;
@@ -514,7 +538,7 @@ namespace Rawr.ProtWarr
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxWarriorSkills);
             this.Name = "CalculationOptionsPanelProtWarr";
-            this.Size = new System.Drawing.Size(370, 603);
+            this.Size = new System.Drawing.Size(370, 630);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxWarriorSkills.ResumeLayout(false);
             this.groupBoxWarriorSkills.PerformLayout();
@@ -569,5 +593,7 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfDevastate;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfBlocking;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel4;
+        private System.Windows.Forms.RadioButton radioButtonDamageOutput;
 	}
 }

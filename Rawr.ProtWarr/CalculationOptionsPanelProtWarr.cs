@@ -59,6 +59,8 @@ namespace Rawr.ProtWarr
             radioButtonMitigationScale.Checked = (calcOpts.RankingMode == 1);
             radioButtonTankPoints.Checked = (calcOpts.RankingMode == 2);
             radioButtonBurstTime.Checked = (calcOpts.RankingMode == 3);
+            radioButtonDamageOutput.Checked = (calcOpts.RankingMode == 4);
+            trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
 
             // Glyphs
@@ -134,11 +136,17 @@ namespace Rawr.ProtWarr
                     calcOpts.RankingMode = 3;
                     trackBarThreatScale.Value = 0;
                 }
+                else if (radioButtonDamageOutput.Checked)
+                {
+                    calcOpts.RankingMode = 4;
+                    trackBarThreatScale.Value = 10;
+                }
                 else
                 {
                     calcOpts.RankingMode = 1;
                     trackBarThreatScale.Value = 10;
                 }
+                trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
                 trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
 
                 Character.OnCalculationsInvalidated();

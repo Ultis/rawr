@@ -213,20 +213,26 @@ namespace Rawr.ProtWarr
         public static float MagicReduction(Character character, Stats stats, DamageType school)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            float cappedResist = calcOpts.TargetLevel * 5.0f;
             float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
-            
-            float schoolResist = 0.0f;
+            float totalResist = stats.AllResist;
+            float resistScale = 0.0f;
+
             switch (school)
             {
-                case DamageType.Arcane: schoolResist = stats.ArcaneResistance; break;
-                case DamageType.Fire: schoolResist = stats.FireResistance; break;
-                case DamageType.Frost: schoolResist = stats.FrostResistance; break;
-                case DamageType.Nature: schoolResist = stats.NatureResistance; break;
-                case DamageType.Shadow: schoolResist = stats.ShadowResistance; break;
+                case DamageType.Arcane: totalResist += stats.ArcaneResistance; break;
+                case DamageType.Fire: totalResist += stats.FireResistance; break;
+                case DamageType.Frost: totalResist += stats.FrostResistance; break;
+                case DamageType.Nature: totalResist += stats.NatureResistance; break;
+                case DamageType.Shadow: totalResist += stats.ShadowResistance; break;
             }
 
-            return (1.0f - (Math.Min(cappedResist, schoolResist + stats.AllResist) / cappedResist) * 0.75f) * damageReduction;
+            if ((calcOpts.TargetLevel - character.Level) < 3)
+                resistScale = 400.0f;
+            else
+                // This number is still being tested by many and may be slightly higher
+                resistScale = 500.0f;
+
+            return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
         }
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType)
