@@ -397,17 +397,46 @@ namespace Rawr
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
-			Stats statsRace = new Stats() { 
+            Stats statsRace = new Stats() { 
 					Health = 6305f,
                     Mana = 4116f,
-					Strength = 121f,
-					Agility = 71f,
-					Stamina = 185f,
-                    Intellect = 129f,
-                    AttackPower = 140f,
+                    AttackPower = 140f, 
                     SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
-                    CritMeleeRating = 64.4736f}; 
-			Stats statsBaseGear = GetItemStats(character, additionalItem);
+                    CritMeleeRating = 64.4736f};
+
+            switch (character.Race)
+            {
+                case Character.CharacterRace.Draenei:
+                    statsRace.Strength = 121f;
+                    statsRace.Agility = 71f;
+                    statsRace.Stamina = 185f;
+                    statsRace.Intellect = 129f;
+                    break;
+
+                case Character.CharacterRace.Tauren:
+                    statsRace.Health = (float) Math.Floor(statsRace.Health * 1.05f);
+                    statsRace.Strength = 125f;
+                    statsRace.Agility = 69f;
+                    statsRace.Stamina = 138f;
+                    statsRace.Intellect = 132f;
+                    break;
+
+                case Character.CharacterRace.Orc:
+                    statsRace.Strength = 123f;
+                    statsRace.Agility = 71f;
+                    statsRace.Stamina = 188f;
+                    statsRace.Intellect = 137f;
+                    break;
+
+                case Character.CharacterRace.Troll:
+                    statsRace.Strength = 121f;
+                    statsRace.Agility = 76f;
+                    statsRace.Stamina = 137f;
+                    statsRace.Intellect = 128f;
+                    break;
+            }
+
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
 			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
@@ -442,7 +471,7 @@ namespace Rawr
 			statsTotal.Strength = strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier));
 			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
-			statsTotal.Health = (float)Math.Round(((statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f)) * (character.Race == Character.CharacterRace.Tauren ? 1.05f : 1f)));
+            statsTotal.Health = (float)Math.Round(statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
 			statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
             statsTotal.Intellect = intBase + (float)Math.Floor((intBase * statsBuffs.BonusIntellectMultiplier) + intBonus * (1 + statsBuffs.BonusIntellectMultiplier));
             statsTotal.Mana = statsRace.Mana + statsBuffs.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
