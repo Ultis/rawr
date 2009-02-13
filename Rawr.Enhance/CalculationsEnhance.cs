@@ -404,7 +404,7 @@ namespace Rawr
 					Agility = 71f,
 					Stamina = 185f,
                     Intellect = 129f,
-                    AttackPower = 1250f,
+                    AttackPower = 140f,
                     SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
                     CritMeleeRating = 64.4736f}; 
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -462,7 +462,7 @@ namespace Rawr
                     break;
             }
 
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Agility + statsTotal.Strength + statsTotal.Intellect) *  (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Agility + statsTotal.Strength + intBonusToAP) * (1f + statsTotal.BonusAttackPowerMultiplier));
 			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
 			
