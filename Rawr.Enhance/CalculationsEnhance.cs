@@ -398,8 +398,6 @@ namespace Rawr
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             Stats statsRace = new Stats() { 
-					Health = 6305f,
-                    Mana = 4116f,
                     AttackPower = 140f, 
                     SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
                     CritMeleeRating = 64.4736f};
@@ -407,6 +405,8 @@ namespace Rawr
             switch (character.Race)
             {
                 case Character.CharacterRace.Draenei:
+					statsRace.Health = 6305f;
+                    statsRace.Mana = 4116f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 71f;
                     statsRace.Stamina = 185f;
@@ -414,7 +414,9 @@ namespace Rawr
                     break;
 
                 case Character.CharacterRace.Tauren:
-                    statsRace.Health = (float) Math.Floor(statsRace.Health * 1.05f);
+ 					statsRace.Health = 6313f;
+                    statsRace.Mana = 3966f;
+                    statsRace.BonusStaminaMultiplier = .05f;
                     statsRace.Strength = 125f;
                     statsRace.Agility = 69f;
                     statsRace.Stamina = 138f;
@@ -422,6 +424,8 @@ namespace Rawr
                     break;
 
                 case Character.CharacterRace.Orc:
+                    statsRace.Health = 6314f;
+                    statsRace.Mana = 4266f;
                     statsRace.Strength = 123f;
                     statsRace.Agility = 71f;
                     statsRace.Stamina = 188f;
@@ -429,6 +433,8 @@ namespace Rawr
                     break;
 
                 case Character.CharacterRace.Troll:
+                    statsRace.Health = 6314f;
+                    statsRace.Mana = 4266f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 76f;
                     statsRace.Stamina = 137f;
@@ -457,8 +463,8 @@ namespace Rawr
 			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
             float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
-            float staBase = (float)Math.Floor(statsRace.Stamina * (1 + statsRace.BonusStaminaMultiplier));
-			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina * (1 + statsRace.BonusStaminaMultiplier));
+            float staBase = (float)Math.Floor(statsRace.Stamina);
+			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
 						
 			Stats statsTotal = new Stats();
 			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
@@ -471,7 +477,7 @@ namespace Rawr
 			statsTotal.Strength = strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier));
 			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
-            statsTotal.Health = (float)Math.Round(statsRace.Health + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
 			statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
             statsTotal.Intellect = intBase + (float)Math.Floor((intBase * statsBuffs.BonusIntellectMultiplier) + intBonus * (1 + statsBuffs.BonusIntellectMultiplier));
             statsTotal.Mana = statsRace.Mana + statsBuffs.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
