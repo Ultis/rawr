@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Rawr
 {
@@ -815,6 +816,8 @@ namespace Rawr
 
 			dictValues.Add("DPS Points", DPSPoints.ToString());
 			dictValues.Add("Overall Points", OverallPoints.ToString());
+
+            dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
 			
 			return dictValues;
 		}
