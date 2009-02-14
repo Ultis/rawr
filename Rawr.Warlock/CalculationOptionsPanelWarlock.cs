@@ -136,17 +136,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void trkLT_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.LTUsePercent = trkLT.Value;
-                lblLT.Text = "Life Tap at " + trkLT.Value + "%";
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             if (!loading)
@@ -203,16 +192,6 @@ namespace Rawr.Warlock
             if (!loading)
                 if (char.IsNumber(e.KeyChar) == false && char.IsControl(e.KeyChar) == false)
                     e.Handled = true;
-        }
-
-        private void chbLTOnFiller_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.LTOnFiller = chbLTOnFiller.Checked;
-                Character.OnCalculationsInvalidated();
-            }
         }
     }
     [Serializable]

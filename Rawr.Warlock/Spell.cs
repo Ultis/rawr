@@ -110,6 +110,8 @@ namespace Rawr.Warlock
         public float CritCount { get; set; }
         public float MissCount { get; set; }
         public float HitCount { get; set; }
+        public float TickCount { get; set; }
+        public float HitChance { get; set; }
         public double CooldownReset { get; set; }
         public float DamageDone { get; set; }
         public float ManaUsed { get; set; }
@@ -468,7 +470,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
-
+            
             TimeBetweenTicks = 2f;
         }
     }
@@ -651,7 +653,7 @@ namespace Rawr.Warlock
         };
 
         public DrainSoul(Stats stats, Character character)
-            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 0f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
+            : base("Drain Soul", stats, character, SpellRankTable, 14, 15f, 0, 15f, 5f / 2 / 3.5f, 30, 0f, Color.Red, MagicSchool.Shadow, SpellTree.Affliction)
         {
             Calculate(stats, character);
         }
@@ -867,7 +869,6 @@ namespace Rawr.Warlock
             MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DirDamageCoef + character.WarlockTalents.ImprovedImmolate * 0.1f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
-
 
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)

@@ -52,17 +52,17 @@ namespace Rawr.Warlock
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Basic Stats:Health",
+                    "Basic Stats:Health",
                     "Basic Stats:Resilience",
-					"Basic Stats:Mana",
-					"Basic Stats:Stamina",
-					"Basic Stats:Intellect",
-					"Basic Stats:Spirit",
-					"Basic Stats:Spell Power",
-					"Basic Stats:Regen",
-					"Basic Stats:Crit",
-					"Basic Stats:Hit",
-					"Basic Stats:Haste",
+                    "Basic Stats:Mana",
+                    "Basic Stats:Stamina",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Spirit",
+                    "Basic Stats:Spell Power",
+                    "Basic Stats:Regen",
+                    "Basic Stats:Crit",
+                    "Basic Stats:Hit",
+                    "Basic Stats:Haste",
                     "Simulation:Rotation",
                     "Simulation:Burst DPS",
                     "Simulation:Sustained DPS",
@@ -149,9 +149,9 @@ namespace Rawr.Warlock
             {
                 case "Mana Sources":
                     CharacterCalculationsWarlock mscalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    SolverBase mssolver = mscalcs.GetSolver(character, mscalcs.BasicStats);
+                    Solver mssolver = mscalcs.GetSolver(character, mscalcs.BasicStats);
                     mssolver.Calculate(mscalcs);
-                    foreach (SolverBase.ManaSource Source in mssolver.ManaSources)
+                    foreach (Solver.ManaSource Source in mssolver.ManaSources)
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = Source.Name;
@@ -164,7 +164,7 @@ namespace Rawr.Warlock
                     return comparisonList.ToArray();
                 case "DPS Sources":
                     CharacterCalculationsWarlock dpscalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    SolverBase dpssolver = dpscalcs.GetSolver(character, dpscalcs.BasicStats);
+                    Solver dpssolver = dpscalcs.GetSolver(character, dpscalcs.BasicStats);
                     dpssolver.Calculate(dpscalcs);
                     foreach (Spell spell in dpssolver.SpellPriority)
                     {
@@ -179,7 +179,7 @@ namespace Rawr.Warlock
                     return comparisonList.ToArray();
                 case "Mana Usage":
                     CharacterCalculationsWarlock mucalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
-                    SolverBase musolver = mucalcs.GetSolver(character, mucalcs.BasicStats);
+                    Solver musolver = mucalcs.GetSolver(character, mucalcs.BasicStats);
                     musolver.Calculate(mucalcs);
                     foreach (Spell spell in musolver.SpellPriority)
                     {
@@ -227,7 +227,7 @@ namespace Rawr.Warlock
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
 
-            SolverBase solver = calculatedStats.GetSolver(character, stats);
+            Solver solver = calculatedStats.GetSolver(character, stats);
             solver.Calculate(calculatedStats);
 
             return calculatedStats;
@@ -441,13 +441,6 @@ namespace Rawr.Warlock
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-//add talent/glyph modifiers or is it set bonuses?
-/*                BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
-                SWPDurationIncrease = stats.SWPDurationIncrease,
-                BonusMindBlastMultiplier = stats.BonusMindBlastMultiplier,
-                MindBlastCostReduction = stats.MindBlastCostReduction,
-                ShadowWordDeathCritIncrease = stats.ShadowWordDeathCritIncrease,
-                WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,*/
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromBaseManaPerHit = stats.ManaRestoreFromBaseManaPerHit,
                 SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
@@ -461,7 +454,9 @@ namespace Rawr.Warlock
                 TimbalsProc = stats.TimbalsProc,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier
+                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+//                CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
+//                LifeTapBonusSpirit = stats.LifeTapBonusSpirit
             };
         }
 
@@ -513,6 +508,8 @@ namespace Rawr.Warlock
                 + stats.PendulumOfTelluricCurrentsProc
                 + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
+//                + stats.CorruptionTriggersCrit
+//                + stats.LifeTapBonusSpirit
                 ) > 0;
         }
 

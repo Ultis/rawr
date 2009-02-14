@@ -63,9 +63,9 @@ namespace Rawr.Warlock
             set { _subPoints[2] = value; }
         }
 
-        public SolverBase GetSolver(Character character, Stats stats)
+        public Solver GetSolver(Character character, Stats stats)
         {
-                return new SolverNew(stats, character);
+                return new Solver(stats, character);
         }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -139,12 +139,11 @@ namespace Rawr.Warlock
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
-            SolverBase solver = GetSolver(character, BasicStats);
+            Solver solver = GetSolver(character, BasicStats);
             solver.Calculate(this);
 
             dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
             dictValues.Add("Burst DPS", string.Format("{0}*DPS", solver.DPS.ToString("0")));
-            dictValues.Add("Sustained DPS", string.Format("{0}*DPS", solver.SustainDPS.ToString("0")));
 
             dictValues.Add("Shadow Bolt", new ShadowBolt(BasicStats, character).ToString());
             dictValues.Add("Incinerate", new Incinerate(BasicStats, character).ToString());
