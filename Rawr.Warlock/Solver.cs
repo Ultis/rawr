@@ -582,8 +582,8 @@ namespace Rawr.Warlock
                 manaGain -= lifeTap.ManaCost;
                 fillerSpell.SpellStatistics.HitCount -= GetCastTime(lifeTap) / GetCastTime(fillerSpell);
                 fillerSpell.SpellStatistics.ManaUsed -= fillerSpell.SpellStatistics.ManaUsed / fillerSpell.SpellStatistics.HitCount * (GetCastTime(lifeTap)) / GetCastTime(fillerSpell);
-//                if (simStats.LifeTapBonusSpirit > 0)
-//                    simStats.SpellPower += 300 * 0.3 * 10 / time;
+                if (simStats.LifeTapBonusSpirit > 0)
+                    simStats.SpellPower += (float)(300 * 0.3 * 10 / time);
             }
             ManaSources.Add(new ManaSource("Life Tap", manaGain));
 
@@ -653,8 +653,8 @@ namespace Rawr.Warlock
                 {
                     case "Shadow Bolt":
                         {
-//                            if (simStats.CorruptionTriggersCrit > 0)
-//                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
+                            if (simStats.CorruptionTriggersCrit > 0)
+                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
                             directDamage += NightfallProcs * spell.AvgDirectDamage * (GetCastTime(spell) - spell.GlobalCooldown) / GetCastTime(spell);
                             if (character.WarlockTalents.ImprovedShadowBolt > 0)
                                 directDamage += spell.SpellStatistics.HitCount / directShadowHits * ISBCharges * character.WarlockTalents.ImprovedShadowBolt * 0.02f * spell.AvgDirectDamage;
@@ -683,8 +683,8 @@ namespace Rawr.Warlock
                         }
                     case "Incinerate":
                         {
-//                            if (simStats.CorruptionTriggersCrit > 0)
-//                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
+                            if (simStats.CorruptionTriggersCrit > 0)
+                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
                             directDamage += CounterBuffedIncinerate * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
                             break;
                         }

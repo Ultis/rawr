@@ -508,8 +508,8 @@ namespace Rawr.Warlock
                 + stats.PendulumOfTelluricCurrentsProc
                 + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
-//                + stats.CorruptionTriggersCrit
-//                + stats.LifeTapBonusSpirit
+                + stats.CorruptionTriggersCrit
+                + stats.LifeTapBonusSpirit
                 ) > 0;
         }
 

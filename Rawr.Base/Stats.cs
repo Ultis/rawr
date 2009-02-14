@@ -256,7 +256,10 @@ namespace Rawr
         Heal1Min,
         #endregion
         #region Rawr.Retribution
-        DivineStormMultiplier
+        DivineStormMultiplier,
+        #endregion
+        #region Warlock set bonuses
+        LifeTapBonusSpirit,
         #endregion
     }
 
@@ -316,7 +319,10 @@ namespace Rawr
 		HealingReceivedMultiplier,
 		DamageTakenMultiplier,
         #region Added by Rawr.Elemental
-        BonusLavaBurstDamage
+        BonusLavaBurstDamage,
+        #endregion
+        #region Warlock set bonuses
+        CorruptionTriggersCrit,
         #endregion
     }
 
@@ -2139,6 +2145,15 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Bonus Spirit after Life Tap")]
+        [Category("Equipment Procs")]
+        public float LifeTapBonusSpirit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LifeTapBonusSpirit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusWarlockSchoolDamageOnCast
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusWarlockSchoolDamageOnCast]; }
@@ -2530,6 +2545,16 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarlockNukeMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Chance to increase SB/Inc crit chance")]
+        [Category("Equipment Procs")]
+        public float CorruptionTriggersCrit
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

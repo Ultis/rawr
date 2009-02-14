@@ -1682,6 +1682,24 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Plagueheart Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { CorruptionTriggersCrit = 0.15f },
+                SetName = "Plagueheart Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Plagueheart Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { LifeTapBonusSpirit = 300f },
+                SetName = "Plagueheart Garb",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Spellfire 3 Piece Bonus",
                 Group = "Set Bonuses", ConflictingBuffs = new List<string>( new string[] {}),
                 Stats = { SpellDamageFromIntellectPercentage = 0.07f },
