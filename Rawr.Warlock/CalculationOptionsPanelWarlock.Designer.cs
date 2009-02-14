@@ -52,6 +52,18 @@
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabChar = new System.Windows.Forms.TabPage();
+            this.gbGlyphs = new System.Windows.Forms.GroupBox();
+            this.chbGlyphCorruption = new System.Windows.Forms.CheckBox();
+            this.chbGlyphSearingPain = new System.Windows.Forms.CheckBox();
+            this.chbGlyphShadowburn = new System.Windows.Forms.CheckBox();
+            this.chbGlyphSB = new System.Windows.Forms.CheckBox();
+            this.chbGlyphSiphonLife = new System.Windows.Forms.CheckBox();
+            this.chbGlyphUA = new System.Windows.Forms.CheckBox();
+            this.chbGlyphImp = new System.Windows.Forms.CheckBox();
+            this.chbGlyphImmolate = new System.Windows.Forms.CheckBox();
+            this.chbGlyphFelguard = new System.Windows.Forms.CheckBox();
+            this.chbGlyphCoA = new System.Windows.Forms.CheckBox();
+            this.chbGlyphConflag = new System.Windows.Forms.CheckBox();
             this.lblSurvivability = new System.Windows.Forms.Label();
             this.gbSpellPriority = new System.Windows.Forms.GroupBox();
             this.bChangePriority = new System.Windows.Forms.Button();
@@ -69,6 +81,7 @@
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
             this.tabChar.SuspendLayout();
+            this.gbGlyphs.SuspendLayout();
             this.gbSpellPriority.SuspendLayout();
             this.tabPet.SuspendLayout();
             this.SuspendLayout();
@@ -307,6 +320,7 @@
             // 
             // tabChar
             // 
+            this.tabChar.Controls.Add(this.gbGlyphs);
             this.tabChar.Controls.Add(this.lblSurvivability);
             this.tabChar.Controls.Add(this.trkSurvivability);
             this.tabChar.Controls.Add(this.gbSpellPriority);
@@ -317,6 +331,150 @@
             this.tabChar.TabIndex = 2;
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
+            // 
+            // gbGlyphs
+            // 
+            this.gbGlyphs.Controls.Add(this.chbGlyphCorruption);
+            this.gbGlyphs.Controls.Add(this.chbGlyphSearingPain);
+            this.gbGlyphs.Controls.Add(this.chbGlyphShadowburn);
+            this.gbGlyphs.Controls.Add(this.chbGlyphSB);
+            this.gbGlyphs.Controls.Add(this.chbGlyphSiphonLife);
+            this.gbGlyphs.Controls.Add(this.chbGlyphUA);
+            this.gbGlyphs.Controls.Add(this.chbGlyphImp);
+            this.gbGlyphs.Controls.Add(this.chbGlyphImmolate);
+            this.gbGlyphs.Controls.Add(this.chbGlyphFelguard);
+            this.gbGlyphs.Controls.Add(this.chbGlyphCoA);
+            this.gbGlyphs.Controls.Add(this.chbGlyphConflag);
+            this.gbGlyphs.Location = new System.Drawing.Point(6, 278);
+            this.gbGlyphs.Name = "gbGlyphs";
+            this.gbGlyphs.Size = new System.Drawing.Size(270, 278);
+            this.gbGlyphs.TabIndex = 56;
+            this.gbGlyphs.TabStop = false;
+            this.gbGlyphs.Text = "Glyphs";
+            // 
+            // chbGlyphCorruption
+            // 
+            this.chbGlyphCorruption.AutoSize = true;
+            this.chbGlyphCorruption.Location = new System.Drawing.Point(5, 42);
+            this.chbGlyphCorruption.Name = "chbGlyphCorruption";
+            this.chbGlyphCorruption.Size = new System.Drawing.Size(116, 17);
+            this.chbGlyphCorruption.TabIndex = 77;
+            this.chbGlyphCorruption.Text = "Glyph of Corruption";
+            this.chbGlyphCorruption.UseVisualStyleBackColor = true;
+            this.chbGlyphCorruption.CheckedChanged += new System.EventHandler(this.chbGlyphCorruption_CheckedChanged);
+            // 
+            // chbGlyphSearingPain
+            // 
+            this.chbGlyphSearingPain.AutoSize = true;
+            this.chbGlyphSearingPain.Location = new System.Drawing.Point(4, 157);
+            this.chbGlyphSearingPain.Name = "chbGlyphSearingPain";
+            this.chbGlyphSearingPain.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphSearingPain.TabIndex = 76;
+            this.chbGlyphSearingPain.Text = "Glyph of Searing Pain";
+            this.chbGlyphSearingPain.UseVisualStyleBackColor = true;
+            this.chbGlyphSearingPain.CheckStateChanged += new System.EventHandler(this.chbGlyphSearingPain_CheckedChanged);
+            // 
+            // chbGlyphShadowburn
+            // 
+            this.chbGlyphShadowburn.AutoSize = true;
+            this.chbGlyphShadowburn.Enabled = false;
+            this.chbGlyphShadowburn.Location = new System.Drawing.Point(4, 203);
+            this.chbGlyphShadowburn.Name = "chbGlyphShadowburn";
+            this.chbGlyphShadowburn.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphShadowburn.TabIndex = 75;
+            this.chbGlyphShadowburn.Text = "Glyph of Shadowburn";
+            this.chbGlyphShadowburn.UseVisualStyleBackColor = true;
+            this.chbGlyphShadowburn.CheckStateChanged += new System.EventHandler(this.chbGlyphShadowburn_CheckedChanged);
+            // 
+            // chbGlyphSB
+            // 
+            this.chbGlyphSB.AutoSize = true;
+            this.chbGlyphSB.Location = new System.Drawing.Point(4, 180);
+            this.chbGlyphSB.Name = "chbGlyphSB";
+            this.chbGlyphSB.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphSB.TabIndex = 74;
+            this.chbGlyphSB.Text = "Glyph of Shadow Bolt";
+            this.chbGlyphSB.UseVisualStyleBackColor = true;
+            this.chbGlyphSB.CheckStateChanged += new System.EventHandler(this.chbGlyphSB_CheckedChanged);
+            // 
+            // chbGlyphSiphonLife
+            // 
+            this.chbGlyphSiphonLife.AutoSize = true;
+            this.chbGlyphSiphonLife.Location = new System.Drawing.Point(4, 226);
+            this.chbGlyphSiphonLife.Name = "chbGlyphSiphonLife";
+            this.chbGlyphSiphonLife.Size = new System.Drawing.Size(121, 17);
+            this.chbGlyphSiphonLife.TabIndex = 73;
+            this.chbGlyphSiphonLife.Text = "Glyph of Siphon Life";
+            this.chbGlyphSiphonLife.UseVisualStyleBackColor = true;
+            this.chbGlyphSiphonLife.CheckStateChanged += new System.EventHandler(this.chbGlyphSiphonLife_CheckedChanged);
+            // 
+            // chbGlyphUA
+            // 
+            this.chbGlyphUA.AutoSize = true;
+            this.chbGlyphUA.Location = new System.Drawing.Point(4, 249);
+            this.chbGlyphUA.Name = "chbGlyphUA";
+            this.chbGlyphUA.Size = new System.Drawing.Size(153, 17);
+            this.chbGlyphUA.TabIndex = 72;
+            this.chbGlyphUA.Text = "Glyph of Unstable Affliction";
+            this.chbGlyphUA.UseVisualStyleBackColor = true;
+            this.chbGlyphUA.CheckStateChanged += new System.EventHandler(this.chbGlyphUA_CheckedChanged);
+            // 
+            // chbGlyphImp
+            // 
+            this.chbGlyphImp.AutoSize = true;
+            this.chbGlyphImp.Enabled = false;
+            this.chbGlyphImp.Location = new System.Drawing.Point(4, 134);
+            this.chbGlyphImp.Name = "chbGlyphImp";
+            this.chbGlyphImp.Size = new System.Drawing.Size(85, 17);
+            this.chbGlyphImp.TabIndex = 71;
+            this.chbGlyphImp.Text = "Glyph of Imp";
+            this.chbGlyphImp.UseVisualStyleBackColor = true;
+            this.chbGlyphImp.CheckStateChanged += new System.EventHandler(this.chbGlyphImp_CheckedChanged);
+            // 
+            // chbGlyphImmolate
+            // 
+            this.chbGlyphImmolate.AutoSize = true;
+            this.chbGlyphImmolate.Location = new System.Drawing.Point(4, 111);
+            this.chbGlyphImmolate.Name = "chbGlyphImmolate";
+            this.chbGlyphImmolate.Size = new System.Drawing.Size(110, 17);
+            this.chbGlyphImmolate.TabIndex = 70;
+            this.chbGlyphImmolate.Text = "Glyph of Immolate";
+            this.chbGlyphImmolate.UseVisualStyleBackColor = true;
+            this.chbGlyphImmolate.CheckedChanged += new System.EventHandler(this.chbGlyphImmolate_CheckedChanged);
+            // 
+            // chbGlyphFelguard
+            // 
+            this.chbGlyphFelguard.AutoSize = true;
+            this.chbGlyphFelguard.Enabled = false;
+            this.chbGlyphFelguard.Location = new System.Drawing.Point(5, 88);
+            this.chbGlyphFelguard.Name = "chbGlyphFelguard";
+            this.chbGlyphFelguard.Size = new System.Drawing.Size(109, 17);
+            this.chbGlyphFelguard.TabIndex = 68;
+            this.chbGlyphFelguard.Text = "Glyph of Felguard";
+            this.chbGlyphFelguard.UseVisualStyleBackColor = true;
+            this.chbGlyphFelguard.CheckedChanged += new System.EventHandler(this.chbGlyphFelguard_CheckedChanged);
+            // 
+            // chbGlyphCoA
+            // 
+            this.chbGlyphCoA.AutoSize = true;
+            this.chbGlyphCoA.Location = new System.Drawing.Point(5, 65);
+            this.chbGlyphCoA.Name = "chbGlyphCoA";
+            this.chbGlyphCoA.Size = new System.Drawing.Size(140, 17);
+            this.chbGlyphCoA.TabIndex = 67;
+            this.chbGlyphCoA.Text = "Glyph of Curse of Agony";
+            this.chbGlyphCoA.UseVisualStyleBackColor = true;
+            this.chbGlyphCoA.CheckedChanged += new System.EventHandler(this.chbGlyphCoA_CheckedChanged);
+            // 
+            // chbGlyphConflag
+            // 
+            this.chbGlyphConflag.AutoSize = true;
+            this.chbGlyphConflag.Location = new System.Drawing.Point(6, 19);
+            this.chbGlyphConflag.Name = "chbGlyphConflag";
+            this.chbGlyphConflag.Size = new System.Drawing.Size(122, 17);
+            this.chbGlyphConflag.TabIndex = 66;
+            this.chbGlyphConflag.Text = "Glyph of Conflagrate";
+            this.chbGlyphConflag.UseVisualStyleBackColor = true;
+            this.chbGlyphConflag.CheckedChanged += new System.EventHandler(this.chbGlyphConflag_CheckedChanged);
             // 
             // lblSurvivability
             // 
@@ -331,9 +489,9 @@
             // 
             this.gbSpellPriority.Controls.Add(this.bChangePriority);
             this.gbSpellPriority.Controls.Add(this.lsSpellPriopity);
-            this.gbSpellPriority.Location = new System.Drawing.Point(6, 114);
+            this.gbSpellPriority.Location = new System.Drawing.Point(6, 78);
             this.gbSpellPriority.Name = "gbSpellPriority";
-            this.gbSpellPriority.Size = new System.Drawing.Size(270, 186);
+            this.gbSpellPriority.Size = new System.Drawing.Size(270, 184);
             this.gbSpellPriority.TabIndex = 53;
             this.gbSpellPriority.TabStop = false;
             this.gbSpellPriority.Text = "Spell Priority";
@@ -426,6 +584,8 @@
             this.tabFight.PerformLayout();
             this.tabChar.ResumeLayout(false);
             this.tabChar.PerformLayout();
+            this.gbGlyphs.ResumeLayout(false);
+            this.gbGlyphs.PerformLayout();
             this.gbSpellPriority.ResumeLayout(false);
             this.tabPet.ResumeLayout(false);
             this.tabPet.PerformLayout();
@@ -465,6 +625,18 @@
         private System.Windows.Forms.CheckBox chbPetSacrificed;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbAffEffects;
+        private System.Windows.Forms.GroupBox gbGlyphs;
+        private System.Windows.Forms.CheckBox chbGlyphSearingPain;
+        private System.Windows.Forms.CheckBox chbGlyphShadowburn;
+        private System.Windows.Forms.CheckBox chbGlyphSB;
+        private System.Windows.Forms.CheckBox chbGlyphSiphonLife;
+        private System.Windows.Forms.CheckBox chbGlyphUA;
+        private System.Windows.Forms.CheckBox chbGlyphImp;
+        private System.Windows.Forms.CheckBox chbGlyphImmolate;
+        private System.Windows.Forms.CheckBox chbGlyphFelguard;
+        private System.Windows.Forms.CheckBox chbGlyphCoA;
+        private System.Windows.Forms.CheckBox chbGlyphConflag;
+        private System.Windows.Forms.CheckBox chbGlyphCorruption;
     }
 }
 

@@ -221,10 +221,8 @@ namespace Rawr.Warlock
             LTUsePercent = (int)CalculationOptions.LTUsePercent;
             maxTime = CalculationOptions.FightLength * 60f;
 
-            bool HauntIsUp = false;
             bool ImmolateIsUp = false;
             bool ShadowflameIsUp = false;
-            LTOnFiller = CalculationOptions.LTOnFiller;
             int AffEffectsNumber = CalculationOptions.AffEffectsNumber;
             int ShadowEmbrace = 0;
             int NightfallCounter = 0;
@@ -258,14 +256,16 @@ namespace Rawr.Warlock
                         if (spell.Cooldown > 0f)
                             spell.SpellStatistics.CooldownReset = time + GetCastTime(spell) + spell.Cooldown;
                         else if (spell.DebuffDuration > 0f)
+                        {
                             spell.SpellStatistics.CooldownReset = time + GetCastTime(spell) + spell.DebuffDuration;
+                            if (spell.Name == "Curse of Agony" && CalculationOptions.GlyphCoA)
+                                spell.SpellStatistics.CooldownReset += 4;
+                        }
 
                         switch (spell.Name)
                         {
                             case "Haunt":
                             {
-                                HauntIsUp = true;
-                                removeEvent("Haunt debuff");
                                 if (!removeEvent(spell, "Aff effect")) AffEffectsNumber++;
                                 events.Add(time + 12, new Event(spell, "Aff effect"));
                                 if (character.WarlockTalents.ShadowEmbrace > 0)
@@ -319,7 +319,7 @@ namespace Rawr.Warlock
                             case "Conflagrate":
                             {
                                 if (ImmolateEnd - time <= 5) CounterBuffedConflag++;
-//                                if (simStats.GlyphOfConflagrate == 0)
+                                if (!CalculationOptions.GlyphConflag)
                                     if (ShadowflameIsUp)
                                     {
                                         removeEvent("Shadowflame");
@@ -382,7 +382,7 @@ namespace Rawr.Warlock
                         if (spell.DebuffDuration > 0f)
                         {
                             float debuff = GetCastTime(spell.TimeBetweenTicks);
-                            while (debuff <= spell.DebuffDuration /*+ (spell.Name == "Corruption" && simStats.GlyphOfCorruption > 0 ? 4 : 0)*/)
+                            while (debuff <= spell.DebuffDuration + (spell.Name == "Curse of Agony" && CalculationOptions.GlyphCoA ? 4 : 0))
                             {
                                 if (spell.Name == "Drain Soul")
                                 {
@@ -449,11 +449,6 @@ namespace Rawr.Warlock
                     {
                         switch (currentEvent.Name)
                         {
-                            case "Haunt debuff":
-                                {
-                                    HauntIsUp = false;
-                                    break;
-                                }
                             case "Shadow Embrace debuff":
                                 {
                                     ShadowEmbrace = 0;
@@ -500,7 +495,7 @@ namespace Rawr.Warlock
             float NightfallProcs = 0;
             if (character.WarlockTalents.Nightfall > 0)
             {
-                NightfallProcs = NightfallCounter * (character.WarlockTalents.Nightfall * 0.02f/* + (simStats.GlyphOfCorruption > 0 ? 0.04f : 0)*/);
+                NightfallProcs = NightfallCounter * (character.WarlockTalents.Nightfall * 0.02f + (CalculationOptions.GlyphCorruption ? 0.04f : 0));
                 if (shadowBolt != null)
                     shadowBolt.SpellStatistics.ManaUsed += NightfallProcs * shadowBolt.ManaCost * (GetCastTime(shadowBolt) - shadowBolt.GlobalCooldown) / GetCastTime(shadowBolt);
             }
@@ -521,8 +516,9 @@ namespace Rawr.Warlock
             #region Mana Recovery
             foreach (Spell spell in SpellPriority)
             {
-                spell.SpellStatistics.ManaUsed += spell.ManaCost * spell.SpellStatistics.HitCount;
-                currentMana -= spell.ManaCost * spell.SpellStatistics.HitCount;
+                float manaCost = spell.ManaCost * (spell.Name == "Shadow Bolt" && CalculationOptions.GlyphSB ? 0.9f : 1);
+                spell.SpellStatistics.ManaUsed += manaCost * spell.SpellStatistics.HitCount;
+                currentMana -= manaCost * spell.SpellStatistics.HitCount;
             }
             fillerSpell.SpellStatistics.ManaUsed -= corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
             currentMana += corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
@@ -654,7 +650,7 @@ namespace Rawr.Warlock
                     case "Shadow Bolt":
                         {
                             if (simStats.CorruptionTriggersCrit > 0)
-                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
+                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += NightfallProcs * spell.AvgDirectDamage * (GetCastTime(spell) - spell.GlobalCooldown) / GetCastTime(spell);
                             if (character.WarlockTalents.ImprovedShadowBolt > 0)
                                 directDamage += spell.SpellStatistics.HitCount / directShadowHits * ISBCharges * character.WarlockTalents.ImprovedShadowBolt * 0.02f * spell.AvgDirectDamage;
@@ -690,6 +686,11 @@ namespace Rawr.Warlock
                         }
                     case "Immolate":
                         {
+                            if (CalculationOptions.GlyphImmolate)
+                            {
+                                directDamage *= 0.9f;
+                                dotDamage *= 1.2f;
+                            }
                             dotDamage -= (float)(dotDamage * hauntMisses * 4 / maxTime);
                             break;
                         }
@@ -703,9 +704,21 @@ namespace Rawr.Warlock
                                 dotDamage *= 1 + Math.Max(0.60f,character.WarlockTalents.SoulSiphon * 0.04f * CounterAffEffects / CounterDrainTicks);
                             break;
                         }
+                    case "Searing Pain":
+                        {
+                            if (CalculationOptions.GlyphSearingPain)
+                                directDamage = spell.AvgHit * (1f - spell.CritChance - 0.2f) + spell.AvgCrit * (spell.CritChance + 0.2f);
+                            break;
+                        }
+                    case "Siphon Life":
+                        {
+                            if (CalculationOptions.GlyphSiphonLife)
+                                dotDamage *= 1.2f;
+                            dotDamage -= (float)(dotDamage * hauntMisses * 4 / maxTime);
+                            break;
+                        }
                     case "Curse of Agony":
                     case "Curse of Doom":
-                    case "Siphon Life":
                     case "Seed of Corruption":
                     case "Rain of Fire":
                     case "Hellfire":
@@ -719,7 +732,6 @@ namespace Rawr.Warlock
                     case "Shadowburn":
                     case "Shadowfury":
                     case "Soul Fire":
-                    case "Searing Pain":
                     case "Chaos Bolt":
                         {
                             break;
@@ -823,6 +835,8 @@ namespace Rawr.Warlock
                 castTime *= 1 - character.WarlockTalents.Backdraft * 0.1f;
                 BackdraftCounter--;
             }
+            if (spell.Name == "Unstable Affliction" && CalculationOptions.GlyphUA)
+                castTime -= 0.2f;
             return castTime;
         }
 

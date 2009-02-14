@@ -193,6 +193,113 @@ namespace Rawr.Warlock
                 if (char.IsNumber(e.KeyChar) == false && char.IsControl(e.KeyChar) == false)
                     e.Handled = true;
         }
+
+        private void chbGlyphConflag_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphConflag = chbGlyphConflag.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphCorruption_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            calcOpts.GlyphCorruption = chbGlyphCorruption.Checked;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void chbGlyphCoA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphCoA = chbGlyphCoA.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphFelguard_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphFelguard = chbGlyphFelguard.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphImmolate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphImmolate = chbGlyphImmolate.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphImp_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphImp = chbGlyphImp.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphSearingPain_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphSearingPain = chbGlyphSearingPain.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphSB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphSB = chbGlyphSB.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphShadowburn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphShadowburn = chbGlyphShadowburn.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphSiphonLife_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphSiphonLife = chbGlyphSiphonLife.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphUA_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphUA = chbGlyphUA.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
@@ -209,7 +316,17 @@ namespace Rawr.Warlock
         public String Pet { get; set; }
         public bool PetSacrificed { get; set; }
         public bool UseDoomguard { get; set; }
-        public bool LTOnFiller { get; set; }
+        public bool GlyphConflag { get; set; }
+        public bool GlyphCorruption { get; set; }
+        public bool GlyphCoA { get; set; }
+        public bool GlyphFelguard { get; set; }
+        public bool GlyphImmolate { get; set; }
+        public bool GlyphImp { get; set; }
+        public bool GlyphSearingPain { get; set; }
+        public bool GlyphSB { get; set; }
+        public bool GlyphShadowburn { get; set; }
+        public bool GlyphSiphonLife { get; set; }
+        public bool GlyphUA { get; set; }
 
         public List<string> SpellPriority { get; set; }
 
