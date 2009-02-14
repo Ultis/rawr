@@ -15,6 +15,7 @@ namespace Rawr.Cat
 		public float AttackSpeed { get; set; }
 		public bool OmenOfClarity { get; set; }
 		public float AvoidedAttacks { get; set; }
+		public float CPGEnergyCostMultiplier { get; set; }
 
 		public float MeleeDamage { get; set; }
 		public float MangleDamage { get; set; }
@@ -31,9 +32,9 @@ namespace Rawr.Cat
 		public float RoarEnergy { get; set; }
 
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
-			float ripDuration, float attackSpeed, bool omenOfClarity, float avoidedAttacks, float meleeDamage, float mangleDamage, float shredDamage, 
-			float rakeDamage, float ripDamage, float biteDamage, float mangleEnergy, float shredEnergy, float rakeEnergy, 
-			float ripEnergy, float biteEnergy, float roarEnergy)
+			float ripDuration, float attackSpeed, bool omenOfClarity, float avoidedAttacks, float cpgEnergyCostMultiplier, 
+			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
+			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
 			Stats = stats;
 			Duration = duration;
@@ -44,6 +45,7 @@ namespace Rawr.Cat
 			AttackSpeed = attackSpeed;
 			OmenOfClarity = omenOfClarity;
 			AvoidedAttacks = avoidedAttacks;
+			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
 
 			MeleeDamage = meleeDamage;
 			MangleDamage = mangleDamage;
@@ -65,8 +67,9 @@ namespace Rawr.Cat
 			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
 			if (OmenOfClarity)
 			{
-				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made mor accurate than that, but that's close at least
-				totalEnergyAvailable += oocProcs * (useShred ? ShredEnergy : MangleEnergy);
+				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least
+				float cpgEnergyRaw = (useShred ? ShredEnergy : MangleEnergy) / CPGEnergyCostMultiplier;
+				totalEnergyAvailable += oocProcs * (cpgEnergyRaw * (1f - AvoidedAttacks) + cpgEnergyRaw * AvoidedAttacks * 0.2f);
 			}
 			
 			float totalCPAvailable = 0f;

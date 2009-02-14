@@ -45,10 +45,16 @@
 			this.radioButtonNoAuto = new System.Windows.Forms.RadioButton();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numericUpDownSurvivalSoftCap = new System.Windows.Forms.NumericUpDown();
+			this.label5 = new System.Windows.Forms.Label();
+			this.numericUpDownTargetDamage = new System.Windows.Forms.NumericUpDown();
+			this.label6 = new System.Windows.Forms.Label();
+			this.numericUpDownTargetAttackSpeed = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetDamage)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetAttackSpeed)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -289,16 +295,90 @@
             0});
 			this.numericUpDownSurvivalSoftCap.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(2, 232);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(119, 13);
+			this.label5.TabIndex = 0;
+			this.label5.Text = "Target Damage (RAW):";
+			// 
+			// numericUpDownTargetDamage
+			// 
+			this.numericUpDownTargetDamage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.numericUpDownTargetDamage.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetDamage.Location = new System.Drawing.Point(172, 230);
+			this.numericUpDownTargetDamage.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetDamage.Name = "numericUpDownTargetDamage";
+			this.numericUpDownTargetDamage.Size = new System.Drawing.Size(84, 20);
+			this.numericUpDownTargetDamage.TabIndex = 3;
+			this.numericUpDownTargetDamage.ThousandsSeparator = true;
+			this.numericUpDownTargetDamage.Value = new decimal(new int[] {
+            30000,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetDamage.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(2, 258);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(164, 13);
+			this.label6.TabIndex = 0;
+			this.label6.Text = "Target Base Attack Speed (Sec):";
+			// 
+			// numericUpDownTargetAttackSpeed
+			// 
+			this.numericUpDownTargetAttackSpeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.numericUpDownTargetAttackSpeed.DecimalPlaces = 2;
+			this.numericUpDownTargetAttackSpeed.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+			this.numericUpDownTargetAttackSpeed.Location = new System.Drawing.Point(172, 256);
+			this.numericUpDownTargetAttackSpeed.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetAttackSpeed.Name = "numericUpDownTargetAttackSpeed";
+			this.numericUpDownTargetAttackSpeed.Size = new System.Drawing.Size(84, 20);
+			this.numericUpDownTargetAttackSpeed.TabIndex = 3;
+			this.numericUpDownTargetAttackSpeed.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+			this.numericUpDownTargetAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// CalculationOptionsPanelBear
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.numericUpDownSurvivalSoftCap);
+			this.Controls.Add(this.numericUpDownTargetAttackSpeed);
+			this.Controls.Add(this.numericUpDownTargetDamage);
 			this.Controls.Add(this.numericUpDownTargetArmor);
 			this.Controls.Add(this.numericUpDownThreatValue);
 			this.Controls.Add(this.comboBoxThreatValue);
+			this.Controls.Add(this.label6);
 			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label5);
 			this.Controls.Add(this.comboBoxTargetLevel);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
@@ -310,6 +390,8 @@
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownSurvivalSoftCap)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetDamage)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetAttackSpeed)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -334,5 +416,9 @@
 		private System.Windows.Forms.RadioButton radioButtonNoAuto;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.NumericUpDown numericUpDownSurvivalSoftCap;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.NumericUpDown numericUpDownTargetDamage;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.NumericUpDown numericUpDownTargetAttackSpeed;
 	}
 }

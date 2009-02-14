@@ -32,6 +32,8 @@ namespace Rawr
             numericUpDownThreatValue.Value = (decimal)calcOpts.ThreatScale;
 			numericUpDownTargetArmor.Value = (decimal)calcOpts.TargetArmor;
 			numericUpDownSurvivalSoftCap.Value = calcOpts.SurvivalSoftCap;
+			numericUpDownTargetDamage.Value = calcOpts.TargetDamage;
+			numericUpDownTargetAttackSpeed.Value = (decimal)calcOpts.TargetAttackSpeed;
 
 			radioButtonNoAuto.Checked = !calcOpts.CustomUseMaul.HasValue;
 			radioButtonMelee.Checked = calcOpts.CustomUseMaul.HasValue && !calcOpts.CustomUseMaul.Value;
@@ -77,6 +79,8 @@ namespace Rawr
 				calcOpts.ThreatScale = (float)numericUpDownThreatValue.Value;
 				calcOpts.TargetArmor = (int)numericUpDownTargetArmor.Value;
 				calcOpts.SurvivalSoftCap = (int)numericUpDownSurvivalSoftCap.Value;
+				calcOpts.TargetDamage = (int)numericUpDownTargetDamage.Value;
+				calcOpts.TargetAttackSpeed = (float)numericUpDownTargetAttackSpeed.Value;
 
 				if (radioButtonNoAuto.Checked) calcOpts.CustomUseMaul = null;
 				else if (radioButtonMelee.Checked) calcOpts.CustomUseMaul = false;
@@ -114,6 +118,8 @@ namespace Rawr
 		public float ThreatScale = 10f;
 		public int TargetArmor = 13083;
 		public int SurvivalSoftCap = 140000;
+		public int TargetDamage = 50000;
+		public float TargetAttackSpeed = 2.0f;
 
 		public bool? CustomUseMaul = null;
 		public bool CustomUseMangle = false;

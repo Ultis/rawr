@@ -252,10 +252,12 @@ namespace Rawr.Cat
 			float biteEnergyRaw = 35f; //Assuming no wasted energy
 			float roarEnergyRaw = 25f;
 
-			float finisherEnergyCostMultiplier = ((1f / chanceNonAvoided) - 1f) * (1f - stats.FinisherEnergyOnAvoid) + 1;
-			float mangleEnergyAverage = mangleEnergyRaw / chanceNonAvoided;
-			float shredEnergyAverage = shredEnergyRaw / chanceNonAvoided;
-			float rakeEnergyAverage = rakeEnergyRaw / chanceNonAvoided;
+			//[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
+			float cpgEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * 0.2f;
+			float finisherEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * (1f - stats.FinisherEnergyOnAvoid);
+			float mangleEnergyAverage = mangleEnergyRaw * cpgEnergyCostMultiplier;
+			float shredEnergyAverage = shredEnergyRaw * cpgEnergyCostMultiplier;
+			float rakeEnergyAverage = rakeEnergyRaw * cpgEnergyCostMultiplier;
 			float ripEnergyAverage = ripEnergyRaw * finisherEnergyCostMultiplier;
 			float biteEnergyAverage = biteEnergyRaw * finisherEnergyCostMultiplier;
 			float roarEnergyAverage = roarEnergyRaw;
@@ -264,7 +266,7 @@ namespace Rawr.Cat
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
 				maintainMangle, calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration, attackSpeed, 
-				character.DruidTalents.OmenOfClarity > 0, chanceAvoided, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
+				character.DruidTalents.OmenOfClarity > 0, chanceAvoided, cpgEnergyCostMultiplier, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
