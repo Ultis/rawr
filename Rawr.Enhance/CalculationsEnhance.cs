@@ -398,6 +398,7 @@ namespace Rawr
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             Stats statsRace = new Stats() { 
+                    Mana = 4116f,
                     AttackPower = 140f, 
                     SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
                     CritMeleeRating = 64.4736f};
@@ -406,39 +407,35 @@ namespace Rawr
             {
                 case Character.CharacterRace.Draenei:
 					statsRace.Health = 6305f;
-                    statsRace.Mana = 4116f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 71f;
-                    statsRace.Stamina = 185f;
+                    statsRace.Stamina = 135f;
                     statsRace.Intellect = 129f;
                     break;
 
                 case Character.CharacterRace.Tauren:
  					statsRace.Health = 6313f;
-                    statsRace.Mana = 3966f;
                     statsRace.BonusStaminaMultiplier = .05f;
                     statsRace.Strength = 125f;
                     statsRace.Agility = 69f;
                     statsRace.Stamina = 138f;
-                    statsRace.Intellect = 132f;
+                    statsRace.Intellect = 123f;
                     break;
 
                 case Character.CharacterRace.Orc:
-                    statsRace.Health = 6314f;
-                    statsRace.Mana = 4266f;
+                    statsRace.Health = 6305f;
                     statsRace.Strength = 123f;
                     statsRace.Agility = 71f;
-                    statsRace.Stamina = 188f;
-                    statsRace.Intellect = 137f;
+                    statsRace.Stamina = 138f;
+                    statsRace.Intellect = 125f;
                     break;
 
                 case Character.CharacterRace.Troll:
-                    statsRace.Health = 6314f;
-                    statsRace.Mana = 4266f;
+                    statsRace.Health = 6305f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 76f;
                     statsRace.Stamina = 137f;
-                    statsRace.Intellect = 128f;
+                    statsRace.Intellect = 124f;
                     break;
             }
 
@@ -461,9 +458,9 @@ namespace Rawr
 			float agiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Agility * (1 + statsRace.BonusAgilityMultiplier));
 			float strBase = (float)Math.Floor(statsRace.Strength * (1 + statsRace.BonusStrengthMultiplier));
 			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
-            float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
+            float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK)+ .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
             float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
-            float staBase = (float)Math.Floor(statsRace.Stamina);
+            float staBase = (float)Math.Floor(statsRace.Stamina);  // need to add mining bonus if have profession
 			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
 						
 			Stats statsTotal = new Stats();
