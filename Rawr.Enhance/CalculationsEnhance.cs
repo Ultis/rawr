@@ -16,7 +16,7 @@ namespace Rawr
 			{
 				if (_calculationOptionsPanel == null)
 				{
-					_calculationOptionsPanel = new CalculationOptionsPanelCat();
+					_calculationOptionsPanel = new CalculationOptionsPanelEnhance();
 				}
 				return _calculationOptionsPanel;
 			}
@@ -214,6 +214,9 @@ namespace Rawr
                 }
             }
 
+            // glyph stuff
+            float spellCritModifier = calcOpts.GlyphFT ? .02f : 0f;
+
             //work it girl
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
@@ -234,7 +237,7 @@ namespace Rawr
 
             float hitBonusSpell = stats.HitRating / 2623.199272f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS);
+            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS + spellCritModifier);
             float spellDamage = stats.SpellPower;
 
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);

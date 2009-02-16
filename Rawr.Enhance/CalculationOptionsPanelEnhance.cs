@@ -8,25 +8,25 @@ using System.Windows.Forms;
 
 namespace Rawr
 {
-	public partial class CalculationOptionsPanelCat : CalculationOptionsPanelBase
+	public partial class CalculationOptionsPanelEnhance : CalculationOptionsPanelBase
 	{
 		private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
 
-		public CalculationOptionsPanelCat()
+		public CalculationOptionsPanelEnhance()
 		{
 			InitializeComponent();
-			armorBosses.Add(3800, ": Shade of Aran");
-			armorBosses.Add(4700, ": Roar");
-			armorBosses.Add(5500, ": Netherspite");
-			armorBosses.Add(6100, ": Julianne, Curator");
-			armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
-			armorBosses.Add(6700, ": Maiden, Illhoof");
-			armorBosses.Add(7300, ": Strawman");
-			armorBosses.Add(7500, ": Attumen");
-			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
-			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
-			armorBosses.Add(8200, ": Midnight");
-			armorBosses.Add(8800, ": Void Reaver");
+            //			armorBosses.Add(3800, ": Shade of Aran");
+            //			armorBosses.Add(4700, ": Roar");
+            //			armorBosses.Add(5500, ": Netherspite");
+            //			armorBosses.Add(6100, ": Julianne, Curator");
+            //			armorBosses.Add(6200, ": Karathress, Vashj, Solarian, Kael'thas, Winterchill, Anetheron, Kaz'rogal, Azgalor, Archimonde, Teron, Shahraz");
+            //			armorBosses.Add(6700, ": Maiden, Illhoof");
+            //			armorBosses.Add(7300, ": Strawman");
+            //			armorBosses.Add(7500, ": Attumen");
+            //			armorBosses.Add(7600, ": Romulo, Nightbane, Malchezaar, Doomwalker");
+            //			armorBosses.Add(7700, ": Hydross, Lurker, Leotheras, Tidewalker, Al'ar, Naj'entus, Supremus, Akama, Gurtogg");
+            //			armorBosses.Add(8200, ": Midnight");
+            //			armorBosses.Add(8800, ": Void Reaver");
 		}
 
 		protected override void LoadCalculationOptions()
@@ -67,8 +67,16 @@ namespace Rawr
 			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime * 100);
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
-			
-			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
+
+            chbGlyphFT.Checked = calcOpts.GlyphFT;
+            chbGlyphLL.Checked = calcOpts.GlyphLL;
+            chbGlyphLB.Checked = calcOpts.GlyphLB;
+            chbGlyphLS.Checked = calcOpts.GlyphLS;
+            chbGlyphShocking.Checked = calcOpts.GlyphShocking;
+            chbGlyphSS.Checked = calcOpts.GlyphSS;
+            chbGlyphWF.Checked = calcOpts.GlyphWF;
+            
+            labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 			labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
 			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
@@ -102,16 +110,107 @@ namespace Rawr
                 calcOpts.OffhandImbue = (string) comboBoxOffhandImbue.SelectedItem;
 				calcOpts.ShattrathFaction = radioButtonAldor.Checked ? "Aldor" : "Scryer";
 
+                calcOpts.GlyphFT = chbGlyphFT.Checked;
+                calcOpts.GlyphLL = chbGlyphLL.Checked;
+                calcOpts.GlyphLB = chbGlyphLB.Checked;
+                calcOpts.GlyphLS = chbGlyphLS.Checked;
+                calcOpts.GlyphShocking = chbGlyphShocking.Checked;
+                calcOpts.GlyphSS = chbGlyphSS.Checked;
+                calcOpts.GlyphWF = chbGlyphWF.Checked;
+
 				Character.OnCalculationsInvalidated();
 			}
 		}
 
-	}
+        private void chbGlyphFW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphFT = chbGlyphFT.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphLL_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphLL = chbGlyphLL.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphLB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphLB = chbGlyphLB.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphLS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphLS = chbGlyphLS.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphShocking_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphShocking = chbGlyphShocking.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphSS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphSS = chbGlyphSS.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphWF_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphWF = chbGlyphWF.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show("Sorry this feature is not available yet!", "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
+        }
+
+    }
 
 	[Serializable]
 	public class CalculationOptionsEnhance : ICalculationOptionBase
 	{
-		public string GetXml()
+        public bool GlyphFT { get; set; }
+        public bool GlyphLL { get; set; }
+        public bool GlyphLB { get; set; }
+        public bool GlyphLS { get; set; }
+        public bool GlyphShocking { get; set; }
+        public bool GlyphSS { get; set; }
+        public bool GlyphWF { get; set; }
+       
+        public string GetXml()
 		{
 			System.Xml.Serialization.XmlSerializer serializer = 
 				new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsEnhance));
@@ -131,5 +230,6 @@ namespace Rawr
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
-	}
+
+    }
 }
