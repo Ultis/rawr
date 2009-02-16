@@ -168,6 +168,7 @@ namespace Rawr.Retribution
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = stats;
+            float fightLength = calcOpts.FightLength * 60f;
 
             //damage multipliers
             float twoHandedSpec = 1f + 0.02f * talents.TwoHandedWeaponSpecialization;
@@ -179,6 +180,9 @@ namespace Rawr.Retribution
             float spellCritBonus = 1.5f * (1f + stats.BonusSpellCritMultiplier);
             float aow = 1f + .05f * talents.TheArtOfWar;
             float rightVen = .08f * talents.RighteousVengeance;
+
+            float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - talents.SanctifiedWrath * 30f));
+            float aw = 1f + ((awTimes * 20f) / fightLength) * 1.2f;
 
             float spellPowerMulti = (1f + stats.BonusHolyDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
@@ -195,13 +199,16 @@ namespace Rawr.Retribution
             #endregion
 
             #region Weapon Damage
+            float bloodlustUptime = ((float)Math.Floor(fightLength / 300f) * 40f + (float)Math.Min(fightLength % 300f, 40f)) / fightLength;
+            float bloodlustHaste = 1f + (bloodlustUptime * .3f);
+
             float baseSpeed = character.MainHand == null ? 3.5f : character.MainHand.Speed;
             float baseWeaponDamage = character.MainHand == null ? 371.5f : (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f;
-            calc.AttackSpeed = baseSpeed / ( 1f + stats.PhysicalHaste );
+            calc.AttackSpeed = baseSpeed / ( (1f + stats.PhysicalHaste) * bloodlustHaste );
             calc.WeaponDamage = baseWeaponDamage + stats.AttackPower * baseSpeed / 14f;
             float normalizedWeaponDamage = calc.WeaponDamage * 3.3f / baseSpeed;
 
-            float whiteDamage = calc.WeaponDamage * talentMulti * physPowerMulti * armorReduction;
+            float whiteDamage = calc.WeaponDamage * talentMulti * physPowerMulti * armorReduction * aw;
 
             const float glancingAmount = 1f - 0.35f;
             const float glanceChance = .24f;
@@ -215,7 +222,7 @@ namespace Rawr.Retribution
             #region Crusader Strike
             if ( talents.CrusaderStrike > 0 )
             {
-                float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow;
+                float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw;
                 float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
                 calc.CrusaderStrikeDPS = csAvgHit / calcOpts.CrusaderStrikeCD;
                 sealProcs += 1f / calcOpts.CrusaderStrikeCD * (1f - calc.ToDodge - calc.ToMiss);
@@ -227,7 +234,7 @@ namespace Rawr.Retribution
             #region Divine Storm
             if ( talents.DivineStorm > 0 )
             {
-                float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier);
+                float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
                 float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
                 float dsRightVen = dsDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit;
                 calc.DivineStormDPS = (dsAvgHit + dsRightVen) / calcOpts.DivineStormCD;
@@ -238,7 +245,7 @@ namespace Rawr.Retribution
             #endregion
             
             #region Seal
-            float sealDamage = calc.WeaponDamage * .27f * spellPowerMulti * talentMulti * partialResist;
+            float sealDamage = calc.WeaponDamage * .27f * spellPowerMulti * talentMulti * partialResist * aw;
             float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
             calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge);
             calc.SealDPS20 = sealAvgHit * sealProcs20 * (1f - calc.ToMiss - calc.ToDodge);
@@ -246,7 +253,7 @@ namespace Rawr.Retribution
 
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .05f * talents.Fanaticism;
-            float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower)
+            float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
@@ -255,7 +262,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Consecration
-            float consDamage = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * vengeance * crusade * spellPowerMulti * partialResist;
+            float consDamage = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * vengeance * crusade * spellPowerMulti * partialResist * aw;
             calc.ConsecrationDPS = consDamage * (calcOpts.GlyphConsecration ? 10f : 8f) / calcOpts.ConescrationCD;
             calc.ConsecrationDPS20 = consDamage * (calcOpts.GlyphConsecration ? 10f : 8f) / calcOpts.ConescrationCD20;
             #endregion
@@ -264,14 +271,14 @@ namespace Rawr.Retribution
             if (calcOpts.MobType < 2 || calcOpts.Mode31)
             {
                 float exoCrit = (calcOpts.Mode31 && calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-                float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist;
+                float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw;
                 float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - calc.ToResist);
                 calc.ExorcismDPS = exoAvgHit / calcOpts.ExorcismCD;
                 calc.ExorcismDPS20 = exoAvgHit / calcOpts.ExorcismCD20;
             }
             #endregion
             float howCrit = stats.PhysicalCrit + .25f * talents.SanctifiedRetribution;
-            float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist;
+            float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist * aw;
             float howAvgHit = howDamage * (1f + howCrit * critBonus - howCrit - calc.ToMiss);
             calc.HammerOfWrathDPS20 = howAvgHit / calcOpts.HammerOfWrathCD20;
             #region HammerOfWrath
@@ -302,6 +309,7 @@ namespace Rawr.Retribution
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            float fightLength = calcOpts.FightLength * 60f;
             Stats statsRace;
             switch (character.Race)
             {
@@ -340,7 +348,8 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
             Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
-            stats.Strength = (float)Math.Floor(statsOther.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
+            float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
+            stats.Strength = (float)Math.Floor((statsOther.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
             float libramAP = stats.APCrusaderStrike_6 * 6f / (calcOpts.CrusaderStrikeCD * (1f - calcOpts.TimeUnder20) + calcOpts.CrusaderStrikeCD20 * calcOpts.TimeUnder20);
             stats.AttackPower = (float)Math.Floor((stats.AttackPower + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
             stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
@@ -350,7 +359,7 @@ namespace Rawr.Retribution
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f;
-            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) / 4f;
+            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) * 4f;
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
