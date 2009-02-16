@@ -215,7 +215,7 @@ namespace Rawr
             }
 
             // glyph stuff
-            float spellCritModifier = calcOpts.GlyphFT ? .02f : 0f;
+            float spellCritModifier = calcOpts.GlyphFT & (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
 
             //work it girl
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
