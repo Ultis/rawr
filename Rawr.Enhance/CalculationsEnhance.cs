@@ -179,8 +179,9 @@ namespace Rawr
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
             }
-            if (character.Ranged.Id == 40710) { // "Totem of Splintering"
-                windfuryWeaponBonus += 212f;
+            if (character.Ranged != null) {
+                if(character.Ranged.Id == 40710) // "Totem of Splintering"
+                    windfuryWeaponBonus += 212f;
             }
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
