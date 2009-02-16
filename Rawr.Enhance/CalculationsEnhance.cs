@@ -36,8 +36,8 @@ namespace Rawr
 					"Basic Stats:Intellect",
                     "Basic Stats:Strength",
                     "Basic Stats:Yellow Hit",
-					"Basic Stats:White Hit",
                     "Basic Stats:Spell Hit",
+					"Basic Stats:White Hit",
                     "Basic Stats:Melee Crit",
                     "Basic Stats:Spell Crit",
                     "Basic Stats:Spellpower",
@@ -167,17 +167,20 @@ namespace Rawr
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float windfuryTotemHaste = .16f + (.02f * character.ShamanTalents.ImprovedWindfuryTotem);
-            float windfuryWeaponBonus = 1250;
+            float windfuryWeaponBonus = 1250f;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
-                    windfuryWeaponBonus = windfuryWeaponBonus * .13f;
+                    windfuryWeaponBonus += windfuryWeaponBonus * .13f;
                     break;
                 case 2:
-                    windfuryWeaponBonus = windfuryWeaponBonus * .27f;
+                    windfuryWeaponBonus += windfuryWeaponBonus * .27f;
                     break;
                 case 3:
-                    windfuryWeaponBonus = windfuryWeaponBonus * .4f;
+                    windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
+            }
+            if (character.Ranged.Id == 40710) { // "Totem of Splintering"
+                windfuryWeaponBonus += 212f;
             }
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
@@ -400,8 +403,8 @@ namespace Rawr
             Stats statsRace = new Stats() { 
                     Mana = 4116f,
                     AttackPower = 140f, 
-                    SpellCritRating = 48.576f,  // TODO - need to identify what the base spell & melee crit ratings should be
-                    CritMeleeRating = 64.4736f};
+                    SpellCritRating = 101f,  // TODO - need to identify what the base spell & melee crit ratings should be
+                    CritMeleeRating = 134f};
 
             switch (character.Race)
             {
@@ -538,7 +541,7 @@ namespace Rawr
 						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
 						calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 25f;
 						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
-							calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
+						calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
 					}
 					return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
@@ -556,7 +559,7 @@ namespace Rawr
 						calcCritYellow.OverallPoints = calcCritYellow.DPSPoints = currentCalculationsEnhanceYellow.YellowCrit;
 						calcGlanceYellow.OverallPoints = calcGlanceYellow.DPSPoints = 0f;
 						calcHitYellow.OverallPoints = calcHitYellow.DPSPoints = (100f - calcMissYellow.OverallPoints -
-							calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
+						calcDodgeYellow.OverallPoints - calcCritYellow.OverallPoints - calcGlanceYellow.OverallPoints);
 					}
 					return new ComparisonCalculationBase[] { calcMissYellow, calcDodgeYellow, calcCritYellow, calcGlanceYellow, calcHitYellow };
 
