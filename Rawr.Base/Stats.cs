@@ -257,6 +257,11 @@ namespace Rawr
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
+        APCrusaderStrike_6,
+        CrusaderStrikeDamage,
+        ConsecrationSpellPower,
+        CritDivineStorm_8,
+        CritJudgement_5,
         #endregion
         #region Warlock set bonuses
         LifeTapBonusSpirit,
@@ -274,7 +279,6 @@ namespace Rawr
         BonusBlockValueMultiplier,
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
-        BonusCrusaderStrikeDamageMultiplier,
         BonusFireDamageMultiplier,
         BonusFrostDamageMultiplier,
         BonusIntellectMultiplier,
@@ -2038,6 +2042,62 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("AP on Crusader Strike (6 sec)")]
+        [Category("Equipment Procs")]
+        public float APCrusaderStrike_6
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_6]; }
+            set { _rawAdditiveData[(int)AdditiveStat.APCrusaderStrike_6] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Crusader Strike Damage")]
+        [Category("Equipment Procs")]
+        public float CrusaderStrikeDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Crit on Divine Storm (8 sec)")]
+        [Category("Equipment Procs")]
+        public float CritDivineStorm_8
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritDivineStorm_8]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritDivineStorm_8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Crit on Judgement (5 sec)")]
+        [Category("Equipment Procs")]
+        public float CritJudgement_5
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CritJudgement_5]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CritJudgement_5] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Consecration Spell Power")]
+        [Category("Equipment Procs")]
+        public float ConsecrationSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ConsecrationSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Divine Storm Damage")]
+        [Category("Equipment Procs")]
+        public float DivineStormMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Flash of Light Spell Power")]
         [Category("Equipment Procs")]
         public float FlashOfLightSpellPower
@@ -2054,16 +2114,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.FlashOfLightMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Divine Storm Damage")]
-        [Category("Equipment Procs")]
-        public float DivineStormMultiplier
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
         }
 
 
@@ -2476,15 +2526,6 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCritHealMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCritHealMultiplier] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% CStrike Dmg")]
-        public float BonusCrusaderStrikeDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCrusaderStrikeDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCrusaderStrikeDamageMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

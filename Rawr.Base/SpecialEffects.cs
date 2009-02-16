@@ -682,26 +682,6 @@ namespace Rawr
 				// Darkmoon Card: Blue Dragon
 				stats.FullManaRegenFor15SecOnSpellcast += 2f;
 			}
-			else if (line.StartsWith("Your Judgement of Command ability has a chance to grant "))
-			{
-				line = line.Substring("Your Judgement of Command ability has a chance to grant ".Length, 3);
-				stats.AttackPower += (10f / (9f / 0.4f)) * float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
-
-			}
-			else if (line.StartsWith("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by"))
-			{
-				line = line.Substring("Causes your Judgement of Command, Judgement of Righteousness, Judgement of Blood, and Judgement of Vengeance to increase your Critical Strike rating by ".Length, 2);
-				line = line.Replace(".", "");
-				stats.CritRating += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture) * 5f / 9f;
-			}
-			else if (line.StartsWith("Increases the damage dealt by your Crusader Strike ability by "))
-			{
-				line = line.Substring("Increases the damage dealt by your Cruasder Strike ability by ".Length);
-				line = line.Replace("%", "");
-				line = line.Replace(".", "");
-				stats.BonusCrusaderStrikeDamageMultiplier += float.Parse(line, System.Globalization.CultureInfo.InvariantCulture) / 100f;
-
-			}
             else if (line.StartsWith("Reduces the mana cost of Holy Light by"))
             {
                 line = line.Replace(".", "");
@@ -863,6 +843,30 @@ namespace Rawr
                 line = line.Replace(".", "");
                 line = line.Substring("Increases the damage dealt by your Lava Burst by ".Length);
                 stats.LavaBurstBonus = float.Parse(line);
+            }
+            else if (line == "Your Crusader Strike ability also grants you 120 attack power for 6 sec.")
+            {
+                stats.APCrusaderStrike_6 = 120f;
+            }
+            else if (line == "Increases the spell power of your Consecration spell by 141.")
+            {
+                stats.ConsecrationSpellPower = 141f;
+            }
+            else if (line == "Increases the damage dealt by Crusader Strike by 115.5.")
+            {
+                stats.CrusaderStrikeDamage = 115.5f;
+            }
+            else if (line == "Increases the damage dealt by Crusader Strike by 116.")
+            {
+                stats.CrusaderStrikeDamage = 115.5f;
+            }
+            else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
+            {
+                stats.CritDivineStorm_8 = 73f;
+            }
+            else if (line == "Causes your Judgements to increase your Critical Strike Rating by 61 for 5 sec.")
+            {
+                stats.CritJudgement_5 = 61f;
             }
         }
 

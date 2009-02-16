@@ -215,7 +215,7 @@ namespace Rawr.Retribution
             #region Crusader Strike
             if ( talents.CrusaderStrike > 0 )
             {
-                float csDamage = normalizedWeaponDamage * 1.1f * talentMulti * physPowerMulti * armorReduction * aow;
+                float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow;
                 float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
                 calc.CrusaderStrikeDPS = csAvgHit / calcOpts.CrusaderStrikeCD;
                 sealProcs += 1f / calcOpts.CrusaderStrikeCD * (1f - calc.ToDodge - calc.ToMiss);
@@ -255,7 +255,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Consecration
-            float consDamage = (72f + .04f * stats.SpellPower + .04f * stats.AttackPower) * vengeance * crusade * spellPowerMulti * partialResist;
+            float consDamage = (72f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * vengeance * crusade * spellPowerMulti * partialResist;
             calc.ConsecrationDPS = consDamage * (calcOpts.GlyphConsecration ? 10f : 8f) / calcOpts.ConescrationCD;
             calc.ConsecrationDPS20 = consDamage * (calcOpts.GlyphConsecration ? 10f : 8f) / calcOpts.ConescrationCD20;
             #endregion
@@ -301,6 +301,7 @@ namespace Rawr.Retribution
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             PaladinTalents talents = character.PaladinTalents;
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             Stats statsRace;
             switch (character.Race)
             {
@@ -340,7 +341,8 @@ namespace Rawr.Retribution
             Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
             Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
             stats.Strength = (float)Math.Floor(statsOther.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
-            stats.AttackPower = (float)Math.Floor((stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
+            float libramAP = stats.APCrusaderStrike_6 * 6f / (calcOpts.CrusaderStrikeCD * (1f - calcOpts.TimeUnder20) + calcOpts.CrusaderStrikeCD20 * calcOpts.TimeUnder20);
+            stats.AttackPower = (float)Math.Floor((stats.AttackPower + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
             stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
             stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
                 + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
@@ -352,10 +354,12 @@ namespace Rawr.Retribution
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
+            float libramCrit = stats.CritJudgement_5 * 5f / (calcOpts.JudgementCD * (1f - calcOpts.TimeUnder20) + calcOpts.JudgementCD20 * calcOpts.TimeUnder20)
+                + stats.CritDivineStorm_8 * 8f / (calcOpts.DivineStormCD * (1f - calcOpts.TimeUnder20) + calcOpts.DivineStormCD20 * calcOpts.TimeUnder20);
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
-            stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +
+            stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating + libramCrit) * .01f +
                 character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
-            stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating) * .01f
+            stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating + libramCrit) * .01f
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating) * .01f) - 1f;
@@ -465,7 +469,14 @@ namespace Rawr.Retribution
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
-                DivineStormMultiplier = stats.DivineStormMultiplier
+                DivineStormMultiplier = stats.DivineStormMultiplier,
+
+                GreatnessProc = stats.GreatnessProc,
+                CritDivineStorm_8 = stats.CritDivineStorm_8,
+                CritJudgement_5 = stats.CritJudgement_5,
+                CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
+                APCrusaderStrike_6 = stats.APCrusaderStrike_6,
+                ConsecrationSpellPower = stats.ConsecrationSpellPower
             };
         }
 
@@ -475,7 +486,8 @@ namespace Rawr.Retribution
                 stats.HitRating + stats.CritRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.ExpertiseRating + stats.HasteRating +
                 stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
-                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier
+                stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier +
+                stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower
                 ) != 0;
         }
     }
