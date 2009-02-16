@@ -219,7 +219,7 @@ namespace Rawr
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
             float hitBonus = stats.HitRating / 3278.998947f;
-            float expertiseBonus = Math.Abs(stats.ExpertiseRating / 3278.998947f) * 0.0025f; 
+            float expertiseBonus = (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) * 4f) * .0025f; 
 
             float glancingRate = 0.25f;
 
@@ -383,12 +383,12 @@ namespace Rawr
 			calculatedStats.AvoidedAttacks = chanceWhiteMiss * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
-            calculatedStats.YellowHit = (1 - chanceYellowMiss) * 100f;
-            calculatedStats.SpellHit = (1 - chanceSpellMiss) * 100f;
-            calculatedStats.WhiteHit = (1 - chanceWhiteMiss) * 100f;
-            calculatedStats.MeleeCrit = chanceWhiteCrit * 100f;
-            calculatedStats.YellowCrit = chanceYellowCrit * 100f;
-            calculatedStats.SpellCrit = chanceSpellCrit * 100f;
+            calculatedStats.YellowHit = (float)Math.Floor((1 - chanceYellowMiss) * 10000f) / 100f;
+            calculatedStats.SpellHit = (float)Math.Floor((1 - chanceSpellMiss) * 10000f) / 100f;
+            calculatedStats.WhiteHit = (float)Math.Floor((1 - chanceWhiteMiss) * 10000f) / 100f;
+            calculatedStats.MeleeCrit = (float)Math.Floor(chanceWhiteCrit * 10000f) / 100f;
+            calculatedStats.YellowCrit = (float)Math.Floor(chanceYellowCrit * 10000f) / 100f;
+            calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
             calculatedStats.AttackSpeed = unhastedOHSpeed / (1f + .3f) / (1f + .2f) / (1f + hasteBonus);
 			calculatedStats.ArmorMitigation = modArmor * 100f;
 
@@ -794,40 +794,13 @@ namespace Rawr
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
-			float critRating = BasicStats.CritRating;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Judgement of the Crusade")))
-				critRating -= 66.24f;
-			critRating -= 264.0768f; //Base 5% + 6% from talents
-			
-			float hitRating = BasicStats.HitRating;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Faerie Fire")))
-				hitRating -= 47.3077f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Heroic Presence")))
-				hitRating -= 15.769f;
-
-			float armorPenetration = BasicStats.ArmorPenetration;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")))
-				armorPenetration -= 610f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")))
-				armorPenetration -= 2600f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")))
-				armorPenetration -= 800f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
-				armorPenetration -= 2000f;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")))
-				armorPenetration -= 1000f;
-
-			float attackPower = BasicStats.AttackPower;
-			if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))
-				attackPower -= 121f;
-
             //"Complex Stats:Avg MH Speed",
             //"Complex Stats:Avg OH Speed",
 
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
 			dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
-			dictValues.Add("Attack Power", attackPower.ToString());
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Strength", BasicStats.Strength.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());
