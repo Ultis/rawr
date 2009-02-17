@@ -94,26 +94,19 @@
     <Compile Include="CalculationsRetribution.cs" />
     <Compile Include="CharacterCalculationsRetribution.cs" />
     <Compile Include="ComparisonCalculationRetribution.cs" />
-    <Compile Include="Graph.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Graph.designer.cs">
-      <DependentUpon>Graph.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Rotation.cs" />
+    <Compile Include="RotationSimulator.cs" />
+    <Compile Include="RotationSolution.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CalculationOptionsPanelRetribution.resx">
       <DependentUpon>CalculationOptionsPanelRetribution.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Graph.resx">
-      <DependentUpon>Graph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

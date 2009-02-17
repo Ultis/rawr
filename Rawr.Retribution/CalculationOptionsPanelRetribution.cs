@@ -33,28 +33,13 @@ namespace Rawr.Retribution
             trkTime20.Value = (int)(calcOpts.TimeUnder20 * 100);
             lblTime20.Text = trkTime20.Value + "%";
 
-            txtJudgeCD.Text = calcOpts.JudgementCD.ToString();
-            txtJudgeCD20.Text = calcOpts.JudgementCD20.ToString();
-
-            txtCSCD.Text = calcOpts.CrusaderStrikeCD.ToString();
-            txtCSCD20.Text = calcOpts.CrusaderStrikeCD20.ToString();
-
-            txtDSCD.Text = calcOpts.DivineStormCD.ToString();
-            txtDSCD20.Text = calcOpts.DivineStormCD20.ToString();
-
-            txtConsCD.Text = calcOpts.ConescrationCD.ToString();
-            txtConsCD20.Text = calcOpts.ConescrationCD20.ToString();
-
-            txtExoCD.Text = calcOpts.ExorcismCD.ToString();
-            txtExoCD20.Text = calcOpts.ExorcismCD20.ToString();
-
-            txtHoWCD20.Text = calcOpts.HammerOfWrathCD20.ToString();
-
             chkMode31.Checked = calcOpts.Mode31;
             chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
-            
+
+            UpdatePriorityDisplay(calcOpts);
+
             loading = false;
         }
 
@@ -139,159 +124,61 @@ namespace Rawr.Retribution
             }
         }
 
-        private void txtJudgeCD_TextChanged(object sender, EventArgs e)
+        private void UpdatePriorityDisplay(CalculationOptionsRetribution calcOpts)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.JudgementCD = int.Parse(txtJudgeCD.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            lblPriority1.Text = calcOpts.Priorities[0].ToString();
+            lblPriority2.Text = calcOpts.Priorities[1].ToString();
+            lblPriority3.Text = calcOpts.Priorities[2].ToString();
+            lblPriority4.Text = calcOpts.Priorities[3].ToString();
+            lblPriority5.Text = calcOpts.Priorities[4].ToString();
+            lblPriority6.Text = calcOpts.Priorities[5].ToString();
         }
 
-        private void txtJudgeCD20_TextChanged(object sender, EventArgs e)
+        private void PrioritySwitch1(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.JudgementCD20 = int.Parse(txtJudgeCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[1], calcOpts.Priorities[0], calcOpts.Priorities[2], 
+                calcOpts.Priorities[3], calcOpts.Priorities[4], calcOpts.Priorities[5] };
+            UpdatePriorityDisplay(calcOpts);
+            Character.OnCalculationsInvalidated();
         }
 
-        private void txtCSCD_TextChanged(object sender, EventArgs e)
+        private void PrioritySwitch2(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.CrusaderStrikeCD = int.Parse(txtCSCD.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[2], calcOpts.Priorities[1], 
+                calcOpts.Priorities[3], calcOpts.Priorities[4], calcOpts.Priorities[5] };
+            UpdatePriorityDisplay(calcOpts);
+            Character.OnCalculationsInvalidated();
         }
 
-        private void txtCSCD20_TextChanged(object sender, EventArgs e)
+        private void PrioritySwitch3(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.CrusaderStrikeCD20 = int.Parse(txtCSCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[3], 
+                calcOpts.Priorities[2], calcOpts.Priorities[4], calcOpts.Priorities[5] };
+            UpdatePriorityDisplay(calcOpts);
+            Character.OnCalculationsInvalidated();
         }
 
-        private void txtDSCD_TextChanged(object sender, EventArgs e)
+        private void PrioritySwitch4(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.DivineStormCD = int.Parse(txtDSCD.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[2], 
+                calcOpts.Priorities[4], calcOpts.Priorities[3], calcOpts.Priorities[5] };
+            UpdatePriorityDisplay(calcOpts);
+            Character.OnCalculationsInvalidated();
         }
 
-        private void txtDSCD20_TextChanged(object sender, EventArgs e)
+        private void PrioritySwitch5(object sender, EventArgs e)
         {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.DivineStormCD20 = int.Parse(txtDSCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
+            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[2], 
+                calcOpts.Priorities[3], calcOpts.Priorities[5], calcOpts.Priorities[4] };
+            UpdatePriorityDisplay(calcOpts);
+            Character.OnCalculationsInvalidated();
         }
 
-        private void txtConsCD_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.ConescrationCD = int.Parse(txtConsCD.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
-        }
-
-        private void txtConsCD20_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.ConescrationCD20 = int.Parse(txtConsCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
-        }
-
-        private void txtExoCD_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.ExorcismCD = int.Parse(txtExoCD.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
-        }
-
-        private void txtExoCD20_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.ExorcismCD20 = int.Parse(txtExoCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
-        }
-
-        private void txtHoWCD20_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                try
-                {
-                    calcOpts.HammerOfWrathCD20 = int.Parse(txtHoWCD20.Text);
-                    Character.OnCalculationsInvalidated();
-                }
-                catch (Exception) { ; }
-            }
-        }
 
     }
 
@@ -314,18 +201,8 @@ namespace Rawr.Retribution
         public float TimeUnder20 = .18f;
         public bool Mode31 = false;
 
-        public float JudgementCD = 7.1f;
-        public float DivineStormCD = 10.5f;
-        public float CrusaderStrikeCD = 7.1f;
-        public float ConescrationCD = 10.5f;
-        public float ExorcismCD = 18f;
-
-        public float JudgementCD20 = 7.1f;
-        public float DivineStormCD20 = 12.5f;
-        public float CrusaderStrikeCD20 = 7.1f;
-        public float ConescrationCD20 = 12.5f;
-        public float ExorcismCD20 = 25f;
-        public float HammerOfWrathCD20 = 6.4f;
+        public Rotation.Ability[] Priorities = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
+                                                   Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
 
         public bool GlyphJudgement = true;
         public bool GlyphConsecration = true;
