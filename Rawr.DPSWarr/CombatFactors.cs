@@ -4,9 +4,9 @@ namespace Rawr.DPSWarr
     {
         public CombatFactors(Character character, Stats stats)
         {
-            _stats = stats;
-            _mainHand = character.MainHand ?? new Knuckles();
-            _offHand = character.OffHand ?? new Knuckles();
+			_stats = stats;
+			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
+			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
             _talents = character.WarriorTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
             _characterRace = character.Race;

@@ -9,6 +9,14 @@ namespace Rawr.DPSWarr
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", Character.CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public CalculationsDPSWarr()
         {
             SetupRelevantItemTypes();
@@ -177,19 +185,19 @@ namespace Rawr.DPSWarr
             //Mongoose
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
             {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
             }
             if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
             {
-                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
-                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
+                statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
+                statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
             }
 
             //Executioner
             if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
             {
-                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
             }
 
             return statsBuffs;
@@ -199,9 +207,9 @@ namespace Rawr.DPSWarr
         {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             var agiBase = (float) Math.Floor(statsRace.Agility*(1 + statsRace.BonusAgilityMultiplier));
             var agiBonus = (float) Math.Floor(statsGearEnchantsBuffs.Agility*(1 + statsRace.BonusAgilityMultiplier));
@@ -504,8 +512,8 @@ namespace Rawr.DPSWarr
                         PhysicalCrit = 0.03186f,
                     };
                     if ((character.MainHand != null) &&
-                        ((character.MainHand.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Type == Item.ItemType.OneHandMace)))
+                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
+                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
                     {
                         statsRace.Expertise += 5f;
                     }

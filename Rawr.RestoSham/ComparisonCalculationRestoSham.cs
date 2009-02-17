@@ -49,7 +49,14 @@ namespace Rawr.RestoSham
         {
             get { return _item; }
             set { _item = value; }
-        }
+		}
+
+		private ItemInstance _itemInstance = null;
+		public override ItemInstance ItemInstance
+		{
+			get { return _itemInstance; }
+			set { _itemInstance = value; }
+		}
 
 
         private bool _bEquipped;

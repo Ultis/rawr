@@ -81,7 +81,14 @@ namespace Rawr.Moonkin
             {
                 item = value;
             }
-        }
+		}
+
+		private ItemInstance _itemInstance = null;
+		public override ItemInstance ItemInstance
+		{
+			get { return _itemInstance; }
+			set { _itemInstance = value; }
+		}
 
         bool equipped = false;
         public override bool Equipped

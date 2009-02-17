@@ -1032,9 +1032,9 @@ namespace Rawr.Elemental
             #region Base state
             SimuState baseState = new SimuState(baseStats, talents, calcOpts);
             if (calcOpts.calculatedStats.LocalCharacter.Trinket1 != null)
-                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket1.Stats);
+                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket1.Item.Stats);
             if (calcOpts.calculatedStats.LocalCharacter.Trinket2 != null)
-                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket2.Stats);
+                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket2.Item.Stats);
             #endregion
             /*SimuState stateSim1 = baseState.Clone();
             stateSim1.simulator = new DefaultRotation { castLvBWithoutFS = true, castFSWheneverPossible = true };

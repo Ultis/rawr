@@ -27,7 +27,14 @@ namespace Rawr.Rogue
             set { _subPoints[0] = value; }
         }
 
-        public override Item Item { get; set; }
+		public override Item Item { get; set; }
+
+		private ItemInstance _itemInstance = null;
+		public override ItemInstance ItemInstance
+		{
+			get { return _itemInstance; }
+			set { _itemInstance = value; }
+		}
 
         public override bool Equipped { get; set; }
 

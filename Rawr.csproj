@@ -194,12 +194,6 @@
     <Compile Include="FormEnterNameRealm.Designer.cs">
       <DependentUpon>FormEnterNameRealm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFillSockets.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormFillSockets.Designer.cs">
-      <DependentUpon>FormFillSockets.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormItemEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -323,10 +317,6 @@
     <EmbeddedResource Include="FormEnterNameRealm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormEnterNameRealm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormFillSockets.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>FormFillSockets.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormGemmingTemplates.resx">
       <DependentUpon>FormGemmingTemplates.cs</DependentUpon>

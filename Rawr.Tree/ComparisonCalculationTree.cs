@@ -37,7 +37,14 @@ namespace Rawr.Tree
         {
             get { return _item; }
             set { _item = value; }
-        }
+		}
+
+		private ItemInstance _itemInstance = null;
+		public override ItemInstance ItemInstance
+		{
+			get { return _itemInstance; }
+			set { _itemInstance = value; }
+		}
         
         public override bool Equipped { get; set;}
 
