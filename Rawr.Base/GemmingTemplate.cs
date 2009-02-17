@@ -217,7 +217,7 @@ namespace Rawr
             }
         }
 
-		public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blackstmithingSocket)
+		public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
 		{
 			if (item == null) return null;
 			Item gem1 = null;
@@ -231,10 +231,10 @@ namespace Rawr
 				case Item.ItemSlot.Blue: gem1 = BlueGem; break;
 				case Item.ItemSlot.Prismatic: gem1 = PrismaticGem; break;
                 case Item.ItemSlot.None: 
-                    if (blackstmithingSocket)
+                    if (blacksmithingSocket)
                     {
                         gem1 = PrismaticGem;
-                        blackstmithingSocket = false;
+                        blacksmithingSocket = false;
                     }
                     break;
 			}
@@ -246,10 +246,10 @@ namespace Rawr
 				case Item.ItemSlot.Blue: gem2 = BlueGem; break;
 				case Item.ItemSlot.Prismatic: gem2 = PrismaticGem; break;
                 case Item.ItemSlot.None:
-                    if (blackstmithingSocket)
+                    if (blacksmithingSocket)
                     {
                         gem2 = PrismaticGem;
-                        blackstmithingSocket = false;
+                        blacksmithingSocket = false;
                     }
                     break;
             }
@@ -261,10 +261,10 @@ namespace Rawr
 				case Item.ItemSlot.Blue: gem3 = BlueGem; break;
 				case Item.ItemSlot.Prismatic: gem3 = PrismaticGem; break;
                 case Item.ItemSlot.None:
-                    if (blackstmithingSocket)
+                    if (blacksmithingSocket)
                     {
                         gem3 = PrismaticGem;
-                        blackstmithingSocket = false;
+                        blacksmithingSocket = false;
                     }
                     break;
             }
