@@ -639,7 +639,7 @@ namespace Rawr //O O . .
 
         public ItemAvailability GetItemAvailability(Item item)
         {
-            return GetItemAvailability(item.Id.ToString(), item.Id.ToString(), item.Id.ToString());
+            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0.0.0", item.Id.ToString() + ".0.0.0.0");
         }
 
         public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
