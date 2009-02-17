@@ -24,6 +24,8 @@ namespace Rawr.RestoSham
             txtOutsideFSR.Tag = new NumericField("OutsideFSRPct", 0f, 75f, true);
             txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 3000f, true);
+            tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
+            tbOverhealing.Tag = new NumericField("OverhealingPercentage", 0f, 100f, true);
         }
 
         protected override void LoadCalculationOptions()
@@ -49,6 +51,12 @@ namespace Rawr.RestoSham
             chkELWGlyph.Checked = options.ELWGlyph;
             chkGlyphCH.Checked = options.GlyphCH;
             txtESInterval.Text = options.ESInterval.ToString();
+            
+            // The track bars
+            tbBurst.Value = (Int32)options.BurstPercentage; 
+            UpdateTrackBarLabel(tbBurst);
+            tbOverhealing.Value = (Int32)options.OverhealingPercentage;
+            UpdateTrackBarLabel(tbOverhealing);
 
             _bLoading = false;
         }
@@ -261,6 +269,10 @@ namespace Rawr.RestoSham
             if (trackBar.Tag == null)
                 return;
 
+            // For now, only update the labels of track bars we think are percentages.
+            if (trackBar.Minimum == 0 && trackBar.Maximum == 100)
+                UpdateTrackBarLabel(trackBar);
+
             NumericField f = trackBar.Tag as NumericField;
             if (trackBar.Value == 0 && !f.CanBeZero)
             {
@@ -277,6 +289,25 @@ namespace Rawr.RestoSham
 
             this[f.PropertyName] = trackBar.Value;
             Character.OnCalculationsInvalidated();
+        }
+
+        private void UpdateTrackBarLabel(TrackBar trackBar)
+        {
+            Control[] sr = trackBar.Parent.Controls.Find(string.Format("{0}_Label", trackBar.Name), true);
+            if (sr == null || sr.Length != 1)
+                return;
+
+            Label l = sr[0] as Label;
+            if (l == null)
+                return;
+
+            System.Text.RegularExpressions.Regex re = new System.Text.RegularExpressions.Regex(
+                "\\(\\d*%\\)",
+                System.Text.RegularExpressions.RegexOptions.CultureInvariant
+                | System.Text.RegularExpressions.RegexOptions.Compiled
+            );
+
+            l.Text = re.Replace(l.Text, string.Format("({0}%)", trackBar.Value));
         }
     }
 
@@ -377,6 +408,15 @@ namespace Rawr.RestoSham
         /// </summary>
         public float ESInterval = 60f;
 
+        /// <summary>
+        /// The percentage of healing that is intended to be burst.
+        /// </summary>
+        public float BurstPercentage = 20f;
+
+        /// <summary>
+        /// The percentage of healing that is overhealing.
+        /// </summary>
+        public float OverhealingPercentage = 20f;
     }
 
 }

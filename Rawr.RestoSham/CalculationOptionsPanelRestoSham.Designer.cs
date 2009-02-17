@@ -44,6 +44,11 @@
             this.chkGlyphCH = new System.Windows.Forms.CheckBox();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbOverhealing_Label = new System.Windows.Forms.Label();
+            this.tbOverhealing = new System.Windows.Forms.TrackBar();
+            this.tbBurst_Label = new System.Windows.Forms.Label();
+            this.tbBurst = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -57,6 +62,9 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.tabPage1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -213,6 +221,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.txtFightLength);
             this.tabPage1.Controls.Add(this.chkMT);
@@ -232,6 +241,55 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tbOverhealing_Label);
+            this.groupBox1.Controls.Add(this.tbOverhealing);
+            this.groupBox1.Controls.Add(this.tbBurst_Label);
+            this.groupBox1.Controls.Add(this.tbBurst);
+            this.groupBox1.Location = new System.Drawing.Point(6, 200);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(192, 153);
+            this.groupBox1.TabIndex = 27;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Healing Style";
+            // 
+            // tbOverhealing_Label
+            // 
+            this.tbOverhealing_Label.AutoSize = true;
+            this.tbOverhealing_Label.Location = new System.Drawing.Point(6, 84);
+            this.tbOverhealing_Label.Name = "tbOverhealing_Label";
+            this.tbOverhealing_Label.Size = new System.Drawing.Size(84, 13);
+            this.tbOverhealing_Label.TabIndex = 5;
+            this.tbOverhealing_Label.Text = "Overhealing (%):";
+            // 
+            // tbOverhealing
+            // 
+            this.tbOverhealing.Location = new System.Drawing.Point(6, 100);
+            this.tbOverhealing.Maximum = 100;
+            this.tbOverhealing.Name = "tbOverhealing";
+            this.tbOverhealing.Size = new System.Drawing.Size(179, 45);
+            this.tbOverhealing.TabIndex = 4;
+            this.tbOverhealing.Scroll += new System.EventHandler(this.OnTrackBarScroll);
+            // 
+            // tbBurst_Label
+            // 
+            this.tbBurst_Label.AutoSize = true;
+            this.tbBurst_Label.Location = new System.Drawing.Point(7, 20);
+            this.tbBurst_Label.Name = "tbBurst_Label";
+            this.tbBurst_Label.Size = new System.Drawing.Size(51, 13);
+            this.tbBurst_Label.TabIndex = 1;
+            this.tbBurst_Label.Text = "Burst (%):";
+            // 
+            // tbBurst
+            // 
+            this.tbBurst.Location = new System.Drawing.Point(7, 36);
+            this.tbBurst.Maximum = 100;
+            this.tbBurst.Name = "tbBurst";
+            this.tbBurst.Size = new System.Drawing.Size(179, 45);
+            this.tbBurst.TabIndex = 0;
+            this.tbBurst.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
             // label2
             // 
@@ -356,6 +414,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -393,6 +455,11 @@
         private System.Windows.Forms.CheckBox chkWaterShield3;
         private System.Windows.Forms.CheckBox chkGlyphCH;
         private System.Windows.Forms.CheckBox chkELWGlyph;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TrackBar tbBurst;
+        private System.Windows.Forms.Label tbOverhealing_Label;
+        private System.Windows.Forms.TrackBar tbOverhealing;
+        private System.Windows.Forms.Label tbBurst_Label;
 
     }
 }
