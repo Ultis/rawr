@@ -492,9 +492,9 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
-        public Stats GetEnchantsStats(Character character)
+        public Stats GetItemStats(Character character, Item additionalItem)
         {
-            Stats statsEnchants = null; //TODO: FIX_THIS   base.GetEnchantsStats(character);
+            Stats statsItems = base.GetItemStats(character, additionalItem);
 
             // Assuming a GCD every 1.5s
             float abilityPerSecond = 1.0f / 1.5f;
@@ -502,29 +502,29 @@ threat and limited threat scaled by the threat scale.",
             float hitRate = 0.85f;  
 
             //Mongoose
-            if (statsEnchants.MongooseProc > 0)
+            if (statsItems.MongooseProc > 0)
             {
                 float procRate = 1.0f; // PPM
                 float procDuration = 15.0f;
                 float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
                 float procUptime = procDuration * procPerSecond;
 
-                statsEnchants.Agility += 120.0f * procUptime;
-                statsEnchants.HasteRating += (2.0f / ProtWarr.HasteRatingToHaste) * procUptime;
+                statsItems.Agility += 120.0f * procUptime;
+                statsItems.HasteRating += (2.0f / ProtWarr.HasteRatingToHaste) * procUptime;
             }
 
             //Executioner
-            if (statsEnchants.ExecutionerProc > 0)
+            if (statsItems.ExecutionerProc > 0)
             {
                 float procRate = 1.2f; // PPM
                 float procDuration = 15.0f;
                 float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
                 float procUptime = procDuration * procPerSecond;
 
-                statsEnchants.ArmorPenetrationRating += 120.0f * procUptime;
+                statsItems.ArmorPenetrationRating += 120.0f * procUptime;
             }
 
-            return statsEnchants;
+            return statsItems;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -533,7 +533,6 @@ threat and limited threat scaled by the threat scale.",
             WarriorTalents talents = character.WarriorTalents;
 
             Stats statsRace = GetRaceStats(character);
-			Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsTalents = new Stats()
@@ -550,20 +549,20 @@ threat and limited threat scaled by the threat scale.",
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
             };
-            Stats statsGearEnchantsBuffs = statsItems + statsEnchants + statsBuffs;
-            Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
+            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
             statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsEnchants.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsEnchants.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)
             {
                 statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
             }
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsEnchants.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += statsTotal.Stamina * 10f;
             if (character.ActiveBuffsContains("Commanding Shout"))
                 statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
