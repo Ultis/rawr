@@ -411,12 +411,12 @@ namespace Rawr.RestoSham
         /// <summary>
         /// The percentage of healing that is intended to be burst.
         /// </summary>
-        public float BurstPercentage = 20f;
+        public float BurstPercentage = 25f;
 
         /// <summary>
         /// The percentage of healing that is overhealing.
         /// </summary>
-        public float OverhealingPercentage = 20f;
+        public float OverhealingPercentage = 35f;
     }
 
 }

@@ -217,15 +217,10 @@ namespace Rawr.RestoSham
             float Purify = (1f + ((character.ShamanTalents.Purification) * .02f));
             float Healing = 1.88f * stats.SpellPower;
             float Hasted = 1 - (stats.HasteRating / 3279);
-            float OverHeal = .35f;
-            float Burst = .25f;
-            float Sustained = .60f;
-            float Activity = 1;
-            if ((Burst + Sustained) > 1)
-                Sustained = 1f - Burst;
-            if ((Burst + Sustained) < 1)
-                Activity = (Burst + Sustained);
-            float TrueHealing = (1 - OverHeal) * Activity;
+            float OverHeal = options.OverhealingPercentage * .01f;
+            float Burst = options.BurstPercentage * .01f;
+            float Sustained = 1 - Burst;
+            float TrueHealing = (1 - OverHeal);
             float ELWHPS = 0;
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * Purify;
@@ -262,10 +257,10 @@ namespace Rawr.RestoSham
                 HWTC = (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
 
             // Spell Mana Costs
-            float LHWM = ((550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f))) * Activity;
-            float HWM = ((1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))) * Activity;
-            float CHM = ((835 * Redux)) * Activity;
-            float RTM = (((792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))) * Activity) * character.ShamanTalents.Riptide;
+            float LHWM = ((550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f)));
+            float HWM = ((1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            float CHM = ((835 * Redux));
+            float RTM = (((792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)))) * character.ShamanTalents.Riptide;
 
             // Spell Healing Amounts
             float LHWHeal = ((((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
@@ -287,7 +282,7 @@ namespace Rawr.RestoSham
             if (character.ShamanTalents.EarthShield > 0)
                 ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify) * TrueHealing;
             if (character.ShamanTalents.EarthShield > 0)
-                ESCMPS = (((Time / options.ESInterval) * (660f * Redux))) * Activity;
+                ESCMPS = (((Time / options.ESInterval) * (660f * Redux)));
 
             // MPS Calculation Variables
             float RTMPS = 0;
