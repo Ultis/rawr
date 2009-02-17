@@ -12,7 +12,102 @@ namespace Rawr
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                ////Relevant Gem IDs for Enhancement Shamans
+                //Red
+                int[] delicate = { 39905, 39997, 40112, 42143 };
+                int[] bright = { 39906, 39999, 40114, 36766 };
+                int[] precise = { 39910, 40003, 40118, 42154 };
+                
+                //Yellow
+                int[] rigid = { 39915, 40014, 40125, 42156 };
+                int[] smooth = { 39914, 40013, 40124, 42149 };
+
+                //Orange
+                int[] accurate = { 39966, 40058, 40162 };
+                int[] deadly = { 39952, 40043, 40147 };
+                int[] glinting = { 39953, 40044, 40148 };
+                int[] pristine = { 39961, 40053, 40157 };
+                int[] wicked = { 39960, 40052, 40156 };
+
+                //Meta
+                // int austere = 41380;
+                int relentless = 41398;
+
+                return new List<GemmingTemplate>() { 
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Agility
+						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Attack Power
+						RedId = bright[0], YellowId = bright[0], BlueId = bright[0], PrismaticId = bright[0], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+						RedId = precise[0], YellowId = precise[0], BlueId = precise[0], PrismaticId = precise[0], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+						RedId = rigid[0], YellowId = rigid[0], BlueId = rigid[0], PrismaticId = rigid[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+						RedId = smooth[0], YellowId = smooth[0], BlueId = smooth[0], PrismaticId = smooth[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
+						RedId = accurate[0], YellowId = accurate[0], BlueId = accurate[0], PrismaticId = accurate[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
+						RedId = deadly[0], YellowId = deadly[0], BlueId = deadly[0], PrismaticId = deadly[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
+						RedId = glinting[0], YellowId = glinting[0], BlueId = glinting[0], PrismaticId = glinting[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
+						RedId = pristine[0], YellowId = pristine[0], BlueId = pristine[0], PrismaticId = pristine[0], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
+						RedId = wicked[0], YellowId = wicked[0], BlueId = wicked[0], PrismaticId = wicked[0], MetaId = relentless },
+
+                   	new GemmingTemplate() { Model = "Enhance", Group = "Rare", //Max Agility
+						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", //Max Attack Power
+						RedId = bright[1], YellowId = bright[1], BlueId = bright[1], PrismaticId = bright[1], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+						RedId = precise[1], YellowId = precise[1], BlueId = precise[1], PrismaticId = precise[1], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+						RedId = rigid[1], YellowId = rigid[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+						RedId = smooth[1], YellowId = smooth[1], BlueId = smooth[1], PrismaticId = smooth[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
+						RedId = accurate[1], YellowId = accurate[1], BlueId = accurate[1], PrismaticId = accurate[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
+						RedId = deadly[1], YellowId = deadly[1], BlueId = deadly[1], PrismaticId = deadly[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
+						RedId = glinting[1], YellowId = glinting[1], BlueId = glinting[1], PrismaticId = glinting[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
+						RedId = pristine[1], YellowId = pristine[1], BlueId = pristine[1], PrismaticId = pristine[1], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
+						RedId = wicked[1], YellowId = wicked[1], BlueId = wicked[1], PrismaticId = wicked[1], MetaId = relentless },
+
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Agility
+						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Attack Power
+						RedId = bright[2], YellowId = bright[2], BlueId = bright[2], PrismaticId = bright[2], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+						RedId = precise[2], YellowId = precise[2], BlueId = precise[2], PrismaticId = precise[2], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+						RedId = rigid[2], YellowId = rigid[2], BlueId = rigid[2], PrismaticId = rigid[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+						RedId = smooth[2], YellowId = smooth[2], BlueId = smooth[2], PrismaticId = smooth[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
+						RedId = accurate[2], YellowId = accurate[2], BlueId = accurate[2], PrismaticId = accurate[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
+						RedId = deadly[2], YellowId = deadly[2], BlueId = deadly[2], PrismaticId = deadly[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
+						RedId = glinting[2], YellowId = glinting[2], BlueId = glinting[2], PrismaticId = glinting[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
+						RedId = pristine[2], YellowId = pristine[2], BlueId = pristine[2], PrismaticId = pristine[2], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
+						RedId = wicked[2], YellowId = wicked[2], BlueId = wicked[2], PrismaticId = wicked[2], MetaId = relentless },
+
+                    new GemmingTemplate() { Model = "Enhance", Group = "Jewelcrafter", //Max Agility
+						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Jewelcrafter", //Max Attack Power
+						RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+						RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = relentless },
+                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+						RedId = rigid[3], YellowId = rigid[3], BlueId = rigid[3], PrismaticId = rigid[3], MetaId = relentless },
+                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+						RedId = smooth[3], YellowId = smooth[3], BlueId = smooth[3], PrismaticId = smooth[3], MetaId = relentless },
+               };
             }
         }
 
