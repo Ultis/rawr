@@ -841,6 +841,12 @@ namespace Rawr.Moonkin
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
 
+			// Do Starfall calculations.
+			float starfallDamage = (character.DruidTalents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
+			starfallDamage *= (int)Math.Floor(calcOpts.FightLength / (3 + 1.0f/6.0f)) + 1;
+			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
+			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
+
             foreach (SpellRotation rot in rotations)
             {
 
@@ -877,8 +883,8 @@ namespace Rawr.Moonkin
                     rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
                     sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
                 }
-                burstDPS += trinketDPS + treeDPS;
-                sustainedDPS += trinketDPS + treeDPS;
+                burstDPS += trinketDPS + treeDPS + starfallDPS;
+                sustainedDPS += trinketDPS + treeDPS + starfallDPS;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.DPS = sustainedDPS;
                 if ((calcOpts.userRotation == "None" && sustainedDPS > maxDamageDone) || calcOpts.userRotation == rot.Name)
@@ -1137,6 +1143,17 @@ namespace Rawr.Moonkin
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
             return 3 * damagePerTree;
         }
+
+		// Starfall
+		private static float DoStarfallCalcs(float effectiveArcaneDamage, float spellHit, float spellCrit, float critDamageModifier)
+		{
+			float baseDamage = 5460.0f;
+
+			// Spell coefficient = 60%
+			float damagePerNormalHit = baseDamage + 0.6f * effectiveArcaneDamage;
+			float damagePerCrit = damagePerNormalHit * critDamageModifier;
+			return (spellCrit * damagePerCrit + (1 - spellCrit) * damagePerNormalHit) * spellHit;
+		}
 
         // Clicky trinket calculations
         private static void DoOnUseTrinketCalcs(CharacterCalculationsMoonkin calcs, float hitRate, ref float spellPower, ref float effectiveSpellCrit, ref float effectiveSpellHaste, ref float trinketExtraDPS)
