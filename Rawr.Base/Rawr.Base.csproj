@@ -112,7 +112,9 @@
       <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Enchant.cs" />
-    <Compile Include="GemmingTemplate.cs" />
+    <Compile Include="GemmingTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />
