@@ -7,10 +7,10 @@ namespace Rawr.Bear
 	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", Character.CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
 	{
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
+		public override List<GemmingTemplate> DefaultGemmingTemplates
+		{
+			get
+			{
 				////Relevant Gem IDs for Ferals
 				//Red
 				int[] bold = { 39900, 39996, 40111, 42142 };
@@ -83,8 +83,8 @@ namespace Rawr.Bear
 					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Survivbility
 						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
 				};
-            }
-        }
+			}
+		}
 
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
