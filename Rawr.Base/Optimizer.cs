@@ -947,36 +947,22 @@ namespace Rawr
             //Dictionary<Item, bool> uniqueDict = new Dictionary<Item, bool>();
             Item item = null;
             List<ItemInstance> possibleGemmedItems = null;
-            List<string> gemmedIds = null;
-            Dictionary<string, List<string>> gemmedIdMap = new Dictionary<string, List<string>>();
+            List<string> gemmedIds = new List<string>();
+            Dictionary<string, bool> gemmedIdMap = new Dictionary<string, bool>();
             foreach (string xid in itemIds)
             {
                 int dot = xid.LastIndexOf('.');
-                string gemmedId = (dot >= 0) ? xid.Substring(0, dot) : xid;
-                List<string> restrictions;
-                if (!gemmedIdMap.TryGetValue(gemmedId, out restrictions))
-                {
-                    restrictions = new List<string>();
-                    gemmedIdMap[gemmedId] = restrictions;
-                }
+                string gemmedId = (dot >= 0) ? xid.Substring(0, dot) : (xid + ".*.*.*");
                 string restriction = (dot >= 0) ? xid.Substring(dot + 1) : "*";
-                if (overrideReenchant) restriction = "*";
-                if (!restrictions.Contains(restriction)) restrictions.Add(restriction);
+                gemmedIdMap[gemmedId + "." + restriction] = true;
+                if (overrideReenchant) gemmedIdMap[gemmedId + ".*"] = true;
 
                 if (overrideRegem)
                 {
                     int dot2 = xid.IndexOf('.');
-                    gemmedId = (dot2 >= 0) ? xid.Substring(0, dot2) : xid;
-                }
-                if (overrideReenchant) restriction = "*";
-                if (overrideRegem || overrideReenchant)
-                {
-                    if (!gemmedIdMap.TryGetValue(gemmedId, out restrictions))
-                    {
-                        restrictions = new List<string>();
-                        gemmedIdMap[gemmedId] = restrictions;
-                    }
-                    if (!restrictions.Contains(restriction)) restrictions.Add(restriction);
+                    gemmedId = ((dot2 >= 0) ? xid.Substring(0, dot2) : xid) + ".*.*.*";
+                    gemmedIdMap[gemmedId + "." + restriction] = true;
+                    if (overrideReenchant) gemmedIdMap[gemmedId + ".*"] = true;
                 }
             }
             gemmedIds = new List<string>(gemmedIdMap.Keys);
