@@ -484,7 +484,6 @@
             // chbGlyphSS
             // 
             this.chbGlyphSS.AutoSize = true;
-            this.chbGlyphSS.Enabled = false;
             this.chbGlyphSS.Location = new System.Drawing.Point(5, 134);
             this.chbGlyphSS.Name = "chbGlyphSS";
             this.chbGlyphSS.Size = new System.Drawing.Size(120, 17);

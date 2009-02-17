@@ -332,14 +332,14 @@ namespace Rawr
 
             float glancingRate = 0.25f;
 
-            float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS);
+            float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
             float hitBonusSpell = stats.HitRating / 2623.199272f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS + spellCritModifier);
+            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS + spellCritModifier + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower;
 
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
@@ -446,7 +446,8 @@ namespace Rawr
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
 
             //4: Earth Shock DPS
-            float stormstrikeMultiplier = 1.2f; // TODO glyph adds 8% if equipped
+            float ssGlyphBonus = calcOpts.GlyphSS ? .08f : 0f;
+            float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
             float damageESBase = 872f;
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * stats.SpellPower);
@@ -612,15 +613,13 @@ namespace Rawr
             statsTotal.CritMeleeRating = statsRace.CritMeleeRating + statsGearEnchantsBuffs.CritMeleeRating;
 
             int MQ = character.ShamanTalents.MentalQuickness;
-            float FT = 211f * (1 + character.ShamanTalents.ElementalWeapons * .1f);
+            statsTotal.BonusFlametongueDamage = (float) Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
 
-            statsTotal.SpellPower = (statsTotal.AttackPower * .1f * MQ) + FT + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower;
+            statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            // Haste trinket (Meteorite Whetstone)
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone)
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-			statsTotal.TerrorProc = statsRace.TerrorProc + statsGearEnchantsBuffs.TerrorProc;
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
