@@ -262,6 +262,7 @@ namespace Rawr
         ConsecrationSpellPower,
         CritDivineStorm_8,
         CritJudgement_5,
+        JudgementCDReduction,
         #endregion
         #region Warlock set bonuses
         LifeTapBonusSpirit,
@@ -2094,6 +2095,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("sec Judgement CD Reduction")]
+        [Category("Equipment Procs")]
+        public float JudgementCDReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementCDReduction] = value; }
         }
 
 

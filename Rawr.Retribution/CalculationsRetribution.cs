@@ -167,7 +167,8 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, true, calcOpts.GlyphConsecration);
+            Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false,
+                calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
@@ -291,8 +292,6 @@ namespace Rawr.Retribution
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
-            Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, true, calcOpts.GlyphConsecration);
-            RotationSolution sol = RotationSimulator.SimulateRotation(rot);
             Stats statsRace;
             switch (character.Race)
             {
@@ -331,6 +330,10 @@ namespace Rawr.Retribution
 
             Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
             Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
+
+            Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false, calcOpts.GlyphConsecration);
+            RotationSolution sol = RotationSimulator.SimulateRotation(rot);
+
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (float)Math.Floor((statsOther.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
             float libramAP = stats.APCrusaderStrike_6 * 6f * sol.CrusaderStrike / fightLength;
@@ -468,7 +471,8 @@ namespace Rawr.Retribution
                 CritJudgement_5 = stats.CritJudgement_5,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 APCrusaderStrike_6 = stats.APCrusaderStrike_6,
-                ConsecrationSpellPower = stats.ConsecrationSpellPower
+                ConsecrationSpellPower = stats.ConsecrationSpellPower,
+                JudgementCDReduction = stats.JudgementCDReduction
             };
         }
 
@@ -479,7 +483,8 @@ namespace Rawr.Retribution
                 stats.CritRating + stats.HitRating + stats.PhysicalHaste + stats.PhysicalCrit + stats.PhysicalHit + stats.SpellHit + stats.SpellPower+
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower
+                stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower +
+                stats.JudgementCDReduction
                 ) != 0;
         }
     }

@@ -2308,6 +2308,15 @@ namespace Rawr
                 SetThreshold = 2
             });
 
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { JudgementCDReduction = 1f },
+                SetName = "Redemption Battlegear",
+                SetThreshold = 4
+            });
             
 			#endregion
 
