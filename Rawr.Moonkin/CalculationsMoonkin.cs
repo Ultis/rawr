@@ -11,7 +11,37 @@ namespace Rawr.Moonkin
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                return new List<GemmingTemplate>()
+				{
+					// Perfect uncommon gems
+					// All but blue = Perfect Runed Bloodstone
+					// Blue = Perfect Purified Shadow Crystal (spirit/spell power)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 41438,
+						YellowId = 41438,
+						BlueId = 41457,
+						PrismaticId = 41438,
+						MetaId = 41285
+					},
+					// Rare gems
+					// All but blue = Runed Scarlet Ruby
+					// Blue = Purified Twilight Opal (spirit/spell power)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 39998,
+						BlueId = 40026,
+						PrismaticId = 39998,
+						MetaId = 41285
+					}
+				};
             }
         }
 
