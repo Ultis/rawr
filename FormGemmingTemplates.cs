@@ -80,7 +80,8 @@ namespace Rawr
 				checkBoxHeader.CheckStateChanged += new EventHandler(checkBoxHeader_CheckStateChanged);
 				checkBoxHeader.Left = 22;
 				checkBoxHeader.Top = -1;
-				panelGroupHeader.Controls.Add(checkBoxHeader);
+                checkBoxHeader.AutoSize = true;
+                panelGroupHeader.Controls.Add(checkBoxHeader);
 
 				panelGemmingTemplates.Controls.Add(panelGroupHeader);
 				panelGroupHeader.BringToFront();

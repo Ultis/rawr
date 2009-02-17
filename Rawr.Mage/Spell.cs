@@ -284,16 +284,16 @@ namespace Rawr.Mage
                 Spell spell = castingState.GetSpell(spellWeight.Spell);
                 weightTotal += spellWeight.Weight;
                 CastTime += spellWeight.Weight * spell.CastTime;
-                CostPerSecond += spellWeight.Weight * spell.CostPerSecond;
-                DamagePerSecond += spellWeight.Weight * spell.DamagePerSecond;
-                ThreatPerSecond += spellWeight.Weight * spell.ThreatPerSecond;
-                ManaRegenPerSecond += spellWeight.Weight * spell.ManaRegenPerSecond;
+                CostPerSecond += spellWeight.Weight * spell.CostPerSecond * spell.CastTime;
+                DamagePerSecond += spellWeight.Weight * spell.DamagePerSecond * spell.CastTime;
+                ThreatPerSecond += spellWeight.Weight * spell.ThreatPerSecond * spell.CastTime;
+                ManaRegenPerSecond += spellWeight.Weight * spell.ManaRegenPerSecond * spell.CastTime;
             }
             CastTime /= weightTotal;
-            CostPerSecond /= weightTotal;
-            DamagePerSecond /= weightTotal;
-            ThreatPerSecond /= weightTotal;
-            ManaRegenPerSecond /= weightTotal;
+            CostPerSecond /= weightTotal * CastTime;
+            DamagePerSecond /= weightTotal * CastTime;
+            ThreatPerSecond /= weightTotal * CastTime;
+            ManaRegenPerSecond /= weightTotal * CastTime;
         }
 
         public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)

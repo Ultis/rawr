@@ -9,26 +9,38 @@ namespace Rawr.Mage
 	[Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", Character.CharacterClass.Mage)]
     public sealed class CalculationsMage : CalculationsBase
     {
+        private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                const int runed = 39998;
-                const int veiled = 40049;
-                const int potent = 40048;
-                const int reckless = 40051;
-                const int glowing = 40025;
-                const int purified = 40026;
-                const int royal = 40027;
-                const int chaotic = 41285;
-                return new List<GemmingTemplate>() 
+                if (_defaultGemmingTemplates == null)
                 {
-                    new GemmingTemplate() { Model = "Mage", Group = "Rare", Enabled = true, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = chaotic},
-                    new GemmingTemplate() { Model = "Mage", Group = "Rare", Enabled = true, RedId = runed, YellowId = veiled, BlueId = purified, PrismaticId = runed, MetaId = chaotic},
-                    new GemmingTemplate() { Model = "Mage", Group = "Rare", Enabled = true, RedId = runed, YellowId = potent, BlueId = purified, PrismaticId = runed, MetaId = chaotic},
-                    new GemmingTemplate() { Model = "Mage", Group = "Rare", Enabled = true, RedId = runed, YellowId = reckless, BlueId = purified, PrismaticId = runed, MetaId = chaotic},
-                };
+                    _defaultGemmingTemplates = new List<GemmingTemplate>();
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Purified)", false, 39911, 39957, 39956, 39959, 39946, 39941);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Royal)", false, 39911, 39957, 39956, 39959, 39946, 39943);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Glowing)", false, 39911, 39957, 39956, 39959, 39946, 39936);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Jewelcrafting)", false, 39911, 39957, 39956, 39959, 39946, 42144);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Purified)", true, 39998, 40049, 40048, 40051, 40047, 40026);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Royal)", false, 39998, 40049, 40048, 40051, 40047, 40027);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Glowing)", false, 39998, 40049, 40048, 40051, 40047, 40025);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 39998, 40049, 40048, 40051, 40047, 42144);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Purified)", false, 40113, 40153, 40152, 40155, 40151, 40133);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Royal)", false, 40113, 40153, 40152, 40155, 40151, 40134);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Glowing)", false, 40113, 40153, 40152, 40155, 40151, 40132);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 40113, 40153, 40152, 40155, 40151, 42144);
+                }
+                return _defaultGemmingTemplates;
             }
+        }
+
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int veiled, int potent, int reckless, int luminous, int blue)
+        {
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = veiled, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = potent, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = reckless, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = luminous, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
         }
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
