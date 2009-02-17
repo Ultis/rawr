@@ -227,8 +227,15 @@ namespace Rawr
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			e.Graphics.DrawImageUnscaled(PrerenderedImage, 0, 0);
+			try
+			{
+				e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+				e.Graphics.DrawImageUnscaled(PrerenderedImage, 0, 0);
+			}
+			catch (Exception ex)
+			{
+				ex.ToString();
+			}
 		}
 
 		private bool _isEnchant = false;
@@ -247,119 +254,127 @@ namespace Rawr
 		{
 			get
 			{
-				if (_prerenderedImage == null)
+				try
 				{
-					_prerenderedImage = new Bitmap(this.Width, this.Height);
-					Graphics g = Graphics.FromImage(_prerenderedImage);
-					g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-					g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-
-					if (_tooltipShown)
+					if (_prerenderedImage == null)
 					{
-						g.FillRectangle(BrushHighlightBorder, 2, 2, this.Width - 4, this.Height - 2);
-						g.FillRectangle(BrushHighlight, 3, 3, this.Width - 6, this.Height - 4);
-					}
-					else if (_itemCalculation.Equipped)
-						g.FillRectangle(BrushEquipped, 2, 2, this.Width - 4, this.Height - 4);
+						_prerenderedImage = new Bitmap(this.Width, this.Height);
+						Graphics g = Graphics.FromImage(_prerenderedImage);
+						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+						g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 
-					if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
-						g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
-					int gemCount = (_itemCalculation.Item.SocketColor1 == Item.ItemSlot.None ? 0 : 1) +
-						(_itemCalculation.Item.SocketColor2 == Item.ItemSlot.None ? 0 : 1) +
-							(_itemCalculation.Item.SocketColor3 == Item.ItemSlot.None ? 0 : 1);
-					if (IsEnchant)
-						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
-							new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
-					else
-						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
-							new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
-					
-					if (_itemCalculation.Item.SocketColor1 != Item.ItemSlot.None)
-					{
-						switch (_itemCalculation.Item.SocketColor1)
+						if (_tooltipShown)
 						{
-							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
+							g.FillRectangle(BrushHighlightBorder, 2, 2, this.Width - 4, this.Height - 2);
+							g.FillRectangle(BrushHighlight, 3, 3, this.Width - 6, this.Height - 4);
 						}
-                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem1 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem1, true), 
-								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
-						gemCount--;
-					}
+						else if (_itemCalculation.Equipped)
+							g.FillRectangle(BrushEquipped, 2, 2, this.Width - 4, this.Height - 4);
 
-					if (_itemCalculation.Item.SocketColor2 != Item.ItemSlot.None)
-					{
-						switch (_itemCalculation.Item.SocketColor2)
+						if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
+							g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
+						int gemCount = (_itemCalculation.Item.SocketColor1 == Item.ItemSlot.None ? 0 : 1) +
+							(_itemCalculation.Item.SocketColor2 == Item.ItemSlot.None ? 0 : 1) +
+								(_itemCalculation.Item.SocketColor3 == Item.ItemSlot.None ? 0 : 1);
+						if (IsEnchant)
+							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
+								new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
+						else
+							g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
+								new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
+
+						if (_itemCalculation.Item.SocketColor1 != Item.ItemSlot.None)
 						{
-							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
+							switch (_itemCalculation.Item.SocketColor1)
+							{
+								case Item.ItemSlot.Meta:
+									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Red:
+									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Yellow:
+									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Blue:
+									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+							}
+							if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem1 != null)
+								g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem1, true),
+									new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
+							gemCount--;
 						}
-                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem2 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem2, true),
-								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
-						gemCount--;
-					}
 
-					if (_itemCalculation.Item.SocketColor3 != Item.ItemSlot.None)
-					{
-						switch (_itemCalculation.Item.SocketColor3)
+						if (_itemCalculation.Item.SocketColor2 != Item.ItemSlot.None)
 						{
-							case Item.ItemSlot.Meta:
-								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Red:
-								g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Yellow:
-								g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
-							case Item.ItemSlot.Blue:
-								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
-								break;
+							switch (_itemCalculation.Item.SocketColor2)
+							{
+								case Item.ItemSlot.Meta:
+									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Red:
+									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Yellow:
+									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Blue:
+									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+							}
+							if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem2 != null)
+								g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem2, true),
+									new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
+							gemCount--;
 						}
-                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem3 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem3, true),
-								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
-						gemCount--;
-					}
 
-					float maxWidth = this.Width - 10;
-					int startX = 5;
-					int sort = (int)_sort;
-					int subPointWidth = 0;
-					Color[] subPointColors = new Color[Calculations.SubPointNameColors.Values.Count];
-					Calculations.SubPointNameColors.Values.CopyTo(subPointColors, 0);
-					for (int i = 0; i < _itemCalculation.SubPoints.Length; i++)
-					{
-						if (sort == i || sort < 0)
+						if (_itemCalculation.Item.SocketColor3 != Item.ItemSlot.None)
 						{
-							subPointWidth = (int)Math.Floor((float)maxWidth * (_itemCalculation.SubPoints[i] / _maxRating));
+							switch (_itemCalculation.Item.SocketColor3)
+							{
+								case Item.ItemSlot.Meta:
+									g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Red:
+									g.FillRectangle(BrushRed, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Yellow:
+									g.FillRectangle(BrushYellow, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+								case Item.ItemSlot.Blue:
+									g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
+									break;
+							}
+							if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem3 != null)
+								g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem3, true),
+									new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
+							gemCount--;
+						}
+
+						float maxWidth = this.Width - 10;
+						int startX = 5;
+						int sort = (int)_sort;
+						int subPointWidth = 0;
+						Color[] subPointColors = new Color[Calculations.SubPointNameColors.Values.Count];
+						Calculations.SubPointNameColors.Values.CopyTo(subPointColors, 0);
+						for (int i = 0; i < _itemCalculation.SubPoints.Length; i++)
+						{
+							if (sort == i || sort < 0)
+							{
+								subPointWidth = (int)Math.Floor((float)maxWidth * (_itemCalculation.SubPoints[i] / _maxRating));
 								g.FillRectangle(new SolidBrush(subPointColors[i]), new Rectangle(Math.Max(0, startX), Math.Max(0, this.Height - 5), Math.Max(0, subPointWidth), 2));
-							startX += subPointWidth;
+								startX += subPointWidth;
+							}
 						}
 					}
+					return _prerenderedImage;
 				}
-				return _prerenderedImage;
+				catch (Exception ex)
+				{
+					ex.ToString();
+					return null;
+				}
 			}
 		}
 

@@ -12,7 +12,7 @@ namespace Rawr.RestoSham
             {
                 ////Relevant Gem IDs for Resto Shaman - Goes Normal, Rare, Epic, and JC
                 //Red
-                int[] Runed = { 39911, 39998, 40113, 42141 };
+                int[] Runed = { 39911, 39998, 40113, 42144 };
 
                 //Purple
                 int[] Royal = { 39943, 40027, 40134 };

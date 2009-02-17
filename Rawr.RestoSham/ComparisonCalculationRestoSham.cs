@@ -36,7 +36,7 @@ namespace Rawr.RestoSham
         }
 
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
