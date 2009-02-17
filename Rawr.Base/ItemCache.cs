@@ -17,24 +17,24 @@ namespace Rawr
 			set { _instance = value; }
 		}
 
-		public static SortedDictionary<string, Item[]> Items { get { return _instance.Items; } }
+		public static SortedDictionary<int, Item> Items { get { return _instance.Items; } }
 
 		public static void InvalidateCachedStats() { Instance.InvalidateCachedStats(); }
-
+	
 		public static Item FindItemById(int id) { return _instance.FindItemById(id); }
-		public static Item FindItemById(string gemmedId) { return _instance.FindItemById(gemmedId); }
-		public static Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return _instance.FindItemById(id, createIfCorrectGemmingNotFound); }
-		public static Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent) { return _instance.FindItemById(gemmedId, createIfCorrectGemmingNotFound,raiseEvent); }
         public static bool ContainsItemId(int id) { return _instance.ContainsItemId(id); }
 
 		public static Item AddItem(Item item) { return _instance.AddItem(item); }
-		public static Item AddItem(Item item, bool removeOldCopy, bool raiseEvent) { return _instance.AddItem(item, removeOldCopy, raiseEvent); }
+		public static Item AddItem(Item item, bool raiseEvent) { return _instance.AddItem(item, raiseEvent); }
 
 		public static void DeleteItem(Item item) { _instance.DeleteItem(item); }
 		public static void DeleteItem(Item item, bool raiseEvent) { _instance.DeleteItem(item, raiseEvent); }
 
 		public static Item[] AllItems { get { return _instance.AllItems; } }
 		public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
+
+        public static Item[] GetUnfilteredRelevantItems(CalculationsBase model) { return _instance.GetUnfilteredRelevantItems(model); }
+        public static Item[] GetRelevantItems(CalculationsBase model) { return _instance.GetRelevantItems(model); }
 
 		public static void OnItemsChanged() { _instance.OnItemsChanged(); }
 
@@ -47,15 +47,15 @@ namespace Rawr
 		public ItemCacheInstance() { }
 		public ItemCacheInstance(ItemCacheInstance instanceToClone)
 		{
-			_items = new SortedDictionary<string, Item[]>();
-			foreach (KeyValuePair<string, Item[]> kvp in instanceToClone.Items)
+			_items = new SortedDictionary<int, Item>();
+			foreach (KeyValuePair<int, Item> kvp in instanceToClone.Items)
 			{
-				_items.Add(kvp.Key, kvp.Value.Clone() as Item[]);
+                _items[kvp.Key] = kvp.Value;
 			}
 		}
 
-		private SortedDictionary<string, Item[]> _items;
-		public SortedDictionary<string, Item[]> Items
+		private SortedDictionary<int, Item> _items;
+		public SortedDictionary<int, Item> Items
 		{
 			get
 			{
@@ -67,72 +67,19 @@ namespace Rawr
 
 		public void InvalidateCachedStats()
         {
-            foreach (Item[] items in Items.Values)
+            foreach (Item item in Items.Values)
             {
-                foreach (Item item in items)
-                {
-                    item.InvalidateCachedData();
-                }
+                item.InvalidateCachedData();
             }
         }
 
-        public ICollection<Item> FindAllItemsById(int id)
-        {
-            List<Item> items = new List<Item>();
-			string keyStartsWith = id.ToString() + ".";
-			string keyNoGem= id.ToString() + ".0.0.0";
-            Item[] noGem = null;
-            foreach (string key in Items.Keys)
-            {
-                if(key == keyNoGem)
-                {
-                    noGem = Items[key];
-                }
-                else if (key.StartsWith(keyStartsWith))
-                {
-                    items.AddRange(Items[key]);
-                }
-            }
-            if(noGem != null && items.Count == 0)
-            {
-                items.AddRange(noGem);
-            }
-            return items;
-        }
-
-		public Item FindItemById(int id) { return FindItemById(id.ToString() + ".0.0.0"); }
-		public Item FindItemById(string gemmedId) { return FindItemById(gemmedId, true,true); }
-		public Item FindItemById(int id, bool createIfCorrectGemmingNotFound) { return FindItemById(id.ToString() + ".0.0.0", createIfCorrectGemmingNotFound,true); }
-		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent) { return FindItemById(gemmedId, createIfCorrectGemmingNotFound, raiseEvent, false); }
-		public Item FindItemById(string gemmedId, bool createIfCorrectGemmingNotFound, bool raiseEvent, bool hintSkipRelevant)
+		public Item FindItemById(int id)
 		{
-			if (!string.IsNullOrEmpty(gemmedId))
+			if (id > 0)
 			{
-				Item retRelevant;
-				if (!hintSkipRelevant && RelevantItemsDictionary.TryGetValue(gemmedId, out retRelevant))
-					return retRelevant;
-				Item[] retIrrelevant;
-				if (Items.TryGetValue(gemmedId, out retIrrelevant))
-					return retIrrelevant[0];
-				else if (!createIfCorrectGemmingNotFound)
-					return null;
-
-				string[] ids = gemmedId.Split('.');
-				int id = int.Parse(ids[0]);
-				int id1 = ids.Length == 4 ? int.Parse(ids[1]) : 0;
-				int id2 = ids.Length == 4 ? int.Parse(ids[2]) : 0;
-				int id3 = ids.Length == 4 ? int.Parse(ids[3]) : 0;
-				string keyStartsWith = id.ToString() + ".";
-				foreach (string key in Items.Keys)
-					if (key.StartsWith(keyStartsWith))
-					{
-						Item item = Items[key][0];
-						Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-							item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), id1, id2, id3, item.MinDamage,
-							item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-						AddItem(copy, false, raiseEvent);
-						return copy;
-					}
+				Item item;
+                Items.TryGetValue(id, out item);
+				return item;
 			}
 			return null;
 		}
@@ -141,41 +88,24 @@ namespace Rawr
         {
             if (id > 0)
             {
-                string keyStartsWith = id.ToString() + ".";
-                foreach (string key in Items.Keys)
-                    if (key.StartsWith(keyStartsWith))
-                    {
-                        return true;
-                    }
+                return Items.ContainsKey(id);
             }
             return false;
         }
 
-		public Item AddItem(Item item) { return AddItem(item, true, true); }
-		public Item AddItem(Item item, bool removeOldCopy, bool raiseEvent)
+		public Item AddItem(Item item) { return AddItem(item, true); }
+		public Item AddItem(Item item, bool raiseEvent)
 		{
 			if (item == null) return null;
 			//Chasing the lies no one believed...
-			Item[] existing;
-			Item[] newArray;
-			if (removeOldCopy)
-			{
-				DeleteItem(item, false);
-			}
 
-			if (Items.TryGetValue(item.GemmedId, out existing))
-			{
-				newArray = new Item[existing.Length + 1];
-				existing.CopyTo(newArray, 0);
-				newArray[existing.Length] = item;
-				Items[item.GemmedId] = newArray;
-			}
-			else
-			{
-				Items.Add(item.GemmedId, new Item[] { item });
-			}
-
-
+            Item cachedItem;
+            if (Items.TryGetValue(item.Id, out cachedItem))
+            {
+                cachedItem.Delete();
+            }
+            item.LastChange = DateTime.Now;
+            Items[item.Id] = item;
 
 			if (raiseEvent) OnItemsChanged();
 			return item;
@@ -184,20 +114,14 @@ namespace Rawr
 		public void DeleteItem(Item item) { DeleteItem(item, true); }
 		public void DeleteItem(Item item, bool raiseEvent)
 		{
-			Item[] existing;
-			if (item != null && Items.TryGetValue(item.GemmedId, out existing))
+			if (item != null)
 			{
-				if (existing.Length > 1)
-				{
-					List<Item> newArray = new List<Item>();
-					for (int i = 0; i < existing.Length; i++)
-						if (existing[i].GetHashCode() != item.GetHashCode())
-							newArray.Add(existing[i]);
-
-					Items[item.GemmedId] = newArray.ToArray();
-				}
-				else
-					Items.Remove(item.GemmedId);
+                Item cachedItem;
+                if (Items.TryGetValue(item.Id, out cachedItem))
+                {
+                    cachedItem.Delete();
+                    Items.Remove(item.Id);
+                }
 			}
 			if (raiseEvent) OnItemsChanged();
 		}
@@ -209,27 +133,9 @@ namespace Rawr
 			{
 				if (_allItems == null)
 				{
-					List<Item> items = new List<Item>();
-					foreach (Item[] itemArray in Items.Values)
-						items.AddRange(itemArray);
-					_allItems = items.ToArray();
+					_allItems = new List<Item>(Items.Values).ToArray();
 				}
 				return _allItems;
-			}
-		}
-
-		private SortedDictionary<string, Item> _relevantItemsDictionary = null;
-		public SortedDictionary<string, Item> RelevantItemsDictionary
-		{
-			get
-			{
-				if (_relevantItemsDictionary == null)
-				{
-					_relevantItemsDictionary = new SortedDictionary<string, Item>();
-					foreach (Item item in RelevantItems)
-						_relevantItemsDictionary[item.GemmedId] = item;
-				}
-				return _relevantItemsDictionary;
 			}
 		}
 
@@ -277,7 +183,6 @@ namespace Rawr
 		{
 			_allItems = null;
 			_relevantItems = null;
-            _relevantItemsDictionary = null;
 			if (ItemsChanged != null) ItemsChanged(null, null);
 		}
 
@@ -317,7 +222,7 @@ namespace Rawr
 
 		public void Load()
 		{
-			_items = new SortedDictionary<string, Item[]>();
+			_items = new SortedDictionary<int, Item>();
 			List<Item> listItems = new List<Item>();
 			if (File.Exists(ItemCache.SavedFilePath))
 			{
@@ -330,7 +235,7 @@ namespace Rawr
 					listItems = (List<Item>)serializer.Deserialize(reader);
 					reader.Close();
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					MessageBox.Show("Rawr was unable to load the Item Cache. It appears to have been made with a previous incompatible version of Rawr. Please use the ItemCache included with this version of Rawr to start from.");
 				}
@@ -338,9 +243,9 @@ namespace Rawr
 			foreach (Item item in listItems)
 			{
 				item.Stats.ConvertStatsToWotLKEquivalents();
-                item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
+                //item.Sockets.Stats.ConvertStatsToWotLKEquivalents();
 				//if (item.Type == Item.ItemType.Leather) UpdateArmorFromWowhead(item);
-				AddItem(item, true, false);
+				AddItem(item, false);
 			}
 
 			LocationFactory.Load("Data" + System.IO.Path.DirectorySeparatorChar + "ItemSource.xml");
@@ -351,7 +256,6 @@ namespace Rawr
 		void Calculations_ModelChanged(object sender, EventArgs e)
 		{
 			_relevantItems = null;
-            _relevantItemsDictionary = null;
         }
 
 		//private void UpdateArmorFromWowhead(Item item)
