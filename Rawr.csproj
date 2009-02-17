@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A0F124AB-2A3C-488C-A8AB-38FC5444CB37}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -125,6 +125,18 @@
     <Compile Include="CalculationDisplay.Designer.cs">
       <DependentUpon>CalculationDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormGemmingTemplates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGemmingTemplates.Designer.cs">
+      <DependentUpon>FormGemmingTemplates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormItemInstance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormItemInstance.Designer.cs">
+      <DependentUpon>FormItemInstance.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBatchTools.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,12 +155,6 @@
     <Compile Include="FormItemFilter.Designer.cs">
       <DependentUpon>FormItemFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMassGemReplacement.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormMassGemReplacement.Designer.cs">
-      <DependentUpon>FormMassGemReplacement.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormRelevantItemRefinement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +166,12 @@
     </Compile>
     <Compile Include="FormSaveTalentSpec.Designer.cs">
       <DependentUpon>FormSaveTalentSpec.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GemmingTemplateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GemmingTemplateControl.Designer.cs">
+      <DependentUpon>GemmingTemplateControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ItemButtonWithEnchant.cs">
       <SubType>UserControl</SubType>
@@ -316,12 +328,20 @@
       <SubType>Designer</SubType>
       <DependentUpon>FormFillSockets.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormGemmingTemplates.resx">
+      <DependentUpon>FormGemmingTemplates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormItemEditor.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormItemEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormItemFilter.resx">
       <DependentUpon>FormItemFilter.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormItemInstance.resx">
+      <DependentUpon>FormItemInstance.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormItemSelection.resx">
@@ -331,10 +351,6 @@
     <EmbeddedResource Include="FormMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormMassGemReplacement.resx">
-      <DependentUpon>FormMassGemReplacement.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormOptimize.resx">
       <DependentUpon>FormOptimize.cs</DependentUpon>
@@ -375,6 +391,9 @@
     <EmbeddedResource Include="FormUpgradeComparison.resx">
       <DependentUpon>FormUpgradeComparison.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GemmingTemplateControl.resx">
+      <DependentUpon>GemmingTemplateControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ItemButtonWithEnchant.resx">
       <DependentUpon>ItemButtonWithEnchant.cs</DependentUpon>

@@ -21,7 +21,7 @@ namespace Rawr
 
 		public override string Text { get { return itemButtonItem.Text; } set { itemButtonItem.Text = value; } }
 		public Character.CharacterSlot CharacterSlot { get { return itemButtonItem.CharacterSlot; } set { itemButtonItem.CharacterSlot = value; } }
-		public Item SelectedItem { get { return itemButtonItem.SelectedItem; } set { itemButtonItem.SelectedItem = value; } }
+        public ItemInstance SelectedItem { get { return itemButtonItem.SelectedItemInstance; } set { itemButtonItem.SelectedItemInstance = value; UpdateSelectedItem(); } }
 		public int SelectedItemId { get { return itemButtonItem.SelectedItemId; } set { itemButtonItem.SelectedItemId = value; } }
 		public Image ItemIcon { get { return itemButtonItem.ItemIcon; } set { itemButtonItem.ItemIcon = value; } }
 		public bool UseVisualStyleBackColor { get { return itemButtonItem.UseVisualStyleBackColor; } set { itemButtonItem.UseVisualStyleBackColor = value; } }
@@ -40,7 +40,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					_character.CalculationsInvalidated += new EventHandler(_character_CalculationsInvalidated);
-					SelectedEnchant = _character.GetEnchantBySlot(CharacterSlot);
+					//SelectedEnchant = _character.GetEnchantBySlot(CharacterSlot);
 				}
 			}
 		}
@@ -53,38 +53,22 @@ namespace Rawr
 		{
 			get
 			{
-				if (SelectedEnchant == null) return 0;
-				else return SelectedEnchant.Id;
-			}
-			set
-			{
-				if (value == 0) SelectedEnchant = null;
-				else SelectedEnchant = Enchant.FindEnchant(value, Item.GetItemSlotByCharacterSlot(CharacterSlot), Character);
+				if (SelectedItem == null || SelectedItem.Enchant == null) return 0;
+				else return SelectedItem.Enchant.Id;
 			}
 		}
-		private Enchant _selectedEnchant;
-		public Enchant SelectedEnchant
+
+        public Enchant SelectedEnchant
 		{
 			get
 			{
-				return _selectedEnchant;
-			}
-			set
-			{
-				if (Character != null)
-					Character.SetEnchantBySlot(CharacterSlot, value);
-				else
-					_selectedEnchant = value;
-				UpdateSelectedItem();
-			}
+                if (SelectedItem == null) return null;
+                else return SelectedItem.Enchant;
+            }
 		}
 
 		public void UpdateSelectedItem()
 		{
-			if (Character != null)
-			{
-				_selectedEnchant = Character.GetEnchantBySlot(CharacterSlot);
-			}
             if (SelectedEnchant != null)
             {
                 buttonEnchant.Text = SelectedEnchant.ShortName;
@@ -104,11 +88,11 @@ namespace Rawr
 
 		void buttonEnchant_MouseEnter(object sender, EventArgs e)
 		{
-			if (SelectedItem != null)
+            if (SelectedEnchant != null)
 			{
 				int tipX = this.Width;
 				Item itemEnchant = new Item(SelectedEnchant.Name, Item.ItemQuality.Temp, Item.ItemType.None,
-					-1 * (SelectedEnchant.Id + (10000 * (int)SelectedEnchant.Slot)), null, Item.ItemSlot.None, null, false, SelectedEnchant.Stats, new Sockets(), 0, 0, 0, 0, 0,
+					-1 * (SelectedEnchant.Id + (10000 * (int)SelectedEnchant.Slot)), null, Item.ItemSlot.None, null, false, SelectedEnchant.Stats, null, Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0,
 					Item.ItemDamageType.Physical, 0, null);
 				
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)

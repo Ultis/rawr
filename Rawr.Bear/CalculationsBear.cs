@@ -7,6 +7,85 @@ namespace Rawr.Bear
 	[Rawr.Calculations.RawrModelInfo("Bear", "Ability_Racial_BearForm", Character.CharacterClass.Druid)]
 	public class CalculationsBear : CalculationsBase
 	{
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+				////Relevant Gem IDs for Ferals
+				//Red
+				int[] bold = { 39900, 39996, 40111, 42142 };
+				int[] delicate = { 39905, 39997, 40112, 42143 };
+				
+				//Purple
+				int[] shifting = { 39935, 40023, 40130 };
+				int[] sovereign = { 39934, 40022, 40129 };
+
+				//Blue
+				int[] solid = { 39919, 40008, 40119, 36767 };
+
+				//Green
+				int[] enduring = { 39976, 40089, 40167 };
+
+				//Yellow
+				int[] thick = { 39916, 40015, 40126, 42157 };
+
+				//Orange
+				int[] etched = { 39948, 40038, 40143 };
+				int[] fierce = { 39951, 40041, 40146 };
+				int[] glinting = { 39953, 40044, 40148 };
+				int[] stalwart = { 39964, 40056, 40160 };
+
+				//Meta
+				int austere = 41380;
+				int relentless = 41398;
+
+                return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Max Mitigation
+						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Mitigation Heavier 
+						RedId = delicate[0], YellowId = stalwart[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Mitigation Heavy
+						RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Survivbility Heavy
+						RedId = shifting[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Max Survivbility
+						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Max Mitigation
+						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Mitigation Heavier 
+						RedId = delicate[1], YellowId = stalwart[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Mitigation Heavy
+						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Survivbility Heavy
+						RedId = shifting[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Rare", Enabled = true, //Max Survivbility
+						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+						
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Max Mitigation
+						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Mitigation Heavier 
+						RedId = delicate[2], YellowId = stalwart[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Mitigation Heavy
+						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Survivbility Heavy
+						RedId = shifting[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Epic", //Max Survivbility
+						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+						
+					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Mitigation
+						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Mitigation Heavy
+						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Survivbility Heavy
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Survivbility
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
+				};
+            }
+        }
+
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
 		private CalculationOptionsPanelBase _calculationOptionsPanel = null;
@@ -95,7 +174,7 @@ the Threat Scale defined on the Options tab.",
 					"Threat Stats:Faerie Fire",
 					"Threat Stats:Lacerate",
 					"Threat Stats:Lacerate DOT Tick",
-					"Threat Stats:Missed Attacks",
+					"Threat Stats:Avoided Attacks",
 					};
 				return _characterDisplayCalculationLabels;
 			}
@@ -112,9 +191,7 @@ the Threat Scale defined on the Options tab.",
                     "Hit Rating",
                     "Expertise Rating",
 					"Haste Rating",
-                    "Missed Attacks",
-                    "Unlimited Threat",
-                    "Limited Threat",
+                    "Avoided Attacks %",
 					"Mitigation % from Armor",
 					"Avoidance %",
 					"% Chance to be Crit",
@@ -696,7 +773,7 @@ the Threat Scale defined on the Options tab.",
 			DruidTalents talents = character.DruidTalents;
 			
 			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
+			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = new Stats()
 			{
@@ -722,7 +799,7 @@ the Threat Scale defined on the Options tab.",
 				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.22f * talents.SurvivalOfTheFittest) - 1f,
 			};
 			
-			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
+			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             // Inserted by Trolando
             if (statsTotal.GreatnessProc > 0)
@@ -745,7 +822,7 @@ the Threat Scale defined on the Options tab.",
 			statsWeapon.AttackPower += statsWeapon.Strength * 2;
 			if (character.MainHand != null)
 			{
-				float fap = (character.MainHand.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
+				float fap = (character.MainHand.Item.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
 				statsTotal.AttackPower += fap;
 				statsWeapon.AttackPower += fap;
 			}
@@ -1457,7 +1534,7 @@ the Threat Scale defined on the Options tab.",
 			dictValues["Haste Rating"] = string.Format("{0}*{1} Attack Speed", BasicStats.HasteRating, Math.Round(AttackSpeed * 1000f)/1000f);
 			dictValues["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString();
 
-			dictValues["Missed Attacks"] = String.Format("{0}%*Missed={1}% Dodged={2}% Parried={3}%", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks);
+			dictValues["Avoided Attacks"] = String.Format("{0}%*Missed={1}% Dodged={2}% Parried={3}%", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks);
            
 			string rotationFormat = "{0} DPS, {1} TPS*{2}";
 			dictValues["Highest DPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestDPSRotation.DPS), Math.Round(HighestDPSRotation.TPS), HighestDPSRotation.Name);
@@ -1483,6 +1560,10 @@ the Threat Scale defined on the Options tab.",
 			switch (calculation)
 			{
 				case "Health": return BasicStats.Health;
+				case "Hit Rating": return BasicStats.HitRating;
+				case "Expertise Rating": return BasicStats.ExpertiseRating;
+				case "Haste Rating": return BasicStats.HasteRating;
+				case "Avoided Attacks %": return AvoidedAttacks;
 				case "Mitigation % from Armor": return Mitigation;
 				case "Avoidance %": return AvoidancePostDR;
 				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 80))) - CritReduction);
@@ -1553,6 +1634,13 @@ the Threat Scale defined on the Options tab.",
 			get { return _item; }
 			set { _item = value; }
 		}
+
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
 
 		private bool _equipped = false;
 		public override bool Equipped

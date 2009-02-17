@@ -7,6 +7,14 @@ namespace Rawr.Moonkin
 	[Rawr.Calculations.RawrModelInfo("Moonkin", "Spell_Nature_ForceOfNature", Character.CharacterClass.Druid)]
 	class CalculationsMoonkin : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
@@ -231,10 +239,10 @@ namespace Rawr.Moonkin
             
             // Get the gear/enchants/buffs stats loaded in
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             // Bonus multipliers
 			Stats statsTalents = new Stats()
@@ -275,7 +283,7 @@ namespace Rawr.Moonkin
             statsTotal.Mana = (float)Math.Round(statsRace.Mana + 15f * statsTotal.Intellect) - 280;
 			if (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm > 0)
 			{
-				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor + statsEnchants.Armor) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
+				statsTotal.Armor = (float)Math.Round((statsBaseGear.Armor/* + statsEnchants.Armor*/) * 4.7f + statsBuffs.Armor + statsTotal.Agility * 2f);
 			}
 			else
 			{

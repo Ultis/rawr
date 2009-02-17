@@ -8,6 +8,13 @@ namespace Rawr
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", Character.CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
 	{
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -248,16 +255,16 @@ namespace Rawr
             float wdpsMH = 0.0f;
             if (character != null && character.MainHand != null)
             {
-                unhastedMHSpeed = character.MainHand.Speed;
-                wdpsMH = character.MainHand.DPS;
+                unhastedMHSpeed = character.MainHand.Item.Speed;
+                wdpsMH = character.MainHand.Item.DPS;
             }
 
             float unhastedOHSpeed = 0.0f;
             float wdpsOH = 0.0f;
             if (character != null && character.OffHand != null)
             {
-                unhastedOHSpeed = character.OffHand.Speed;
-                wdpsOH = character.OffHand.DPS;
+                unhastedOHSpeed = character.OffHand.Item.Speed;
+                wdpsOH = character.OffHand.Item.DPS;
             }
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
@@ -447,10 +454,10 @@ namespace Rawr
             }
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
+			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+			Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
@@ -885,6 +892,13 @@ namespace Rawr
 			get { return _item; }
 			set { _item = value; }
 		}
+
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
 
 		private bool _equipped = false;
 		public override bool Equipped

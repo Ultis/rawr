@@ -18,19 +18,26 @@ namespace Rawr
 
 			ItemToolTip.Instance.SetToolTip(this, "");
 
-			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
+			//ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
 		}
 
-		private bool _itemsChanging = false;
-		void ItemCache_ItemsChanged(object sender, EventArgs e)
+		private bool _readOnly = false;
+		public bool ReadOnly
 		{
-			if (SelectedItem != null && !_itemsChanging)
-			{
-				_itemsChanging = true;
-				SelectedItem = ItemCache.FindItemById(SelectedItem.GemmedId);
-				_itemsChanging = false;
-			}
+			get { return _readOnly; }
+			set { _readOnly = value; }
 		}
+
+        //private bool _itemsChanging = false;
+        //void ItemCache_ItemsChanged(object sender, EventArgs e)
+        //{
+        //    /*if (SelectedItem != null && !_itemsChanging)
+        //    {
+        //        _itemsChanging = true;
+        //        SelectedItem = ItemCache.FindItemById(SelectedItem.GemmedId);
+        //        _itemsChanging = false;
+        //    }*/
+        //}
 
 		void ItemButton_MouseLeave(object sender, EventArgs e)
 		{
@@ -39,7 +46,14 @@ namespace Rawr
 
 		void ItemButton_MouseEnter(object sender, EventArgs e)
 		{
-			if (SelectedItem != null)
+            if (SelectedItemInstance != null)
+            {
+                int tipX = this.Width;
+                if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
+                    tipX = -249;
+                ItemToolTip.Instance.Show(SelectedItemInstance, this, new Point(tipX, 0));
+            }
+			else if (SelectedItem != null)
 			{
 				int tipX = this.Width;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
@@ -50,13 +64,13 @@ namespace Rawr
 
 		void ItemButton_MouseClick(object sender, MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Left)
+			if (e.Button == MouseButtons.Left && !ReadOnly)
 			{
 				(this.FindForm() as IFormItemSelectionProvider).FormItemSelection.Show(this, CharacterSlot);
 			}
-			else if (e.Button == MouseButtons.Right && SelectedItem != null)
+			else if (e.Button == MouseButtons.Right && SelectedItemInstance != null)
 			{
-				ItemContextualMenu.Instance.Show(SelectedItem, Character.CharacterSlot.None, false);
+				ItemContextualMenu.Instance.Show(SelectedItemInstance, Character.CharacterSlot.None, false);
 			}
 		}
 
@@ -85,7 +99,7 @@ namespace Rawr
 				if (_character != null)
 				{
 					_character.CalculationsInvalidated += new EventHandler(_character_ItemsChanged);
-					SelectedItem = _character[CharacterSlot];
+					SelectedItemInstance = _character[CharacterSlot];
 				}
 			}
 		}
@@ -116,12 +130,21 @@ namespace Rawr
 		{
 			if (Character != null)
 			{
-				_selectedItem = Character[CharacterSlot];
+				_selectedItemInstance = Character[CharacterSlot];
+                if (_selectedItemInstance == null)
+                {
+                    _selectedItem = null;
+                }
+                else
+                {
+                    _selectedItem = _selectedItemInstance.Item;
+                }
 			}
 			this.Text = string.Empty;
 			this.ItemIcon = _selectedItem != null ? ItemIcons.GetItemIcon(_selectedItem, this.Width < 64) : null;
 		}
 
+		public event EventHandler SelectedItemChanged;
 		private Item _selectedItem;
 		public Item SelectedItem
 		{
@@ -131,16 +154,44 @@ namespace Rawr
 			}
 			set
 			{
-				if (Character != null)
-					Character[CharacterSlot] = value;
-				else
-					_selectedItem = value;
-				UpdateSelectedItem();
+                if (Character == null)
+                {
+                    _selectedItemInstance = null;
+                    _selectedItem = value;
+                    UpdateSelectedItem();
+                }
 				//foreach (ToolStripMenuItem menuItem in menu.Items)
 				//	menuItem.Checked = (menuItem.Tag == _selectedItem);
-
+				if (SelectedItemChanged != null) SelectedItemChanged(this, EventArgs.Empty);
 			}
 		}
+
+        private ItemInstance _selectedItemInstance;
+        public ItemInstance SelectedItemInstance
+        {
+            get
+            {
+                return _selectedItemInstance;
+            }
+            set
+            {
+                if (Character != null)
+                    Character[CharacterSlot] = value;
+                else
+                {
+                    _selectedItemInstance = value;
+                    if (_selectedItemInstance != null)
+                    {
+                        _selectedItem = _selectedItemInstance.Item;
+                    }
+                    else
+                    {
+                        _selectedItem = null;
+                    }
+                }
+                UpdateSelectedItem();
+            }
+        }
 
 		private bool _dimIcon = false;
 		private Image _itemIcon = null;

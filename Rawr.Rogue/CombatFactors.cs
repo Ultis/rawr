@@ -7,9 +7,9 @@ namespace Rawr.Rogue
         public CombatFactors(Character character, Stats stats)
         {
             _stats = stats;
-            _mainHand = character.MainHand ?? new Knuckles();
-            _offHand = character.OffHand ?? new Knuckles();
-            _talents = character.RogueTalents;
+			_mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
+			_offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
+			_talents = character.RogueTalents;
             _calcOpts = character.CalculationOptions as CalculationOptionsRogue;
             _characterRace = character.Race;
         }

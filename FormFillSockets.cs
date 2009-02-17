@@ -14,7 +14,6 @@ namespace Rawr
 				{
 					_formItemSelection = new FormItemSelection();
 					_formItemSelection.Character = FormMain.Instance.FormItemSelection.Character;
-					_formItemSelection.Items = ItemCache.RelevantItems;
 				}
 				return _formItemSelection;
 			}
@@ -22,7 +21,7 @@ namespace Rawr
 
         public bool FillEmptySockets
         {
-            get { return radioButtonEmpty.Checked; }
+            get { return true; }
         }
 
         public Item GemRed
@@ -32,17 +31,17 @@ namespace Rawr
 
         public Item GemBlue
         {
-            get { return gemButtonBlue.SelectedItem; }
+            get { return gem1Button.SelectedItem; }
         }
 
         public Item GemYellow
         {
-            get { return gemButtonYellow.SelectedItem; }
+            get { return gem2Button.SelectedItem; }
         }
 
         public Item GemMeta
         {
-            get { return gemButtonMeta.SelectedItem; }
+            get { return gem3Button.SelectedItem; }
         }
 
         public FormFillSockets()

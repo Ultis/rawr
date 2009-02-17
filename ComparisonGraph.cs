@@ -410,7 +410,16 @@ namespace Rawr
                                 }
                                 if (item.Item != null && item.Item.Id != 0)
                                 {
-                                    switch (Character.GetItemAvailability(item.Item))
+                                    Character.ItemAvailability itemAvailability;
+                                    if (item.ItemInstance != null)
+                                    {
+                                        itemAvailability = Character.GetItemAvailability(item.ItemInstance);
+                                    }
+                                    else
+                                    {
+                                        itemAvailability = Character.GetItemAvailability(item.Item);
+                                    }
+                                    switch (itemAvailability)
                                     {
                                         case Character.ItemAvailability.RegemmingAllowed:
                                             g.DrawImageUnscaled(bmpDiamond, 0, 55 + (i * 36));
@@ -600,14 +609,26 @@ namespace Rawr
                 int itemIndex = (int) Math.Floor(((float) (e.Y - 44f + _scrollBar.Value)) / 36f);
                 if (itemIndex >= 0 && itemIndex < ItemCalculations.Length && ItemCalculations[itemIndex].Item != null && ItemCalculations[itemIndex].Item.Id != 0)
                 {
+                    ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
                     Item item = ItemCalculations[itemIndex].Item;
                     if (e.X < 10)
                     {
-                        if (item != null && item.Id != 0)
+                        if (itemInstance != null && itemInstance.Id != 0)
                         {
                             if ((e.Button & MouseButtons.Right) != 0)
                             {
-                                if (item.Id > 0 && !item.IsGem) ItemEnchantContextualMenu.Instance.Show(item);
+                                if (itemInstance.Id > 0) ItemEnchantContextualMenu.Instance.Show(itemInstance);
+                            }
+                            else
+                            {
+                                Character.ToggleItemAvailability(itemInstance, (Control.ModifierKeys & Keys.Control) == 0);
+                            }
+                        }
+                        else if (item != null && item.Id != 0)
+                        {
+                            if ((e.Button & MouseButtons.Right) != 0)
+                            {
+                                //if (item.Id > 0) ItemEnchantContextualMenu.Instance.Show(itemInstance);
                             }
                             else
                             {
@@ -615,10 +636,10 @@ namespace Rawr
                             }
                         }
                     }
-                    else if (item.Id > 0)
+                    else if (itemInstance.Id > 0)
                     {
                         Character.CharacterSlot slot = EquipSlot;
-                        Item showItem = ItemCalculations[itemIndex].Item;
+                        ItemInstance showItem = ItemCalculations[itemIndex].ItemInstance;
                         if (slot == Character.CharacterSlot.AutoSelect)
                         {
                             if (SlotMap != null && SlotMap.ContainsKey(showItem.Slot))
@@ -657,8 +678,10 @@ namespace Rawr
                     if (itemIndex >= 0 && itemIndex < ItemCalculations.Length)
                     {
                         Item item = ItemCalculations[itemIndex].Item;
+                        ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
                         Character itemCharacter = ItemCalculations[itemIndex].Character;
-                        Enchant itemEnchant = ItemCalculations[itemIndex].Enchant;
+                        Enchant itemEnchant = null;
+                        if (ItemCalculations[itemIndex].ItemInstance != null) itemEnchant = ItemCalculations[itemIndex].ItemInstance.Enchant;
                         if (e.X < 10 && item != null && item.Id != 0)
                             cursor = Cursors.Hand;
 
@@ -667,8 +690,14 @@ namespace Rawr
                             int tipX = 118;
                             if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
                                 tipX = -249;
-
-                            ShowTooltip(item, itemCharacter, itemEnchant, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                            if (itemInstance != null)
+                            {
+                                ShowTooltip(itemInstance, itemCharacter, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                            }
+                            else
+                            {
+                                ShowTooltip(item, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                            }
                         }
                     }
                     else
@@ -686,13 +715,25 @@ namespace Rawr
             }
         }
 
-        private void ShowTooltip(Item item, Character itemCharacter, Enchant itemEnchant, Point location)
+        private void ShowTooltip(ItemInstance item, Character itemCharacter, Point location)
+        {
+            if (_tooltipItemInstance != item || _tooltipLocation != location)
+            {
+                _tooltipItem = null;
+                _tooltipItemInstance = item;
+                _tooltipItemCharacter = itemCharacter;
+                _tooltipLocation = location;
+                ShowHideTooltip();
+            }
+        }
+
+        private void ShowTooltip(Item item, Point location)
         {
             if (_tooltipItem != item || _tooltipLocation != location)
             {
                 _tooltipItem = item;
-                _tooltipItemCharacter = itemCharacter;
-                _tooltipItemEnchant = itemEnchant;
+                _tooltipItemInstance = null;
+                _tooltipItemCharacter = null;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
@@ -700,24 +741,28 @@ namespace Rawr
 
         private void HideTooltip()
         {
-            if (_tooltipItem != null)
+            if (_tooltipItem != null || _tooltipItemInstance != null)
             {
                 _tooltipItem = null;
+                _tooltipItemInstance = null;
                 _tooltipItemCharacter = null;
-                _tooltipItemEnchant = null;
                 ShowHideTooltip();
             }
         }
 
+        private ItemInstance _tooltipItemInstance = null;
         private Item _tooltipItem = null;
         private Character _tooltipItemCharacter = null;
-        private Enchant _tooltipItemEnchant = null;
         private Point _tooltipLocation = Point.Empty;
         private void ShowHideTooltip()
         {
             if (_tooltipItem != null && _tooltipLocation != Point.Empty)
             {
-                ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, _tooltipItemEnchant, this, _tooltipLocation);
+                ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, this, _tooltipLocation);
+            }
+            else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty)
+            {
+                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipItemCharacter, this, _tooltipLocation);
             }
             else
             {

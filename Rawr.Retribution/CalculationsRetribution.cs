@@ -7,6 +7,14 @@ namespace Rawr.Retribution
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", Character.CharacterClass.Paladin)]
 	class CalculationsRetribution : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -325,11 +333,11 @@ namespace Rawr.Retribution
             statsRace.Mana = 4114;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
-            Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
+            Stats stats = statsBaseGear + statsBuffs + statsRace;
+            Stats statsOther = statsBaseGear + statsBuffs;
 
             Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false, calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);

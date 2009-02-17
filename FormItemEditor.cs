@@ -23,7 +23,6 @@ namespace Rawr
 				{
 					_formItemSelection = new FormItemSelection();
 					_formItemSelection.Character = FormMain.Instance.FormItemSelection.Character;
-					_formItemSelection.Items = ItemCache.RelevantItems;
 				}
 				return _formItemSelection;
 			}
@@ -41,7 +40,7 @@ namespace Rawr
 					Item oldItem = _selectedItem.Tag as Item;
                     oldItem.InvalidateCachedData();
 					_selectedItem.Text = oldItem.Name;
-					oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
+					//oldItem.IdsChanged -= new EventHandler(Item_IdsChanged);
 					string slot = oldItem.Slot.ToString();
 					if (oldItem.Slot == Item.ItemSlot.Red || oldItem.Slot == Item.ItemSlot.Orange || oldItem.Slot == Item.ItemSlot.Yellow
 						 || oldItem.Slot == Item.ItemSlot.Green || oldItem.Slot == Item.ItemSlot.Blue || oldItem.Slot == Item.ItemSlot.Purple
@@ -56,8 +55,8 @@ namespace Rawr
 				Item selectedItem = _selectedItem.Tag as Item;
                 selectedItem.InvalidateCachedData();
                 if (selectedItem.IsGem) ItemCache.InvalidateCachedStats();
-				selectedItem.IdsChanged += new EventHandler(Item_IdsChanged);
-				_equippedSlots = _character.GetEquippedSlots(selectedItem);
+				//selectedItem.IdsChanged += new EventHandler(Item_IdsChanged);
+				//_equippedSlots = _character.GetEquippedSlots(selectedItem);
 					
 				textBoxName.DataBindings.Clear();
                 textBoxSetName.DataBindings.Clear();
@@ -78,9 +77,9 @@ namespace Rawr
 				comboBoxSocket1.DataBindings.Clear();
 				comboBoxSocket2.DataBindings.Clear();
 				comboBoxSocket3.DataBindings.Clear();
-				itemButtonGem1.DataBindings.Clear();
-				itemButtonGem2.DataBindings.Clear();
-				itemButtonGem3.DataBindings.Clear();
+				//itemButtonGem1.DataBindings.Clear();
+				//itemButtonGem2.DataBindings.Clear();
+				//itemButtonGem3.DataBindings.Clear();
 
 
 				if (selectedItem != null)
@@ -100,12 +99,12 @@ namespace Rawr
                     comboBoxSlot.DataBindings.Add("Text", selectedItem, "SlotString");
 					comboBoxType.DataBindings.Add("Text", selectedItem, "TypeString");
                     comboBoxDamageType.DataBindings.Add("Text", selectedItem, "DamageType");
-                    comboBoxSocket1.DataBindings.Add("Text", selectedItem.Sockets, "Color1String");
-					comboBoxSocket2.DataBindings.Add("Text", selectedItem.Sockets, "Color2String");
-					comboBoxSocket3.DataBindings.Add("Text", selectedItem.Sockets, "Color3String");
-					itemButtonGem1.DataBindings.Add("SelectedItemId", selectedItem, "Gem1Id");
-					itemButtonGem2.DataBindings.Add("SelectedItemId", selectedItem, "Gem2Id");
-					itemButtonGem3.DataBindings.Add("SelectedItemId", selectedItem, "Gem3Id");
+                    comboBoxSocket1.DataBindings.Add("Text", selectedItem, "SocketColor1String");
+					comboBoxSocket2.DataBindings.Add("Text", selectedItem, "SocketColor2String");
+					comboBoxSocket3.DataBindings.Add("Text", selectedItem, "SocketColor3String");
+					//itemButtonGem1.DataBindings.Add("SelectedItemId", selectedItem, "Gem1Id");
+					//itemButtonGem2.DataBindings.Add("SelectedItemId", selectedItem, "Gem2Id");
+					//itemButtonGem3.DataBindings.Add("SelectedItemId", selectedItem, "Gem3Id");
 
                     textBoxSource.Text = selectedItem.LocationInfo.Description;
                     textBoxNote.DataBindings.Add("Text", selectedItem.LocationInfo, "Note");
@@ -120,7 +119,7 @@ namespace Rawr
                         checkedListBoxRequiredClasses.SetItemChecked(i, Array.IndexOf<string>(requiredClasses, (string)checkedListBoxRequiredClasses.Items[i]) >= 0);
                     }
 
-                    var socketBonuses = selectedItem.Sockets.Stats.Values(x=> x > 0).GetEnumerator();
+                    var socketBonuses = selectedItem.SocketBonus.Values(x=> x > 0).GetEnumerator();
                     if (!socketBonuses.MoveNext())
                     {
                         comboBoxBonus1.SelectedIndex = 0;
@@ -154,14 +153,14 @@ namespace Rawr
 			}
 		}
 
-		void Item_IdsChanged(object sender, EventArgs e)
-		{
-			Item item = (sender as Item);
-			foreach (Character.CharacterSlot slot in _equippedSlots)
-				_character[slot] = item;
-		}
+        //void Item_IdsChanged(object sender, EventArgs e)
+        //{
+        //    Item item = (sender as Item);
+        //    foreach (Character.CharacterSlot slot in _equippedSlots)
+        //        _character[slot] = item;
+        //}
 
-		private Character.CharacterSlot[] _equippedSlots;
+		//private Character.CharacterSlot[] _equippedSlots;
 
 		private Character _character;
         public Character Character
@@ -251,9 +250,9 @@ namespace Rawr
 
 		void comboBoxSocket_TextChanged(object sender, EventArgs e)
 		{
-			itemButtonGem1.CharacterSlot = comboBoxSocket1.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
-			itemButtonGem2.CharacterSlot = comboBoxSocket2.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
-			itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
+			//itemButtonGem1.CharacterSlot = comboBoxSocket1.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
+			//itemButtonGem2.CharacterSlot = comboBoxSocket2.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
+			//itemButtonGem3.CharacterSlot = comboBoxSocket3.Text == Item.ItemSlot.Meta.ToString() ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems;
 		}
 
 		private void LoadItems() { LoadItems(ItemCache.AllItems); }
@@ -360,7 +359,7 @@ namespace Rawr
                 Int32 item_id = Armory.GetItemIdByName(name);
                 if (item_id > 0)
                 {
-                    newItem = Item.LoadFromId(item_id, true, "Manually Added", true);
+                    newItem = Item.LoadFromId(item_id, true, true, true);
                 }
             }
 
@@ -373,8 +372,8 @@ namespace Rawr
                     // need to add + where the spaces are
                     string wowhead_name = name.Replace(' ', '+');
                     // we can now pass it through the normal URI
-                    newItem = Wowhead.GetItem(wowhead_name + ".0.0.0");
-                    if (newItem != null) ItemCache.AddItem(newItem, true, true);
+                    newItem = Wowhead.GetItem(wowhead_name + ".0.0.0", true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
             }
 
@@ -398,21 +397,21 @@ namespace Rawr
                 // try the armory (if requested)
                 if (useArmory)
                 {
-                    newItem = Item.LoadFromId(id, true, "Manually Added", true);
+                    newItem = Item.LoadFromId(id, true, true, true);
                 }
 
                 // try wowhead (if requested)
                 if ((newItem == null) && useWowhead)
                 {
-                    newItem = Wowhead.GetItem(id.ToString() + ".0.0.0");
-                    if (newItem != null) ItemCache.AddItem(newItem, true, true);
+                    newItem = Wowhead.GetItem(id.ToString() + ".0.0.0", true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
 
                 if (newItem == null)
                 {
                     if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Sockets(), 0, 0, 0, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
+                        newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
                         ItemCache.AddItem(newItem);
                     }
                 }
@@ -451,12 +450,12 @@ namespace Rawr
             if (listViewItems.SelectedItems.Count > 0)
             {
                 Item item = listViewItems.SelectedItems[0].Tag as Item;
-                if (MessageBox.Show("Are you sure you want to delete this instance of the " + item.Name, "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show("Are you sure you want to delete " + item.Name + " from your item cache?", "Confirm Delete", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _changingItemCache = true;
                     ItemCache.DeleteItem(item);
                     _changingItemCache = false;
-                    listViewItems.Items.Remove(listViewItems.SelectedItems[0]);
+                    listViewItems.Items.Remove(listViewItems.SelectedItems[0]); 
                     if (listViewItems.Items.Count > 0)
                     {
                         listViewItems.SelectedIndices.Add(0);
@@ -468,14 +467,14 @@ namespace Rawr
 
 		private void buttonFillSockets_Click(object sender, EventArgs e)
 		{
-			FormFillSockets form = new FormFillSockets();
+			/*FormFillSockets form = new FormFillSockets();
 			if (form.ShowDialog(this) == DialogResult.OK)
 			{
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (item.Sockets.Color1 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
+					if (item.SocketColor1 != Item.ItemSlot.None && (!form.FillEmptySockets || item.Gem1Id == 0))
 					{
-						switch (item.Sockets.Color1)
+						switch (item.SocketColor1)
 						{
 							case Item.ItemSlot.Red:
 								item.Gem1 = form.GemRed;
@@ -538,14 +537,14 @@ namespace Rawr
 					}
 				}
 			}
-            form.Dispose();
+            form.Dispose();*/
 		}
 
 		private void buttonDuplicate_Click(object sender, EventArgs e)
 		{
-			Item item = listViewItems.SelectedItems[0].Tag as Item;
+			/*Item item = listViewItems.SelectedItems[0].Tag as Item;
 			Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot, item.SetName, item.Unique, item.Stats.Clone(),
-				item.Sockets.Clone(), 0, 0, 0, item.MinDamage, item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+				item.SocketBonus.Clone(), 0, 0, 0, item.MinDamage, item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
 			_changingItemCache = true;
 			ItemCache.AddItem(copy, false, true);
 			_changingItemCache = false;
@@ -562,7 +561,7 @@ namespace Rawr
 			listViewItems.Items.Add(newLvi);
 			newLvi.Selected = true;
 			listViewItems.Sort();
-			newLvi.EnsureVisible();
+			newLvi.EnsureVisible();*/
 		}
 
 		internal void SelectItem(Item item, bool force) 
@@ -607,7 +606,7 @@ namespace Rawr
         private void comboBoxBonus_SelectedIndexChanged(object sender, EventArgs e)
         {
             Item selectedItem = SelectedItem.Tag as Item;
-            UpdateStatDataBindings(sender as ComboBox, selectedItem.Sockets.Stats, true);
+            UpdateStatDataBindings(sender as ComboBox, selectedItem.SocketBonus, true);
         }
 
         private void comboBoxStat_SelectedIndexChanged(object sender, EventArgs e)
@@ -693,7 +692,7 @@ namespace Rawr
 
 		private void buttonDeleteDuplicates_Click(object sender, EventArgs e)
 		{
-			if (listViewItems.SelectedItems.Count > 0)
+			/*if (listViewItems.SelectedItems.Count > 0)
 			{
 				Item itemToSave = listViewItems.SelectedItems[0].Tag as Item;
 				if (MessageBox.Show("Are you sure you want to delete all instances of " + itemToSave.Name + " except the selected one?", "Confirm Delete Duplicates", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -712,7 +711,7 @@ namespace Rawr
 					Cursor = Cursors.Default;
 					_changingItemCache = false;
 				}
-			}
+			}*/
         }
 
         private void checkedListBoxRequiredClasses_ItemCheck(object sender, ItemCheckEventArgs e)
@@ -739,43 +738,5 @@ namespace Rawr
                 }
             }
         }
-
-        private void buttonDeleteAllDuplicates_Click(object sender, EventArgs e)
-        {
-            if (listViewItems.Items.Count > 0)
-            {
-				if (MessageBox.Show("Are you sure you want to delete all instances of duplicate items?", "Confirm Delete Duplicates", MessageBoxButtons.YesNo) == DialogResult.Yes)
-				{
-                    _changingItemCache = true;
-                    Cursor = Cursors.WaitCursor;
-
-                    for(int i =0; i < listViewItems.Items.Count; i++)
-                    {
-
-                            Item itemToSave = listViewItems.Items[i].Tag as Item;
-
-                            List<Item> itemsToDelete = new List<Item>(ItemCache.Instance.FindAllItemsById(itemToSave.Id));
-                            Item itemUngemmed = ItemCache.FindItemById(itemToSave.Id.ToString() + ".0.0.0", false, false);
-                            if (itemsToDelete.Count > 1)
-                            {
-                                if (itemUngemmed != null) itemsToDelete.Add(itemUngemmed);
-                                if (itemsToDelete.Contains(itemToSave)) itemsToDelete.Remove(itemToSave);
-                                foreach (Item itemToDelete in itemsToDelete)
-                                    ItemCache.DeleteItem(itemToDelete, false);
-                                foreach (ListViewItem lvi in listViewItems.Items)
-                                    if (itemsToDelete.Contains(lvi.Tag as Item))
-                                        listViewItems.Items.Remove(lvi);
-                                Cursor = Cursors.Default;
-                            }
-
-                        
-                    }
-                    Cursor = Cursors.Default;
-                    ItemCache.OnItemsChanged();
-                    _changingItemCache = false;
-				}
-			}
-        }
-    
     }
 }

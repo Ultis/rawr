@@ -8,6 +8,14 @@ namespace Rawr.HolyPriest
 	[Rawr.Calculations.RawrModelInfo("HolyPriest", "Spell_Holy_Renew", Character.CharacterClass.Priest)]
 	public class CalculationsHolyPriest : CalculationsBase 
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
         private string _currentChartName = null;
@@ -312,7 +320,7 @@ namespace Rawr.HolyPriest
         {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTalents = new Stats()
@@ -325,7 +333,7 @@ namespace Rawr.HolyPriest
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
             };
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));

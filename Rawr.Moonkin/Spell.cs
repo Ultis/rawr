@@ -1113,10 +1113,10 @@ namespace Rawr.Moonkin
                 {
                     float baseRegenConstant = CalculationsMoonkin.ManaRegenConstant;
                     // Calculate the intellect from a weapon swap
-                    float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Stats.Intellect)
+                    float userIntellect = calcs.BasicStats.Intellect - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Intellect) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Intellect)
                         + calcOpts.InnervateWeaponInt;
                     // Do the same with spirit
-                    float userSpirit = calcs.BasicStats.Spirit - (character.MainHand == null ? 0 : character.MainHand.Stats.Spirit) - (character.OffHand == null ? 0 : character.OffHand.Stats.Spirit)
+                    float userSpirit = calcs.BasicStats.Spirit - (character.MainHand == null ? 0 : character.MainHand.Item.Stats.Spirit) - (character.OffHand == null ? 0 : character.OffHand.Item.Stats.Spirit)
                         + calcOpts.InnervateWeaponSpi;
                     // The new spirit regen for innervate periods uses the new weapon stats
                     spiritRegen = baseRegenConstant * (float)Math.Sqrt(userIntellect) * userSpirit;

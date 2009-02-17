@@ -7,6 +7,13 @@ namespace Rawr.Tankadin
     [Rawr.Calculations.RawrModelInfo("Tankadin", "Spell_Holy_AvengersShield", Character.CharacterClass.Paladin)]
     public class CalculationsTankadin : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -334,11 +341,11 @@ you are being killed by burst damage, focus on Survival Points.",
             statsRace.Mana = 4114;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats stats = statsBaseGear + statsEnchants + statsBuffs + statsRace;
-            Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
+            Stats stats = statsBaseGear + statsBuffs + statsRace;
+            Stats statsOther = statsBaseGear + statsBuffs;
             stats.Strength = (float)Math.Floor(statsOther.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
             stats.AttackPower = (float)Math.Round((stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
             stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));

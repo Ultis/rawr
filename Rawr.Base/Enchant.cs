@@ -10,54 +10,54 @@ namespace Rawr
     {
     }
 
-	/// <summary>
-	/// An object representing an Enchantment to be placed on a slot on a character.
-	/// </summary>
-	public class Enchant
-	{
-		/// <summary>
-		/// The ID of the enchant. This is determined by viewing the enchant spell on Wowhead, and
-		/// noting the Enchant Item Permenant ID in the spell effect data.
-		/// 
-		/// EXAMPLE:
-		/// Enchant Gloves - Superior Agility. This enchant is applied by spell 25080, which you can find
-		/// by searching on Wowhead (http://www.wowhead.com/?spell=25080). In the spell Effect section, it
-		/// says "Enchant Item Permanent (2564)". The Enchant ID is 2564.
-		/// </summary>
-		public int Id;
+    /// <summary>
+    /// An object representing an Enchantment to be placed on a slot on a character.
+    /// </summary>
+    public class Enchant
+    {
+        /// <summary>
+        /// The ID of the enchant. This is determined by viewing the enchant spell on Wowhead, and
+        /// noting the Enchant Item Permenant ID in the spell effect data.
+        /// 
+        /// EXAMPLE:
+        /// Enchant Gloves - Superior Agility. This enchant is applied by spell 25080, which you can find
+        /// by searching on Wowhead (http://www.wowhead.com/?spell=25080). In the spell Effect section, it
+        /// says "Enchant Item Permanent (2564)". The Enchant ID is 2564.
+        /// </summary>
+        public int Id;
 
-		/// <summary>
-		/// The name of the enchant.
-		/// </summary>
-		public string Name;
+        /// <summary>
+        /// The name of the enchant.
+        /// </summary>
+        public string Name;
 
-		/// <summary>
-		/// A shortened version of the enchant's Name.
-		/// </summary>
-		public string ShortName
-		{
-			get
-			{
-				string shortName = Name.Replace("Arcanum of the ", "").Replace("Arcanum of ", "").Replace("Inscription of the ", "")
-					.Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
-					.Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "")
-					.Replace(" Spellthread", "").Replace("Lining - ", "");
-				return shortName.Substring(0, Math.Min(shortName.Length, 12));
-			}
-		}
-		
-		/// <summary>
-		/// The slot that the enchant is applied to. If the enchant is available on multiple slots,
-		/// define the enchant multiple times, once for each slot.
-		/// 
-		/// IMPORTANT: Currently, all weapon enchants should be defined as applying to the MainHand slot.
-		/// </summary>
-		public Item.ItemSlot Slot = Item.ItemSlot.Head;
+        /// <summary>
+        /// A shortened version of the enchant's Name.
+        /// </summary>
+        public string ShortName
+        {
+            get
+            {
+                string shortName = Name.Replace("Arcanum of the ", "").Replace("Arcanum of ", "").Replace("Inscription of the ", "")
+                    .Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
+                    .Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "")
+                    .Replace(" Spellthread", "").Replace("Lining - ", "");
+                return shortName.Substring(0, Math.Min(shortName.Length, 12));
+            }
+        }
 
-		/// <summary>
-		/// The stats that the enchant gives the character.
-		/// </summary>
-		public Stats Stats = new Stats();
+        /// <summary>
+        /// The slot that the enchant is applied to. If the enchant is available on multiple slots,
+        /// define the enchant multiple times, once for each slot.
+        /// 
+        /// IMPORTANT: Currently, all weapon enchants should be defined as applying to the MainHand slot.
+        /// </summary>
+        public Item.ItemSlot Slot = Item.ItemSlot.Head;
+
+        /// <summary>
+        /// The stats that the enchant gives the character.
+        /// </summary>
+        public Stats Stats = new Stats();
 
         private static List<Enchant> _allEnchants = null;
         private static readonly string _SaveFilePath;
@@ -65,7 +65,7 @@ namespace Rawr
 
         static Enchant()
         {
-			_SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
+            _SaveFilePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Data" + System.IO.Path.DirectorySeparatorChar + "EnchantCache.xml");
             LoadEnchants();
             SaveEnchants();
         }
@@ -89,14 +89,14 @@ namespace Rawr
             Slot = slot;
             Stats = stats;
         }
-        
-		public override string ToString()
-		{
-			string summary = Name + ": ";
-			summary += Stats.ToString();
-			summary = summary.TrimEnd(',', ' ', ':');
-			return summary;
-		}
+
+        public override string ToString()
+        {
+            string summary = Name + ": ";
+            summary += Stats.ToString();
+            summary = summary.TrimEnd(',', ' ', ':');
+            return summary;
+        }
 
         public override bool Equals(object obj)
         {
@@ -113,79 +113,81 @@ namespace Rawr
 
         public override int GetHashCode()
         {
-            return (Name+Id.ToString()+Slot.ToString()+Stats.ToString()).GetHashCode();
+            return (Name + Id.ToString() + Slot.ToString() + Stats.ToString()).GetHashCode();
         }
 
-		public bool FitsInSlot(Item.ItemSlot slot)
-		{
-			return (Slot == slot ||
-				(Slot == Item.ItemSlot.OneHand && (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)) ||
-				(Slot == Item.ItemSlot.TwoHand && (slot == Item.ItemSlot.MainHand)));
-		}
+        public bool FitsInSlot(Item.ItemSlot slot)
+        {
+            return (Slot == slot ||
+                (Slot == Item.ItemSlot.OneHand && (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)) ||
+                (Slot == Item.ItemSlot.TwoHand && (slot == Item.ItemSlot.MainHand)));
+        }
 
-		public bool FitsInSlot(Item.ItemSlot slot, Character character)
-		{
-			return Calculations.EnchantFitsInSlot(this, character, slot);
-		}
+        public bool FitsInSlot(Item.ItemSlot slot, Character character)
+        {
+            return Calculations.EnchantFitsInSlot(this, character, slot);
+        }
 
-		/// <summary>
-		/// A List<Enchant> containing all known enchants relevant to all models.
-		/// </summary>
-		public static List<Enchant> AllEnchants
-		{
-			get 
+        /// <summary>
+        /// A List<Enchant> containing all known enchants relevant to all models.
+        /// </summary>
+        public static List<Enchant> AllEnchants
+        {
+            get
             {
-				return _allEnchants;
-			}
-		}
+                return _allEnchants;
+            }
+        }
 
-		public static Enchant FindEnchant(int id, Item.ItemSlot slot, Character character)
-		{
-			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			//if (slot != Item.ItemSlot.MainHand)
-			//    validSlots.Add(slot);
-			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-			//    validSlots.Add(Item.ItemSlot.OneHand);
-			//if (slot == Item.ItemSlot.MainHand)
-			//    validSlots.Add(Item.ItemSlot.TwoHand);
-			return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant) 
-				{ return (enchant.Id == id) && (enchant.FitsInSlot(slot, character) || 
-					(enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand)); })) ?? AllEnchants[0];
-		}
+        public static Enchant FindEnchant(int id, Item.ItemSlot slot, Character character)
+        {
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
+            return AllEnchants.Find(new Predicate<Enchant>(delegate(Enchant enchant)
+            {
+                return (enchant.Id == id) && (enchant.FitsInSlot(slot, character) ||
+                  (enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OneHand));
+            })) ?? AllEnchants[0];
+        }
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character)
         {
             return FindEnchants(slot, character, Calculations.Instance);
         }
 
-		public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, CalculationsBase model)
-		{
-			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			//if (slot != Item.ItemSlot.MainHand)
-			//    validSlots.Add(slot);
-			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-			//    validSlots.Add(Item.ItemSlot.OneHand);
-			//if (slot == Item.ItemSlot.MainHand)
-			//    validSlots.Add(Item.ItemSlot.TwoHand);
-			return AllEnchants.FindAll(new Predicate<Enchant>(
-				delegate(Enchant enchant)
-				{
-					return model.HasRelevantStats(enchant.Stats) &&
-						( enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None )
-						|| enchant.Slot == Item.ItemSlot.None;
-				}
-			));
-		}
+        public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, CalculationsBase model)
+        {
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
+            return AllEnchants.FindAll(new Predicate<Enchant>(
+                delegate(Enchant enchant)
+                {
+                    return model.HasRelevantStats(enchant.Stats) &&
+                        (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None)
+                        || enchant.Slot == Item.ItemSlot.None;
+                }
+            ));
+        }
 
         public static List<Enchant> FindAllEnchants(Item.ItemSlot slot, Character character)
         {
-			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			//if (slot != Item.ItemSlot.MainHand)
-			//    validSlots.Add(slot);
-			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
-			//    validSlots.Add(Item.ItemSlot.OneHand);
-			//if (slot == Item.ItemSlot.MainHand)
-			//    validSlots.Add(Item.ItemSlot.TwoHand);
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand || slot == Item.ItemSlot.TwoHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {
@@ -201,24 +203,24 @@ namespace Rawr
         }
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds, CalculationsBase model)
-		{
-			//List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-			//if (slot != Item.ItemSlot.MainHand)
-			//    validSlots.Add(slot);
-			//if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
-			//    validSlots.Add(Item.ItemSlot.OneHand);
-			//if (slot == Item.ItemSlot.MainHand)
-			//    validSlots.Add(Item.ItemSlot.TwoHand);
+        {
+            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
+            //if (slot != Item.ItemSlot.MainHand)
+            //    validSlots.Add(slot);
+            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.OneHand);
+            //if (slot == Item.ItemSlot.MainHand)
+            //    validSlots.Add(Item.ItemSlot.TwoHand);
             return AllEnchants.FindAll(new Predicate<Enchant>(
-				delegate(Enchant enchant)
-				{
+                delegate(Enchant enchant)
+                {
                     return ((model.HasRelevantStats(enchant.Stats) &&
                         (enchant.FitsInSlot(slot, character) || slot == Item.ItemSlot.None) || enchant.Slot == Item.ItemSlot.None)
                         && availableIds.Contains((-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString()))
                         || enchant.Id == 0;
-				}
-			));
-		}
+                }
+            ));
+        }
 
         private static void SaveEnchants()
         {
@@ -252,7 +254,7 @@ namespace Rawr
             catch (Exception) { /* should ignore exception if there is a problem with the file */ }
             finally
             {
-                if(_allEnchants == null)
+                if (_allEnchants == null)
                 {
                     _allEnchants = new List<Enchant>();
 
@@ -356,9 +358,9 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Legs, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Hands, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Feet, new Stats() { Stamina = 18 }));
-			defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Head, new Stats() { Stamina = 18 }));
-			defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Shoulders, new Stats() { Stamina = 18 }));
-			defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Chest, new Stats() { DefenseRating = 8 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Head, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(3330, "Heavy Borean Armor Kit", Item.ItemSlot.Shoulders, new Stats() { Stamina = 18 }));
+            defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Chest, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Hands, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Legs, new Stats() { DefenseRating = 8 }));
             defaultEnchants.Add(new Enchant(2793, "Vindicator's Armor Kit", Item.ItemSlot.Feet, new Stats() { DefenseRating = 8 }));
@@ -406,14 +408,14 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1594, "Greater Assault", Item.ItemSlot.Hands, new Stats() { AttackPower = 26 }));
             defaultEnchants.Add(new Enchant(1603, "Crusher", Item.ItemSlot.Hands, new Stats() { AttackPower = 44 }));
             defaultEnchants.Add(new Enchant(3231, "Expertise", Item.ItemSlot.Hands, new Stats() { ExpertiseRating = 15 }));
-			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
+            defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 20 }));
             defaultEnchants.Add(new Enchant(1103, "Exceptional Agility", Item.ItemSlot.OneHand, new Stats() { Agility = 26 }));
-			defaultEnchants.Add(new Enchant(2668, "Potency", Item.ItemSlot.OneHand, new Stats() { Strength = 20 }));
+            defaultEnchants.Add(new Enchant(2668, "Potency", Item.ItemSlot.OneHand, new Stats() { Strength = 20 }));
             defaultEnchants.Add(new Enchant(1606, "Greater Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 50 }));
             defaultEnchants.Add(new Enchant(3833, "Superior Potency", Item.ItemSlot.OneHand, new Stats() { AttackPower = 65 }));
             defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", Item.ItemSlot.OneHand, new Stats() { HitRating = 28 }));
             defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", Item.ItemSlot.OneHand, new Stats() { ParryRating = 15 }));
-			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
+            defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
             defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
             defaultEnchants.Add(new Enchant(3843, "Diamond-cut Refractor Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 15 }));
             defaultEnchants.Add(new Enchant(3608, "Heartseeker Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 40 }));
@@ -469,7 +471,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(1147, "Greater Spirit", Item.ItemSlot.Feet, new Stats() { Spirit = 18 }));
 
             // Healing enchants (add spell damage too)
-			defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
+            defaultEnchants.Add(new Enchant(3001, "Arcanum of Renewal", Item.ItemSlot.Head, new Stats() { SpellPower = 19, Mp5 = 7 }));
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", Item.ItemSlot.Head, new Stats() { SpellPower = 30, Mp5 = 8 }));
 
             defaultEnchants.Add(new Enchant(3150, "Restore Mana Prime", Item.ItemSlot.Chest, new Stats() { Mp5 = 6 }));
@@ -477,31 +479,31 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3233, "Exceptional Mana", Item.ItemSlot.Chest, new Stats() { Mana = 250 }));
 
             defaultEnchants.Add(new Enchant(2980, "Greater Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
-			defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
-			defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
+            defaultEnchants.Add(new Enchant(2993, "Greater Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 12, Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(2979, "Inscription of Faith", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 15 }));
             defaultEnchants.Add(new Enchant(2992, "Inscription of the Oracle", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2604, "Zandalar Signet of Serenity", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18 }));
 
-			defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
+            defaultEnchants.Add(new Enchant(2322, "Major Healing", Item.ItemSlot.Hands, new Stats() { SpellPower = 19 }));
             defaultEnchants.Add(new Enchant(2934, "Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 10 }));
             defaultEnchants.Add(new Enchant(3249, "Greater Blasting", Item.ItemSlot.Hands, new Stats() { CritRating = 16 }));
 
             defaultEnchants.Add(new Enchant(2746, "Golden Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 35, Stamina = 20 }));
-			defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
+            defaultEnchants.Add(new Enchant(2745, "Silver Spellthread", Item.ItemSlot.Legs, new Stats() { SpellPower = 25, Stamina = 15 }));
 
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Chest, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Feet, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Legs, new Stats() { Mp5 = 3 }));
             defaultEnchants.Add(new Enchant(2794, "Magister's Armor Kit", Item.ItemSlot.Hands, new Stats() { Mp5 = 3 }));
 
-			defaultEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellPower = 12 }));
+            defaultEnchants.Add(new Enchant(2930, "Healing Power", Item.ItemSlot.Finger, new Stats() { SpellPower = 12 }));
 
-			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { SpellPower = 40 }));
+            defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.OneHand, new Stats() { SpellPower = 40 }));
 
             defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 12 }));
             defaultEnchants.Add(new Enchant(1128, "Greater Intellect", Item.ItemSlot.OffHand, new Stats() { Intellect = 25 }));
 
-			defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
+            defaultEnchants.Add(new Enchant(2617, "Superior Healing", Item.ItemSlot.Wrist, new Stats() { SpellPower = 15 }));
 
             defaultEnchants.Add(new Enchant(2648, "Steelweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 12 }));
             defaultEnchants.Add(new Enchant(1951, "Titanweave", Item.ItemSlot.Back, new Stats() { DefenseRating = 16 }));
@@ -513,132 +515,132 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3794, "Inscription of Dominance", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 23, Resilience = 15 }));
 
             //The stat value of mongoose and executioner is dependent on the weapon speed and is thus left to the individual models to take care of through the Id
-			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
-			defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, new Stats() { BerserkingProc = 1 }));
-			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));
-			defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Hands, new Stats() { ShadowResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Legs, new Stats() { ShadowResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Hands, new Stats() { FireResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Feet, new Stats() { FireResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Chest, new Stats() { FireResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Legs, new Stats() { FireResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, new Stats() { FrostResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, new Stats() { FrostResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Hands, new Stats() { NatureResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Feet, new Stats() { NatureResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Chest, new Stats() { NatureResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Legs, new Stats() { NatureResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Hands, new Stats() { ArcaneResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Feet, new Stats() { ArcaneResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Chest, new Stats() { ArcaneResistance = 8 }));
-			defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Legs, new Stats() { ArcaneResistance = 8 }));
-			defaultEnchants.Add(new Enchant(3005, "Arcanum of Nature Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3813, "Arcanum of Toxic Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 25, Stamina = 30 }));
-			defaultEnchants.Add(new Enchant(3006, "Arcanum of Arcane Warding", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3815, "Arcanum of the Eclipsed Moon", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 25, Stamina = 30 }));
-			defaultEnchants.Add(new Enchant(3007, "Arcanum of Fire Warding", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3816, "Arcanum of the Flame's Soul", Item.ItemSlot.Head, new Stats() { FireResistance = 25, Stamina = 30 }));
-			defaultEnchants.Add(new Enchant(3008, "Arcanum of Frost Warding", Item.ItemSlot.Head, new Stats() { FrostResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3812, "Arcanum of the Frosty Soul", Item.ItemSlot.Head, new Stats() { FrostResistance = 25, Stamina = 30 }));
-			defaultEnchants.Add(new Enchant(3009, "Arcanum of Shadow Warding", Item.ItemSlot.Head, new Stats() { ShadowResistance = 20 }));
-			defaultEnchants.Add(new Enchant(3814, "Arcanum of the Fleeing Shadow", Item.ItemSlot.Head, new Stats() { ShadowResistance = 25, Stamina = 30 }));
-			defaultEnchants.Add(new Enchant(2998, "Inscription of Endurance", Item.ItemSlot.Shoulders, new Stats() { NatureResistance = 4, ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4 }));
-			defaultEnchants.Add(new Enchant(2664, "Major Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 7, ArcaneResistance = 7, FireResistance = 7, FrostResistance = 7, ShadowResistance = 7 }));
-			defaultEnchants.Add(new Enchant(2619, "Greater Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 15 }));
+            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.OneHand, new Stats() { MongooseProc = 1 }));
+            defaultEnchants.Add(new Enchant(3789, "Berserking", Item.ItemSlot.OneHand, new Stats() { BerserkingProc = 1 }));
+            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.OneHand, new Stats() { ExecutionerProc = 1 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Hands, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Feet, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Chest, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2984, "Shadow Armor Kit", Item.ItemSlot.Legs, new Stats() { ShadowResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Hands, new Stats() { FireResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Feet, new Stats() { FireResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Chest, new Stats() { FireResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2985, "Flame Armor Kit", Item.ItemSlot.Legs, new Stats() { FireResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Hands, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Feet, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Chest, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2987, "Frost Armor Kit", Item.ItemSlot.Legs, new Stats() { FrostResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Hands, new Stats() { NatureResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Feet, new Stats() { NatureResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Chest, new Stats() { NatureResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2988, "Nature Armor Kit", Item.ItemSlot.Legs, new Stats() { NatureResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Hands, new Stats() { ArcaneResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Feet, new Stats() { ArcaneResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Chest, new Stats() { ArcaneResistance = 8 }));
+            defaultEnchants.Add(new Enchant(2989, "Arcane Armor Kit", Item.ItemSlot.Legs, new Stats() { ArcaneResistance = 8 }));
+            defaultEnchants.Add(new Enchant(3005, "Arcanum of Nature Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3813, "Arcanum of Toxic Warding", Item.ItemSlot.Head, new Stats() { NatureResistance = 25, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(3006, "Arcanum of Arcane Warding", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3815, "Arcanum of the Eclipsed Moon", Item.ItemSlot.Head, new Stats() { ArcaneResistance = 25, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(3007, "Arcanum of Fire Warding", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3816, "Arcanum of the Flame's Soul", Item.ItemSlot.Head, new Stats() { FireResistance = 25, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(3008, "Arcanum of Frost Warding", Item.ItemSlot.Head, new Stats() { FrostResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3812, "Arcanum of the Frosty Soul", Item.ItemSlot.Head, new Stats() { FrostResistance = 25, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(3009, "Arcanum of Shadow Warding", Item.ItemSlot.Head, new Stats() { ShadowResistance = 20 }));
+            defaultEnchants.Add(new Enchant(3814, "Arcanum of the Fleeing Shadow", Item.ItemSlot.Head, new Stats() { ShadowResistance = 25, Stamina = 30 }));
+            defaultEnchants.Add(new Enchant(2998, "Inscription of Endurance", Item.ItemSlot.Shoulders, new Stats() { NatureResistance = 4, ArcaneResistance = 4, FireResistance = 4, FrostResistance = 4, ShadowResistance = 4 }));
+            defaultEnchants.Add(new Enchant(2664, "Major Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 7, ArcaneResistance = 7, FireResistance = 7, FrostResistance = 7, ShadowResistance = 7 }));
+            defaultEnchants.Add(new Enchant(2619, "Greater Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 15 }));
             defaultEnchants.Add(new Enchant(1262, "Superior Arcane Resistance", Item.ItemSlot.Back, new Stats() { ArcaneResistance = 20 }));
             defaultEnchants.Add(new Enchant(1446, "Superior Shadow Resistance", Item.ItemSlot.Back, new Stats() { ShadowResistance = 20 }));
             defaultEnchants.Add(new Enchant(1354, "Superior Fire Resistance", Item.ItemSlot.Back, new Stats() { FireResistance = 20 }));
             defaultEnchants.Add(new Enchant(3230, "Superior Frost Resistance", Item.ItemSlot.Back, new Stats() { FrostResistance = 20 }));
             defaultEnchants.Add(new Enchant(1400, "Superior Nature Resistance", Item.ItemSlot.Back, new Stats() { NatureResistance = 20 }));
             defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Head, new Stats() { FireResistance = 20 }));
-			defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Legs, new Stats() { FireResistance = 20 }));
+            defaultEnchants.Add(new Enchant(1505, "Lesser Arcanum of Resilience", Item.ItemSlot.Legs, new Stats() { FireResistance = 20 }));
 
             defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.OffHand, new Stats() { Stamina = 18 }));
             defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.OffHand, new Stats() { BlockRating = 15 }));
             defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.OffHand, new Stats() { BlockValue = 18 }));
             defaultEnchants.Add(new Enchant(1952, "Defense", Item.ItemSlot.OffHand, new Stats() { DefenseRating = 20 }));
 
-			//scopes
-			defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
-			defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
-			defaultEnchants.Add(new Enchant(2523, "Biznicks 247x128 Accurascope", Item.ItemSlot.Ranged, new Stats() { RangedHitRating = 30 }));
-			defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 28 }));
+            //scopes
+            defaultEnchants.Add(new Enchant(2723, "Khorium Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 12 }));
+            defaultEnchants.Add(new Enchant(2722, "Adamantite Scope", Item.ItemSlot.Ranged, new Stats() { ScopeDamage = 10 }));
+            defaultEnchants.Add(new Enchant(2523, "Biznicks 247x128 Accurascope", Item.ItemSlot.Ranged, new Stats() { RangedHitRating = 30 }));
+            defaultEnchants.Add(new Enchant(2724, "Stabilized Eternium Scope", Item.ItemSlot.Ranged, new Stats() { RangedCritRating = 28 }));
 
-			//Sapphiron Enchants
-			defaultEnchants.Add(new Enchant(2721, "Power of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, SpellPower = 15 }));
-			defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, BonusArmor = 100 }));
-			defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
+            //Sapphiron Enchants
+            defaultEnchants.Add(new Enchant(2721, "Power of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, SpellPower = 15 }));
+            defaultEnchants.Add(new Enchant(2716, "Fortitude of the Scourge", Item.ItemSlot.Shoulders, new Stats() { Stamina = 16, BonusArmor = 100 }));
+            defaultEnchants.Add(new Enchant(2715, "Resilience of the Scourge", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 16, Mp5 = 5 }));
             defaultEnchants.Add(new Enchant(2717, "Might of the Scourge", Item.ItemSlot.Shoulders, new Stats() { CritRating = 14, AttackPower = 26 }));
-			
-			//Hodir Enchants
-			defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
-			defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
-			defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
-			defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
-			defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
-			defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
-			defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
-			defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
-			
-			//Inscriber enchants
-			defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
-			defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));
-			defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 52, DefenseRating = 15 }));
-			defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 61 }));
-			
-			//Leatherworking enchants
-			defaultEnchants.Add(new Enchant(3756, "Fur Lining - Attack Power", Item.ItemSlot.Wrist, new Stats() { AttackPower = 114 }));
-			defaultEnchants.Add(new Enchant(3757, "Fur Lining - Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 90 }));
-			defaultEnchants.Add(new Enchant(3758, "Fur Lining - Spell Power", Item.ItemSlot.Wrist, new Stats() { SpellPower = 67 }));
-			defaultEnchants.Add(new Enchant(3759, "Fur Lining - Fire Resist", Item.ItemSlot.Wrist, new Stats() { FireResistance = 60 }));
-			defaultEnchants.Add(new Enchant(3760, "Fur Lining - Frost Resist", Item.ItemSlot.Wrist, new Stats() { FrostResistance = 60 }));
-			defaultEnchants.Add(new Enchant(3761, "Fur Lining - Shadow Resist", Item.ItemSlot.Wrist, new Stats() { ShadowResistance = 60 }));
-			defaultEnchants.Add(new Enchant(3762, "Fur Lining - Nature Resist", Item.ItemSlot.Wrist, new Stats() { NatureResistance = 60 }));
-			defaultEnchants.Add(new Enchant(3763, "Fur Lining - Arcane Resist", Item.ItemSlot.Wrist, new Stats() { ArcaneResistance = 60 }));
-			defaultEnchants.Add(new Enchant(3327, "Jormungar Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { Stamina = 55, Agility = 22 }));
-			defaultEnchants.Add(new Enchant(3328, "Nerubian Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { AttackPower = 75, CritRating = 22 }));
-			
+
+            //Hodir Enchants
+            defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }));
+            defaultEnchants.Add(new Enchant(2986, "Lesser Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { AttackPower = 30, CritRating = 10 }));
+            defaultEnchants.Add(new Enchant(3809, "Greater Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, Mp5 = 6 }));
+            defaultEnchants.Add(new Enchant(3807, "Lesser Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, Mp5 = 4 }));
+            defaultEnchants.Add(new Enchant(3811, "Greater Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 20, DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(2978, "Lesser Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 15, DefenseRating = 10 }));
+            defaultEnchants.Add(new Enchant(3810, "Greater Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 24, CritRating = 15 }));
+            defaultEnchants.Add(new Enchant(3806, "Lesser Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { SpellPower = 18, CritRating = 10 }));
+
+            //Inscriber enchants
+            defaultEnchants.Add(new Enchant(3835, "Master's Inscription of the Axe", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, AttackPower = 104 }));
+            defaultEnchants.Add(new Enchant(3836, "Master's Inscription of the Crag", Item.ItemSlot.Shoulders, new Stats() { Mp5 = 6, SpellPower = 61 }));
+            defaultEnchants.Add(new Enchant(3837, "Master's Inscription of the Pinnacle", Item.ItemSlot.Shoulders, new Stats() { DodgeRating = 52, DefenseRating = 15 }));
+            defaultEnchants.Add(new Enchant(3838, "Master's Inscription of the Storm", Item.ItemSlot.Shoulders, new Stats() { CritRating = 15, SpellPower = 61 }));
+
+            //Leatherworking enchants
+            defaultEnchants.Add(new Enchant(3756, "Fur Lining - Attack Power", Item.ItemSlot.Wrist, new Stats() { AttackPower = 114 }));
+            defaultEnchants.Add(new Enchant(3757, "Fur Lining - Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 90 }));
+            defaultEnchants.Add(new Enchant(3758, "Fur Lining - Spell Power", Item.ItemSlot.Wrist, new Stats() { SpellPower = 67 }));
+            defaultEnchants.Add(new Enchant(3759, "Fur Lining - Fire Resist", Item.ItemSlot.Wrist, new Stats() { FireResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3760, "Fur Lining - Frost Resist", Item.ItemSlot.Wrist, new Stats() { FrostResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3761, "Fur Lining - Shadow Resist", Item.ItemSlot.Wrist, new Stats() { ShadowResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3762, "Fur Lining - Nature Resist", Item.ItemSlot.Wrist, new Stats() { NatureResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3763, "Fur Lining - Arcane Resist", Item.ItemSlot.Wrist, new Stats() { ArcaneResistance = 60 }));
+            defaultEnchants.Add(new Enchant(3327, "Jormungar Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { Stamina = 55, Agility = 22 }));
+            defaultEnchants.Add(new Enchant(3328, "Nerubian Leg Reinforcements", Item.ItemSlot.Legs, new Stats() { AttackPower = 75, CritRating = 22 }));
+
 
             //Death Knight Rune Enchants
-            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, new Stats() { BonusStrengthMultiplier = .075f } ));
-            defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", Item.ItemSlot.TwoHand, new Stats() { Parry = 0.04f } ));
+            defaultEnchants.Add(new Enchant(3368, "Rune of the Fallen Crusader", Item.ItemSlot.OneHand, new Stats() { BonusStrengthMultiplier = .075f }));
+            defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", Item.ItemSlot.TwoHand, new Stats() { Parry = 0.04f }));
             defaultEnchants.Add(new Enchant(3594, "Rune of Swordbreaking", Item.ItemSlot.OneHand, new Stats() { Parry = 0.02f }));
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", Item.ItemSlot.TwoHand, new Stats() { Defense = 25.0f, BonusStaminaMultiplier = 0.02f }));
 
             // Engineering enchant
-            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (56 + 2.0f / 3.0f) } ));
+            defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (56 + 2.0f / 3.0f) }));
 
             // Tailoring enchant
             defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { LightweaveEmbroideryProc = 1 }));
 
-			//3.0.8 enchants
-			defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));
-			defaultEnchants.Add(new Enchant(3849, "Titanium Plating", Item.ItemSlot.OffHand, new Stats() { BlockValue = 40 }));
-			defaultEnchants.Add(new Enchant(3852, "Greater Inscription of the Gladiator", Item.ItemSlot.Shoulders, new Stats() { Stamina = 30, Resilience = 15 }));
-            
+            //3.0.8 enchants
+            defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));
+            defaultEnchants.Add(new Enchant(3849, "Titanium Plating", Item.ItemSlot.OffHand, new Stats() { BlockValue = 40 }));
+            defaultEnchants.Add(new Enchant(3852, "Greater Inscription of the Gladiator", Item.ItemSlot.Shoulders, new Stats() { Stamina = 30, Resilience = 15 }));
+
             #region Enchants to Delete
-			defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, null));
-			defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));
-			defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, null));
-			#endregion
+            defaultEnchants.Add(new Enchant(2673, "Mongoose", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(3225, "Executioner", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2343, "Major Healing", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(1071, "Major Stamina", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2655, "Shield Block", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2653, "Tough Shield", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2654, "Intellect", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2669, "Major Spellpower", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2666, "Major Intellect", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2671, "Sunfire", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2672, "Soulfrost", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2667, "Savagery", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(2670, "Major Agility", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(3222, "Greater Agility", Item.ItemSlot.MainHand, null));
+            defaultEnchants.Add(new Enchant(9001, "Major Defense", Item.ItemSlot.Chest, null));
+            defaultEnchants.Add(new Enchant(2660, "Exceptional Mana", Item.ItemSlot.Chest, null));
+            #endregion
             return defaultEnchants;
         }
-	}
+    }
 }

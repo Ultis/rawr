@@ -157,7 +157,7 @@ namespace Rawr
 			}
             OptimizationRequirement[] _requirements = requirements.ToArray();
 
-            _optimizer.InitializeItemCache(_character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -233,25 +233,25 @@ namespace Rawr
 				{
 					//Loading new items while IsLoading==true causes properties to be reset to their previously cached values, 
 					//so load all the items beforehand, then put them into the character all at once.
-					Item itemBack = bestCharacter.Back == null ? null : ItemCache.FindItemById(bestCharacter.Back.GemmedId);
-					Item itemChest = bestCharacter.Chest == null ? null : ItemCache.FindItemById(bestCharacter.Chest.GemmedId);
-					Item itemFeet = bestCharacter.Feet == null ? null : ItemCache.FindItemById(bestCharacter.Feet.GemmedId);
-					Item itemFinger1 = bestCharacter.Finger1 == null ? null : ItemCache.FindItemById(bestCharacter.Finger1.GemmedId);
-					Item itemFinger2 = bestCharacter.Finger2 == null ? null : ItemCache.FindItemById(bestCharacter.Finger2.GemmedId);
-					Item itemHands = bestCharacter.Hands == null ? null : ItemCache.FindItemById(bestCharacter.Hands.GemmedId);
-					Item itemHead = bestCharacter.Head == null ? null : ItemCache.FindItemById(bestCharacter.Head.GemmedId);
-					Item itemLegs = bestCharacter.Legs == null ? null : ItemCache.FindItemById(bestCharacter.Legs.GemmedId);
-					Item itemMainHand = bestCharacter.MainHand == null ? null : ItemCache.FindItemById(bestCharacter.MainHand.GemmedId);
-					Item itemNeck = bestCharacter.Neck == null ? null : ItemCache.FindItemById(bestCharacter.Neck.GemmedId);
-					Item itemOffHand = bestCharacter.OffHand == null ? null : ItemCache.FindItemById(bestCharacter.OffHand.GemmedId);
-					Item itemProjectile = bestCharacter.Projectile == null ? null : ItemCache.FindItemById(bestCharacter.Projectile.GemmedId);
-					Item itemProjectileBag = bestCharacter.ProjectileBag == null ? null : ItemCache.FindItemById(bestCharacter.ProjectileBag.GemmedId);
-					Item itemRanged = bestCharacter.Ranged == null ? null : ItemCache.FindItemById(bestCharacter.Ranged.GemmedId);
-					Item itemShoulders = bestCharacter.Shoulders == null ? null : ItemCache.FindItemById(bestCharacter.Shoulders.GemmedId);
-					Item itemTrinket1 = bestCharacter.Trinket1 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket1.GemmedId);
-					Item itemTrinket2 = bestCharacter.Trinket2 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket2.GemmedId);
-					Item itemWaist = bestCharacter.Waist == null ? null : ItemCache.FindItemById(bestCharacter.Waist.GemmedId);
-					Item itemWrist = bestCharacter.Wrist == null ? null : ItemCache.FindItemById(bestCharacter.Wrist.GemmedId);
+					ItemInstance itemBack = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
+                    ItemInstance itemChest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
+                    ItemInstance itemFeet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
+                    ItemInstance itemFinger1 = bestCharacter.Finger1 == null ? null : bestCharacter.Finger1.Clone();
+                    ItemInstance itemFinger2 = bestCharacter.Finger2 == null ? null : bestCharacter.Finger2.Clone();
+                    ItemInstance itemHands = bestCharacter.Hands == null ? null : bestCharacter.Hands.Clone();
+                    ItemInstance itemHead = bestCharacter.Head == null ? null : bestCharacter.Head.Clone();
+                    ItemInstance itemLegs = bestCharacter.Legs == null ? null : bestCharacter.Legs.Clone();
+                    ItemInstance itemMainHand = bestCharacter.MainHand == null ? null : bestCharacter.MainHand.Clone();
+                    ItemInstance itemNeck = bestCharacter.Neck == null ? null : bestCharacter.Neck.Clone();
+                    ItemInstance itemOffHand = bestCharacter.OffHand == null ? null : bestCharacter.OffHand.Clone();
+                    ItemInstance itemProjectile = bestCharacter.Projectile == null ? null : bestCharacter.Projectile.Clone();
+                    ItemInstance itemProjectileBag = bestCharacter.ProjectileBag == null ? null : bestCharacter.ProjectileBag.Clone();
+                    ItemInstance itemRanged = bestCharacter.Ranged == null ? null : bestCharacter.Ranged.Clone();
+                    ItemInstance itemShoulders = bestCharacter.Shoulders == null ? null : bestCharacter.Shoulders.Clone();
+                    ItemInstance itemTrinket1 = bestCharacter.Trinket1 == null ? null : bestCharacter.Trinket1.Clone();
+                    ItemInstance itemTrinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
+                    ItemInstance itemWaist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
+                    ItemInstance itemWrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
 					
 					_character.IsLoading = true;
 					_character.Back = itemBack;
@@ -273,19 +273,19 @@ namespace Rawr
 					_character.Trinket2 = itemTrinket2;
 					_character.Waist = itemWaist;
 					_character.Wrist = itemWrist;
-					_character.BackEnchant = bestCharacter.BackEnchant;
-					_character.ChestEnchant = bestCharacter.ChestEnchant;
-					_character.FeetEnchant = bestCharacter.FeetEnchant;
-					_character.Finger1Enchant = bestCharacter.Finger1Enchant;
-					_character.Finger2Enchant = bestCharacter.Finger2Enchant;
-					_character.HandsEnchant = bestCharacter.HandsEnchant;
-					_character.HeadEnchant = bestCharacter.HeadEnchant;
-					_character.LegsEnchant = bestCharacter.LegsEnchant;
-					_character.MainHandEnchant = bestCharacter.MainHandEnchant;
-					_character.OffHandEnchant = bestCharacter.OffHandEnchant;
-					_character.RangedEnchant = bestCharacter.RangedEnchant;
-					_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-					_character.WristEnchant = bestCharacter.WristEnchant;
+                    //_character.BackEnchant = bestCharacter.BackEnchant;
+                    //_character.ChestEnchant = bestCharacter.ChestEnchant;
+                    //_character.FeetEnchant = bestCharacter.FeetEnchant;
+                    //_character.Finger1Enchant = bestCharacter.Finger1Enchant;
+                    //_character.Finger2Enchant = bestCharacter.Finger2Enchant;
+                    //_character.HandsEnchant = bestCharacter.HandsEnchant;
+                    //_character.HeadEnchant = bestCharacter.HeadEnchant;
+                    //_character.LegsEnchant = bestCharacter.LegsEnchant;
+                    //_character.MainHandEnchant = bestCharacter.MainHandEnchant;
+                    //_character.OffHandEnchant = bestCharacter.OffHandEnchant;
+                    //_character.RangedEnchant = bestCharacter.RangedEnchant;
+                    //_character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
+                    //_character.WristEnchant = bestCharacter.WristEnchant;
 					_character.IsLoading = false;
 					_character.OnCalculationsInvalidated();
 					Close();
@@ -469,7 +469,7 @@ namespace Rawr
                 }
             }
 
-            _optimizer.InitializeItemCache(_character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();

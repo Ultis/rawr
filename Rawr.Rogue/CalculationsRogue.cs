@@ -10,6 +10,14 @@ namespace Rawr.Rogue
     [Calculations.RawrModelInfoAttribute("Rogue", "Ability_Rogue_SliceDice", Character.CharacterClass.Rogue)]
     public class CalculationsRogue : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public CalculationsRogue()
         {
             SetupRelevantItemTypes();
@@ -217,9 +225,9 @@ namespace Rawr.Rogue
         {
             Stats statsRace = GetRaceStats(character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 
             //TalentTree tree = character.AllTalents;
 

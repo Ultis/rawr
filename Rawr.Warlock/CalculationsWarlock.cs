@@ -8,6 +8,14 @@ namespace Rawr.Warlock
     [Rawr.Calculations.RawrModelInfo("Warlock", "Spell_Nature_FaerieFire", Character.CharacterClass.Warlock)]
     public class CalculationsWarlock : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Warlock; } }
 
         private string _currentChartName = null;
@@ -357,7 +365,7 @@ namespace Rawr.Warlock
         {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTalents = new Stats()
@@ -371,7 +379,7 @@ namespace Rawr.Warlock
                 BonusCritChance = character.WarlockTalents.DemonicTactics * 0.02f + character.WarlockTalents.Backlash * 0.01f,
             };
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));

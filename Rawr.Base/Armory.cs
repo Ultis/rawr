@@ -34,28 +34,21 @@ namespace Rawr
                 Character.CharacterClass charClass = (Character.CharacterClass)Int32.Parse(docCharacter.SelectSingleNode("page/characterInfo/character").Attributes["classId"].Value);
 
 				Dictionary<Character.CharacterSlot, string> items = new Dictionary<Character.CharacterSlot, string>();
-				Dictionary<Character.CharacterSlot, int> enchants = new Dictionary<Character.CharacterSlot, int>();
+				//Dictionary<Character.CharacterSlot, int> enchants = new Dictionary<Character.CharacterSlot, int>();
 
 				foreach (XmlNode itemNode in docCharacter.SelectNodes("page/characterInfo/characterTab/items/item"))
 				{
 					int slot = int.Parse(itemNode.Attributes["slot"].Value) + 1;
                     Character.CharacterSlot cslot = Character.GetCharacterSlotFromId(slot);
-					items[cslot] = string.Format("{0}.{1}.{2}.{3}", itemNode.Attributes["id"].Value,
-						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value);
-					enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
+					items[cslot] = string.Format("{0}.{1}.{2}.{3}.{4}", itemNode.Attributes["id"].Value,
+						itemNode.Attributes["gem0Id"].Value, itemNode.Attributes["gem1Id"].Value, itemNode.Attributes["gem2Id"].Value, itemNode.Attributes["permanentenchant"].Value);
+					//enchants[cslot] = int.Parse(itemNode.Attributes["permanentenchant"].Value);
 				}
 
-				if (items.ContainsKey(Character.CharacterSlot.Wrist))
+				/*if (items.ContainsKey(Character.CharacterSlot.Wrist))
 				{
 					string[] wristIds = items[Character.CharacterSlot.Wrist].Split('.');
-					Item wristItemRaw = null;
-					string keyStartsWith = wristIds[0] + ".";
-					foreach (string key in ItemCache.Items.Keys)
-						if (key.StartsWith(keyStartsWith))
-						{
-							wristItemRaw = ItemCache.Items[key][0];
-							break;
-						}
+					Item wristItemRaw = ItemCache.FindItemById(int.Parse(wristIds[0]));
 					wristItemRaw = wristItemRaw ?? GetItem(wristIds[0] + ".0.0.0", "Loading Character from Armory");
 					if (wristItemRaw.Sockets.Color1 == Item.ItemSlot.None && wristIds[1] != "0")
 					{
@@ -128,7 +121,7 @@ namespace Rawr
 						items[Character.CharacterSlot.Waist] = string.Format("{0}.{1}.{2}.0", waistIds[0], waistIds[1], waistIds[2]);
 						items[Character.CharacterSlot.ExtraWaistSocket] = waistIds[3] + ".0.0.0";
 					}
-				}
+				}*/
 
                 itemsOnCharacter = new string[items.Values.Count];
                 items.Values.CopyTo(itemsOnCharacter, 0);
@@ -153,23 +146,23 @@ namespace Rawr
 					items.ContainsKey(Character.CharacterSlot.OffHand) ? items[Character.CharacterSlot.OffHand] : null,
 					items.ContainsKey(Character.CharacterSlot.Ranged) ? items[Character.CharacterSlot.Ranged] : null,
 					items.ContainsKey(Character.CharacterSlot.Projectile) ? items[Character.CharacterSlot.Projectile] : null,
-					null,
-					items.ContainsKey(Character.CharacterSlot.ExtraWristSocket) ? items[Character.CharacterSlot.ExtraWristSocket] : null,
-					items.ContainsKey(Character.CharacterSlot.ExtraHandsSocket) ? items[Character.CharacterSlot.ExtraHandsSocket] : null,
-					items.ContainsKey(Character.CharacterSlot.ExtraWaistSocket) ? items[Character.CharacterSlot.ExtraWaistSocket] : null,
-					enchants.ContainsKey(Character.CharacterSlot.Head) ? enchants[Character.CharacterSlot.Head] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Shoulders) ? enchants[Character.CharacterSlot.Shoulders] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Back) ? enchants[Character.CharacterSlot.Back] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Chest) ? enchants[Character.CharacterSlot.Chest] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Wrist) ? enchants[Character.CharacterSlot.Wrist] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Hands) ? enchants[Character.CharacterSlot.Hands] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Legs) ? enchants[Character.CharacterSlot.Legs] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Feet) ? enchants[Character.CharacterSlot.Feet] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Finger1) ? enchants[Character.CharacterSlot.Finger1] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Finger2) ? enchants[Character.CharacterSlot.Finger2] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.MainHand) ? enchants[Character.CharacterSlot.MainHand] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.OffHand) ? enchants[Character.CharacterSlot.OffHand] : 0,
-					enchants.ContainsKey(Character.CharacterSlot.Ranged) ? enchants[Character.CharacterSlot.Ranged] : 0
+					null
+                    //items.ContainsKey(Character.CharacterSlot.ExtraWristSocket) ? items[Character.CharacterSlot.ExtraWristSocket] : null,
+                    //items.ContainsKey(Character.CharacterSlot.ExtraHandsSocket) ? items[Character.CharacterSlot.ExtraHandsSocket] : null,
+                    //items.ContainsKey(Character.CharacterSlot.ExtraWaistSocket) ? items[Character.CharacterSlot.ExtraWaistSocket] : null,
+                    //enchants.ContainsKey(Character.CharacterSlot.Head) ? enchants[Character.CharacterSlot.Head] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Shoulders) ? enchants[Character.CharacterSlot.Shoulders] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Back) ? enchants[Character.CharacterSlot.Back] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Chest) ? enchants[Character.CharacterSlot.Chest] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Wrist) ? enchants[Character.CharacterSlot.Wrist] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Hands) ? enchants[Character.CharacterSlot.Hands] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Legs) ? enchants[Character.CharacterSlot.Legs] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Feet) ? enchants[Character.CharacterSlot.Feet] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Finger1) ? enchants[Character.CharacterSlot.Finger1] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Finger2) ? enchants[Character.CharacterSlot.Finger2] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.MainHand) ? enchants[Character.CharacterSlot.MainHand] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.OffHand) ? enchants[Character.CharacterSlot.OffHand] : 0,
+                    //enchants.ContainsKey(Character.CharacterSlot.Ranged) ? enchants[Character.CharacterSlot.Ranged] : 0
 					);
                 
                 character.Class = charClass;
@@ -295,6 +288,18 @@ namespace Rawr
                         Int32 id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
                         return id;
                     }
+                    else
+                    {
+                        // choose an exact match if it exists
+                        foreach (XmlNode node in items_nodes)
+                        {
+                            if (node.Attributes["name"].InnerText == item_name)
+                            {
+                                Int32 id = Int32.Parse(items_nodes[0].Attributes["id"].InnerText);
+                                return id;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -305,17 +310,17 @@ namespace Rawr
             return -1;
         }
 
-		public static Item GetItem(string gemmedId, string logReason)
+        public static Item GetItem(int id) { return GetItem(id, "Unknown reason"); }
+		public static Item GetItem(int id, string logReason)
 		{
 			//Just close your eyes
 			XmlDocument docItem = null;
 			try
 			{
-				string id = gemmedId.Split('.')[0];
 				WebRequestWrapper wrw = new WebRequestWrapper();
-                docItem = wrw.DownloadItemToolTipSheet(id);
-                XmlDocument docItemInfo = wrw.DownloadItemInformation(int.Parse(id));
-                ItemLocation location = LocationFactory.Create(docItem, id);
+                docItem = wrw.DownloadItemToolTipSheet(id.ToString());
+                XmlDocument docItemInfo = wrw.DownloadItemInformation(id);
+                ItemLocation location = LocationFactory.Create(docItem, id.ToString());
                 if (docItem == null || docItem.SelectSingleNode("/page/itemTooltips/itemTooltip[1]") == null)
                 {
                     StatusMessaging.ReportError("Get Item", null, "No item returned from Armory for " + id);
@@ -323,12 +328,15 @@ namespace Rawr
                 }
 				Item.ItemQuality quality = Item.ItemQuality.Common;
 				Item.ItemType type = Item.ItemType.None;
-				string name = string.Empty;
+                Item.ItemSlot socketColor1 = Item.ItemSlot.None;
+                Item.ItemSlot socketColor2 = Item.ItemSlot.None;
+                Item.ItemSlot socketColor3 = Item.ItemSlot.None;
+                Stats socketStats = new Stats();
+                string name = string.Empty;
 				string iconPath = string.Empty;
 				string setName = string.Empty;
 				Item.ItemSlot slot = Item.ItemSlot.None;
 				Stats stats = new Stats();
-				Sockets sockets = new Sockets();
 				int inventoryType = -1;
 				int classId = -1;
 				string subclassName = string.Empty;
@@ -364,28 +372,28 @@ namespace Rawr
 				/* fix class restrictions on BOP items that can only be made by certain classes */
 				switch (id)
 				{
-					case "35181":
-					case "32495":
+					case 35181:
+					case 32495:
 						requiredClasses.Add("Priest");
 						break;
-					case "32476":
-					case "35184":
-					case "32475":
-					case "34355":
+					case 32476:
+					case 35184:
+					case 32475:
+					case 34355:
 						requiredClasses.Add("Shaman");
 						break;
-					case "32474":
-					case "34356":
+					case 32474:
+					case 34356:
 						requiredClasses.Add("Hunter");
 						break;
-					case "46106":
-					case "32479":
-					case "32480":
-					case "46109":
+					case 46106:
+					case 32479:
+					case 32480:
+					case 46109:
 						requiredClasses.Add("Druid");
 						break;
-					case "32478":
-					case "34353":
+					case 32478:
+					case 34353:
 						requiredClasses.Add("Druid");
 						requiredClasses.Add("Rogue");
 						break;
@@ -461,7 +469,7 @@ namespace Rawr
 							baseArmor = ((float)itemLevel + 358f) * 7f / 26f;
 							break;
 					}
-					baseArmor *= 0.48f;
+					
 					baseArmor = (float)Math.Floor(baseArmor);
 					stats.BonusArmor = stats.Armor - baseArmor;
 					stats.Armor = baseArmor;
@@ -489,14 +497,14 @@ namespace Rawr
 					}
 
 					//parse Use/Equip lines
-					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, int.Parse(id));
+					if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
 					if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true);
 				}
 
 				XmlNodeList socketNodes = docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socket");
-				if (socketNodes.Count > 0) sockets.Color1String = socketNodes[0].Attributes["color"].Value;
-				if (socketNodes.Count > 1) sockets.Color2String = socketNodes[1].Attributes["color"].Value;
-				if (socketNodes.Count > 2) sockets.Color3String = socketNodes[2].Attributes["color"].Value;
+                if (socketNodes.Count > 0) socketColor1 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[0].Attributes["color"].Value);
+                if (socketNodes.Count > 1) socketColor2 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[1].Attributes["color"].Value);
+                if (socketNodes.Count > 2) socketColor3 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), socketNodes[2].Attributes["color"].Value);
 				string socketBonusesString = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/socketData/socketMatchEnchant")) { socketBonusesString = node.InnerText.Trim('+'); }
 				if (!string.IsNullOrEmpty(socketBonusesString))
@@ -522,40 +530,40 @@ namespace Rawr
 							switch (socketBonus.Substring(socketBonus.IndexOf(' ') + 1))
 							{
 								case "Agility":
-									sockets.Stats.Agility = socketBonusValue;
+									socketStats.Agility = socketBonusValue;
 									break;
 								case "Stamina":
-									sockets.Stats.Stamina = socketBonusValue;
+									socketStats.Stamina = socketBonusValue;
 									break;
 								case "Dodge Rating":
-									sockets.Stats.DodgeRating = socketBonusValue;
+									socketStats.DodgeRating = socketBonusValue;
 									break;
 								case "Parry Rating":
-									sockets.Stats.ParryRating = socketBonusValue;
+									socketStats.ParryRating = socketBonusValue;
 									break;
 								case "Block Rating":
-									sockets.Stats.BlockRating = socketBonusValue;
+									socketStats.BlockRating = socketBonusValue;
 									break;
 								case "Block Value":
-									sockets.Stats.BlockValue = socketBonusValue;
+									socketStats.BlockValue = socketBonusValue;
 									break;
 								case "Defense Rating":
-									sockets.Stats.DefenseRating = socketBonusValue;
+									socketStats.DefenseRating = socketBonusValue;
 									break;
 								case "Hit Rating":
-									sockets.Stats.HitRating = socketBonusValue;
+									socketStats.HitRating = socketBonusValue;
 									break;
 								case "Haste Rating":
-									sockets.Stats.HasteRating = socketBonusValue;
+									socketStats.HasteRating = socketBonusValue;
 									break;
 								case "Expertise Rating":
-									sockets.Stats.ExpertiseRating = socketBonusValue;
+									socketStats.ExpertiseRating = socketBonusValue;
 									break;
 								case "Armor Penetration Rating":
-									sockets.Stats.ArmorPenetrationRating = socketBonusValue;
+									socketStats.ArmorPenetrationRating = socketBonusValue;
 									break;
 								case "Strength":
-									sockets.Stats.Strength = socketBonusValue;
+									socketStats.Strength = socketBonusValue;
 									break;
 								case "Healing":
 								//case "Healing +4 Spell Damage":
@@ -567,57 +575,57 @@ namespace Rawr
 								//case "Healing and +2 Spell Damage":
 								//case "Healing and +1 Spell Damage":
 									if (socketBonusValue == 0)
-										sockets.Stats.SpellPower = (float)Math.Round(int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f);
+										socketStats.SpellPower = (float)Math.Round(int.Parse(socketBonuses[0].Substring(0, socketBonuses[0].IndexOf(' '))) / 1.88f);
 									else
-										sockets.Stats.SpellPower = (float)Math.Round(socketBonusValue / 1.88f);
+										socketStats.SpellPower = (float)Math.Round(socketBonusValue / 1.88f);
 									break;
                                 case "Spell Damage":
                                     // Only update Spell Damage if its not already set (Incase its an old heal bonus)
-                                    if (sockets.Stats.SpellPower == 0)
-                                        sockets.Stats.SpellPower = socketBonusValue;
+                                    if (socketStats.SpellPower == 0)
+                                        socketStats.SpellPower = socketBonusValue;
                                     //sockets.Stats.Healing = socketBonusValue;
                                     break;
                                 case "Spell Power":
-                                    sockets.Stats.SpellPower = socketBonusValue;
+                                    socketStats.SpellPower = socketBonusValue;
                                     break;
                                 case "Crit Rating":
 								case "Crit Strike Rating":
 								case "Critical Rating":
 								case "Critical Strike Rating":
-									sockets.Stats.CritRating = socketBonusValue;
+									socketStats.CritRating = socketBonusValue;
 									break;
 								case "Attack Power":
-									sockets.Stats.AttackPower = socketBonusValue;
+									socketStats.AttackPower = socketBonusValue;
 									break;
 								case "Weapon Damage":
-									sockets.Stats.WeaponDamage = socketBonusValue;
+									socketStats.WeaponDamage = socketBonusValue;
 									break;
 								case "Resilience":
 								case "Resilience Rating":
-									sockets.Stats.Resilience = socketBonusValue;
+									socketStats.Resilience = socketBonusValue;
 									break;
 								//case "Spell Damage and Healing":
 								//    sockets.Stats.SpellDamageRating = socketBonusValue;
 								//    sockets.Stats.Healing = socketBonusValue;
 								//    break;
 								case "Spell Hit Rating":
-									sockets.Stats.HitRating = socketBonusValue;
+									socketStats.HitRating = socketBonusValue;
 									break;
 								case "Intellect":
-									sockets.Stats.Intellect = socketBonusValue;
+									socketStats.Intellect = socketBonusValue;
 									break;
 								case "Spell Crit":
 								case "Spell Crit Rating":
 								case "Spell Critical":
 								case "Spell Critical Rating":
 								case "Spell Critical Strike Rating":
-									sockets.Stats.CritRating = socketBonusValue;
+									socketStats.CritRating = socketBonusValue;
 									break;
 								case "Spell Haste Rating":
-									sockets.Stats.HasteRating = socketBonusValue;
+									socketStats.HasteRating = socketBonusValue;
 									break;
 								case "Spirit":
-									sockets.Stats.Spirit = socketBonusValue;
+									socketStats.Spirit = socketBonusValue;
 									break;
 								case "Mana every 5 seconds":
 								case "Mana ever 5 Sec":
@@ -625,7 +633,7 @@ namespace Rawr
 								case "mana per 5 sec.":
 								case "Mana per 5 sec.":
 								case "Mana per 5 Seconds":
-									sockets.Stats.Mp5 = socketBonusValue;
+									socketStats.Mp5 = socketBonusValue;
 									break;
 							}
 						}
@@ -806,7 +814,7 @@ namespace Rawr
 				}
 				string desc = string.Empty;
 				foreach (XmlNode node in docItem.SelectNodes("page/itemTooltips/itemTooltip/desc")) { desc = node.InnerText; }
-                if (desc.ToLower().Contains("matches any socket"))
+                if (desc.Contains("Matches any socket"))
                 {
                     slot = Item.ItemSlot.Prismatic;
                 }
@@ -827,16 +835,9 @@ namespace Rawr
 				else if (desc.Contains("meta gem slot"))
 					slot = Item.ItemSlot.Meta;
 
-				string[] ids = gemmedId.Split('.');
-				int gem1Id = ids.Length == 4 ? int.Parse(ids[1]) : 0;
-				int gem2Id = ids.Length == 4 ? int.Parse(ids[2]) : 0;
-				int gem3Id = ids.Length == 4 ? int.Parse(ids[3]) : 0;
                 Item item = new Item()
                 {
-					_id = int.Parse(id),
-                    _gem1Id = gem1Id,
-                    _gem2Id = gem2Id,
-                    _gem3Id = gem3Id, //Set the local fields so as not to call OnIdsChanging/Changed, so it's not added to the ItemCache yet.
+					_id = id,
                     Name = name,
                     Quality = quality,
                     Type = type,
@@ -844,7 +845,10 @@ namespace Rawr
                     Slot = slot,
                     SetName = setName,
                     Stats = stats,
-                    Sockets = sockets,
+                    SocketColor1 = socketColor1,
+                    SocketColor2 = socketColor2,
+                    SocketColor3 = socketColor3,
+                    SocketBonus = socketStats,
                     MinDamage = minDamage,
                     MaxDamage = maxDamage,
                     DamageType = damageType,
@@ -873,7 +877,7 @@ namespace Rawr
                 //}
                 //else
                 //{
-                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + gemmedId);
+                StatusMessaging.ReportError("Get Item", ex, "Rawr encountered an error getting Item from Armory: " + id);
                     //System.Windows.Forms.MessageBox.Show(string.Format("Rawr encountered an error getting Item " +
                     //"from Armory: {0}. If you still encounter this error, please copy and" +
                     //" paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\nResponse: {1}\r\n\r\n\r\n{2}\r\n\r\n{3}",
@@ -1145,7 +1149,7 @@ namespace Rawr
 			try
 			{
 				StatusMessaging.UpdateStatus(slot.ToString(), "Downloading Upgrade List");
-				Item itemToUpgrade = character[slot];
+				ItemInstance itemToUpgrade = character[slot];
 				if (itemToUpgrade != null)
 				{
 					WebRequestWrapper wrw = new WebRequestWrapper();
@@ -1159,34 +1163,22 @@ namespace Rawr
 						{
 							StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
 							string id = nodeList[i].Attributes["id"].Value;
-							List<Item> idealItemGemmings = ItemCache.Instance.FindAllItemsById(int.Parse(id)) as List<Item>;
-							if (idealItemGemmings.Count > 0)
+                            if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
 							{
-								id += string.Format(".{0}.{1}.{2}", idealGems[idealItemGemmings[0].Sockets.Color1],
-									idealGems[idealItemGemmings[0].Sockets.Color2], idealGems[idealItemGemmings[0].Sockets.Color3]);
-								ItemCache.FindItemById(id);
-							}
-							else
-							{
-								Item idealItem = GetItem(id, "Loading Upgrades");
+								Item idealItem = GetItem(int.Parse(id), "Loading Upgrades");
 								if (idealItem != null)
 								{
-									idealItem._gem1Id = idealGems[idealItem.Sockets.Color1];
-									idealItem._gem2Id = idealGems[idealItem.Sockets.Color2];
-									idealItem._gem3Id = idealGems[idealItem.Sockets.Color3];
+                                    ItemInstance idealGemmedItem = new ItemInstance(int.Parse(id), idealGems[idealItem.SocketColor1], idealGems[idealItem.SocketColor2], idealGems[idealItem.SocketColor3], itemToUpgrade.EnchantId);
 
-									if (!ItemCache.Items.ContainsKey(idealItem.GemmedId))
+									Item newItem = ItemCache.AddItem(idealItem, false);
+
+									//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
+									// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
+                                    ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealGemmedItem, character, slot);
+
+									if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
 									{
-										Item newItem = ItemCache.Instance.AddItem(idealItem, true, false);
-
-										//This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
-										// then do the compare and remove it if we don't want it, we can avoid that constant event trigger
-										ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealItem, character, slot);
-
-										if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
-										{
-											ItemCache.DeleteItem(newItem, false);
-										}
+										ItemCache.DeleteItem(newItem, false);
 									}
 								}
 							}

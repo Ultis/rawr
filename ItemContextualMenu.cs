@@ -27,7 +27,7 @@ namespace Rawr
 			set { _character = value; }
 		}
 
-		private Item _item;
+		private ItemInstance _item;
         private Character _itemCharacter;
 		private Character.CharacterSlot _equipSlot;
 		private ToolStripMenuItem _menuItemName;
@@ -42,7 +42,8 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemCreateBearGemmings;
 		private ToolStripMenuItem _menuItemCreateCatGemmings;
         private ToolStripMenuItem _menuItemEvaluateUpgrade;
-		public ItemContextualMenu()
+        private ToolStripMenuItem _menuItemCustomizeItem;
+        public ItemContextualMenu()
 		{
 			_menuItemName = new ToolStripMenuItem();
 			_menuItemName.Enabled = false;
@@ -65,7 +66,7 @@ namespace Rawr
             _menuItemEquipAll = new ToolStripMenuItem("Equip All");
             _menuItemEquipAll.Click += new EventHandler(_menuItemEquipAll_Click);
 
-			_menuItemDelete = new ToolStripMenuItem("Delete");
+			_menuItemDelete = new ToolStripMenuItem("Delete Custom Gemming");
 			_menuItemDelete.Click += new EventHandler(_menuItemDelete_Click);
 
 			_menuItemDeleteDuplicates = new ToolStripMenuItem("Delete Duplicates");
@@ -74,11 +75,8 @@ namespace Rawr
             _menuItemEvaluateUpgrade = new ToolStripMenuItem("Evaluate Upgrade");
             _menuItemEvaluateUpgrade.Click += new EventHandler(_menuItemEvaluateUpgrade_Click);
 
-			//TODO: Implement this for all models.
-			_menuItemCreateBearGemmings = new ToolStripMenuItem("Create Bear Gemmings");
-			_menuItemCreateBearGemmings.Click += new EventHandler(_menuItemCreateBearGemmings_Click);
-			_menuItemCreateCatGemmings = new ToolStripMenuItem("Create Cat Gemmings");
-			_menuItemCreateCatGemmings.Click += new EventHandler(_menuItemCreateCatGemmings_Click);
+            _menuItemCustomizeItem = new ToolStripMenuItem("Add Custom Gemming...");
+            _menuItemCustomizeItem.Click += new EventHandler(_menuItemCustomizeItem_Click);
 
 			this.Items.Add(_menuItemName);
 			this.Items.Add(new ToolStripSeparator());
@@ -88,23 +86,33 @@ namespace Rawr
 			this.Items.Add(_menuItemRefreshWowhead);
 			this.Items.Add(_menuItemEquip);
             this.Items.Add(_menuItemEquipAll);
+            this.Items.Add(_menuItemCustomizeItem);
             this.Items.Add(_menuItemDelete);
-			this.Items.Add(_menuItemDeleteDuplicates);
+			//this.Items.Add(_menuItemDeleteDuplicates);
             this.Items.Add(_menuItemEvaluateUpgrade);
-
-			//this.Items.Add(_menuItemCreateBearGemmings);
-			//this.Items.Add(_menuItemCreateCatGemmings);
 		}
+
+        void _menuItemCustomizeItem_Click(object sender, EventArgs e)
+        {
+            FormItemInstance form = new FormItemInstance();
+            form.CharacterSlot = _equipSlot;
+            form.ItemInstance = _item.Clone();
+            if (form.ShowDialog(FormMain.Instance) == DialogResult.OK)
+            {
+                Character.CustomItemInstances.Add(form.ItemInstance);
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
         void _menuItemEvaluateUpgrade_Click(object sender, EventArgs e)
         {
             FormOptimize optimize = new FormOptimize(Character);
-            optimize.EvaluateUpgrades(_item);
+            optimize.EvaluateUpgrades(_item.Item);
             optimize.ShowDialog(this);
             optimize.Dispose();
         }
 
-        public void Show(Item item, Character.CharacterSlot equipSlot, bool allowDelete)
+        public void Show(ItemInstance item, Character.CharacterSlot equipSlot, bool allowDelete)
         {
             // TankConcrete 09.01.09 - Added a check to make sure the item being displayed
             // is really an item we can show a context menu for. Enchants, etc., won't work
@@ -118,7 +126,7 @@ namespace Rawr
             return;
         }
 
-		public void Show(Item item, Character.CharacterSlot equipSlot, Character itemCharacter, bool allowDelete)
+		public void Show(ItemInstance item, Character.CharacterSlot equipSlot, Character itemCharacter, bool allowDelete)
 		{
 			_item = item;
             _itemCharacter = itemCharacter;
@@ -126,21 +134,26 @@ namespace Rawr
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (this.Character[equipSlot] != item);
             _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = equipSlot != Character.CharacterSlot.None;
-			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled;
+			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled && Character.CustomItemInstances.Contains(item);
 			_menuItemDeleteDuplicates.Enabled = allowDelete;
-			_menuItemName.Text = item.Name;
+			_menuItemName.Text = item.Item.Name;
 
 			this.Show(Control.MousePosition);
 		}
 
 		void _menuItemDelete_Click(object sender, EventArgs e)
 		{
-			ItemCache.DeleteItem(_item);
+			//ItemCache.DeleteItem(_item);
+            if (Character.CustomItemInstances.Contains(_item))
+            {
+                Character.CustomItemInstances.Remove(_item);
+                Character.OnCalculationsInvalidated();
+            }
 		}
 
 		void _menuItemDeleteDuplicates_Click(object sender, EventArgs e)
 		{
-			if (MessageBox.Show("Are you sure you want to delete all instances of " + _item.Name + " except the selected one?", "Confirm Delete Duplicates", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			/*if (MessageBox.Show("Are you sure you want to delete all instances of " + _item.Item.Name + " except the selected one?", "Confirm Delete Duplicates", MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				Cursor = Cursors.WaitCursor;
 				List<Item> itemsToDelete = new List<Item>(ItemCache.Instance.FindAllItemsById(_item.Id));
@@ -151,7 +164,7 @@ namespace Rawr
 				foreach (Item itemToDelete in itemsToDelete)
 					ItemCache.DeleteItem(itemToDelete);
 				Cursor = Cursors.Default;
-			}
+			}*/
 		}
 
 		void _menuItemCreateBearGemmings_Click(object sender, EventArgs e)
@@ -161,7 +174,7 @@ namespace Rawr
 			string gemmedSocketStam = _item.Id.ToString();
 			string gemmedStam = _item.Id.ToString();
 			foreach(Item.ItemSlot color in new Item.ItemSlot[]
-				{_item.Sockets.Color1, _item.Sockets.Color2, _item.Sockets.Color3})
+				{_item.Item.SocketColor1, _item.Item.SocketColor2, _item.Item.SocketColor3})
 			{
 				switch (color)
 				{
@@ -202,17 +215,17 @@ namespace Rawr
 				}
 			}
 
-			ItemCache.FindItemById(gemmedAgi);
-			ItemCache.FindItemById(gemmedSocketAgi);
-			ItemCache.FindItemById(gemmedSocketStam);
-			ItemCache.FindItemById(gemmedStam);
+            //ItemCache.FindItemById(gemmedAgi);
+            //ItemCache.FindItemById(gemmedSocketAgi);
+            //ItemCache.FindItemById(gemmedSocketStam);
+            //ItemCache.FindItemById(gemmedStam);
 		}
 
 		void _menuItemCreateCatGemmings_Click(object sender, EventArgs e)
 		{
 			string gemmedAgi = _item.Id.ToString();
 			string gemmedSocketAgi = _item.Id.ToString();
-			foreach (Item.ItemSlot color in new Item.ItemSlot[] { _item.Sockets.Color1, _item.Sockets.Color2, _item.Sockets.Color3 })
+			foreach (Item.ItemSlot color in new Item.ItemSlot[] { _item.Item.SocketColor1, _item.Item.SocketColor2, _item.Item.SocketColor3 })
 			{
 				switch (color)
 				{
@@ -243,78 +256,78 @@ namespace Rawr
 				}
 			}
 
-			ItemCache.FindItemById(gemmedAgi);
-			ItemCache.FindItemById(gemmedSocketAgi);
+			//ItemCache.FindItemById(gemmedAgi);
+			//ItemCache.FindItemById(gemmedSocketAgi);
 		}
 
 		void _menuItemEquip_Click(object sender, EventArgs e)
 		{
-            this.Character[_equipSlot] = _item == null ? null : ItemCache.FindItemById(_item.GemmedId);
+            this.Character[_equipSlot] = _item == null ? null : _item.Clone();
 		}
 
         void _menuItemEquipAll_Click(object sender, EventArgs e)
         {
             _character.IsLoading = true;
-            _character.Back = _itemCharacter.Back == null ? null : ItemCache.FindItemById(_itemCharacter.Back.GemmedId);
-            _character.Chest = _itemCharacter.Chest == null ? null : ItemCache.FindItemById(_itemCharacter.Chest.GemmedId);
-            _character.Feet = _itemCharacter.Feet == null ? null : ItemCache.FindItemById(_itemCharacter.Feet.GemmedId);
-            _character.Finger1 = _itemCharacter.Finger1 == null ? null : ItemCache.FindItemById(_itemCharacter.Finger1.GemmedId);
-            _character.Finger2 = _itemCharacter.Finger2 == null ? null : ItemCache.FindItemById(_itemCharacter.Finger2.GemmedId);
-            _character.Hands = _itemCharacter.Hands == null ? null : ItemCache.FindItemById(_itemCharacter.Hands.GemmedId);
-            _character.Head = _itemCharacter.Head == null ? null : ItemCache.FindItemById(_itemCharacter.Head.GemmedId);
-            _character.Legs = _itemCharacter.Legs == null ? null : ItemCache.FindItemById(_itemCharacter.Legs.GemmedId);
-            _character.MainHand = _itemCharacter.MainHand == null ? null : ItemCache.FindItemById(_itemCharacter.MainHand.GemmedId);
-            _character.Neck = _itemCharacter.Neck == null ? null : ItemCache.FindItemById(_itemCharacter.Neck.GemmedId);
-            _character.OffHand = _itemCharacter.OffHand == null ? null : ItemCache.FindItemById(_itemCharacter.OffHand.GemmedId);
-            _character.Projectile = _itemCharacter.Projectile == null ? null : ItemCache.FindItemById(_itemCharacter.Projectile.GemmedId);
-            _character.ProjectileBag = _itemCharacter.ProjectileBag == null ? null : ItemCache.FindItemById(_itemCharacter.ProjectileBag.GemmedId);
-            _character.Ranged = _itemCharacter.Ranged == null ? null : ItemCache.FindItemById(_itemCharacter.Ranged.GemmedId);
-            _character.Shoulders = _itemCharacter.Shoulders == null ? null : ItemCache.FindItemById(_itemCharacter.Shoulders.GemmedId);
-            _character.Trinket1 = _itemCharacter.Trinket1 == null ? null : ItemCache.FindItemById(_itemCharacter.Trinket1.GemmedId);
-            _character.Trinket2 = _itemCharacter.Trinket2 == null ? null : ItemCache.FindItemById(_itemCharacter.Trinket2.GemmedId);
-            _character.Waist = _itemCharacter.Waist == null ? null : ItemCache.FindItemById(_itemCharacter.Waist.GemmedId);
-            _character.Wrist = _itemCharacter.Wrist == null ? null : ItemCache.FindItemById(_itemCharacter.Wrist.GemmedId);
-            _character.BackEnchant = _itemCharacter.BackEnchant;
-            _character.ChestEnchant = _itemCharacter.ChestEnchant;
-            _character.FeetEnchant = _itemCharacter.FeetEnchant;
-            _character.Finger1Enchant = _itemCharacter.Finger1Enchant;
-            _character.Finger2Enchant = _itemCharacter.Finger2Enchant;
-            _character.HandsEnchant = _itemCharacter.HandsEnchant;
-            _character.HeadEnchant = _itemCharacter.HeadEnchant;
-            _character.LegsEnchant = _itemCharacter.LegsEnchant;
-            _character.MainHandEnchant = _itemCharacter.MainHandEnchant;
-            _character.OffHandEnchant = _itemCharacter.OffHandEnchant;
-            _character.RangedEnchant = _itemCharacter.RangedEnchant;
-            _character.ShouldersEnchant = _itemCharacter.ShouldersEnchant;
-            _character.WristEnchant = _itemCharacter.WristEnchant;
+            _character.Back = _itemCharacter.Back == null ? null : _itemCharacter.Back.Clone();
+            _character.Chest = _itemCharacter.Chest == null ? null : _itemCharacter.Chest.Clone();
+            _character.Feet = _itemCharacter.Feet == null ? null : _itemCharacter.Feet.Clone();
+            _character.Finger1 = _itemCharacter.Finger1 == null ? null : _itemCharacter.Finger1.Clone();
+            _character.Finger2 = _itemCharacter.Finger2 == null ? null : _itemCharacter.Finger2.Clone();
+            _character.Hands = _itemCharacter.Hands == null ? null : _itemCharacter.Hands.Clone();
+            _character.Head = _itemCharacter.Head == null ? null : _itemCharacter.Head.Clone();
+            _character.Legs = _itemCharacter.Legs == null ? null : _itemCharacter.Legs.Clone();
+            _character.MainHand = _itemCharacter.MainHand == null ? null : _itemCharacter.MainHand.Clone();
+            _character.Neck = _itemCharacter.Neck == null ? null : _itemCharacter.Neck.Clone();
+            _character.OffHand = _itemCharacter.OffHand == null ? null : _itemCharacter.OffHand.Clone();
+            _character.Projectile = _itemCharacter.Projectile == null ? null : _itemCharacter.Projectile.Clone();
+            _character.ProjectileBag = _itemCharacter.ProjectileBag == null ? null : _itemCharacter.ProjectileBag.Clone();
+            _character.Ranged = _itemCharacter.Ranged == null ? null : _itemCharacter.Ranged.Clone();
+            _character.Shoulders = _itemCharacter.Shoulders == null ? null : _itemCharacter.Shoulders.Clone();
+            _character.Trinket1 = _itemCharacter.Trinket1 == null ? null : _itemCharacter.Trinket1.Clone();
+            _character.Trinket2 = _itemCharacter.Trinket2 == null ? null : _itemCharacter.Trinket2.Clone();
+            _character.Waist = _itemCharacter.Waist == null ? null : _itemCharacter.Waist.Clone();
+            _character.Wrist = _itemCharacter.Wrist == null ? null : _itemCharacter.Wrist.Clone();
+            //_character.BackEnchant = _itemCharacter.BackEnchant;
+            //_character.ChestEnchant = _itemCharacter.ChestEnchant;
+            //_character.FeetEnchant = _itemCharacter.FeetEnchant;
+            //_character.Finger1Enchant = _itemCharacter.Finger1Enchant;
+            //_character.Finger2Enchant = _itemCharacter.Finger2Enchant;
+            //_character.HandsEnchant = _itemCharacter.HandsEnchant;
+            //_character.HeadEnchant = _itemCharacter.HeadEnchant;
+            //_character.LegsEnchant = _itemCharacter.LegsEnchant;
+            //_character.MainHandEnchant = _itemCharacter.MainHandEnchant;
+            //_character.OffHandEnchant = _itemCharacter.OffHandEnchant;
+            //_character.RangedEnchant = _itemCharacter.RangedEnchant;
+            //_character.ShouldersEnchant = _itemCharacter.ShouldersEnchant;
+            //_character.WristEnchant = _itemCharacter.WristEnchant;
             _character.IsLoading = false;
             _character.OnCalculationsInvalidated();
         }
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)
 		{
-			ItemCache.DeleteItem(_item);
-			Item newItem = Item.LoadFromId(_item.GemmedId, true, "Refreshing",false);
-			if (newItem == null)
+			//ItemCache.DeleteItem(_item);
+			Item newItem = Item.LoadFromId(_item.Id, true, true, false);
+			/*if (newItem == null)
 			{
 				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
-				ItemCache.AddItem(_item, true, false);
-			}
+				ItemCache.AddItem(_item, false);
+			}*/
 			ItemCache.OnItemsChanged();
 		}
 
 		void _menuItemRefreshWowhead_Click(object sender, EventArgs e)
 		{
-			ItemCache.DeleteItem(_item);
-			Item newItem = Wowhead.GetItem(_item.GemmedId);
+			//ItemCache.DeleteItem(_item);
+			Item newItem = Wowhead.GetItem(_item.Id);
 			if (newItem == null)
 			{
 				MessageBox.Show("Unable to find item " + _item.Id + ". Reverting to previous data.");
-				ItemCache.AddItem(_item, true, false);
+				//ItemCache.AddItem(_item, true, false);
 			}
 			else
 			{
-				ItemCache.AddItem(newItem, true, true);
+				ItemCache.AddItem(newItem, true);
 			}
 			ItemCache.OnItemsChanged();
 		}
@@ -331,7 +344,7 @@ namespace Rawr
 			foreach (Form form in Application.OpenForms) if (form is FormItemEditor) editor = form as FormItemEditor;
 			if (editor == null)
 			{
-				FormItemEditor itemEditor = new FormItemEditor(Character, _item);
+				FormItemEditor itemEditor = new FormItemEditor(Character, _item.Item);
 				//itemEditor.SelectItem(_item, true);
 				itemEditor.ShowDialog(FormMain.Instance);
                 itemEditor.Dispose();
@@ -340,7 +353,7 @@ namespace Rawr
 			}
 			else
 			{
-				editor.SelectItem(_item, true);
+				editor.SelectItem(_item.Item, true);
 				editor.Focus();
 			}
 		}

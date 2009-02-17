@@ -8,6 +8,14 @@ namespace Rawr.TankDK
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_shadow_deathanddecay", Character.CharacterClass.DeathKnight)]
     class CalculationsTankDK : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -371,7 +379,7 @@ namespace Rawr.TankDK
                     + character.DeathKnightTalents.EbonPlaguebringer
                     + character.DeathKnightTalents.Annihilation);
 
-                float weaponDmg = (character.MainHand.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
+                float weaponDmg = (character.MainHand.Item.DPS + stats.AttackPower / 14.0f) * character.MainHand.Speed;
 
                 // Haste trinket (Meteorite Whetstone)
                 calcs.BasicStats.HasteRating += calcs.BasicStats.HasteRatingOnPhysicalAttack * 10 / 45;
@@ -443,7 +451,7 @@ namespace Rawr.TankDK
 
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
@@ -489,7 +497,7 @@ namespace Rawr.TankDK
             }
             */
 
-            statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
             statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;

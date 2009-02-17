@@ -22,12 +22,12 @@ namespace Rawr
 					foreach (string line in lines)
 						if (line != lines[0])
 						{
-							Item item = GetItem(line.Split(',')[0]);
+							Item item = GetItem(line.Split(',')[0], true);
 							//Item item = ProcessItem(line);
 							if (item != null)
 							{
 								items.Add(item);
-								ItemCache.AddItem(item, true, false);
+								ItemCache.AddItem(item, false);
 							}
 						}
 
@@ -51,12 +51,12 @@ namespace Rawr
 			DateTime start = DateTime.Now;
 			foreach (int id in knownIds)
 			{
-				Item item = GetItem(id.ToString());
+				Item item = GetItem(id);
 				//Item item = ProcessItem(line);
 				if (item != null)
 				{
 					ItemCache.DeleteItem(ItemCache.FindItemById(item.Id));
-					ItemCache.AddItem(item, true, false);
+					ItemCache.AddItem(item, false);
 					strIDs.Append(id.ToString() + ", ");
 				}
 				count++;
@@ -108,7 +108,6 @@ namespace Rawr
 			Item item = new Item() { 
 				_id = int.Parse(id),
 				Name = name, 
-				Sockets = new Sockets(), 
 				Quality = (Item.ItemQuality)int.Parse(quality),
 				IconPath = string.Empty,
 				Stats = new Stats()
@@ -157,21 +156,16 @@ namespace Rawr
             return item;
 		}
 
-		public static Item GetItem(string gemmedId) { return GetItem(gemmedId, true); }
-		public static Item GetItem(string gemmedId, bool filter)
+		public static Item GetItem(int id) { return GetItem(id.ToString(), true); }
+        public static Item GetItem(int id, bool filter) { return GetItem(id.ToString(), filter); }		
+		public static Item GetItem(string query, bool filter)
 		{
-			string[] idsplit = gemmedId.Split('.');
-			string wowhead_id = idsplit[0];
 			WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument docItem = wrw.DownloadItemWowhead(wowhead_id);
-			int idGem1 = idsplit.Length > 1 ? int.Parse(idsplit[1]) : 0;
-			int idGem2 = idsplit.Length > 2 ? int.Parse(idsplit[2]) : 0;
-			int idGem3 = idsplit.Length > 3 ? int.Parse(idsplit[3]) : 0;
+            XmlDocument docItem = wrw.DownloadItemWowhead(query);
             // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
             int id = 0;
             foreach (XmlNode node in docItem.SelectNodes("wowhead/item")) { id = int.Parse(node.Attributes["id"].Value); }
-			Item item = new Item() { _id = id, Stats = new Stats(), Sockets = new Sockets(),
-				_gem1Id = idGem1, _gem2Id = idGem2, _gem3Id = idGem3 };
+			Item item = new Item() { _id = id, Stats = new Stats() };
 			string htmlTooltip = string.Empty;
 			string json1 = string.Empty;
 			string json2 = string.Empty;
@@ -523,19 +517,19 @@ namespace Rawr
 					break;
 
 				case "socket1":
-                    item.Sockets.Color1 = GetSocketType(value);
+                    item.SocketColor1 = GetSocketType(value);
 					break;
 
 				case "socket2":
-                    item.Sockets.Color2 = GetSocketType(value);
+                    item.SocketColor2 = GetSocketType(value);
 					break;
 
 				case "socket3":
-                    item.Sockets.Color3 = GetSocketType(value);
+                    item.SocketColor3 = GetSocketType(value);
 					break;
 
 				case "socketbonus":
-                    item.Sockets.Stats = GetSocketBonus(value);
+                    item.SocketBonus = GetSocketBonus(value);
                     break;
 
 				case "parryrtng":

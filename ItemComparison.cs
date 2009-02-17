@@ -11,8 +11,6 @@ namespace Rawr
 {
     public partial class ItemComparison : UserControl
     {
-        public Item[] Items;
-
         public ComparisonGraph.ComparisonSort Sort
         {
             get
@@ -48,20 +46,27 @@ namespace Rawr
         {
 			Calculations.ClearCache();
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-            if (Items != null && Character != null)
+            if (Character != null)
             {
-                bool seenEquippedItem = (Character[slot]==null);
-                foreach (Item item in Items)
+                if ((int)slot >= 0 && (int)slot <= 20)
                 {
-                    if (item.FitsInSlot(slot, Character))
+                    bool seenEquippedItem = (Character[slot] == null);
+                    foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
                         itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
                     }
+                    // add item
+                    if (!seenEquippedItem)
+                        itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
                 }
-                // add item
-                if (!seenEquippedItem)
-                    itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
+                else
+                {
+                    foreach (Item item in Character.GetRelevantItems(slot))
+                    {
+                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
+                    }
+                }
             }
 
             comparisonGraph1.RoundValues = true;
@@ -73,7 +78,7 @@ namespace Rawr
 
         public void LoadEnchantsBySlot(Item.ItemSlot slot, CharacterCalculationsBase currentCalculations)
         {
-            if (Items != null && Character != null)
+            if (Character != null)
             {
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
@@ -84,7 +89,7 @@ namespace Rawr
 
         public void LoadBuffs(CharacterCalculationsBase currentCalculations, bool activeOnly)
         {
-            if (Items != null && Character != null)
+            if (Character != null)
             {
                 comparisonGraph1.RoundValues = true;
                 comparisonGraph1.CustomRendered = false;
@@ -97,9 +102,9 @@ namespace Rawr
         {
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
             SortedList<Item.ItemSlot, Character.CharacterSlot> slotMap = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
-            if (Items != null && Character != null)
+            if (Character != null)
             {
-                SortedList<string, Item> items = new SortedList<string, Item>();
+                SortedList<string, ItemInstance> items = new SortedList<string, ItemInstance>();
 
                 float Finger1 = (Character[Character.CharacterSlot.Finger1] == null ? 0 : Calculations.GetItemCalculations(
                     Character[Character.CharacterSlot.Finger1], Character, Character.CharacterSlot.Finger1).OverallPoints);
@@ -132,13 +137,11 @@ namespace Rawr
 
                 }
 
-
-
-                foreach (Item relevantItem in ItemCache.RelevantItems)
+                foreach (KeyValuePair<Item.ItemSlot, Character.CharacterSlot> kvp in Item.DefaultSlotMap)
                 {
                     try
                     {
-                        Item.ItemSlot iSlot = relevantItem.Slot;
+                        Item.ItemSlot iSlot = kvp.Key;
                         Character.CharacterSlot slot;
 
                         if (slotMap.ContainsKey(iSlot))
@@ -147,22 +150,22 @@ namespace Rawr
                         }
                         else
                         {
-                            slot = Item.DefaultSlotMap[iSlot];
+                            slot = kvp.Value;
                         }
                         if (slot != Character.CharacterSlot.None)
                         {
                             ComparisonCalculationBase slotCalc;
-							Item currentItem = Character[slot];
+							ItemInstance currentItem = Character[slot];
 							if (currentItem == null)
 								slotCalc = Calculations.CreateNewComparisonCalculation();
 							else
 								slotCalc = Calculations.GetItemCalculations(currentItem, Character, slot);
 
-                            foreach (Item item in ItemCache.Instance.FindAllItemsById(relevantItem.Id))
+                            foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
                             {
 								if (!items.ContainsKey(item.GemmedId) && (currentItem == null || currentItem.GemmedId != item.GemmedId))
                                 {
-									if (currentItem != null && currentItem.Unique)
+									if (currentItem != null && currentItem.Item.Unique)
                                     {
                                         Character.CharacterSlot otherSlot = Character.CharacterSlot.None;
                                         switch (slot)
@@ -241,7 +244,7 @@ namespace Rawr
         public void LoadCurrentGearEnchantsBuffs(CharacterCalculationsBase currentCalculations)
         {
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-            if (Items != null && Character != null)
+            if (Character != null)
             {
                 foreach (Character.CharacterSlot slot in Enum.GetValues(typeof(Character.CharacterSlot)))
                     if (Character[slot] != null)
@@ -293,7 +296,7 @@ namespace Rawr
         public void LoadTalentSpecs(TalentPicker picker)
         {
             List<ComparisonCalculationBase> talentCalculations = new List<ComparisonCalculationBase>();
-            if (Items != null && Character != null)
+            if (Character != null)
             {
                 Character baseChar = Character.Clone();
                 switch (baseChar.Class)

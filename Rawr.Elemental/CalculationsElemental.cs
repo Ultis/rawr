@@ -7,6 +7,14 @@ namespace Rawr.Elemental
 	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", Character.CharacterClass.Shaman)]
 	public class CalculationsElemental : CalculationsBase
 	{
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
 		{
@@ -303,15 +311,15 @@ namespace Rawr.Elemental
 		{
             Stats statsRace = GetRaceStats(character);
 			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
+			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = GetTalentStats(character.ShamanTalents);
 
-			Stats statsGearEnchantsBuffs = statsItems + statsEnchants + statsBuffs;
+			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
 
 			CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
 
-			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
+			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             statsTotal.Strength *= 1 + statsTotal.BonusStrengthMultiplier;
             statsTotal.Agility *= 1 + statsTotal.BonusAgilityMultiplier;
@@ -658,6 +666,13 @@ namespace Rawr.Elemental
 			get { return _item; }
 			set { _item = value; }
 		}
+
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
 
 		private bool _equipped = false;
 		public override bool Equipped

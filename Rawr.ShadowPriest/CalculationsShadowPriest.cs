@@ -8,6 +8,14 @@ namespace Rawr.ShadowPriest
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", Character.CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase 
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Priest; } }
 
         private string _currentChartName = null;
@@ -433,7 +441,7 @@ namespace Rawr.ShadowPriest
         {
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats statsTalents = new Stats()
@@ -446,7 +454,7 @@ namespace Rawr.ShadowPriest
                 SpellCombatManaRegeneration = character.PriestTalents.Meditation * 0.1f
             };
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));

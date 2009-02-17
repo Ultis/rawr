@@ -23,6 +23,13 @@ namespace Rawr.Hunter
 	
 		#endregion	
 		
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
 
 
         /**
@@ -378,8 +385,8 @@ namespace Rawr.Hunter
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
 			calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
 			calculatedStats.PetStats = GetPetStats(options, calculatedStats.BasicStats, character);
-			if (character.Ranged == null || (character.Ranged.Type != Item.ItemType.Bow && character.Ranged.Type != Item.ItemType.Gun
-											&& character.Ranged.Type != Item.ItemType.Crossbow))
+			if (character.Ranged == null || (character.Ranged.Item.Type != Item.ItemType.Bow && character.Ranged.Item.Type != Item.ItemType.Gun
+											&& character.Ranged.Item.Type != Item.ItemType.Crossbow))
 			{
 				//skip all the calculations if there is no ranged weapon
 				return calculatedStats;
@@ -401,7 +408,7 @@ namespace Rawr.Hunter
             double normalAutoshotsPerSecond = 0.0;
             if (character.Ranged != null)
             {
-                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Speed / (totalStaticHaste));
+                calculatedStats.BaseAttackSpeed = (float)(character.Ranged.Item.Speed / (totalStaticHaste));
                 normalAutoshotsPerSecond = 1.0 / calculatedStats.BaseAttackSpeed;
             }
 
@@ -456,11 +463,11 @@ namespace Rawr.Hunter
 
             if (character.Ranged != null && character.Projectile != null)
             {
-                weaponDamageAverage = (float)(character.Ranged.MinDamage + character.Ranged.MaxDamage) / 2f;
-                ammoDamage = character.Ranged.Speed * ((float)(character.Projectile.MaxDamage + character.Projectile.MinDamage) / 2f);
+                weaponDamageAverage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+                ammoDamage = character.Ranged.Item.Speed * ((float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f);
                 weaponDamageAverage += ammoDamage
                     + calculatedStats.BasicStats.ScopeDamage
-                    + ((effectiveRAPAgainstMob + hawkRAPBonus) / 14 * character.Ranged.Speed);
+                    + ((effectiveRAPAgainstMob + hawkRAPBonus) / 14 * character.Ranged.Item.Speed);
 
             }
             #endregion
@@ -576,10 +583,10 @@ namespace Rawr.Hunter
 		{
 			Stats statsRace = GetRaceStats(character.Race);
 			Stats statsBaseGear = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
+			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			Stats statsTalents = GetBaseTalentStats(character.HunterTalents);
-			Stats statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs;
+			Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
 			statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsHunter options = character.CalculationOptions as CalculationOptionsHunter;
@@ -658,8 +665,8 @@ namespace Rawr.Hunter
             statsTotal.PhysicalHit = 1.0f - chanceMiss;
 
  			if (character.Ranged != null &&
-				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Type == Item.ItemType.Gun) ||
-				(character.Race == Character.CharacterRace.Troll && character.Ranged.Type == Item.ItemType.Bow)))
+				((character.Race == Character.CharacterRace.Dwarf && character.Ranged.Item.Type == Item.ItemType.Gun) ||
+				(character.Race == Character.CharacterRace.Troll && character.Ranged.Item.Type == Item.ItemType.Bow)))
 			{
                 statsTotal.CritRating += (float)Math.Floor(ratings.CRIT_RATING_PER_PERCENT);
 			}

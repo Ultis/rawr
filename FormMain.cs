@@ -82,7 +82,6 @@ Here's a quick rundown of the status of each model:
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr v{0}";
 		private System.Threading.Timer _timerCheckForUpdates;
-        private FormMassGemReplacement _gemControl;
 
         private FormRelevantItemRefinement _itemRefinement;
         public FormRelevantItemRefinement ItemRefinement
@@ -103,16 +102,6 @@ Here's a quick rundown of the status of each model:
                 if (_formItemFilter == null || _formItemFilter.IsDisposed)
                     _formItemFilter = new FormItemFilter();
                 return _formItemFilter;
-            }
-        }
-
-        public FormMassGemReplacement GemControl
-        {
-            get
-            {
-                if (_gemControl == null || _gemControl.IsDisposed)
-                    _gemControl = new FormMassGemReplacement();
-                return _gemControl;
             }
         }
 
@@ -243,9 +232,7 @@ Here's a quick rundown of the status of each model:
 						itemButtonNeck.Character = itemButtonShirt.Character = itemButtonShoulders.Character =
 						itemButtonTabard.Character = itemButtonTrinket1.Character = itemButtonTrinket2.Character =
 						itemButtonWaist.Character = itemButtonMainHand.Character = itemButtonOffHand.Character =
-						itemButtonProjectile.Character = itemButtonProjectileBag.Character = 
-						itemButtonExtraHandsSocket.Character = itemButtonExtraWaistSocket.Character =
-						itemButtonExtraWristSocket.Character = itemButtonWrist.Character = _character;
+						itemButtonProjectile.Character = itemButtonProjectileBag.Character = itemButtonWrist.Character = _character;
 					//Ahhh ahhh ahhh ahhh ahhh ahhh ahhh ahhh...
 
 					_character.ClassChanged += new EventHandler(_character_ClassChanged);
@@ -258,7 +245,10 @@ Here's a quick rundown of the status of each model:
 					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
 					checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
-					if (comboBoxClass.Text != Character.Class.ToString())
+                    checkBoxWaistBlacksmithingSocket.Checked = Character.WaistBlacksmithingSocketEnabled;
+                    checkBoxWristBlacksmithingSocket.Checked = Character.WristBlacksmithingSocketEnabled;
+                    checkBoxHandsBlacksmithingSocket.Checked = Character.HandsBlacksmithingSocketEnabled;
+                    if (comboBoxClass.Text != Character.Class.ToString())
 					{
 						comboBoxClass.Text = Character.Class.ToString();
 						_character_ClassChanged(null, null);
@@ -354,9 +344,9 @@ Here's a quick rundown of the status of each model:
 				itemButtonTabard.UpdateSelectedItem(); itemButtonTrinket1.UpdateSelectedItem(); itemButtonTrinket2.UpdateSelectedItem();
 				itemButtonWaist.UpdateSelectedItem(); itemButtonMainHand.UpdateSelectedItem(); itemButtonOffHand.UpdateSelectedItem();
 				itemButtonProjectile.UpdateSelectedItem(); itemButtonProjectileBag.UpdateSelectedItem(); itemButtonWrist.UpdateSelectedItem();
-				itemButtonExtraHandsSocket.UpdateSelectedItem(); itemButtonExtraWaistSocket.UpdateSelectedItem(); itemButtonExtraWristSocket.UpdateSelectedItem();
 				//ItemEnchantsChanged();
 			}
+
 			//and the clouds above move closer / looking so dissatisfied
 			Calculations.ClearCache();
 			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
@@ -563,8 +553,7 @@ Here's a quick rundown of the status of each model:
             }
             else
             {
-                Item[] items = ItemCache.RelevantItems;
-                itemComparison1.Items = items;
+                Character.InvalidateItemInstances();
                 LoadComparisonData();
             }
 		}
@@ -581,10 +570,13 @@ Here's a quick rundown of the status of each model:
 		void defaultGemControlToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            FormMassGemReplacement GemControl = new FormMassGemReplacement();
+            FormGemmingTemplates GemControl = new FormGemmingTemplates();
             GemControl.ShowDialog(this);
-            if(GemControl.DialogResult.Equals(DialogResult.OK))
+            if (GemControl.DialogResult.Equals(DialogResult.OK))
+            {
+                GemmingTemplate.SaveTemplates();
                 ItemCache.OnItemsChanged();
+            }
         }
 		
         private void editItemsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -938,10 +930,10 @@ Here's a quick rundown of the status of each model:
             foreach (int slotNum in Enum.GetValues(typeof(Character.CharacterSlot)))
             {
                 Character.CharacterSlot slot = (Character.CharacterSlot)(slotNum);
-                Item item = Character[slot];
+                ItemInstance item = Character[slot];
                 if (item != null)
                 {
-                    sb.AppendFormat("{0}\t{1}", slot,item.Name);
+                    sb.AppendFormat("{0}\t{1}", slot,item.Item.Name);
                     sb.AppendLine();
                 }
             }
@@ -1178,7 +1170,7 @@ Here's a quick rundown of the status of each model:
 				StatusMessaging.UpdateStatus("Update All Items from Armory", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
-					Item.LoadFromId(item.GemmedId, true, "Refreshing", false);
+					Item.LoadFromId(item.Id, true, false, false);
 				}
 			}
 			StatusMessaging.UpdateStatusFinished("Update All Items");
@@ -1199,7 +1191,7 @@ Here's a quick rundown of the status of each model:
 				{
 					try
 					{
-						Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
+						Item.LoadFromId(item.Id, true, false, true);
 					}
 					catch (Exception ex)
 					{
@@ -1279,14 +1271,17 @@ Here's a quick rundown of the status of each model:
                 if (id != null)
                 {
                     if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
-                    Item newItem = Item.LoadFromId(id, false, "Character from Armory", false);
+                    string[] s = id.Split('.');
+                    Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, false);
+                    if (s.Length >= 4)
+                    {
+                        Item gem;
+                        if (s[1] != "*" && s[1] != "0") gem = Item.LoadFromId(int.Parse(s[1]), false, false, false);
+                        if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, false);
+                        if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, false);
+                    }
                     if (newItem != null)
                     {
-                        // force load all gems also
-                        Item gem;
-                        gem = newItem.Gem1;
-                        gem = newItem.Gem2;
-                        gem = newItem.Gem3;
                         items.Add(newItem);
                     }
                 }
@@ -1457,20 +1452,63 @@ Here's a quick rundown of the status of each model:
 
 				foreach (Item item in ItemCache.AllItems)
 				{
-					if (!string.IsNullOrEmpty(item.RequiredClasses))
-					//if (item.SetName.Contains("Deadly") || item.SetName.Contains("Hateful") || 
-					//    item.SetName.Contains("Savage") || item.SetName.Contains("Brutal") || 
-					//    item.SetName.Contains("Vengeful") || item.SetName.Contains("Merciless") || 
-					//    item.SetName.Contains("Valorous") || item.SetName.Contains("Heroes'"))
+					if (item.Slot == Item.ItemSlot.TwoHand)
 					{
 						ItemCache.DeleteItem(item, false);
-						Item newItem = Item.LoadFromId(item.GemmedId, true, "Refreshing", false, true);
+						Item newItem = Item.LoadFromId(item.Id, true, false, true);
 						if (newItem == null)
 						{
 							MessageBox.Show("Unable to find item " + item.Id + ". Reverting to previous data.");
-							ItemCache.AddItem(item, true, false);
+							ItemCache.AddItem(item, false);
 							continue;
 						}
+						float dps = 0f;
+						if (newItem.Quality == Item.ItemQuality.Epic)
+							switch (newItem.ItemLevel)
+							{
+								case 226: dps = 222.9f; break;
+								case 213: dps = 203.7f; break;
+								case 200: dps = 186.6f; break;
+								case 154: dps = 140.3f; break;
+								case 146: dps = 134.1f; break;
+								case 141: dps = 130.4f; break;
+								case 136: dps = 126.9f; break;
+								case 134: dps = 125.5f; break;
+								case 132: dps = 124.3f; break;
+								case 125: dps = 119.9f; break;
+								case 123: dps = 118.6f; break;
+								case 120: dps = 116.9f; break;
+								case 115: dps = 114.1f; break;
+								case 107: dps = 109.6f; break;
+								case 105: dps = 108.5f; break;
+								case 100: dps = 105.7f; break;
+								default:
+									dps = 0f;
+									break;
+							}
+						if (newItem.Quality == Item.ItemQuality.Rare)
+							switch (newItem.ItemLevel)
+							{
+								case 200: dps = 169.2f; break;
+								case 187: dps = 156.1f; break;
+								case 179: dps = 148.8f; break;
+								case 175: dps = 145.1f; break;
+								case 159: dps = 132.5f; break;
+								case 158: dps = 113.9f; break;
+								case 155: dps = 129.7f; break;
+								case 146: dps = 123.7f; break;
+								case 138: dps = 118.6f; break;
+								case 115: dps = 93.2f; break;
+								case 112: dps = 90.3f; break;
+								case 109: dps = 87.3f; break;
+								case 103: dps = 81.5f; break;
+								case 100: dps = 78.6f; break;
+								default:
+									dps = 0f;
+									break;
+							}
+						if (newItem.DPS + 10f < dps)
+							newItem.MinDamage = newItem.MaxDamage = (int)Math.Round(dps * newItem.Speed);
 					}
 				}
 
@@ -1637,6 +1675,33 @@ Here's a quick rundown of the status of each model:
 		{
 			Help.ShowHelp(null, "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
 		}
+
+        private void checkBoxWristBlacksmithingSocket_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+            {
+                Character.WristBlacksmithingSocketEnabled = checkBoxWristBlacksmithingSocket.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxHandsBlacksmithingSocket_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+            {
+                Character.HandsBlacksmithingSocketEnabled = checkBoxHandsBlacksmithingSocket.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxWaistBlacksmithingSocket_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+            {
+                Character.WaistBlacksmithingSocketEnabled = checkBoxWaistBlacksmithingSocket.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 
 
         //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)

@@ -7,6 +7,13 @@ namespace Rawr.Tree
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
     class CalculationsTree : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
@@ -592,10 +599,10 @@ namespace Rawr.Tree
             statsTalents.BonusStrengthMultiplier = 0.01f * character.DruidTalents.SurvivalOfTheFittest * 2;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));

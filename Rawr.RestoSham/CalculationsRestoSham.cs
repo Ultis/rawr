@@ -6,6 +6,14 @@ namespace Rawr.RestoSham
     [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", Character.CharacterClass.Shaman)]
     class CalculationsRestoSham : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         //
         // Colors of the ratings we track:
         //
@@ -181,7 +189,7 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             if (options.ManaTideEveryCD)
                 onUse += (((float)Math.Truncate(options.FightLength / 5.025f) + 1) *
-                    (stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
+					(stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
 
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
             // Out of Five Second Rule regen currently removed.
@@ -436,16 +444,16 @@ namespace Rawr.RestoSham
             }
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
             if (statModifier != null)
                 statsTotal += statModifier;
 
             statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
             statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) + 
-                (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect + statsEnchants.Intellect) * IntMultiplier);
+                (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect/* + statsEnchants.Intellect*/) * IntMultiplier);
             // statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
@@ -455,8 +463,8 @@ namespace Rawr.RestoSham
             // Fight options:
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-            float OrbRegen = (options.WaterShield3 ? 130 : 100);
-            statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0);
+			float OrbRegen = (options.WaterShield3 ? 130 : 100);
+			statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0);
 
             return statsTotal;
         }
@@ -556,8 +564,8 @@ namespace Rawr.RestoSham
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                BonusCritHealMultiplier = stats.BonusCritHealMultiplier
-            };
+				BonusCritHealMultiplier = stats.BonusCritHealMultiplier
+			};
         }
 
 

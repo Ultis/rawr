@@ -142,10 +142,10 @@ namespace Rawr.Mage
             requiresMIP = segmentCooldowns || integralMana;
         }
 
-        private static bool IsItemActivatable(Item item)
+        private static bool IsItemActivatable(ItemInstance item)
         {
-            if (item == null) return false;
-            return (item.Stats.SpellPowerFor15SecOnUse2Min + item.Stats.SpellPowerFor20SecOnUse2Min + item.Stats.HasteRatingFor20SecOnUse2Min + item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Stats.SpellPowerFor15SecOnUse90Sec + item.Stats.HasteRatingFor20SecOnUse5Min + item.Stats.SpellPowerFor20SecOnUse5Min > 0);
+            if (item == null || item.Item == null) return false;
+            return (item.Item.Stats.SpellPowerFor15SecOnUse2Min + item.Item.Stats.SpellPowerFor20SecOnUse2Min + item.Item.Stats.HasteRatingFor20SecOnUse2Min + item.Item.Stats.Mp5OnCastFor20SecOnUse2Min + item.Item.Stats.SpellPowerFor15SecOnUse90Sec + item.Item.Stats.HasteRatingFor20SecOnUse5Min + item.Item.Stats.SpellPowerFor20SecOnUse5Min > 0);
         }
 
         private double MaximizeColdsnapDuration(double fightDuration, double coldsnapCooldown, double effectDuration, double effectCooldown, out int coldsnapCount)
@@ -322,7 +322,7 @@ namespace Rawr.Mage
                 #region Setup Trinkets
                 if (trinket1Available)
                 {
-                    Stats s = character.Trinket1.Stats;
+                    Stats s = character.Trinket1.Item.Stats;
                     if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
                     {
                         trinket1Duration = 20;
@@ -345,11 +345,11 @@ namespace Rawr.Mage
                     }
                     calculationResult.Trinket1Duration = trinket1Duration;
                     calculationResult.Trinket1Cooldown = trinket1Cooldown;
-                    calculationResult.Trinket1Name = character.Trinket1.Name;
+                    calculationResult.Trinket1Name = character.Trinket1.Item.Name;
                 }
                 if (trinket2Available)
                 {
-                    Stats s = character.Trinket2.Stats;
+                    Stats s = character.Trinket2.Item.Stats;
                     if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
                     {
                         trinket2Duration = 20;
@@ -372,7 +372,7 @@ namespace Rawr.Mage
                     }
                     calculationResult.Trinket2Duration = trinket2Duration;
                     calculationResult.Trinket2Cooldown = trinket2Cooldown;
-                    calculationResult.Trinket2Name = character.Trinket2.Name;
+                    calculationResult.Trinket2Name = character.Trinket2.Item.Name;
                 }
                 if (manaGemEffectAvailable)
                 {
@@ -602,10 +602,10 @@ namespace Rawr.Mage
                     }
                 }
                 // wand
-                if (character.Ranged != null && character.Ranged.Type == Item.ItemType.Wand)
+                if (character.Ranged != null && character.Ranged.Item.Type == Item.ItemType.Wand)
                 {
                     int wandSegments = (restrictManaUse) ? segments : 1;
-                    Spell wand = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.DamageType, character.Ranged.MinDamage, character.Ranged.MaxDamage, character.Ranged.Speed);
+                    Spell wand = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed);
                     calculationResult.BaseState.SetSpell(SpellId.Wand, wand);
                     manaRegen = wand.CostPerSecond - wand.ManaRegenPerSecond;
                     for (int segment = 0; segment < wandSegments; segment++)

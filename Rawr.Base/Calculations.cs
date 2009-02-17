@@ -201,11 +201,15 @@ namespace Rawr
 		{
 			Instance.ClearCache();
 		}
-		public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+		public static ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, Character.CharacterSlot slot)
 		{
 			return Instance.GetItemCalculations(item, character, slot);
 		}
-		public static List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
+        public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+        {
+            return Instance.GetItemCalculations(item, character, slot);
+        }
+        public static List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
 		{
 			return Instance.GetEnchantCalculations(slot, character, currentCalcs);
 		}
@@ -225,10 +229,10 @@ namespace Rawr
 		{
 			return Instance.GetCharacterStats(character, additionalItem);
 		}
-		public static Stats GetEnchantsStats(Character character)
+		/*public static Stats GetEnchantsStats(Character character)
 		{
 			return Instance.GetEnchantsStats(character);
-		}
+		}*/
 		public static Stats GetBuffsStats(List<string> buffs)
 		{
 			return Instance.GetBuffsStats(buffs);
@@ -461,6 +465,14 @@ namespace Rawr
         /// <param name="height">Height of the graph.</param>
         public virtual void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height) { }
 
+        /// <summary>
+        /// List of default gemming templates recommended by the model
+        /// </summary>
+        public abstract List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get;
+        }
+
 		/// <summary>
 		/// Filters a Stats object to just the stats relevant to the model.
 		/// </summary>
@@ -489,7 +501,7 @@ namespace Rawr
 			_cachedSlot = Character.CharacterSlot.Shirt;
 		}
 
-		public virtual ComparisonCalculationBase GetItemCalculations(Item item, Character character, Character.CharacterSlot slot)
+		public virtual ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, Character.CharacterSlot slot)
 		{
 			bool useCache = character == _cachedCharacter && slot == _cachedSlot;
 			Character characterWithSlotEmpty = null;
@@ -504,7 +516,6 @@ namespace Rawr
 				characterWithNewItem[slot] = item;
 			}
 
-
 			CharacterCalculationsBase characterStatsWithSlotEmpty;
 			if (useCache)
 				characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
@@ -516,14 +527,12 @@ namespace Rawr
 				_cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
 			}
 
-
-			Item additionalItem = null;
-			if (item.FitsInSlot(Character.CharacterSlot.Gems) || item.FitsInSlot(Character.CharacterSlot.Metas)) additionalItem = item;
-			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem);
+			CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, null);
 
 			ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
-			itemCalc.Item = item;
-			itemCalc.Name = item.Name;
+			itemCalc.ItemInstance = item;
+            itemCalc.Item = item.Item;
+			itemCalc.Name = item.Item.Name;
 			itemCalc.Equipped = character[slot] == item;
 			itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
 			float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
@@ -537,6 +546,45 @@ namespace Rawr
 
 			return itemCalc;
 		}
+
+        public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, Character.CharacterSlot slot)
+        {
+            bool useCache = character == _cachedCharacter && slot == _cachedSlot;
+            Character characterWithSlotEmpty = null;
+
+            if (!useCache)
+                characterWithSlotEmpty = character.Clone();
+            Character characterWithNewItem = character.Clone();
+
+            CharacterCalculationsBase characterStatsWithSlotEmpty;
+            if (useCache)
+                characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
+            else
+            {
+                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty);
+                _cachedCharacter = character;
+                _cachedSlot = slot;
+                _cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
+            }
+
+            CharacterCalculationsBase characterStatsWithNewItem = GetCharacterCalculations(characterWithNewItem, additionalItem);
+
+            ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
+            itemCalc.Item = additionalItem;
+            itemCalc.Name = additionalItem.Name;
+            itemCalc.Equipped = false;
+            itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
+            float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
+            for (int i = 0; i < characterStatsWithNewItem.SubPoints.Length; i++)
+            {
+                subPoints[i] = characterStatsWithNewItem.SubPoints[i] - characterStatsWithSlotEmpty.SubPoints[i];
+            }
+            itemCalc.SubPoints = subPoints;
+
+            characterStatsWithNewItem.ToString();
+
+            return itemCalc;
+        }
 
 		public virtual List<ComparisonCalculationBase> GetEnchantCalculations(Item.ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs)
 		{
@@ -568,8 +616,9 @@ namespace Rawr
 				ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
 				enchantCalc.Name = enchant.Name;
 				enchantCalc.Item = new Item(enchant.Name, Item.ItemQuality.Temp, Item.ItemType.None, 
-					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, Item.ItemSlot.None, null, false, enchant.Stats, new Sockets(), 0, 0, 0, 0, 0,
-					Item.ItemDamageType.Physical, 0, null);
+					-1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, Item.ItemSlot.None, null, 
+                    false, enchant.Stats, null, Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None,
+                    0, 0, Item.ItemDamageType.Physical, 0, null);
 				enchantCalc.Item.Name = enchant.Name;
 				enchantCalc.Item.Stats = enchant.Stats;
 				enchantCalc.Equipped = isEquipped;
@@ -710,23 +759,23 @@ namespace Rawr
 
         public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 		{
-			List<Item> items = new List<Item>(new Item[] {character.Back, character.Chest, character.Feet, character.Finger1,
+			List<ItemInstance> items = new List<ItemInstance>(new ItemInstance[] {character.Back, character.Chest, character.Feet, character.Finger1,
 				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
 				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
 				character.Waist, character.MainHand, character.Ranged, character.Projectile, 
-				character.ProjectileBag, character.Wrist, character.ExtraHandsSocket, character.ExtraWaistSocket,
-				character.ExtraWristSocket});
-			if (additionalItem != null)
-				items.Add(additionalItem);
+				character.ProjectileBag, character.Wrist/*, character.ExtraHandsSocket, character.ExtraWaistSocket,
+				character.ExtraWristSocket*/});
 			if (IncludeOffHandInCalculations(character))
 				items.Add(character.OffHand);
 
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-                foreach (Item item in items)
+                foreach (ItemInstance item in items)
                     if (item != null)
                         stats.AccumulateUnsafe(item.GetTotalStats(character));
+                if (additionalItem != null)
+                    stats.AccumulateUnsafe(additionalItem.Stats);
                 stats.EndUnsafe();
             }
 		}
@@ -738,7 +787,8 @@ namespace Rawr
             return stats;
         }
 
-        public unsafe virtual void AccumulateEnchantsStats(Stats stats, Character character)
+        // this is now included in accumulating item stats
+        /*public unsafe virtual void AccumulateEnchantsStats(Stats stats, Character character)
         {
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
@@ -788,14 +838,15 @@ namespace Rawr
                 stats.AccumulateUnsafe(character.WristEnchant.Stats, true);
                 stats.EndUnsafe();
             }
-        }
+        }*/
 
+        /*
 		public virtual Stats GetEnchantsStats(Character character)
 		{
             Stats stats = new Stats();
             AccumulateEnchantsStats(stats, character);
             return stats;
-        }
+        }*/
 
         public virtual void AccumulateBuffsStats(Stats stats, IEnumerable<string> buffs)
         {
@@ -1144,11 +1195,17 @@ namespace Rawr
 		public abstract float[] SubPoints { get; set; }
 
 		/// <summary>
-		/// The Item, or other object, being rated. This property is used to build the tooltip for this
-		/// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
-		/// Item, a new blank item may be created for this field, containing just a Name and Stats.
+		/// The ItemInstance being rated. This property is used to build the tooltip for this
+		/// object in the chart.
 		/// </summary>
-		public abstract Item Item { get; set; }
+		public abstract ItemInstance ItemInstance { get; set; }
+
+        /// <summary>
+        /// The Item, or other object, being rated. This property is used to build the tooltip for this
+        /// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
+        /// Item, a new blank item may be created for this field, containing just a Name and Stats.
+        /// </summary>
+        public abstract Item Item { get; set; }
 
 		/// <summary>
 		/// Whether the object beign rated is currently equipped by the character. This controls whether
@@ -1161,11 +1218,6 @@ namespace Rawr
         /// are based. Used by optimizer upgrade calculations.
         /// </summary>
         public Character Character { get; set; }
-
-        /// <summary>
-        /// Enchant associated with the Item. Used by optimizer upgrade calculations.
-        /// </summary>
-        public Enchant Enchant { get; set; }
     }
 
 	/// <summary>

@@ -12,13 +12,6 @@ namespace Rawr
 {
 	public partial class FormItemSelection : Form
 	{
-		private Item[] _items;
-		public Item[] Items
-		{
-			get { return _items; }
-			set { _items = value; }
-		}
-
 		private Character _character;
 		public Character Character
 		{
@@ -120,7 +113,6 @@ namespace Rawr
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-			Items = ItemCache.Instance.RelevantItems;
 			Character.CharacterSlot characterSlot = _characterSlot;
 			_characterSlot = Character.CharacterSlot.None;
 			LoadItemsBySlot(characterSlot);
@@ -227,28 +219,67 @@ namespace Rawr
 			{
 				_characterSlot = slot;
 				List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
-				if (this.Items != null && this.Character != null)
-				{
-                    bool seenEquippedItem = Character[slot] == null;
-					foreach (Item item in this.Items)
-					{
-                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-						if (item.FitsInSlot(slot, Character))
-						{
-							itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
-						}
-					}
-                    if (!seenEquippedItem)
+                if ((int)slot >= 0 && (int)slot <= 20)
+                {
+                    if (this.Character != null)
                     {
-                        itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], this.Character, slot));
+                        bool seenEquippedItem = Character[slot] == null;
+                        foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
+                        {
+                            if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
+                            if (item.Item.FitsInSlot(slot, Character))
+                            {
+                                itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                            }
+                        }
+                        if (!seenEquippedItem)
+                        {
+                            itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], this.Character, slot));
+                        }
                     }
-				}
-				ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
-				emptyCalcs.Name = "Empty";
-				emptyCalcs.Item = new Item();
-				emptyCalcs.Item.Name = "Empty";
-				emptyCalcs.Equipped = this.Character[slot] == null;
-				itemCalculations.Add(emptyCalcs);
+                    ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+                    emptyCalcs.Name = "Empty";
+                    emptyCalcs.Item = new Item();
+                    emptyCalcs.Item.Name = "Empty";
+                    emptyCalcs.Equipped = this.Character[slot] == null;
+                    itemCalculations.Add(emptyCalcs);
+                }
+                else
+                {
+                    if (this.Character != null)
+                    {
+                        bool seenEquippedItem = false;
+                        if (_button != null && _button.SelectedItem == null)
+                        {
+                            seenEquippedItem = true;
+                        }
+                        foreach (Item item in Character.GetRelevantItems(slot))
+                        {
+                            if (!seenEquippedItem && _button != null && item.Equals(_button.SelectedItem)) seenEquippedItem = true;
+                            if (item.FitsInSlot(slot, Character))
+                            {
+                                itemCalculations.Add(Calculations.GetItemCalculations(item, this.Character, slot));
+                            }
+                        }
+                        if (!seenEquippedItem && _button != null && _button.SelectedItem != null)
+                        {
+                            itemCalculations.Add(Calculations.GetItemCalculations(_button.SelectedItem, this.Character, slot));
+                        }
+                    }
+                    ComparisonCalculationBase emptyCalcs = Calculations.CreateNewComparisonCalculation();
+                    emptyCalcs.Name = "Empty";
+                    emptyCalcs.Item = new Item();
+                    emptyCalcs.Item.Name = "Empty";
+                    if (_button != null && _button.SelectedItem != null)
+                    {
+                        emptyCalcs.Equipped = _button.SelectedItem == null;
+                    }
+                    else
+                    {
+                        emptyCalcs.Equipped = false;
+                    }
+                    itemCalculations.Add(emptyCalcs);
+                }
 				itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(CompareItemCalculations));
 				ItemCalculations = itemCalculations.ToArray();
 			}
@@ -315,7 +346,7 @@ namespace Rawr
                 ComparisonCalculationBase calc = this.ItemCalculations[i];
 				if (_button != null)
 				{
-					calc.Equipped = calc.Item == _button.SelectedItem || (calc.Item.Id == 0 && _button.SelectedItem == null);
+					calc.Equipped = (calc.ItemInstance == _button.SelectedItemInstance && calc.Item == _button.SelectedItem) || (calc.Item.Id == 0 && _button.SelectedItem == null);
 					ctrl.IsEnchant = false;
 				}
 				if (_buttonEnchant != null)
@@ -354,17 +385,36 @@ namespace Rawr
 			RebuildItemList();
 		}
 
-		public void Select(Item item)
+		public void Select(ItemInstance item)
 		{
 			if (_button != null)
-				_button.SelectedItem = item;
-			if (_buttonEnchant != null)
-				_buttonEnchant.SelectedEnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
+				_button.SelectedItemInstance = item == null ? null : item.Clone();
+            //if (_buttonEnchant != null)
+            //{
+            //    ItemInstance copy = _buttonEnchant.SelectedItem.Clone();
+            //    copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
+            //    _buttonEnchant.SelectedItem = copy;
+            //}
 			_characterSlot = Character.CharacterSlot.None;
 			ItemToolTip.Instance.Hide(this);
 			this.Hide();
 		}
-	}
+
+        public void Select(Item item)
+        {
+            if (_button != null)
+                _button.SelectedItem = item;
+            if (_buttonEnchant != null)
+            {
+                ItemInstance copy = _buttonEnchant.SelectedItem.Clone();
+                copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
+                _buttonEnchant.SelectedItem = copy;
+            }
+            _characterSlot = Character.CharacterSlot.None;
+            ItemToolTip.Instance.Hide(this);
+            this.Hide();
+        }
+    }
 
 	public interface IFormItemSelectionProvider
 	{

@@ -27,7 +27,7 @@ namespace Rawr
 			set { _character = value; }
 		}
 
-		private Item _item;
+		private ItemInstance _item;
 		private ToolStripMenuItem _menuItemName;
         public ItemEnchantContextualMenu()
 		{
@@ -49,21 +49,21 @@ namespace Rawr
             Character.ToggleAvailableItemEnchantRestriction(_item, enchant);
         }
 
-		public void Show(Item item)
+		public void Show(ItemInstance item)
 		{
 			_item = item;
-			_menuItemName.Text = item.Name;
+			_menuItemName.Text = item.Item.Name;
             Character.ItemAvailability availability = Character.GetItemAvailability(_item);
             string gemmedId = string.Empty;
             bool allEnabled = false;
             switch (availability)
             {
                 case Character.ItemAvailability.Available:
-                    gemmedId = item.GemmedId;
+                    gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                     allEnabled = true;
                     break;
                 case Character.ItemAvailability.AvailableWithEnchantRestrictions:
-                    gemmedId = item.GemmedId;
+                    gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                     break;
                 case Character.ItemAvailability.RegemmingAllowed:
                     allEnabled = true;

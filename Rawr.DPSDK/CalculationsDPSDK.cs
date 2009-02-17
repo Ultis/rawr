@@ -8,6 +8,14 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_shadow_deathcoil", Character.CharacterClass.DeathKnight)]
 	class CalculationsDPSDK : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
         /// <summary>
         /// Dictionary<string, Color> that includes the names of each rating which your model will use,
@@ -267,35 +275,35 @@ namespace Rawr.DPSDK
                 // Tier 7 set bonus hack
                 if (character.Chest != null)
                 {
-                    if (character.Chest.SetName != null && character.Chest.SetName.Contains("Battlegear"))
+                    if (character.Chest.Item.SetName != null && character.Chest.Item.SetName.Contains("Battlegear"))
                     {
                         numt7++;
                     }
                 }
                 if (character.Head != null)
                 {
-                    if (character.Head.SetName != null && character.Head.SetName.Contains("Battlegear"))
+                    if (character.Head.Item.SetName != null && character.Head.Item.SetName.Contains("Battlegear"))
                     {
                         numt7++;
                     }
                 }
                 if (character.Hands != null)
                 {
-                    if (character.Hands.SetName != null && character.Hands.SetName.Contains("Battlegear"))
+                    if (character.Hands.Item.SetName != null && character.Hands.Item.SetName.Contains("Battlegear"))
                     {
                         numt7++;
                     }
                 }
                 if (character.Legs != null)
                 {
-                    if (character.Legs.SetName != null && character.Legs.SetName.Contains("Battlegear"))
+                    if (character.Legs.Item.SetName != null && character.Legs.Item.SetName.Contains("Battlegear"))
                     {
                         numt7++;
                     }
                 }
                 if (character.Shoulders != null)
                 {
-                    if (character.Shoulders.SetName != null && character.Shoulders.SetName.Contains("Battlegear"))
+                    if (character.Shoulders.Item.SetName != null && character.Shoulders.Item.SetName.Contains("Battlegear"))
                     {
                         numt7++;
                     }
@@ -322,13 +330,13 @@ namespace Rawr.DPSDK
                 if (character.Race == Character.CharacterRace.Dwarf)
                 {
                     if (character.MainHand != null &&
-                        (character.MainHand.Type == Item.ItemType.OneHandMace ||
-                         character.MainHand.Type == Item.ItemType.TwoHandMace))
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
+                         character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
                     {
                         MHExpertise += 5f;
                     }
 
-                    if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandMace)
+                    if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandMace)
                     {
                         OHExpertise += 5f;
                     }
@@ -336,13 +344,13 @@ namespace Rawr.DPSDK
                 else if (character.Race == Character.CharacterRace.Orc)
                 {
                     if (character.MainHand != null &&
-                        (character.MainHand.Type == Item.ItemType.OneHandAxe ||
-                         character.MainHand.Type == Item.ItemType.TwoHandAxe))
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe ||
+                         character.MainHand.Item.Type == Item.ItemType.TwoHandAxe))
                     {
                         MHExpertise += 5f;
                     }
 
-                    if (character.OffHand != null && character.OffHand.Type == Item.ItemType.OneHandAxe)
+                    if (character.OffHand != null && character.OffHand.Item.Type == Item.ItemType.OneHandAxe)
                     {
                         OHExpertise += 5f;
                     }
@@ -351,17 +359,17 @@ namespace Rawr.DPSDK
                 if (character.Race == Character.CharacterRace.Human)
                 {
                     if (character.MainHand != null &&
-                        (character.MainHand.Type == Item.ItemType.OneHandSword ||
-                         character.MainHand.Type == Item.ItemType.TwoHandSword ||
-                         character.MainHand.Type == Item.ItemType.OneHandMace ||
-                         character.MainHand.Type == Item.ItemType.TwoHandMace))
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandSword ||
+                         character.MainHand.Item.Type == Item.ItemType.TwoHandSword ||
+                         character.MainHand.Item.Type == Item.ItemType.OneHandMace ||
+                         character.MainHand.Item.Type == Item.ItemType.TwoHandMace))
                     {
                         MHExpertise += 3f;
                     }
 
                     if (character.OffHand != null &&
-                        (character.OffHand.Type == Item.ItemType.OneHandSword ||
-                        character.OffHand.Type == Item.ItemType.OneHandMace))
+                        (character.OffHand.Item.Type == Item.ItemType.OneHandSword ||
+                        character.OffHand.Item.Type == Item.ItemType.OneHandMace))
                     {
                         OHExpertise += 3f;
                     }
@@ -373,7 +381,7 @@ namespace Rawr.DPSDK
 
             if (character.MainHand != null)
             {
-                MH = new Weapon(character.MainHand, stats, calcOpts, MHExpertise);
+                MH = new Weapon(character.MainHand.Item, stats, calcOpts, MHExpertise);
                 calcs.MHAttackSpeed = MH.hastedSpeed;
                 calcs.MHWeaponDamage = MH.damage;
                 calcs.MHExpertise = MH.effectiveExpertise;
@@ -381,7 +389,7 @@ namespace Rawr.DPSDK
 
             if (character.OffHand != null)
             {
-                OH = new Weapon(character.OffHand, stats, calcOpts, OHExpertise);
+                OH = new Weapon(character.OffHand.Item, stats, calcOpts, OHExpertise);
 
                 float OHMult = .05f * (float)talents.NervesOfColdSteel;
                 OH.damage *= .5f + OHMult;
@@ -1262,7 +1270,7 @@ namespace Rawr.DPSDK
            
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             Stats statsTalents = new Stats()
             {
@@ -1277,8 +1285,8 @@ namespace Rawr.DPSDK
             Stats statsGearEnchantsBuffs = new Stats();
 
             // Mongoose  **ASSUMPTION: Mongoose has a 40% uptime
-            if (statsEnchants.MongooseProc > 0)
-                statsEnchants.Agility += 120f * 0.4f;
+            if (statsBaseGear.MongooseProc > 0)
+                statsBaseGear.Agility += 120f * 0.4f;
 
             //calculate drums uptime...if it lands on an even minute mark ignore it, as it will have a duration of 0
             //removed due to no drums in WotLK
@@ -1306,7 +1314,7 @@ namespace Rawr.DPSDK
                 statsBuffs.BonusSpellPowerMultiplier     = ((1f + statsBuffs.BonusSpellPowerMultiplier)     * (1f + (.01f * calcOpts.FerociousInspiration)));
             }
 
-            statsGearEnchantsBuffs = statsBaseGear + statsEnchants + statsBuffs + statsRace + statsTalents;
+            statsGearEnchantsBuffs = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.BonusAttackPowerMultiplier = statsGearEnchantsBuffs.BonusAttackPowerMultiplier;
             statsTotal.BonusAgilityMultiplier = statsGearEnchantsBuffs.BonusAgilityMultiplier;

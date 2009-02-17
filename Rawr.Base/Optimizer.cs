@@ -190,8 +190,8 @@ namespace Rawr
         private int _thoroughness;
         private CalculationsBase model;
 
-        private ItemCacheInstance mainItemCache;
-        private ItemCacheInstance optimizerItemCache;
+        //private ItemCacheInstance mainItemCache;
+        //private ItemCacheInstance optimizerItemCache;
 
         public static OptimizationMethod OptimizationMethod { get; set; }
 
@@ -208,20 +208,21 @@ namespace Rawr
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
         }
 
-        public void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, CalculationsBase model)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, CalculationsBase model)
         {
-            mainItemCache = ItemCache.Instance;
-            optimizerItemCache = new ItemCacheInstance(mainItemCache);
+            _character = character;
+            //mainItemCache = ItemCache.Instance;
+            //optimizerItemCache = new ItemCacheInstance(mainItemCache);
             this.model = model;
 
             try
             {
-                ItemCache.Instance = optimizerItemCache;
+                //ItemCache.Instance = optimizerItemCache;
                 PopulateAvailableIds(availableItems, overrideRegem, overrideReenchant);
             }
             finally
             {
-                ItemCache.Instance = mainItemCache;
+                //ItemCache.Instance = mainItemCache;
             }
         }
 
@@ -338,7 +339,7 @@ namespace Rawr
         private AsyncOperation asyncOperation;
         private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
         private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant);
+        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade);
 
         public event OptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
@@ -422,22 +423,22 @@ namespace Rawr
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
-        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, null, null);
+            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, null, null);
         }
 
-        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
         {
             Exception error = null;
             float upgradeValue = 0f;
             try
             {
-                upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, out error);
+                upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
             }
             catch (Exception ex)
             {
@@ -498,7 +499,7 @@ namespace Rawr
 
             try
             {
-                ItemCache.Instance = optimizerItemCache;
+                //ItemCache.Instance = optimizerItemCache;
                 if (_thoroughness == 1)
                 {
                     // if we just start from current character and look for direct upgrades
@@ -522,7 +523,7 @@ namespace Rawr
             }
             finally
             {
-                ItemCache.Instance = mainItemCache;
+                //ItemCache.Instance = mainItemCache;
             }
 
             ReportProgress(100, bestValue);
@@ -549,8 +550,12 @@ namespace Rawr
         {
             for (int i = 0; i < 19; i++)
             {
-                Item item = character[(Character.CharacterSlot)i];
-                if (item != null)
+                ItemInstance item = character[(Character.CharacterSlot)i];
+                if (!slotItems[i].Contains(item))
+                {
+                    slotItems[i].Add(item);
+                }
+                /*if (item != null)
                 {
                     Enchant itemEnchant = character.GetEnchantBySlot((Character.CharacterSlot)i);
                     Dictionary<int, bool> dict;
@@ -572,7 +577,7 @@ namespace Rawr
                         dict[itemEnchant.Id] = true;
                         if (!list.Contains(itemEnchant)) list.Add(itemEnchant);
                     }
-                }
+                }*/
             }
         }
 
@@ -591,14 +596,14 @@ namespace Rawr
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
             try
             {
-                ItemCache.Instance = optimizerItemCache;
+                //ItemCache.Instance = optimizerItemCache;
 
                 // make equipped gear/enchant valid
                 MarkEquippedItemsAsValid(_character);
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
-                Item[] items = mainItemCache.GetRelevantItems(model);
+                Item[] items = ItemCache.GetRelevantItems(model);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationBase>();
@@ -650,7 +655,7 @@ namespace Rawr
                             float best = -10000000f;
                             CharacterCalculationsBase bestCalculations;
                             Character bestCharacter;
-                            if (lockedItems.Length > 1)
+                            if (lockedItems.Count > 1)
                             {
                                 _character = LookForDirectItemUpgrades(null, lockedSlot, best, _character, out bestCalculations).Value;
                             }
@@ -671,10 +676,10 @@ namespace Rawr
                             }
                             if (best > baseValue)
                             {
-                                item = bestCharacter[lockedSlot];
+                                ItemInstance bestItem = bestCharacter[lockedSlot];
                                 ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
-                                itemCalc.Item = item;
-                                itemCalc.Enchant = bestCharacter.GetEnchantBySlot(lockedSlot);
+                                itemCalc.ItemInstance = bestItem;
+                                itemCalc.Item = bestItem.Item;
                                 itemCalc.Character = bestCharacter;
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
@@ -701,27 +706,27 @@ namespace Rawr
             finally
             {
                 _character = saveCharacter;
-                ItemCache.Instance = mainItemCache;
+                //ItemCache.Instance = mainItemCache;
             }
 
             ReportProgress(100, 0f);
             return upgrades;
         }
 
-        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant)
+        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            float upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, upgradeEnchant, out error);
+            float upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgradeValue;
         }
 
-        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item upgrade, Enchant upgradeEnchant, out Exception error)
+        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -736,7 +741,7 @@ namespace Rawr
             float upgradeValue = 0f;
             try
             {
-                ItemCache.Instance = optimizerItemCache;
+                //ItemCache.Instance = optimizerItemCache;
 
                 // make equipped gear/enchant valid
                 // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
@@ -746,30 +751,22 @@ namespace Rawr
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetCalculationsValue(_character, baseCalculations);
 
-                Item item = upgrade;                
+                ItemInstance item = upgrade;                
                 foreach (Character.CharacterSlot slot in slots)
                 {
-					if (item.FitsInSlot(slot, _character))
+					if (item.Item.FitsInSlot(slot, _character))
                     {
-                        lockedItems = new Item[] { item };
-                        if (upgradeEnchant == null)
-                        {
-                            lockedEnchants = null;
-                        }
-                        else
-                        {
-                            lockedEnchants = new Enchant[] { upgradeEnchant };
-                        }
+                        lockedItems = new List<ItemInstance>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
                         {
                             lockedSlot = Character.CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                         {
                             lockedSlot = Character.CharacterSlot.Trinket2;
                         }
-                        _character = BuildSingleItemEnchantSwapCharacter(_character, lockedSlot, upgrade, upgradeEnchant);
+                        _character = BuildSingleItemSwapCharacter(_character, lockedSlot, upgrade);
                         float best;
                         CharacterCalculationsBase bestCalculations;
                         Character bestCharacter;
@@ -788,7 +785,7 @@ namespace Rawr
                             bool injected;
                             bestCharacter = Optimize(null, 0, out best, out bestCalculations, out injected);
                         }
-                        if (bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id || bestCharacter.GetEnchantBySlot(lockedSlot) != upgradeEnchant) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
+                        if (bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
                         upgradeValue = best - baseValue;
                         if (upgradeValue < 0 && (saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
                         _character = saveCharacter;
@@ -802,7 +799,7 @@ namespace Rawr
             finally
             {
                 _character = saveCharacter;
-                ItemCache.Instance = mainItemCache;
+                //ItemCache.Instance = mainItemCache;
             }
 
             ReportProgress(100, 0f);
@@ -814,26 +811,26 @@ namespace Rawr
         Item[] metaGemItems;
         Item[] gemItems;
 		const int slotCount = 19;
-		const int characterSlotCount = 24;
+		const int characterSlotCount = 21;
 		int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
         int[] pairSlotMap;
         //SortedList<Item, bool> uniqueItems; not needed since we store the items themselves, we can just check Unique on the item
-		Item[] headItems, neckItems, shouldersItems, backItems, chestItems, wristItems, handsItems, waistItems,
+		List<ItemInstance> headItems, neckItems, shouldersItems, backItems, chestItems, wristItems, handsItems, waistItems,
 					legsItems, feetItems, fingerItems, trinketItems, mainHandItems, offHandItems, rangedItems, 
 					projectileItems, projectileBagItems;
-		Enchant[] backEnchants, chestEnchants, feetEnchants, fingerEnchants, handsEnchants, headEnchants,
-			legsEnchants, shouldersEnchants, mainHandEnchants, offHandEnchants, rangedEnchants, wristEnchants;
-        Item[][] slotItems = new Item[slotCount][];
-        Enchant[][] slotEnchants = new Enchant[slotCount][];
-        Dictionary<int, bool>[] slotAvailableEnchants = new Dictionary<int,bool>[slotCount];
-        Item[] lockedItems;
-        Enchant[] lockedEnchants;
-        Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
-        Dictionary<string, List<Enchant>> itemEnchantValidList;
+        //Enchant[] backEnchants, chestEnchants, feetEnchants, fingerEnchants, handsEnchants, headEnchants,
+        //    legsEnchants, shouldersEnchants, mainHandEnchants, offHandEnchants, rangedEnchants, wristEnchants;
+        List<ItemInstance>[] slotItems = new List<ItemInstance>[slotCount];
+        Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
+        //Dictionary<int, bool>[] slotAvailableEnchants = new Dictionary<int,bool>[slotCount];
+        List<ItemInstance> lockedItems;
+        //Enchant[] lockedEnchants;
+        //Dictionary<string, Dictionary<int, bool>> itemEnchantValid;
+        //Dictionary<string, List<Enchant>> itemEnchantValidList;
         Character.CharacterSlot lockedSlot = Character.CharacterSlot.None;
 		Random rand;
 
-        private bool ItemEnchantValid(Character.CharacterSlot slot, Item item, Enchant enchant)
+        /*private bool ItemEnchantValid(Character.CharacterSlot slot, Item item, Enchant enchant)
         {
             bool valid;
             if (slot == lockedSlot)
@@ -855,20 +852,20 @@ namespace Rawr
             if (validEnchants == null) return false;
             validEnchants.TryGetValue(enchant.Id, out valid);
             return valid;
-        }
+        }*/
 
         private void PopulateLockedItems(Item item)
         {
             lockedItems = GetPossibleGemmedItemsForItem(item, item.Id.ToString(), gemItems, metaGemItems);
             //foreach (Item possibleGemmedItem in lockedItems)
             //    uniqueItems[possibleGemmedItem] = item.Unique;
-            lockedEnchants = null;
+            //lockedEnchants = null;
         }
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
             Dictionary<int, Item> relevantItemMap = new Dictionary<int, Item>();
-            foreach (Item relevantItem in mainItemCache.GetUnfilteredRelevantItems(model))
+            foreach (Item relevantItem in ItemCache.GetUnfilteredRelevantItems(model))
             {
                 relevantItemMap[relevantItem.Id] = relevantItem;
             }
@@ -914,78 +911,42 @@ namespace Rawr
             metaGemItems = metaGemItemList.ToArray();
             gemItems = FilterList(gemItemList);
 
-            List<Item> headItemList = new List<Item>();
-            List<Item> neckItemList = new List<Item>();
-            List<Item> shouldersItemList = new List<Item>();
-            List<Item> backItemList = new List<Item>();
-            List<Item> chestItemList = new List<Item>();
-            List<Item> wristItemList = new List<Item>();
-            List<Item> handsItemList = new List<Item>();
-            List<Item> waistItemList = new List<Item>();
-            List<Item> legsItemList = new List<Item>();
-            List<Item> feetItemList = new List<Item>();
-            List<Item> fingerItemList = new List<Item>();
-            List<Item> trinketItemList = new List<Item>();
-            List<Item> mainHandItemList = new List<Item>();
-            List<Item> offHandItemList = new List<Item>();
-            List<Item> rangedItemList = new List<Item>();
-            List<Item> projectileItemList = new List<Item>();
-            List<Item> projectileBagItemList = new List<Item>();
+            List<ItemInstance> headItemList = new List<ItemInstance>();
+            List<ItemInstance> neckItemList = new List<ItemInstance>();
+            List<ItemInstance> shouldersItemList = new List<ItemInstance>();
+            List<ItemInstance> backItemList = new List<ItemInstance>();
+            List<ItemInstance> chestItemList = new List<ItemInstance>();
+            List<ItemInstance> wristItemList = new List<ItemInstance>();
+            List<ItemInstance> handsItemList = new List<ItemInstance>();
+            List<ItemInstance> waistItemList = new List<ItemInstance>();
+            List<ItemInstance> legsItemList = new List<ItemInstance>();
+            List<ItemInstance> feetItemList = new List<ItemInstance>();
+            List<ItemInstance> fingerItemList = new List<ItemInstance>();
+            List<ItemInstance> trinketItemList = new List<ItemInstance>();
+            List<ItemInstance> mainHandItemList = new List<ItemInstance>();
+            List<ItemInstance> offHandItemList = new List<ItemInstance>();
+            List<ItemInstance> rangedItemList = new List<ItemInstance>();
+            List<ItemInstance> projectileItemList = new List<ItemInstance>();
+            List<ItemInstance> projectileBagItemList = new List<ItemInstance>();
 
             Dictionary<string, bool> uniqueStore = new Dictionary<string, bool>();
 
-            List<Enchant> backEnchantList = new List<Enchant>();
-            foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Back, _character, availableItems, model))
-                backEnchantList.Add(enchant);
-            backEnchants = backEnchantList.ToArray();
-            List<Enchant> chestEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Chest, _character, availableItems, model))
-                chestEnchantList.Add(enchant);
-            chestEnchants = chestEnchantList.ToArray();
-            List<Enchant> feetEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Feet, _character, availableItems, model))
-                feetEnchantList.Add(enchant);
-            feetEnchants = feetEnchantList.ToArray();
-            List<Enchant> fingerEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Finger, _character, availableItems, model))
-                fingerEnchantList.Add(enchant);
-            fingerEnchants = fingerEnchantList.ToArray();
-            List<Enchant> handsEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Hands, _character, availableItems, model))
-                handsEnchantList.Add(enchant);
-            handsEnchants = handsEnchantList.ToArray();
-            List<Enchant> headEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Head, _character, availableItems, model))
-                headEnchantList.Add(enchant);
-            headEnchants = headEnchantList.ToArray();
-            List<Enchant> legsEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Legs, _character, availableItems, model))
-                legsEnchantList.Add(enchant);
-            legsEnchants = legsEnchantList.ToArray();
-            List<Enchant> shouldersEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Shoulders, _character, availableItems, model))
-                shouldersEnchantList.Add(enchant);
-            shouldersEnchants = shouldersEnchantList.ToArray();
-            List<Enchant> mainHandEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.MainHand, _character, availableItems, model))
-                mainHandEnchantList.Add(enchant);
-            mainHandEnchants = mainHandEnchantList.ToArray();
-            List<Enchant> offHandEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.OffHand, _character, availableItems, model))
-                offHandEnchantList.Add(enchant);
-            offHandEnchants = offHandEnchantList.ToArray();
-            List<Enchant> rangedEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Ranged, _character, availableItems, model))
-                rangedEnchantList.Add(enchant);
-            rangedEnchants = rangedEnchantList.ToArray();
-            List<Enchant> wristEnchantList = new List<Enchant>();
-			foreach (Enchant enchant in Enchant.FindEnchants(Item.ItemSlot.Wrist, _character, availableItems, model))
-                wristEnchantList.Add(enchant);
-            wristEnchants = wristEnchantList.ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = Enchant.FindEnchants(Item.ItemSlot.Back, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = Enchant.FindEnchants(Item.ItemSlot.Chest, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = Enchant.FindEnchants(Item.ItemSlot.Feet, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = Enchant.FindEnchants(Item.ItemSlot.Finger, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = Enchant.FindEnchants(Item.ItemSlot.Hands, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = Enchant.FindEnchants(Item.ItemSlot.Head, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = Enchant.FindEnchants(Item.ItemSlot.Legs, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = Enchant.FindEnchants(Item.ItemSlot.Shoulders, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = Enchant.FindEnchants(Item.ItemSlot.MainHand, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = Enchant.FindEnchants(Item.ItemSlot.OffHand, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = Enchant.FindEnchants(Item.ItemSlot.Ranged, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = Enchant.FindEnchants(Item.ItemSlot.Wrist, _character, availableItems, model).ToArray();
 
             //Dictionary<Item, bool> uniqueDict = new Dictionary<Item, bool>();
             Item item = null;
-            Item[] possibleGemmedItems = null;
+            List<ItemInstance> possibleGemmedItems = null;
             List<string> gemmedIds = null;
             Dictionary<string, List<string>> gemmedIdMap = new Dictionary<string, List<string>>();
             foreach (string xid in itemIds)
@@ -1019,8 +980,8 @@ namespace Rawr
                 }
             }
             gemmedIds = new List<string>(gemmedIdMap.Keys);
-            itemEnchantValid = new Dictionary<string, Dictionary<int, bool>>();
-            itemEnchantValidList = new Dictionary<string, List<Enchant>>();
+            //itemEnchantValid = new Dictionary<string, Dictionary<int, bool>>();
+            //itemEnchantValidList = new Dictionary<string, List<Enchant>>();
             foreach (string gid in gemmedIds)
             {
                 int dot = gid.IndexOf('.');
@@ -1030,25 +991,25 @@ namespace Rawr
                 if (item != null)
                 {
                     possibleGemmedItems = GetPossibleGemmedItemsForItem(item, gid, gemItems, metaGemItems);
-                    if (item.FitsInSlot(Character.CharacterSlot.Head, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { headItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Neck, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { neckItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Shoulders, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { shouldersItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Back, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { backItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Chest, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { chestItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Wrist, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { wristItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Hands, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { handsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Waist, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { waistItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Legs, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { legsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Feet, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { feetItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Finger1, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { fingerItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Trinket1, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { trinketItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.MainHand, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { mainHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.OffHand, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { offHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Ranged, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { rangedItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.Projectile, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.ProjectileBag, _character)) foreach (Item gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileBagItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+                    if (item.FitsInSlot(Character.CharacterSlot.Head, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { headItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Neck, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { neckItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Shoulders, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { shouldersItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Back, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { backItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Chest, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { chestItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Wrist, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { wristItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Hands, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { handsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Waist, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { waistItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Legs, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { legsItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Feet, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { feetItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Finger1, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { fingerItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Trinket1, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { trinketItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.MainHand, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { mainHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.OffHand, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { offHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Ranged, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { rangedItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.Projectile, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.ProjectileBag, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileBagItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 
-                    List<Enchant> validEnchants = new List<Enchant>();
+                    /*List<Enchant> validEnchants = new List<Enchant>();
                     foreach (string restriction in gemmedIdMap[gid])
                     {
                         if (restriction == "*")
@@ -1131,11 +1092,11 @@ namespace Rawr
                             dict[enchant.Id] = true;
                             if (!list.Contains(enchant)) list.Add(enchant);
                         }
-                    }                    
+                    }*/                    
                 }
             }
             // store dictionaries for available enchants for locked slots
-            for (int slot = 0; slot < slotCount; slot++)
+            /*for (int slot = 0; slot < slotCount; slot++)
             {
                 Enchant[] validEnchants = null;
                 Item.ItemSlot itemSlot = Item.ItemSlot.None;
@@ -1205,21 +1166,7 @@ namespace Rawr
                         dict[enchant.Id] = true;
                     }
                 }
-            }
-
-            // set to all enchants, restrictions will be applied per item
-            slotEnchants[(int)Character.CharacterSlot.Back] = backEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Back, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Chest] = chestEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Chest, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Feet] = feetEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Feet, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Finger1] = slotEnchants[(int)Character.CharacterSlot.Finger2] = fingerEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Finger, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Hands] = handsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Hands, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Head] = headEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Head, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Legs] = legsEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Legs, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Shoulders] = shouldersEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Shoulders, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.MainHand] = mainHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.MainHand, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.OffHand] = offHandEnchants = Enchant.FindAllEnchants(Item.ItemSlot.OffHand, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Ranged] = rangedEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Ranged, _character).ToArray();
-			slotEnchants[(int)Character.CharacterSlot.Wrist] = wristEnchants = Enchant.FindAllEnchants(Item.ItemSlot.Wrist, _character).ToArray();
+            }*/
 
             if (headItemList.Count == 0) headItemList.Add(null);
             if (neckItemList.Count == 0) neckItemList.Add(null);
@@ -1249,8 +1196,8 @@ namespace Rawr
             slotItems[(int)Character.CharacterSlot.Waist] = waistItems = FilterList(waistItemList);
             slotItems[(int)Character.CharacterSlot.Legs] = legsItems = FilterList(legsItemList);
             slotItems[(int)Character.CharacterSlot.Feet] = feetItems = FilterList(feetItemList);
-            slotItems[(int)Character.CharacterSlot.Finger1] = slotItems[(int)Character.CharacterSlot.Finger2] = fingerItems = fingerItemList.ToArray(); //When one ring/trinket is completely better than another
-            slotItems[(int)Character.CharacterSlot.Trinket1] = slotItems[(int)Character.CharacterSlot.Trinket2] = trinketItems = trinketItemList.ToArray(); //you may still want to use both, so don't filter
+            slotItems[(int)Character.CharacterSlot.Finger1] = slotItems[(int)Character.CharacterSlot.Finger2] = fingerItems = fingerItemList; //When one ring/trinket is completely better than another
+            slotItems[(int)Character.CharacterSlot.Trinket1] = slotItems[(int)Character.CharacterSlot.Trinket2] = trinketItems = trinketItemList; //you may still want to use both, so don't filter
             slotItems[(int)Character.CharacterSlot.MainHand] = mainHandItems = FilterList(mainHandItemList);
             slotItems[(int)Character.CharacterSlot.OffHand] = offHandItems = FilterList(offHandItemList);
             slotItems[(int)Character.CharacterSlot.Ranged] = rangedItems = FilterList(rangedItemList);
@@ -1285,7 +1232,7 @@ namespace Rawr
         {
             int gemLimit = 8;
             int itemLimit = 512;
-            int enchantLimit = 8;
+            //int enchantLimit = 8;
 
             List<string> emptyList = new List<string>();
             List<string> tooManyList = new List<string>();
@@ -1353,11 +1300,11 @@ namespace Rawr
             return null;
         }
 
-        private void CalculateWarnings(Array list, string group, List<string> emptyList, List<string> tooManyList, int tooManyLimit)
+        private void CalculateWarnings(System.Collections.IList list, string group, List<string> emptyList, List<string> tooManyList, int tooManyLimit)
         {
-            object el0 = (list.Length > 0) ? list.GetValue(0) : null;
-            if (emptyList != null && (list.Length == 0 || (list.Length == 1 && (el0 == null || (el0 is Enchant && ((Enchant)el0).Id == 0))))) emptyList.Add(group);
-            if (tooManyList != null && list.Length > tooManyLimit) tooManyList.Add(group);
+            object el0 = (list.Count > 0) ? list[0] : null;
+            if (emptyList != null && (list.Count == 0 || (list.Count == 1 && (el0 == null || (el0 is Enchant && ((Enchant)el0).Id == 0))))) emptyList.Add(group);
+            if (tooManyList != null && list.Count > tooManyLimit) tooManyList.Add(group);
         }
 
         private Character Optimize(out float bestValue)
@@ -1500,7 +1447,7 @@ namespace Rawr
             bestCalculations = null;
             injected = false;
             // verify inject character
-            if (injectCharacter != null)
+            /*if (injectCharacter != null)
             {
                 for (int slot = 0; slot < slotCount; slot++)
                 {
@@ -1513,13 +1460,13 @@ namespace Rawr
                         }
                     }
                 }
-            }
+            }*/
             if (injectCharacter != null)
             {
                 foreach (int slot in pairSlotList)
                 {
                     int pairSlot = pairSlotMap[slot];
-                    if (injectCharacter[(Character.CharacterSlot)slot] != null && injectCharacter[(Character.CharacterSlot)pairSlot] != null && injectCharacter[(Character.CharacterSlot)slot].Id == injectCharacter[(Character.CharacterSlot)pairSlot].Id && injectCharacter[(Character.CharacterSlot)slot].Unique)
+                    if (injectCharacter[(Character.CharacterSlot)slot] != null && injectCharacter[(Character.CharacterSlot)pairSlot] != null && injectCharacter[(Character.CharacterSlot)slot].Id == injectCharacter[(Character.CharacterSlot)pairSlot].Id && injectCharacter[(Character.CharacterSlot)slot].Item.Unique)
                     {
                         injectCharacter = null;
                         break;
@@ -1545,7 +1492,7 @@ namespace Rawr
                 bestIsland[i] = -10000000;
             }
             float[] share = new float[popSize];
-			float s, sum, minv, maxv;
+			float s, sum;
 			Character bestCharacter = null;
 			rand = new Random();
 
@@ -1576,8 +1523,8 @@ namespace Rawr
                         maxIsland[i] = -10000000;
                         islandNoImprove[i]++;
                     }
-				    minv = 10000000;
-				    maxv = -10000000;
+				    //minv = 10000000;
+				    //maxv = -10000000;
 				    for (int i = 0; i < popSize; i++)
 				    {
                         int island = i / islandSize;
@@ -1724,11 +1671,11 @@ namespace Rawr
                         }
                     }
 
-					for (int slot = 0; slot < slotCount; slot++)
+					/*for (int slot = 0; slot < slotCount; slot++)
                     {
-                        if (slotEnchants[slot] != null)
+                        if (slotAvailableEnchants[slot] != null)
                         {
-                            results = LookForDirectEnchantUpgrades(slotEnchants[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
+                            results = LookForDirectEnchantUpgrades(slotAvailableEnchants[slot], (Character.CharacterSlot)slot, best, bestCharacter, out calculations);
                             if (results.Key > best) 
                             {
                                 best = results.Key;
@@ -1739,7 +1686,7 @@ namespace Rawr
                                 //population[0].Geneology = "DirectUpgrade";
                             }
                         }
-                    }
+                    }*/
                 }
 			}
 
@@ -1768,43 +1715,43 @@ namespace Rawr
 			//    msGenetic/1000, msManual/1000, msManual / msGenetic));
 		}
 
-		private KeyValuePair<float, Character> LookForDirectItemUpgrades(Item[] items, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
+		private KeyValuePair<float, Character> LookForDirectItemUpgrades(List<ItemInstance> items, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
 		{
 			Character charSwap;
             bestCalculations = null;
 			float value;
 			bool foundUpgrade = false;
             if (slot == lockedSlot) items = lockedItems;
-			foreach (Item item in items)
+			foreach (ItemInstance item in items)
 			{
                 int pairSlot = pairSlotMap[(int)slot];
-                if (item != null && (bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Unique))
+                if (item != null && (bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
 				{
-                    Enchant enchant = null;
-                    if (slotEnchants[(int)slot] != null) enchant = bestCharacter.GetEnchantBySlot(slot);
+                    //Enchant enchant = null;
+                    //if (slotEnchants[(int)slot] != null) enchant = bestCharacter.GetEnchantBySlot(slot);
                     // replace enchant with a valid enchant
-                    if (slot == lockedSlot && lockedEnchants != null && Array.IndexOf(lockedEnchants, enchant) == -1)
-                    {
-                        enchant = lockedEnchants[0];
-                    }
-                    if (slot != lockedSlot && enchant != null)
-                    {
-                        Dictionary<int, bool> dict = item.EnchantValid ?? itemEnchantValid[item.GemmedId];
-                        bool valid;
-                        dict.TryGetValue(enchant.Id, out valid);
-                        if (!valid)
-                        {
-                            foreach (Enchant e in slotEnchants[(int)slot])
-                            {
-                                if (dict.TryGetValue(e.Id, out valid) && valid)
-                                {
-                                    enchant = e;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    charSwap = BuildSingleItemEnchantSwapCharacter(bestCharacter, slot, item, enchant);
+                    //if (slot == lockedSlot && lockedEnchants != null && Array.IndexOf(lockedEnchants, enchant) == -1)
+                    //{
+                    //    enchant = lockedEnchants[0];
+                    //}
+                    //if (slot != lockedSlot && enchant != null)
+                    //{
+                    //    Dictionary<int, bool> dict = item.EnchantValid ?? itemEnchantValid[item.GemmedId];
+                    //    bool valid;
+                    //    dict.TryGetValue(enchant.Id, out valid);
+                    //    if (!valid)
+                    //    {
+                    //        foreach (Enchant e in slotEnchants[(int)slot])
+                    //        {
+                    //            if (dict.TryGetValue(e.Id, out valid) && valid)
+                    //            {
+                    //                enchant = e;
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+                    charSwap = BuildSingleItemSwapCharacter(bestCharacter, slot, item);
                     CharacterCalculationsBase calculations;
                     value = GetCalculationsValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));
                     if (value > best)
@@ -1821,7 +1768,7 @@ namespace Rawr
 			return new KeyValuePair<float, Character>(float.NegativeInfinity, null);
 		}
 
-		private KeyValuePair<float, Character> LookForDirectEnchantUpgrades(Enchant[] enchants, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
+		/*private KeyValuePair<float, Character> LookForDirectEnchantUpgrades(Enchant[] enchants, Character.CharacterSlot slot, float best, Character bestCharacter, out CharacterCalculationsBase bestCalculations)
 		{
 			Character charSwap;
             bestCalculations = null;
@@ -1850,7 +1797,7 @@ namespace Rawr
 			if (newBest > best)
 				return new KeyValuePair<float, Character>(newBest, newBestCharacter);
 			return new KeyValuePair<float,Character>(float.NegativeInfinity, null);
-		}
+		}*/
 
         public static float GetOptimizationValue(Character character, CalculationsBase model)
         {
@@ -1897,13 +1844,12 @@ namespace Rawr
 				return calcs.GetOptimizableCalculationValue(calculation);
 		}
 
-        private delegate Item GeneratorItemSelector(int slot);
-        private delegate Enchant GeneratorEnchantSelector(int slot, Item item);     
+        private delegate ItemInstance GeneratorItemSelector(int slot);
 
-        private void GeneratorFillSlot(int slot, Item[] item, Enchant[] enchant, GeneratorItemSelector itemSelector, GeneratorEnchantSelector enchantSelector)
+        private void GeneratorFillSlot(int slot, ItemInstance[] item, GeneratorItemSelector itemSelector)
         {
-            Item i = item[slot] = itemSelector(slot);
-            if (i != null && slotEnchants[slot] != null)
+            /*ItemInstance i = */item[slot] = itemSelector(slot);
+            /*if (i != null && slotEnchants[slot] != null)
             {
                 Enchant e = null;
                 do
@@ -1911,31 +1857,30 @@ namespace Rawr
                     e = enchantSelector(slot, i);
                 } while (!ItemEnchantValid((Character.CharacterSlot)slot, i, e));
                 enchant[slot] = e;
-            }
+            }*/
         }
 
-        private Character GeneratorBuildCharacter(GeneratorItemSelector itemSelector, GeneratorEnchantSelector enchantSelector)
+        private Character GeneratorBuildCharacter(GeneratorItemSelector itemSelector)
 		{
-            Item[] item = new Item[characterSlotCount];
-            Enchant[] enchant = new Enchant[slotCount];
+            ItemInstance[] item = new ItemInstance[characterSlotCount];
             for (int slot = 0; slot < slotCount; slot++)
             {
-                GeneratorFillSlot(slot, item, enchant, itemSelector, enchantSelector);
+                GeneratorFillSlot(slot, item, itemSelector);
             }
             foreach (int slot in pairSlotList)
             {
                 int pairSlot = pairSlotMap[slot];
-                while (item[slot] != null && item[pairSlot] != null && item[slot].Id == item[pairSlot].Id && item[slot].Unique)
+                while (item[slot] != null && item[pairSlot] != null && item[slot].Id == item[pairSlot].Id && item[slot].Item.Unique)
                 {
-                    GeneratorFillSlot(slot, item, enchant, itemSelector, enchantSelector);
-                    GeneratorFillSlot(pairSlot, item, enchant, itemSelector, enchantSelector);
+                    GeneratorFillSlot(slot, item, itemSelector);
+                    GeneratorFillSlot(pairSlot, item, itemSelector);
                 }
 			}
-			item[(int)Character.CharacterSlot.ExtraHandsSocket] = _character[Character.CharacterSlot.ExtraHandsSocket];
-			item[(int)Character.CharacterSlot.ExtraWaistSocket] = _character[Character.CharacterSlot.ExtraWaistSocket];
-			item[(int)Character.CharacterSlot.ExtraWristSocket] = _character[Character.CharacterSlot.ExtraWristSocket];
+            //item[(int)Character.CharacterSlot.ExtraHandsSocket] = _character[Character.CharacterSlot.ExtraHandsSocket];
+            //item[(int)Character.CharacterSlot.ExtraWaistSocket] = _character[Character.CharacterSlot.ExtraWaistSocket];
+            //item[(int)Character.CharacterSlot.ExtraWristSocket] = _character[Character.CharacterSlot.ExtraWristSocket];
 
-			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
+			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.AssignAllTalentsFromCharacter(_character);
@@ -1948,8 +1893,8 @@ namespace Rawr
             return GeneratorBuildCharacter(
                 delegate(int slot)
                 {
-                    return (lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)];
-                },
+                    return (lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)];
+                }/*,
                 delegate(int slot, Item item)
                 {
                     if (lockedSlot == (Character.CharacterSlot)slot)
@@ -1967,7 +1912,7 @@ namespace Rawr
                     {
                         return (item.EnchantValidList != null ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)]);
                     }
-                });
+                }*/);
         }
 
 		private Character BuildChildCharacter(Character father, Character mother)
@@ -1976,11 +1921,11 @@ namespace Rawr
                 delegate(int slot)
                 {
                     return rand.NextDouble() < 0.5d ? father[(Character.CharacterSlot)slot] : mother[(Character.CharacterSlot)slot];
-                },
+                }/*,
                 delegate(int slot, Item item)
                 {
                     return rand.NextDouble() < 0.5d ? father.GetEnchantBySlot((Character.CharacterSlot)slot) : mother.GetEnchantBySlot((Character.CharacterSlot)slot);
-                });
+                }*/);
 		}
 
         /// <summary>
@@ -2011,22 +1956,22 @@ namespace Rawr
         /// </summary>
         private Character GeneratorBuildSACharacter(Character parent)
         {
-            Item[] item = new Item[characterSlotCount];
-            Enchant[] enchant = new Enchant[slotCount];
+            ItemInstance[] item = new ItemInstance[characterSlotCount];
+            //Enchant[] enchant = new Enchant[slotCount];
 
             for (int slot = 0; slot < slotCount; slot++)
             {
                 item[slot] = parent[(Character.CharacterSlot)slot];
-                enchant[slot] = parent.GetEnchantBySlot((Character.CharacterSlot)slot);
+                //enchant[slot] = parent.GetEnchantBySlot((Character.CharacterSlot)slot);
             }
-			item[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
-			item[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
-			item[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+            //item[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+            //item[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+            //item[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
 
             double r = rand.NextDouble();
             bool successfull = false;
 
-            if (r < 0.1)
+            /*if (r < 0.1)
             {
                 // Change one enchant?
                 // There are better methods to make sure to change one item (shuffled list of all slots) but this works
@@ -2034,7 +1979,7 @@ namespace Rawr
                 for (int i = 0; i < slotCount; i++)
                 {
                     int slot = rand.Next(slotCount);
-                    Item cItem = item[slot];
+                    ItemInstance cItem = item[slot];
                     if (cItem == null || slotEnchants[slot] == null)
                     {
                         continue;
@@ -2064,7 +2009,7 @@ namespace Rawr
                         break;
                     }
                 }
-            }
+            }*/
 
             r = rand.NextDouble();
 
@@ -2085,12 +2030,12 @@ namespace Rawr
                 for (int i = 0; i < slotCount; i++)
                 {
                     int slot = rand.Next(slotCount);
-                    Item newitem = ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)]);
+                    ItemInstance newitem = ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)]);
                     if (newitem == null) continue;
                     int pairSlot = pairSlotMap[slot];
                     if (item[slot] == null || newitem.Id != item[slot].Id)
                     {
-                        if (pairSlot != -1 && item[pairSlot] != null && item[pairSlot].Id == newitem.Id && newitem.Unique)
+                        if (pairSlot != -1 && item[pairSlot] != null && item[pairSlot].Id == newitem.Id && newitem.Item.Unique)
                         {
                             continue;
                         }
@@ -2101,7 +2046,7 @@ namespace Rawr
             }
 
 
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, enchant, _character.ActiveBuffs, false, _character.CurrentModel);
+            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, item, _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character);
@@ -2111,17 +2056,20 @@ namespace Rawr
 
         }
 
-        private Item ReplaceGem(Item item, int index, Item gem)
+        private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
         {
-            // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
-            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
-                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
-            copy.SetGemInternal(1, item.Gem1);
-            copy.SetGemInternal(2, item.Gem2);
-            copy.SetGemInternal(3, item.Gem3);
-            copy.SetGemInternal(index, gem);
+            ItemInstance copy = new ItemInstance(item.Item, item.Gem1, item.Gem2, item.Gem3, item.Enchant);
+            copy.SetGem(index, gem);
             return copy;
+            // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
+            //Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+            //    item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
+            //    item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+            //copy.SetGemInternal(1, item.Gem1);
+            //copy.SetGemInternal(2, item.Gem2);
+            //copy.SetGemInternal(3, item.Gem3);
+            //copy.SetGemInternal(index, gem);
+            //return copy;
             //string gemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, (index == 1) ? gem.Id : item.Gem1Id, (index == 2) ? gem.Id : item.Gem2Id, (index == 3) ? gem.Id : item.Gem3Id);
             //return ItemCache.FindItemById(gemmedId, true, false);
         }
@@ -2136,7 +2084,7 @@ namespace Rawr
 
         private Character BuildReplaceGemMutantCharacter(Character parent, out bool successful)
         {
-            Item[] items = new Item[characterSlotCount];
+            ItemInstance[] items = new ItemInstance[characterSlotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2156,9 +2104,9 @@ namespace Rawr
             items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
             items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
 			items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
-			items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
-			items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
-			items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+            //items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+            //items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+            //items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
 			successful = false;
 
             // do the work
@@ -2172,7 +2120,7 @@ namespace Rawr
                     for (int i = 1; i <= 3; i++)
                     {
                         Item gem = items[slot].GetGem(i);
-                        if (gem != null) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Sockets.GetColor(i) });
+                        if (gem != null) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Item.GetSocketColor(i) });
                     }
                 }
             }
@@ -2196,12 +2144,12 @@ namespace Rawr
                     {
                         newGem = gemItems[rand.Next(gemItems.Length)];
                     }
-                    Item newItem = ReplaceGem(items[(int)mutation.Slot], mutation.Index, newGem);
-                    Dictionary<int, bool> dict;
+                    ItemInstance newItem = ReplaceGem(items[(int)mutation.Slot], mutation.Index, newGem);
+                    //Dictionary<int, bool> dict;
                     // make sure the item and item-enchant combo is allowed
-                    Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
-                    bool valid;
-                    if ((lockedSlot != mutation.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(newItem.GemmedId, out dict) && (enchant == null || (dict.TryGetValue(enchant.Id, out valid) && valid)))
+                    //Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
+                    //bool valid;
+                    if ((lockedSlot == mutation.Slot && lockedItems.Contains(newItem)) || (lockedSlot != mutation.Slot && slotItems[(int)mutation.Slot].Contains(newItem)))
                     {
                         items[(int)mutation.Slot] = newItem;
                         successful = true;
@@ -2212,20 +2160,7 @@ namespace Rawr
             // create character
 
             Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
-                parent.HeadEnchant,
-                parent.ShouldersEnchant,
-                parent.BackEnchant,
-                parent.ChestEnchant,
-                parent.WristEnchant,
-                parent.HandsEnchant,
-                parent.LegsEnchant,
-                parent.FeetEnchant,
-                parent.Finger1Enchant,
-                parent.Finger2Enchant,
-                parent.MainHandEnchant,
-                parent.OffHandEnchant,
-                parent.RangedEnchant,
-                _character.ActiveBuffs, false, _character.CurrentModel);
+                _character.ActiveBuffs, _character.CurrentModel);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2238,7 +2173,7 @@ namespace Rawr
 
         private Character BuildSwapGemMutantCharacter(Character parent, out bool successful)
         {
-            Item[] items = new Item[characterSlotCount];
+            ItemInstance[] items = new ItemInstance[characterSlotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2258,9 +2193,9 @@ namespace Rawr
             items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
             items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
 			items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
-			items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
-			items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
-			items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+            //items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
+            //items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
+            //items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
             successful = false;
 
             // do the work
@@ -2275,7 +2210,7 @@ namespace Rawr
                     for (int i = 1; i <= 3; i++)
                     {
                         Item gem = items[slot].GetGem(i);
-                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Sockets.GetColor(i) });
+                        if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = (Character.CharacterSlot)slot, Index = i, Gem = gem, Socket = items[slot].Item.GetSocketColor(i) });
                     }
                 }
             }
@@ -2319,14 +2254,12 @@ namespace Rawr
                 }
 
                 // mutate
-                Item item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
-                Item item2 = ReplaceGem(items[(int)mutation2.Slot], mutation2.Index, mutation1.Gem);
-                Dictionary<int, bool> dict1, dict2;
+                ItemInstance item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
+                ItemInstance item2 = ReplaceGem(items[(int)mutation2.Slot], mutation2.Index, mutation1.Gem);
                 Enchant enchant1, enchant2;
                 enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
                 enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
-                bool valid1, valid2;
-                if ((lockedSlot != mutation1.Slot || lockedItems == null || lockedItems.Length > 1) && (lockedSlot != mutation2.Slot || lockedItems == null || lockedItems.Length > 1) && itemEnchantValid.TryGetValue(item1.GemmedId, out dict1) && (enchant1 == null || (dict1.TryGetValue(enchant1.Id, out valid1) && valid1)) && itemEnchantValid.TryGetValue(item2.GemmedId, out dict2) && (enchant2 == null || (dict2.TryGetValue(enchant2.Id, out valid2) && valid2)))
+                if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && slotItems[(int)mutation1.Slot].Contains(item1))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && slotItems[(int)mutation2.Slot].Contains(item2))))
                 {
                     successful = true;
                     items[(int)mutation1.Slot] = item1;
@@ -2337,20 +2270,7 @@ namespace Rawr
             // create character
 
             Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
-                parent.HeadEnchant,
-                parent.ShouldersEnchant,
-                parent.BackEnchant,
-                parent.ChestEnchant,
-                parent.WristEnchant,
-                parent.HandsEnchant,
-                parent.LegsEnchant,
-                parent.FeetEnchant,
-                parent.Finger1Enchant,
-                parent.Finger2Enchant,
-                parent.MainHandEnchant,
-                parent.OffHandEnchant,
-                parent.RangedEnchant,
-                _character.ActiveBuffs, false, _character.CurrentModel);
+                _character.ActiveBuffs, _character.CurrentModel);
             //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2370,15 +2290,15 @@ namespace Rawr
             return GeneratorBuildCharacter(
                 delegate(int slot)
                 {
-                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Length)] : slotItems[slot][rand.Next(slotItems[slot].Length)]) : parent[(Character.CharacterSlot)slot];
-                },
+                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)]) : parent[(Character.CharacterSlot)slot];
+                }/*,
                 delegate(int slot, Item item)
                 {
                     return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot && lockedEnchants != null) ? lockedEnchants[rand.Next(lockedEnchants.Length)] : ((item.EnchantValidList != null && lockedSlot != (Character.CharacterSlot)slot) ? item.EnchantValidList[rand.Next(item.EnchantValidList.Count)] : slotEnchants[slot][rand.Next(slotEnchants[slot].Length)])) : parent.GetEnchantBySlot((Character.CharacterSlot)slot);
-                });
+                }*/);
 		}
 
-        private Character BuildSingleItemEnchantSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Item item, Enchant enchant)
+        /*private Character BuildSingleItemEnchantSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Item item, Enchant enchant)
         {
             Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
                 slot == Character.CharacterSlot.Head ? item : baseCharacter.Head,
@@ -2426,9 +2346,9 @@ namespace Rawr
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
             return character;
-        }
+        }*/
 
-		private Character BuildSingleItemSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Item item)
+		private Character BuildSingleItemSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, ItemInstance item)
 		{
 			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
 				slot == Character.CharacterSlot.Head ? item : baseCharacter.Head,
@@ -2451,7 +2371,7 @@ namespace Rawr
 				slot == Character.CharacterSlot.Ranged ? item : baseCharacter.Ranged,
 				slot == Character.CharacterSlot.Projectile ? item : baseCharacter.Projectile,
 				slot == Character.CharacterSlot.ProjectileBag ? item : baseCharacter.ProjectileBag,
-				slot == Character.CharacterSlot.ExtraWristSocket ? item : baseCharacter.ExtraWristSocket,
+				/*slot == Character.CharacterSlot.ExtraWristSocket ? item : baseCharacter.ExtraWristSocket,
 				slot == Character.CharacterSlot.ExtraHandsSocket ? item : baseCharacter.ExtraHandsSocket,
 				slot == Character.CharacterSlot.ExtraWaistSocket ? item : baseCharacter.ExtraWaistSocket,
 				baseCharacter.HeadEnchant,
@@ -2466,8 +2386,8 @@ namespace Rawr
 				baseCharacter.Finger2Enchant,
 				baseCharacter.MainHandEnchant,
 				baseCharacter.OffHandEnchant,
-				baseCharacter.RangedEnchant,
-                _character.ActiveBuffs, false, _character.CurrentModel);
+				baseCharacter.RangedEnchant,*/
+                _character.ActiveBuffs, _character.CurrentModel);
 			//foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
 			//	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
@@ -2478,7 +2398,7 @@ namespace Rawr
 			return character;
 		}
 
-		private Character BuildSingleEnchantSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Enchant enchant)
+		/*private Character BuildSingleEnchantSwapCharacter(Character baseCharacter, Character.CharacterSlot slot, Enchant enchant)
 		{
 			Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race,
 				baseCharacter.Head,
@@ -2526,101 +2446,199 @@ namespace Rawr
             character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
             //character.RecalculateSetBonuses();
 			return character;
-		}
+		}*/
 
-        private Item[] GetPossibleGemmedItemsForItem(Item item, string gemmedId, Item[] gemItems, Item[] metaGemItems)
+        private List<ItemInstance> GetPossibleGemmedItemsForItem(Item item, string gemmedId, Item[] gemItems, Item[] metaGemItems)
 		{
-			List<Item> possibleGemmedItems = new List<Item>();
-			if (!gemmedId.EndsWith("*.*.*") && gemmedId.IndexOf('.') >= 0)
-			{
-                item = ItemCache.FindItemById(gemmedId, false, false);
-                if (item != null) possibleGemmedItems.Add(item);
-			}
-			else
-			{
-                Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
-			    switch (item.Sockets.Color1)
-			    {
-				    case Item.ItemSlot.Meta:
-					    possibleGem1s = metaGemItems;
-					    break;
-				    case Item.ItemSlot.Red:
-				    case Item.ItemSlot.Orange:
-				    case Item.ItemSlot.Yellow:
-				    case Item.ItemSlot.Green:
-				    case Item.ItemSlot.Blue:
-				    case Item.ItemSlot.Purple:
-				    case Item.ItemSlot.Prismatic:
-					    possibleGem1s = gemItems;
-					    break;
-				    default:
-                        possibleGem1s = new Item[] { null };
-					    break;
-			    }
-			    switch (item.Sockets.Color2)
-			    {
-				    case Item.ItemSlot.Meta:
-					    possibleGem2s = metaGemItems;
-					    break;
-				    case Item.ItemSlot.Red:
-				    case Item.ItemSlot.Orange:
-				    case Item.ItemSlot.Yellow:
-				    case Item.ItemSlot.Green:
-				    case Item.ItemSlot.Blue:
-				    case Item.ItemSlot.Purple:
-				    case Item.ItemSlot.Prismatic:
-					    possibleGem2s = gemItems;
-					    break;
-				    default:
-                        possibleGem2s = new Item[] { null };
-					    break;
-			    }
-			    switch (item.Sockets.Color3)
-			    {
-				    case Item.ItemSlot.Meta:
-					    possibleGem3s = metaGemItems;
-					    break;
-				    case Item.ItemSlot.Red:
-				    case Item.ItemSlot.Orange:
-				    case Item.ItemSlot.Yellow:
-				    case Item.ItemSlot.Green:
-				    case Item.ItemSlot.Blue:
-				    case Item.ItemSlot.Purple:
-				    case Item.ItemSlot.Prismatic:
-					    possibleGem3s = gemItems;
-					    break;
-				    default:
-                        possibleGem3s = new Item[] { null };
-					    break;
-			    }
+			List<ItemInstance> possibleGemmedItems = new List<ItemInstance>();
+            string[] ids = gemmedId.Split('.');
+            Item[] possibleGem1s, possibleGem2s, possibleGem3s = null;
+            Enchant[] possibleEnchants = null;
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && _character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && _character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && _character.WristBlacksmithingSocketEnabled);
 
-                foreach (Item gem1 in possibleGem1s)
-                    foreach (Item gem2 in possibleGem2s)
-                        foreach (Item gem3 in possibleGem3s)
+            if (ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*"))
+            {
+                switch (item.SocketColor1)
+                {
+                    case Item.ItemSlot.Meta:
+                        possibleGem1s = metaGemItems;
+                        break;
+                    case Item.ItemSlot.Red:
+                    case Item.ItemSlot.Orange:
+                    case Item.ItemSlot.Yellow:
+                    case Item.ItemSlot.Green:
+                    case Item.ItemSlot.Blue:
+                    case Item.ItemSlot.Purple:
+                    case Item.ItemSlot.Prismatic:
+                        possibleGem1s = gemItems;
+                        break;
+                    default:
+                        if (blacksmithingSocket)
+                        {
+                            possibleGem1s = gemItems;
+                            blacksmithingSocket = false;
+                        }
+                        else
+                        {
+                            possibleGem1s = new Item[] { null };
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                possibleGem1s = new Item[] { ItemCache.FindItemById(int.Parse(ids[1])) };
+            }
+
+            if (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*"))
+            {
+                switch (item.SocketColor2)
+                {
+                    case Item.ItemSlot.Meta:
+                        possibleGem2s = metaGemItems;
+                        break;
+                    case Item.ItemSlot.Red:
+                    case Item.ItemSlot.Orange:
+                    case Item.ItemSlot.Yellow:
+                    case Item.ItemSlot.Green:
+                    case Item.ItemSlot.Blue:
+                    case Item.ItemSlot.Purple:
+                    case Item.ItemSlot.Prismatic:
+                        possibleGem2s = gemItems;
+                        break;
+                    default:
+                        if (blacksmithingSocket)
+                        {
+                            possibleGem2s = gemItems;
+                            blacksmithingSocket = false;
+                        }
+                        else
+                        {
+                            possibleGem2s = new Item[] { null };
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                possibleGem2s = new Item[] { ItemCache.FindItemById(int.Parse(ids[2])) };
+            }
+
+            if (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*"))
+            {
+                switch (item.SocketColor3)
+                {
+                    case Item.ItemSlot.Meta:
+                        possibleGem3s = metaGemItems;
+                        break;
+                    case Item.ItemSlot.Red:
+                    case Item.ItemSlot.Orange:
+                    case Item.ItemSlot.Yellow:
+                    case Item.ItemSlot.Green:
+                    case Item.ItemSlot.Blue:
+                    case Item.ItemSlot.Purple:
+                    case Item.ItemSlot.Prismatic:
+                        possibleGem3s = gemItems;
+                        break;
+                    default:
+                        if (blacksmithingSocket)
+                        {
+                            possibleGem3s = gemItems;
+                            blacksmithingSocket = false;
+                        }
+                        else
+                        {
+                            possibleGem3s = new Item[] { null };
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                possibleGem3s = new Item[] { ItemCache.FindItemById(int.Parse(ids[3])) };
+            }
+
+            if (ids.Length <= 4 || (ids.Length > 4 && ids[4] == "*"))
+            {
+                possibleEnchants = slotAvailableEnchants[(int)Character.GetCharacterSlotByItemSlot(item.Slot)];
+                if (possibleEnchants == null) possibleEnchants = new Enchant[] { null };
+            }
+            else
+            {
+                possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, null) };
+            }
+
+            foreach (Item gem1 in possibleGem1s)
+                foreach (Item gem2 in possibleGem2s)
+                    foreach (Item gem3 in possibleGem3s)
+                        foreach (Enchant enchant in possibleEnchants)
                         {
                             //possibleGemmedItems.Add(ItemCache.Instance.FindItemById(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3), true, false, true));
                             // skip item cache, since we're creating new gemmings most likely they don't exist
                             // it will search through all item to find the item we already have and then clone it
                             // so skip all do that and do cloning ourselves
-                            Item copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
+                            /*ItemInstance copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
                                 item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
-                                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);
+                                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);                            
                             copy.SetGemInternal(1, gem1);
                             copy.SetGemInternal(2, gem2);
-                            copy.SetGemInternal(3, gem3);
-                            possibleGemmedItems.Add(copy);
+                            copy.SetGemInternal(3, gem3);*/
+                            possibleGemmedItems.Add(new ItemInstance(item, gem1, gem2, gem3, enchant));
                             //ItemCache.AddItem(copy, true, false);
-                        }
-			}
+                        }	
 
-			return possibleGemmedItems.ToArray();
+			return possibleGemmedItems;
 		}
 
-		private Item[] FilterList(List<Item> unfilteredList)
+        private Item[] FilterList(List<Item> unfilteredList)
+        {
+            List<Item> filteredList = new List<Item>();
+            List<StatsColors> filteredStatsColors = new List<StatsColors>();
+            foreach (Item item in unfilteredList)
+            {
+                if (item == null)
+                {
+                    filteredList.Add(item);
+                    continue;
+                }
+
+                StatsColors statsColorsA = new StatsColors()
+                {
+                    Item = item,
+                    SetName = item.SetName,
+                    Stats = item.Stats,
+                };
+                bool addItem = true;
+                List<StatsColors> removeItems = new List<StatsColors>();
+                foreach (StatsColors statsColorsB in filteredStatsColors)
+                {
+                    ArrayUtils.CompareResult compare = statsColorsA.CompareTo(statsColorsB);
+                    if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                    {
+                        removeItems.Add(statsColorsB);
+                    }
+                    else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
+                    {
+                        addItem = false;
+                        break;
+                    }
+                }
+                foreach (StatsColors removeItem in removeItems)
+                    filteredStatsColors.Remove(removeItem);
+                if (addItem) filteredStatsColors.Add(statsColorsA);
+            }
+            foreach (StatsColors statsColors in filteredStatsColors)
+            {
+                filteredList.Add(statsColors.Item);
+            }
+            return filteredList.ToArray();
+        }
+
+		private List<ItemInstance> FilterList(List<ItemInstance> unfilteredList)
 		{
-			List<Item> filteredList = new List<Item>();
+			List<ItemInstance> filteredList = new List<ItemInstance>();
 			List<StatsColors> filteredStatsColors = new List<StatsColors>();
-			foreach (Item gemmedItem in unfilteredList)
+			foreach (ItemInstance gemmedItem in unfilteredList)
 			{
 				if (gemmedItem == null)
 				{
@@ -2647,8 +2665,9 @@ namespace Rawr
 
 				StatsColors statsColorsA = new StatsColors()
 				{
-					GemmedItem = gemmedItem,
-                    SetName = gemmedItem.SetName,
+					ItemInstance = gemmedItem,
+                    Item = gemmedItem.Item,
+                    SetName = gemmedItem.Item.SetName,
                     Stats = gemmedItem.GetTotalStats(),
 					Meta = meta,
 					Red = red,
@@ -2677,15 +2696,16 @@ namespace Rawr
 			}
 			foreach (StatsColors statsColors in filteredStatsColors)
 			{
-				filteredList.Add(statsColors.GemmedItem);
+				filteredList.Add(statsColors.ItemInstance);
 			}
-			return filteredList.ToArray();
+			return filteredList;
 		}
 
 		private class StatsColors
 		{
-			public Item GemmedItem;
-			public Stats Stats;
+			public ItemInstance ItemInstance;
+            public Item Item;
+            public Stats Stats;
 			public int Meta;
 			public int Red;
 			public int Yellow;
@@ -2695,7 +2715,7 @@ namespace Rawr
 
 			public ArrayUtils.CompareResult CompareTo(StatsColors other)
 			{
-                if (GemmedItem.IsJewelersGem != other.GemmedItem.IsJewelersGem) return ArrayUtils.CompareResult.Unequal;
+                if (Item.IsJewelersGem != other.Item.IsJewelersGem) return ArrayUtils.CompareResult.Unequal;
                 if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
 
 				if (this.SetName != other.SetName) return ArrayUtils.CompareResult.Unequal;
@@ -2737,7 +2757,7 @@ namespace Rawr
 			}
             public override int GetHashCode()
             {
-                return Stats.GetHashCode()^GemmedItem.GetHashCode();
+                return Stats.GetHashCode()^Item.GetHashCode();
             }
             public override bool Equals(object obj)
             {

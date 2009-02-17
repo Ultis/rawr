@@ -54,14 +54,28 @@ namespace Rawr
 		{
 			if (e.Button == MouseButtons.Left)
 			{
-				if (_itemCalculation.Item.Id == 0)
-					(FindForm() as FormItemSelection).Select(null);
-				else
-					(FindForm() as FormItemSelection).Select(_itemCalculation.Item);
+                if (_itemCalculation.Item.Id == 0)
+                {
+                    (FindForm() as FormItemSelection).Select((ItemInstance)null);
+                }
+                else if (_itemCalculation.ItemInstance != null)
+                {
+                    (FindForm() as FormItemSelection).Select(_itemCalculation.ItemInstance);
+                }
+                else
+                {
+                    (FindForm() as FormItemSelection).Select(_itemCalculation.Item);
+                }
 			}
 			else if (e.Button == MouseButtons.Right)
 			{
-				ItemContextualMenu.Instance.Show(ItemCalculation.Item, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+				if (ItemCalculation.ItemInstance != null)
+					ItemContextualMenu.Instance.Show(ItemCalculation.ItemInstance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+				else
+				{
+					ItemInstance instance = GemmingTemplate.CurrentTemplates[0].GetItemInstance(ItemCalculation.Item, null, false);
+					ItemContextualMenu.Instance.Show(instance, Character.CharacterSlot.None, !ItemCalculation.Equipped);
+				}
 			}
 		}
 
@@ -95,7 +109,14 @@ namespace Rawr
 				int tipX = this.Width + 20;
 				if (Parent.PointToScreen(Location).X + tipX + 249 > System.Windows.Forms.Screen.GetWorkingArea(this).Right)
 					tipX = -249;
-				ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, this, new Point(tipX, 0));
+                if (_itemCalculation.ItemInstance != null)
+                {
+                    ItemToolTip.Instance.Show(_itemCalculation.ItemInstance.Id == 0 ? null : _itemCalculation.ItemInstance, this, new Point(tipX, 0));
+                }
+                else
+                {
+                    ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, this, new Point(tipX, 0));
+                }
 
 				//UpdateBackColors();
 				Invalidate();
@@ -243,9 +264,9 @@ namespace Rawr
 
 					if (!string.IsNullOrEmpty(_itemCalculation.Item.IconPath))
 						g.DrawImageUnscaled(ItemIcons.GetItemIcon(_itemCalculation.Item, true), 5, 5);
-					int gemCount = (_itemCalculation.Item.Sockets.Color1 == Item.ItemSlot.None ? 0 : 1) +
-						(_itemCalculation.Item.Sockets.Color2 == Item.ItemSlot.None ? 0 : 1) +
-							(_itemCalculation.Item.Sockets.Color3 == Item.ItemSlot.None ? 0 : 1);
+					int gemCount = (_itemCalculation.Item.SocketColor1 == Item.ItemSlot.None ? 0 : 1) +
+						(_itemCalculation.Item.SocketColor2 == Item.ItemSlot.None ? 0 : 1) +
+							(_itemCalculation.Item.SocketColor3 == Item.ItemSlot.None ? 0 : 1);
 					if (IsEnchant)
 						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 							new RectangleF(4, 0, Math.Max(0, this.Width - 14 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
@@ -253,9 +274,9 @@ namespace Rawr
 						g.DrawString(_itemCalculation.Item.Name, this.Font, new SolidBrush(this.ForeColor),
 							new RectangleF(41, 0, Math.Max(0, this.Width - 49 - (gemCount * 31)), Math.Max(0, this.Height - 3)), StringFormatItemName);
 					
-					if (_itemCalculation.Item.Sockets.Color1 != Item.ItemSlot.None)
+					if (_itemCalculation.Item.SocketColor1 != Item.ItemSlot.None)
 					{
-						switch (_itemCalculation.Item.Sockets.Color1)
+						switch (_itemCalculation.Item.SocketColor1)
 						{
 							case Item.ItemSlot.Meta:
 								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
@@ -270,15 +291,15 @@ namespace Rawr
 								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
-						if (_itemCalculation.Item.Gem1 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.Item.Gem1, true), 
+                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem1 != null)
+							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem1, true), 
 								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
 						gemCount--;
 					}
 
-					if (_itemCalculation.Item.Sockets.Color2 != Item.ItemSlot.None)
+					if (_itemCalculation.Item.SocketColor2 != Item.ItemSlot.None)
 					{
-						switch (_itemCalculation.Item.Sockets.Color2)
+						switch (_itemCalculation.Item.SocketColor2)
 						{
 							case Item.ItemSlot.Meta:
 								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
@@ -293,15 +314,15 @@ namespace Rawr
 								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
-						if (_itemCalculation.Item.Gem2 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.Item.Gem2, true),
+                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem2 != null)
+							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem2, true),
 								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
 						gemCount--;
 					}
 
-					if (_itemCalculation.Item.Sockets.Color3 != Item.ItemSlot.None)
+					if (_itemCalculation.Item.SocketColor3 != Item.ItemSlot.None)
 					{
-						switch (_itemCalculation.Item.Sockets.Color3)
+						switch (_itemCalculation.Item.SocketColor3)
 						{
 							case Item.ItemSlot.Meta:
 								g.FillRectangle(BrushMeta, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
@@ -316,8 +337,8 @@ namespace Rawr
 								g.FillRectangle(BrushBlue, new Rectangle(Math.Max(0, this.Width - 3 - (gemCount * 31)), 8, 26, 26));
 								break;
 						}
-						if (_itemCalculation.Item.Gem3 != null)
-							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.Item.Gem3, true),
+                        if (_itemCalculation.ItemInstance != null && _itemCalculation.ItemInstance.Gem3 != null)
+							g.DrawImage(ItemIcons.GetItemIcon(_itemCalculation.ItemInstance.Gem3, true),
 								new Rectangle(this.Width - 2 - (gemCount * 31), 9, 24, 24));
 						gemCount--;
 					}

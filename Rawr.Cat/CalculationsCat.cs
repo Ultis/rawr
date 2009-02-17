@@ -9,6 +9,68 @@ namespace Rawr.Cat
 	{
 		//my insides all turned to ash / so slow
 		//and blew away as i collapsed / so cold
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+		{
+			get
+			{
+				////Relevant Gem IDs for Ferals
+				//Red
+				int[] bold = { 39900, 39996, 40111, 42142 };
+				int[] delicate = { 39905, 39997, 40112, 42143 };
+
+				//Purple
+				int[] shifting = { 39935, 40023, 40130 };
+				int[] sovereign = { 39934, 40022, 40129 };
+
+				//Blue
+				int[] solid = { 39919, 40008, 40119, 36767 };
+
+				//Green
+				int[] enduring = { 39976, 40089, 40167 };
+
+				//Yellow
+				int[] thick = { 39916, 40015, 40126, 42157 };
+
+				//Orange
+				int[] etched = { 39948, 40038, 40143 };
+				int[] fierce = { 39951, 40041, 40146 };
+				int[] glinting = { 39953, 40044, 40148 };
+				int[] stalwart = { 39964, 40056, 40160 };
+
+				//Meta
+				int austere = 41380;
+				int relentless = 41398;
+
+				return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max Strength
+						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Str/Haste
+						RedId = bold[0], YellowId = fierce[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Str/Hit
+						RedId = bold[0], YellowId = etched[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Max Strength
+						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Str/Haste 
+						RedId = bold[1], YellowId = fierce[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Str/Hit
+						RedId = bold[1], YellowId = etched[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Max Strength
+						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Str/Haste 
+						RedId = bold[2], YellowId = fierce[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Str/Hit
+						RedId = bold[2], YellowId = etched[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Strength
+						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Strength Heavy
+						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = relentless },
+				};
+			}
+        }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -556,7 +618,7 @@ namespace Rawr.Cat
 					PhysicalCrit = 0.075f };
 
 			Stats statsItems = GetItemStats(character, additionalItem);
-			Stats statsEnchants = GetEnchantsStats(character);
+			//Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 			float[] thickHideMultipliers = new float[] { 1f, 1.04f, 1.07f, 1.1f };
 			statsItems.Armor *= thickHideMultipliers[character.DruidTalents.ThickHide];
@@ -590,13 +652,13 @@ namespace Rawr.Cat
 				BonusRipDuration = (character.CalculationOptions as CalculationOptionsCat).GlyphOfRip ? 4f : 0f,
 			};
 
-			Stats statsGearEnchantsBuffs = statsItems + statsEnchants + statsBuffs;
+			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
 
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			
-			Stats statsTotal = statsRace + statsItems + statsEnchants + statsBuffs + statsTalents;
+			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             // Inserted by Trolando
             if (statsTotal.GreatnessProc > 0)
@@ -619,7 +681,7 @@ namespace Rawr.Cat
 			statsWeapon.AttackPower += statsWeapon.Strength * 2f;
 			if (character.MainHand != null)
 			{
-				float fap = (character.MainHand.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
+				float fap = (character.MainHand.Item.DPS - 54.8f) * 14f; //TODO Find a more accurate number for this?
 				statsTotal.AttackPower += fap;
 				statsWeapon.AttackPower += fap;
 			}
@@ -1138,6 +1200,13 @@ namespace Rawr.Cat
 			get { return _item; }
 			set { _item = value; }
 		}
+
+        private ItemInstance _itemInstance = null;
+        public override ItemInstance ItemInstance
+        {
+            get { return _itemInstance; }
+            set { _itemInstance = value; }
+        }
 
 		private bool _equipped = false;
 		public override bool Equipped

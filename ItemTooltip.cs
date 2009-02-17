@@ -67,6 +67,31 @@ namespace Rawr
             resetItem = true;
         }
 
+        private ItemInstance _currentItemInstance = null;
+
+        private ItemInstance CurrentItemInstance
+        {
+            get { return _currentItemInstance; }
+            set
+            {
+                if (resetItem)
+                {
+                    _currentItemInstance = null;
+                    resetItem = false;
+                }
+                if (_currentItemInstance != value)
+                {
+                    _currentItemInstance = value;
+                    _currentItem = _currentItemInstance.Item;
+                    if (_cachedToolTipImage != null)
+                    {
+                        _cachedToolTipImage.Dispose();
+                        _cachedToolTipImage = null;
+                    }
+                }
+            }
+        }
+
         private Item _currentItem = null;
 
         private Item CurrentItem
@@ -82,6 +107,7 @@ namespace Rawr
                 if (_currentItem != value)
                 {
                     _currentItem = value;
+                    _currentItemInstance = null;
                     if (_cachedToolTipImage != null)
                     {
                         _cachedToolTipImage.Dispose();
@@ -92,7 +118,6 @@ namespace Rawr
         }
 
         private Character CurrentItemCharacter { get; set; }
-        private Enchant CurrentItemEnchant { get; set; }
 
         private Font _fontName = null;
         private Font _fontStats = null;
@@ -126,9 +151,13 @@ namespace Rawr
                     {
                         if (_currentItem != null)
                         {
-                            bool hasSockets = _currentItem.Sockets.Color1 != Item.ItemSlot.None ||
-                                              _currentItem.Sockets.Color2 != Item.ItemSlot.None ||
-                                              _currentItem.Sockets.Color3 != Item.ItemSlot.None;
+                            bool hasSockets = _currentItem.SocketColor1 != Item.ItemSlot.None ||
+                                              _currentItem.SocketColor2 != Item.ItemSlot.None ||
+                                              _currentItem.SocketColor3 != Item.ItemSlot.None;
+                            if (_currentItemInstance != null && (_currentItemInstance.Gem1 != null || _currentItemInstance.Gem2 != null || _currentItemInstance.Gem3 != null))
+                            {
+                                hasSockets = true;
+                            }
 
                             var positiveStats = Calculations.GetRelevantStats(_currentItem.Stats).Values(x => x > 0);
 
@@ -214,7 +243,7 @@ namespace Rawr
                             }
 
                             int enchantSize = 0;
-                            if (CurrentItemEnchant != null)
+                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
                             {
                                 enchantSize = 17;
                             }
@@ -232,7 +261,7 @@ namespace Rawr
                             {
                                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
                                 {
-                                    if (CurrentItemCharacter[slot] != null && CurrentItemCharacter[slot].GemmedId != _currentItem.GemmedId) numTinyItems++;
+                                    if (CurrentItemCharacter[slot] != null && CurrentItemCharacter[slot].GemmedId != _currentItemInstance.GemmedId) numTinyItems++;
                                 }
                             }
 
@@ -326,9 +355,13 @@ namespace Rawr
                                 for (int i = 0; i < 3; i++)
                                 {
                                     Item.ItemSlot slotColor = (i == 0
-                                                                   ? _currentItem.Sockets.Color1
+                                                                   ? _currentItem.SocketColor1
                                                                    :
-                                                               (i == 1 ? _currentItem.Sockets.Color2 : _currentItem.Sockets.Color3));
+                                                               (i == 1 ? _currentItem.SocketColor2 : _currentItem.SocketColor3));
+                                    if (slotColor == Item.ItemSlot.None && _currentItemInstance != null && _currentItemInstance.GetGem(i + 1) != null)
+                                    {
+                                        slotColor = Item.ItemSlot.Prismatic;
+                                    }
                                     if (slotColor != Item.ItemSlot.None)
                                     {
                                         Rectangle rectGemBorder = new Rectangle(3 + (103 * (i)), 25 + statHeight, 35, 35);
@@ -336,20 +369,23 @@ namespace Rawr
                                         switch (slotColor)
                                         {
                                             case Item.ItemSlot.Red:
-                                                brushGemBorder = new SolidBrush(Color.Red);
+                                                brushGemBorder = Brushes.Red;
                                                 break;
                                             case Item.ItemSlot.Yellow:
-                                                brushGemBorder = new SolidBrush(Color.Yellow);
+                                                brushGemBorder = Brushes.Yellow;
                                                 break;
                                             case Item.ItemSlot.Blue:
-                                                brushGemBorder = new SolidBrush(Color.Blue);
+                                                brushGemBorder = Brushes.Blue;
+                                                break;
+                                            case Item.ItemSlot.Prismatic:
+                                                brushGemBorder = Brushes.Silver;
                                                 break;
                                         }
                                         g.FillRectangle(brushGemBorder, rectGemBorder);
-                                        brushGemBorder.Dispose();
                                         brushGemBorder = null;
 
-                                        Item gem = (i == 0 ? _currentItem.Gem1 : (i == 1 ? _currentItem.Gem2 : _currentItem.Gem3));
+                                        Item gem = null;
+                                        if (_currentItemInstance != null) gem = (i == 0 ? _currentItemInstance.Gem1 : (i == 1 ? _currentItemInstance.Gem2 : _currentItemInstance.Gem3));
                                         if (gem != null)
                                         {
                                             Image icon = ItemIcons.GetItemIcon(gem, true);
@@ -361,7 +397,7 @@ namespace Rawr
                                             }
 
                                             Character characterWithItemEquipped = Character.Clone();
-                                            characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItem;
+                                            characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItemInstance;
                                             bool active = gem.MeetsRequirements(characterWithItemEquipped);
 
                                             string[] stats = gem.Stats.ToString().Split(',');
@@ -401,16 +437,16 @@ namespace Rawr
                                 }
 
                                 Brush brushBonus = SystemBrushes.InfoText;
-                                if (!Item.GemMatchesSlot(_currentItem.Gem1, _currentItem.Sockets.Color1) ||
-                                    !Item.GemMatchesSlot(_currentItem.Gem2, _currentItem.Sockets.Color2) ||
-                                    !Item.GemMatchesSlot(_currentItem.Gem3, _currentItem.Sockets.Color3))
+                                if (_currentItemInstance == null || !Item.GemMatchesSlot(_currentItemInstance.Gem1, _currentItem.SocketColor1) ||
+                                    !Item.GemMatchesSlot(_currentItemInstance.Gem2, _currentItem.SocketColor2) ||
+                                    !Item.GemMatchesSlot(_currentItemInstance.Gem3, _currentItem.SocketColor3))
                                     brushBonus = SystemBrushes.GrayText;
 
                                 g.DrawString(
                                     "Socket Bonus: " +
-                                    (CurrentItem.Sockets.Stats.ToString().Length == 0
+                                    (CurrentItem.SocketBonus.ToString().Length == 0
                                          ? "None"
-                                         : CurrentItem.Sockets.Stats.ToString()),
+                                         : CurrentItem.SocketBonus.ToString()),
                                     _fontStats, brushBonus, 2, 63 + statHeight);
 
                                 // update cursor position (the magic number 63 comes from right above)
@@ -452,9 +488,9 @@ namespace Rawr
                             xPos = 2;                           
                             //yPos = (hasSockets ? 76 : 18) + statHeight + 4 + (int)locationSize.Height + extraLocation + 2;
 
-                            if (CurrentItemEnchant != null)
+                            if (CurrentItemInstance != null && CurrentItemInstance.Enchant != null)
                             {
-                                g.DrawString(CurrentItemEnchant.ToString(), _fontStats, SystemBrushes.InfoText, xPos, yPos + 1);
+                                g.DrawString(CurrentItemInstance.Enchant.ToString(), _fontStats, SystemBrushes.InfoText, xPos, yPos + 1);
                                 yPos += enchantSize;
                             }
 
@@ -462,10 +498,10 @@ namespace Rawr
                             {
                                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
                                 {
-                                    Item tinyItem = CurrentItemCharacter[slot];
-                                    if (tinyItem != null && tinyItem.GemmedId != _currentItem.GemmedId)
+                                    ItemInstance tinyItem = CurrentItemCharacter[slot];
+                                    if (tinyItem != null && tinyItem.GemmedId != _currentItemInstance.GemmedId)
                                     {
-                                        Image icon = ItemIcons.GetItemIcon(tinyItem, true);
+                                        Image icon = ItemIcons.GetItemIcon(tinyItem.Item, true);
                                         if (icon != null)
                                         {
                                             g.DrawImage(icon, xPos + 1, yPos + 1, 16, 16);
@@ -491,7 +527,7 @@ namespace Rawr
 
                                         { // hide the name brush scope to reduce bugs
                                             Brush nameBrush = null;
-                                            switch (tinyItem.Quality)
+                                            switch (tinyItem.Item.Quality)
                                             {
                                                 case Item.ItemQuality.Common:
                                                 case Item.ItemQuality.Temp:
@@ -513,7 +549,7 @@ namespace Rawr
                                                     nameBrush = Brushes.Gray;
                                                     break;
                                             }
-                                            string label = tinyItem.Name;
+                                            string label = tinyItem.Item.Name;
                                             Enchant tinyEnchant = CurrentItemCharacter.GetEnchantBySlot(slot);
                                             if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
                                             g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
@@ -530,7 +566,7 @@ namespace Rawr
                 }
                 if (resetItem)
                 {
-                    CurrentItem = null;
+                    CurrentItemInstance = null;
                     resetItem = false;
                 }
                 return _cachedToolTipImage;
@@ -539,19 +575,34 @@ namespace Rawr
 
         public void Show(Item item, IWin32Window window, Point point)
         {
-            Show(item, null, null, window, point);
+            Show(item, null, window, point);
         }
 
-		public void Show(Item item, Character itemCharacter, Enchant itemEnchant, IWin32Window window, Point point)
+		public void Show(Item item, Character itemCharacter, IWin32Window window, Point point)
 		{
 			CurrentItem = item;
             CurrentItemCharacter = itemCharacter;
-            CurrentItemEnchant = itemEnchant;
             if (CachedToolTipImage != null && CurrentItem != null)
             {
                 base.Show(item.Name, window, point);
             }
 		}
+
+        public void Show(ItemInstance item, IWin32Window window, Point point)
+        {
+            Show(item, null, window, point);
+        }
+
+        public void Show(ItemInstance item, Character itemCharacter, IWin32Window window, Point point)
+        {
+            CurrentItemInstance = item;
+            CurrentItemCharacter = itemCharacter;
+            if (CachedToolTipImage != null && CurrentItemInstance != null)
+            {
+                base.Show(item.Item.Name, window, point);
+            }
+        }
+
 
         private void ItemToolTip_Popup(object sender, PopupEventArgs e)
         {

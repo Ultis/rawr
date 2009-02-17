@@ -27,88 +27,94 @@ namespace Rawr //O O . .
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
         [XmlIgnore]
-        private string[] _item = new string[24];
-        [XmlIgnore]
-        private Item[] _itemCached = new Item[24];
-        [XmlIgnore]
-        private int[] _itemEnchant = new int[21];
-        [XmlIgnore]
-        private Enchant[] _itemEnchantCached = new Enchant[21];
+        private ItemInstance[] _item = new ItemInstance[21];
+        private string GetGemmedId(CharacterSlot slot)
+        {
+            ItemInstance item = this[slot];
+            if (item == null) return null;
+            return item.GemmedId;
+        }
+        private void SetGemmedId(CharacterSlot slot, string gemmedId)
+        {
+            if (string.IsNullOrEmpty(gemmedId)) this[slot] = null;
+            else this[slot] = new ItemInstance(gemmedId);
+        }
         [XmlElement("Head")]
-        public string _head { get { return _item[(int)CharacterSlot.Head]; } set { _item[(int)CharacterSlot.Head] = value; } }
+        public string _head { get { return GetGemmedId(CharacterSlot.Head); } set { SetGemmedId(CharacterSlot.Head, value); } }
         [XmlElement("Neck")]
-        public string _neck { get { return _item[(int)CharacterSlot.Neck]; } set { _item[(int)CharacterSlot.Neck] = value; } }
+        public string _neck { get { return GetGemmedId(CharacterSlot.Neck); } set { SetGemmedId(CharacterSlot.Neck, value); } }
         [XmlElement("Shoulders")]
-        public string _shoulders { get { return _item[(int)CharacterSlot.Shoulders]; } set { _item[(int)CharacterSlot.Shoulders] = value; } }
+        public string _shoulders { get { return GetGemmedId(CharacterSlot.Shoulders); } set { SetGemmedId(CharacterSlot.Shoulders, value); } }
         [XmlElement("Back")]
-        public string _back { get { return _item[(int)CharacterSlot.Back]; } set { _item[(int)CharacterSlot.Back] = value; } }
+        public string _back { get { return GetGemmedId(CharacterSlot.Back); } set { SetGemmedId(CharacterSlot.Back, value); } }
         [XmlElement("Chest")]
-        public string _chest { get { return _item[(int)CharacterSlot.Chest]; } set { _item[(int)CharacterSlot.Chest] = value; } }
+        public string _chest { get { return GetGemmedId(CharacterSlot.Chest); } set { SetGemmedId(CharacterSlot.Chest, value); } }
         [XmlElement("Shirt")]
-        public string _shirt { get { return _item[(int)CharacterSlot.Shirt]; } set { _item[(int)CharacterSlot.Shirt] = value; } }
+        public string _shirt { get { return GetGemmedId(CharacterSlot.Shirt); } set { SetGemmedId(CharacterSlot.Shirt, value); } }
         [XmlElement("Tabard")]
-        public string _tabard { get { return _item[(int)CharacterSlot.Tabard]; } set { _item[(int)CharacterSlot.Tabard] = value; } }
+        public string _tabard { get { return GetGemmedId(CharacterSlot.Tabard); } set { SetGemmedId(CharacterSlot.Tabard, value); } }
         [XmlElement("Wrist")]
-        public string _wrist { get { return _item[(int)CharacterSlot.Wrist]; } set { _item[(int)CharacterSlot.Wrist] = value; } }
+        public string _wrist { get { return GetGemmedId(CharacterSlot.Wrist); } set { SetGemmedId(CharacterSlot.Wrist, value); } }
         [XmlElement("Hands")]
-        public string _hands { get { return _item[(int)CharacterSlot.Hands]; } set { _item[(int)CharacterSlot.Hands] = value; } }
+        public string _hands { get { return GetGemmedId(CharacterSlot.Hands); } set { SetGemmedId(CharacterSlot.Hands, value); } }
         [XmlElement("Waist")]
-        public string _waist { get { return _item[(int)CharacterSlot.Waist]; } set { _item[(int)CharacterSlot.Waist] = value; } }
+        public string _waist { get { return GetGemmedId(CharacterSlot.Waist); } set { SetGemmedId(CharacterSlot.Waist, value); } }
         [XmlElement("Legs")]
-        public string _legs { get { return _item[(int)CharacterSlot.Legs]; } set { _item[(int)CharacterSlot.Legs] = value; } }
+        public string _legs { get { return GetGemmedId(CharacterSlot.Legs); } set { SetGemmedId(CharacterSlot.Legs, value); } }
         [XmlElement("Feet")]
-        public string _feet { get { return _item[(int)CharacterSlot.Feet]; } set { _item[(int)CharacterSlot.Feet] = value; } }
+        public string _feet { get { return GetGemmedId(CharacterSlot.Feet); } set { SetGemmedId(CharacterSlot.Feet, value); } }
         [XmlElement("Finger1")]
-        public string _finger1 { get { return _item[(int)CharacterSlot.Finger1]; } set { _item[(int)CharacterSlot.Finger1] = value; } }
+        public string _finger1 { get { return GetGemmedId(CharacterSlot.Finger1); } set { SetGemmedId(CharacterSlot.Finger1, value); } }
         [XmlElement("Finger2")]
-        public string _finger2 { get { return _item[(int)CharacterSlot.Finger2]; } set { _item[(int)CharacterSlot.Finger2] = value; } }
+        public string _finger2 { get { return GetGemmedId(CharacterSlot.Finger2); } set { SetGemmedId(CharacterSlot.Finger2, value); } }
         [XmlElement("Trinket1")]
-        public string _trinket1 { get { return _item[(int)CharacterSlot.Trinket1]; } set { _item[(int)CharacterSlot.Trinket1] = value; } }
+        public string _trinket1 { get { return GetGemmedId(CharacterSlot.Trinket1); } set { SetGemmedId(CharacterSlot.Trinket1, value); } }
         [XmlElement("Trinket2")]
-        public string _trinket2 { get { return _item[(int)CharacterSlot.Trinket2]; } set { _item[(int)CharacterSlot.Trinket2] = value; } }
+        public string _trinket2 { get { return GetGemmedId(CharacterSlot.Trinket2); } set { SetGemmedId(CharacterSlot.Trinket2, value); } }
 		[XmlElement("MainHand")]
-        public string _mainHand { get { return _item[(int)CharacterSlot.MainHand]; } set { _item[(int)CharacterSlot.MainHand] = value; } }
+        public string _mainHand { get { return GetGemmedId(CharacterSlot.MainHand); } set { SetGemmedId(CharacterSlot.MainHand, value); } }
 		[XmlElement("OffHand")]
-        public string _offHand { get { return _item[(int)CharacterSlot.OffHand]; } set { _item[(int)CharacterSlot.OffHand] = value; } }
+        public string _offHand { get { return GetGemmedId(CharacterSlot.OffHand); } set { SetGemmedId(CharacterSlot.OffHand, value); } }
 		[XmlElement("Ranged")]
-        public string _ranged { get { return _item[(int)CharacterSlot.Ranged]; } set { _item[(int)CharacterSlot.Ranged] = value; } }
+        public string _ranged { get { return GetGemmedId(CharacterSlot.Ranged); } set { SetGemmedId(CharacterSlot.Ranged, value); } }
 		[XmlElement("Projectile")]
-        public string _projectile { get { return _item[(int)CharacterSlot.Projectile]; } set { _item[(int)CharacterSlot.Projectile] = value; } }
+        public string _projectile { get { return GetGemmedId(CharacterSlot.Projectile); } set { SetGemmedId(CharacterSlot.Projectile, value); } }
 		[XmlElement("ProjectileBag")]
-        public string _projectileBag { get { return _item[(int)CharacterSlot.ProjectileBag]; } set { _item[(int)CharacterSlot.ProjectileBag] = value; } }
-		[XmlElement("ExtraWristSocket")]
-		public string _extraWristSocket { get { return _item[(int)CharacterSlot.ExtraWristSocket]; } set { _item[(int)CharacterSlot.ExtraWristSocket] = value; } }
-		[XmlElement("ExtraHandsSocket")]
-		public string _extraHandsSocket { get { return _item[(int)CharacterSlot.ExtraHandsSocket]; } set { _item[(int)CharacterSlot.ExtraHandsSocket] = value; } }
-		[XmlElement("ExtraWaistSocket")]
-		public string _extraWaistSocket { get { return _item[(int)CharacterSlot.ExtraWaistSocket]; } set { _item[(int)CharacterSlot.ExtraWaistSocket] = value; } }
-		[XmlElement("HeadEnchant")]
-        public int _headEnchant { get { return _itemEnchant[(int)CharacterSlot.Head]; } set { _itemEnchant[(int)CharacterSlot.Head] = value; } }
-		[XmlElement("ShouldersEnchant")]
-        public int _shouldersEnchant { get { return _itemEnchant[(int)CharacterSlot.Shoulders]; } set { _itemEnchant[(int)CharacterSlot.Shoulders] = value; } }
-		[XmlElement("BackEnchant")]
-        public int _backEnchant { get { return _itemEnchant[(int)CharacterSlot.Back]; } set { _itemEnchant[(int)CharacterSlot.Back] = value; } }
-		[XmlElement("ChestEnchant")]
-        public int _chestEnchant { get { return _itemEnchant[(int)CharacterSlot.Chest]; } set { _itemEnchant[(int)CharacterSlot.Chest] = value; } }
-		[XmlElement("WristEnchant")]
-        public int _wristEnchant { get { return _itemEnchant[(int)CharacterSlot.Wrist]; } set { _itemEnchant[(int)CharacterSlot.Wrist] = value; } }
-		[XmlElement("HandsEnchant")]
-        public int _handsEnchant { get { return _itemEnchant[(int)CharacterSlot.Hands]; } set { _itemEnchant[(int)CharacterSlot.Hands] = value; } }
-		[XmlElement("LegsEnchant")]
-        public int _legsEnchant { get { return _itemEnchant[(int)CharacterSlot.Legs]; } set { _itemEnchant[(int)CharacterSlot.Legs] = value; } }
-		[XmlElement("FeetEnchant")]
-        public int _feetEnchant { get { return _itemEnchant[(int)CharacterSlot.Feet]; } set { _itemEnchant[(int)CharacterSlot.Feet] = value; } }
-		[XmlElement("Finger1Enchant")]
-        public int _finger1Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger1]; } set { _itemEnchant[(int)CharacterSlot.Finger1] = value; } }
-		[XmlElement("Finger2Enchant")]
-        public int _finger2Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger2]; } set { _itemEnchant[(int)CharacterSlot.Finger2] = value; } }
-		[XmlElement("MainHandEnchant")]
-        public int _mainHandEnchant { get { return _itemEnchant[(int)CharacterSlot.MainHand]; } set { _itemEnchant[(int)CharacterSlot.MainHand] = value; } }
-		[XmlElement("OffHandEnchant")]
-        public int _offHandEnchant { get { return _itemEnchant[(int)CharacterSlot.OffHand]; } set { _itemEnchant[(int)CharacterSlot.OffHand] = value; } }
-		[XmlElement("RangedEnchant")]
-        public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
-		[XmlElement("CalculationOptions")]
+        public string _projectileBag { get { return GetGemmedId(CharacterSlot.ProjectileBag); } set { SetGemmedId(CharacterSlot.ProjectileBag, value); } }
+        // fix this to translate into new format if we want to preserve backward compatibility for character files
+        //[XmlElement("ExtraWristSocket")]
+        //public string _extraWristSocket { get { return _item[(int)CharacterSlot.ExtraWristSocket]; } set { _item[(int)CharacterSlot.ExtraWristSocket] = value; } }
+        //[XmlElement("ExtraHandsSocket")]
+        //public string _extraHandsSocket { get { return _item[(int)CharacterSlot.ExtraHandsSocket]; } set { _item[(int)CharacterSlot.ExtraHandsSocket] = value; } }
+        //[XmlElement("ExtraWaistSocket")]
+        //public string _extraWaistSocket { get { return _item[(int)CharacterSlot.ExtraWaistSocket]; } set { _item[(int)CharacterSlot.ExtraWaistSocket] = value; } }
+        //[XmlElement("HeadEnchant")]
+        //public int _headEnchant { get { return _itemEnchant[(int)CharacterSlot.Head]; } set { _itemEnchant[(int)CharacterSlot.Head] = value; } }
+        //[XmlElement("ShouldersEnchant")]
+        //public int _shouldersEnchant { get { return _itemEnchant[(int)CharacterSlot.Shoulders]; } set { _itemEnchant[(int)CharacterSlot.Shoulders] = value; } }
+        //[XmlElement("BackEnchant")]
+        //public int _backEnchant { get { return _itemEnchant[(int)CharacterSlot.Back]; } set { _itemEnchant[(int)CharacterSlot.Back] = value; } }
+        //[XmlElement("ChestEnchant")]
+        //public int _chestEnchant { get { return _itemEnchant[(int)CharacterSlot.Chest]; } set { _itemEnchant[(int)CharacterSlot.Chest] = value; } }
+        //[XmlElement("WristEnchant")]
+        //public int _wristEnchant { get { return _itemEnchant[(int)CharacterSlot.Wrist]; } set { _itemEnchant[(int)CharacterSlot.Wrist] = value; } }
+        //[XmlElement("HandsEnchant")]
+        //public int _handsEnchant { get { return _itemEnchant[(int)CharacterSlot.Hands]; } set { _itemEnchant[(int)CharacterSlot.Hands] = value; } }
+        //[XmlElement("LegsEnchant")]
+        //public int _legsEnchant { get { return _itemEnchant[(int)CharacterSlot.Legs]; } set { _itemEnchant[(int)CharacterSlot.Legs] = value; } }
+        //[XmlElement("FeetEnchant")]
+        //public int _feetEnchant { get { return _itemEnchant[(int)CharacterSlot.Feet]; } set { _itemEnchant[(int)CharacterSlot.Feet] = value; } }
+        //[XmlElement("Finger1Enchant")]
+        //public int _finger1Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger1]; } set { _itemEnchant[(int)CharacterSlot.Finger1] = value; } }
+        //[XmlElement("Finger2Enchant")]
+        //public int _finger2Enchant { get { return _itemEnchant[(int)CharacterSlot.Finger2]; } set { _itemEnchant[(int)CharacterSlot.Finger2] = value; } }
+        //[XmlElement("MainHandEnchant")]
+        //public int _mainHandEnchant { get { return _itemEnchant[(int)CharacterSlot.MainHand]; } set { _itemEnchant[(int)CharacterSlot.MainHand] = value; } }
+        //[XmlElement("OffHandEnchant")]
+        //public int _offHandEnchant { get { return _itemEnchant[(int)CharacterSlot.OffHand]; } set { _itemEnchant[(int)CharacterSlot.OffHand] = value; } }
+        //[XmlElement("RangedEnchant")]
+        //public int _rangedEnchant { get { return _itemEnchant[(int)CharacterSlot.Ranged]; } set { _itemEnchant[(int)CharacterSlot.Ranged] = value; } }
+        [XmlElement("CalculationOptions")]
 		public SerializableDictionary<string, string> _serializedCalculationOptions = new SerializableDictionary<string, string>();
         //[XmlElement("Talents")]
         //public TalentTree _talents = new TalentTree();
@@ -303,54 +309,55 @@ namespace Rawr //O O . .
 
 
         [XmlIgnore]
-        public Item Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
+        public ItemInstance Head { get { return this[CharacterSlot.Head]; } set { this[CharacterSlot.Head] = value; } }
 		[XmlIgnore]
-        public Item Neck { get { return this[CharacterSlot.Neck]; } set { this[CharacterSlot.Neck] = value; } }
+        public ItemInstance Neck { get { return this[CharacterSlot.Neck]; } set { this[CharacterSlot.Neck] = value; } }
 		[XmlIgnore]
-        public Item Shoulders { get { return this[CharacterSlot.Shoulders]; } set { this[CharacterSlot.Shoulders] = value; } }
+        public ItemInstance Shoulders { get { return this[CharacterSlot.Shoulders]; } set { this[CharacterSlot.Shoulders] = value; } }
 		[XmlIgnore]
-        public Item Back { get { return this[CharacterSlot.Back]; } set { this[CharacterSlot.Back] = value; } }
+        public ItemInstance Back { get { return this[CharacterSlot.Back]; } set { this[CharacterSlot.Back] = value; } }
 		[XmlIgnore]
-        public Item Chest { get { return this[CharacterSlot.Chest]; } set { this[CharacterSlot.Chest] = value; } }
+        public ItemInstance Chest { get { return this[CharacterSlot.Chest]; } set { this[CharacterSlot.Chest] = value; } }
 		[XmlIgnore]
-        public Item Shirt { get { return this[CharacterSlot.Shirt]; } set { this[CharacterSlot.Shirt] = value; } }
+        public ItemInstance Shirt { get { return this[CharacterSlot.Shirt]; } set { this[CharacterSlot.Shirt] = value; } }
 		[XmlIgnore]
-        public Item Tabard { get { return this[CharacterSlot.Tabard]; } set { this[CharacterSlot.Tabard] = value; } }
+        public ItemInstance Tabard { get { return this[CharacterSlot.Tabard]; } set { this[CharacterSlot.Tabard] = value; } }
 		[XmlIgnore]
-        public Item Wrist { get { return this[CharacterSlot.Wrist]; } set { this[CharacterSlot.Wrist] = value; } }
+        public ItemInstance Wrist { get { return this[CharacterSlot.Wrist]; } set { this[CharacterSlot.Wrist] = value; } }
 		[XmlIgnore]
-        public Item Hands { get { return this[CharacterSlot.Hands]; } set { this[CharacterSlot.Hands] = value; } }
+        public ItemInstance Hands { get { return this[CharacterSlot.Hands]; } set { this[CharacterSlot.Hands] = value; } }
 		[XmlIgnore]
-        public Item Waist { get { return this[CharacterSlot.Waist]; } set { this[CharacterSlot.Waist] = value; } }
+        public ItemInstance Waist { get { return this[CharacterSlot.Waist]; } set { this[CharacterSlot.Waist] = value; } }
 		[XmlIgnore]
-        public Item Legs { get { return this[CharacterSlot.Legs]; } set { this[CharacterSlot.Legs] = value; } }
+        public ItemInstance Legs { get { return this[CharacterSlot.Legs]; } set { this[CharacterSlot.Legs] = value; } }
 		[XmlIgnore]
-        public Item Feet { get { return this[CharacterSlot.Feet]; } set { this[CharacterSlot.Feet] = value; } }
+        public ItemInstance Feet { get { return this[CharacterSlot.Feet]; } set { this[CharacterSlot.Feet] = value; } }
 		[XmlIgnore]
-        public Item Finger1 { get { return this[CharacterSlot.Finger1]; } set { this[CharacterSlot.Finger1] = value; } }
+        public ItemInstance Finger1 { get { return this[CharacterSlot.Finger1]; } set { this[CharacterSlot.Finger1] = value; } }
 		[XmlIgnore]
-        public Item Finger2 { get { return this[CharacterSlot.Finger2]; } set { this[CharacterSlot.Finger2] = value; } }
+        public ItemInstance Finger2 { get { return this[CharacterSlot.Finger2]; } set { this[CharacterSlot.Finger2] = value; } }
 		[XmlIgnore]
-        public Item Trinket1 { get { return this[CharacterSlot.Trinket1]; } set { this[CharacterSlot.Trinket1] = value; } }
+        public ItemInstance Trinket1 { get { return this[CharacterSlot.Trinket1]; } set { this[CharacterSlot.Trinket1] = value; } }
 		[XmlIgnore]
-        public Item Trinket2 { get { return this[CharacterSlot.Trinket2]; } set { this[CharacterSlot.Trinket2] = value; } }
+        public ItemInstance Trinket2 { get { return this[CharacterSlot.Trinket2]; } set { this[CharacterSlot.Trinket2] = value; } }
 		[XmlIgnore]
-        public Item MainHand { get { return this[CharacterSlot.MainHand]; } set { this[CharacterSlot.MainHand] = value; } }
+        public ItemInstance MainHand { get { return this[CharacterSlot.MainHand]; } set { this[CharacterSlot.MainHand] = value; } }
 		[XmlIgnore]
-		public Item OffHand { get { return this[CharacterSlot.OffHand]; } set { this[CharacterSlot.OffHand] = value; } }
+        public ItemInstance OffHand { get { return this[CharacterSlot.OffHand]; } set { this[CharacterSlot.OffHand] = value; } }
 		[XmlIgnore]
-        public Item Ranged { get { return this[CharacterSlot.Ranged]; } set { this[CharacterSlot.Ranged] = value; } }
+        public ItemInstance Ranged { get { return this[CharacterSlot.Ranged]; } set { this[CharacterSlot.Ranged] = value; } }
 		[XmlIgnore]
-		public Item Projectile { get { return this[CharacterSlot.Projectile]; } set { this[CharacterSlot.Projectile] = value; } }
+        public ItemInstance Projectile { get { return this[CharacterSlot.Projectile]; } set { this[CharacterSlot.Projectile] = value; } }
 		[XmlIgnore]
-		public Item ProjectileBag { get { return this[CharacterSlot.ProjectileBag]; } set { this[CharacterSlot.ProjectileBag] = value; } }
-		[XmlIgnore]
-		public Item ExtraWristSocket { get { return this[CharacterSlot.ExtraWristSocket]; } set { this[CharacterSlot.ExtraWristSocket] = value; } }
-		[XmlIgnore]
-		public Item ExtraHandsSocket { get { return this[CharacterSlot.ExtraHandsSocket]; } set { this[CharacterSlot.ExtraHandsSocket] = value; } }
-		[XmlIgnore]
-		public Item ExtraWaistSocket { get { return this[CharacterSlot.ExtraWaistSocket]; } set { this[CharacterSlot.ExtraWaistSocket] = value; } }
+        public ItemInstance ProjectileBag { get { return this[CharacterSlot.ProjectileBag]; } set { this[CharacterSlot.ProjectileBag] = value; } }
+        //[XmlIgnore]
+        //public Item ExtraWristSocket { get { return this[CharacterSlot.ExtraWristSocket]; } set { this[CharacterSlot.ExtraWristSocket] = value; } }
+        //[XmlIgnore]
+        //public Item ExtraHandsSocket { get { return this[CharacterSlot.ExtraHandsSocket]; } set { this[CharacterSlot.ExtraHandsSocket] = value; } }
+        //[XmlIgnore]
+        //public Item ExtraWaistSocket { get { return this[CharacterSlot.ExtraWaistSocket]; } set { this[CharacterSlot.ExtraWaistSocket] = value; } }
 
+        // leave in for now to reduce rebinding needed
         [XmlIgnore]
 		public Enchant HeadEnchant { get { return GetEnchantBySlot(CharacterSlot.Head); } set { SetEnchantBySlot(CharacterSlot.Head, value); } }
         [XmlIgnore]
@@ -445,6 +452,99 @@ namespace Rawr //O O . .
         [XmlIgnore]
         public bool DisableBuffAutoActivation { get; set; }
 
+        public void InvalidateItemInstances()
+        {
+            _relevantItemInstances = new Dictionary<Character.CharacterSlot, List<ItemInstance>>();
+        }
+
+        public void InvalidateItemInstances(Character.CharacterSlot slot)
+        {
+            _relevantItemInstances.Remove(slot);
+        }
+
+        [XmlIgnore]
+        private List<ItemInstance> _customItemInstances = new List<ItemInstance>();
+
+        public List<ItemInstance> CustomItemInstances
+        {
+            get
+            {
+                return _customItemInstances;
+            }
+            set
+            {
+                _customItemInstances = value;
+                InvalidateItemInstances();
+            }
+        }
+
+        public bool WaistBlacksmithingSocketEnabled { get; set; }
+        public bool HandsBlacksmithingSocketEnabled { get; set; }
+        public bool WristBlacksmithingSocketEnabled { get; set; }
+
+        [XmlIgnore]
+        private Dictionary<Character.CharacterSlot, List<ItemInstance>> _relevantItemInstances = new Dictionary<Character.CharacterSlot, List<ItemInstance>>();
+
+        [XmlIgnore]
+        private Dictionary<Character.CharacterSlot, List<Item>> _relevantItems = new Dictionary<Character.CharacterSlot, List<Item>>();
+
+        public List<ItemInstance> GetRelevantItemInstances(Character.CharacterSlot slot)
+        {
+            bool blacksmithingSocket = false;
+            if ((slot == CharacterSlot.Waist && WaistBlacksmithingSocketEnabled) || (slot == CharacterSlot.Hands && HandsBlacksmithingSocketEnabled) || (slot == CharacterSlot.Wrist && WristBlacksmithingSocketEnabled))
+            {
+                blacksmithingSocket = true;
+            }
+            List<ItemInstance> items;
+            if (!_relevantItemInstances.TryGetValue(slot, out items))
+            {
+                items = new List<ItemInstance>();
+                foreach (Item item in ItemCache.RelevantItems)
+                {
+                    if (item.FitsInSlot(slot, this))
+                    {
+                        List<ItemInstance> itemInstances = new List<ItemInstance>();
+                        foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
+                        {
+							if (template.Enabled)
+							{
+								ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+								if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+							}
+                        }
+                        items.AddRange(itemInstances);
+                    }
+                }
+                foreach (ItemInstance item in CustomItemInstances)
+                {
+                    if (item.Item.FitsInSlot(slot, this))
+                    {
+                        if (!items.Contains(item)) items.Add(item);
+                    }
+                }
+                _relevantItemInstances[slot] = items;
+            }
+            return items;
+        }
+
+        public List<Item> GetRelevantItems(Character.CharacterSlot slot)
+        {
+            List<Item> items;
+            if (!_relevantItems.TryGetValue(slot, out items))
+            {
+                items = new List<Item>();
+                foreach (Item item in ItemCache.RelevantItems)
+                {
+                    if (item.FitsInSlot(slot, this))
+                    {
+                        items.Add(item);
+                    }
+                }
+                _relevantItems[slot] = items;
+            }
+            return items;
+        }
+
         public void AssignAllTalentsFromCharacter(Character character)
         {
             WarriorTalents = character.WarriorTalents.Clone();
@@ -480,15 +580,8 @@ namespace Rawr //O O . .
             }
 		}
 
-        public Item[] GetAvailableItems()
-        {
-            foreach (string gemmedid in _availableItems)
-            {
-            }
-            return null;
-        }    
 
-        public bool IsEquipped(Item itemToBeChecked)
+        public bool IsEquipped(ItemInstance itemToBeChecked)
         {
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
             if (slot == CharacterSlot.Finger1)
@@ -500,7 +593,7 @@ namespace Rawr //O O . .
 			else
 				return IsEquipped(itemToBeChecked, slot);
         }
-        public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
+        public bool IsEquipped(ItemInstance itemToBeChecked, CharacterSlot slot)
         { 
 			return itemToBeChecked != null && this[slot] != null && itemToBeChecked.GemmedId == this[slot].GemmedId;
         }
@@ -543,16 +636,26 @@ namespace Rawr //O O . .
                 default: return Character.CharacterSlot.None;
             }
         }
+
         public ItemAvailability GetItemAvailability(Item item)
         {
-            string id = item.Id.ToString();
+            return GetItemAvailability(item.Id.ToString(), item.Id.ToString(), item.Id.ToString());
+        }
+
+        public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
+        {
+            return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}.{2}.{3}", itemInstance.Id, itemInstance.Gem1Id, itemInstance.Gem2Id, itemInstance.Gem3Id), itemInstance.GemmedId);
+        }
+
+        private ItemAvailability GetItemAvailability(string id, string gemId, string fullId)
+        {
             string anyGem = id + ".*.*.*";
             List<string> list = _availableItems.FindAll(x => x.StartsWith(id));
-            if (list.Contains(item.GemmedId + ".*"))
+            if (list.Contains(gemId + ".*"))
             {
                 return ItemAvailability.Available;
             }
-            else if (list.FindIndex(x => x.StartsWith(item.GemmedId)) >= 0)
+            else if (list.FindIndex(x => x.StartsWith(gemId)) >= 0)
             {
                 return ItemAvailability.AvailableWithEnchantRestrictions;
             }
@@ -588,60 +691,83 @@ namespace Rawr //O O . .
                     _availableItems.Add(id);
                 }
             }
-            else
+            OnAvailableItemsChanged();
+        }
+
+        public void ToggleItemAvailability(ItemInstance item, bool regemmingAllowed)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+
+            if (id.StartsWith("-") || regemmingAllowed)
             {
-                // enabled toggle
-                if (_availableItems.FindIndex(x => x.StartsWith(item.GemmedId)) >= 0)
+                // all enabled toggle
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem)) >= 0)
                 {
-                    _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                    _availableItems.Remove(id);
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem));
                 }
                 else
                 {
-                    _availableItems.Add(item.GemmedId + ".*");
+                    _availableItems.Add(id);
+                }
+            }
+            else
+            {
+                // enabled toggle
+                if (_availableItems.FindIndex(x => x.StartsWith(gemId)) >= 0)
+                {
+                    _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                }
+                else
+                {
+                    _availableItems.Add(gemId + ".*");
                 }
             }
             OnAvailableItemsChanged();
         }
 
-        public void ToggleAvailableItemEnchantRestriction(Item item, Enchant enchant)
+        public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
         {
             string id = item.Id.ToString();
             string anyGem = id + ".*.*.*";
+            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
             ItemAvailability availability = GetItemAvailability(item);
             switch (availability)
             {
                 case ItemAvailability.Available:
                     if (enchant != null)
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
-                        _availableItems.Add(item.GemmedId + "." + enchant.Id.ToString());
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                        _availableItems.Add(gemId + "." + enchant.Id.ToString());
                     }
                     else
                     {
                         // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
                         foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
                         {
-                            _availableItems.Add(item.GemmedId + "." + e.Id.ToString());
+                            _availableItems.Add(gemId + "." + e.Id.ToString());
                         }
                     }
                     break;
                 case ItemAvailability.AvailableWithEnchantRestrictions:
                     if (enchant != null)
                     {
-                        if (_availableItems.Contains(item.GemmedId + "." + enchant.Id.ToString()))
+                        if (_availableItems.Contains(gemId + "." + enchant.Id.ToString()))
                         {
-                            _availableItems.Remove(item.GemmedId + "." + enchant.Id.ToString());
+                            _availableItems.Remove(gemId + "." + enchant.Id.ToString());
                         }
                         else
                         {
-                            _availableItems.Add(item.GemmedId + "." + enchant.Id.ToString());
+                            _availableItems.Add(gemId + "." + enchant.Id.ToString());
                         }
                     }
                     else
                     {
-                        _availableItems.RemoveAll(x => x.StartsWith(item.GemmedId));
-                        _availableItems.Add(item.GemmedId + ".*");
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId));
+                        _availableItems.Add(gemId + ".*");
                     }
                     break;
                 case ItemAvailability.RegemmingAllowed:
@@ -736,14 +862,9 @@ namespace Rawr //O O . .
         //private static Item.ItemSlot[] characterSlot2ItemSlot = new Item.ItemSlot[] { Item.ItemSlot.Projectile, Item.ItemSlot.Head, Item.ItemSlot.Neck, Item.ItemSlot.Shoulders, Item.ItemSlot.Chest, Item.ItemSlot.Waist, Item.ItemSlot.Legs, Item.ItemSlot.Feet, Item.ItemSlot.Wrist, Item.ItemSlot.Hands, Item.ItemSlot.Finger, Item.ItemSlot.Finger, Item.ItemSlot.Trinket, Item.ItemSlot.Trinket, Item.ItemSlot.Back, Item.ItemSlot.MainHand, Item.ItemSlot.OffHand, Item.ItemSlot.Ranged, Item.ItemSlot.ProjectileBag, Item.ItemSlot.Tabard, Item.ItemSlot.Shirt };
         public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
         {
-            int i = (int)slot;
-            if (i < 0 || i > 20) return null;
-            Enchant e = _itemEnchantCached[i];
-            if (e == null)
-            {
-				e = _itemEnchantCached[i] = Enchant.FindEnchant(_itemEnchant[i], Rawr.Item.GetItemSlotByCharacterSlot(slot), this);
-            }
-            return e;
+            ItemInstance item = this[slot];
+            if (item == null) return null;
+            return item.Enchant;
         }
 
         public bool IsEnchantable(Character.CharacterSlot slot)
@@ -842,8 +963,8 @@ namespace Rawr //O O . .
         {
             int i = (int)slot;
             if (i < 0 || i > 20) return;
-            _itemEnchant[i] = enchant == null ? 0 : enchant.Id;
-            _itemEnchantCached[i] = enchant;
+            ItemInstance item = this[slot];
+            if (item != null) item.Enchant = enchant;
 			OnCalculationsInvalidated();
 		}
 
@@ -859,55 +980,6 @@ namespace Rawr //O O . .
                 return _characterSlots;
             }
         }
-
-        #region Cached item tracking and invalidation
-        // hook idschanged event on equipped items, only hook this for main character, clones and optimization instances are short lived and don't need to track these changes
-        [XmlIgnore]
-        private bool _trackEquippedItemChanges = true;
-        [XmlIgnore]
-        private bool TrackEquippedItemChanges
-        {
-            get
-            {
-                return _trackEquippedItemChanges;
-            }
-            set
-            {
-                if (_trackEquippedItemChanges != value)
-                {
-                    _trackEquippedItemChanges = value;
-                    if (_trackEquippedItemChanges)
-                    {
-                        // hook events
-                        for (int i = 0; i < _itemCached.Length; i++)
-                        {
-                            if (_itemCached[i] != null) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
-                        }
-                    }
-                    else
-                    {
-                        // unhook events
-                        for (int i = 0; i < _itemCached.Length; i++)
-                        {
-                            if (_itemCached[i] != null) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
-                        }
-                    }
-                }
-            }
-        }
-
-        void _itemCached_IdsChanged(object sender, EventArgs e)
-        {
-            for (int i = 0; i < _itemCached.Length; i++)
-            {
-                if (sender == _itemCached[i])
-                {
-                    _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
-                    _itemCached[i] = null;
-                }
-            }
-        }
-        #endregion
 
         // cache gem counts as this takes the most time of accumulating item stats
         // this becomes invalid when items on character change, invalidate in OnItemsChanged
@@ -957,16 +1029,16 @@ namespace Rawr //O O . .
         {
             if (!gemCountValid)
             {
-                redGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Red);
-                yellowGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Yellow);
-                blueGemCount = GetGemColorCount(Rawr.Item.ItemSlot.Blue);
+                redGemCount = GetGemColorCount(Item.ItemSlot.Red);
+                yellowGemCount = GetGemColorCount(Item.ItemSlot.Yellow);
+                blueGemCount = GetGemColorCount(Item.ItemSlot.Blue);
                 jewelersGemCount = GetJewelersGemCount();
 
                 gemCountValid = true;
             }
         }
 
-        private int GetItemJewelersGemCount(Item item)
+        private int GetItemJewelersGemCount(ItemInstance item)
         {
             int count = 0;
             if (item != null)
@@ -988,19 +1060,19 @@ namespace Rawr //O O . .
             return count;
         }
 
-        private int GetItemGemColorCount(Rawr.Item item, Rawr.Item.ItemSlot slotColor)
+        private int GetItemGemColorCount(ItemInstance item, Item.ItemSlot slotColor)
         {
             int count = 0;
             if (item != null)
             {
-                if (item.Gem1 != null && Rawr.Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
-                if (item.Gem2 != null && Rawr.Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
-                if (item.Gem3 != null && Rawr.Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
+                if (item.Gem1 != null && Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
+                if (item.Gem2 != null && Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
+                if (item.Gem3 != null && Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
             }
             return count;
         }
 
-        public int GetGemColorCount(Rawr.Item.ItemSlot slotColor)
+        public int GetGemColorCount(Item.ItemSlot slotColor)
         {
             int count = 0;
             /*foreach (CharacterSlot slot in CharacterSlots)
@@ -1035,9 +1107,9 @@ namespace Rawr //O O . .
             count += GetItemGemColorCount(Projectile, slotColor);
             count += GetItemGemColorCount(ProjectileBag, slotColor);
 
-			if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
-			if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
-			if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
+            //if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
+            //if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
+            //if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
             
             return count;
         }
@@ -1053,6 +1125,7 @@ namespace Rawr //O O . .
 		public void OnCalculationsInvalidated()
 		{
             gemCountValid = false; // invalidate gem counts
+            InvalidateItemInstances();
             if (IsLoading) return;
 			RecalculateSetBonuses();
 
@@ -1066,18 +1139,18 @@ namespace Rawr //O O . .
 				ClassChanged(this, EventArgs.Empty);
 		}
 
-		private void RecalculateSetBonusesFromCache()
+		public void RecalculateSetBonuses()
         {
             //Compute Set Bonuses
             Dictionary<string, int> setCounts = new Dictionary<string, int>();
-            for (int slot = 0; slot < _itemCached.Length; slot++)
+            for (int slot = 0; slot < _item.Length; slot++)
             {
-                Item item = _itemCached[slot];
-                if (item != null && !string.IsNullOrEmpty(item.SetName))
+                ItemInstance item = _item[slot];
+                if (item != null && !string.IsNullOrEmpty(item.Item.SetName))
                 {
                     int count;
-                    setCounts.TryGetValue(item.SetName, out count);
-                    setCounts[item.SetName] = count + 1;
+                    setCounts.TryGetValue(item.Item.SetName, out count);
+                    setCounts[item.Item.SetName] = count + 1;
                 }
             }
 
@@ -1095,62 +1168,59 @@ namespace Rawr //O O . .
             }
         }
 
-		public void RecalculateSetBonuses()
-		{
-			//Compute Set Bonuses
-			Dictionary<string, int> setCounts = new Dictionary<string, int>();
-			foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Legs, Neck,
-                Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, MainHand, OffHand, Ranged, Wrist})
-			{
-				if (item != null && !string.IsNullOrEmpty(item.SetName))
-				{
-                    int count;
-                    setCounts.TryGetValue(item.SetName, out count);
-					setCounts[item.SetName] = count + 1;
-				}
-			}
+        //public void RecalculateSetBonuses()
+        //{
+        //    //Compute Set Bonuses
+        //    Dictionary<string, int> setCounts = new Dictionary<string, int>();
+        //    foreach (Item item in new Item[] {Back, Chest, Feet, Finger1, Finger2, Hands, Head, Legs, Neck,
+        //        Shirt, Shoulders, Tabard, Trinket1, Trinket2, Waist, MainHand, OffHand, Ranged, Wrist})
+        //    {
+        //        if (item != null && !string.IsNullOrEmpty(item.SetName))
+        //        {
+        //            int count;
+        //            setCounts.TryGetValue(item.SetName, out count);
+        //            setCounts[item.SetName] = count + 1;
+        //        }
+        //    }
 
-            // eliminate searching in active buffs: first remove all set bonuses, then add active ones
-            ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
-            foreach (KeyValuePair<string, int> pair in setCounts)
-            {
-                foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
-                {
-                    if (pair.Value >= buff.SetThreshold)
-                    {
-                        ActiveBuffs.Add(buff);
-                    }
-                }
-            }
-        }
+        //    // eliminate searching in active buffs: first remove all set bonuses, then add active ones
+        //    ActiveBuffs.RemoveAll(buff => !string.IsNullOrEmpty(buff.SetName));
+        //    foreach (KeyValuePair<string, int> pair in setCounts)
+        //    {
+        //        foreach (Buff buff in Buff.GetSetBonuses(pair.Key))
+        //        {
+        //            if (pair.Value >= buff.SetThreshold)
+        //            {
+        //                ActiveBuffs.Add(buff);
+        //            }
+        //        }
+        //    }
+        //}
 
         [XmlIgnore]
-        public Item this[CharacterSlot slot]
+        public ItemInstance this[CharacterSlot slot]
         {
             get
             {
                 int i = (int)slot;
-                if (i < 0 || i > 23) return null;
-                Item item;
-                if ((item = _itemCached[i]) == null)
-                {
-                    item = _itemCached[i] = Rawr.Item.LoadFromId(_item[i], "Equipped Item");
-                    if (item != null && _trackEquippedItemChanges) item.IdsChanged += new EventHandler(_itemCached_IdsChanged);
-                }
-                return item;
+                if (i < 0 || i > 20) return null;
+                return _item[i];
             }
             set
             {
                 int i = (int)slot;
-                if (i < 0 || i > 23) return;
-                if (value == null || _item[i] != value.GemmedId)
-                {
-                    _item[i] = value != null ? value.GemmedId : null;
-                    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
-                    _itemCached[i] = value;
-                    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
-                    OnCalculationsInvalidated();
-                }
+                if (i < 0 || i > 20) return;
+                // should we track id changes? for now assume assume we don't have to
+                _item[i] = value;
+                OnCalculationsInvalidated();
+                //if (value == null || _item[i] != value.GemmedId) 
+                //{
+                //    _item[i] = value != null ? value.GemmedId : null;
+                //    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged -= new EventHandler(_itemCached_IdsChanged);
+                //    _itemCached[i] = value;
+                //    if (_itemCached[i] != null && _trackEquippedItemChanges) _itemCached[i].IdsChanged += new EventHandler(_itemCached_IdsChanged);
+                //    OnCalculationsInvalidated();
+                //}
             }
         }
 
@@ -1189,7 +1259,7 @@ namespace Rawr //O O . .
             return new List<string>(_ids.Keys).ToArray();
         }
 
-		public CharacterSlot[] GetEquippedSlots(Item item)
+		public CharacterSlot[] GetEquippedSlots(ItemInstance item)
 		{
 			List<CharacterSlot> listSlots = new List<CharacterSlot>();
             foreach (CharacterSlot slot in CharacterSlots)
@@ -1236,9 +1306,6 @@ namespace Rawr //O O . .
             ProjectileBag = 18,
             Tabard = 19,
             Shirt = 20,
-			ExtraWristSocket = 21,
-			ExtraHandsSocket = 22,
-			ExtraWaistSocket = 23,
 			
 			Gems = 100,
 			Metas = 101,
@@ -1344,24 +1411,15 @@ namespace Rawr //O O . .
         }
 
         public Character() { }
-		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
-			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
-                string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
-			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
-			string projectileBag, string extraWristSocket, string extraHandsSocket, string extraWaistSocket) 
-        : this(name, realm, region, race, head, neck, shoulders, back, chest, shirt, tabard, wrist, hands, waist, 
-			legs, feet, finger1, finger2, trinket1, trinket2, mainHand, offHand, ranged, projectile, projectileBag,
-			extraWristSocket, extraHandsSocket, extraWaistSocket, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-		{ }
 
 		public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
 			string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
 				string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
 			string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
-			string projectileBag, string extraWristSocket, string extraHandsSocket, string extraWaistSocket,
+			string projectileBag/*, string extraWristSocket, string extraHandsSocket, string extraWaistSocket,
 			int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, 
 			int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, 
-			int enchantMainHand, int enchantOffHand, int enchantRanged)
+			int enchantMainHand, int enchantOffHand, int enchantRanged*/)
         {
             _name = name;
             _realm = realm;
@@ -1388,36 +1446,38 @@ namespace Rawr //O O . .
 			_ranged = ranged;
 			_projectile = projectile;
 			_projectileBag = projectileBag;
-			_extraWristSocket = extraWristSocket;
-			_extraHandsSocket = extraHandsSocket;
-			_extraWaistSocket = extraWaistSocket;
+            //_extraWristSocket = extraWristSocket;
+            //_extraHandsSocket = extraHandsSocket;
+            //_extraWaistSocket = extraWaistSocket;
 
-			_headEnchant = enchantHead;
-			_shouldersEnchant = enchantShoulders;
-			_backEnchant = enchantBack;
-			_chestEnchant = enchantChest;
-			_wristEnchant = enchantWrist;
-			_handsEnchant = enchantHands;
-			_legsEnchant = enchantLegs;
-			_feetEnchant = enchantFeet;
-			_finger1Enchant = enchantFinger1;
-			_finger2Enchant = enchantFinger2;
-			_mainHandEnchant = enchantMainHand;
-			_offHandEnchant = enchantOffHand;
-			_rangedEnchant = enchantRanged;
+            //_headEnchant = enchantHead;
+            //_shouldersEnchant = enchantShoulders;
+            //_backEnchant = enchantBack;
+            //_chestEnchant = enchantChest;
+            //_wristEnchant = enchantWrist;
+            //_handsEnchant = enchantHands;
+            //_legsEnchant = enchantLegs;
+            //_feetEnchant = enchantFeet;
+            //_finger1Enchant = enchantFinger1;
+            //_finger2Enchant = enchantFinger2;
+            //_mainHandEnchant = enchantMainHand;
+            //_offHandEnchant = enchantOffHand;
+            //_rangedEnchant = enchantRanged;
+            WaistBlacksmithingSocketEnabled = true;
 		}
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
-			Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
-                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, 
-			Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile, 
-			Item projectileBag, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,
+            ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
+                ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
+            ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
+            ItemInstance projectileBag/*, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
             Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
 			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
 			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand,
-			Enchant enchantRanged, bool trackEquippedItemChanges)
+			Enchant enchantRanged, bool trackEquippedItemChanges*/
+                                                                  )
         {
-            _trackEquippedItemChanges = trackEquippedItemChanges;
+            //_trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
             _realm = realm;
@@ -1444,7 +1504,7 @@ namespace Rawr //O O . .
             Ranged = ranged;
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
-			ExtraWristSocket = extraWristSocket;
+			/*ExtraWristSocket = extraWristSocket;
 			ExtraHandsSocket = extraHandsSocket;
 			ExtraWaistSocket = extraWaistSocket;
 
@@ -1460,137 +1520,80 @@ namespace Rawr //O O . .
             Finger2Enchant = enchantFinger2;
             MainHandEnchant = enchantMainHand;
             OffHandEnchant = enchantOffHand;
-            RangedEnchant = enchantRanged;
+            RangedEnchant = enchantRanged;*/
             IsLoading = false;
             RecalculateSetBonuses();
         }
 
         // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
         public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, 
-			Item head, Item neck, Item shoulders, Item back, Item chest, Item shirt, Item tabard,
-                Item wrist, Item hands, Item waist, Item legs, Item feet, Item finger1, Item finger2, 
-			Item trinket1, Item trinket2, Item mainHand, Item offHand, Item ranged, Item projectile,
-			Item projectileBag, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
-			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
-			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, 
-			Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+			ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
+                ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
+			ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
+			ItemInstance projectileBag, List<Buff> activeBuffs, string model)
         {
-            _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
             _realm = realm;
             _region = region;
             _race = race;
-            _itemCached[(int)CharacterSlot.Head] = head;
-            _itemCached[(int)CharacterSlot.Neck] = neck;
-            _itemCached[(int)CharacterSlot.Shoulders] = shoulders;
-            _itemCached[(int)CharacterSlot.Back] = back;
-            _itemCached[(int)CharacterSlot.Chest] = chest;
-            _itemCached[(int)CharacterSlot.Shirt] = shirt;
-            _itemCached[(int)CharacterSlot.Tabard] = tabard;
-            _itemCached[(int)CharacterSlot.Wrist] = wrist;
-            _itemCached[(int)CharacterSlot.Hands] = hands;
-            _itemCached[(int)CharacterSlot.Waist] = waist;
-            _itemCached[(int)CharacterSlot.Legs] = legs;
-            _itemCached[(int)CharacterSlot.Feet] = feet;
-            _itemCached[(int)CharacterSlot.Finger1] = finger1;
-            _itemCached[(int)CharacterSlot.Finger2] = finger2;
-            _itemCached[(int)CharacterSlot.Trinket1] = trinket1;
-            _itemCached[(int)CharacterSlot.Trinket2] = trinket2;
-            _itemCached[(int)CharacterSlot.MainHand] = mainHand;
-            _itemCached[(int)CharacterSlot.OffHand] = offHand;
-            _itemCached[(int)CharacterSlot.Ranged] = ranged;
-            _itemCached[(int)CharacterSlot.Projectile] = projectile;
-			_itemCached[(int)CharacterSlot.ProjectileBag] = projectileBag;
-			_itemCached[(int)CharacterSlot.ExtraWristSocket] = extraWristSocket;
-			_itemCached[(int)CharacterSlot.ExtraHandsSocket] = extraHandsSocket;
-			_itemCached[(int)CharacterSlot.ExtraWaistSocket] = extraWaistSocket;
-
-            _itemEnchantCached[(int)CharacterSlot.Head] = enchantHead;
-            _itemEnchantCached[(int)CharacterSlot.Shoulders] = enchantShoulders;
-            _itemEnchantCached[(int)CharacterSlot.Back] = enchantBack;
-            _itemEnchantCached[(int)CharacterSlot.Chest] = enchantChest;
-            _itemEnchantCached[(int)CharacterSlot.Wrist] = enchantWrist;
-            _itemEnchantCached[(int)CharacterSlot.Hands] = enchantHands;
-            _itemEnchantCached[(int)CharacterSlot.Legs] = enchantLegs;
-            _itemEnchantCached[(int)CharacterSlot.Feet] = enchantFeet;
-            _itemEnchantCached[(int)CharacterSlot.Finger1] = enchantFinger1;
-            _itemEnchantCached[(int)CharacterSlot.Finger2] = enchantFinger2;
-            _itemEnchantCached[(int)CharacterSlot.MainHand] = enchantMainHand;
-            _itemEnchantCached[(int)CharacterSlot.OffHand] = enchantOffHand;
-            _itemEnchantCached[(int)CharacterSlot.Ranged] = enchantRanged;
+            _item[(int)CharacterSlot.Head] = head;
+            _item[(int)CharacterSlot.Neck] = neck;
+            _item[(int)CharacterSlot.Shoulders] = shoulders;
+            _item[(int)CharacterSlot.Back] = back;
+            _item[(int)CharacterSlot.Chest] = chest;
+            _item[(int)CharacterSlot.Shirt] = shirt;
+            _item[(int)CharacterSlot.Tabard] = tabard;
+            _item[(int)CharacterSlot.Wrist] = wrist;
+            _item[(int)CharacterSlot.Hands] = hands;
+            _item[(int)CharacterSlot.Waist] = waist;
+            _item[(int)CharacterSlot.Legs] = legs;
+            _item[(int)CharacterSlot.Feet] = feet;
+            _item[(int)CharacterSlot.Finger1] = finger1;
+            _item[(int)CharacterSlot.Finger2] = finger2;
+            _item[(int)CharacterSlot.Trinket1] = trinket1;
+            _item[(int)CharacterSlot.Trinket2] = trinket2;
+            _item[(int)CharacterSlot.MainHand] = mainHand;
+            _item[(int)CharacterSlot.OffHand] = offHand;
+            _item[(int)CharacterSlot.Ranged] = ranged;
+            _item[(int)CharacterSlot.Projectile] = projectile;
+            _item[(int)CharacterSlot.ProjectileBag] = projectileBag;
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
             CurrentModel = model;
-            RecalculateSetBonusesFromCache();
+            RecalculateSetBonuses();
         }
 
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,  Item[] items,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
-			Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
-			Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand, 
-			Enchant enchantRanged, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
+        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race,  ItemInstance[] items, List<Buff> activeBuffs, string model)
         {
-            _trackEquippedItemChanges = trackEquippedItemChanges;
             IsLoading = true;
             _name = name;
             _realm = realm;
             _region = region;
             _race = race;
-            Array.Copy(items, _itemCached, items.Length);
+            Array.Copy(items, _item, items.Length);
 
-            _itemEnchantCached[(int)CharacterSlot.Head] = enchantHead;
-            _itemEnchantCached[(int)CharacterSlot.Shoulders] = enchantShoulders;
-            _itemEnchantCached[(int)CharacterSlot.Back] = enchantBack;
-            _itemEnchantCached[(int)CharacterSlot.Chest] = enchantChest;
-            _itemEnchantCached[(int)CharacterSlot.Wrist] = enchantWrist;
-            _itemEnchantCached[(int)CharacterSlot.Hands] = enchantHands;
-            _itemEnchantCached[(int)CharacterSlot.Legs] = enchantLegs;
-            _itemEnchantCached[(int)CharacterSlot.Feet] = enchantFeet;
-            _itemEnchantCached[(int)CharacterSlot.Finger1] = enchantFinger1;
-            _itemEnchantCached[(int)CharacterSlot.Finger2] = enchantFinger2;
-            _itemEnchantCached[(int)CharacterSlot.MainHand] = enchantMainHand;
-            _itemEnchantCached[(int)CharacterSlot.OffHand] = enchantOffHand;
-            _itemEnchantCached[(int)CharacterSlot.Ranged] = enchantRanged;
             IsLoading = false;
             ActiveBuffs.AddRange(activeBuffs);
             CurrentModel = model;
-            RecalculateSetBonusesFromCache();
-        }
-
-        public Character(string name, string realm, Character.CharacterRegion region, CharacterRace race, Item[] items, 
-			Enchant[] enchants, List<Buff> activeBuffs, bool trackEquippedItemChanges, string model)
-        {
-            _trackEquippedItemChanges = trackEquippedItemChanges;
-            IsLoading = true;
-            _name = name;
-            _realm = realm;
-            _region = region;
-            _race = race;
-            Array.Copy(items, _itemCached, items.Length);
-            Array.Copy(enchants, _itemEnchantCached, enchants.Length);
-            IsLoading = false;
-            ActiveBuffs.AddRange(activeBuffs);
-            CurrentModel = model;
-            RecalculateSetBonusesFromCache();
+            RecalculateSetBonuses();
         }
 
 		public Character Clone()
 		{
             Character clone = new Character(this.Name, this.Realm, this.Region, this.Race,
-                        this.Head, this.Neck, this.Shoulders, this.Back, this.Chest, this.Shirt,
-                        this.Tabard, this.Wrist, this.Hands, this.Waist, this.Legs, this.Feet,
-                        this.Finger1,
-                        this.Finger2,
-                        this.Trinket1,
-                        this.Trinket2,
-                        this.MainHand,
-                        this.OffHand,
-                        this.Ranged,
-                        this.Projectile,
-                        this.ProjectileBag,
-						this.ExtraWristSocket,
+                        Head == null ? null : Head.Clone(), Neck == null ? null : Neck.Clone(), Shoulders == null ? null : Shoulders.Clone(), Back == null ? null : Back.Clone(), Chest == null ? null : Chest.Clone(), Shirt == null ? null : Shirt.Clone(),
+                        Tabard == null ? null : Tabard.Clone(), Wrist == null ? null : Wrist.Clone(), Hands == null ? null : Hands.Clone(), Waist == null ? null : Waist.Clone(), Legs == null ? null : Legs.Clone(), Feet == null ? null : Feet.Clone(),
+                        Finger1 == null ? null : Finger1.Clone(),
+                        Finger2 == null ? null : Finger2.Clone(),
+                        Trinket1 == null ? null : Trinket1.Clone(),
+                        Trinket2 == null ? null : Trinket2.Clone(),
+                        MainHand == null ? null : MainHand.Clone(),
+                        OffHand == null ? null : OffHand.Clone(),
+                        Ranged == null ? null : Ranged.Clone(),
+                        Projectile == null ? null : Projectile.Clone(),
+                        ProjectileBag == null ? null : ProjectileBag.Clone()
+						/*this.ExtraWristSocket,
 						this.ExtraHandsSocket,
 						this.ExtraWaistSocket,
                         this.HeadEnchant,
@@ -1605,7 +1608,7 @@ namespace Rawr //O O . .
                         this.Finger2Enchant,
                         this.MainHandEnchant,
                         this.OffHandEnchant,
-                        this.RangedEnchant, false);
+                        this.RangedEnchant, false*/);
 			foreach (Buff buff in this.ActiveBuffs) 
 				if (!clone.ActiveBuffs.Contains(buff))
 					clone.ActiveBuffs.Add(buff);

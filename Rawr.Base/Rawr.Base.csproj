@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{842B74C7-EE94-44D9-A02F-4074166EF506}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -112,6 +112,7 @@
       <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Enchant.cs" />
+    <Compile Include="GemmingTemplate.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />

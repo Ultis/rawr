@@ -6,7 +6,14 @@ namespace Rawr.Healadin
 	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", Character.CharacterClass.Paladin)]
 	public class CalculationsHealadin : CalculationsBase
     {
-        
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
         {
@@ -190,17 +197,17 @@ namespace Rawr.Healadin
             if (stats.ManaRestore5min > 0)
             {
                 calc.ManaOther += (float)Math.Ceiling((fight_length - 30f) / 300f) * stats.ManaRestore5min;
-            }
-            if (stats.GreatnessProc > 0)
-            {
-                float intMultiple = (1f + (GetItemStats(character, additionalItem) + GetEnchantsStats(character) + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
-                    * (1 + .03f * talents.DivineIntellect);
-                float greatnessInt = stats.GreatnessProc * intMultiple;
-                float greatnessMana = greatnessInt * 15;
-                float greatnessProcs = (float)Math.Ceiling((fight_length - 15f) / 45f);
-                calc.ManaOther += stats.ManaRestoreFromMaxManaPerSecond * 15f * greatnessMana * calcOpts.Replenishment * greatnessProcs; // Replenishment
-                calc.ManaOther += (divine_pleas * 15f / fight_length) * greatnessMana * .25f * greatnessProcs; // Divine Plea
-            }
+			}
+			if (stats.GreatnessProc > 0)
+			{
+				float intMultiple = (1f + (GetItemStats(character, additionalItem)/* + GetEnchantsStats(character)*/ + GetBuffsStats(character.ActiveBuffs)).BonusIntellectMultiplier)
+					* (1 + .03f * talents.DivineIntellect);
+				float greatnessInt = stats.GreatnessProc * intMultiple;
+				float greatnessMana = greatnessInt * 15;
+				float greatnessProcs = (float)Math.Ceiling((fight_length - 15f) / 45f);
+				calc.ManaOther += stats.ManaRestoreFromMaxManaPerSecond * 15f * greatnessMana * calcOpts.Replenishment * greatnessProcs; // Replenishment
+				calc.ManaOther += (divine_pleas * 15f / fight_length) * greatnessMana * .25f * greatnessProcs; // Divine Plea
+			}
             calc.TotalMana = calc.ManaBase + calc.ManaDivinePlea + calc.ManaMp5 + calc.ManaOther + calc.ManaPotion + 
                 calc.ManaReplenishment + calc.ManaSpiritual + calc.ManaLayOnHands;
 
@@ -337,7 +344,7 @@ namespace Rawr.Healadin
             if (calcOpts.Glyph_HL) calc.HLGlyph = calc.HLHealed * calcOpts.GHL_Targets * 0.1f * heal_multi *
                 ((1 - stats.SpellCrit - talents.HolyPower * .01f) + 1.5f * (1f + stats.BonusCritHealMultiplier) * (stats.SpellCrit + talents.HolyPower * .01f));
 
-            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed;
+            calc.TotalHealed = calc.FoLHealed + calc.HLHealed + calc.HSHealed + calc.HLGlyph;
             if (talents.BeaconOfLight > 0) calc.TotalHealed += calc.BoLHealed = calcOpts.BoLEff * calcOpts.BoLUp * calc.TotalHealed;
             calc.TotalHealed += calc.SSAbsorbed + calc.HLGlyph + calc.HealedOther;
 
@@ -376,11 +383,11 @@ namespace Rawr.Healadin
 
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsEnchants = GetEnchantsStats(character);
+            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            Stats statsTotal = statsBaseGear + statsEnchants + statsBuffs + statsRace;
-            Stats statsOther = statsBaseGear + statsEnchants + statsBuffs;
+            Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
+            Stats statsOther = statsBaseGear + statsBuffs;
 
 
             statsTotal.Stamina = (float)Math.Round(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));

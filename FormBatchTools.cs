@@ -36,8 +36,7 @@ namespace Rawr
         int upgradeListPhase;
         private class UpgradeEntry
         {
-            public Item Item { get; set; }
-            public Enchant Enchant { get; set; }
+            public ItemInstance Item { get; set; }
             public float Value { get; set; }
             private List<float> valueList = new List<float>();
             public List<float> ValueList
@@ -144,25 +143,25 @@ namespace Rawr
                         Character _character = CurrentBatchCharacter.Character;
                         Character bestCharacter = e.OptimizedCharacter;
 
-                        _character.Back = bestCharacter.Back == null ? null : ItemCache.FindItemById(bestCharacter.Back.GemmedId);
-                        _character.Chest = bestCharacter.Chest == null ? null : ItemCache.FindItemById(bestCharacter.Chest.GemmedId);
-                        _character.Feet = bestCharacter.Feet == null ? null : ItemCache.FindItemById(bestCharacter.Feet.GemmedId);
-                        _character.Finger1 = bestCharacter.Finger1 == null ? null : ItemCache.FindItemById(bestCharacter.Finger1.GemmedId);
-                        _character.Finger2 = bestCharacter.Finger2 == null ? null : ItemCache.FindItemById(bestCharacter.Finger2.GemmedId);
-                        _character.Hands = bestCharacter.Hands == null ? null : ItemCache.FindItemById(bestCharacter.Hands.GemmedId);
-                        _character.Head = bestCharacter.Head == null ? null : ItemCache.FindItemById(bestCharacter.Head.GemmedId);
-                        _character.Legs = bestCharacter.Legs == null ? null : ItemCache.FindItemById(bestCharacter.Legs.GemmedId);
-                        _character.MainHand = bestCharacter.MainHand == null ? null : ItemCache.FindItemById(bestCharacter.MainHand.GemmedId);
-                        _character.Neck = bestCharacter.Neck == null ? null : ItemCache.FindItemById(bestCharacter.Neck.GemmedId);
-                        _character.OffHand = bestCharacter.OffHand == null ? null : ItemCache.FindItemById(bestCharacter.OffHand.GemmedId);
-                        _character.Projectile = bestCharacter.Projectile == null ? null : ItemCache.FindItemById(bestCharacter.Projectile.GemmedId);
-                        _character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : ItemCache.FindItemById(bestCharacter.ProjectileBag.GemmedId);
-                        _character.Ranged = bestCharacter.Ranged == null ? null : ItemCache.FindItemById(bestCharacter.Ranged.GemmedId);
-                        _character.Shoulders = bestCharacter.Shoulders == null ? null : ItemCache.FindItemById(bestCharacter.Shoulders.GemmedId);
-                        _character.Trinket1 = bestCharacter.Trinket1 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket1.GemmedId);
-                        _character.Trinket2 = bestCharacter.Trinket2 == null ? null : ItemCache.FindItemById(bestCharacter.Trinket2.GemmedId);
-                        _character.Waist = bestCharacter.Waist == null ? null : ItemCache.FindItemById(bestCharacter.Waist.GemmedId);
-                        _character.Wrist = bestCharacter.Wrist == null ? null : ItemCache.FindItemById(bestCharacter.Wrist.GemmedId);
+                        _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
+                        _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
+                        _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
+                        _character.Finger1 = bestCharacter.Finger1 == null ? null : bestCharacter.Finger1.Clone();
+                        _character.Finger2 = bestCharacter.Finger2 == null ? null : bestCharacter.Finger2.Clone();
+                        _character.Hands = bestCharacter.Hands == null ? null : bestCharacter.Hands.Clone();
+                        _character.Head = bestCharacter.Head == null ? null : bestCharacter.Head.Clone();
+                        _character.Legs = bestCharacter.Legs == null ? null : bestCharacter.Legs.Clone();
+                        _character.MainHand = bestCharacter.MainHand == null ? null : bestCharacter.MainHand.Clone();
+                        _character.Neck = bestCharacter.Neck == null ? null : bestCharacter.Neck.Clone();
+                        _character.OffHand = bestCharacter.OffHand == null ? null : bestCharacter.OffHand.Clone();
+                        _character.Projectile = bestCharacter.Projectile == null ? null : bestCharacter.Projectile.Clone();
+                        _character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : bestCharacter.ProjectileBag.Clone();
+                        _character.Ranged = bestCharacter.Ranged == null ? null : bestCharacter.Ranged.Clone();
+                        _character.Shoulders = bestCharacter.Shoulders == null ? null : bestCharacter.Shoulders.Clone();
+                        _character.Trinket1 = bestCharacter.Trinket1 == null ? null : bestCharacter.Trinket1.Clone();
+                        _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
+                        _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
+                        _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
                         _character.BackEnchant = bestCharacter.BackEnchant;
                         _character.ChestEnchant = bestCharacter.ChestEnchant;
                         _character.FeetEnchant = bestCharacter.FeetEnchant;
@@ -252,13 +251,12 @@ namespace Rawr
                             }
                             foreach (ComparisonCalculationBase comp in kvp.Value)
                             {
-                                string key = comp.Item.GemmedId + "." + ((comp.Enchant == null) ? "0" : comp.Enchant.Id.ToString());
+                                string key = comp.ItemInstance.GemmedId;
                                 UpgradeEntry upgradeEntry;
                                 if (!map.TryGetValue(key, out upgradeEntry))
                                 {
                                     upgradeEntry = new UpgradeEntry();
-                                    upgradeEntry.Item = comp.Item;
-                                    upgradeEntry.Enchant = comp.Enchant;
+                                    upgradeEntry.Item = comp.ItemInstance;
                                     map[key] = upgradeEntry;
                                 }
                             }
@@ -300,7 +298,7 @@ namespace Rawr
             switch (currentOperation)
             {
                 case AsyncOperation.BuildUpgradeList:
-                    statusLabel.Text = string.Format("[{2}/{3}] {0}: {1}", CurrentBatchCharacter.Name, upgradeListEnumerator.Current.Item.Name, batchIndex + 1, BatchCharacterList.Count);
+                    statusLabel.Text = string.Format("[{2}/{3}] {0}: {1}", CurrentBatchCharacter.Name, upgradeListEnumerator.Current.Item.Item.Name, batchIndex + 1, BatchCharacterList.Count);
                     statusProgressBar.Value = e.ProgressPercentage;
                     break;
             }
@@ -364,10 +362,10 @@ namespace Rawr
                                 foreach (UpgradeEntry entry in filtered.Values)
                                 {
                                     ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
-                                    itemCalc.Item = entry.Item;
-                                    itemCalc.Enchant = entry.Enchant;
+                                    itemCalc.ItemInstance = entry.Item;
+                                    itemCalc.Item = entry.Item.Item;
                                     itemCalc.Character = null;
-                                    itemCalc.Name = entry.Item.Name;
+                                    itemCalc.Name = entry.Item.Item.Name;
                                     itemCalc.Equipped = false;
                                     itemCalc.OverallPoints = entry.Value / totalValue;
                                     itemCalc.SubPoints = entry.ValueList.ToArray();
@@ -657,21 +655,22 @@ namespace Rawr
                 {
                     for (int slot = 0; slot < 19; slot++)
                     {
-                        Item item = character.Character[(Character.CharacterSlot)slot];
-                        Enchant enchant = character.Character.GetEnchantBySlot((Character.CharacterSlot)slot);
+                        ItemInstance item = character.Character[(Character.CharacterSlot)slot];
                         if (item != null)
                         {
                             string id = item.Id.ToString();
                             string anyGem = id + ".*.*.*";
+                            string onlyGemmedId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+                            string anyEnchant = string.Format("{0}.{1}.{2}.{3}.*", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
                             List<string> list = character.Character.AvailableItems.FindAll(x => x.StartsWith(id));
                             List<string> sublist;
-                            if (list.Contains(item.GemmedId + ".*"))
+                            if (list.Contains(onlyGemmedId + ".*"))
                             {
                                 // available
                             }
-                            else if ((sublist = list.FindAll(x => x.StartsWith(item.GemmedId))).Count > 0)
+                            else if ((sublist = list.FindAll(x => x.StartsWith(onlyGemmedId))).Count > 0)
                             {
-                                if (sublist.Contains(item.GemmedId + "." + (enchant != null ? enchant.Id.ToString() : "0")))
+                                if (sublist.Contains(item.GemmedId))
                                 {
                                     // available
                                 }
@@ -689,7 +688,7 @@ namespace Rawr
                             }
                             else if ((sublist = list.FindAll(x => x.StartsWith(anyGem))).Count > 0)
                             {
-                                if (sublist.Contains(anyGem + "." + (enchant != null ? enchant.Id.ToString() : "0")))
+                                if (sublist.Contains(anyGem + "." + item.EnchantId))
                                 {
                                     // available
                                 }
@@ -704,13 +703,8 @@ namespace Rawr
                             else if (list.Count > 0)
                             {
                                 string s = list[0];
-                                item = ItemCache.FindItemById(s.Substring(0, s.LastIndexOf('.')));
+                                item = new ItemInstance(s);
                                 character.Character[(Character.CharacterSlot)slot] = item;
-                                string se = s.Substring(s.LastIndexOf('.') + 1);
-                                if (se != "*")
-                                {
-                                    character.Character.SetEnchantBySlot((Character.CharacterSlot)slot, Enchant.FindEnchant(int.Parse(se), item.Slot, character.Character));
-                                }
                                 character.UnsavedChanges = true;
                             }
                             else
@@ -719,21 +713,33 @@ namespace Rawr
                                 {
                                     if (s.IndexOf('.') < 0)
                                     {
-                                        item = ItemCache.FindItemById(int.Parse(s));
+                                        item = item.Clone();
+                                        item.Id = int.Parse(s);
+                                        if (item.Item.SocketColor1 == Item.ItemSlot.None) item.Gem1 = null;
+                                        if (item.Item.SocketColor2 == Item.ItemSlot.None) item.Gem2 = null;
+                                        if (item.Item.SocketColor3 == Item.ItemSlot.None) item.Gem3 = null;
                                     }
                                     else
                                     {
                                         string[] slist = s.Split('.');
                                         if (slist[1] == "*")
                                         {
-                                            item = ItemCache.FindItemById(int.Parse(slist[0]));
+                                            item = item.Clone();
+                                            item.Id = int.Parse(slist[0]);
+                                            if (item.Item.SocketColor1 == Item.ItemSlot.None) item.Gem1 = null;
+                                            if (item.Item.SocketColor2 == Item.ItemSlot.None) item.Gem2 = null;
+                                            if (item.Item.SocketColor3 == Item.ItemSlot.None) item.Gem3 = null;
                                         }
                                         else
                                         {
-                                            item = ItemCache.FindItemById(s.Substring(0, s.LastIndexOf('.')));
+                                            item = item.Clone();
+                                            item.Id = int.Parse(slist[0]);
+                                            item.Gem1Id = int.Parse(slist[1]);
+                                            item.Gem2Id = int.Parse(slist[2]);
+                                            item.Gem3Id = int.Parse(slist[3]);
                                         }
                                     }
-                                    if (item != null && item.FitsInSlot((Character.CharacterSlot)slot, character.Character))
+                                    if (item != null && item.Item.FitsInSlot((Character.CharacterSlot)slot, character.Character))
                                     {
                                         character.Character[(Character.CharacterSlot)slot] = item;
                                         string se = s.Substring(s.LastIndexOf('.') + 1);
@@ -801,7 +807,7 @@ namespace Rawr
             {
                 bool _overrideRegem = checkBoxOverrideRegem.Checked;
                 bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-                _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
+                _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
             }
             _optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
         }
@@ -837,7 +843,7 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
+            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
             _optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
         }
 
@@ -846,8 +852,8 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
-            _optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item, upgradeListEnumerator.Current.Enchant);
+            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, CurrentBatchCharacter.Model);
+            _optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item);
         }
     }
 

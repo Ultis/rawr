@@ -5,68 +5,99 @@ using System.ComponentModel;
 
 namespace Rawr
 {
-    public class ItemList : List<Item>
-    {
-    }
-
-    [Serializable]
+	#region Item
+	[Serializable]
 	public class Item : IComparable<Item>
 	{
 		[XmlElement("Name")]
 		public string _name;
+
 		[XmlElement("Id")]
 		public int _id;
-        [XmlElement("ItemLevel")]
-        public int _itemLevel;
-        [XmlElement("IconPath")]
+
+		[XmlElement("ItemLevel")]
+		public int _itemLevel;
+
+		[XmlElement("IconPath")]
 		public string _iconPath;
+
 		[XmlElement("Slot")]
 		public ItemSlot _slot;
+
 		[XmlElement("Stats")]
 		public Stats _stats = new Stats();
-		[XmlElement("Sockets")]
-		public Sockets _sockets = new Sockets();
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Gem1Id")]
-		public int _gem1Id;
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Gem2Id")]
-		public int _gem2Id;
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Gem3Id")]
-		public int _gem3Id;
+
 		[XmlElement("Quality")]
 		public ItemQuality _quality;
-		[System.ComponentModel.DefaultValueAttribute("")]
+
+		[DefaultValueAttribute("")]
 		[XmlElement("SetName")]
 		public string _setName;
+		
 		[XmlElement("Type")]
 		public ItemType _type = ItemType.None;
-		[System.ComponentModel.DefaultValueAttribute(0)]
+		
+		[DefaultValueAttribute(0)]
 		[XmlElement("MinDamage")]
 		public int _minDamage = 0;
-		[System.ComponentModel.DefaultValueAttribute(0)]
+
+		[DefaultValueAttribute(0)]
 		[XmlElement("MaxDamage")]
 		public int _maxDamage = 0;
-		[System.ComponentModel.DefaultValueAttribute(0)]
+
+		[DefaultValueAttribute(0)]
 		[XmlElement("DamageType")]
-        public ItemDamageType _damageType = ItemDamageType.Physical;
-		[System.ComponentModel.DefaultValueAttribute(0)]
+		public ItemDamageType _damageType = ItemDamageType.Physical;
+
+		[DefaultValueAttribute(0)]
 		[XmlElement("Speed")]
 		public float _speed = 0f;
-		[System.ComponentModel.DefaultValueAttribute("")]
+
+		[DefaultValueAttribute("")]
 		[XmlElement("RequiredClasses")]
 		public string _requiredClasses;
-		[System.ComponentModel.DefaultValueAttribute(false)]
+
+		[DefaultValueAttribute(false)]
 		[XmlElement("Unique")]
 		public bool _unique;
 
-        public ItemLocation LocationInfo
+		[DefaultValueAttribute(0)]
+		[XmlElement("SocketColor1")]
+		public ItemSlot _socketColor1;
+
+		[DefaultValueAttribute(0)]
+		[XmlElement("SocketColor2")]
+		public ItemSlot _socketColor2;
+
+		[DefaultValueAttribute(0)]
+		[XmlElement("SocketColor3")]
+		public ItemSlot _socketColor3;
+
+		[XmlElement("SocketBonus")]
+		public Stats _socketBonus = new Stats();
+
+		public ItemLocation LocationInfo
+		{
+			get
+			{
+				return LocationFactory.Lookup(Id);
+			}
+		}
+
+        [XmlIgnore]
+        public DateTime LastChange { get; set; }
+
+        public void InvalidateCachedData()
         {
-            get
-            {
-                return LocationFactory.Lookup(Id);
-            }
+            LastChange = DateTime.Now;
+        }
+
+        [XmlIgnore]
+        public bool Invalid { get; set; }
+
+        public void Delete()
+        {
+            Invalid = true;
         }
 
 		[XmlIgnore]
@@ -81,21 +112,19 @@ namespace Rawr
 			get { return _id; }
 			set
 			{
-				OnIdsChanging();
 				_id = value;
-				OnIdsChanged();
 			}
 		}
-        [XmlIgnore]
-        public int ItemLevel
-        {
-            get { return _itemLevel; }
-            set
-            {
-                _itemLevel = value;
-            }
-        }
-        [XmlIgnore]
+		[XmlIgnore]
+		public int ItemLevel
+		{
+			get { return _itemLevel; }
+			set
+			{
+				_itemLevel = value;
+			}
+		}
+		[XmlIgnore]
 		public string IconPath
 		{
 			get { return _iconPath; }
@@ -121,184 +150,6 @@ namespace Rawr
 		{
 			get { return _stats; }
 			set { _stats = value; }
-		}
-		[XmlIgnore]
-		public Sockets Sockets
-		{
-			get { return _sockets; }
-			set { _sockets = value; }
-		}
-		[XmlIgnore]
-		public int Gem1Id
-		{
-			get { return _gem1Id; }
-			set
-			{
-				OnIdsChanging();
-				_gem1Id = value;
-				OnIdsChanged();
-			}
-		}
-		[XmlIgnore]
-		public int Gem2Id
-		{
-			get { return _gem2Id; }
-			set
-			{
-				OnIdsChanging();
-				_gem2Id = value;
-				OnIdsChanged();
-			}
-		}
-		[XmlIgnore]
-		public int Gem3Id
-		{
-			get { return _gem3Id; }
-			set
-			{
-				OnIdsChanging();
-				_gem3Id = value;
-				OnIdsChanged();
-			}
-		}
-		[XmlIgnore]
-		private Item _gem1Cached = null;
-		[XmlIgnore]
-		public Item Gem1
-		{
-			get
-			{
-				if (Gem1Id == 0) return null;
-				if (_gem1Cached == null || _gem1Cached.Id != Gem1Id)
-				{
-					_gem1Cached = Item.LoadFromId(Gem1Id, "Gem1 in " + GemmedId);
-					if (_gem1Cached == null) Gem1Id = 0;
-				}
-				return _gem1Cached;
-			}
-			set
-			{
-				if (value == null)
-					Gem1Id = 0;
-				else
-					Gem1Id = value.Id;
-                _gem1Cached = value;
-			}
-		}
-		[XmlIgnore]
-		private Item _gem2Cached = null;
-		[XmlIgnore]
-		public Item Gem2
-		{
-			get
-			{
-				if (Gem2Id == 0) return null;
-				if (_gem2Cached == null || _gem2Cached.Id != Gem2Id)
-				{
-					_gem2Cached = Item.LoadFromId(Gem2Id, "Gem2 in " + GemmedId);
-					if (_gem2Cached == null) Gem2Id = 0;
-				}
-				return _gem2Cached;
-			}
-			set
-			{
-				if (value == null)
-					Gem2Id = 0;
-				else
-					Gem2Id = value.Id;
-                _gem2Cached = value;
-			}
-		}
-		[XmlIgnore]
-		private Item _gem3Cached = null;
-		[XmlIgnore]
-		public Item Gem3
-		{
-			get
-			{
-				if (Gem3Id == 0) return null;
-				if (_gem3Cached == null || _gem3Cached.Id != Gem3Id)
-				{
-					_gem3Cached = Item.LoadFromId(Gem3Id, "Gem3 in " + GemmedId);
-					if (_gem3Cached == null) Gem3Id = 0;
-				}
-				return _gem3Cached;
-			}
-			set
-			{
-				if (value == null)
-					Gem3Id = 0;
-				else
-					Gem3Id = value.Id;
-                _gem3Cached = value;
-			}
-		}
-
-        // 1-based index
-        public Item GetGem(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return Gem1;
-                case 2:
-                    return Gem2;
-                case 3:
-                    return Gem3;
-                default:
-                    return null;
-            }
-        }
-
-        public void SetGem(int index, Item value)
-        {
-            switch (index)
-            {
-                case 1:
-                    Gem1 = value;
-                    break;
-                case 2:
-                    Gem2 = value;
-                    break;
-                case 3:
-                    Gem3 = value;
-                    break;
-            }
-        }
-
-        // this version should only be used from optimizer, it bypasses the item cache completely
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void SetGemInternal(int index, Item value)
-        {
-            switch (index)
-            {
-                case 1:
-                    _gem1Cached = value;
-                    _gem1Id = (value == null) ? 0 : value.Id;
-                    break;
-                case 2:
-                    _gem2Cached = value;
-                    _gem2Id = (value == null) ? 0 : value.Id;
-                    break;
-                case 3:
-                    _gem3Cached = value;
-                    _gem3Id = (value == null) ? 0 : value.Id;
-                    break;
-            }
-        }
-
-		private string _gemmedId = string.Empty;
-		[XmlIgnore]
-		public string GemmedId
-		{
-			get
-			{
-                if (_gemmedId.Length == 0) // _gemmedId is never null
-				{
-					_gemmedId = string.Format("{0}.{1}.{2}.{3}", Id, Gem1Id, Gem2Id, Gem3Id);
-				}
-				return _gemmedId;
-			}
 		}
 		[XmlIgnore]
 		public ItemQuality Quality
@@ -369,18 +220,18 @@ namespace Rawr
 				_maxDamage = value;
 			}
 		}
-        [XmlIgnore]
-        public ItemDamageType DamageType
-        {
-            get
-            {
-                return _damageType;
-            }
-            set
-            {
-                _damageType = value;
-            }
-        }
+		[XmlIgnore]
+		public ItemDamageType DamageType
+		{
+			get
+			{
+				return _damageType;
+			}
+			set
+			{
+				_damageType = value;
+			}
+		}
 		[XmlIgnore]
 		public float Speed
 		{
@@ -426,36 +277,77 @@ namespace Rawr
 				_unique = value;
 			}
 		}
-		
-
-		private void OnIdsChanging()
+		[XmlIgnore]
+		public ItemSlot SocketColor1
 		{
-			ItemCache.DeleteItem(this, false);
+			get { return _socketColor1; }
+			set { _socketColor1 = value; }
+		}
+		[XmlIgnore]
+		public ItemSlot SocketColor2
+		{
+			get { return _socketColor2; }
+			set { _socketColor2 = value; }
+		}
+		[XmlIgnore]
+		public ItemSlot SocketColor3
+		{
+			get { return _socketColor3; }
+			set { _socketColor3 = value; }
+		}
+		public ItemSlot GetSocketColor(int index)
+		{
+			switch (index)
+			{
+				case 1:
+					return SocketColor1;
+				case 2:
+					return SocketColor2;
+				case 3:
+					return SocketColor3;
+				default:
+					return ItemSlot.None;
+			}
+		}
+		[XmlIgnore]
+		public string SocketColor1String
+		{
+			get { return _socketColor1.ToString(); }
+			set { _socketColor1 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+		}
+		[XmlIgnore]
+		public string SocketColor2String
+		{
+			get { return _socketColor2.ToString(); }
+			set { _socketColor2 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+		}
+		[XmlIgnore]
+		public string SocketColor3String
+		{
+			get { return _socketColor3.ToString(); }
+			set { _socketColor3 = (ItemSlot)Enum.Parse(typeof(ItemSlot), value); }
+		}
+		[XmlIgnore]
+		public Stats SocketBonus
+		{
+			get { return _socketBonus; }
+			set { _socketBonus = value; }
 		}
 
-		public event EventHandler IdsChanged;
-		private void OnIdsChanged()
+		public enum ItemDamageType
 		{
-			_gemmedId = string.Empty;
-			ItemCache.AddItem(this, false, false);
-            InvalidateCachedData();
-			if (IdsChanged != null) IdsChanged(this, null);
+			Physical = 0,
+			Holy,
+			Fire,
+			Nature,
+			Frost,
+			Shadow,
+			Arcane
 		}
-
-        public enum ItemDamageType
-        {
-            Physical = 0,
-            Holy,
-            Fire,
-            Nature,
-            Frost,
-            Shadow,
-            Arcane
-        }
 
 		public enum ItemQuality
 		{
-            Temp = -1,
+			Temp = -1,
 			Poor = 0,
 			Common,
 			Uncommon,
@@ -496,14 +388,14 @@ namespace Rawr
 			Idol,
 			Libram,
 			Totem,
-            Sigil,
+			Sigil,
 
 			Arrow,
 			Bullet,
 			Quiver,
 			AmmoPouch
 		}
-		
+
 		public enum ItemSlot
 		{
 			None,
@@ -584,71 +476,71 @@ namespace Rawr
 		{
 			switch (slot)
 			{
-				case Character.CharacterSlot.Projectile: return Item.ItemSlot.Projectile;
-				case Character.CharacterSlot.Head: return Item.ItemSlot.Head;
-				case Character.CharacterSlot.Neck: return Item.ItemSlot.Neck;
-				case Character.CharacterSlot.Shoulders: return Item.ItemSlot.Shoulders;
-				case Character.CharacterSlot.Chest: return Item.ItemSlot.Chest;
-				case Character.CharacterSlot.Waist: return Item.ItemSlot.Waist;
-				case Character.CharacterSlot.Legs: return Item.ItemSlot.Legs;
-				case Character.CharacterSlot.Feet: return Item.ItemSlot.Feet;
-				case Character.CharacterSlot.Wrist: return Item.ItemSlot.Wrist;
-				case Character.CharacterSlot.Hands: return Item.ItemSlot.Hands;
-				case Character.CharacterSlot.Finger1: return Item.ItemSlot.Finger;
-				case Character.CharacterSlot.Finger2: return Item.ItemSlot.Finger;
-				case Character.CharacterSlot.Trinket1: return Item.ItemSlot.Trinket;
-				case Character.CharacterSlot.Trinket2: return Item.ItemSlot.Trinket;
-				case Character.CharacterSlot.Back: return Item.ItemSlot.Back;
-				case Character.CharacterSlot.MainHand: return Item.ItemSlot.MainHand;
-				case Character.CharacterSlot.OffHand: return Item.ItemSlot.OffHand;
-				case Character.CharacterSlot.Ranged: return Item.ItemSlot.Ranged;
-				case Character.CharacterSlot.ProjectileBag: return Item.ItemSlot.ProjectileBag;
-				case Character.CharacterSlot.ExtraWristSocket: return Item.ItemSlot.Prismatic;
-				case Character.CharacterSlot.ExtraHandsSocket: return Item.ItemSlot.Prismatic;
-				case Character.CharacterSlot.ExtraWaistSocket: return Item.ItemSlot.Prismatic;
-				case Character.CharacterSlot.Tabard: return Item.ItemSlot.Tabard;
-				case Character.CharacterSlot.Shirt: return Item.ItemSlot.Shirt;
-				case Character.CharacterSlot.Gems: return Item.ItemSlot.Prismatic;
-				case Character.CharacterSlot.Metas: return Item.ItemSlot.Meta;
-				default: return Item.ItemSlot.None;
+				case Character.CharacterSlot.Projectile: return ItemSlot.Projectile;
+				case Character.CharacterSlot.Head: return ItemSlot.Head;
+				case Character.CharacterSlot.Neck: return ItemSlot.Neck;
+				case Character.CharacterSlot.Shoulders: return ItemSlot.Shoulders;
+				case Character.CharacterSlot.Chest: return ItemSlot.Chest;
+				case Character.CharacterSlot.Waist: return ItemSlot.Waist;
+				case Character.CharacterSlot.Legs: return ItemSlot.Legs;
+				case Character.CharacterSlot.Feet: return ItemSlot.Feet;
+				case Character.CharacterSlot.Wrist: return ItemSlot.Wrist;
+				case Character.CharacterSlot.Hands: return ItemSlot.Hands;
+				case Character.CharacterSlot.Finger1: return ItemSlot.Finger;
+				case Character.CharacterSlot.Finger2: return ItemSlot.Finger;
+				case Character.CharacterSlot.Trinket1: return ItemSlot.Trinket;
+				case Character.CharacterSlot.Trinket2: return ItemSlot.Trinket;
+				case Character.CharacterSlot.Back: return ItemSlot.Back;
+				case Character.CharacterSlot.MainHand: return ItemSlot.MainHand;
+				case Character.CharacterSlot.OffHand: return ItemSlot.OffHand;
+				case Character.CharacterSlot.Ranged: return ItemSlot.Ranged;
+				case Character.CharacterSlot.ProjectileBag: return ItemSlot.ProjectileBag;
+                //case Character.CharacterSlot.ExtraWristSocket: return ItemSlot.Prismatic;
+                //case Character.CharacterSlot.ExtraHandsSocket: return ItemSlot.Prismatic;
+                //case Character.CharacterSlot.ExtraWaistSocket: return ItemSlot.Prismatic;
+				case Character.CharacterSlot.Tabard: return ItemSlot.Tabard;
+				case Character.CharacterSlot.Shirt: return ItemSlot.Shirt;
+				case Character.CharacterSlot.Gems: return ItemSlot.Prismatic;
+				case Character.CharacterSlot.Metas: return ItemSlot.Meta;
+				default: return ItemSlot.None;
 			}
 		}
 
-        public bool IsGem
-        {
-            get
-            {
-                return Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
-            }
-        }
+		public bool IsGem
+		{
+			get
+			{
+				return Slot == ItemSlot.Meta || Slot == ItemSlot.Blue || Slot == ItemSlot.Green || Slot == ItemSlot.Orange || Slot == ItemSlot.Prismatic || Slot == ItemSlot.Purple || Slot == ItemSlot.Red || Slot == ItemSlot.Yellow;
+			}
+		}
 
-        public bool IsJewelersGem
-        {
-            get
-            {
-                if (Slot != ItemSlot.Prismatic) return false;
-                return Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157;
-            }
-        }
+		public bool IsJewelersGem
+		{
+			get
+			{
+				if (Slot != ItemSlot.Prismatic) return false;
+				return Id == 42142 || Id == 36766 || Id == 42148 || Id == 42143 || Id == 42152 || Id == 42153 || Id == 42146 || Id == 42158 || Id == 42154 || Id == 42150 || Id == 42156 || Id == 42144 || Id == 42149 || Id == 36767 || Id == 42145 || Id == 42155 || Id == 42151 || Id == 42157;
+			}
+		}
 
 		public Item() { }
-		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Sockets sockets, int gem1Id, int gem2Id, int gem3Id, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
+		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Stats socketBonus, ItemSlot socketColor1, ItemSlot socketColor2, ItemSlot socketColor3, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
 			_name = name;
 			_id = id;
 			_iconPath = iconPath;
 			_slot = slot;
 			_stats = stats;
-			_sockets = sockets;
-			_gem1Id = gem1Id;
-			_gem2Id = gem2Id;
-			_gem3Id = gem3Id;
+			_socketBonus = socketBonus;
+			_socketColor1 = socketColor1;
+			_socketColor2 = socketColor2;
+			_socketColor3 = socketColor3;
 			_setName = setName;
 			_quality = quality;
 			_type = type;
 			_minDamage = minDamage;
 			_maxDamage = maxDamage;
-            _damageType = damageType;
+			_damageType = damageType;
 			_speed = speed;
 			_requiredClasses = requiredClasses;
 			_unique = unique;
@@ -664,76 +556,24 @@ namespace Rawr
 				IconPath = this.IconPath,
 				Slot = this.Slot,
 				Stats = this.Stats.Clone(),
-				Sockets = this.Sockets.Clone(),
-				Gem1Id = this.Gem1Id,
-				Gem2Id = this.Gem2Id,
-				Gem3Id = this.Gem3Id,
+				SocketBonus = this.SocketBonus.Clone(),
+				SocketColor1 = this.SocketColor1,
+				SocketColor2 = this.SocketColor2,
+				SocketColor3 = this.SocketColor3,
 				SetName = this.SetName,
 				Type = this.Type,
 				MinDamage = this.MinDamage,
 				MaxDamage = this.MaxDamage,
-                DamageType = this.DamageType,
+				DamageType = this.DamageType,
 				Speed = this.Speed,
 				RequiredClasses = this.RequiredClasses,
-                Unique = this.Unique
+				Unique = this.Unique
 			};
 		}
 
 		public override string ToString()
 		{
-			string summary = this.Name + ": ";
-			summary += this.GetTotalStats().ToString();
-			//summary += Stats.ToString();
-			//summary += Sockets.ToString();
-			if (summary.EndsWith(", ")) summary = summary.Substring(0, summary.Length - 2);
-
-			if ((Sockets.Color1 != Item.ItemSlot.None && Gem1Id == 0) ||
-				(Sockets.Color2 != Item.ItemSlot.None && Gem2Id == 0) ||
-				(Sockets.Color3 != Item.ItemSlot.None && Gem3Id == 0))
-				summary += " [EMPTY SOCKETS]";
-
-			return summary;
-		}
-
-        // caching policy: cache total stats only for items that don't have global requirements
-        // value should not change if it relies on data other than from this item
-        // assume there is no stat editing happening in code other than in item editor
-        // invalidate on id changes, invalidate when item is opened for editing
-        // invalidate all items when any gem is opened for editing
-        // invalidate 
-        private Stats cachedTotalStats = null;
-        public void InvalidateCachedData()
-        {
-            cachedTotalStats = null;
-        }
-
-		public Stats GetTotalStats() { return GetTotalStats(null); }
-		public unsafe Stats GetTotalStats(Character character)
-		{
-            if (cachedTotalStats != null) return cachedTotalStats;
-            bool volatileGem = false, volatileItem = false;
-			Stats totalItemStats = new Stats();
-            fixed (float* pRawAdditiveData = totalItemStats._rawAdditiveData, pRawMultiplicativeData = totalItemStats._rawMultiplicativeData, pRawNoStackData = totalItemStats._rawNoStackData)
-            {
-                totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-                totalItemStats.AccumulateUnsafe(this.Stats);
-                bool eligibleForSocketBonus = GemMatchesSlot(Gem1, Sockets.Color1) &&
-                    GemMatchesSlot(Gem2, Sockets.Color2) &&
-                    GemMatchesSlot(Gem3, Sockets.Color3);
-                if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem1.Stats);
-                volatileItem = volatileItem || volatileGem;
-                if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem2.Stats);
-                volatileItem = volatileItem || volatileGem;
-                if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem3.Stats);
-                volatileItem = volatileItem || volatileGem;
-                if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Sockets.Stats);
-                if (!volatileItem)
-                {
-                    cachedTotalStats = totalItemStats;
-                    cachedTotalStats.GenerateSparseData();
-                }
-            }
-			return totalItemStats;
+			return this.Name + ": " + this.Stats.ToString();
 		}
 
 		public static bool GemMatchesSlot(Item gem, ItemSlot slotColor)
@@ -743,49 +583,49 @@ namespace Rawr
 				case ItemSlot.Red:
 					return gem != null && (gem.Slot == ItemSlot.Red || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
 				case ItemSlot.Yellow:
-					return gem != null && (gem.Slot == ItemSlot.Yellow || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Prismatic);
+                    return gem != null && (gem.Slot == ItemSlot.Yellow || gem.Slot == ItemSlot.Orange || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Prismatic);
 				case ItemSlot.Blue:
-					return gem != null && (gem.Slot == ItemSlot.Blue || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
+                    return gem != null && (gem.Slot == ItemSlot.Blue || gem.Slot == ItemSlot.Green || gem.Slot == ItemSlot.Purple || gem.Slot == ItemSlot.Prismatic);
 				case ItemSlot.Meta:
 					return gem != null && (gem.Slot == ItemSlot.Meta);
 				default:
-					return gem == null;
+                    return gem == null || gem.Slot != ItemSlot.Meta;
 			}
 		}
-        
-        public static SortedList<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap{ get; private set;}
-        static Item()
-        {
-            SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
 
-            foreach(Item.ItemSlot iSlot in Enum.GetValues(typeof(Item.ItemSlot)))
-            {
-                list[iSlot] = Character.CharacterSlot.None;
-            }
-            list[Item.ItemSlot.Head] = Character.CharacterSlot.Head;
-            list[Item.ItemSlot.Neck] = Character.CharacterSlot.Neck;
-            list[Item.ItemSlot.Shoulders] = Character.CharacterSlot.Shoulders;
-            list[Item.ItemSlot.Back] = Character.CharacterSlot.Back;
-            list[Item.ItemSlot.Chest] = Character.CharacterSlot.Chest;
-            list[Item.ItemSlot.Shirt] = Character.CharacterSlot.Shirt;
-            list[Item.ItemSlot.Tabard] = Character.CharacterSlot.Tabard;
-            list[Item.ItemSlot.Wrist] = Character.CharacterSlot.Wrist;
-            list[Item.ItemSlot.Hands] = Character.CharacterSlot.Hands;
-            list[Item.ItemSlot.Waist] = Character.CharacterSlot.Waist;
-            list[Item.ItemSlot.Legs] = Character.CharacterSlot.Legs;
-            list[Item.ItemSlot.Feet] = Character.CharacterSlot.Feet;
-            list[Item.ItemSlot.Finger] = Character.CharacterSlot.Finger1;
-            list[Item.ItemSlot.Trinket] = Character.CharacterSlot.Trinket1;
-            list[Item.ItemSlot.OneHand] = Character.CharacterSlot.MainHand;
-            list[Item.ItemSlot.TwoHand] = Character.CharacterSlot.MainHand;
-            list[Item.ItemSlot.MainHand] = Character.CharacterSlot.MainHand;
-            list[Item.ItemSlot.OffHand] = Character.CharacterSlot.OffHand;
-            list[Item.ItemSlot.Ranged] = Character.CharacterSlot.Ranged;
-            list[Item.ItemSlot.Projectile] = Character.CharacterSlot.Projectile;
-            list[Item.ItemSlot.ProjectileBag] = Character.CharacterSlot.ProjectileBag;
-            list.TrimExcess();
-            DefaultSlotMap = list;
-        }
+		public static SortedList<Item.ItemSlot, Character.CharacterSlot> DefaultSlotMap { get; private set; }
+		static Item()
+		{
+			SortedList<Item.ItemSlot, Character.CharacterSlot> list = new SortedList<Item.ItemSlot, Character.CharacterSlot>();
+
+			foreach (Item.ItemSlot iSlot in Enum.GetValues(typeof(Item.ItemSlot)))
+			{
+				list[iSlot] = Character.CharacterSlot.None;
+			}
+			list[Item.ItemSlot.Head] = Character.CharacterSlot.Head;
+			list[Item.ItemSlot.Neck] = Character.CharacterSlot.Neck;
+			list[Item.ItemSlot.Shoulders] = Character.CharacterSlot.Shoulders;
+			list[Item.ItemSlot.Back] = Character.CharacterSlot.Back;
+			list[Item.ItemSlot.Chest] = Character.CharacterSlot.Chest;
+			list[Item.ItemSlot.Shirt] = Character.CharacterSlot.Shirt;
+			list[Item.ItemSlot.Tabard] = Character.CharacterSlot.Tabard;
+			list[Item.ItemSlot.Wrist] = Character.CharacterSlot.Wrist;
+			list[Item.ItemSlot.Hands] = Character.CharacterSlot.Hands;
+			list[Item.ItemSlot.Waist] = Character.CharacterSlot.Waist;
+			list[Item.ItemSlot.Legs] = Character.CharacterSlot.Legs;
+			list[Item.ItemSlot.Feet] = Character.CharacterSlot.Feet;
+			list[Item.ItemSlot.Finger] = Character.CharacterSlot.Finger1;
+			list[Item.ItemSlot.Trinket] = Character.CharacterSlot.Trinket1;
+			list[Item.ItemSlot.OneHand] = Character.CharacterSlot.MainHand;
+			list[Item.ItemSlot.TwoHand] = Character.CharacterSlot.MainHand;
+			list[Item.ItemSlot.MainHand] = Character.CharacterSlot.MainHand;
+			list[Item.ItemSlot.OffHand] = Character.CharacterSlot.OffHand;
+			list[Item.ItemSlot.Ranged] = Character.CharacterSlot.Ranged;
+			list[Item.ItemSlot.Projectile] = Character.CharacterSlot.Projectile;
+			list[Item.ItemSlot.ProjectileBag] = Character.CharacterSlot.ProjectileBag;
+			list.TrimExcess();
+			DefaultSlotMap = list;
+		}
 
 		public bool FitsInSlot(Character.CharacterSlot charSlot)
 		{
@@ -832,9 +672,9 @@ namespace Rawr
 					return this.Slot == ItemSlot.Projectile;
 				case Character.CharacterSlot.ProjectileBag:
 					return this.Slot == ItemSlot.ProjectileBag;
-				case Character.CharacterSlot.ExtraWristSocket:
-				case Character.CharacterSlot.ExtraHandsSocket:
-				case Character.CharacterSlot.ExtraWaistSocket:
+                //case Character.CharacterSlot.ExtraWristSocket:
+                //case Character.CharacterSlot.ExtraHandsSocket:
+                //case Character.CharacterSlot.ExtraWaistSocket:
 				case Character.CharacterSlot.Gems:
 					return this.Slot == ItemSlot.Red || this.Slot == ItemSlot.Blue || this.Slot == ItemSlot.Yellow
 						|| this.Slot == ItemSlot.Purple || this.Slot == ItemSlot.Green || this.Slot == ItemSlot.Orange
@@ -853,31 +693,31 @@ namespace Rawr
 		}
 
 		public bool MeetsRequirements(Character character)
-        {
-            bool temp;
-            return MeetsRequirements(character, out temp);
-        }
+		{
+			bool temp;
+			return MeetsRequirements(character, out temp);
+		}
 
-        /// <summary>
-        /// Checks whether item meets the requirements to activate its stats.
-        /// </summary>
-        /// <param name="character">Character for which we are checking the requirements.</param>
-        /// <param name="volatileRequirements">This is set to true for items that depend on requirements not local to the item itself.</param>
-        /// <returns>True if the item meets the requirements.</returns>
+		/// <summary>
+		/// Checks whether item meets the requirements to activate its stats.
+		/// </summary>
+		/// <param name="character">Character for which we are checking the requirements.</param>
+		/// <param name="volatileRequirements">This is set to true for items that depend on requirements not local to the item itself.</param>
+		/// <returns>True if the item meets the requirements.</returns>
 		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
 			volatileRequirements = false;
-            int redGems = 0, yellowGems = 0, blueGems = 0;
-            if (character != null)
-            {
-                /*redGems = character.GetGemColorCount(ItemSlot.Red);
-                yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
-                blueGems = character.GetGemColorCount(ItemSlot.Blue);*/
-                redGems = character.RedGemCount;
-                yellowGems = character.YellowGemCount;
-                blueGems = character.BlueGemCount;
-            }
-            bool meetsRequirements = false;
+			int redGems = 0, yellowGems = 0, blueGems = 0;
+			if (character != null)
+			{
+				/*redGems = character.GetGemColorCount(ItemSlot.Red);
+				yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
+				blueGems = character.GetGemColorCount(ItemSlot.Blue);*/
+				redGems = character.RedGemCount;
+				yellowGems = character.YellowGemCount;
+				blueGems = character.BlueGemCount;
+			}
+			bool meetsRequirements = false;
 
 			//TODO: Make this dynamic, by loading the gem requirements from the armory
 			switch (this.Id)
@@ -897,45 +737,45 @@ namespace Rawr
 				case 44078:
 				case 44089:
 				case 41382:
-                case 41398:
+				case 41398:
 					volatileRequirements = true; //1 of each
 					meetsRequirements = redGems >= 1 && yellowGems >= 1 && blueGems >= 1;
 					break;
 				case 25897:
-                    volatileRequirements = true; //More reds than blues
-                    meetsRequirements = redGems > blueGems;
-                    break;
-                case 25895:
-                    volatileRequirements = true; //More reds than yellows
-                    meetsRequirements = redGems > yellowGems;
-                    break;
-                case 25893:
+					volatileRequirements = true; //More reds than blues
+					meetsRequirements = redGems > blueGems;
+					break;
+				case 25895:
+					volatileRequirements = true; //More reds than yellows
+					meetsRequirements = redGems > yellowGems;
+					break;
+				case 25893:
 				case 32640:
-                    volatileRequirements = true; //More blues than yellows
-                    meetsRequirements = blueGems > yellowGems;
-                    break;
-                case 34220:
+					volatileRequirements = true; //More blues than yellows
+					meetsRequirements = blueGems > yellowGems;
+					break;
+				case 34220:
 				case 41285:
-                    volatileRequirements = true; //2 blues
-                    meetsRequirements = blueGems >= 2;
+					volatileRequirements = true; //2 blues
+					meetsRequirements = blueGems >= 2;
 					break;
 				case 41376:
 					volatileRequirements = true; //2 reds
 					meetsRequirements = redGems >= 2;
 					break;
-                case 25896:
+				case 25896:
 				case 44087:
-                    volatileRequirements = true; //3 blues
-                    meetsRequirements = blueGems >= 3;
-                    break;
-                case 25898:
-                    volatileRequirements = true; //5 blues
-                    meetsRequirements = blueGems >= 5;
-                    break;
-                case 32641:
-                    volatileRequirements = true; //exactly 3 yellows
-                    meetsRequirements = yellowGems == 3;
-                    break;
+					volatileRequirements = true; //3 blues
+					meetsRequirements = blueGems >= 3;
+					break;
+				case 25898:
+					volatileRequirements = true; //5 blues
+					meetsRequirements = blueGems >= 5;
+					break;
+				case 32641:
+					volatileRequirements = true; //exactly 3 yellows
+					meetsRequirements = yellowGems == 3;
+					break;
 				case 41333:
 					volatileRequirements = true; //3 red
 					meetsRequirements = redGems >= 3;
@@ -945,19 +785,19 @@ namespace Rawr
 				case 28556:
 				case 41339:
 				case 44076:
-                    volatileRequirements = true; //2 yellows, 1 red
-                    meetsRequirements = yellowGems >= 2 && redGems >= 1;
-                    break;
-                case 35501:
+					volatileRequirements = true; //2 yellows, 1 red
+					meetsRequirements = yellowGems >= 2 && redGems >= 1;
+					break;
+				case 35501:
 				case 44088:
-                    volatileRequirements = true; //1 yellow, 2 blue
-                    meetsRequirements = yellowGems >= 1 && blueGems >= 2;
-                    break;
-                case 41378:
+					volatileRequirements = true; //1 yellow, 2 blue
+					meetsRequirements = yellowGems >= 1 && blueGems >= 2;
+					break;
+				case 41378:
 				case 44084:
 				case 41381:
-                    volatileRequirements = true; //2 yellow, 1 blue
-                    meetsRequirements = yellowGems >= 2 && blueGems >= 1;
+					volatileRequirements = true; //2 yellow, 1 blue
+					meetsRequirements = yellowGems >= 2 && blueGems >= 1;
 					break;
 				case 41380:
 				case 41377:
@@ -978,164 +818,520 @@ namespace Rawr
 					volatileRequirements = true; //2 red, 1 blue
 					meetsRequirements = redGems >= 2 && blueGems >= 1;
 					break;
-                default:
-                    meetsRequirements = true;
-                    break;
+				default:
+					meetsRequirements = true;
+					break;
 			}
-            
-            if (character == null || !character.EnforceMetagemRequirements) return true;
+
+			if (character == null || !character.EnforceMetagemRequirements) return true;
 			return meetsRequirements;
 		}
 
 
 
-		public static Item LoadFromId(int id, string logReason) { return LoadFromId(id, false, logReason, true); }
-		public static Item LoadFromId(int id, bool forceRefresh, string logReason, bool raiseEvent) { return LoadFromId(id.ToString() + ".0.0.0", forceRefresh, logReason, raiseEvent); }
-		public static Item LoadFromId(string gemmedId, string logReason) { return LoadFromId(gemmedId, false, logReason, true); }
-		public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent) { return LoadFromId(gemmedId, forceRefresh, logReason, raiseEvent, false); }
-		public static Item LoadFromId(string gemmedId, bool forceRefresh, string logReason, bool raiseEvent, bool useWowhead)
+		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
+		public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead)
 		{
-			if (string.IsNullOrEmpty(gemmedId))
-				return null;
-			Item cachedItem = ItemCache.FindItemById(gemmedId, true, raiseEvent);
-			if (cachedItem != null && !forceRefresh)
-				return cachedItem;
+			Item cachedItem = ItemCache.FindItemById(id);
+			if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
-                if (cachedItem != null)
-                {
-                    ItemCache.DeleteItem(cachedItem, raiseEvent);
-                }
-				Item newItem = useWowhead ? Wowhead.GetItem(gemmedId, false) : Armory.GetItem(gemmedId, logReason);
-				if (newItem == null && cachedItem != null)
+				Item newItem = useWowhead ? Wowhead.GetItem(id, false) : Armory.GetItem(id);
+				if (newItem != null)
 				{
-					ItemCache.AddItem(cachedItem, true, raiseEvent);
+					ItemCache.AddItem(newItem, raiseEvent);
 				}
-				else
-				{
-					ItemCache.AddItem(newItem, true, raiseEvent);
-				}
-                
-				return newItem;
+
+				return ItemCache.FindItemById(id);
 			}
 		}
 
-        /// <summary>
-        /// Used by optimizer to cache dictionary search result
-        /// </summary>
-        [XmlIgnore]
-        internal Dictionary<int, bool> EnchantValid;
-        [XmlIgnore]
-        internal List<Enchant> EnchantValidList;
+		/// <summary>
+		/// Used by optimizer to cache dictionary search result
+		/// </summary>
+        //[XmlIgnore]
+        //internal Dictionary<int, bool> EnchantValid;
+        //[XmlIgnore]
+        //internal List<Enchant> EnchantValidList;
 
-        #region IComparable<Item> Members
+		#region IComparable<Item> Members
 
-        public int CompareTo(Item other)
+		public int CompareTo(Item other)
+		{
+			return ToString().CompareTo(other.ToString());
+		}
+
+		#endregion
+	}
+	#endregion
+
+	#region ItemInstance
+    // to make our lives more tolerable, ItemInstance is exactly what it implies
+    // it is a single instance of an item, it is not to be shared between multiple characters
+    // or whatever, at least if you don't know what you are doing
+    // if for whatever reason you reuse the same instance treat it as read only
+	[Serializable]
+	public class ItemInstance : IComparable<ItemInstance>
+	{
+		[XmlElement("Id")]
+		public int _id;
+		[DefaultValueAttribute(0)]
+		[XmlElement("Gem1Id")]
+		public int _gem1Id;
+		[DefaultValueAttribute(0)]
+		[XmlElement("Gem2Id")]
+		public int _gem2Id;
+		[DefaultValueAttribute(0)]
+		[XmlElement("Gem3Id")]
+		public int _gem3Id;
+		[DefaultValueAttribute(0)]
+		[XmlElement("EnchantId")]
+		public int _enchantId;
+
+		[XmlIgnore]
+		public int Id
+		{
+			get { return _id; }
+            set
+            {
+                _id = value; OnIdsChanged();
+            }
+		}
+		[XmlIgnore]
+		public int Gem1Id
+		{
+			get { return _gem1Id; }
+            set
+            {
+                _gem1Id = value; OnIdsChanged();
+            }
+		}
+		[XmlIgnore]
+		public int Gem2Id
+		{
+			get { return _gem2Id; }
+            set
+            {
+                _gem2Id = value; OnIdsChanged();
+            }
+		}
+		[XmlIgnore]
+		public int Gem3Id
+		{
+			get { return _gem3Id; }
+            set
+            {
+                _gem3Id = value; OnIdsChanged();
+            }
+		}
+		[XmlIgnore]
+		public int EnchantId
+		{
+			get { return _enchantId; }
+            set
+            {
+                _enchantId = value; OnIdsChanged();
+            }
+		}
+
+        public event EventHandler IdsChanged;
+        private void OnIdsChanged()
         {
-            return ToString().CompareTo(other.ToString());
+            _gemmedId = string.Empty;
+            InvalidateCachedData();
+            if (IdsChanged != null) IdsChanged(this, null);
         }
 
-        #endregion
-    }
-
-	[Serializable]
-	public class Sockets
-	{
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Color1")]
-		public Item.ItemSlot _color1;
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Color2")]
-		public Item.ItemSlot _color2;
-		[System.ComponentModel.DefaultValueAttribute(0)]
-		[XmlElement("Color3")]
-		public Item.ItemSlot _color3;
-		[XmlElement("Stats")]
-		public Stats _stats = new Stats();
-
-		[XmlIgnore]
-		public Item.ItemSlot Color1
-		{
-			get { return _color1; }
-			set { _color1 = value; }
-		}
-		[XmlIgnore]
-		public Item.ItemSlot Color2
-		{
-			get { return _color2; }
-			set { _color2 = value; }
-		}
-		[XmlIgnore]
-		public Item.ItemSlot Color3
-		{
-			get { return _color3; }
-			set { _color3 = value; }
-		}
-        public Item.ItemSlot GetColor(int index)
+        [XmlIgnore]
+        private Item _itemCached = null;
+        [XmlIgnore]
+        public Item Item
         {
-            switch (index)
+            get
             {
-                case 1:
-                    return Color1;
-                case 2:
-                    return Color2;
-                case 3:
-                    return Color3;
-                default:
-                    return Item.ItemSlot.None;
+                if (Id == 0) return null;
+                if (_itemCached == null || _itemCached.Id != Id || _itemCached.Invalid)
+                {
+                    _itemCached = Item.LoadFromId(Id);
+                }
+                return _itemCached;
+            }
+            set
+            {
+                if (value == null)
+                    Id = 0;
+                else
+                    Id = value.Id;
+                _itemCached = value;
             }
         }
+
 		[XmlIgnore]
-		public string Color1String
-		{
-			get { return _color1.ToString(); }
-			set { _color1 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
-		}
+		private Item _gem1Cached = null;
 		[XmlIgnore]
-		public string Color2String
+		public Item Gem1
 		{
-			get { return _color2.ToString(); }
-			set { _color2 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
-		}
-		[XmlIgnore]
-		public string Color3String
-		{
-			get { return _color3.ToString(); }
-			set { _color3 = (Item.ItemSlot)Enum.Parse(typeof(Item.ItemSlot), value); }
-		}
-		[XmlIgnore]
-		public Stats Stats
-		{
-			get { return _stats; }
-			set { _stats = value; }
+			get
+			{
+				if (Gem1Id == 0) return null;
+				if (_gem1Cached == null || _gem1Cached.Id != Gem1Id || _gem1Cached.Invalid)
+				{
+					_gem1Cached = Item.LoadFromId(Gem1Id);
+				}
+				return _gem1Cached;
+			}
+			set
+			{
+				if (value == null)
+					Gem1Id = 0;
+				else
+					Gem1Id = value.Id;
+				_gem1Cached = value;
+            }
 		}
 
-		public Sockets() { }
-		public Sockets(Item.ItemSlot color1, Item.ItemSlot color2, Item.ItemSlot color3, Stats stats)
+		[XmlIgnore]
+		private Item _gem2Cached = null;
+		[XmlIgnore]
+		public Item Gem2
 		{
-			_color1 = color1;
-			_color2 = color2;
-			_color3 = color3;
-			_stats = stats;
+			get
+			{
+				if (Gem2Id == 0) return null;
+				if (_gem2Cached == null || _gem2Cached.Id != Gem2Id || _gem2Cached.Invalid)
+				{
+					_gem2Cached = Item.LoadFromId(Gem2Id);
+				}
+				return _gem2Cached;
+			}
+			set
+			{
+				if (value == null)
+					Gem2Id = 0;
+				else
+					Gem2Id = value.Id;
+				_gem2Cached = value;
+            }
 		}
 
-		public Sockets Clone()
+		[XmlIgnore]
+		private Item _gem3Cached = null;
+		[XmlIgnore]
+		public Item Gem3
 		{
-			return new Sockets(this.Color1, this.Color2, this.Color3, this.Stats.Clone());
+			get
+			{
+				if (Gem3Id == 0) return null;
+				if (_gem3Cached == null || _gem3Cached.Id != Gem3Id || _gem3Cached.Invalid)
+				{
+					_gem3Cached = Item.LoadFromId(Gem3Id);
+				}
+				return _gem3Cached;
+			}
+			set
+			{
+				if (value == null)
+					Gem3Id = 0;
+				else
+					Gem3Id = value.Id;
+				_gem3Cached = value;
+            }
+		}
+
+		[XmlIgnore]
+		private Enchant _enchantCached = null;
+		[XmlIgnore]
+		public Enchant Enchant
+		{
+		    get
+		    {
+		        if (_enchantCached == null || _enchantCached.Id != EnchantId)
+		        {
+		            _enchantCached = Enchant.FindEnchant(EnchantId, Item.Slot, null);
+		        }
+		        return _enchantCached;
+		    }
+		    set
+		    {
+		        if (value == null)
+		            EnchantId = 0;
+		        else
+                    EnchantId = value.Id;
+		        _enchantCached = value;
+            }
+		}
+
+		// 1-based index
+		public Item GetGem(int index)
+		{
+			switch (index)
+			{
+				case 1:
+					return Gem1;
+				case 2:
+					return Gem2;
+				case 3:
+					return Gem3;
+				default:
+					return null;
+			}
+		}
+
+		public void SetGem(int index, Item value)
+		{
+			switch (index)
+			{
+				case 1:
+					Gem1 = value;
+					break;
+				case 2:
+					Gem2 = value;
+					break;
+				case 3:
+					Gem3 = value;
+					break;
+			}
+		}
+
+        [XmlIgnore]
+		private string _gemmedId = string.Empty;
+		[XmlIgnore]
+		public string GemmedId
+		{
+			get
+			{
+				if (_gemmedId.Length == 0) // _gemmedId is never null
+				{
+					_gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId);
+				}
+				return _gemmedId;
+			}
+            set
+            {
+                if (value == null) _gemmedId = string.Empty;
+                else _gemmedId = value;
+                string[] ids = _gemmedId.Split('.');
+                _id = int.Parse(ids[0]);
+                _gem1Id = ids.Length > 1 ? int.Parse(ids[1]) : 0;
+                _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
+                _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
+                _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+                OnIdsChanged();
+            }
+		}
+		
+		public ItemInstance() { }
+		public ItemInstance(string gemmedId)
+		{
+			string[] ids = gemmedId.Split('.');
+			_id = int.Parse(ids[0]);
+			_gem1Id = ids.Length > 1 ? int.Parse(ids[1]) : 0;
+			_gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
+			_gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
+			_enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+		}
+		public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId)
+		{
+			_id = id;
+			_gem1Id = gem1Id;
+			_gem2Id = gem2Id;
+			_gem3Id = gem3Id;
+			_enchantId = enchantId;
+		}
+        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant)
+        {
+            Item = item;
+            Gem1 = gem1;
+            Gem2 = gem2;
+            Gem3 = gem3;
+            Enchant = enchant;
+        }
+
+		public ItemInstance Clone()
+		{
+			return new ItemInstance()
+			{
+				Item = this.Item,
+				Gem1 = this.Gem1,
+				Gem2 = this.Gem2,
+				Gem3 = this.Gem3,
+				Enchant = this.Enchant
+			};
 		}
 
 		public override string ToString()
 		{
-			string summary = Color1.ToString().Substring(0, 1) + Color2.ToString().Substring(0, 1) + Color3.ToString().Substring(0, 1);
-			summary = summary.Replace("N", "") + "+";
-			if (Stats.Agility > 0) summary += Stats.Agility.ToString() + "Agi";
-			if (Stats.Stamina > 0) summary += Stats.Stamina.ToString() + "Sta";
-			if (Stats.DodgeRating > 0) summary += Stats.DodgeRating.ToString() + "Dodge";
-			if (Stats.DefenseRating > 0) summary += Stats.DefenseRating.ToString() + "Def";
-			if (Stats.Resilience > 0) summary += Stats.Resilience.ToString() + "Res";
-			if (summary.EndsWith("+")) summary = summary.Substring(0, summary.Length - 1);
+			string summary = this.Item.Name + ": ";
+			summary += this.GetTotalStats().ToString();
+			//summary += Stats.ToString();
+			//summary += Sockets.ToString();
+			if (summary.EndsWith(", ")) summary = summary.Substring(0, summary.Length - 2);
+
+			if ((Item.SocketColor1 != Item.ItemSlot.None && Gem1Id == 0) ||
+				(Item.SocketColor2 != Item.ItemSlot.None && Gem2Id == 0) ||
+				(Item.SocketColor3 != Item.ItemSlot.None && Gem3Id == 0))
+				summary += " [EMPTY SOCKETS]";
+
 			return summary;
 		}
-	}
 
+		// caching policy: cache total stats only for items that don't have global requirements
+		// value should not change if it relies on data other than from this item
+		// assume there is no stat editing happening in code other than in item editor
+		// invalidate on id changes, invalidate when item is opened for editing
+		// invalidate all items when any gem is opened for editing
+		// invalidate 
+		private Stats cachedTotalStats = null;
+        private DateTime cachedTime; 
+		public void InvalidateCachedData()
+		{
+			cachedTotalStats = null;
+		}
+
+		public Stats GetTotalStats() { return GetTotalStats(null); }
+		public unsafe Stats GetTotalStats(Character character)
+		{
+			if (cachedTotalStats != null && Item.LastChange <= cachedTime) return cachedTotalStats; // TODO evaluate whether we should make a check for invalidation of gems or just invalidate all items when gems change
+			bool volatileGem = false, volatileItem = false;
+			Stats totalItemStats = new Stats();
+			fixed (float* pRawAdditiveData = totalItemStats._rawAdditiveData, pRawMultiplicativeData = totalItemStats._rawMultiplicativeData, pRawNoStackData = totalItemStats._rawNoStackData)
+			{
+				totalItemStats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
+				totalItemStats.AccumulateUnsafe(Item.Stats);
+				bool eligibleForSocketBonus =	Item.GemMatchesSlot(Gem1, Item.SocketColor1) &&
+												Item.GemMatchesSlot(Gem2, Item.SocketColor2) &&
+												Item.GemMatchesSlot(Gem3, Item.SocketColor3);
+				if (Gem1 != null && Gem1.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem1.Stats);
+				volatileItem = volatileItem || volatileGem;
+				if (Gem2 != null && Gem2.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem2.Stats);
+				volatileItem = volatileItem || volatileGem;
+				if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem3.Stats);
+				volatileItem = volatileItem || volatileGem;
+				if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus);
+                totalItemStats.AccumulateUnsafe(Enchant.Stats);
+				if (!volatileItem)
+				{
+                    cachedTime = DateTime.Now;
+					cachedTotalStats = totalItemStats;
+					cachedTotalStats.GenerateSparseData();
+				}
+			}
+			return totalItemStats;
+		}
+
+
+		public static ItemInstance LoadFromId(string gemmedId)
+		{
+			if (string.IsNullOrEmpty(gemmedId))
+				return null;
+			return new ItemInstance(gemmedId);
+		}
+
+		#region IComparable<Item> Members
+
+		public int CompareTo(ItemInstance other)
+		{
+			return GemmedId.CompareTo(other.GemmedId);
+		}
+
+		#endregion
+
+        public bool FitsInSlot(Character.CharacterSlot characterSlot)
+        {
+            return Item.FitsInSlot(characterSlot);
+        }
+
+        // helper functions to minimize fixing of models
+        [XmlIgnore]
+        public Item.ItemSlot Slot
+        {
+            get
+            {
+                if (Item == null) return Item.ItemSlot.None;
+                return Item.Slot;
+            }
+        }
+
+        [XmlIgnore]
+        public Item.ItemType Type
+        {
+            get
+            {
+                if (Item == null) return Item.ItemType.None;
+                return Item.Type;
+            }
+        }
+
+        [XmlIgnore]
+        public int MinDamage
+        {
+            get
+            {
+                if (Item == null) return 0;
+                return Item.MinDamage;
+            }
+        }
+
+        [XmlIgnore]
+        public int MaxDamage
+        {
+            get
+            {
+                if (Item == null) return 0;
+                return Item.MaxDamage;
+            }
+        }
+
+        [XmlIgnore]
+        public Item.ItemDamageType DamageType
+        {
+            get
+            {
+                if (Item == null) return Item.ItemDamageType.Physical;
+                return Item.DamageType;
+            }
+        }
+
+        [XmlIgnore]
+        public float Speed
+        {
+            get
+            {
+                if (Item == null) return 0;
+                return Item.Speed;
+            }
+        }
+
+        public static bool operator ==(ItemInstance a, ItemInstance b)
+        {
+            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return ReferenceEquals(a, b);
+            return a.GemmedId == b.GemmedId;
+        }
+
+        public static bool operator !=(ItemInstance a, ItemInstance b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            ItemInstance o = obj as ItemInstance;
+            if (o != null)
+            {
+                return GemmedId == o.GemmedId;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return GemmedId.GetHashCode();
+        }
+    }
+
+	#endregion
+
+	public class ItemList : List<Item>
+    {
+    }
 }

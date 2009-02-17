@@ -197,6 +197,14 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                return new List<GemmingTemplate>() { };
+            }
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
             CharacterCalculationsProtWarr   calculatedStats = new CharacterCalculationsProtWarr();
@@ -336,8 +344,8 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     if ((character.MainHand != null) &&
-                        ((character.MainHand.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Type == Item.ItemType.OneHandMace)))
+                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
+                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
                     {
                         statsRace.Expertise += 3f;
                     }
@@ -358,7 +366,7 @@ threat and limited threat scaled by the threat scale.",
                     };
 
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Type == Item.ItemType.OneHandAxe))
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandAxe))
                     {
                         statsRace.Expertise += 5f;
                     }
@@ -378,7 +386,7 @@ threat and limited threat scaled by the threat scale.",
                         PhysicalCrit = 0.03185f,
                     };
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Type == Item.ItemType.OneHandMace))
+                        (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
                     {
                         statsRace.Expertise += 5f;
                     }
@@ -484,9 +492,9 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
-        public override Stats GetEnchantsStats(Character character)
+        public Stats GetEnchantsStats(Character character)
         {
-            Stats statsEnchants = base.GetEnchantsStats(character);
+            Stats statsEnchants = null; //TODO: FIX_THIS   base.GetEnchantsStats(character);
 
             // Assuming a GCD every 1.5s
             float abilityPerSecond = 1.0f / 1.5f;
@@ -498,7 +506,7 @@ threat and limited threat scaled by the threat scale.",
             {
                 float procRate = 1.0f; // PPM
                 float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
+                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
                 float procUptime = procDuration * procPerSecond;
 
                 statsEnchants.Agility += 120.0f * procUptime;
@@ -510,7 +518,7 @@ threat and limited threat scaled by the threat scale.",
             {
                 float procRate = 1.2f; // PPM
                 float procDuration = 15.0f;
-                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
+                float procPerSecond = (((procRate / 60.0f) * character.MainHand.Item.Speed) + ((procRate / 60.0f) * abilityPerSecond)) * hitRate;
                 float procUptime = procDuration * procPerSecond;
 
                 statsEnchants.ArmorPenetrationRating += 120.0f * procUptime;
