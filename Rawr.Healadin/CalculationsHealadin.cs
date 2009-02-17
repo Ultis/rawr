@@ -6,11 +6,45 @@ namespace Rawr.Healadin
 	[Rawr.Calculations.RawrModelInfo("Healadin", "Spell_Holy_HolyBolt", Character.CharacterClass.Paladin)]
 	public class CalculationsHealadin : CalculationsBase
     {
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                ////Relevant Gem IDs
+                //Green
+                int[] dazzling = { 39984, 40094, 40175 };
+
+                //Yellow
+                int[] brilliant = { 39912, 40012, 40123, 42148 };
+
+                //Orange
+                int[] luminous = { 39946, 40047, 40151 };
+
+                //Meta
+                int insightful = 41401;
+                int revitalizing = 41376;
+
+                return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
+						RedId = brilliant[0], YellowId = brilliant[0], BlueId = brilliant[0], PrismaticId = brilliant[0], MetaId = insightful },
+					new GemmingTemplate() { Model = "Healadin", Group = "Uncommon",
+						RedId = luminous[0], YellowId = brilliant[0], BlueId = dazzling[0], PrismaticId = brilliant[0], MetaId = insightful },
+
+					new GemmingTemplate() { Model = "Healadin", Group = "Rare", Enabled = true,
+						RedId = brilliant[1], YellowId = brilliant[1], BlueId = brilliant[1], PrismaticId = brilliant[1], MetaId = insightful },
+					new GemmingTemplate() { Model = "Healadin", Group = "Rare", Enabled = true,
+						RedId = luminous[1], YellowId = brilliant[1], BlueId = dazzling[1], PrismaticId = brilliant[1], MetaId = insightful },
+						
+					new GemmingTemplate() { Model = "Healadin", Group = "Epic",
+						RedId = brilliant[2], YellowId = brilliant[2], BlueId = brilliant[2], PrismaticId = brilliant[2], MetaId = insightful },
+					new GemmingTemplate() { Model = "Healadin", Group = "Epic",
+						RedId = luminous[2], YellowId = brilliant[2], BlueId = dazzling[2], PrismaticId = brilliant[2], MetaId = insightful },
+						
+					new GemmingTemplate() { Model = "Healadin", Group = "Jeweler",
+						RedId = brilliant[3], YellowId = brilliant[3], BlueId = brilliant[3], PrismaticId = brilliant[3], MetaId = insightful },
+				};
             }
         }
 
