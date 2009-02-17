@@ -384,10 +384,13 @@ namespace Rawr.Retribution
             Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false, calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);
 
+            float berserkingAP = stats.BerserkingProc * 140f;
+
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (float)Math.Floor((statsOther.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
             float libramAP = stats.APCrusaderStrike_6 * 6f * sol.CrusaderStrike / fightLength;
-            stats.AttackPower = (float)Math.Floor((stats.AttackPower + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
+            stats.AttackPower = (float)Math.Floor((stats.AttackPower + berserkingAP +libramAP + stats.Strength * 2)
+                * (1 + stats.BonusAttackPowerMultiplier));
             stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
             stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
                 + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
@@ -515,7 +518,7 @@ namespace Rawr.Retribution
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
-
+                BerserkingProc = stats.BerserkingProc,
                 GreatnessProc = stats.GreatnessProc,
                 CritDivineStorm_8 = stats.CritDivineStorm_8,
                 CritJudgement_5 = stats.CritJudgement_5,
@@ -534,7 +537,7 @@ namespace Rawr.Retribution
                 stats.BonusStrengthMultiplier + stats.BonusStaminaMultiplier + stats.BonusAgilityMultiplier + stats.BonusCritMultiplier + stats.BonusDamageMultiplier +
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower +
-                stats.JudgementCDReduction
+                stats.JudgementCDReduction + stats.BerserkingProc
                 ) != 0;
         }
     }
