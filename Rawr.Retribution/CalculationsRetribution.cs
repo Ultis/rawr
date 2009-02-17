@@ -7,11 +7,53 @@ namespace Rawr.Retribution
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", Character.CharacterClass.Paladin)]
 	class CalculationsRetribution : CalculationsBase
     {
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                ////Relevant Gem IDs
+
+                //red
+                int[] bold = { 39900, 39996, 40111, 42142 };  // +str
+
+                //Orange
+                int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
+                int[] etched = { 39948, 40038, 40143 };  // +str,+hit
+
+                //Purple
+                int[] sovereign = { 39934, 40022, 40129 }; // +str,+stam
+
+                //Meta
+                int relentless = 41398;
+                int chaotic = 41285;
+
+                return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
+						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
+						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Uncommon",
+						RedId = bold[0], YellowId = etched[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+
+					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
+						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
+						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Rare", Enabled = true,
+						RedId = bold[1], YellowId = etched[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
+						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
+						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Retribution", Group = "Epic",
+						RedId = bold[2], YellowId = etched[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Retribution", Group = "Jeweler",
+						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+				};
             }
         }
 
