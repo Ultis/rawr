@@ -33,7 +33,13 @@ namespace Rawr.ShadowPriest
                         f += f2;
                 return f;
             }
-            set { }
+			set
+			{
+				float val = value;
+				for (int x = 1; x < _subPoints.Length; x++)
+					val -= _subPoints[x];
+				_subPoints[0] = val;
+			}
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };

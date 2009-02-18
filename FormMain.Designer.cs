@@ -1266,7 +1266,7 @@ namespace Rawr
             // 
             this.defaultGemControlToolStripMenuItem.Name = "defaultGemControlToolStripMenuItem";
             this.defaultGemControlToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.defaultGemControlToolStripMenuItem.Text = "Set Default Gems for Equipment...";
+            this.defaultGemControlToolStripMenuItem.Text = "Edit Gemmings...";
             this.defaultGemControlToolStripMenuItem.Click += new System.EventHandler(this.defaultGemControlToolStripMenuItem_Click);
             // 
             // refineEquipmentParametersToolStripMenuItem
