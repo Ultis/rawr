@@ -12,7 +12,119 @@ namespace Rawr.HolyPriest
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                // Interesting Gem Choices for a Holy & Discipline Priest
+                // Red
+                int[] runed = { 39911, 39998, 40113, 42144 }; // +spp
+
+                // Orange
+                int[] durable = { 39958, 40050, 40154 }; // +spp/+resilience
+                int[] luminous = { 39946, 40047, 40151 }; // +spp/+int
+                int[] potent = { 39956, 40048, 40152 }; // +spp/+crit
+                int[] reckless = { 39959, 40051, 40155 }; // +spp/+haste
+                //int[] veiled = { 39957, 40049, 40153 }; // +spp/+hit
+
+                // Yellow
+                int[] brilliant = { 39912, 40012, 40123, 42148 }; // +int
+                int[] mystic = { 39917, 40016, 40127, 42158 }; // +resilience
+                int[] quick = { 39918, 40017, 40128, 42150 }; // +haste
+                // int[] rigid = { 39915, 40014, 40125, 42156 }; // +hit
+                int[] smooth = { 39914, 40013, 40124, 42149 }; // +crit
+
+                // Green
+                int[] dazzling = { 39984, 40094, 40175 }; // +int/+mp5
+                int[] energized = { 39989, 40105, 40179 }; // +haste/+mp5
+                int[] forceful = { 39978, 40091, 40169 }; // +haste/+sta
+                int[] intricate = { 39983, 40104, 40174 }; // +haste/+spi
+                int[] jagged = { 39974, 40086, 40165 }; // +crit/+stamina
+                // int[] lambent = { 39986, 40100, 40177 }; // +hit/+mp5
+                int[] misty = { 39980, 40095, 40171 }; // +crit/+spi
+                int[] opaque = { 39988, 40103, 40178 }; // +resilience/+mp5
+                int[] seers = { 39979, 40092, 40170 }; // +int/+spi 
+                // int[] shining = { 39981, 40099, 40172 }; // +hit/+spi
+                int[] steady = { 39977, 40090, 40168 }; // +resilience/+stamina
+                int[] sundered = { 39985, 40096, 40176 }; // +crit/+mp5
+                int[] timeless = { 39968, 40085, 40164 }; // +int/+stamina
+                int[] turbid = { 39982, 40102, 40173 }; // +resilience/+spi
+                // int[] vivid = { 39975, 40088, 40166 }; // +hit/+stamina
+
+                // Blue
+                int[] lustrous = { 39927, 40010, 40121, 42146 }; // +mp5
+                int[] solid = { 39919, 40008, 40119, 36767 }; // +stamina
+                int[] sparkling = { 39920, 40009, 40120, 42145 }; // +spirit
+
+                // Purple
+                int[] glowing = { 39936, 40025, 40132 }; // +spp/+stamina
+                int[] purified = { 39941, 40026, 40133 }; // +spp/+spirit
+                int[] royal = { 39943, 40027, 40134 }; // +spp/+mp5
+
+                // Meta
+                int[] beaming = { 41389 }; // +crit rating/+2% mana
+                int[] ember = { 41333 }; // +spp/+2% int
+                int[] insightful = { 41401 }; // +int/manarestore
+                int[] revitalizing = { 41376 }; // +mp5/+3% heal effect
+                int[] powerful = { 41397 }; // +stamina/-10% stun duration
+ 
+                return new List<GemmingTemplate>() {
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max Mana
+                        RedId = luminous[0], YellowId = brilliant[0], BlueId = seers[0], PrismaticId = brilliant[0], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max Mana Regen
+                        RedId = purified[0], YellowId = seers[0], BlueId = sparkling[0], PrismaticId = sparkling[0], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max SPP
+                        RedId = runed[0], YellowId = luminous[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max Haste
+                        RedId = runed[0], YellowId = reckless[0], BlueId = intricate[0], PrismaticId = runed[0], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max Crit
+                        RedId = runed[0], YellowId = potent[0], BlueId = misty[0], PrismaticId = runed[0], MetaId = beaming[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // Max Blast
+                        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Uncommon", // PvP
+                        RedId = glowing[0], YellowId = steady[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = powerful[0] },
+
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // Max Mana
+                        RedId = luminous[1], YellowId = brilliant[1], BlueId = seers[1], PrismaticId = brilliant[1], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", // Max Mana Regen
+                        RedId = purified[1], YellowId = seers[1], BlueId = sparkling[1], PrismaticId = sparkling[1], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // Max SPP
+                        RedId = runed[1], YellowId = luminous[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // Max Haste
+                        RedId = runed[1], YellowId = reckless[1], BlueId = intricate[1], PrismaticId = runed[1], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // Max Crit
+                        RedId = runed[1], YellowId = potent[1], BlueId = misty[1], PrismaticId = runed[1], MetaId = beaming[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // Max Blast
+                        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Rare", Enabled = true, // PvP
+                        RedId = glowing[1], YellowId = steady[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
+
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max Mana
+                        RedId = luminous[2], YellowId = brilliant[2], BlueId = seers[2], PrismaticId = brilliant[2], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max Mana Regen
+                        RedId = purified[2], YellowId = seers[2], BlueId = sparkling[2], PrismaticId = sparkling[2], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max SPP
+                        RedId = runed[2], YellowId = luminous[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max Haste
+                        RedId = runed[2], YellowId = reckless[2], BlueId = intricate[2], PrismaticId = runed[2], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max Crit
+                        RedId = runed[2], YellowId = potent[2], BlueId = misty[2], PrismaticId = runed[2], MetaId = beaming[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // Max Blast
+                        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Epic", // PvP
+                        RedId = glowing[2], YellowId = steady[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = powerful[0] },
+
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // Max Mana
+                        RedId = brilliant[3], YellowId = brilliant[1], BlueId = brilliant[3], PrismaticId = brilliant[1], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // Max Mana Regen
+                        RedId = sparkling[3], YellowId = sparkling[3], BlueId = sparkling[1], PrismaticId = sparkling[3], MetaId = insightful[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // Max SPP
+                        RedId = runed[1], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[1], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // Max Haste
+                        RedId = quick[3], YellowId = quick[1], BlueId = quick[3], PrismaticId = quick[1], MetaId = ember[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // Max Crit
+                        RedId = smooth[3], YellowId = smooth[1], BlueId = smooth[3], PrismaticId = smooth[1], MetaId = beaming[0] },
+                    new GemmingTemplate() { Model = "HolyPriest", Group = "Jeweler", // PvP
+                        RedId = solid[3], YellowId = solid[3], BlueId = solid[1], PrismaticId = solid[1], MetaId = powerful[0] },
+
+               
+                };
             }
         }
 
