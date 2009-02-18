@@ -532,7 +532,7 @@ the Threat Scale defined on the Options tab.",
 			BearRotationCalculator.BearRotationCalculation rotationCalculationDPS, rotationCalculationTPS;
 			rotationCalculationDPS = rotationCalculationTPS = new BearRotationCalculator.BearRotationCalculation();
 
-			StringBuilder rotations = new StringBuilder();
+			//StringBuilder rotations = new StringBuilder();
 			for (int useMaul = 0; useMaul < 3; useMaul++)
 				for (int useMangle = 0; useMangle < 2; useMangle++)
 					for (int useSwipe = 0; useSwipe < 2; useSwipe++)
@@ -543,7 +543,7 @@ the Threat Scale defined on the Options tab.",
 								BearRotationCalculator.BearRotationCalculation rotationCalculation = 
 									rotationCalculator.GetRotationCalculations(useMaulValues[useMaul],
 									useMangle == 1, useSwipe == 1, useFaerieFire == 1, useLacerate == 1);
-								rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.TPS + "TPS, " + rotationCalculation.DPS + "DPS");
+								//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.TPS + "TPS, " + rotationCalculation.DPS + "DPS");
 								if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
 									rotationCalculationDPS = rotationCalculation;
 								if (rotationCalculation.TPS > rotationCalculationTPS.TPS)
@@ -601,102 +601,6 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.SwipeDPR = swipeDPR;
 			calculatedStats.LacerateTPR = lacerateTPR;
 			calculatedStats.LacerateDPR = lacerateDPR;
-
-
-			//float bloodlustThreat = (1 - chanceAvoided) * stats.BloodlustProc / 4.0f * 5;
-
-			//float averageDamage = 1 - chanceAvoided - chanceCrit + critMultiplier * chanceCrit;
-			//float weaponDamage = (1 + stats.BonusDamageMultiplier) * (stats.WeaponDamage + (2.5f * +(768f + attackPower) / 14f));
-			//float mangleUptime = 1 - (chanceAvoided * chanceAvoided);
-			//float mangleMultipler = mangleUptime * 1.3f;
-            
-			//float MangleDamage = 1.1f * 1.15f * (weaponDamage + 155f + stats.BonusMangleBearDamage)*averageDamage*modArmor;
-			//float MangleThreat = 1.45f *( 25 * chanceCrit+(1+stats.BonusMangleBearThreat)* MangleDamage+bloodlustThreat);
-			//float SwipeDamage = 1.1f * (1 + stats.BonusSwipeDamageMultiplier) * (1 + stats.BonusDamageMultiplier) * ((.077f * stats.AttackPower + 92))*averageDamage*modArmor;
-			//float SwipeThreat = 1.45f * ( 25 * chanceCrit+SwipeDamage+bloodlustThreat);
-			//float LacerateDamage = 1.1f*(1+stats.BonusDamageMultiplier)*mangleMultipler*(31+stats.AttackPower/100+stats.BonusLacerateDamage)*averageDamage*modArmor ;
-			//float LacerateThreat = 1.45f * ((285) * (1 - chanceAvoided) + 25 * chanceCrit + LacerateDamage+bloodlustThreat);
-			//float LacerateDotDPS = 1.1f * (1 + stats.BonusDamageMultiplier) * (mangleMultipler * (155 + 5 * (stats.AttackPower / 100) + stats.BonusLacerateDamage))/3 ;
-			//float LacerateDotTPS = 1.45f * (.2f * LacerateDotDPS);
-
-
-			//float whiteDamage = 1.1f * weaponDamage*modArmor* (averageDamage - chanceGlance * glancingReduction);
-			//float whiteThreat = 1.45f * (25 * chanceCrit+whiteDamage) +bloodlustThreat;
-
-			//calculatedStats.MLS1_3_0DPS = (MangleDamage * 1  + LacerateDamage * 3  + SwipeDamage*0)/6+LacerateDotDPS + whiteDamage / attackSpeed;
-			//calculatedStats.MLS1_3_0TPS = (MangleThreat * 1  + LacerateThreat * 3  + SwipeThreat*0)/6+LacerateDotTPS + whiteThreat / attackSpeed ;
-
-			//calculatedStats.MLS1_0_3DPS = (MangleDamage * 1  + LacerateDamage * 0  + SwipeDamage*3)/6+LacerateDotDPS + whiteDamage / attackSpeed;
-			//calculatedStats.MLS1_0_3TPS = (MangleThreat * 1  + LacerateThreat * 0  + SwipeThreat*3)/6+LacerateDotTPS + whiteThreat / attackSpeed ;
-
-			////Missed lacerates are repeated until hit, removing some swipes
-			//calculatedStats.MLS1_1_2DPS = (MangleDamage * 1  + LacerateDamage * 1/(1-chanceAvoided)  + SwipeDamage*2*(1-chanceAvoided))/6+LacerateDotDPS + whiteDamage / attackSpeed;
-			//calculatedStats.MLS1_1_2TPS = (MangleThreat * 1  + LacerateThreat * 1/(1-chanceAvoided)  + SwipeThreat*2*(1-chanceAvoided))/6+LacerateDotTPS + whiteThreat / attackSpeed ;
-
-			////This rotation will drop stacks if you miss
-			////Calculate the average damage over time, given the probability of n stacks applied
-			//float lacerateUptime = (chanceAvoided)*(
-			//        (1-chanceAvoided)*1/5+
-			//        (1-chanceAvoided)*(1-chanceAvoided)*2/5+
-			//        (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*3/5+
-			//        (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*4/5)+
-			//        (1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided)*(1-chanceAvoided);
-
-			//calculatedStats.MLS2_1_5DPS = (MangleDamage * 2  + LacerateDamage * 1  + SwipeDamage*5)/12+LacerateDotDPS*lacerateUptime + whiteDamage / attackSpeed;
-			//calculatedStats.MLS2_1_5TPS = (MangleThreat * 2  + LacerateThreat * 1  + SwipeThreat*5)/12+LacerateDotTPS*lacerateUptime + whiteThreat / attackSpeed ;
-
-			////get convert the glancing white attacks to maul hits
-			//calculatedStats.MaulDPS = 1.1f* (179 * averageDamage*modArmor+chanceGlance * glancingReduction)/attackSpeed;
-			//calculatedStats.MaulTPS = 1.45f*(calculatedStats.MaulDPS+ 322 / attackSpeed);
-
-			//calculatedStats.MaxLacerate = (LacerateThreat) / 2 + LacerateDotTPS;
-			//calculatedStats.MaxLacerateDPS = LacerateDamage / 2 + LacerateDotDPS;
-
-			//calculatedStats.MinLacerate = (LacerateThreat) / 15 + LacerateDotTPS;
-			//calculatedStats.MinLacerateDPS = LacerateDamage / 15 + LacerateDotDPS;
-
-			//calculatedStats.SwipeDamage = SwipeDamage ;
-			//calculatedStats.SwipeThreat = SwipeThreat ;
-
-			//calculatedStats.MangleDamage = MangleDamage ;
-			//calculatedStats.MangleThreat = MangleThreat ;
-
-			//calculatedStats.WhiteDPS = whiteDamage / attackSpeed;
-			//calculatedStats.WhiteTPS = (whiteThreat+bloodlustThreat) / attackSpeed;
-                
-			//calculatedStats.ThreatPoints = Math.Max(calculatedStats.MLS1_3_0TPS, 
-			//    Math.Max(calculatedStats.MLS1_0_3TPS, Math.Max(calculatedStats.MLS1_1_2TPS,calculatedStats.MLS2_1_5TPS))) ;
-
-			//if(calculatedStats.ThreatPoints == calculatedStats.MLS1_3_0TPS)
-			//{
-			//    calculatedStats.LimitedDPS = calculatedStats.MLS1_3_0DPS;
-			//}
-			//else if(calculatedStats.ThreatPoints == calculatedStats.MLS1_0_3TPS)
-			//{
-			//    calculatedStats.LimitedDPS = calculatedStats.MLS1_0_3DPS;
-			//}
-			//else if(calculatedStats.ThreatPoints == calculatedStats.MLS1_1_2TPS)
-			//{
-			//    calculatedStats.LimitedDPS = calculatedStats.MLS1_1_2DPS;
-			//}
-			//else
-			//{
-			//    calculatedStats.LimitedDPS = calculatedStats.MLS2_1_5DPS;
-			//}
-			//calculatedStats.UnlimitedDPS=calculatedStats.LimitedDPS+calculatedStats.MaulDPS;
-
-			//calculatedStats.UnlimitedThreat = calculatedStats.ThreatPoints + calculatedStats.MaulTPS;
-
-			//calculatedStats.ThreatScale = calcOpts.ThreatScale;
-			//calculatedStats.ThreatPoints *= calculatedStats.ThreatScale;
-            
-
-			//calculatedStats.UnlimitedThreat *= calculatedStats.ThreatScale;
-
-
-			//calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-            
-
         }
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)

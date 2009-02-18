@@ -147,16 +147,28 @@ namespace Rawr.Bear
 				attackTPS += (MaulThreat / MeleeSpeed);
 			}
 
-			List<string> rotationName = new List<string>();
-			if (useMaul.HasValue && !useMaul.Value) rotationName.Add("Melee");
-			if (useMaul.HasValue && useMaul.Value) rotationName.Add("Maul");
-			if (useMangle) rotationName.Add("Mangle");
-			if (useSwipe) rotationName.Add("Swipe");
-			if (useLacerate) rotationName.Add("Lacerate");
-			if (useFaerieFire) rotationName.Add("FaerieFire");
-			if (rotationName.Count == 0) rotationName.Add("None");
+			StringBuilder strRotationName = new StringBuilder();
+			if (useMaul.HasValue && !useMaul.Value) strRotationName.Append("Melee+");
+			if (useMaul.HasValue && useMaul.Value) strRotationName.Append("Maul+");
+			if (useMangle) strRotationName.Append("Mangle+");
+			if (useSwipe) strRotationName.Append("Swipe+");
+			if (useLacerate) strRotationName.Append("Lacerate+");
+			if (useFaerieFire) strRotationName.Append("FaerieFire+");
+			if (strRotationName.Length == 0) strRotationName.Append("None");
+			else strRotationName.Length--;
 
-			return new BearRotationCalculation() { Name = string.Join("+", rotationName.ToArray()), DPS = attackDPS, TPS = attackTPS };
+			return new BearRotationCalculation() { Name = strRotationName.ToString(), DPS = attackDPS, TPS = attackTPS };
+
+			//List<string> rotationName = new List<string>();
+			//if (useMaul.HasValue && !useMaul.Value) rotationName.Add("Melee");
+			//if (useMaul.HasValue && useMaul.Value) rotationName.Add("Maul");
+			//if (useMangle) rotationName.Add("Mangle");
+			//if (useSwipe) rotationName.Add("Swipe");
+			//if (useLacerate) rotationName.Add("Lacerate");
+			//if (useFaerieFire) rotationName.Add("FaerieFire");
+			//if (rotationName.Count == 0) rotationName.Add("None");
+
+			//return new BearRotationCalculation() { Name = string.Join("+", rotationName.ToArray()), DPS = attackDPS, TPS = attackTPS };
 		}
 
 		public class BearRotationCalculation

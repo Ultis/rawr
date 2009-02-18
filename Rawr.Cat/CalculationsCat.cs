@@ -333,7 +333,7 @@ namespace Rawr.Cat
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
 
-			StringBuilder rotations = new StringBuilder();
+			//StringBuilder rotations = new StringBuilder();
 			for (int roarCP = 1; roarCP < 6; roarCP++)
 				for (int useShred = 0; useShred < 2; useShred++)
 					for (int useRip = 0; useRip < 2; useRip++)
@@ -342,7 +342,7 @@ namespace Rawr.Cat
 							CatRotationCalculator.CatRotationCalculation rotationCalculation =
 								rotationCalculator.GetRotationCalculations(
 								useShred == 1, useRip == 1, useFerociousBite == 1, roarCP);
-							rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
+							//rotations.AppendLine(rotationCalculation.Name + ": " + rotationCalculation.DPS + "DPS");
 							if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
 								rotationCalculationDPS = rotationCalculation;
 						}
@@ -351,7 +351,7 @@ namespace Rawr.Cat
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
 				calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomUseFerociousBite, calcOpts.CustomCPSavageRoar);
-			calculatedStats.Rotations = rotations.ToString();
+			//calculatedStats.Rotations = rotations.ToString();
 			#endregion
 
 			calculatedStats.AvoidedAttacks = chanceAvoided * 100f;

@@ -211,41 +211,18 @@ namespace Rawr.Cat
 			float damageTotal = meleeDamageTotal + mangleDamageTotal + rakeDamageTotal + shredDamageTotal + ripDamageTotal + biteDamageTotal;
 			#endregion
 
-			List<string> rotationName = new List<string>();
-			if (MaintainMangle || !useShred) rotationName.Add("Mangle");
-			if (useShred) rotationName.Add("Shred");
-			if (useRip) rotationName.Add("Rip");
-			if (useFerociousBite) rotationName.Add("Bite");
-			rotationName.Add("Roar" + roarCP.ToString());
-			
+			StringBuilder rotationName = new StringBuilder();
+			if (MaintainMangle || !useShred) rotationName.Append("Mangle+");
+			if (useShred) rotationName.Append("Shred+");
+			if (useRip) rotationName.Append("Rip+");
+			if (useFerociousBite) rotationName.Append("Bite+");
+			rotationName.Append("Roar" + roarCP.ToString());
+
 			return new CatRotationCalculation()
-			{ 
-				Name = string.Join(" + ", rotationName.ToArray()),
+			{
+				Name = rotationName.ToString(),
 				DPS = damageTotal / Duration,
-				
-				//Stats = Stats,
-				//Duration = Duration,
-				//CPPerCPG = CPPerCPG,
-				//MaintainMangle = MaintainMangle,
-				//MangleDuration = MangleDuration,
-				//RipDuration = RipDuration,
-				//AttackSpeed = AttackSpeed,
-				//OmenOfClarity = OmenOfClarity,
 
-				//MeleeDamage = MeleeDamage,
-				//MangleDamage = MangleDamage,
-				//ShredDamage = ShredDamage,
-				//RakeDamage = RakeDamage,
-				//RipDamage = RipDamage,
-				//BiteDamage = BiteDamage,
-
-				//MangleEnergy = MangleEnergy,
-				//ShredEnergy = ShredEnergy,
-				//RakeEnergy = RakeEnergy,
-				//RipEnergy = RipEnergy,
-				//BiteEnergy = BiteEnergy,
-				//RoarEnergy = RoarEnergy,
-				
 				MeleeDamageTotal = meleeDamageTotal,
 				MangleDamageTotal = mangleDamageTotal,
 				RakeDamageTotal = rakeDamageTotal,
@@ -256,6 +233,29 @@ namespace Rawr.Cat
 
 				RoarCP = roarCP,
 			};
+
+			//List<string> rotationName = new List<string>();
+			//if (MaintainMangle || !useShred) rotationName.Add("Mangle");
+			//if (useShred) rotationName.Add("Shred");
+			//if (useRip) rotationName.Add("Rip");
+			//if (useFerociousBite) rotationName.Add("Bite");
+			//rotationName.Add("Roar" + roarCP.ToString());
+			
+			//return new CatRotationCalculation()
+			//{ 
+			//    Name = string.Join(" + ", rotationName.ToArray()),
+			//    DPS = damageTotal / Duration,
+				
+			//    MeleeDamageTotal = meleeDamageTotal,
+			//    MangleDamageTotal = mangleDamageTotal,
+			//    RakeDamageTotal = rakeDamageTotal,
+			//    ShredDamageTotal = shredDamageTotal,
+			//    RipDamageTotal = ripDamageTotal,
+			//    BiteDamageTotal = biteDamageTotal,
+			//    DamageTotal = damageTotal,
+
+			//    RoarCP = roarCP,
+			//};
 		}
 
 		public class CatRotationCalculation
