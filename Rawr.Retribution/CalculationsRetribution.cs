@@ -354,12 +354,12 @@ namespace Rawr.Retribution
                 case Character.CharacterRace.Human:
                     statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f, BonusSpiritMultiplier = 0.1f, };
                     //Expertise for Humans
-                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace || character.MainHand.Type == Item.ItemType.OneHandSword))
+                    if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
                         statsRace.Expertise = 3f;
                     break;
                 default: //defaults to Dwarf stats
                     statsRace = new Stats() { Strength = 24f, Agility = 16f, Stamina = 25f, Intellect = 19f, Spirit = 20f, };
-                    if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandMace)
+                    if (character.MainHand != null && character.MainHand.Type == Item.ItemType.TwoHandMace)
                         statsRace.Expertise = 5f;
                     break;
             }

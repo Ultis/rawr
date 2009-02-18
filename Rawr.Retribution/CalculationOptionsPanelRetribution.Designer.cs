@@ -55,8 +55,6 @@
             this.lblPriority2 = new System.Windows.Forms.Label();
             this.butPriority1Down = new System.Windows.Forms.Button();
             this.butPriority1Up = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.lblPriority1 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.trkTime20 = new System.Windows.Forms.TrackBar();
@@ -74,7 +72,7 @@
             this.groupBox1.Controls.Add(this.chkGlyphSenseUndead);
             this.groupBox1.Controls.Add(this.chkGlyphConsecration);
             this.groupBox1.Controls.Add(this.chkGlyphJudgement);
-            this.groupBox1.Location = new System.Drawing.Point(3, 336);
+            this.groupBox1.Location = new System.Drawing.Point(3, 310);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(146, 91);
             this.groupBox1.TabIndex = 0;
@@ -192,12 +190,10 @@
             this.groupBox2.Controls.Add(this.lblPriority2);
             this.groupBox2.Controls.Add(this.butPriority1Down);
             this.groupBox2.Controls.Add(this.butPriority1Up);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.lblPriority1);
             this.groupBox2.Location = new System.Drawing.Point(3, 110);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(235, 220);
+            this.groupBox2.Size = new System.Drawing.Size(235, 194);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
@@ -205,7 +201,7 @@
             // butPriority6Down
             // 
             this.butPriority6Down.Enabled = false;
-            this.butPriority6Down.Location = new System.Drawing.Point(206, 191);
+            this.butPriority6Down.Location = new System.Drawing.Point(206, 164);
             this.butPriority6Down.Name = "butPriority6Down";
             this.butPriority6Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority6Down.TabIndex = 8;
@@ -214,7 +210,7 @@
             // 
             // butPriority6Up
             // 
-            this.butPriority6Up.Location = new System.Drawing.Point(177, 191);
+            this.butPriority6Up.Location = new System.Drawing.Point(177, 164);
             this.butPriority6Up.Name = "butPriority6Up";
             this.butPriority6Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority6Up.TabIndex = 7;
@@ -224,7 +220,7 @@
             // 
             // butPriority5Down
             // 
-            this.butPriority5Down.Location = new System.Drawing.Point(206, 162);
+            this.butPriority5Down.Location = new System.Drawing.Point(206, 135);
             this.butPriority5Down.Name = "butPriority5Down";
             this.butPriority5Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority5Down.TabIndex = 8;
@@ -234,7 +230,7 @@
             // 
             // butPriority5Up
             // 
-            this.butPriority5Up.Location = new System.Drawing.Point(177, 162);
+            this.butPriority5Up.Location = new System.Drawing.Point(177, 135);
             this.butPriority5Up.Name = "butPriority5Up";
             this.butPriority5Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority5Up.TabIndex = 7;
@@ -244,7 +240,7 @@
             // 
             // butPriority4Down
             // 
-            this.butPriority4Down.Location = new System.Drawing.Point(206, 133);
+            this.butPriority4Down.Location = new System.Drawing.Point(206, 106);
             this.butPriority4Down.Name = "butPriority4Down";
             this.butPriority4Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority4Down.TabIndex = 8;
@@ -254,7 +250,7 @@
             // 
             // butPriority4Up
             // 
-            this.butPriority4Up.Location = new System.Drawing.Point(177, 133);
+            this.butPriority4Up.Location = new System.Drawing.Point(177, 106);
             this.butPriority4Up.Name = "butPriority4Up";
             this.butPriority4Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority4Up.TabIndex = 7;
@@ -264,7 +260,7 @@
             // 
             // lblPriority6
             // 
-            this.lblPriority6.Location = new System.Drawing.Point(6, 196);
+            this.lblPriority6.Location = new System.Drawing.Point(6, 169);
             this.lblPriority6.Name = "lblPriority6";
             this.lblPriority6.Size = new System.Drawing.Size(167, 13);
             this.lblPriority6.TabIndex = 6;
@@ -272,7 +268,7 @@
             // 
             // butPriority3Down
             // 
-            this.butPriority3Down.Location = new System.Drawing.Point(206, 104);
+            this.butPriority3Down.Location = new System.Drawing.Point(206, 77);
             this.butPriority3Down.Name = "butPriority3Down";
             this.butPriority3Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority3Down.TabIndex = 8;
@@ -282,7 +278,7 @@
             // 
             // lblPriority5
             // 
-            this.lblPriority5.Location = new System.Drawing.Point(6, 167);
+            this.lblPriority5.Location = new System.Drawing.Point(6, 140);
             this.lblPriority5.Name = "lblPriority5";
             this.lblPriority5.Size = new System.Drawing.Size(167, 13);
             this.lblPriority5.TabIndex = 6;
@@ -290,7 +286,7 @@
             // 
             // butPriority3Up
             // 
-            this.butPriority3Up.Location = new System.Drawing.Point(177, 104);
+            this.butPriority3Up.Location = new System.Drawing.Point(177, 77);
             this.butPriority3Up.Name = "butPriority3Up";
             this.butPriority3Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority3Up.TabIndex = 7;
@@ -300,7 +296,7 @@
             // 
             // lblPriority4
             // 
-            this.lblPriority4.Location = new System.Drawing.Point(6, 138);
+            this.lblPriority4.Location = new System.Drawing.Point(6, 111);
             this.lblPriority4.Name = "lblPriority4";
             this.lblPriority4.Size = new System.Drawing.Size(167, 13);
             this.lblPriority4.TabIndex = 6;
@@ -308,7 +304,7 @@
             // 
             // butPriority2Down
             // 
-            this.butPriority2Down.Location = new System.Drawing.Point(206, 75);
+            this.butPriority2Down.Location = new System.Drawing.Point(206, 48);
             this.butPriority2Down.Name = "butPriority2Down";
             this.butPriority2Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority2Down.TabIndex = 8;
@@ -318,7 +314,7 @@
             // 
             // lblPriority3
             // 
-            this.lblPriority3.Location = new System.Drawing.Point(6, 109);
+            this.lblPriority3.Location = new System.Drawing.Point(6, 82);
             this.lblPriority3.Name = "lblPriority3";
             this.lblPriority3.Size = new System.Drawing.Size(167, 13);
             this.lblPriority3.TabIndex = 6;
@@ -326,7 +322,7 @@
             // 
             // butPriority2Up
             // 
-            this.butPriority2Up.Location = new System.Drawing.Point(177, 75);
+            this.butPriority2Up.Location = new System.Drawing.Point(177, 48);
             this.butPriority2Up.Name = "butPriority2Up";
             this.butPriority2Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority2Up.TabIndex = 7;
@@ -336,7 +332,7 @@
             // 
             // lblPriority2
             // 
-            this.lblPriority2.Location = new System.Drawing.Point(6, 80);
+            this.lblPriority2.Location = new System.Drawing.Point(6, 53);
             this.lblPriority2.Name = "lblPriority2";
             this.lblPriority2.Size = new System.Drawing.Size(167, 13);
             this.lblPriority2.TabIndex = 6;
@@ -344,7 +340,7 @@
             // 
             // butPriority1Down
             // 
-            this.butPriority1Down.Location = new System.Drawing.Point(206, 46);
+            this.butPriority1Down.Location = new System.Drawing.Point(206, 19);
             this.butPriority1Down.Name = "butPriority1Down";
             this.butPriority1Down.Size = new System.Drawing.Size(23, 23);
             this.butPriority1Down.TabIndex = 5;
@@ -355,34 +351,16 @@
             // butPriority1Up
             // 
             this.butPriority1Up.Enabled = false;
-            this.butPriority1Up.Location = new System.Drawing.Point(177, 46);
+            this.butPriority1Up.Location = new System.Drawing.Point(177, 19);
             this.butPriority1Up.Name = "butPriority1Up";
             this.butPriority1Up.Size = new System.Drawing.Size(23, 23);
             this.butPriority1Up.TabIndex = 4;
             this.butPriority1Up.Text = "+";
             this.butPriority1Up.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(179, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(50, 21);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(6, 19);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(167, 21);
-            this.comboBox1.TabIndex = 1;
-            // 
             // lblPriority1
             // 
-            this.lblPriority1.Location = new System.Drawing.Point(6, 51);
+            this.lblPriority1.Location = new System.Drawing.Point(6, 24);
             this.lblPriority1.Name = "lblPriority1";
             this.lblPriority1.Size = new System.Drawing.Size(167, 13);
             this.lblPriority1.TabIndex = 0;
@@ -503,7 +481,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown cmbLength;
         private System.Windows.Forms.Label lblTime20;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label lblPriority1;
         private System.Windows.Forms.Button butPriority6Down;
         private System.Windows.Forms.Button butPriority6Up;
@@ -522,7 +499,6 @@
         private System.Windows.Forms.Label lblPriority2;
         private System.Windows.Forms.Button butPriority1Down;
         private System.Windows.Forms.Button butPriority1Up;
-        private System.Windows.Forms.Button button1;
 
     }
 }
