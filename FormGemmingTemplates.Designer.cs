@@ -149,6 +149,7 @@
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.MaximizeBox = false;
+			this.ControlBox = false;
 			this.MaximumSize = new System.Drawing.Size(361, 2048);
 			this.MinimumSize = new System.Drawing.Size(361, 300);
 			this.Name = "FormGemmingTemplates";

@@ -86,10 +86,12 @@ namespace Rawr
 				panelGemmingTemplates.Controls.Add(panelGroupHeader);
 				panelGroupHeader.BringToFront();
 
+				bool allDisabled = group != "Custom";
 				foreach (GemmingTemplate gemmingTemplate in GemmingTemplate.CurrentTemplates)
 				{
 					if (gemmingTemplate.Group == group)
 					{
+						allDisabled = allDisabled && !gemmingTemplate.Enabled;
 						GemmingTemplateControl gemmingTemplateControl = new GemmingTemplateControl();
 						gemmingTemplateControl.Dock = DockStyle.Top;
 						gemmingTemplateControl.GemmingTemplate = gemmingTemplate;
@@ -99,6 +101,7 @@ namespace Rawr
 						gemmingTemplateControl.BringToFront();
 					}
 				}
+				if (allDisabled) buttonExpand.Text = "+";
 			}
 
 			_panelAddGemmingTemplate = new Panel();
