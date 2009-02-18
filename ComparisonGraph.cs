@@ -611,6 +611,7 @@ namespace Rawr
                 {
                     ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
                     Item item = ItemCalculations[itemIndex].Item;
+					if (item != null && itemInstance == null) itemInstance = GemmingTemplate.CurrentTemplates[0].GetItemInstance(item, null, false);
                     if (e.X < 10)
                     {
                         if (itemInstance != null && itemInstance.Id != 0)
@@ -636,25 +637,25 @@ namespace Rawr
                             }
                         }
                     }
-                    else if (itemInstance.Id > 0)
+                    else if (itemInstance != null && itemInstance.Id > 0)
                     {
                         Character.CharacterSlot slot = EquipSlot;
-                        ItemInstance showItem = ItemCalculations[itemIndex].ItemInstance;
+                        //ItemInstance showItem = ItemCalculations[itemIndex].ItemInstance;
                         if (slot == Character.CharacterSlot.AutoSelect)
                         {
-                            if (SlotMap != null && SlotMap.ContainsKey(showItem.Slot))
+                            if (SlotMap != null && SlotMap.ContainsKey(itemInstance.Slot))
                             {
-                                slot = SlotMap[showItem.Slot];
+								slot = SlotMap[itemInstance.Slot];
                             }
                             else
                             {
-                                slot = Item.DefaultSlotMap[showItem.Slot];
+								slot = Item.DefaultSlotMap[itemInstance.Slot];
                             }
                         }
 
-                        ItemContextualMenu.Instance.Show(showItem, slot, ItemCalculations[itemIndex].Character, true);
+						ItemContextualMenu.Instance.Show(itemInstance, slot, ItemCalculations[itemIndex].Character, true);
 
-                    }
+					}
                 }
             }
             //}
