@@ -71,6 +71,7 @@
       <DependentUpon>CalculationOptionsPanelEnhance.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculationsEnhance.cs" />
+    <Compile Include="EnhSim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

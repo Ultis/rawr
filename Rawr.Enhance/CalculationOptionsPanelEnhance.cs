@@ -194,9 +194,9 @@ namespace Rawr
 
         private void button1_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Sorry this feature is not available yet!", "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
+            Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
+            simExport.copyToClipboard();
         }
-
     }
 
 	[Serializable]

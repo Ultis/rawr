@@ -66,7 +66,7 @@
             this.chbGlyphLB = new System.Windows.Forms.CheckBox();
             this.chbGlyphFT = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
@@ -548,7 +548,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Controls.Add(this.btnEnhSim);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(264, 532);
@@ -556,15 +556,15 @@
             this.tabPage3.Text = "EnhSim";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnEnhSim
             // 
-            this.button1.Location = new System.Drawing.Point(21, 23);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(208, 28);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Export Stats to EnhSim config file";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
+            this.btnEnhSim.Name = "btnEnhSim";
+            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
+            this.btnEnhSim.TabIndex = 0;
+            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
+            this.btnEnhSim.UseVisualStyleBackColor = true;
+            this.btnEnhSim.Click += new System.EventHandler(this.button1_Click);
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -631,7 +631,7 @@
         private System.Windows.Forms.CheckBox chbGlyphLB;
         private System.Windows.Forms.CheckBox chbGlyphFT;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnEnhSim;
 
     }
 }
