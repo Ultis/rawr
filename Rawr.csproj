@@ -468,6 +468,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DefaultDataFiles\GemmingTemplates.xml" />
+    <Content Include="DefaultDataFiles\ItemCache.xml" />
+    <Content Include="DefaultDataFiles\ItemFilter.xml" />
+    <Content Include="DefaultDataFiles\ItemSource.xml" />
+    <Content Include="DefaultDataFiles\Talents.xml" />
     <Content Include="RawrIcon.ico" />
     <None Include="ItemFilterRegexList.datasource" />
     <None Include="ReadMe.txt">

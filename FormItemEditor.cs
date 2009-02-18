@@ -403,17 +403,17 @@ namespace Rawr
                 // try wowhead (if requested)
                 if ((newItem == null) && useWowhead)
                 {
-                    newItem = Wowhead.GetItem(id.ToString() + ".0.0.0", true);
+                    newItem = Wowhead.GetItem(id.ToString(), true);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
 
                 if (newItem == null)
                 {
-                    if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
-                        ItemCache.AddItem(newItem);
-                    }
+					if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+					{
+						newItem = new Item("New Item", Item.ItemQuality.Epic, Item.ItemType.None, id, "temp", Item.ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), Item.ItemSlot.None, Item.ItemSlot.None, Item.ItemSlot.None, 0, 0, Item.ItemDamageType.Physical, 0f, string.Empty);
+						ItemCache.AddItem(newItem);
+					}
                 }
                 {
                     AddNewItemToListView(newItem);
