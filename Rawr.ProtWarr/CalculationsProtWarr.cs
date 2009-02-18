@@ -502,7 +502,7 @@ threat and limited threat scaled by the threat scale.",
             float hitRate = 0.85f;  
 
             //Mongoose
-            if (statsItems.MongooseProc > 0)
+            if (character.MainHand != null && statsItems.MongooseProc > 0)
             {
                 float procRate = 1.0f; // PPM
                 float procDuration = 15.0f;
@@ -514,7 +514,7 @@ threat and limited threat scaled by the threat scale.",
             }
 
             //Executioner
-            if (statsItems.ExecutionerProc > 0)
+            if (character.MainHand != null && statsItems.ExecutionerProc > 0)
             {
                 float procRate = 1.2f; // PPM
                 float procDuration = 15.0f;
