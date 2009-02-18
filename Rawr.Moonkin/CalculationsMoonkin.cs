@@ -13,6 +13,46 @@ namespace Rawr.Moonkin
             {
                 return new List<GemmingTemplate>()
 				{
+					// Uncommon gems
+					// All sockets = Runed Bloodstone
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 39911,
+						YellowId = 39911,
+						BlueId = 39911,
+						PrismaticId = 39911,
+						MetaId = 41285
+					},
+					// Perfect uncommon gems
+					// All sockets = Perfect Runed Bloodstone
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 41438,
+						YellowId = 41438,
+						BlueId = 41438,
+						PrismaticId = 41438,
+						MetaId = 41285
+					},
+					// Uncommon gems
+					// All but blue = Runed Bloodstone
+					// Blue = Purified Shadow Crystal (spirit/spell power)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 39911,
+						YellowId = 39911,
+						BlueId = 39941,
+						PrismaticId = 39911,
+						MetaId = 41285
+					},
 					// Perfect uncommon gems
 					// All but blue = Perfect Runed Bloodstone
 					// Blue = Perfect Purified Shadow Crystal (spirit/spell power)
@@ -27,6 +67,34 @@ namespace Rawr.Moonkin
 						PrismaticId = 41438,
 						MetaId = 41285
 					},
+					// Uncommon gems
+					// All but blue = Runed Bloodstone
+					// Blue = Runed Dragon's Eye (Jewelcrafting)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 39911,
+						YellowId = 39911,
+						BlueId = 42144,
+						PrismaticId = 39911,
+						MetaId = 41285
+					},
+					// Perfect uncommon gems
+					// All but blue = Perfect Runed Bloodstone
+					// Blue = Runed Dragon's Eye (Jewelcrafting)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Uncommon",
+						RedId = 41438,
+						YellowId = 41438,
+						BlueId = 42144,
+						PrismaticId = 41438,
+						MetaId = 41285
+					},
 					// Rare gems
 					// All but blue = Runed Scarlet Ruby
 					// Blue = Purified Twilight Opal (spirit/spell power)
@@ -38,6 +106,35 @@ namespace Rawr.Moonkin
 						RedId = 39998,
 						YellowId = 39998,
 						BlueId = 40026,
+						PrismaticId = 39998,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Rare gems
+					// All sockets = Runed Scarlet Ruby
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 39998,
+						BlueId = 39998,
+						PrismaticId = 39998,
+						MetaId = 41285,
+                        Enabled = true
+					},
+					// Rare gems
+					// All but blue = Runed Scarlet Ruby
+					// Blue = Runed Dragon's Eye (Jewelcrafting)
+					// Meta = Chaotic
+					new GemmingTemplate()
+					{
+						Model = "Moonkin",
+						Group = "Rare",
+						RedId = 39998,
+						YellowId = 39998,
+						BlueId = 42144,
 						PrismaticId = 39998,
 						MetaId = 41285
 					}
