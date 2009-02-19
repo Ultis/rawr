@@ -407,25 +407,31 @@ namespace Rawr.ShadowPriest
             // Finalize Trinkets
             if (simStats.TimbalsProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
-                int dots = (MF != null)?3:0;
+                //int dots = (MF != null)?3:0; // Apparently Flay no longer procs this
+                int dots = 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Timbal = new TimbalProc(simStats, character);
+                float ProcChance = 0.1f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+                float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
 
-                DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+                DPS += Timbal.AvgDamage / EffCooldown * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+                //DPS += Timbal.AvgDamage / (15f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
             if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
                 // Although, All dots tick about every 3s, so in avg cooldown gains another 1.5s, putting it at 16.5
-                int dots = (MF != null) ? 3 : 0;
+                int dots = 0;
                 foreach (Spell spell in SpellPriority)
                     if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
                 Spell Extract = new ExtractProc(simStats, character);
-                //float ProcChance = 0.1f;
-                //float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-                //float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
+                float ProcChance = 0.1f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+                float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
 
-                DPS += Extract.AvgDamage / (16.5f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+                DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
+                //DPS += Extract.AvgDamage / (16.5f + 3f / (1f - (float)Math.Pow(1f - 0.1f, dots))) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * ShadowHitChance / 100f;
             }
             if (simStats.PendulumOfTelluricCurrentsProc > 0.0f)
             {   // 15% proc chance, 45s internal cd, shoots a Shadow bolt

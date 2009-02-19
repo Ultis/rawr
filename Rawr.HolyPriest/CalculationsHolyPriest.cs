@@ -317,6 +317,11 @@ namespace Rawr.HolyPriest
             calculatedStats.Character = character;
 
             calculatedStats.SpiritRegen = (float)Math.Floor(5 * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
+            if (calculationOptions.NewManaRegen)
+            {
+                calculatedStats.SpiritRegen *= 0.6f;
+                stats.SpellCombatManaRegeneration *= 5f / 3f;
+            }
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 

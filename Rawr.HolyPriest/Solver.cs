@@ -315,7 +315,9 @@ namespace Rawr.HolyPriest
             float avgcastlen = cyclelen / castctr;
             float avgcritcast = crittable / sr.Count;
 
-            float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);        
+            float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
+            if (calculationOptions.NewManaRegen)
+                periodicRegenOutFSR *= 0.6f;
 
             // Add up all mana gains.
             float regen = 0, tmpregen = 0;
