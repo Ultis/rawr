@@ -7,12 +7,86 @@ namespace Rawr.Tree
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
     class CalculationsTree : CalculationsBase
     {
+        private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                if (_defaultGemmingTemplates == null)
+                {
+                    // Meta
+                    int ember = 41333;
+                    int revitalizing = 41376;
+
+                    // [0] uncommon
+                    // [1] perfect uncommon
+                    // [2] rare
+                    // [3] epic
+                    // [4] jewelcrafting
+
+                    // Reds
+                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // spell power
+                    // Blue
+                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5
+                    int[] sparkling = { 39920, 41442, 40009, 40120, 42145 }; // spi
+                    // Yellow
+                    int[] brilliant = { 39912, 41444, 40012, 40123, 42148 }; // int
+                    // Purple
+                    int[] purified = { 39941, 41457, 40026, 40133 }; // spell power + spirit
+                    int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
+                    // Green
+                    int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
+                    int[] seers = { 39979, 41473, 40092, 40170 }; // int + spi
+                    // Orange
+                    int[] luminous = { 39946, 41494, 40047, 40151 }; // int + spell power
+
+                    /*
+                     * Gemmings
+                     * No Crit, Spirit > MP5
+                     * red: Runed, Purified, Luminous
+                     * yellow: Brilliant, Seer's, Luminous
+                     * blue: Sparkling, Purified, Seer's
+                     * = runed, purified, luminous, brilliant, seer's, sparkling
+                     * seems seer's is always better than sparkling
+                     * Meta: use revitalizing (better than ember)
+                     */
+
+                    _defaultGemmingTemplates = new List<GemmingTemplate>();
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", true, runed[2], purified[2], luminous[2], seers[2], brilliant[2], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", true, runed[2], purified[2], luminous[2], seers[2], brilliant[2], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], ember);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], sparkling[4], brilliant[4], revitalizing);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], sparkling[4], brilliant[4], ember);
+                }
+                return _defaultGemmingTemplates;
             }
+        }
+
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int purified, int luminous, int seers, int brilliant, int meta)
+        {
+            // Overrides, only "runed" and "seers"
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
+
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = luminous, BlueId = purified, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = luminous, YellowId = brilliant, BlueId = seers, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = luminous, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = purified, YellowId = seers, BlueId = seers, PrismaticId = seers, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = seers, BlueId = seers, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+        }
+
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int sparkling, int brilliant, int meta)
+        {
+            // Overrides, only "runed" and "seers"
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = sparkling, YellowId = sparkling, BlueId = sparkling, PrismaticId = sparkling, MetaId = meta, Enabled = enabled });
+
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = brilliant, BlueId = sparkling, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
@@ -176,10 +250,25 @@ namespace Rawr.Tree
         private static float DoTrinketManaRestoreCalcs(CharacterCalculationsTree calcs, float castsPerMinute)
         {
             float mp5FromTrinket = 0.0f;
-            // Mp5 on cast for 10 sec, 45 sec cooldown
+            // Memento of Tyrande
+            if (calcs.BasicStats.MementoProc > 0)
+            {
+                calcs.BasicStats.ManaRestoreOnCast_10_45 += 76 * 3;
+            }
+            // Spark of Life, Je'Tze's Bell, Memento of Tyrande
             if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
             {
-                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / 15f;
+                // MP5 for 15 seconds (value = mana gained on entire duration)
+                // 10% chance, 45 sec icd
+                float cd = 45f + (60f / castsPerMinute) / .1f;
+                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / cd;
+            }
+            // Insightful Earthstorm Diamond
+            if (calcs.BasicStats.ManaRestoreOnCast_5_15 > 0)
+            {
+                // 5% chance, 15 sec icd
+                float cd = 15f + (60f / castsPerMinute) / .05f;
+                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_5_15 / cd;
             }
             if (calcs.BasicStats.FullManaRegenFor15SecOnSpellcast > 0)
             {
@@ -190,10 +279,6 @@ namespace Rawr.Tree
                 {
                     mp5FromTrinket += tmpregen;
                 }
-            }
-            if (calcs.BasicStats.MementoProc > 0)
-            {
-                mp5FromTrinket += 17; // 3 sec cast time, 15.5 mp5, 1.5 sec cast time 19 mp5
             }
             return mp5FromTrinket;
         }
@@ -797,6 +882,10 @@ namespace Rawr.Tree
                 #endregion
                 #region Gems
                 //BonusManaGem = stats.BonusManaGem; //Insightful Eathrstorm/Earthsiege Diamond?
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
+                BonusManaMultiplier = stats.BonusManaMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 #endregion
             };
         }
@@ -820,6 +909,7 @@ namespace Rawr.Tree
                 + stats.TreeOfLifeAura + stats.ReduceRegrowthCost + stats.ReduceRejuvenationCost + stats.RejuvenationHealBonus 
                 + stats.LifebloomTickHealBonus + stats.LifebloomFinalHealBonus + stats.ReduceHealingTouchCost
                 + stats.HealingTouchFinalHealBonus + stats.LifebloomCostReduction + stats.NourishBonusPerHoT
+                + stats.BonusCritHealMultiplier + stats.ManaRestoreOnCast_5_15 + stats.BonusManaMultiplier
                 > 0)
                 return true;
 
