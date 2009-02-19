@@ -564,7 +564,7 @@
             this.btnEnhSim.TabIndex = 0;
             this.btnEnhSim.Text = "Export Stats to EnhSim config file";
             this.btnEnhSim.UseVisualStyleBackColor = true;
-            this.btnEnhSim.Click += new System.EventHandler(this.button1_Click);
+            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
             // CalculationOptionsPanelEnhance
             // 

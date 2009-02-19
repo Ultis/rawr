@@ -192,11 +192,15 @@ namespace Rawr
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnEnhSim_Click(object sender, EventArgs e)
         {
-            Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
-            simExport.copyToClipboard();
+            if (Character.Name != null)
+            {
+                Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
+                simExport.copyToClipboard();
+            }
         }
+
     }
 
 	[Serializable]

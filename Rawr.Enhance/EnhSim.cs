@@ -9,6 +9,12 @@ namespace Rawr.Enhance
     public class EnhSim
     {
         private String _configText = null;
+        private String _metagem = null;
+        private String _mhEnchant = null;
+        private String _ohEnchant = null;
+        private String _trinket1name = null;
+        private String _trinket2name = null;
+        private String _totemname = null;
 
         public EnhSim(Character character)
         {
@@ -16,6 +22,7 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BasicStats;
+            removeUseProcEffects(character, stats);
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendLine("##########################################");
@@ -53,16 +60,16 @@ namespace Rawr.Enhance
             sb.AppendLine("mh_imbue                        " + calcOpts.MainhandImbue.ToString().ToLower());
             sb.AppendLine("oh_imbue                        " + calcOpts.OffhandImbue.ToString().ToLower());
             sb.AppendLine(" ");
-            sb.AppendLine("mh_enchant                      - # not yet implemented in Rawr Export"); // mongoose
-            sb.AppendLine("oh_enchant                      - # not yet implemented in Rawr Export"); // -
+            sb.AppendLine("mh_enchant                      " + _mhEnchant);
+            sb.AppendLine("oh_enchant                      " + _ohEnchant);
             sb.AppendLine(" ");
             sb.AppendLine("mh_weapon                       - # not yet implemented in Rawr Export"); // -
             sb.AppendLine("oh_weapon                       - # not yet implemented in Rawr Export"); // -
             sb.AppendLine(" ");
-            sb.AppendLine("trinket1                        - # not yet implemented in Rawr Export"); // mirror_of_truth
-            sb.AppendLine("trinket2                        - # not yet implemented in Rawr Export"); // shard_of_contempt
+            sb.AppendLine("trinket1                        " + _trinket1name);
+            sb.AppendLine("trinket2                        " + _trinket2name);
             sb.AppendLine(" ");
-            sb.AppendLine("totem                           " + getTotemName(character.Ranged)); 
+            sb.AppendLine("totem                           " + _totemname); 
             sb.AppendLine(" ");
             sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
             sb.AppendLine(" ");
@@ -118,7 +125,41 @@ namespace Rawr.Enhance
             
         }
 
-        private String getTotemName(ItemInstance totem)
+        private void removeUseProcEffects(Character character, Stats stats)
+        {
+            // this routine needs to remove the effects of meta gems, enchants, trinkets and totems
+            // Rawr adds in average proc effects whereas EnhSim uses the raw data and the name of
+            // the meta gem, enchants, trinkets and totems
+            _trinket1name = adjustTrinketStats(character.Trinket1, stats);
+            _trinket2name = adjustTrinketStats(character.Trinket2, stats);
+            _totemname = adjustTotemStats(character.Ranged, stats);
+            _mhEnchant = adjustWeaponEnchantStats(character.MainHandEnchant, stats);
+            _ohEnchant = adjustWeaponEnchantStats(character.OffHandEnchant, stats);
+//            _metagem = adjustMetaGemStats(character.Head.Slot, stats);
+        }
+
+        private String adjustWeaponEnchantStats(Enchant enchant, Stats stats)
+        {
+            if (enchant == null)
+                return "-";
+            // check weapon enchant return enchant name for EnhSim
+            switch (enchant.Id) {
+                case 2673:
+                    return "mongoose";
+                case 3225:
+                    return "executioner";
+                case 1900:
+                    return "crusader";
+                case 3273:
+                    return "deathfrost";
+                case 3789:
+                    return "berserking";
+                default:
+                    return "-";
+            }
+        }
+
+        private String adjustTotemStats(ItemInstance totem, Stats stats)
         {
             if (totem == null)
                 return "-";
@@ -153,6 +194,91 @@ namespace Rawr.Enhance
                     return "hateful_gladiators_totem_of_survival";
                 case 42594:
                     return "savage_gladiators_totem_of_survival";
+                default:
+                    return "-";
+            }
+        }
+
+        private String adjustTrinketStats(ItemInstance trinket, Stats stats)
+        {
+            if (trinket == null)
+                return "-";
+            switch (trinket.Id)
+            {
+	            case 28830:
+		            return "dragonspine_trophy";
+	            case 32419:
+		            return "ashtongue_talisman";
+	            case 32505:
+		            return "madness_of_the_betrayer";
+	            case 28034:
+		            return "hourglass_of_the_unraveller";
+	            case 30627:
+		            return "tsunami_talisman";
+	            case 34472:
+		            return "shard_of_contempt";
+	            case 33831:
+		            return "berserkers_call";
+	            case 29383:
+		            return "bloodlust_brooch";
+	            case 28288:
+		            return "abacus_of_violent_odds";
+	            case 32658:
+		            return "badge_of_tenacity";
+	            case 35702:
+		            return "shadowsong_panther";
+	            case 34427:
+		            return "blackened_naaru_silver";
+	            case 31856:
+		            return "darkmoon_card_crusade";
+	            case 40431:
+		            return "fury_of_the_five_flights";
+	            case 40256:
+		            return "grim_toll";
+	            case 39257:
+		            return "loathebs_shadow";
+	            case 40684:
+		            return "mirror_of_truth";
+	            case 32483:
+		            return "the_skull_of_guldan";
+	            case 37390:
+		            return "meteorite_whetstone";
+	            case 39229:
+		            return "embrace_of_the_spider";
+	            case 40255:
+		            return "dying_curse";
+	            case 40432:
+		            return "illustration_of_the_dragon_soul";
+	            case 40682:
+		            return "sundial_of_the_exiled";
+	            case 37660:
+		            return "forge_ember";
+	            case 37723:
+		            return "incisor_fragment";
+	            case 37873:
+		            return "mark_of_the_war_prisoner";
+	            case 37166:
+		            return "sphere_of_red_dragons_blood";
+	            case 36972:
+		            return "tome_of_arcane_phenomena";
+	            case 40531:
+		            return "mark_of_norgannon";
+	            case 44014:
+		            return "fezziks_pocketwatch";
+	            case 43836:
+		            return "thorny_rose_brooch";
+	            case 38764:
+		            return "rune_of_finite_variation";
+	            case 40371:
+		            return "bandits_insignia";
+	            case 44253:
+		            return "darkmoon_card_greatness";
+	            case 37264:
+		            return "pendulum_of_telluric_currents";
+	            case 37064:
+		            return "vestige_of_haldor";
+	            case 42395:
+                    return "twilight_serpent";
                 default:
                     return "-";
             }
