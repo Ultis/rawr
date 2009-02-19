@@ -495,7 +495,7 @@ namespace Rawr
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
             calculatedStats.YellowHit = (float)Math.Floor((1 - chanceYellowMiss) * 10000f) / 100f;
             calculatedStats.SpellHit = (float)Math.Floor((1 - chanceSpellMiss) * 10000f) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((1 - chanceWhiteMiss) * 10000f) / 100f;
+            calculatedStats.WhiteHit = (float)Math.Floor((1 - chanceWhiteMiss) * 10000f) / 100f; 
             calculatedStats.MeleeCrit = (float)Math.Floor(chanceWhiteCrit * 10000f) / 100f;
             calculatedStats.YellowCrit = (float)Math.Floor(chanceYellowCrit * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
@@ -521,6 +521,7 @@ namespace Rawr
                     statsRace.Agility = 71f;
                     statsRace.Stamina = 135f;
                     statsRace.Intellect = 129f;
+                    statsRace.Spirit = 145f;
                     break;
 
                 case Character.CharacterRace.Tauren:
@@ -530,6 +531,7 @@ namespace Rawr
                     statsRace.Agility = 69f;
                     statsRace.Stamina = 138f;
                     statsRace.Intellect = 123f;
+                    statsRace.Spirit = 145f;
                     break;
 
                 case Character.CharacterRace.Orc:
@@ -538,6 +540,7 @@ namespace Rawr
                     statsRace.Agility = 71f;
                     statsRace.Stamina = 138f;
                     statsRace.Intellect = 125f;
+                    statsRace.Spirit = 146f;
                     break;
 
                 case Character.CharacterRace.Troll:
@@ -546,6 +549,7 @@ namespace Rawr
                     statsRace.Agility = 76f;
                     statsRace.Stamina = 137f;
                     statsRace.Intellect = 124f;
+                    statsRace.Spirit = 144f;
                     break;
             }
 
@@ -588,6 +592,7 @@ namespace Rawr
 			statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
             statsTotal.Intellect = intBase + (float)Math.Floor((intBase * statsBuffs.BonusIntellectMultiplier) + intBonus * (1 + statsBuffs.BonusIntellectMultiplier));
             statsTotal.Mana = statsRace.Mana + statsBuffs.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
+            statsTotal.Spirit = statsRace.Spirit + statsBuffs.Spirit + statsGearEnchantsBuffs.Spirit;
 
             int MD = character.ShamanTalents.MentalDexterity;
             float intBonusToAP = 0.0f;

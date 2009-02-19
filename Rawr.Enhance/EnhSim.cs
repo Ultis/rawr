@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Rawr.Enhance
 {
@@ -12,8 +13,8 @@ namespace Rawr.Enhance
         public EnhSim(Character character)
         {
             CalculationsEnhance ce = new CalculationsEnhance();
-            Stats stats = ce.GetCharacterStats(character, null);
-            CharacterCalculationsBase calcs = ce.GetCharacterCalculations(character, null);
+            CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
+            Stats stats = calcs.BasicStats;
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             sb.AppendLine("##########################################");
@@ -26,10 +27,11 @@ namespace Rawr.Enhance
             sb.AppendLine(" ");
             sb.AppendLine("mh_dps                          0.0 # not yet implemented in Rawr Export"); // dps 1dp
             sb.AppendLine("oh_dps                          0.0 # not yet implemented in Rawr Export"); // dps 1dp
-            sb.AppendLine("mh_crit                         0.0 # not yet implemented in Rawr Export"); // %
-            sb.AppendLine("oh_crit                         0.0 # not yet implemented in Rawr Export"); // %
-            sb.AppendLine("mh_hit                          0.0 # not yet implemented in Rawr Export"); // %
-            sb.AppendLine("oh_hit                          0.0 # not yet implemented in Rawr Export"); // %
+            sb.AppendLine("mh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
+            float hitbonus = stats.HitRating / 32.78998947f;
+            sb.AppendLine("mh_hit                          " + hitbonus.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_hit                          " + hitbonus.ToString("F2", CultureInfo.InvariantCulture)); // %
             sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString());
             sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString());
             sb.AppendLine("ap                              " + stats.AttackPower.ToString());
@@ -38,7 +40,7 @@ namespace Rawr.Enhance
             sb.AppendLine("str                             " + stats.Strength.ToString());
             sb.AppendLine("agi                             " + stats.Agility.ToString());
             sb.AppendLine("int                             " + stats.Intellect.ToString());
-            sb.AppendLine("spi                             " + stats.Spirit.ToString() + " # not yet implemented in Rawr Export");
+            sb.AppendLine("spi                             " + stats.Spirit.ToString());
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString());
             sb.AppendLine("spell_crit                      0.0 # not yet implemented in Rawr Export"); // %
             sb.AppendLine("spell_hit                       0.0 # not yet implemented in Rawr Export"); // %
@@ -57,15 +59,15 @@ namespace Rawr.Enhance
             sb.AppendLine("trinket1                        - # not yet implemented in Rawr Export"); // mirror_of_truth
             sb.AppendLine("trinket2                        - # not yet implemented in Rawr Export"); // shard_of_contempt
             sb.AppendLine(" ");
-            sb.AppendLine("totem                           - # not yet implemented in Rawr Export"); // totem_of_splintering
+            sb.AppendLine("totem                           " + getTotemName(character.Ranged)); 
             sb.AppendLine(" ");
-            sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); // -
+            sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
             sb.AppendLine(" ");
-            sb.AppendLine("metagem                         - # not yet implemented in Rawr Export"); // relentless_earthstorm_diamond
+            sb.AppendLine("metagem                         - # not yet implemented in Rawr Export" ); 
             sb.AppendLine(" ");
-            sb.AppendLine("glyph_major1                    - # not yet implemented in Rawr Export"); // stormstrike
-            sb.AppendLine("glyph_major2                    - # not yet implemented in Rawr Export"); // windfury_weapon
-            sb.AppendLine("glyph_major3                    - # not yet implemented in Rawr Export"); // flametongue_weapon
+            sb.AppendLine("glyph_major1                    - # not yet implemented in Rawr Export"); 
+            sb.AppendLine("glyph_major2                    - # not yet implemented in Rawr Export"); 
+            sb.AppendLine("glyph_major3                    - # not yet implemented in Rawr Export");
             sb.AppendLine(" ");
             sb.AppendLine("glyph_minor1                    -"); 
             sb.AppendLine("glyph_minor2                    -"); 
@@ -111,6 +113,46 @@ namespace Rawr.Enhance
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\nPaste the config data into your config file in a decent text editor!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
             
+        }
+
+        private String getTotemName(ItemInstance totem)
+        {
+            if (totem == null)
+                return "-";
+            switch (totem.Id) {
+                case 33507:
+                    return "stonebreakers_totem";
+                case 27815:
+                    return "totem_of_the_astral_winds";
+                case 40710:
+                    return "totem_of_splintering";
+                case 32330:
+                    return "totem_of_ancestral_guidance";
+                case 28248:
+                    return "totem_of_the_void";
+                case 33506:
+                    return "skycall_totem";
+                case 40267:
+                    return "totem_of_hex";
+                case 40322:
+                    return "totem_of_dueling";
+                case 40708:
+                    return "totem_of_the_elemental_plane";
+                case 42607:
+                    return "deadly_gladiators_totem_of_indomitability";
+                case 42606:
+                    return "hateful_gladiators_totem_of_indomitability";
+                case 42593:
+                    return "savage_gladiators_totem_of_indomitability";
+                case 42602:
+                    return "deadly_gladiators_totem_of_survival";
+                case 42601:
+                    return "hateful_gladiators_totem_of_survival";
+                case 42594:
+                    return "savage_gladiators_totem_of_survival";
+                default:
+                    return "-";
+            }
         }
     }
 }
