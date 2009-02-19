@@ -27,6 +27,7 @@ namespace Rawr.HolyPriest
             CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
 
             cbRotation.SelectedIndex = calcOpts.Rotation;
+            panelCustom.Visible = calcOpts.Rotation == 10;
 
             cmbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
@@ -90,6 +91,7 @@ namespace Rawr.HolyPriest
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
                 calcOpts.Rotation = cbRotation.SelectedIndex;
                 Character.OnCalculationsInvalidated();
+                panelCustom.Visible = calcOpts.Rotation == 10;
             }
         }
 
