@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Globalization;
 
 namespace Rawr
 {
@@ -145,7 +146,7 @@ namespace Rawr
                     "Basic Stats:Spellpower",
 					"Basic Stats:Expertise Rating",
 					"Basic Stats:Haste Rating",
-					"Basic Stats:Penetration Rating",
+					"Basic Stats:Armour Pen Rating",
 					"Complex Stats:Avoided Attacks",
 					"Complex Stats:Avg MH Speed",
                     "Complex Stats:Avg OH Speed",
@@ -156,6 +157,17 @@ namespace Rawr
                     "Complex Stats:Avg Time to Windfury",
 					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Enhancement shamans only care about DPS, so Overall Points will always be identical to DPS Points.",
+                    "Attacks:Swing",
+                    "Attacks:Windfury Attack",
+                    "Attacks:Flametongue Attack",
+                    "Attacks:Lightning Bolt",
+                    "Attacks:Earth Shock",
+                    "Attacks:Searing/Magma Totem",
+                    "Attacks:Stormstrike",
+                    "Attacks:Spirit Wolf",
+                    "Attacks:Lightning Shield",
+                    "Attacks:Lava Lash",
+                    "Attacks:Total DPS",
                     "Module Version:Enhance Version"
 				};
 				return _characterDisplayCalculationLabels;
@@ -460,7 +472,7 @@ namespace Rawr
             float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * stats.SpellPower);
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
 
-            //6: Winfury DPS
+            //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
             float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - modArmor);
 
@@ -501,6 +513,17 @@ namespace Rawr
             calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
             calculatedStats.AttackSpeed = unhastedOHSpeed / (1f + .3f) / (1f + .2f) / (1f + hasteBonus);
 			calculatedStats.ArmorMitigation = modArmor * 100f;
+
+            calculatedStats.SwingDamage = dpsMelee;
+            calculatedStats.Stormstrike = dpsSS;
+            calculatedStats.LavaLash = dpsLL;
+            calculatedStats.EarthShock = dpsES;
+            calculatedStats.LightningBolt = dpsLB;
+            calculatedStats.WindfuryAttack = dpsWF;
+            calculatedStats.LightningShield = dpsLS;
+            calculatedStats.SearingMagma = dpsST;
+            calculatedStats.FlameTongueAttack = dpsFT;
+            calculatedStats.SpiritWolf = dpsDogs;
 
 			return calculatedStats;
 		}
@@ -903,7 +926,78 @@ namespace Rawr
 			get { return _meleeDamage; }
 			set { _meleeDamage = value; }
 		}
-		public List<Buff> ActiveBuffs { get; set; }
+
+        private float _swingDamage;
+        public float SwingDamage
+        {
+            get { return _swingDamage; }
+            set { _swingDamage = value; }
+        }
+
+        private float _windfuryAttack;
+        public float WindfuryAttack
+        {
+            get { return _windfuryAttack; }
+            set { _windfuryAttack = value; }
+        }
+
+        private float _flametongueAttack;
+        public float FlameTongueAttack
+        {
+            get { return _flametongueAttack; }
+            set { _flametongueAttack = value; }
+        }
+
+        private float _lightningBolt;
+        public float LightningBolt
+        {
+            get { return _lightningBolt; }
+            set { _lightningBolt = value; }
+        }
+
+        private float _earthShock;
+        public float EarthShock
+        {
+            get { return _earthShock; }
+            set { _earthShock = value; }
+        }
+
+        private float _searingMagma;
+        public float SearingMagma
+        {
+            get { return _searingMagma; }
+            set { _searingMagma = value; }
+        }
+
+        private float _stormstrike;
+        public float Stormstrike
+        {
+            get { return _stormstrike; }
+            set { _stormstrike = value; }
+        }
+
+        private float _spiritWolf;
+        public float SpiritWolf
+        {
+            get { return _spiritWolf; }
+            set { _spiritWolf = value; }
+        }
+
+        private float _lightningShield;
+        public float LightningShield
+        {
+            get { return _lightningShield; }
+            set { _lightningShield = value; }
+        }
+
+        private float _lavaLash;
+        public float LavaLash
+        {
+            get { return _lavaLash; }
+            set { _lavaLash = value; }
+        }
+
+        public List<Buff> ActiveBuffs { get; set; }
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
@@ -928,12 +1022,24 @@ namespace Rawr
 
 			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
 			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-			dictValues.Add("Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
+			dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString());
             dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
 			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
 
-			dictValues.Add("DPS Points", DPSPoints.ToString());
-			dictValues.Add("Overall Points", OverallPoints.ToString());
+            dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
+
+            dictValues.Add("Swing", SwingDamage.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Windfury Attack", WindfuryAttack.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Flametongue Attack", FlameTongueAttack.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Lightning Bolt", LightningBolt.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Earth Shock", EarthShock.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Searing/Magma Totem", SearingMagma.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Stormstrike", Stormstrike.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Spirit Wolf", SpiritWolf.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Lightning Shield", LightningShield.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Lava Lash", LavaLash.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
 
             dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
 			

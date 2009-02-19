@@ -13,6 +13,7 @@ namespace Rawr.Enhance
         public EnhSim(Character character)
         {
             CalculationsEnhance ce = new CalculationsEnhance();
+            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BasicStats;
 
@@ -25,30 +26,32 @@ namespace Rawr.Enhance
             sb.AppendLine("mh_speed                        " + character.MainHand.Speed.ToString());
             sb.AppendLine("oh_speed                        " + character.OffHand.Speed.ToString());
             sb.AppendLine(" ");
-            sb.AppendLine("mh_dps                          0.0 # not yet implemented in Rawr Export"); // dps 1dp
-            sb.AppendLine("oh_dps                          0.0 # not yet implemented in Rawr Export"); // dps 1dp
+            sb.AppendLine("mh_dps                          " + character.MainHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_dps                          " + character.OffHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
-            float hitbonus = stats.HitRating / 32.78998947f;
-            sb.AppendLine("mh_hit                          " + hitbonus.ToString("F2", CultureInfo.InvariantCulture));
-            sb.AppendLine("oh_hit                          " + hitbonus.ToString("F2", CultureInfo.InvariantCulture)); // %
+            float hitBonus = stats.HitRating / 32.78998947f;
+            sb.AppendLine("mh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
             sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString());
             sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString());
             sb.AppendLine("ap                              " + stats.AttackPower.ToString());
-            sb.AppendLine("haste                           0 # not yet implemented in Rawr Export"); // %
+            float hasteBonus = stats.HasteRating / 32.78998947f;
+            sb.AppendLine("haste                           " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
             sb.AppendLine("armor_penetration               0 # not yet implemented in Rawr Export"); // %
             sb.AppendLine("str                             " + stats.Strength.ToString());
             sb.AppendLine("agi                             " + stats.Agility.ToString());
             sb.AppendLine("int                             " + stats.Intellect.ToString());
             sb.AppendLine("spi                             " + stats.Spirit.ToString());
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString());
-            sb.AppendLine("spell_crit                      0.0 # not yet implemented in Rawr Export"); // %
-            sb.AppendLine("spell_hit                       0.0 # not yet implemented in Rawr Export"); // %
+            sb.AppendLine("spell_crit                      " + calcs.SpellCrit.ToString());
+            hitBonus = stats.HitRating / 26.23199272f;
+            sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
             sb.AppendLine("max_mana                        " + stats.Mana.ToString());
             sb.AppendLine("mp5                             " + stats.Mp5.ToString());
             sb.AppendLine(" ");
-            sb.AppendLine("mh_imbue                        - # not yet implemented in Rawr Export"); // windfury
-            sb.AppendLine("oh_imbue                        - # not yet implemented in Rawr Export"); // flametongue
+            sb.AppendLine("mh_imbue                        " + calcOpts.MainhandImbue.ToString().ToLower());
+            sb.AppendLine("oh_imbue                        " + calcOpts.OffhandImbue.ToString().ToLower());
             sb.AppendLine(" ");
             sb.AppendLine("mh_enchant                      - # not yet implemented in Rawr Export"); // mongoose
             sb.AppendLine("oh_enchant                      - # not yet implemented in Rawr Export"); // -
