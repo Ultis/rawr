@@ -619,7 +619,6 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelHolyPriest";
             this.Size = new System.Drawing.Size(285, 652);
-            this.Load += new System.EventHandler(this.CalculationOptionsPanelHolyPriest_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).EndInit();
