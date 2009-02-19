@@ -45,6 +45,7 @@ namespace Rawr
         ExtraSpiritWhileCasting,
         CatFormStrength,
         CHHealIncrease,
+        CHHWHealIncrease,
         CHManaReduction,
         CPOnFinisher,
         PhysicalCrit,
@@ -178,6 +179,7 @@ namespace Rawr
         UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
+        WaterShieldIncrease,
         WrathDmg,
         DruidAshtongueTrinket,
         AverageHeal,
@@ -3076,6 +3078,24 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.WeakenedSoulDurationDecrease] = value; }
         }
 
+        // Tier 7 Shaman Set
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increases the healing done by your Chain Heal and Healing Wave by 5%")]
+        [Percentage]
+        public float CHHWHealIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHHWHealIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHHWHealIncrease] = value; }
+        }
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Your Water Shield is 10% stronger")]
+        [Percentage]
+        public float WaterShieldIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WaterShieldIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WaterShieldIncrease] = value; }
+        }
+
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
@@ -3174,7 +3194,6 @@ namespace Rawr
             get { return _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min]; }
             set { _rawNoStackData[(int)NonStackingStat.ManacostReduceWithin15OnUse1Min] = value; }
         }
-
         #region Added by Rawr.*Priest for Glyphs
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]

@@ -2118,6 +2118,25 @@ namespace Rawr
                 Stats = { CHHealIncrease = .05f },
                 SetThreshold = 4
             });
+            // Tier 7
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Regalia",
+                Stats = { WaterShieldIncrease = .1f },
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Regalia",
+                Stats = { CHHWHealIncrease = .05f },
+                SetThreshold = 4
+            });
 
             // Elemental Shaman set bonuses:
             //Tier 6																																																																																		

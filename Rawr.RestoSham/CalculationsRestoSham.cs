@@ -327,7 +327,7 @@ namespace Rawr.RestoSham
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * Purify;
 
             // Water Shield Variables
-            float Orb = 400 * (1 + (character.ShamanTalents.ImprovedShields * .05f));
+            float Orb = (400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
 
             // Spell Casting Times
@@ -366,10 +366,10 @@ namespace Rawr.RestoSham
             // Spell Healing Amounts
             float LHWHeal = ((((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
             float HWHeal = ((((3250f + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
-            float CHHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC);
+            float CHHeal = (((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             float CHRTHeal = 0;
             if (character.ShamanTalents.Riptide > 0)
-                CHRTHeal = ((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC);
+                CHRTHeal = (((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             if (character.ShamanTalents.Riptide < 1)
                 CHRTHeal = CHHeal;
             float RTHeal = ((((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken)) * TrueHealing) * character.ShamanTalents.Riptide;
@@ -560,7 +560,7 @@ namespace Rawr.RestoSham
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
 			float OrbRegen = (options.WaterShield3 ? 130 : 100);
-			statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0);
+			statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0) * (1 + statsBaseGear.WaterShieldIncrease);
 
             return statsTotal;
         }
@@ -656,6 +656,8 @@ namespace Rawr.RestoSham
                 HasteRating = stats.HasteRating,
                 Health = stats.Health,
                 Mana = stats.Mana,
+                WaterShieldIncrease = stats.WaterShieldIncrease,
+                CHHWHealIncrease = stats.CHHWHealIncrease,
                 // Spirit = stats.Spirit,
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
@@ -668,8 +670,8 @@ namespace Rawr.RestoSham
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + 
-                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 + 
-                stats.ManaRestoreFromMaxManaPerSecond) > 0;
+                stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
+                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease) > 0;
         }
 
 
