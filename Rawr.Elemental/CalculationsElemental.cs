@@ -59,29 +59,29 @@ namespace Rawr.Elemental
         private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int royal, int reckless, int quick, int dazzling, int meta)
         {
             // if no mana problem, runed is always very good
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
             // if mana problem,dazzling is often very good
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = dazzling, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = dazzling, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
 
             /*
              * red: runed, royal
              * yellow: reckless, quick
              * blue: royal, dazzling(, lustrous)
              */
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
         }
 
         private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int meta)
         {
             // Overrides, only "runed" and "seers"
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = lustrous, YellowId = lustrous, BlueId = lustrous, PrismaticId = lustrous, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = lustrous, YellowId = lustrous, BlueId = lustrous, PrismaticId = lustrous, MetaId = meta, Enabled = enabled });
 
-            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
