@@ -515,11 +515,27 @@ namespace Rawr //O O . .
                         items.AddRange(itemInstances);
                     }
                 }
+                // add custom instances
                 foreach (ItemInstance item in CustomItemInstances)
                 {
                     if (item.Item.FitsInSlot(slot, this))
                     {
                         if (!items.Contains(item)) items.Add(item);
+                    }
+                }
+                // add available instances
+                foreach (string availableItem in AvailableItems)
+                {
+                    // only have to worry about items with gems, others should be visible already
+                    string[] ids = availableItem.Split('.');
+                    if (ids.Length > 1 && ids[1] != "*")
+                    {
+                        Item item = ItemCache.FindItemById(int.Parse(ids[0]));
+                        if (item.FitsInSlot(slot, this))
+                        {
+                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? GetEnchantBySlot(slot).Id : int.Parse(ids[4]));
+                            if (!items.Contains(instance)) items.Add(instance);
+                        }
                     }
                 }
                 _relevantItemInstances[slot] = items;
