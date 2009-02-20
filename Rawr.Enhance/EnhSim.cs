@@ -136,6 +136,7 @@ namespace Rawr.Enhance
             _mhEnchant = adjustWeaponEnchantStats(character.MainHandEnchant, stats);
             _ohEnchant = adjustWeaponEnchantStats(character.OffHandEnchant, stats);
 //            _metagem = adjustMetaGemStats(character.Head.Slot, stats);
+            stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45; // deals with Meteorite Whetstone/Dragonspine Trophy
         }
 
         private String adjustWeaponEnchantStats(Enchant enchant, Stats stats)
@@ -206,78 +207,117 @@ namespace Rawr.Enhance
             switch (trinket.Id)
             {
 	            case 28830:
+                    // dealt with by HasteRatingOnPhysicalAttack
 		            return "dragonspine_trophy";
 	            case 32419:
+                    // no effect added in SpecialEffects class
 		            return "ashtongue_talisman";
 	            case 32505:
+                    stats.ArmorPenetrationRating -= 42f / 5f;
 		            return "madness_of_the_betrayer";
 	            case 28034:
+                    stats.AttackPower -= 300f / 6f;
 		            return "hourglass_of_the_unraveller";
 	            case 30627:
+                    stats.AttackPower -= 340f / 6f;
 		            return "tsunami_talisman";
 	            case 34472:
+                    stats.AttackPower -= 90f;
 		            return "shard_of_contempt";
 	            case 33831:
+                    stats.AttackPower -= 360f / 6f;
 		            return "berserkers_call";
 	            case 29383:
+                    stats.AttackPower -= 278f / 6f;
 		            return "bloodlust_brooch";
 	            case 28288:
+                    stats.HasteRating -= 260f / 12f;
 		            return "abacus_of_violent_odds";
 	            case 32658:
+                    stats.CritRating -= ((150f / 6f) / 25f) * 45.90598679f;
+                    stats.AttackPower -= (150f / 6f) * 1.03f;
 		            return "badge_of_tenacity";
 	            case 35702:
+                    stats.AttackPower -= 320f / 6f;
 		            return "shadowsong_panther";
 	            case 34427:
+                    // no effect added in SpecialEffects class
 		            return "blackened_naaru_silver";
 	            case 31856:
+                    stats.AttackPower -= 120; 
+                    stats.SpellPower -= 80;
 		            return "darkmoon_card_crusade";
 	            case 40431:
+                    stats.AttackPower -= 320;
 		            return "fury_of_the_five_flights";
 	            case 40256:
+                    stats.ArmorPenetrationRating -= 612f / 5f;
 		            return "grim_toll";
 	            case 39257:
+                    stats.AttackPower -= 670f / 6f;
 		            return "loathebs_shadow";
 	            case 40684:
+                    stats.AttackPower -= 1000f / 7f;
 		            return "mirror_of_truth";
 	            case 32483:
+                    // stats.HasteRatingFor20SecOnUse2Min += 175;
 		            return "the_skull_of_guldan";
 	            case 37390:
-		            return "meteorite_whetstone";
+                    // dealt with by HasteRatingOnPhysicalAttack
+                    return "meteorite_whetstone";
 	            case 39229:
+                    // stats.SpellHasteFor10SecOnCast_10_45 -= 505;
 		            return "embrace_of_the_spider";
 	            case 40255:
+                    // stats.SpellPowerFor10SecOnCast_15_45 -= 765;
 		            return "dying_curse";
 	            case 40432:
+                    stats.SpellPower -= 200;
 		            return "illustration_of_the_dragon_soul";
 	            case 40682:
+                    // stats.SpellPowerFor10SecOnHit_10_45 -= 590;
 		            return "sundial_of_the_exiled";
 	            case 37660:
+                    // stats.SpellPowerFor10SecOnHit_10_45 -= 512;
 		            return "forge_ember";
 	            case 37723:
+                    stats.ArmorPenetrationRating -= 291;
 		            return "incisor_fragment";
 	            case 37873:
+                    stats.SpellPower -= 346f / 6f;
 		            return "mark_of_the_war_prisoner";
 	            case 37166:
+                    stats.AttackPower -= 670f / 6f;
 		            return "sphere_of_red_dragons_blood";
 	            case 36972:
+                    stats.HasteRating -= 256f / 6f;
 		            return "tome_of_arcane_phenomena";
 	            case 40531:
+                    stats.HasteRating -= 491f / 6f;
 		            return "mark_of_norgannon";
 	            case 44014:
+                    stats.AttackPower -= 54f;
 		            return "fezziks_pocketwatch";
 	            case 43836:
+                    stats.HasteRating -= 212f / 6f;
 		            return "thorny_rose_brooch";
 	            case 38764:
+                    stats.HasteRating -= 208f / 6f;
 		            return "rune_of_finite_variation";
 	            case 40371:
+                    // no effect added in SpecialEffects class
 		            return "bandits_insignia";
 	            case 44253:
+                    // stats.GreatnessProc -= 1;
 		            return "darkmoon_card_greatness";
 	            case 37264:
+                    // stats.PendulumOfTelluricCurrentsProc -= 1;
 		            return "pendulum_of_telluric_currents";
 	            case 37064:
+                    // no effect added in SpecialEffects class
 		            return "vestige_of_haldor";
 	            case 42395:
+                    stats.SpellPower -= 292f / 15f;
                     return "twilight_serpent";
                 default:
                     return "-";

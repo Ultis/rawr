@@ -646,7 +646,8 @@ namespace Rawr
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
 			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
 			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone)
+            statsTotal.HasteRatingOnPhysicalAttack = statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack;
+            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
