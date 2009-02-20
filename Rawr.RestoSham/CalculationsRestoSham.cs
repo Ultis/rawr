@@ -6,7 +6,8 @@ namespace Rawr.RestoSham
     [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", Character.CharacterClass.Shaman)]
     class CalculationsRestoSham : CalculationsBase
     {
-         public override List<GemmingTemplate> DefaultGemmingTemplates
+        #region Gemming Template Area
+        public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
@@ -113,11 +114,9 @@ namespace Rawr.RestoSham
 						RedId = Brilliant[3], YellowId = Brilliant[3], BlueId = Brilliant[3], PrismaticId = Brilliant[3], MetaId = Ember },
 				};
             }
-        }   
-
-        //
-        // Colors of the ratings we track:
-        //
+        }
+        #endregion
+        #region Colors of the ratings we track
         private Dictionary<string, System.Drawing.Color> _subpointColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -132,8 +131,8 @@ namespace Rawr.RestoSham
                 return _subpointColors;
             }
         }
-
-
+        #endregion
+        #region Labels and Charts info
         //
         // Character calulcations display labels:
         //
@@ -208,10 +207,8 @@ namespace Rawr.RestoSham
             }
         }
 
-
-        //
-        // Item types we're interested in:
-        //
+        #endregion
+        #region Item types we're interested in.
         private List<Item.ItemType> _relevantItemTypes = null;
         public override List<Item.ItemType> RelevantItemTypes
         {
@@ -235,8 +232,8 @@ namespace Rawr.RestoSham
                 return _relevantItemTypes;
             }
         }
-       
-
+        #endregion
+        #region Model Verification and prepare Calculations
         //
         // This model is for shammies!
         //
@@ -258,8 +255,8 @@ namespace Rawr.RestoSham
         {
             return new CharacterCalculationsRestoSham();
         }
-
-
+        #endregion
+        #region Calculations
         //
         // Do the actual calculations:
         //
@@ -274,7 +271,7 @@ namespace Rawr.RestoSham
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
-
+            #region MP5 and Mana
             // calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit + 
@@ -284,7 +281,6 @@ namespace Rawr.RestoSham
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
 
             // Total Mana Pool for the fight:
-
             float onUse = 0.0f;
             if (options.ManaPotAmount > 0)
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
@@ -302,9 +298,9 @@ namespace Rawr.RestoSham
                 stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .1f * 150f);
             if (character.ActiveBuffsContains("Flametongue Totem"))
                 stats.SpellPower += (character.ShamanTalents.EnhancingTotems * .05f * 144);
-
-
-            // Stats, Talents, and Options
+            mp5 +=  (options.WaterShield ? 2 : 0) * (stats.TOTH / 27 * 2);
+            #endregion
+            #region Stats, Talents, and Options
             float CurrentMana = calcStats.TotalManaPool;
             float Awaken = (.1f * character.ShamanTalents.AncestralAwakening);
             float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
@@ -325,12 +321,12 @@ namespace Rawr.RestoSham
             float ELWHPS = 0;
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * Purify;
-
-            // Water Shield Variables
-            float Orb = (400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
+            #endregion
+            #region Water Shield Variables
+            float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (stats.TOTH);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
-
-            // Spell Casting Times
+            #endregion
+            #region Spell Casting Times
             float WSC = 1.5f * Hasted;
             float LHWC = (1.5f * Hasted) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
             float HWC = ((3f - (.1f * character.ShamanTalents.ImprovedHealingWave)) * Hasted) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
@@ -356,26 +352,26 @@ namespace Rawr.RestoSham
                 LHWTC = 1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .01f));
             if (HWTC < (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3))))
                 HWTC = (1.5f + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
-
-            // Spell Mana Costs
-            float LHWM = ((550 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f)));
-            float HWM = ((1099 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
-            float CHM = ((835 * Redux));
-            float RTM = (((792 * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)))) * character.ShamanTalents.Riptide;
-
-            // Spell Healing Amounts
-            float LHWHeal = ((((1720f + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
-            float HWHeal = ((((3250f + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
-            float CHHeal = (((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
+            #endregion
+            #region Spell Mana Costs
+            float LHWM = (((550) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f)));
+            float HWM = (((1099 - stats.HWManaReduce) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            float CHM = (((835 - stats.CHManaReduce) * Redux));
+            float RTM = ((((792) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)))) * character.ShamanTalents.Riptide;
+            #endregion
+            #region Spell Healing Amounts
+            float LHWHeal = (((((1720 + (1.88f * stats.LHWHealPlus)) + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
+            float HWHeal = (((((3250 + (1.88f * stats.HWHealPlus)) + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
+            float CHHeal = ((((((1130 + (1.88f * (stats.CHHealPlus_1 + stats.CHHealPlus_2))) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             float CHRTHeal = 0;
             if (character.ShamanTalents.Riptide > 0)
-                CHRTHeal = (((((1130f + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
+                CHRTHeal = ((((((1130f + (1.88f * (stats.CHHealPlus_1 + stats.CHHealPlus_2))) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             if (character.ShamanTalents.Riptide < 1)
                 CHRTHeal = CHHeal;
             float RTHeal = ((((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken)) * TrueHealing) * character.ShamanTalents.Riptide;
             float RTHot = ((((1670f + (Healing * .5f)) * Purify) / 15f) * TrueHealing) * character.ShamanTalents.Riptide;
-
-            // Earth Shield Specific Calcs
+            #endregion
+            #region Earth Shield Specific Calcs
             if (options.ESInterval < 32)
                 options.ESInterval = 32;
             float ESC = 0;
@@ -384,8 +380,8 @@ namespace Rawr.RestoSham
                 ESC = ((((Time / options.ESInterval) * (((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) / Time) * Purify) * TrueHealing;
             if (character.ShamanTalents.EarthShield > 0)
                 ESCMPS = (((Time / options.ESInterval) * (660f * Redux)));
-
-            // MPS Calculation Variables
+            #endregion
+            #region MPS Calculation Variables
             float RTMPS = 0;
             if (character.ShamanTalents.Riptide > 0)
                 RTMPS = ((RTM / RTC)) * character.ShamanTalents.Riptide;
@@ -397,8 +393,8 @@ namespace Rawr.RestoSham
             float ESLHWMPSMT = (ESCMPS + ((EFL / LHWC) * LHWM)) / Time;
             float ESHWMPSMT = (ESCMPS + ((EFL / (HWC)) * HWM)) / Time;
             float ESCHMPSMT = (ESCMPS + ((EFL / CHC) * CHM)) / Time;
-
-            // Calculate Best HPS
+            #endregion
+            #region Calculate Best HPS
             float RTHPS = 0;
             if (character.ShamanTalents.Riptide > 0)
                 RTHPS = (RTHeal / RTC) * character.ShamanTalents.Riptide;
@@ -447,8 +443,8 @@ namespace Rawr.RestoSham
                     if (calcStats.RTWH3HPSMT > calcStats.RTLWH2CHRTHPSMT)
                         calcStats.BurstHPS = calcStats.RTWH3HPSMT;
 
-            
-            // Calculate Tim till OOM
+            #endregion
+            #region Calculate Tim till OOM
             calcStats.ESLHWMPSMT = CurrentMana / ESLHWMPSMT;
             calcStats.ESHWMPSMT = CurrentMana / ESHWMPSMT;
             calcStats.ESCHMPSMT = CurrentMana / ESCHMPSMT;
@@ -492,8 +488,8 @@ namespace Rawr.RestoSham
                 if (calcStats.RTWH3MPSMT > calcStats.RTLWH4MPSMT)
                     if (calcStats.RTWH3MPSMT > calcStats.RTLWH2CHRTMPSMT)
                         calcStats.BurstMPS = calcStats.RTWH3MPSMT;
-
-            // Final Stats
+            #endregion
+            #region Final Stats
             calcStats.TillOOM = (Burst * calcStats.BurstMPS) + (Sustained * calcStats.FightMPS);
             calcStats.TotalHPS = (Burst * calcStats.BurstHPS) + (Sustained * calcStats.FightHPS) + ELWHPS;
             calcStats.TotalHealed = calcStats.TotalHPS * (options.FightLength * 60f);
@@ -501,11 +497,10 @@ namespace Rawr.RestoSham
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
             return calcStats;
+            #endregion
         }
-
-
-        //
-        // Create the statistics for a given character:
+        #endregion
+        #region Create the statistics for a given character:
         //
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
@@ -564,8 +559,8 @@ namespace Rawr.RestoSham
 
             return statsTotal;
         }
-
-
+        #endregion
+        #region Chart data area
         //
         // Class used by stat relative weights custom chart.
         //
@@ -640,9 +635,8 @@ namespace Rawr.RestoSham
             return retVal;
         }
 
-
-        //
-        // Get stats which are relevant to resto shammies:
+        #endregion
+        #region Relevant Stats
         //
         public override Stats GetRelevantStats(Stats stats)
         {
@@ -658,7 +652,13 @@ namespace Rawr.RestoSham
                 Mana = stats.Mana,
                 WaterShieldIncrease = stats.WaterShieldIncrease,
                 CHHWHealIncrease = stats.CHHWHealIncrease,
-                // Spirit = stats.Spirit,
+                TOTH = stats.TOTH,
+                HWHealPlus = stats.HWHealPlus,
+                LHWHealPlus = stats.LHWHealPlus,
+                CHHealPlus_1 = stats.CHHealPlus_1,
+                CHHealPlus_2 = stats.CHHealPlus_2,
+                HWManaReduce = stats.HWManaReduce,
+                CHManaReduce = stats.CHManaReduce,
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
@@ -671,12 +671,12 @@ namespace Rawr.RestoSham
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + 
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
-                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease) > 0;
+                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.HWManaReduce + 
+                stats.CHManaReduce + stats.CHHealPlus_1 + stats.CHHealPlus_2 + stats.HWHealPlus + stats.LHWHealPlus + stats.TOTH) > 0;
         }
 
-
-        //
-        // Retrieve our options from XML:
+        #endregion
+        #region Retrieve our options from XML:
         //
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
@@ -686,5 +686,6 @@ namespace Rawr.RestoSham
             CalculationOptionsRestoSham calcOpts = serializer.Deserialize(reader) as CalculationOptionsRestoSham;
             return calcOpts;
         }
+        #endregion
     }
 }

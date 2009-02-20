@@ -44,9 +44,6 @@ namespace Rawr
         BonusStreadyShotCrit,
         ExtraSpiritWhileCasting,
         CatFormStrength,
-        CHHealIncrease,
-        CHHWHealIncrease,
-        CHManaReduction,
         CPOnFinisher,
         PhysicalCrit,
         CritRating,
@@ -78,7 +75,6 @@ namespace Rawr
         Intellect,
         InterruptProtection,
         JudgementOfCommandAttackPowerBonus,
-        LHWManaReduction,
         LightningCapacitorProc,
         LightweaveEmbroideryProc,
         ThunderCapacitorProc,
@@ -92,7 +88,6 @@ namespace Rawr
         WarlockGrandSpellstone,
         WarlockGrandFirestone,
         Mana,
-        ManaSpringMp5Increase,
         ManaRestore5min,
         ManaRestorePerCast,
         ManaRestoreOnCast_5_15,
@@ -179,7 +174,6 @@ namespace Rawr
         UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
-        WaterShieldIncrease,
         WrathDmg,
         DruidAshtongueTrinket,
         AverageHeal,
@@ -244,6 +238,21 @@ namespace Rawr
         LightningSpellPower,
         LightningBoltHasteProc_15_45,
         LavaBurstBonus,
+        #endregion
+        #region Added by Rawr.Restosham
+        ManaSpringMp5Increase,
+        TOTH,
+        HWHealPlus, 
+        LHWHealPlus, 
+        CHHealPlus_1, 
+        CHHealPlus_2, 
+        HWManaReduce,
+        CHManaReduce,
+        WaterShieldIncrease,
+        CHHWHealIncrease,
+        CHManaReduction,
+        CHHealIncrease,
+        LHWManaReduction,
         #endregion
         #region Rawr.Healadin
         FlashOfLightSpellPower,
@@ -2231,38 +2240,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mp5 increase for Mana Spring")]
-        public float ManaSpringMp5Increase
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Reduce Lesser Healing Wave mana cost by 5%")]
-        public float LHWManaReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LHWManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LHWManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Reduce Chain Heal mana cost by 10%")]
-        public float CHManaReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CHManaReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CHManaReduction] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Increase healing done by Chain Heal by 5%")]
-        public float CHHealIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CHHealIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CHHealIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         public float RangedAttackPower
         {
@@ -2507,6 +2484,72 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus]; }
             set { _rawAdditiveData[(int)AdditiveStat.LavaBurstBonus] = value; }
+        }
+
+        #endregion
+        #region Added by Rawr.RestoSham
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Mp5 increase for Mana Spring")]
+        public float ManaSpringMp5Increase
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduces the mana cost of Healing Wave by ")]
+        public float HWManaReduce
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HWManaReduce]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HWManaReduce] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduces the base mana cost of Chain Heal by ")]
+        public float CHManaReduce
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHManaReduce]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHManaReduce] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increases the base amount healed by your chain heal by ")]
+        public float CHHealPlus_1
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHHealPlus_1]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHHealPlus_1] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increases the base amount healed by Chain Heal by ")]
+        public float CHHealPlus_2
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHHealPlus_2]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHHealPlus_2] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increases spell power of Healing Wave by ")]
+        public float HWHealPlus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HWHealPlus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HWHealPlus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increases spell power of Lesser Healing Wave by ")]
+        public float LHWHealPlus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.LHWHealPlus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LHWHealPlus] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Your Water Shield ability grants an additional ")]
+        public float TOTH
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TOTH]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TOTH] = value; }
         }
 
         #endregion
@@ -3078,6 +3121,18 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.WeakenedSoulDurationDecrease] = value; }
         }
 
+
+
+        #region Added by Rawr.Elemental
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float BonusLavaBurstDamage
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Restosham
         // Tier 7 Shaman Set
         [System.ComponentModel.DefaultValue(0f)]
         [DisplayName("Increases the healing done by your Chain Heal and Healing Wave by 5%")]
@@ -3096,13 +3151,28 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.WaterShieldIncrease] = value; }
         }
 
-        #region Added by Rawr.Elemental
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        public float BonusLavaBurstDamage
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduce Lesser Healing Wave mana cost by 5%")]
+        public float LHWManaReduction
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusLavaBurstDamage] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.LHWManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.LHWManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Reduce Chain Heal mana cost by 10%")]
+        public float CHManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValue(0f)]
+        [DisplayName("Increase healing done by Chain Heal by 5%")]
+        public float CHHealIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHHealIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHHealIncrease] = value; }
         }
         #endregion
 
