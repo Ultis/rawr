@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalculationOptionsPanelTree));
             this.label2 = new System.Windows.Forms.Label();
             this.cbSchattrathFaction = new System.Windows.Forms.ComboBox();
             this.tbSurvScale = new System.Windows.Forms.TextBox();
@@ -52,6 +51,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.chbLivingSeed = new System.Windows.Forms.CheckBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.cbNewManaRegen = new System.Windows.Forms.CheckBox();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.cbRotation = new System.Windows.Forms.ComboBox();
@@ -176,7 +176,7 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(297, 576);
+            this.tabControl1.Size = new System.Drawing.Size(297, 545);
             this.tabControl1.TabIndex = 23;
             // 
             // tabPage1
@@ -188,7 +188,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(289, 550);
+            this.tabPage1.Size = new System.Drawing.Size(289, 519);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -297,7 +297,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(289, 550);
+            this.tabPage2.Size = new System.Drawing.Size(289, 519);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Fight";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -306,7 +306,7 @@
             // 
             this.groupBox9.Controls.Add(this.label3);
             this.groupBox9.Controls.Add(this.chbLivingSeed);
-            this.groupBox9.Location = new System.Drawing.Point(6, 310);
+            this.groupBox9.Location = new System.Drawing.Point(6, 318);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(277, 36);
             this.groupBox9.TabIndex = 35;
@@ -333,6 +333,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.cbNewManaRegen);
             this.groupBox7.Controls.Add(this.tkReplenishment);
             this.groupBox7.Controls.Add(this.lblReplenishment);
             this.groupBox7.Controls.Add(this.cbRotation);
@@ -345,10 +346,21 @@
             this.groupBox7.Controls.Add(this.trkTimeInFSR);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 288);
+            this.groupBox7.Size = new System.Drawing.Size(277, 306);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
+            // 
+            // cbNewManaRegen
+            // 
+            this.cbNewManaRegen.AutoSize = true;
+            this.cbNewManaRegen.Location = new System.Drawing.Point(9, 280);
+            this.cbNewManaRegen.Name = "cbNewManaRegen";
+            this.cbNewManaRegen.Size = new System.Drawing.Size(187, 17);
+            this.cbNewManaRegen.TabIndex = 36;
+            this.cbNewManaRegen.Text = "Use 3.1 Mana Regen calculations";
+            this.cbNewManaRegen.UseVisualStyleBackColor = true;
+            this.cbNewManaRegen.CheckedChanged += new System.EventHandler(this.cbNewManaRegen_CheckedChanged);
             // 
             // tkReplenishment
             // 
@@ -479,9 +491,9 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.tbWildGrowth);
             this.groupBox3.Controls.Add(this.lblWG);
-            this.groupBox3.Location = new System.Drawing.Point(6, 362);
+            this.groupBox3.Location = new System.Drawing.Point(6, 360);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 171);
+            this.groupBox3.Size = new System.Drawing.Size(277, 123);
             this.groupBox3.TabIndex = 27;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Wild Growth";
@@ -491,9 +503,10 @@
             this.label7.AutoEllipsis = true;
             this.label7.Location = new System.Drawing.Point(6, 89);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(262, 79);
+            this.label7.Size = new System.Drawing.Size(262, 29);
             this.label7.TabIndex = 42;
-            this.label7.Text = resources.GetString("label7.Text");
+            this.label7.Text = "(Healing provided by wild growth is not yet modelled, but mana usage and gcd time" +
+                " is)";
             // 
             // label5
             // 
@@ -528,7 +541,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(289, 550);
+            this.tabPage3.Size = new System.Drawing.Size(289, 564);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Glyphs";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -686,7 +699,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(289, 550);
+            this.tabPage4.Size = new System.Drawing.Size(289, 519);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Module Notes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -798,5 +811,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblBSRatio;
         private System.Windows.Forms.TrackBar tbBSRatio;
+        private System.Windows.Forms.CheckBox cbNewManaRegen;
     }
 }

@@ -117,7 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label7.Text" xml:space="preserve">
-    <value>Yes, this is cheating. It is a waste of time to write simulations for every fight in the game. If you have to do lots of AoE healing and you use Wild Growth, make an estimation. WG healing is not calculated, but it will cause lower healing on your rotation and (probably) faster OOM.</value>
-  </data>
 </root>

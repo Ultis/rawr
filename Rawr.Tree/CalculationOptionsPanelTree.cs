@@ -75,6 +75,8 @@ namespace Rawr.Tree
             chbGlyphLifebloom.Checked = calcOpts.glyphOfLifebloom;
             chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
 
+            cbNewManaRegen.Checked = calcOpts.newManaRegen;
+
             loading = false;
 
             //Enable/Disable Glyph Checkboxes
@@ -228,6 +230,14 @@ namespace Rawr.Tree
             lblBSRatio.Text = "Ratio: "+burst + "% Burst, "+sust + "% Sustained.";
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbNewManaRegen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.newManaRegen = cbNewManaRegen.Checked;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -240,19 +250,19 @@ namespace Rawr.Tree
         public string ShattrathFaction = "Aldor";
         public bool useLivingSeedAsCritMultiplicator = true;
 
-        public float SurvTargetLife = 12000f;
+        public float SurvTargetLife = 14000f;
         public float SurvScaleBelowTarget = 100f;
 
         //Add Average Spellpower to Calculation = 0.0f (% used)
-        public float averageSpellpowerUsage = 80f;
+        public float averageSpellpowerUsage = 100f;
 
         public int BSRatio = 75; // goes from 0 to 100
 
-        public int FightDuration = 300; //5 Minutes
+        public int FightDuration = 360; // 6 Minutes
         public int Rotation = 6; // default: group regrowth and heal 1 tank
         public int ManaPot = 0; // none
         public int FSRRatio = 90;
-        public int ReplenishmentUptime = 30;
+        public int ReplenishmentUptime = 50;
         public int WildGrowthPerMinute = 4;
 
         public bool glyphOfHealingTouch = false;
@@ -262,6 +272,8 @@ namespace Rawr.Tree
         public bool glyphOfLifebloom = false;
         public bool glyphOfInnervate = false;
         public bool glyphOfSwiftmend = false;
+
+        public bool newManaRegen = true;
 
         public string GetXml()
         {

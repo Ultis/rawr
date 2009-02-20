@@ -17,6 +17,7 @@ namespace Rawr.Tree
                     // Meta
                     int ember = 41333;
                     int revitalizing = 41376;
+                    int insightful = 41401;
 
                     // [0] uncommon
                     // [1] perfect uncommon
@@ -54,12 +55,16 @@ namespace Rawr.Tree
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Insightful)", false, runed[0], purified[0], luminous[0], seers[0], brilliant[0], insightful);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", true, runed[2], purified[2], luminous[2], seers[2], brilliant[2], revitalizing);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", true, runed[2], purified[2], luminous[2], seers[2], brilliant[2], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Insightful)", false, runed[1], purified[1], luminous[1], seers[1], brilliant[1], insightful);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], luminous[2], seers[2], brilliant[2], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], luminous[2], seers[2], brilliant[2], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Insightful)", true, runed[2], purified[2], luminous[2], seers[2], brilliant[2], insightful);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], ember);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Insightful)", false, runed[3], purified[3], luminous[3], seers[3], brilliant[3], insightful);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], sparkling[4], brilliant[4], revitalizing);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], sparkling[4], brilliant[4], ember);
                 }
@@ -261,14 +266,14 @@ namespace Rawr.Tree
                 // MP5 for 15 seconds (value = mana gained on entire duration)
                 // 10% chance, 45 sec icd
                 float cd = 45f + (60f / castsPerMinute) / .1f;
-                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_10_45 / cd;
+                mp5FromTrinket += 5 * calcs.BasicStats.ManaRestoreOnCast_10_45 / cd;
             }
             // Insightful Earthstorm Diamond
             if (calcs.BasicStats.ManaRestoreOnCast_5_15 > 0)
             {
                 // 5% chance, 15 sec icd
                 float cd = 15f + (60f / castsPerMinute) / .05f;
-                mp5FromTrinket += calcs.BasicStats.ManaRestoreOnCast_5_15 / cd;
+                mp5FromTrinket += 5 * calcs.BasicStats.ManaRestoreOnCast_5_15 / cd;
             }
             if (calcs.BasicStats.FullManaRegenFor15SecOnSpellcast > 0)
             {
@@ -588,13 +593,20 @@ namespace Rawr.Tree
             #region Calculate regen
             float trinketRegen = DoTrinketManaRestoreCalcs(calculatedStats, calculatedStats.Simulation[7]);
             float spiritRegen = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.Spirit);
-            float spiritRegenWhileCasting = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.ExtraSpiritWhileCasting + calculatedStats.BasicStats.Spirit);
+            float spiritRegenPlusMDF = CalculateManaRegen(calculatedStats.BasicStats.Intellect, calculatedStats.BasicStats.ExtraSpiritWhileCasting + calculatedStats.BasicStats.Spirit);
+            //calculatedStats.SpiritRegen = (float)Math.Floor(5 * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
+            if (calcOpts.newManaRegen)
+            {
+                spiritRegen *= 0.6f;
+                spiritRegenPlusMDF *= 0.6f;
+                calculatedStats.BasicStats.SpellCombatManaRegeneration *= 5f / 3f;
+            }
             calculatedStats.replenishRegen = calculatedStats.BasicStats.Mana * 0.0025f * 5 * (calcOpts.ReplenishmentUptime / 100f);
-            //spirit regen + mp5 + replenishmp5
-            calculatedStats.ManaRegInFSR = spiritRegenWhileCasting * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
-            calculatedStats.ManaRegOutFSR = spiritRegenWhileCasting + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
+            // spirit regen with majestic dragon figurine + mp5 + replenishmp5
+            calculatedStats.ManaRegInFSR = spiritRegenPlusMDF * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
+            calculatedStats.ManaRegOutFSR = spiritRegenPlusMDF + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
             float ratio_extraspi = 0.8f; // OK, lets assume a mana starved person keeps 80% of the extra spirit effect, because they will keep casting anyway
-            float ManaRegOutFSRNoCasting = (1-ratio_extraspi)*spiritRegen + ratio_extraspi*spiritRegenWhileCasting + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
+            float ManaRegOutFSRNoCasting = (1-ratio_extraspi)*spiritRegen + ratio_extraspi*spiritRegenPlusMDF + calculatedStats.BasicStats.Mp5 + calculatedStats.replenishRegen;
             float ratio = 1f / 100f * calcOpts.FSRRatio;
             float manaRegen = ratio * calculatedStats.ManaRegInFSR + (1 - ratio) * calculatedStats.ManaRegOutFSR + trinketRegen;
             calculatedStats.ManaRegen = manaRegen;
