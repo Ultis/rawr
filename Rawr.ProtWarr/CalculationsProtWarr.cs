@@ -7,6 +7,96 @@ namespace Rawr.ProtWarr
 	[Rawr.Calculations.RawrModelInfo("ProtWarr", "Ability_Warrior_DefensiveStance", Character.CharacterClass.Warrior)]
 	public class CalculationsProtWarr : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+                ////Relevant Gem IDs for ProtWarr
+                //Red
+                int[] bold = { 39900, 39996, 40111, 42142 };
+                int[] delicate = { 39905, 39997, 40112, 42143 };
+                int[] subtle = { 39907, 40000, 40115, 42151 };
+                int[] flashing = { 39908, 40001, 40116, 42152};
+                int[] precise = { 39910, 40003, 40118, 42154 };
+
+
+                //Purple
+                int[] shifting = { 39935, 40023, 40130 };
+                int[] sovereign = { 39934, 40022, 40129 };
+                int[] regal = { 39938, 40031, 40138 };
+                int[] defender = { 39939, 40032, 40139 };
+                int[] guardian = { 39940, 40034, 40141 };
+
+                //Blue
+                int[] solid = { 39919, 40008, 40119, 36767 };
+
+                //Green
+                int[] enduring = { 39976, 40089, 40167 };
+
+                //Yellow
+                int[] thick = { 39916, 40015, 40126, 42157 };
+
+                //Orange
+                int[] etched = { 39948, 40038, 40143 };
+                int[] champion = { 39949, 40039, 40144 };
+                int[] fierce = { 39951, 40041, 40146 };
+                int[] glinting = { 39953, 40044, 40148 };
+                int[] stalwart = { 39964, 40056, 40160 };
+                int[] glimmering = { 39965, 40057, 40161};
+                int[] accurate = { 39966, 40058, 40162 };
+                int[] resolute = { 39967, 40059, 40163 };
+
+                //Meta
+                int austere = 41380;
+                int relentless = 41398;
+
+                return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Uncommon", //Max Mitigation
+						RedId = subtle[0], YellowId = subtle[0], BlueId = subtle[0], PrismaticId = subtle[0], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Uncommon", //Mitigation Heavier 
+						RedId = subtle[0], YellowId = stalwart[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Uncommon", //Mitigation Heavy
+						RedId = defender[0], YellowId = thick[0], BlueId = enduring[0], PrismaticId = thick[0], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Uncommon", //Survivability Heavy
+						RedId = regal[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Uncommon", //Max Survivability
+						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Rare", Enabled = true, //Max Mitigation
+						RedId = subtle[1], YellowId = subtle[1], BlueId = subtle[1], PrismaticId = subtle[1], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Rare", Enabled = true, //Mitigation Heavier 
+						RedId = subtle[1], YellowId = stalwart[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Rare", Enabled = true, //Mitigation Heavy
+						RedId = defender[1], YellowId = thick[1], BlueId = enduring[1], PrismaticId = thick[1], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Rare", Enabled = true, //Survivability Heavy
+						RedId = regal[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Rare", Enabled = true, //Max Survivability
+						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+						
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Epic", //Max Mitigation
+						RedId = subtle[2], YellowId = subtle[2], BlueId = subtle[2], PrismaticId = subtle[2], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Epic", //Mitigation Heavier 
+						RedId = subtle[2], YellowId = stalwart[2], BlueId = regal[2], PrismaticId = subtle[2], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Epic", //Mitigation Heavy
+						RedId = defender[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Epic", //Survivability Heavy
+						RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Epic", //Max Survivability
+						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+						
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Jeweler", //Max Mitigation
+						RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Jeweler", //Mitigation Heavy
+						RedId = defender[2], YellowId = thick[3], BlueId = enduring[2], PrismaticId = thick[3], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Jeweler", //Survivability Heavy
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+					new GemmingTemplate() { Model = "ProtWarr", Group = "Jeweler", //Max Survivability
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
+				};
+            }
+        }
+
         #region Variables and Properties
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -196,14 +286,6 @@ threat and limited threat scaled by the threat scale.",
 			return calcOpts;
         }
         #endregion
-
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
-                return new List<GemmingTemplate>() { };
-            }
-        }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
