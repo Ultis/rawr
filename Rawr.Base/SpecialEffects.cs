@@ -880,6 +880,8 @@ namespace Rawr
 				stats.AttackPower += 21f; //Nightseye Panther
 			else if (line.StartsWith("Increases attack power by 185 for 15 sec."))
 				stats.AttackPower += 23f; //Uniting Charm + Ogre Mauler's Badge
+            else if (line.StartsWith("Increases attack power by 432 for 15 sec."))
+                stats.AttackPower += 54f; // Fezzik's Pocketwatch
 			else if (line.StartsWith("Increases attack power by "))
 			{
 				line = line.Substring("Increases attack power by ".Length);
