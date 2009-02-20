@@ -43,7 +43,6 @@
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.trkTestOfFaith = new System.Windows.Forms.TrackBar();
             this.cbModelProcs = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.lblSerendipity = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
@@ -56,15 +55,8 @@
             this.cbNewMana = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
             this.panelCustom = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
@@ -77,6 +69,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).BeginInit();
@@ -87,16 +80,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             this.panelCustom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // trkActivity
@@ -137,7 +127,7 @@
             "Disc-Raid (PW:S/Penance/Flash)",
             "Custom Role (You pick!)"});
             this.cbRotation.Location = new System.Drawing.Point(6, 166);
-            this.cbRotation.MaxDropDownItems = 10;
+            this.cbRotation.MaxDropDownItems = 11;
             this.cbRotation.Name = "cbRotation";
             this.cbRotation.Size = new System.Drawing.Size(262, 21);
             this.cbRotation.TabIndex = 26;
@@ -178,7 +168,7 @@
             // 
             // trkSerendipity
             // 
-            this.trkSerendipity.Location = new System.Drawing.Point(6, 282);
+            this.trkSerendipity.Location = new System.Drawing.Point(6, 221);
             this.trkSerendipity.Maximum = 100;
             this.trkSerendipity.Name = "trkSerendipity";
             this.trkSerendipity.Size = new System.Drawing.Size(262, 42);
@@ -191,7 +181,7 @@
             // 
             // trkReplenishment
             // 
-            this.trkReplenishment.Location = new System.Drawing.Point(6, 164);
+            this.trkReplenishment.Location = new System.Drawing.Point(6, 103);
             this.trkReplenishment.Maximum = 100;
             this.trkReplenishment.Name = "trkReplenishment";
             this.trkReplenishment.Size = new System.Drawing.Size(262, 42);
@@ -202,7 +192,7 @@
             // 
             // trkShadowfiend
             // 
-            this.trkShadowfiend.Location = new System.Drawing.Point(6, 225);
+            this.trkShadowfiend.Location = new System.Drawing.Point(6, 164);
             this.trkShadowfiend.Maximum = 150;
             this.trkShadowfiend.Name = "trkShadowfiend";
             this.trkShadowfiend.Size = new System.Drawing.Size(262, 42);
@@ -225,7 +215,7 @@
             // 
             // trkTestOfFaith
             // 
-            this.trkTestOfFaith.Location = new System.Drawing.Point(6, 340);
+            this.trkTestOfFaith.Location = new System.Drawing.Point(6, 279);
             this.trkTestOfFaith.Maximum = 100;
             this.trkTestOfFaith.Name = "trkTestOfFaith";
             this.trkTestOfFaith.Size = new System.Drawing.Size(262, 42);
@@ -247,21 +237,10 @@
             this.cbModelProcs.UseVisualStyleBackColor = true;
             this.cbModelProcs.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Please enter information below:*";
-            this.toolTip1.SetToolTip(this.label2, "Type in information from a statistic gathering tool like Recount, WWS and similar" +
-                    ".");
-            // 
             // lblSerendipity
             // 
             this.lblSerendipity.AutoSize = true;
-            this.lblSerendipity.Location = new System.Drawing.Point(3, 266);
+            this.lblSerendipity.Location = new System.Drawing.Point(3, 205);
             this.lblSerendipity.Name = "lblSerendipity";
             this.lblSerendipity.Size = new System.Drawing.Size(70, 13);
             this.lblSerendipity.TabIndex = 31;
@@ -270,7 +249,7 @@
             // lblReplenishment
             // 
             this.lblReplenishment.AutoSize = true;
-            this.lblReplenishment.Location = new System.Drawing.Point(3, 148);
+            this.lblReplenishment.Location = new System.Drawing.Point(3, 87);
             this.lblReplenishment.Name = "lblReplenishment";
             this.lblReplenishment.Size = new System.Drawing.Size(88, 13);
             this.lblReplenishment.TabIndex = 32;
@@ -279,7 +258,7 @@
             // lblShadowfiend
             // 
             this.lblShadowfiend.AutoSize = true;
-            this.lblShadowfiend.Location = new System.Drawing.Point(3, 209);
+            this.lblShadowfiend.Location = new System.Drawing.Point(3, 148);
             this.lblShadowfiend.Name = "lblShadowfiend";
             this.lblShadowfiend.Size = new System.Drawing.Size(80, 13);
             this.lblShadowfiend.TabIndex = 34;
@@ -296,7 +275,7 @@
             // 
             // trkRapture
             // 
-            this.trkRapture.Location = new System.Drawing.Point(6, 395);
+            this.trkRapture.Location = new System.Drawing.Point(6, 334);
             this.trkRapture.Maximum = 100;
             this.trkRapture.Name = "trkRapture";
             this.trkRapture.Size = new System.Drawing.Size(262, 42);
@@ -307,7 +286,7 @@
             // lblRapture
             // 
             this.lblRapture.AutoSize = true;
-            this.lblRapture.Location = new System.Drawing.Point(3, 385);
+            this.lblRapture.Location = new System.Drawing.Point(3, 324);
             this.lblRapture.Name = "lblRapture";
             this.lblRapture.Size = new System.Drawing.Size(56, 13);
             this.lblRapture.TabIndex = 40;
@@ -316,7 +295,7 @@
             // lblTestOfFaith
             // 
             this.lblTestOfFaith.AutoSize = true;
-            this.lblTestOfFaith.Location = new System.Drawing.Point(3, 324);
+            this.lblTestOfFaith.Location = new System.Drawing.Point(3, 263);
             this.lblTestOfFaith.Name = "lblTestOfFaith";
             this.lblTestOfFaith.Size = new System.Drawing.Size(139, 13);
             this.lblTestOfFaith.TabIndex = 43;
@@ -363,7 +342,6 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -389,109 +367,9 @@
             this.tabPage1.Text = "Role";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.lblSerendipity);
-            this.tabPage2.Controls.Add(this.lblRapture);
-            this.tabPage2.Controls.Add(this.trkRapture);
-            this.tabPage2.Controls.Add(this.trkTestOfFaith);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Controls.Add(this.cbNewMana);
-            this.tabPage2.Controls.Add(this.trkActivity);
-            this.tabPage2.Controls.Add(this.lblActivity);
-            this.tabPage2.Controls.Add(this.lblTestOfFaith);
-            this.tabPage2.Controls.Add(this.cmbManaAmt);
-            this.tabPage2.Controls.Add(this.trkShadowfiend);
-            this.tabPage2.Controls.Add(this.lblShadowfiend);
-            this.tabPage2.Controls.Add(this.lblReplenishment);
-            this.tabPage2.Controls.Add(this.trkReplenishment);
-            this.tabPage2.Controls.Add(this.trkSerendipity);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(271, 492);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Mana";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.label14);
-            this.tabPage3.Controls.Add(this.label12);
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.numericUpDown5);
-            this.tabPage3.Controls.Add(this.numericUpDown4);
-            this.tabPage3.Controls.Add(this.label10);
-            this.tabPage3.Controls.Add(this.label2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(271, 492);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Advanced Role";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(75, 271);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(121, 13);
-            this.label14.TabIndex = 21;
-            this.label14.Text = "WORK IN PROGRESS!";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(171, 21);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(49, 13);
-            this.label12.TabIndex = 17;
-            this.label12.Text = "Seconds";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(84, 21);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(44, 13);
-            this.label11.TabIndex = 16;
-            this.label11.Text = "Minutes";
-            // 
-            // numericUpDown5
-            // 
-            this.numericUpDown5.Location = new System.Drawing.Point(171, 40);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
-            59,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown5.TabIndex = 15;
-            // 
-            // numericUpDown4
-            // 
-            this.numericUpDown4.Location = new System.Drawing.Point(84, 40);
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown4.TabIndex = 14;
-            this.numericUpDown4.Value = new decimal(new int[] {
-            6,
-            0,
-            0,
-            0});
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 42);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(73, 13);
-            this.label10.TabIndex = 13;
-            this.label10.Text = "Fight Duration";
-            // 
             // panelCustom
             // 
+            this.panelCustom.Controls.Add(this.label14);
             this.panelCustom.Controls.Add(this.numericUpDown7);
             this.panelCustom.Controls.Add(this.numericUpDown6);
             this.panelCustom.Controls.Add(this.label13);
@@ -508,6 +386,15 @@
             this.panelCustom.Name = "panelCustom";
             this.panelCustom.Size = new System.Drawing.Size(271, 299);
             this.panelCustom.TabIndex = 42;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(62, 187);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(121, 13);
+            this.label14.TabIndex = 21;
+            this.label14.Text = "WORK IN PROGRESS!";
             // 
             // numericUpDown7
             // 
@@ -622,6 +509,31 @@
             this.label3.TabIndex = 21;
             this.label3.Text = "Flash Heal";
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.lblSerendipity);
+            this.tabPage2.Controls.Add(this.lblRapture);
+            this.tabPage2.Controls.Add(this.trkRapture);
+            this.tabPage2.Controls.Add(this.trkTestOfFaith);
+            this.tabPage2.Controls.Add(this.lblTestOfFaith);
+            this.tabPage2.Controls.Add(this.trkShadowfiend);
+            this.tabPage2.Controls.Add(this.lblShadowfiend);
+            this.tabPage2.Controls.Add(this.lblReplenishment);
+            this.tabPage2.Controls.Add(this.trkReplenishment);
+            this.tabPage2.Controls.Add(this.trkSerendipity);
+            this.tabPage2.Controls.Add(this.label4);
+            this.tabPage2.Controls.Add(this.cbNewMana);
+            this.tabPage2.Controls.Add(this.trkActivity);
+            this.tabPage2.Controls.Add(this.lblActivity);
+            this.tabPage2.Controls.Add(this.cmbManaAmt);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(271, 492);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Mana";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelHolyPriest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -641,12 +553,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             this.panelCustom.ResumeLayout(false);
             this.panelCustom.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
@@ -654,6 +560,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -686,13 +594,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.NumericUpDown numericUpDown5;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Panel panelCustom;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
