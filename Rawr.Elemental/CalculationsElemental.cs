@@ -1,18 +1,87 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Rawr.Elemental.Estimation;
 
 namespace Rawr.Elemental
 {
 	[Rawr.Calculations.RawrModelInfo("Elemental", "Spell_Nature_Lightning", Character.CharacterClass.Shaman)]
 	public class CalculationsElemental : CalculationsBase
 	{
+        private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+                if (_defaultGemmingTemplates == null)
+                {
+                    // Meta
+                    int chaotic = 41285;
+
+                    // [0] uncommon
+                    // [1] perfect uncommon
+                    // [2] rare
+                    // [3] epic
+                    // [4] jewelcrafting
+
+                    // Reds
+                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // spell power
+                    // Blue
+                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5
+                    // Yellow
+                    int[] quick = { 39918, 41446, 40017, 40128, 42150 }; // haste
+                    // Purple
+                    int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
+                    // Green
+                    int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
+                    // Orange
+                    int[] luminous = { 39946, 41494, 40047, 40151 }; // spell power + int
+                    int[] reckless = { 39959, 41497, 40051, 40155 }; // spell power + haste
+                    int[] potent = { 39956, 41495, 40048, 40152}; // spell power + crit
+
+                    /*
+                     * red: runed, royal
+                     * yellow: reckless, quick
+                     * blue: royal, dazzling(, lustrous)
+                     */
+
+                    _defaultGemmingTemplates = new List<GemmingTemplate>();
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect", false, runed[1], royal[1], reckless[1], quick[1], dazzling[1], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, runed[2], royal[2], reckless[2], quick[2], dazzling[2], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", false, runed[3], royal[3], reckless[3], quick[3], dazzling[3], chaotic);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, runed[4], quick[4], lustrous[4], chaotic);
+                }
+                return _defaultGemmingTemplates;
             }
+        }
+
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int royal, int reckless, int quick, int dazzling, int meta)
+        {
+            // if no mana problem, runed is always very good
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            // if mana problem,dazzling is often very good
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = dazzling, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+
+            /*
+             * red: runed, royal
+             * yellow: reckless, quick
+             * blue: royal, dazzling(, lustrous)
+             */
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+        }
+
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int meta)
+        {
+            // Overrides, only "runed" and "seers"
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = lustrous, YellowId = lustrous, BlueId = lustrous, PrismaticId = lustrous, MetaId = meta, Enabled = enabled });
+
+            list.Add(new GemmingTemplate() { Model = "Tree", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
@@ -250,11 +319,11 @@ namespace Rawr.Elemental
 
             if (calcOpts.UseSimulator)
             {
-                Simulator.solve(stats, character.ShamanTalents, calcOpts);
+                Rawr.Elemental.Simulator.Simulator.solve(stats, character.ShamanTalents, calcOpts);
             }
             else
             {
-                Solver.solve(calculatedStats, calcOpts);
+                Rawr.Elemental.Estimation.Estimation.solve(calculatedStats, calcOpts);
             }
 
             return calculatedStats;
@@ -686,7 +755,30 @@ namespace Rawr.Elemental
 			return string.Format("{0}: ({1}O {2}Burst {3}Sustained)", Name, Math.Round(OverallPoints), Math.Round(BurstPoints), Math.Round(SustainedPoints));
 		}
 	}
-    
+
+    public class Rotation
+    {
+        public float CastFraction;
+        public float CritFraction;
+        public float MissFraction;
+        public float DPS;
+        public float MPS;
+
+        public float CC_FS;
+        public float CC_LvB;
+        public float CC_LB;
+
+        public Spell LB;
+        public Spell CL;
+        public Spell CL3;
+        public Spell CL4;
+        public Spell LvB;
+        public Spell LvBFS;
+        public Spell FS;
+        public Spell ES;
+        public Spell FrS;
+    }
+
     public static class Constants
     {
         // Source: http://www.wowwiki.com/Base_mana
