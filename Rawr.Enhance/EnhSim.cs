@@ -32,28 +32,28 @@ namespace Rawr.Enhance
             sb.AppendLine("race                            " + character.Race.ToString().ToLower());
             sb.AppendLine("mh_speed                        " + character.MainHand.Speed.ToString());
             sb.AppendLine("oh_speed                        " + character.OffHand.Speed.ToString());
-            sb.AppendLine(" ");
             sb.AppendLine("mh_dps                          " + character.MainHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_dps                          " + character.OffHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = stats.HitRating / 32.78998947f;
             sb.AppendLine("mh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
-            sb.AppendLine("oh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
-            sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString());
-            sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString());
-            sb.AppendLine("ap                              " + stats.AttackPower.ToString());
+            sb.AppendLine("oh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("ap                              " + stats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
             float hasteBonus = stats.HasteRating / 32.78998947f;
-            sb.AppendLine("haste                           " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
-            sb.AppendLine("armor_penetration               0 # not yet implemented in Rawr Export"); // %
-            sb.AppendLine("str                             " + stats.Strength.ToString());
-            sb.AppendLine("agi                             " + stats.Agility.ToString());
-            sb.AppendLine("int                             " + stats.Intellect.ToString());
-            sb.AppendLine("spi                             " + stats.Spirit.ToString());
-            sb.AppendLine("spellpower                      " + stats.SpellPower.ToString());
-            sb.AppendLine("spell_crit                      " + calcs.SpellCrit.ToString());
+            sb.AppendLine("haste                           " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
+            float armourPenBonus = stats.ArmorPenetrationRating / 15.39529991f;
+            sb.AppendLine("armor_penetration               " + armourPenBonus.ToString("F2", CultureInfo.InvariantCulture)); 
+            sb.AppendLine("str                             " + stats.Strength.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("agi                             " + stats.Agility.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("int                             " + stats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("spi                             " + stats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
+            sb.AppendLine("spell_crit                      " + calcs.SpellCrit.ToString("F2", CultureInfo.InvariantCulture));
             hitBonus = stats.HitRating / 26.23199272f;
-            sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture)); // %
+            sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("max_mana                        " + stats.Mana.ToString());
             sb.AppendLine("mp5                             " + stats.Mp5.ToString());
             sb.AppendLine(" ");
@@ -61,18 +61,29 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_imbue                        " + calcOpts.OffhandImbue.ToString().ToLower());
             sb.AppendLine(" ");
             sb.AppendLine("mh_enchant                      " + _mhEnchant);
+            String weaponType = "-";
+            if (character.MainHand.Type == Item.ItemType.OneHandAxe)
+                weaponType = "axe";
+            else if (character.MainHand.Type == Item.ItemType.TwoHandAxe)
+                weaponType = "axe";
+            sb.AppendLine("mh_weapon                       " + weaponType);
             sb.AppendLine("oh_enchant                      " + _ohEnchant);
-            sb.AppendLine(" ");
-            sb.AppendLine("mh_weapon                       - # not yet implemented in Rawr Export"); // -
-            sb.AppendLine("oh_weapon                       - # not yet implemented in Rawr Export"); // -
+            if (character.OffHand == null)
+                weaponType = "-";
+            else
+            {
+                if (character.OffHand.Type == Item.ItemType.OneHandAxe)
+                    weaponType = "axe";
+                else if (character.OffHand.Type == Item.ItemType.TwoHandAxe)
+                    weaponType = "axe";
+            }
+            sb.AppendLine("oh_weapon                       " + weaponType); 
             sb.AppendLine(" ");
             sb.AppendLine("trinket1                        " + _trinket1name);
             sb.AppendLine("trinket2                        " + _trinket2name);
             sb.AppendLine(" ");
             sb.AppendLine("totem                           " + _totemname); 
-            sb.AppendLine(" ");
             sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
-            sb.AppendLine(" ");
             sb.AppendLine("metagem                         - # not yet implemented in Rawr Export" ); 
             sb.AppendLine(" ");
             sb.AppendLine("glyph_major1                    - # not yet implemented in Rawr Export"); 
@@ -135,8 +146,21 @@ namespace Rawr.Enhance
             _totemname = adjustTotemStats(character.Ranged, stats);
             _mhEnchant = adjustWeaponEnchantStats(character.MainHandEnchant, stats);
             _ohEnchant = adjustWeaponEnchantStats(character.OffHandEnchant, stats);
-//            _metagem = adjustMetaGemStats(character.Head.Slot, stats);
+            _metagem = adjustMetaGemStats(character.Head, stats);
             stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45; // deals with Meteorite Whetstone/Dragonspine Trophy
+
+            // having removed all the stuff added by on use/procs we need to take the ceiling values as 100+2.66 would have been floored to 102
+            // if we take 2.66 from 102 we get 101.33 which is too low.
+            stats.AttackPower = (float) Math.Ceiling(stats.AttackPower);
+            stats.SpellPower = (float) Math.Ceiling(stats.SpellPower);
+            stats.HasteRating = (float)Math.Ceiling(stats.HasteRating);
+            stats.CritRating = (float)Math.Ceiling(stats.CritRating);
+            stats.ArmorPenetrationRating = (float)Math.Ceiling(stats.ArmorPenetrationRating);
+        }
+
+        private String adjustMetaGemStats(ItemInstance gem, Stats stats)
+        {
+            return "-";
         }
 
         private String adjustWeaponEnchantStats(Enchant enchant, Stats stats)

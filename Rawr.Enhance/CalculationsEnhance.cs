@@ -1006,26 +1006,26 @@ namespace Rawr
             //"Complex Stats:Avg OH Speed",
 
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-			dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
-			dictValues.Add("Agility", BasicStats.Agility.ToString());
-			dictValues.Add("Strength", BasicStats.Strength.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
+            dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Mana", BasicStats.Mana.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Agility", BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Strength", BasicStats.Strength.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
 
-            dictValues.Add("White Hit", WhiteHit.ToString() + "%");
-            dictValues.Add("Yellow Hit", YellowHit.ToString() + "%");
-            dictValues.Add("Spell Hit", SpellHit.ToString() + "%");
-            dictValues.Add("Melee Crit", MeleeCrit.ToString() + "%");
-            dictValues.Add("Spell Crit", SpellCrit.ToString() + "%");
+            dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Melee Crit", MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Spell Crit", SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%");
 
-            dictValues.Add("Spellpower", BasicStats.SpellPower.ToString());
+            dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
 
-			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
-			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-			dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString());
+            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
-			dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
+            dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%");
 
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
