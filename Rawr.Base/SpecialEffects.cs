@@ -916,7 +916,7 @@ namespace Rawr
 				line = line.Substring("Increases agility by ".Length);
 				if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
 				if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-				stats.CritRating += ((((float)int.Parse(line)) / 6f) / 25f) * 22.08f;
+                stats.CritRating += ((((float)int.Parse(line)) / 6f) / 25f) * 45.90598679f;
 				stats.AttackPower += (((float)int.Parse(line)) / 6f) * 1.03f;
 			}
             // Wrath: Eye of the Night
