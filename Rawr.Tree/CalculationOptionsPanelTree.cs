@@ -49,7 +49,6 @@ namespace Rawr.Tree
             tbSurvScale.Text = calcOpts.SurvScaleBelowTarget.ToString();
             tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
             tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
-            chbLivingSeed.Checked = calcOpts.useLivingSeedAsCritMultiplicator;
             tbBSRatio.Value = calcOpts.BSRatio;
             int burst = 100 - tbBSRatio.Value;
             int sust = tbBSRatio.Value;
@@ -76,6 +75,9 @@ namespace Rawr.Tree
             chbGlyphInnervate.Checked = calcOpts.glyphOfInnervate;
 
             cbNewManaRegen.Checked = calcOpts.newManaRegen;
+            cbInnervate.Checked = calcOpts.Innervates > 0;
+            tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
+            lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
             loading = false;
 
@@ -238,6 +240,23 @@ namespace Rawr.Tree
             calcOpts.newManaRegen = cbNewManaRegen.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbInnervate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.Innervates = cbInnervate.Checked?1:0;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void tbPrimaryHealFrac_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.MainSpellFraction = tbPrimaryHealFrac.Value;
+            lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -248,7 +267,6 @@ namespace Rawr.Tree
         public CharacterCalculationsTree calculatedStats = null;
 
         public string ShattrathFaction = "Aldor";
-        public bool useLivingSeedAsCritMultiplicator = true;
 
         public float SurvTargetLife = 14000f;
         public float SurvScaleBelowTarget = 100f;
@@ -264,6 +282,8 @@ namespace Rawr.Tree
         public int FSRRatio = 90;
         public int ReplenishmentUptime = 50;
         public int WildGrowthPerMinute = 4;
+        public int MainSpellFraction = 50;
+        public int Innervates = 1;
 
         public bool glyphOfHealingTouch = false;
         public bool glyphOfRegrowth = false;

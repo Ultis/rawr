@@ -157,8 +157,7 @@ namespace Rawr.Tree
             critPercent += 2f * druidTalents.NaturesMajesty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
-            if (calcOpts.useLivingSeedAsCritMultiplicator)
-                critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed;
             
             minHeal *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
@@ -263,8 +262,7 @@ namespace Rawr.Tree
 
             critPercent += 10f * druidTalents.ImprovedRegrowth;
             //Living Seed
-            if (calcOpts.useLivingSeedAsCritMultiplicator)
-                critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed;
 
             minHeal *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
@@ -603,7 +601,7 @@ namespace Rawr.Tree
 			critPercent += 2f * druidTalents.NaturesMajesty;
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
-            if (calcOpts.useLivingSeedAsCritMultiplicator)
+            //if (calcOpts.useLivingSeedAsCritMultiplicator)
                 critModifier += 0.1f * druidTalents.LivingSeed;
 
             minHeal *=
