@@ -157,16 +157,16 @@ namespace Rawr
                     "Complex Stats:Avg Time to Windfury",
 					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Enhancement shamans only care about DPS, so Overall Points will always be identical to DPS Points.",
-                    "Attacks:Swing",
+                    "Attacks:White Damage",
                     "Attacks:Windfury Attack",
                     "Attacks:Flametongue Attack",
-                    "Attacks:Lightning Bolt",
-                    "Attacks:Earth Shock",
-                    "Attacks:Searing/Magma Totem",
                     "Attacks:Stormstrike",
-                    "Attacks:Spirit Wolf",
-                    "Attacks:Lightning Shield",
                     "Attacks:Lava Lash",
+                    "Attacks:Searing/Magma Totem",
+                    "Attacks:Earth Shock",
+                    "Attacks:Lightning Bolt",
+                    "Attacks:Lightning Shield",
+                    "Attacks:Spirit Wolf",
                     "Attacks:Total DPS",
                     "Module Version:Enhance Version"
 				};
@@ -331,11 +331,14 @@ namespace Rawr
             // glyph stuff
             float spellCritModifier = calcOpts.GlyphFT & (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
 
-            //work it girl
+            ////////////////////////////
+            // Main calculation Block //
+            ////////////////////////////
+
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
             baseArmor = baseArmor * (1 - modPercentDecrease);
-            float modArmor = (baseArmor / (baseArmor + 10557.5f)); // TODO - old value is 10557.5 this comes from???
+            float modArmor = 1.0f - (baseArmor / (baseArmor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
@@ -377,7 +380,7 @@ namespace Rawr
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
 
             //XXX: Only MH WF for now
-            float chanceToProcWFPerHit = .2f;
+            float chanceToProcWFPerHit = .2f + (calcOpts.GlyphWF ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
 
             //The Swing Loop
@@ -1030,7 +1033,7 @@ namespace Rawr
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
-            dictValues.Add("Swing", SwingDamage.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("White Damage", SwingDamage.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Windfury Attack", WindfuryAttack.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Flametongue Attack", FlameTongueAttack.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Lightning Bolt", LightningBolt.ToString("F2", CultureInfo.InvariantCulture));

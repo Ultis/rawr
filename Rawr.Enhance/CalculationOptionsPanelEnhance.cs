@@ -122,7 +122,7 @@ namespace Rawr
 			}
 		}
 
-        private void chbGlyphFW_CheckedChanged(object sender, EventArgs e)
+        private void chbGlyphFT_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {

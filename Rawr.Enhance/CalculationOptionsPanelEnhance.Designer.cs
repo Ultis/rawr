@@ -480,6 +480,7 @@
             this.chbGlyphLL.TabIndex = 77;
             this.chbGlyphLL.Text = "Glyph of Lava Lash";
             this.chbGlyphLL.UseVisualStyleBackColor = true;
+            this.chbGlyphLL.CheckedChanged += new System.EventHandler(this.chbGlyphLL_CheckedChanged);
             // 
             // chbGlyphSS
             // 
@@ -490,17 +491,18 @@
             this.chbGlyphSS.TabIndex = 76;
             this.chbGlyphSS.Text = "Glyph of Stormstrike";
             this.chbGlyphSS.UseVisualStyleBackColor = true;
+            this.chbGlyphSS.CheckedChanged += new System.EventHandler(this.chbGlyphSS_CheckedChanged);
             // 
             // chbGlyphWF
             // 
             this.chbGlyphWF.AutoSize = true;
-            this.chbGlyphWF.Enabled = false;
             this.chbGlyphWF.Location = new System.Drawing.Point(5, 157);
             this.chbGlyphWF.Name = "chbGlyphWF";
             this.chbGlyphWF.Size = new System.Drawing.Size(154, 17);
             this.chbGlyphWF.TabIndex = 74;
             this.chbGlyphWF.Text = "Glyph of Windfury Weapon";
             this.chbGlyphWF.UseVisualStyleBackColor = true;
+            this.chbGlyphWF.CheckedChanged += new System.EventHandler(this.chbGlyphWF_CheckedChanged);
             // 
             // chbGlyphShocking
             // 
@@ -512,6 +514,7 @@
             this.chbGlyphShocking.TabIndex = 71;
             this.chbGlyphShocking.Text = "Glyph of Shocking";
             this.chbGlyphShocking.UseVisualStyleBackColor = true;
+            this.chbGlyphShocking.CheckedChanged += new System.EventHandler(this.chbGlyphShocking_CheckedChanged);
             // 
             // chbGlyphLS
             // 
@@ -523,6 +526,7 @@
             this.chbGlyphLS.TabIndex = 68;
             this.chbGlyphLS.Text = "Glyph of Lightning Shield";
             this.chbGlyphLS.UseVisualStyleBackColor = true;
+            this.chbGlyphLS.CheckedChanged += new System.EventHandler(this.chbGlyphLS_CheckedChanged);
             // 
             // chbGlyphLB
             // 
@@ -534,6 +538,7 @@
             this.chbGlyphLB.TabIndex = 67;
             this.chbGlyphLB.Text = "Glyph of Lightning Bolt";
             this.chbGlyphLB.UseVisualStyleBackColor = true;
+            this.chbGlyphLB.CheckedChanged += new System.EventHandler(this.chbGlyphLB_CheckedChanged);
             // 
             // chbGlyphFT
             // 
@@ -544,7 +549,7 @@
             this.chbGlyphFT.TabIndex = 66;
             this.chbGlyphFT.Text = "Glyph of Flametongue Weapon";
             this.chbGlyphFT.UseVisualStyleBackColor = true;
-            this.chbGlyphFT.CheckedChanged += new System.EventHandler(this.chbGlyphFW_CheckedChanged);
+            this.chbGlyphFT.CheckedChanged += new System.EventHandler(this.chbGlyphFT_CheckedChanged);
             // 
             // tabPage3
             // 

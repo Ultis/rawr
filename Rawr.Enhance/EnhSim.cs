@@ -28,7 +28,7 @@ namespace Rawr.Enhance
             sb.AppendLine("##########################################");
             sb.AppendLine("### Rawr.Enhance Data Export to EnhSim ###");
             sb.AppendLine("##########################################");
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("race                            " + character.Race.ToString().ToLower());
             sb.AppendLine("mh_speed                        " + character.MainHand.Speed.ToString());
             sb.AppendLine("oh_speed                        " + character.OffHand.Speed.ToString());
@@ -56,10 +56,10 @@ namespace Rawr.Enhance
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("max_mana                        " + stats.Mana.ToString());
             sb.AppendLine("mp5                             " + stats.Mp5.ToString());
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("mh_imbue                        " + calcOpts.MainhandImbue.ToString().ToLower());
             sb.AppendLine("oh_imbue                        " + calcOpts.OffhandImbue.ToString().ToLower());
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("mh_enchant                      " + _mhEnchant);
             String weaponType = "-";
             if (character.MainHand.Type == Item.ItemType.OneHandAxe)
@@ -78,22 +78,26 @@ namespace Rawr.Enhance
                     weaponType = "axe";
             }
             sb.AppendLine("oh_weapon                       " + weaponType); 
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("trinket1                        " + _trinket1name);
             sb.AppendLine("trinket2                        " + _trinket2name);
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("totem                           " + _totemname); 
             sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
             sb.AppendLine("metagem                         - # not yet implemented in Rawr Export" ); 
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("glyph_major1                    - # not yet implemented in Rawr Export"); 
             sb.AppendLine("glyph_major2                    - # not yet implemented in Rawr Export"); 
             sb.AppendLine("glyph_major3                    - # not yet implemented in Rawr Export");
-            sb.AppendLine(" ");
+            sb.AppendLine();
             sb.AppendLine("glyph_minor1                    -"); 
             sb.AppendLine("glyph_minor2                    -"); 
             sb.AppendLine("glyph_minor3                    -");
-            sb.AppendLine(" ");
+            sb.AppendLine();
+            sb.AppendLine("###########");
+            sb.AppendLine("# Talents #");
+            sb.AppendLine("###########");
+            sb.AppendLine();
             sb.AppendLine("ancestral_knowledge             " + character.ShamanTalents.AncestralKnowledge + "/5");
             sb.AppendLine("improved_shields                " + character.ShamanTalents.ImprovedShields + "/3");
             sb.AppendLine("mental_dexterity                " + character.ShamanTalents.MentalDexterity + "/3");
@@ -107,7 +111,6 @@ namespace Rawr.Enhance
             sb.AppendLine("improved_stormstrike            " + character.ShamanTalents.ImprovedStormstrike + "/2");
             sb.AppendLine("static_shock                    " + character.ShamanTalents.StaticShock + "/3");
             sb.AppendLine("maelstrom_weapon                " + character.ShamanTalents.MaelstromWeapon + "/5");
-            sb.AppendLine(" ");
             sb.AppendLine("convection                      " + character.ShamanTalents.Convection + "/5");
             sb.AppendLine("concussion                      " + character.ShamanTalents.Concussion + "/5");
             sb.AppendLine("call_of_flame                   " + character.ShamanTalents.CallOfFlame + "/3");
