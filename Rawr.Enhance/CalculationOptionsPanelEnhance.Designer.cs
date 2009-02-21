@@ -449,7 +449,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(264, 528);
+            this.tabPage2.Size = new System.Drawing.Size(264, 525);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Glyphs";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -518,7 +518,6 @@
             // chbGlyphLS
             // 
             this.chbGlyphLS.AutoSize = true;
-            this.chbGlyphLS.Enabled = false;
             this.chbGlyphLS.Location = new System.Drawing.Point(5, 88);
             this.chbGlyphLS.Name = "chbGlyphLS";
             this.chbGlyphLS.Size = new System.Drawing.Size(143, 17);
@@ -530,7 +529,6 @@
             // chbGlyphLB
             // 
             this.chbGlyphLB.AutoSize = true;
-            this.chbGlyphLB.Enabled = false;
             this.chbGlyphLB.Location = new System.Drawing.Point(5, 65);
             this.chbGlyphLB.Name = "chbGlyphLB";
             this.chbGlyphLB.Size = new System.Drawing.Size(132, 17);

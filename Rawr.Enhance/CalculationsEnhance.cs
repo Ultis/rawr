@@ -460,7 +460,7 @@ namespace Rawr
             //3: Lavalash DPS
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
             if (calcOpts.GlyphLL & calcOpts.OffhandImbue == "flametongue")
-                dpsLL = dpsLL * 1.1f; // 10% bonus dmg if Lava Lash Glyph
+                dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
 
             //4: Earth Shock DPS
             float ssGlyphBonus = calcOpts.GlyphSS ? .08f : 0f;
@@ -476,6 +476,8 @@ namespace Rawr
             float coefLB = .7143f;
             float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * stats.SpellPower);
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
+            if (calcOpts.GlyphLB)
+                dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
 
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
@@ -487,6 +489,8 @@ namespace Rawr
             float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * stats.SpellPower);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS;
+            if (calcOpts.GlyphLS)
+                dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
             //8: Searing Totem DPS
             float damageSTBase = 105;
