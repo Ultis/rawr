@@ -394,7 +394,7 @@ namespace Rawr.Hunter
 
             HunterRatings ratings = new HunterRatings();
 
-            double hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.5 * character.HunterTalents.AspectMastery);
+            double hawkRAPBonus = ratings.HAWK_BONUS_AP * (1.0 + 0.3 * character.HunterTalents.AspectMastery);
 
             #region Base Attack Speed
             //Hasted Speed = Weapon Speed / ( (1+(Haste1 %)) * (1+(Haste2 %)) * (1+(((Haste Rating 1 + Haste Rating 2 + ... )/100)/15.7)) )

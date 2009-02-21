@@ -408,7 +408,7 @@ namespace Rawr.Hunter
 
                 case Shots.SerpentSting:
                     shot.casttime = 1.5 + options.Latency;
-                    shot.cooldown = 12.0;
+                    shot.cooldown = 15.0;
                     shot.type = Shots.SerpentSting;
                     break;
 

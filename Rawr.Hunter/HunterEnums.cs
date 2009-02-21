@@ -97,11 +97,11 @@ namespace Rawr.Hunter
         public double QUIVER_SPEED_INCREASE = 1.15;
 
 
-        public double STEADY_AP_SCALE = 0.2;
+        public double STEADY_AP_SCALE = 0.1;
         public double STEADY_BONUS_DMG = 252.0;
 
-        public double EXPLOSIVE_AP_SCALE = 0.08;
-        public double EXPLOSIVE_BONUS_DMG = (238.0 + 286.0)/2.0;
+        public double EXPLOSIVE_AP_SCALE = 0.16;
+        public double EXPLOSIVE_BONUS_DMG = (428.0 + 516.0) / 2.0;
 
         public double ARCANE_AP_SCALE = 0.15;
         public double ARCANE_BONUS_DMG = 492.0;
