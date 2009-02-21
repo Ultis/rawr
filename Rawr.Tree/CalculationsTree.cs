@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace Rawr.Tree
 {
+    public enum HealTargetTypes { TankHealing = 0, RaidHealing = 1 };
+
     [Rawr.Calculations.RawrModelInfo("Tree", "Ability_Druid_TreeofLife", Character.CharacterClass.Druid)]
     class CalculationsTree : CalculationsBase
     {
@@ -288,7 +290,7 @@ namespace Rawr.Tree
             return mp5FromTrinket;
         }
 
-        protected float[] SimulateHealing(CharacterCalculationsTree calculatedStats, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac)
+        protected float[] SimulateHealing(CharacterCalculationsTree calculatedStats, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
         {
             #region Spells
             int hots = 0;
@@ -351,13 +353,17 @@ namespace Rawr.Tree
             float tpsHealing = 1f - (hotsCastTime + wgCastTime);
             tpsHealing *= primaryFrac;
             float hpsHealing = 0;
-            if (primaryHeal is Lifebloom || primaryHeal is Rejuvenation)
+            // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
+            if (primaryHealTarget == HealTargetTypes.RaidHealing)
             {
-                hpsHealing = tpsHealing * primaryHeal.HPSHoT;
+                hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
+                                                                //   by total healing by primaryHeal/cast time
+                                                                // This assumes full HoT duration is effective on raid
+                                                                //   members. 
             } 
-            else 
+            else  
             {
-                hpsHealing = tpsHealing * primaryHeal.HPS;
+                hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
             }
             float mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
             castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
@@ -427,7 +433,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute, 
                             true, true, true, 1,
                             new Nourish(calculatedStats, 3),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                         
@@ -440,7 +446,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 2,
                             new Nourish(calculatedStats, 3),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -452,7 +458,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 1,
                             new HealingTouch(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -464,7 +470,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 2,
                             new HealingTouch(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -476,7 +482,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 1,
                             new Regrowth(calculatedStats, true),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -488,7 +494,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, true, true, 2,
                             new Regrowth(calculatedStats, true),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -501,7 +507,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 1,
                             new Regrowth(calculatedStats, false),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -514,7 +520,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 2,
                             new Regrowth(calculatedStats, false),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -526,7 +532,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 1,
                             new Rejuvenation(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -538,7 +544,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 2,
                             new Rejuvenation(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -550,7 +556,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 1,
                             new Nourish(calculatedStats, 0),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -562,7 +568,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             true, false, true, 2,
                             new Nourish(calculatedStats, 0),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.RaidHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -574,7 +580,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             false, false, false, 0,
                             new Nourish(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -586,7 +592,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             false, false, false, 0,
                             new HealingTouch(calculatedStats),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
@@ -598,7 +604,7 @@ namespace Rawr.Tree
                             calculatedStats, calcOpts.WildGrowthPerMinute,
                             false, false, false, 0,
                             new Regrowth(calculatedStats, true),
-                            .01f * calcOpts.MainSpellFraction);
+                            .01f * calcOpts.MainSpellFraction, HealTargetTypes.TankHealing);
                         HPS = calculatedStats.Simulation[0];
                         MPS = calculatedStats.Simulation[1];
                     }
