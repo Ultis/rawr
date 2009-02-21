@@ -59,7 +59,7 @@ namespace Rawr.ProtWarr
                 
                 // Generate List of Gemming Templates
                 List<GemmingTemplate> gemmingTemplate = new List<GemmingTemplate>();
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j <= groupNames.GetUpperBound(0); j++)
                 {
                     for (int i = 0; i <= gemmingTemplates.GetUpperBound(0); i++)
                     {
