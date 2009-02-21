@@ -459,6 +459,8 @@ namespace Rawr
 
             //3: Lavalash DPS
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
+            if (calcOpts.GlyphLL & calcOpts.OffhandImbue == "flametongue")
+                dpsLL = dpsLL * 1.1f; // 10% bonus dmg if Lava Lash Glyph
 
             //4: Earth Shock DPS
             float ssGlyphBonus = calcOpts.GlyphSS ? .08f : 0f;

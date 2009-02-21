@@ -11,6 +11,7 @@ namespace Rawr
 	public partial class CalculationOptionsPanelEnhance : CalculationOptionsPanelBase
 	{
 		private Dictionary<int, string> armorBosses = new Dictionary<int, string>();
+        private int _glyphCount = 0;
 
 		public CalculationOptionsPanelEnhance()
 		{
@@ -75,6 +76,10 @@ namespace Rawr
             chbGlyphShocking.Checked = calcOpts.GlyphShocking;
             chbGlyphSS.Checked = calcOpts.GlyphSS;
             chbGlyphWF.Checked = calcOpts.GlyphWF;
+
+            _glyphCount = (chbGlyphFT.Checked ? 1 : 0) + (chbGlyphLL.Checked ? 1 : 0) + (chbGlyphLB.Checked ? 1 : 0) +
+                          (chbGlyphLS.Checked ? 1 : 0) + (chbGlyphSS.Checked ? 1 : 0) + (chbGlyphWF.Checked ? 1 : 0) +
+                          (chbGlyphShocking.Checked ? 1 : 0);
             
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 			labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
@@ -122,13 +127,26 @@ namespace Rawr
 			}
 		}
 
+        private bool checkMaxGlyphs(CheckBox glyph)
+        {
+            _glyphCount += glyph.Checked ? 1 : -1;
+            if (glyph.Checked & _glyphCount == 4)
+            {
+                System.Windows.Forms.MessageBox.Show("You can enable a maximum of three glyphs",
+                                                     "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);
+                glyph.Checked = false;
+            }
+            else
+                Character.OnCalculationsInvalidated();
+            return glyph.Checked;
+        }
+
         private void chbGlyphFT_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphFT = chbGlyphFT.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphFT = checkMaxGlyphs(chbGlyphFT);
             }
         }
 
@@ -137,8 +155,7 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphLL = chbGlyphLL.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphLL = checkMaxGlyphs(chbGlyphLL);
             }
         }
 
@@ -147,8 +164,7 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphLB = chbGlyphLB.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphLB = checkMaxGlyphs(chbGlyphLB);
             }
         }
 
@@ -157,8 +173,7 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphLS = chbGlyphLS.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphLS = checkMaxGlyphs(chbGlyphLS);
             }
         }
 
@@ -167,8 +182,7 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphShocking = chbGlyphShocking.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphShocking = checkMaxGlyphs(chbGlyphShocking);
             }
         }
 
@@ -177,8 +191,7 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphSS = chbGlyphSS.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphSS = checkMaxGlyphs(chbGlyphSS);
             }
         }
 
@@ -187,14 +200,13 @@ namespace Rawr
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.GlyphWF = chbGlyphWF.Checked;
-                Character.OnCalculationsInvalidated();
+                calcOpts.GlyphWF = checkMaxGlyphs(chbGlyphWF);
             }
         }
 
         private void btnEnhSim_Click(object sender, EventArgs e)
         {
-            if (Character.Name != null)
+            if (!_loadingCalculationOptions & Character.Name != null)
             {
                 Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
                 simExport.copyToClipboard();

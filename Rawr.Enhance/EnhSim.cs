@@ -86,9 +86,8 @@ namespace Rawr.Enhance
             sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
             sb.AppendLine("metagem                         - # not yet implemented in Rawr Export" ); 
             sb.AppendLine();
-            sb.AppendLine("glyph_major1                    - # not yet implemented in Rawr Export"); 
-            sb.AppendLine("glyph_major2                    - # not yet implemented in Rawr Export"); 
-            sb.AppendLine("glyph_major3                    - # not yet implemented in Rawr Export");
+
+            addGlyphs(calcOpts, sb);
             sb.AppendLine();
             sb.AppendLine("glyph_minor1                    -"); 
             sb.AppendLine("glyph_minor2                    -"); 
@@ -137,6 +136,51 @@ namespace Rawr.Enhance
             System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\nPaste the config data into your config file in a decent text editor!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
             
+        }
+
+        private void addGlyphs(CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
+        {
+            int glyphNumber = 0;
+            if (calcOpts.GlyphFT)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    flametongue");
+            }
+            if (calcOpts.GlyphLB)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    lightning_bolt");
+            }
+            if (calcOpts.GlyphLL)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    lava_lash");
+            }
+            if (calcOpts.GlyphLS)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    lightning_shield");
+            }
+            if (calcOpts.GlyphShocking)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    earth_shock");
+            }
+            if (calcOpts.GlyphSS)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    stormstrike");
+            }
+            if (calcOpts.GlyphWF)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    windfury_weapon");
+            }
+            while (glyphNumber < 3)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    -");
+            }
         }
 
         private void removeUseProcEffects(Character character, Stats stats)

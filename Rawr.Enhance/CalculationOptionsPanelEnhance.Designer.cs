@@ -88,7 +88,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(272, 558);
+            this.tabControl.Size = new System.Drawing.Size(272, 551);
             this.tabControl.TabIndex = 9;
             // 
             // tabPage1
@@ -122,7 +122,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(264, 532);
+            this.tabPage1.Size = new System.Drawing.Size(264, 525);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -449,7 +449,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(264, 532);
+            this.tabPage2.Size = new System.Drawing.Size(264, 528);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Glyphs";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -473,7 +473,6 @@
             // chbGlyphLL
             // 
             this.chbGlyphLL.AutoSize = true;
-            this.chbGlyphLL.Enabled = false;
             this.chbGlyphLL.Location = new System.Drawing.Point(5, 42);
             this.chbGlyphLL.Name = "chbGlyphLL";
             this.chbGlyphLL.Size = new System.Drawing.Size(118, 17);
@@ -556,7 +555,7 @@
             this.tabPage3.Controls.Add(this.btnEnhSim);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(264, 532);
+            this.tabPage3.Size = new System.Drawing.Size(264, 528);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "EnhSim";
             this.tabPage3.UseVisualStyleBackColor = true;
