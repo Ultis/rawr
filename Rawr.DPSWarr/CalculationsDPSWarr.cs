@@ -102,7 +102,11 @@ namespace Rawr.DPSWarr
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
         {
-            return enchant.FitsInSlot(slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
+            if (character != null && (character.WarriorTalents != null && (enchant != null && (slot != null))))
+            {
+                return enchant.FitsInSlot(slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
+            }
+            return enchant.FitsInSlot(slot);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
@@ -183,19 +187,19 @@ namespace Rawr.DPSWarr
             var statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             //Mongoose
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
+            if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 2673)))
             {
                 statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
                 statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
             }
-            if (character.OffHand != null && character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
+            if (character.OffHand != null && (character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673))
             {
                 statsBuffs.Agility += 120f * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
                 statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Item.Speed)) / 6f));
             }
 
             //Executioner
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+            if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 3225)))
             {
                 statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
             }

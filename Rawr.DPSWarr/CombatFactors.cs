@@ -239,6 +239,16 @@ namespace Rawr.DPSWarr
                     || weapon.Type == Item.ItemType.TwoHandSword || weapon.Type == Item.ItemType.TwoHandMace))
                     baseExpertise += 3f;
             }
+            else if (_characterRace == Character.CharacterRace.Dwarf)
+            {
+                if (weapon != null && (weapon.Type == Item.ItemType.OneHandMace || weapon.Type == Item.ItemType.TwoHandMace))
+                    baseExpertise += 5f;
+            }
+            else if (_characterRace == Character.CharacterRace.Orc)
+            {
+                if (weapon != null && (weapon.Type == Item.ItemType.OneHandAxe || weapon.Type == Item.ItemType.TwoHandAxe))
+                    baseExpertise += 5f;
+            }
 
             return baseExpertise;
         }
