@@ -18,6 +18,7 @@ namespace Rawr.Mage
         private int[] segmentColumn;
         private CharacterCalculationsMage calculationResult;
         private Character character;
+        private MageTalents talents;
         private CalculationOptionsMage calculationOptions;
         private string armor;
 
@@ -135,6 +136,7 @@ namespace Rawr.Mage
         private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, string armor)
         {
             this.character = character;
+            this.talents = character.MageTalents;
             this.calculationOptions = calculationOptions;
             this.segmentCooldowns = segmentCooldowns;
             this.integralMana = integralMana;
@@ -277,27 +279,27 @@ namespace Rawr.Mage
 
                 restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
                 heroismAvailable = calculationOptions.HeroismAvailable;
-                arcanePowerAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.ArcanePower == 1);
-                icyVeinsAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.IcyVeins == 1);
-                combustionAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.Combustion == 1);
-                moltenFuryAvailable = character.MageTalents.MoltenFury > 0;
+                arcanePowerAvailable = !calculationOptions.DisableCooldowns && (talents.ArcanePower == 1);
+                icyVeinsAvailable = !calculationOptions.DisableCooldowns && (talents.IcyVeins == 1);
+                combustionAvailable = !calculationOptions.DisableCooldowns && (talents.Combustion == 1);
+                moltenFuryAvailable = talents.MoltenFury > 0;
                 trinket1Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket1);
                 trinket2Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket2);
-                coldsnapAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.ColdSnap == 1);
+                coldsnapAvailable = !calculationOptions.DisableCooldowns && (talents.ColdSnap == 1);
                 potionOfWildMagicAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfWildMagic;
                 potionOfSpeedAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfSpeed;
                 effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
                 flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
                 drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
-                waterElementalAvailable = !calculationOptions.DisableCooldowns && (character.MageTalents.SummonWaterElemental == 1);
+                waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
                 manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
-                calculationResult.EvocationCooldown = (240.0 - 60.0 * character.MageTalents.ArcaneFlows);
-                calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * character.MageTalents.ColdAsIce);
-                calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * character.MageTalents.ArcaneFlows);
+                calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
+                calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
+                calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
                 calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
-                calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * character.MageTalents.IceFloes + (character.MageTalents.IceFloes == 3 ? 0.01 : 0.00));
-                calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * character.MageTalents.ColdAsIce);
-                calculationResult.WaterElementalDuration = 45.0 + 5.0 * character.MageTalents.ImprovedWaterElemental;
+                calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
+                calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
+                calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
                 if (calculationOptions.PlayerLevel < 77)
                 {
                     calculationResult.ManaGemValue = 2400.0;
@@ -432,14 +434,14 @@ namespace Rawr.Mage
 
         private float EvaluateSurvivability(Stats characterStats)
         {
-            double ampMelee = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 - 0.01 * character.MageTalents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation) * (1 - calculationResult.BaseState.Dodge);
-            double ampPhysical = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 - 0.01 * character.MageTalents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation);
-            double ampArcane = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampFire = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampFrost = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampNature = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampShadow = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore) * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
-            double ampHoly = (1 - 0.02 * character.MageTalents.PrismaticCloak) * (1 + 0.01 * character.MageTalents.PlayingWithFire) * (1 - 0.02 * character.MageTalents.FrozenCore);
+            double ampMelee = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation) * (1 - calculationResult.BaseState.Dodge);
+            double ampPhysical = (1 - 0.02 * talents.PrismaticCloak) * (1 - 0.01 * talents.ArcticWinds) * (1 - calculationResult.BaseState.MeleeMitigation);
+            double ampArcane = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * Math.Max(1 - characterStats.ArcaneResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampFire = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * Math.Max(1 - characterStats.FireResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampFrost = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * Math.Max(1 - characterStats.FrostResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampNature = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * Math.Max(1 - characterStats.NatureResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampShadow = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore) * Math.Max(1 - characterStats.ShadowResistance / calculationOptions.TargetLevel * 0.15f, 0.25f);
+            double ampHoly = (1 - 0.02 * talents.PrismaticCloak) * (1 + 0.01 * talents.PlayingWithFire) * (1 - 0.02 * talents.FrozenCore);
 
             double melee = ampMelee * (calculationOptions.MeleeDps * (1 + Math.Max(0, calculationOptions.MeleeCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.MeleeDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
             double physical = ampPhysical * (calculationOptions.PhysicalDps * (1 + Math.Max(0, calculationOptions.PhysicalCrit / 100.0 - calculationResult.BaseState.PhysicalCritReduction) * (2 * (1 - calculationResult.BaseState.CritDamageReduction) - 1)) + calculationOptions.PhysicalDot * (1 - 0.5f * calculationResult.BaseState.CritDamageReduction));
@@ -1328,17 +1330,17 @@ namespace Rawr.Mage
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.EmpoweredFire > 0)
+            else if (talents.EmpoweredFire > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.EmpoweredFrostbolt > 0)
+            else if (talents.EmpoweredFrostbolt > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.SpellPower > 0)
+            else if (talents.SpellPower > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
@@ -1380,7 +1382,7 @@ namespace Rawr.Mage
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : Math.Max(((int)((calculationOptions.FightDuration - 60.0) / 60.0)) * 0.5 + 1.5, calculationResult.MaxManaGem));
             }
-            else if (flameCapAvailable && !(!calculationOptions.SmartOptimization && character.MageTalents.SpellPower > 0))
+            else if (flameCapAvailable && !(!calculationOptions.SmartOptimization && talents.SpellPower > 0))
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
             }
@@ -1644,8 +1646,8 @@ namespace Rawr.Mage
                 rowAoe = rowCount++;
                 rowFlamestrike = rowCount++;
                 rowConeOfCold = rowCount++;
-                if (character.MageTalents.BlastWave == 1) rowBlastWave = rowCount++;
-                if (character.MageTalents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
+                if (talents.BlastWave == 1) rowBlastWave = rowCount++;
+                if (talents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
             }
             if (combustionAvailable) rowCombustion = rowCount++;
             if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
@@ -2111,15 +2113,15 @@ namespace Rawr.Mage
             }
             if (!calculationOptions.CustomSpellMixOnly)
             {
-                if (calculationOptions.MaintainScorch && calculationOptions.MaintainSnare && character.MageTalents.ImprovedScorch > 0 && character.MageTalents.Slow > 0)
+                if (calculationOptions.MaintainScorch && calculationOptions.MaintainSnare && talents.ImprovedScorch > 0 && talents.Slow > 0)
                 {
                     // no cycles right now that provide scorch and snare
                 }
-                if (calculationOptions.MaintainScorch && character.MageTalents.ImprovedScorch > 0)
+                if (calculationOptions.MaintainScorch && talents.ImprovedScorch > 0)
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0)
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
                             list.Add(SpellId.ABABarSc);
                             list.Add(SpellId.ABABarCSc);
@@ -2128,9 +2130,9 @@ namespace Rawr.Mage
                             list.Add(SpellId.AB3ABarCSc);
                             list.Add(SpellId.AB3MBAMABarSc);
                         }
-                        else if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
+                        else if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                         {
-                            if (character.MageTalents.LivingBomb > 0)
+                            if (talents.LivingBomb > 0)
                             {
                                 list.Add(SpellId.FFBScLBPyro);
                             }
@@ -2138,11 +2140,11 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            if (character.MageTalents.LivingBomb > 0)
+                            if (talents.LivingBomb > 0)
                             {
                                 list.Add(SpellId.FBScLBPyro);
                             }
-                            if (character.MageTalents.HotStreak > 0)
+                            if (talents.HotStreak > 0)
                             {
                                 list.Add(SpellId.FBScPyro);
                             }
@@ -2154,12 +2156,12 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        if (character.MageTalents.LivingBomb > 0)
+                        if (talents.LivingBomb > 0)
                         {
                             list.Add(SpellId.FBScLBPyro);
                             list.Add(SpellId.ScLBPyro);
                         }
-                        if (character.MageTalents.HotStreak > 0)
+                        if (talents.HotStreak > 0)
                         {
                             list.Add(SpellId.FBScPyro);
                         }
@@ -2170,13 +2172,13 @@ namespace Rawr.Mage
                         if (calculationOptions.PlayerLevel >= 75)
                         {
                             list.Add(SpellId.FFBScPyro);
-                            if (character.MageTalents.LivingBomb > 0)
+                            if (talents.LivingBomb > 0)
                             {
                                 list.Add(SpellId.FFBScLBPyro);
                             }
                         }
                         list.Add(SpellId.FBFBlast);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0)
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
                             list.Add(SpellId.ABABarSc);
                             list.Add(SpellId.ABABarCSc);
@@ -2187,25 +2189,25 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                else if (calculationOptions.MaintainSnare && character.MageTalents.Slow > 0)
+                else if (calculationOptions.MaintainSnare && talents.Slow > 0)
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.ArcaneBarrage > 0)
+                        if (talents.ArcaneBarrage > 0)
                         {
-                            if (character.MageTalents.ImprovedFrostbolt > 0)
+                            if (talents.ImprovedFrostbolt > 0)
                             {
                                 list.Add(SpellId.FrBABarSlow);
                             }
-                            if (character.MageTalents.ImprovedFireball > 0)
+                            if (talents.ImprovedFireball > 0)
                             {
                                 list.Add(SpellId.FBABarSlow);
                             }
-                            if (character.MageTalents.ArcaneEmpowerment > 0)
+                            if (talents.ArcaneEmpowerment > 0)
                             {
                                 list.Add(SpellId.ABABarSlow);
                             }
-                            if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
+                            if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
                             {
                                 list.Add(SpellId.FrBABarSlow);
                                 list.Add(SpellId.FBABarSlow);
@@ -2224,16 +2226,16 @@ namespace Rawr.Mage
                 {
                     if (calculationOptions.SmartOptimization)
                     {
-                        if (character.MageTalents.EmpoweredFire > 0)
+                        if (talents.EmpoweredFire > 0)
                         {
-                            if (character.MageTalents.PiercingIce == 3 && character.MageTalents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
+                            if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                             {
                                 list.Add(SpellId.FFBPyro);
-                                if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
+                                if (talents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
                             }
                             else
                             {
-                                if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                                if (talents.HotStreak > 0 && talents.Pyroblast > 0)
                                 {
                                     list.Add(SpellId.FBPyro);
                                 }
@@ -2241,12 +2243,12 @@ namespace Rawr.Mage
                                 {
                                     list.Add(SpellId.Fireball);
                                 }
-                                if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
+                                if (talents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                             }
                         }
-                        else if (character.MageTalents.EmpoweredFrostbolt > 0)
+                        else if (talents.EmpoweredFrostbolt > 0)
                         {
-                            if (character.MageTalents.BrainFreeze > 0)
+                            if (talents.BrainFreeze > 0)
                             {
                                 list.Add(SpellId.FrBFB);
                             }
@@ -2255,26 +2257,26 @@ namespace Rawr.Mage
                                 list.Add(SpellId.FrostboltFOF);
                             }
                         }
-                        else if (character.MageTalents.ArcaneBarrage > 0)
+                        else if (talents.ArcaneBarrage > 0)
                         {
-                            if (character.MageTalents.ImprovedFrostbolt > 0)
+                            if (talents.ImprovedFrostbolt > 0)
                             {
                                 list.Add(SpellId.Frostbolt);
                                 list.Add(SpellId.FrBABar);
                                 list.Add(SpellId.FrB2ABar);
                             }
-                            if (character.MageTalents.ImprovedFireball > 0)
+                            if (talents.ImprovedFireball > 0)
                             {
                                 list.Add(SpellId.Fireball);
                                 list.Add(SpellId.FBABar);
                                 list.Add(SpellId.FB2ABar);
                             }
-                            if (character.MageTalents.ArcaneEmpowerment > 0)
+                            if (talents.ArcaneEmpowerment > 0)
                             {
                                 list.Add(SpellId.ABAM);
                                 list.Add(SpellId.AB3AM2MBAM);
                                 list.Add(SpellId.AB3AM);
-                                if (character.MageTalents.MissileBarrage > 0)
+                                if (talents.MissileBarrage > 0)
                                 {
                                     list.Add(SpellId.ABABar1MBAM);
                                     list.Add(SpellId.ABABar2MBAM);
@@ -2282,7 +2284,7 @@ namespace Rawr.Mage
                                     list.Add(SpellId.ABSpam3MBAM);
                                 }
                             }
-                            if (character.MageTalents.ImprovedFrostbolt == 0 && character.MageTalents.ImprovedFireball == 0 && character.MageTalents.ArcaneEmpowerment == 0)
+                            if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
                             {
                                 list.Add(SpellId.FrBABar);
                                 list.Add(SpellId.FBABar);
@@ -2292,7 +2294,7 @@ namespace Rawr.Mage
                                 list.Add(SpellId.ABAM);
                                 list.Add(SpellId.AB3AM2MBAM);
                                 list.Add(SpellId.AB3AM);
-                                if (character.MageTalents.MissileBarrage > 0)
+                                if (talents.MissileBarrage > 0)
                                 {
                                     list.Add(SpellId.ABABar1MBAM);
                                     list.Add(SpellId.ABABar2MBAM);
@@ -2313,8 +2315,8 @@ namespace Rawr.Mage
                     {
                         list.Add(SpellId.ArcaneMissiles);
                         list.Add(SpellId.Scorch);
-                        if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.ScLBPyro);
-                        if (character.MageTalents.HotStreak > 0 && character.MageTalents.Pyroblast > 0)
+                        if (talents.LivingBomb > 0) list.Add(SpellId.ScLBPyro);
+                        if (talents.HotStreak > 0 && talents.Pyroblast > 0)
                         {
                             list.Add(SpellId.FBPyro);
                         }
@@ -2326,40 +2328,40 @@ namespace Rawr.Mage
                         {
                             list.Add(SpellId.FrostfireBoltFOF);
                             list.Add(SpellId.FFBPyro);
-                            if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
+                            if (talents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
                         }
                         list.Add(SpellId.FBFBlast);
-                        if (character.MageTalents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
+                        if (talents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
                         list.Add(SpellId.FrostboltFOF);
-                        if (character.MageTalents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
-                        if (character.MageTalents.FingersOfFrost > 0) list.Add(SpellId.FrBFBIL);
+                        if (talents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
+                        if (talents.FingersOfFrost > 0) list.Add(SpellId.FrBFBIL);
                         list.Add(SpellId.ArcaneBlast33);
                         list.Add(SpellId.ABAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar0C);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
-                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpamMBAM);
-                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3AM);
-                        if (character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3AM2MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FB2ABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
-                        if (calculationOptions.PlayerLevel >= 75 && character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
-                        if (character.MageTalents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar1C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar0MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB2ABar3C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam3C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam03C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABSpam3MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar3C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2C);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar2MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.ABABar1MBAM);
-                        if (character.MageTalents.ArcaneBarrage > 0 && character.MageTalents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar0C);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
+                        if (talents.MissileBarrage > 0) list.Add(SpellId.ABSpamMBAM);
+                        if (talents.MissileBarrage > 0) list.Add(SpellId.AB3AM);
+                        if (talents.MissileBarrage > 0) list.Add(SpellId.AB3AM2MBAM);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FB2ABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
+                        if (calculationOptions.PlayerLevel >= 75 && talents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar1C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar0MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar3C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam3C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam03C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam3MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar3C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar2C);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar2MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar1MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3MBAM);
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)
@@ -2369,8 +2371,8 @@ namespace Rawr.Mage
                     list.Add(SpellId.FlamestrikeSingle);
                     list.Add(SpellId.Blizzard);
                     list.Add(SpellId.ConeOfCold);
-                    if (character.MageTalents.BlastWave == 1) list.Add(SpellId.BlastWave);
-                    if (character.MageTalents.DragonsBreath == 1) list.Add(SpellId.DragonsBreath);
+                    if (talents.BlastWave == 1) list.Add(SpellId.BlastWave);
+                    if (talents.DragonsBreath == 1) list.Add(SpellId.DragonsBreath);
                 }
             }
             return list;

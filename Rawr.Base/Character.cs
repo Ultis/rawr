@@ -182,25 +182,25 @@ namespace Rawr //O O . .
 		private DeathKnightTalents _deathKnightTalents = null;
 
 		[XmlIgnore]
-		public WarriorTalents WarriorTalents { get { return _warriorTalents = _warriorTalents ?? new WarriorTalents(); } set { _warriorTalents = value; } }
+		public WarriorTalents WarriorTalents { get { return _warriorTalents ?? (_warriorTalents = new WarriorTalents()); } set { _warriorTalents = value; } }
 		[XmlIgnore]
-		public PaladinTalents PaladinTalents { get { return _paladinTalents = _paladinTalents ?? new PaladinTalents(); } set { _paladinTalents = value; } }
+		public PaladinTalents PaladinTalents { get { return _paladinTalents ?? (_paladinTalents = new PaladinTalents()); } set { _paladinTalents = value; } }
 		[XmlIgnore]
-		public HunterTalents HunterTalents { get { return _hunterTalents = _hunterTalents ?? new HunterTalents(); } set { _hunterTalents = value; } }
+		public HunterTalents HunterTalents { get { return _hunterTalents ?? (_hunterTalents = new HunterTalents()); } set { _hunterTalents = value; } }
 		[XmlIgnore]
-		public RogueTalents RogueTalents { get { return _rogueTalents = _rogueTalents ?? new RogueTalents(); } set { _rogueTalents = value; } }
+		public RogueTalents RogueTalents { get { return _rogueTalents ?? (_rogueTalents = new RogueTalents()); } set { _rogueTalents = value; } }
 		[XmlIgnore]
-		public PriestTalents PriestTalents { get { return _priestTalents = _priestTalents ?? new PriestTalents(); } set { _priestTalents = value; } }
+		public PriestTalents PriestTalents { get { return _priestTalents ?? (_priestTalents = new PriestTalents()); } set { _priestTalents = value; } }
 		[XmlIgnore]
-		public ShamanTalents ShamanTalents { get { return _shamanTalents = _shamanTalents ?? new ShamanTalents(); } set { _shamanTalents = value; } }
+		public ShamanTalents ShamanTalents { get { return _shamanTalents ?? (_shamanTalents = new ShamanTalents()); } set { _shamanTalents = value; } }
 		[XmlIgnore]
-		public MageTalents MageTalents { get { return _mageTalents = _mageTalents ?? new MageTalents(); } set { _mageTalents = value; } }
+		public MageTalents MageTalents { get { return _mageTalents ?? (_mageTalents = new MageTalents()); } set { _mageTalents = value; } }
 		[XmlIgnore]
-		public WarlockTalents WarlockTalents { get { return _warlockTalents = _warlockTalents ?? new WarlockTalents(); } set { _warlockTalents = value; } }
+		public WarlockTalents WarlockTalents { get { return _warlockTalents ?? (_warlockTalents = new WarlockTalents()); } set { _warlockTalents = value; } }
 		[XmlIgnore]
-		public DruidTalents DruidTalents { get { return _druidTalents = _druidTalents ?? new DruidTalents(); } set { _druidTalents = value; } }
+		public DruidTalents DruidTalents { get { return _druidTalents ?? (_druidTalents = new DruidTalents()); } set { _druidTalents = value; } }
 		[XmlIgnore]
-		public DeathKnightTalents DeathKnightTalents { get { return _deathKnightTalents = _deathKnightTalents ?? new DeathKnightTalents(); } set { _deathKnightTalents = value; } }
+		public DeathKnightTalents DeathKnightTalents { get { return _deathKnightTalents ?? (_deathKnightTalents = new DeathKnightTalents()); } set { _deathKnightTalents = value; } }
 
 		[XmlIgnore]
 		public TalentsBase CurrentTalents

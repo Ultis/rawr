@@ -742,56 +742,58 @@ namespace Rawr.Mage
                 waterbolt = new Waterbolt(castingState, RawSpellDamage); // TODO should be frost damage
                 DamagePerSecond += waterbolt.DamagePerSecond;
             }
-            if (!ForceMiss && !EffectProc && baseStats.LightningCapacitorProc > 0)
+            if (!ForceMiss && !EffectProc)
             {
-                BaseSpell LightningBolt = castingState.LightningBolt;
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
-                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 3f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
-                DamagePerSecond += boltDps;
-                ThreatPerSecond += boltDps * castingState.NatureThreatMultiplier;
-                //continuous model
-                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
+                if (baseStats.LightningCapacitorProc > 0)
+                {
+                    BaseSpell LightningBolt = castingState.LightningBolt;
+                    //discrete model
+                    int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                    float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                    float avgHitsToDischarge = 3f / avgCritsPerHit;
+                    if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                    float boltDps = LightningBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                    DamagePerSecond += boltDps;
+                    ThreatPerSecond += boltDps * castingState.NatureThreatMultiplier;
+                    //continuous model
+                    //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
+                }
+                if (baseStats.ThunderCapacitorProc > 0)
+                {
+                    BaseSpell ThunderBolt = castingState.ThunderBolt;
+                    //discrete model
+                    int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
+                    float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
+                    float avgHitsToDischarge = 4f / avgCritsPerHit;
+                    if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
+                    float boltDps = ThunderBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
+                    DamagePerSecond += boltDps;
+                    ThreatPerSecond += boltDps * castingState.NatureThreatMultiplier;
+                    //continuous model
+                    //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
+                }
+                if (baseStats.ShatteredSunAcumenProc > 0 && !calculationOptions.Aldor)
+                {
+                    BaseSpell ArcaneBolt = castingState.ArcaneBolt;
+                    float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
+                    DamagePerSecond += boltDps;
+                    ThreatPerSecond += boltDps * castingState.ArcaneThreatMultiplier;
+                }
+                if (baseStats.PendulumOfTelluricCurrentsProc > 0)
+                {
+                    BaseSpell PendulumOfTelluricCurrents = castingState.PendulumOfTelluricCurrents;
+                    float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
+                    DamagePerSecond += boltDps;
+                    ThreatPerSecond += boltDps * castingState.ShadowThreatMultiplier;
+                }
+                if (baseStats.LightweaveEmbroideryProc > 0)
+                {
+                    BaseSpell LightweaveBolt = castingState.LightweaveBolt;
+                    float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
+                    DamagePerSecond += boltDps;
+                    ThreatPerSecond += boltDps * castingState.HolyThreatMultiplier;
+                }
             }
-            if (!ForceMiss && !EffectProc && baseStats.ThunderCapacitorProc > 0)
-            {
-                BaseSpell ThunderBolt = castingState.ThunderBolt;
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / HitProcs));
-                float avgCritsPerHit = CritRate * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 4f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = ThunderBolt.AverageDamage / ((CastTime / HitProcs) * (hitsInsideCooldown + avgHitsToDischarge));
-                DamagePerSecond += boltDps;
-                ThreatPerSecond += boltDps * castingState.NatureThreatMultiplier;
-                //continuous model
-                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
-            }
-            if (!ForceMiss && !EffectProc && baseStats.ShatteredSunAcumenProc > 0 && !calculationOptions.Aldor)
-            {
-                BaseSpell ArcaneBolt = castingState.ArcaneBolt;
-                float boltDps = ArcaneBolt.AverageDamage / (45f + CastTime / HitProcs / 0.1f);
-                DamagePerSecond += boltDps;
-                ThreatPerSecond += boltDps * castingState.ArcaneThreatMultiplier;
-            }
-            if (!ForceMiss && !EffectProc && baseStats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                BaseSpell PendulumOfTelluricCurrents = castingState.PendulumOfTelluricCurrents;
-                float boltDps = PendulumOfTelluricCurrents.AverageDamage / (45f + CastTime / HitProcs / 0.15f);
-                DamagePerSecond += boltDps;
-                ThreatPerSecond += boltDps * castingState.ShadowThreatMultiplier;
-            }
-            if (!ForceMiss && !EffectProc && baseStats.LightweaveEmbroideryProc > 0)
-            {
-                BaseSpell LightweaveBolt = castingState.LightweaveBolt;
-                float boltDps = LightweaveBolt.AverageDamage / (45f + CastTime / HitProcs / 0.5f);
-                DamagePerSecond += boltDps;
-                ThreatPerSecond += boltDps * castingState.HolyThreatMultiplier;
-            }
-
             /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
             float OO5SR = 0;
             if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))

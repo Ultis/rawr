@@ -3431,17 +3431,17 @@ namespace Rawr.Mage
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.EmpoweredFire > 0)
+            else if (talents.EmpoweredFire > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.EmpoweredFrostbolt > 0)
+            else if (talents.EmpoweredFrostbolt > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
             }
-            else if (character.MageTalents.SpellPower > 0)
+            else if (talents.SpellPower > 0)
             {
                 Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
                 manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;

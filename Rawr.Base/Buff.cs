@@ -27,7 +27,7 @@ namespace Rawr
         private List<string> _conflictingBuffs = null;
         public List<string> ConflictingBuffs
         {
-            get { return _conflictingBuffs ?? new List<string>(new string[] { Group }); }
+            get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>(new string[] { Group })); }
             set { _conflictingBuffs = value; }
         }
 
