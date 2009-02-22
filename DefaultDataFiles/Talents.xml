@@ -1,4 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfSavedTalentSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Druid</Class>
+    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Priest</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Mage</Class>
+    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Warlock</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Rogue</Class>
+    <Spec>00000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Hunter</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Shaman</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Warrior</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Full Cat 80</Name>
+    <Class>Druid</Class>
+    <Spec>00000000000000000000000000005522021323220100531000303135100550301200000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>0/53/18 (Frostfire)</Name>
+    <Class>Mage</Class>
+    <Spec>00000000000000000000000000000023050300123033310531203013512033030310030000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>13/0/58 (Frostbolt)</Name>
+    <Class>Mage</Class>
+    <Spec>23002500010000000000000000000000000000000000000000000000003533030311233100230152231350</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>11/52/8 (Fireball)</Name>
+    <Class>Mage</Class>
+    <Spec>23000500010000000000000000000000550220123033300531203003512030030000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>19/52/0 (Fireball)</Name>
+    <Class>Mage</Class>
+    <Spec>23002503010003000000000000000000550120123033300531203013510000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>57/3/11 (Arcane)</Name>
+    <Class>Mage</Class>
+    <Spec>23000523010033015232310250532103000000000000000000000000002032030010000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>53/0/18 (Arcane)</Name>
+    <Class>Mage</Class>
+    <Spec>23000523010013015032310250532100000000000000000000000000002033030310030000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>53/18/0 (Arcane+Scorch)</Name>
+    <Class>Mage</Class>
+    <Spec>23000523010013015032310250532123050020123000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

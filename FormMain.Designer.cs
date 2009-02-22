@@ -150,15 +150,6 @@ namespace Rawr
 			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.defaultGemControlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -179,6 +170,13 @@ namespace Rawr
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rawrWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.rawrHelpPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.gemmingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.gearOptimizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.itemFilteringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tourOfRawrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -1402,7 +1400,6 @@ namespace Rawr
 			this.menuStripMain.Dock = System.Windows.Forms.DockStyle.None;
 			this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.menuStripMain.Location = new System.Drawing.Point(0, 0);
@@ -1506,78 +1503,6 @@ namespace Rawr
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// editToolStripMenuItem
-			// 
-			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.pasteToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.selectAllToolStripMenuItem});
-			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-			this.editToolStripMenuItem.Text = "&Edit";
-			// 
-			// undoToolStripMenuItem
-			// 
-			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.undoToolStripMenuItem.Text = "&Undo";
-			// 
-			// redoToolStripMenuItem
-			// 
-			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-			this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.redoToolStripMenuItem.Text = "&Redo";
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(141, 6);
-			// 
-			// cutToolStripMenuItem
-			// 
-			this.cutToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cutToolStripMenuItem.Image")));
-			this.cutToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-			this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-			this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.cutToolStripMenuItem.Text = "Cu&t";
-			// 
-			// copyToolStripMenuItem
-			// 
-			this.copyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToolStripMenuItem.Image")));
-			this.copyToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-			this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-			this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.copyToolStripMenuItem.Text = "&Copy";
-			// 
-			// pasteToolStripMenuItem
-			// 
-			this.pasteToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("pasteToolStripMenuItem.Image")));
-			this.pasteToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-			this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-			this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.pasteToolStripMenuItem.Text = "&Paste";
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(141, 6);
-			// 
-			// selectAllToolStripMenuItem
-			// 
-			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-			this.selectAllToolStripMenuItem.Text = "Select &All";
-			// 
 			// toolsToolStripMenuItem
 			// 
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1612,7 +1537,7 @@ namespace Rawr
 			// 
 			this.defaultGemControlToolStripMenuItem.Name = "defaultGemControlToolStripMenuItem";
 			this.defaultGemControlToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-			this.defaultGemControlToolStripMenuItem.Text = "Edit Gemmings...";
+			this.defaultGemControlToolStripMenuItem.Text = "Edit Gemming Templates...";
 			this.defaultGemControlToolStripMenuItem.Click += new System.EventHandler(this.defaultGemControlToolStripMenuItem_Click);
 			// 
 			// refineEquipmentParametersToolStripMenuItem
@@ -1711,7 +1636,14 @@ namespace Rawr
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.rawrWebsiteToolStripMenuItem,
-            this.donateToolStripMenuItem});
+            this.donateToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.rawrHelpPageToolStripMenuItem,
+            this.tourOfRawrToolStripMenuItem,
+            this.gemmingsToolStripMenuItem,
+            this.gearOptimizationToolStripMenuItem,
+            this.batchToolsToolStripMenuItem,
+            this.itemFilteringToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
 			this.helpToolStripMenuItem.Text = "&Help";
@@ -1719,16 +1651,63 @@ namespace Rawr
 			// rawrWebsiteToolStripMenuItem
 			// 
 			this.rawrWebsiteToolStripMenuItem.Name = "rawrWebsiteToolStripMenuItem";
-			this.rawrWebsiteToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-			this.rawrWebsiteToolStripMenuItem.Text = "Rawr Website...";
+			this.rawrWebsiteToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.rawrWebsiteToolStripMenuItem.Text = "Rawr Website";
 			this.rawrWebsiteToolStripMenuItem.Click += new System.EventHandler(this.rawrWebsiteToolStripMenuItem_Click);
 			// 
 			// donateToolStripMenuItem
 			// 
 			this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-			this.donateToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+			this.donateToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
 			this.donateToolStripMenuItem.Text = "Donate...";
 			this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+			// 
+			// rawrHelpPageToolStripMenuItem
+			// 
+			this.rawrHelpPageToolStripMenuItem.Name = "rawrHelpPageToolStripMenuItem";
+			this.rawrHelpPageToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.rawrHelpPageToolStripMenuItem.Text = "Rawr Help Page";
+			this.rawrHelpPageToolStripMenuItem.Click += new System.EventHandler(this.rawrHelpPageToolStripMenuItem_Click);
+			// 
+			// gemmingsToolStripMenuItem
+			// 
+			this.gemmingsToolStripMenuItem.Name = "gemmingsToolStripMenuItem";
+			this.gemmingsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.gemmingsToolStripMenuItem.Text = "  Gemmings";
+			this.gemmingsToolStripMenuItem.Click += new System.EventHandler(this.gemmingsToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
+			// 
+			// gearOptimizationToolStripMenuItem
+			// 
+			this.gearOptimizationToolStripMenuItem.Name = "gearOptimizationToolStripMenuItem";
+			this.gearOptimizationToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.gearOptimizationToolStripMenuItem.Text = "  Gear Optimization";
+			this.gearOptimizationToolStripMenuItem.Click += new System.EventHandler(this.gearOptimizationToolStripMenuItem_Click);
+			// 
+			// batchToolsToolStripMenuItem
+			// 
+			this.batchToolsToolStripMenuItem.Name = "batchToolsToolStripMenuItem";
+			this.batchToolsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.batchToolsToolStripMenuItem.Text = "  Batch Tools";
+			this.batchToolsToolStripMenuItem.Click += new System.EventHandler(this.batchToolsToolStripMenuItem_Click);
+			// 
+			// itemFilteringToolStripMenuItem
+			// 
+			this.itemFilteringToolStripMenuItem.Name = "itemFilteringToolStripMenuItem";
+			this.itemFilteringToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
+			this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
+			// 
+			// tourOfRawrToolStripMenuItem
+			// 
+			this.tourOfRawrToolStripMenuItem.Name = "tourOfRawrToolStripMenuItem";
+			this.tourOfRawrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.tourOfRawrToolStripMenuItem.Text = "  Tour of Rawr";
+			this.tourOfRawrToolStripMenuItem.Click += new System.EventHandler(this.tourOfRawrToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -1738,7 +1717,7 @@ namespace Rawr
 			this.Controls.Add(this.toolStripContainer1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
-			this.MinimumSize = new System.Drawing.Size(896, 668);
+			this.MinimumSize = new System.Drawing.Size(896, 737);
 			this.Name = "FormMain";
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
@@ -1795,16 +1774,7 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem editItemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripContainer toolStripContainer1;
@@ -1918,6 +1888,13 @@ namespace Rawr
         private System.Windows.Forms.CheckBox checkBoxWristBlacksmithingSocket;
         private System.Windows.Forms.CheckBox checkBoxWaistBlacksmithingSocket;
         private System.Windows.Forms.CheckBox checkBoxHandsBlacksmithingSocket;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem rawrHelpPageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem tourOfRawrToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem gemmingsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem gearOptimizationToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem itemFilteringToolStripMenuItem;
         
     }
 }

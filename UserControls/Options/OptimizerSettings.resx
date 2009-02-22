@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="checkBoxTemplateGemsEnabled.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checkBoxTemplateGemsEnabled.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -130,13 +126,14 @@
     <value>18, 54</value>
   </data>
   <data name="checkBoxTemplateGemsEnabled.Size" type="System.Drawing.Size, System.Drawing">
-    <value>177, 17</value>
+    <value>213, 30</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="checkBoxTemplateGemsEnabled.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
   <data name="checkBoxTemplateGemsEnabled.Text" xml:space="preserve">
-    <value>Treat template gems as enabled</value>
+    <value>Consider gems in enabled gemming templates to be available</value>
   </data>
   <data name="&gt;&gt;checkBoxTemplateGemsEnabled.Name" xml:space="preserve">
     <value>checkBoxTemplateGemsEnabled</value>

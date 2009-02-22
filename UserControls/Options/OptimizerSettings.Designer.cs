@@ -28,69 +28,69 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizerSettings));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBoxOptimizationMethod = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.WarningsEnabledCheckBox = new System.Windows.Forms.CheckBox();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.checkBoxTemplateGemsEnabled = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.checkBoxTemplateGemsEnabled);
-            this.groupBox1.Controls.Add(this.comboBoxOptimizationMethod);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.WarningsEnabledCheckBox);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
-            // 
-            // comboBoxOptimizationMethod
-            // 
-            this.comboBoxOptimizationMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxOptimizationMethod.FormattingEnabled = true;
-            this.comboBoxOptimizationMethod.Items.AddRange(new object[] {
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptimizerSettings));
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.checkBoxTemplateGemsEnabled = new System.Windows.Forms.CheckBox();
+			this.comboBoxOptimizationMethod = new System.Windows.Forms.ComboBox();
+			this.label1 = new System.Windows.Forms.Label();
+			this.WarningsEnabledCheckBox = new System.Windows.Forms.CheckBox();
+			this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+			this.SuspendLayout();
+			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.checkBoxTemplateGemsEnabled);
+			this.groupBox1.Controls.Add(this.comboBoxOptimizationMethod);
+			this.groupBox1.Controls.Add(this.label1);
+			this.groupBox1.Controls.Add(this.WarningsEnabledCheckBox);
+			resources.ApplyResources(this.groupBox1, "groupBox1");
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.TabStop = false;
+			// 
+			// checkBoxTemplateGemsEnabled
+			// 
+			resources.ApplyResources(this.checkBoxTemplateGemsEnabled, "checkBoxTemplateGemsEnabled");
+			this.checkBoxTemplateGemsEnabled.Name = "checkBoxTemplateGemsEnabled";
+			this.checkBoxTemplateGemsEnabled.UseVisualStyleBackColor = true;
+			// 
+			// comboBoxOptimizationMethod
+			// 
+			this.comboBoxOptimizationMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxOptimizationMethod.FormattingEnabled = true;
+			this.comboBoxOptimizationMethod.Items.AddRange(new object[] {
             resources.GetString("comboBoxOptimizationMethod.Items"),
             resources.GetString("comboBoxOptimizationMethod.Items1")});
-            resources.ApplyResources(this.comboBoxOptimizationMethod, "comboBoxOptimizationMethod");
-            this.comboBoxOptimizationMethod.Name = "comboBoxOptimizationMethod";
-            // 
-            // label1
-            // 
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
-            // 
-            // WarningsEnabledCheckBox
-            // 
-            resources.ApplyResources(this.WarningsEnabledCheckBox, "WarningsEnabledCheckBox");
-            this.WarningsEnabledCheckBox.Name = "WarningsEnabledCheckBox";
-            this.WarningsEnabledCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
-            // checkBoxTemplateGemsEnabled
-            // 
-            resources.ApplyResources(this.checkBoxTemplateGemsEnabled, "checkBoxTemplateGemsEnabled");
-            this.checkBoxTemplateGemsEnabled.Name = "checkBoxTemplateGemsEnabled";
-            this.checkBoxTemplateGemsEnabled.UseVisualStyleBackColor = true;
-            // 
-            // OptimizerSettings
-            // 
-            resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
-            this.Name = "OptimizerSettings";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.ResumeLayout(false);
+			resources.ApplyResources(this.comboBoxOptimizationMethod, "comboBoxOptimizationMethod");
+			this.comboBoxOptimizationMethod.Name = "comboBoxOptimizationMethod";
+			// 
+			// label1
+			// 
+			resources.ApplyResources(this.label1, "label1");
+			this.label1.Name = "label1";
+			// 
+			// WarningsEnabledCheckBox
+			// 
+			resources.ApplyResources(this.WarningsEnabledCheckBox, "WarningsEnabledCheckBox");
+			this.WarningsEnabledCheckBox.Name = "WarningsEnabledCheckBox";
+			this.WarningsEnabledCheckBox.UseVisualStyleBackColor = true;
+			// 
+			// errorProvider1
+			// 
+			this.errorProvider1.ContainerControl = this;
+			// 
+			// OptimizerSettings
+			// 
+			resources.ApplyResources(this, "$this");
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.groupBox1);
+			this.Name = "OptimizerSettings";
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+			this.ResumeLayout(false);
 
 		}
 

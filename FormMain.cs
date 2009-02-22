@@ -169,7 +169,7 @@ Here's a quick rundown of the status of each model:
 		{
 			if (_checkForUpdatesEnabled)
 			{
-				string latestVersion = new Rawr.WebRequestWrapper().GetLatestVersionString();
+				string latestVersion = new Rawr.WebRequestWrapper().GetBetaVersionString();
 				if (!string.IsNullOrEmpty(latestVersion))
 				{
 					string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -1703,32 +1703,22 @@ Here's a quick rundown of the status of each model:
             }
         }
 
+		private void rawrHelpPageToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Help"); }
 
-        //private void itemsToolStripMenuItem_Click(object sender, EventArgs e)
-		//{
-		//    FormItemEditor itemEditor = new FormItemEditor(Character);
-		//    itemEditor.ShowDialog(this);
-		//    ItemCache.OnItemsChanged();
-		//}
+		private void tourOfRawrToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Tour"); }
 
-		//private void buffsToolStripMenuItem1_Click(object sender, EventArgs e)
-		//{
-		//    EditBuffs edit = new EditBuffs(Buff.AllBuffs);
-		//    if (edit.ShowDialog() == DialogResult.OK)
-		//    {
-		//        //copy edited buffs to buff cache
-		//    }
-		//    edit.Dispose();
-		//}
+		private void gemmingsToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=Gemmings"); }
 
-		//private void enchantsToolStripMenuItem1_Click(object sender, EventArgs e)
-		//{
-		//    EditEnchants edit = new EditEnchants(Enchant.AllEnchants);
-		//    if (edit.ShowDialog() == DialogResult.OK)
-		//    {
-		//        //copy edited enchants to enchant cache.
-		//    }
-		//    edit.Dispose();
-		//}
+		private void gearOptimizationToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=GearOptimization"); }
+
+		private void batchToolsToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=BatchTools"); }
+
+		private void itemFilteringToolStripMenuItem_Click(object sender, EventArgs e)
+		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
 	}
 }

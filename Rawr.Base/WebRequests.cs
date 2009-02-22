@@ -260,6 +260,16 @@ namespace Rawr
 			return html;
 		}
 
+		public string GetBetaVersionString()
+		{
+			string html = DownloadText("http://www.codeplex.com/Rawr");
+			if (html == null || !html.Contains("{Beta Version: ")) return string.Empty;
+			html = html.Substring(html.IndexOf("{Beta Version: ") + "{Beta Version: ".Length);
+			if (!html.Contains("}")) return string.Empty;
+			html = html.Substring(0, html.IndexOf("}"));
+			return html;
+		}
+
 		public string DownloadClassTalentTree(Character.CharacterClass characterClass)
 		{
 			//http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js
