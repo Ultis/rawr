@@ -94,5 +94,17 @@ namespace Rawr.Properties {
                 this["OptimizationMethod"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TemplateGemsEnabled {
+            get {
+                return ((bool)(this["TemplateGemsEnabled"]));
+            }
+            set {
+                this["TemplateGemsEnabled"] = value;
+            }
+        }
     }
 }

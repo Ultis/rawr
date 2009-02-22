@@ -249,7 +249,7 @@ namespace Rawr
 		private static void InitializeAvailableItemList(Character currentChar)
 		{
 			// Get the current list of items that we know about.
-			string[] equippedItems = currentChar.GetAllEquipedAndAvailableGearIds();
+			/*string[] equippedItems = currentChar.GetAllEquippedAndAvailableGearIds();
 			string itemId = string.Empty;
 
 			// Loop through the list of known and equipped items
@@ -269,8 +269,18 @@ namespace Rawr
 					// Add this item to our list
 					currentChar.AvailableItems.Add(itemId);
 				}
-			}
-
+			}*/
+            for (Character.CharacterSlot slot = 0; slot <= (Character.CharacterSlot)20; slot++)
+            {
+                ItemInstance item = currentChar[slot];
+                if (item != null && item.Id != 0)
+                {
+                    if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
+                    Enchant enchant = item.Enchant;
+                    string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+                    if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
+                }
+            }
 		}
 
         public static Int32 GetItemIdByName(string item_name)

@@ -694,7 +694,7 @@ Here's a quick rundown of the status of each model:
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (character != null)
             {
-                this.EnsureItemsLoaded(character.GetAllEquipedAndAvailableGearIds());
+                this.EnsureItemsLoaded(character.GetAllEquippedAndAvailableGearIds());
                 _characterPath = e.Argument as string;
                 InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
                 e.Result = character;
@@ -1349,7 +1349,7 @@ Here's a quick rundown of the status of each model:
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (characterProfilerChoice != null)
             {
-                this.EnsureItemsLoaded(characterProfilerChoice.Character.GetAllEquipedAndAvailableGearIds());
+                this.EnsureItemsLoaded(characterProfilerChoice.Character.GetAllEquippedAndAvailableGearIds());
                 _characterPath = null;
                 e.Result = characterProfilerChoice.Character;
             }
@@ -1655,7 +1655,7 @@ Here's a quick rundown of the status of each model:
             StatusMessaging.UpdateStatusFinished("Load Character");
             if (characterProfilerCharacter.Character != null)
             {
-                EnsureItemsLoaded(characterProfilerCharacter.Character.GetAllEquipedAndAvailableGearIds());
+                EnsureItemsLoaded(characterProfilerCharacter.Character.GetAllEquippedAndAvailableGearIds());
             }
             else
             {

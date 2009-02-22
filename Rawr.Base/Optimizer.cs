@@ -208,7 +208,7 @@ namespace Rawr
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
         }
 
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, CalculationsBase model)
+        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
         {
             _character = character;
             //mainItemCache = ItemCache.Instance;
@@ -217,6 +217,27 @@ namespace Rawr
 
             try
             {
+                if (templateGemsEnabled)
+                {
+                    availableItems = new List<string>(availableItems);
+                    List<string> templateGems = new List<string>();
+                    // this could actually be empty, but in practice they will populate it at least once before
+                    foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[model.Name])
+                    {
+                        if (template.Enabled)
+                        {
+                            if (!templateGems.Contains(template.RedId.ToString())) templateGems.Add(template.RedId.ToString());
+                            if (!templateGems.Contains(template.YellowId.ToString())) templateGems.Add(template.YellowId.ToString());
+                            if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
+                            if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
+                            if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                        }
+                    }
+                    foreach (string gem in templateGems)
+                    {
+                        if (!availableItems.Contains(gem)) availableItems.Add(gem);
+                    }
+                }
                 //ItemCache.Instance = optimizerItemCache;
                 PopulateAvailableIds(availableItems, overrideRegem, overrideReenchant);
             }

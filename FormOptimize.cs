@@ -157,7 +157,7 @@ namespace Rawr
 			}
             OptimizationRequirement[] _requirements = requirements.ToArray();
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();
@@ -469,7 +469,7 @@ namespace Rawr
                 }
             }
 
-            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Calculations.Instance);
+            _optimizer.InitializeItemCache(_character, _character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, Calculations.Instance);
             if (Properties.Optimizer.Default.WarningsEnabled)
             {
                 string prompt = _optimizer.GetWarningPromptIfNeeded();

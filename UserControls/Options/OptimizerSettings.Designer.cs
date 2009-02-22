@@ -35,12 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.WarningsEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.checkBoxTemplateGemsEnabled = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxTemplateGemsEnabled);
             this.groupBox1.Controls.Add(this.comboBoxOptimizationMethod);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.WarningsEnabledCheckBox);
@@ -73,6 +75,12 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // checkBoxTemplateGemsEnabled
+            // 
+            resources.ApplyResources(this.checkBoxTemplateGemsEnabled, "checkBoxTemplateGemsEnabled");
+            this.checkBoxTemplateGemsEnabled.Name = "checkBoxTemplateGemsEnabled";
+            this.checkBoxTemplateGemsEnabled.UseVisualStyleBackColor = true;
+            // 
             // OptimizerSettings
             // 
             resources.ApplyResources(this, "$this");
@@ -93,6 +101,7 @@
         private System.Windows.Forms.CheckBox WarningsEnabledCheckBox;
         private System.Windows.Forms.ComboBox comboBoxOptimizationMethod;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkBoxTemplateGemsEnabled;
 
 
 	}

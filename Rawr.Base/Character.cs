@@ -1240,7 +1240,7 @@ namespace Rawr //O O . .
             }
         }
 
-        public string[] GetAllEquipedAndAvailableGearIds()
+        public string[] GetAllEquippedAndAvailableGearIds()
         {
             Dictionary<string, bool> _ids = new Dictionary<string, bool>();
             if (_back != null) _ids[_back] = true;

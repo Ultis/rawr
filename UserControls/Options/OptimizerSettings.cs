@@ -25,6 +25,7 @@ namespace Rawr.UserControls.Options
                     comboBoxOptimizationMethod.SelectedIndex = 1;
                     break;
             }
+            checkBoxTemplateGemsEnabled.Checked = Properties.Optimizer.Default.TemplateGemsEnabled;
         }
 
 
@@ -42,6 +43,7 @@ namespace Rawr.UserControls.Options
                     Properties.Optimizer.Default.OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
                     break;
             }
+            Properties.Optimizer.Default.TemplateGemsEnabled = checkBoxTemplateGemsEnabled.Checked;
             Properties.Optimizer.Default.Save();
 		}
 
