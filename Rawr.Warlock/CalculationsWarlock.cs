@@ -12,7 +12,71 @@ namespace Rawr.Warlock
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+				////Relevant Gem IDs for Warlocks
+				//Red
+				int[] runed = { 39911, 39998, 40113, 42144 };
+
+				//Purple
+				int[] purified = { 39941, 40026, 40133 };
+
+				//Orange
+				int[] reckless = { 39959, 40051, 40155 };
+				int[] veiled = { 39957, 40049, 40153 };
+
+				//Meta
+				int ember = 41333;
+				int chaotic = 41285;
+
+				return new List<GemmingTemplate>()
+				{
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //Max SP - Ember
+				        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
+				        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Haste - Ember
+				        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //Max SP - Chaotic
+				        RedId = runed[0], YellowId = runed[0], BlueId = runed[0], PrismaticId = runed[0], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Hit - Chaotic
+				        RedId = runed[0], YellowId = veiled[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Uncommon", //SP/Haste - Chaotic
+				        RedId = runed[0], YellowId = reckless[0], BlueId = purified[0], PrismaticId = runed[0], MetaId = chaotic },
+						
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //Max SP - Ember
+				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //SP/Hit - Ember
+				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //SP/Haste - Ember
+				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //Max SP - Chaotic
+				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //SP/Hit - Chaotic
+				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Rare", Enabled = true, //SP/Haste - Chaotic
+				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic },
+						
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //Max SP - Ember
+				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //SP/Hit - Ember
+				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //SP/Haste - Ember
+				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //Max SP - Chaotic
+				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //SP/Hit - Chaotic
+				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Epic", //SP/Haste - Chaotic
+				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic },
+						
+				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //Max SP - Ember
+				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
+				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = ember },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
+				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = chaotic },
+				    new GemmingTemplate() { Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
+				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic },
+				};
             }
         }
 

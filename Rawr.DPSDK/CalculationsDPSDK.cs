@@ -12,7 +12,41 @@ namespace Rawr.DPSDK
         {
             get
             {
-                return new List<GemmingTemplate>() { };
+				////Relevant Gem IDs for DPSDKs
+				//Red
+				int[] bold = { 39900, 39996, 40111, 42142 };
+
+				//Purple
+				int[] sovereign = { 39934, 40022, 40129 };
+
+				//Orange
+				int[] inscribed = { 39947, 40037, 40142 };
+
+				//Meta
+				int chaotic = 41285;
+
+				return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "DPSDK", Group = "Uncommon", //Max Strength
+						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Uncommon", //Strength
+						RedId = bold[0], YellowId = inscribed[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = chaotic },
+						
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Max Strength
+						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Rare", Enabled = true, //Strength
+						RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
+						
+					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", //Max Strength
+						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Epic", //Strength
+						RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
+						
+					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
+						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
+					new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
+						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
+				};
             }
         }
 

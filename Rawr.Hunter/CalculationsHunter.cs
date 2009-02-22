@@ -16,20 +16,68 @@ namespace Rawr.Hunter
 	[Rawr.Calculations.RawrModelInfo("Hunter", "Inv_Weapon_Bow_07", Character.CharacterClass.Hunter)]
 	public class CalculationsHunter : CalculationsBase
     {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
+				////Relevant Gem IDs for Hunters
+				//Red
+				int[] delicate = { 39905, 39997, 40112, 42143 };
+
+				//Purple
+				int[] shifting = { 39935, 40023, 40130 };
+
+				//Green
+				int[] vivid = { 39975, 40088, 40166 };
+
+				//Yellow
+				int[] rigid = { 39915, 40014, 40125, 42156 };
+
+				//Orange
+				int[] glinting = { 39953, 40044, 40148 };
+
+				//Meta
+				int relentless = 41398;
+
+				return new List<GemmingTemplate>()
+				{
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Max Agi
+						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Agi/Hit
+						RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Uncommon", //Hit
+						RedId = glinting[0], YellowId = rigid[0], BlueId = vivid[0], PrismaticId = rigid[0], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Max Agi
+						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Agi/Hit
+						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Rare", Enabled = true, //Hit
+						RedId = glinting[1], YellowId = rigid[1], BlueId = vivid[1], PrismaticId = rigid[1], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Max Agi
+						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Agi/Hit
+						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Epic", //Hit
+						RedId = glinting[2], YellowId = rigid[2], BlueId = vivid[2], PrismaticId = rigid[2], MetaId = relentless },
+						
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Max Agi
+						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Agi/Hit
+						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Hunter", Group = "Jeweler", //Hit
+						RedId = rigid[3], YellowId = rigid[2], BlueId = rigid[3], PrismaticId = rigid[2], MetaId = relentless },
+				};
+            }
+        }
+
 		#region Talent Constants
 		private const string BEAST_MASTER = "Beast Mastery";
 		private const string SURVIVAL = "Survival";
 		private const string MARKSMAN = "Marksmanship";
 	
 		#endregion	
-		
-        public override List<GemmingTemplate> DefaultGemmingTemplates
-        {
-            get
-            {
-                return new List<GemmingTemplate>() { };
-            }
-        }
 
 
         /**
