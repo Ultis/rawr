@@ -273,7 +273,7 @@ namespace Rawr
             for (Character.CharacterSlot slot = 0; slot <= (Character.CharacterSlot)20; slot++)
             {
                 ItemInstance item = currentChar[slot];
-                if (item != null && item.Id != 0)
+                if ((object)item != null && item.Id != 0)
                 {
                     if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
                     Enchant enchant = item.Enchant;
@@ -1163,7 +1163,7 @@ namespace Rawr
 			{
 				StatusMessaging.UpdateStatus(slot.ToString(), "Downloading Upgrade List");
 				ItemInstance itemToUpgrade = character[slot];
-				if (itemToUpgrade != null)
+                if ((object)itemToUpgrade != null)
 				{
 					WebRequestWrapper wrw = new WebRequestWrapper();
 					docUpgradeSearch = wrw.DownloadUpgrades(character.Name, character.Region,character.Realm,itemToUpgrade.Id);

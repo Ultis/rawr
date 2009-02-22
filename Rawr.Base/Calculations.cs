@@ -772,7 +772,7 @@ namespace Rawr
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
                 foreach (ItemInstance item in items)
-                    if (item != null)
+                    if ((object)item != null)
                         stats.AccumulateUnsafe(item.GetTotalStats(character));
                 if (additionalItem != null)
                     stats.AccumulateUnsafe(additionalItem.Stats);
@@ -928,7 +928,7 @@ namespace Rawr
 
 		public virtual bool IncludeOffHandInCalculations(Character character)
 		{
-			return character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand;
+			return (object)character.MainHand == null || character.MainHand.Slot != Item.ItemSlot.TwoHand;
 		}
 
         public virtual bool CanUseAmmo

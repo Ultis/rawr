@@ -23,29 +23,38 @@ namespace Rawr.Mage
         LightningBolt,
         ThunderBolt,
         LightweaveBolt,
-        [Description("Arcane Barrage")]
+        [Description("Arcane Barrage (0)")]
         ArcaneBarrage,
+        [Description("Arcane Barrage (1)")]
         ArcaneBarrage1,
+        [Description("Arcane Barrage (2)")]
         ArcaneBarrage2,
+        [Description("Arcane Barrage (3)")]
         ArcaneBarrage3,
         ArcaneBarrage1Combo,
         ArcaneBarrage2Combo,
         ArcaneBarrage3Combo,
         ArcaneBolt,
         PendulumOfTelluricCurrents,
-        [Description("Arcane Missiles")]
+        [Description("Arcane Missiles (0)")]
         ArcaneMissiles,
+        [Description("Arcane Missiles (1)")]
         ArcaneMissiles1,
+        [Description("Arcane Missiles (2)")]
         ArcaneMissiles2,
+        [Description("Arcane Missiles (3)")]
         ArcaneMissiles3,
         ArcaneMissiles0Clipped,
         ArcaneMissiles1Clipped,
         ArcaneMissiles2Clipped,
         ArcaneMissiles3Clipped,
-        [Description("MBAM")]
+        [Description("MBAM (0)")]
         ArcaneMissilesMB,
+        [Description("MBAM (1)")]
         ArcaneMissilesMB1,
+        [Description("MBAM (2)")]
         ArcaneMissilesMB2,
+        [Description("MBAM (3)")]
         ArcaneMissilesMB3,
         ArcaneMissilesMB0Clipped,
         ArcaneMissilesMB1Clipped,
@@ -80,8 +89,8 @@ namespace Rawr.Mage
         ScorchNoCC,
         [Description("Living Bomb")]
         LivingBomb,
-        [Description("Arcane Blast")]
         ArcaneBlastSpam,
+        [Description("Arcane Blast (3)")]
         ArcaneBlast33,
         ArcaneBlast33NoCC,
         [Description("Arcane Blast(0)")]

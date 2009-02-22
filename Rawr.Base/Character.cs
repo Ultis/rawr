@@ -31,7 +31,7 @@ namespace Rawr //O O . .
         private string GetGemmedId(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
-            if (item == null) return null;
+            if ((object)item == null) return null;
             return item.GemmedId;
         }
         private void SetGemmedId(CharacterSlot slot, string gemmedId)
@@ -610,8 +610,8 @@ namespace Rawr //O O . .
 				return IsEquipped(itemToBeChecked, slot);
         }
         public bool IsEquipped(ItemInstance itemToBeChecked, CharacterSlot slot)
-        { 
-			return itemToBeChecked != null && this[slot] != null && itemToBeChecked.GemmedId == this[slot].GemmedId;
+        {
+            return itemToBeChecked == this[slot];
         }
 
         public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)
@@ -879,7 +879,7 @@ namespace Rawr //O O . .
         public Enchant GetEnchantBySlot(Character.CharacterSlot slot)
         {
             ItemInstance item = this[slot];
-            if (item == null) return null;
+            if ((object)item == null) return null;
             return item.Enchant;
         }
 
@@ -980,7 +980,7 @@ namespace Rawr //O O . .
             int i = (int)slot;
             if (i < 0 || i > 20) return;
             ItemInstance item = this[slot];
-            if (item != null) item.Enchant = enchant;
+            if ((object)item != null) item.Enchant = enchant;
 			OnCalculationsInvalidated();
 		}
 
@@ -1057,7 +1057,7 @@ namespace Rawr //O O . .
         private int GetItemJewelersGemCount(ItemInstance item)
         {
             int count = 0;
-            if (item != null)
+            if ((object)item != null)
             {
                 if (item.Gem1 != null && item.Gem1.IsJewelersGem) count++;
                 if (item.Gem2 != null && item.Gem2.IsJewelersGem) count++;
@@ -1079,7 +1079,7 @@ namespace Rawr //O O . .
         private int GetItemGemColorCount(ItemInstance item, Item.ItemSlot slotColor)
         {
             int count = 0;
-            if (item != null)
+            if ((object)item != null)
             {
                 if (item.Gem1 != null && Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
                 if (item.Gem2 != null && Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
@@ -1162,7 +1162,7 @@ namespace Rawr //O O . .
             for (int slot = 0; slot < _item.Length; slot++)
             {
                 ItemInstance item = _item[slot];
-                if (item != null && !string.IsNullOrEmpty(item.Item.SetName))
+                if ((object)item != null && !string.IsNullOrEmpty(item.Item.SetName))
                 {
                     int count;
                     setCounts.TryGetValue(item.Item.SetName, out count);
@@ -1598,17 +1598,17 @@ namespace Rawr //O O . .
 		public Character Clone()
 		{
             Character clone = new Character(this.Name, this.Realm, this.Region, this.Race,
-                        Head == null ? null : Head.Clone(), Neck == null ? null : Neck.Clone(), Shoulders == null ? null : Shoulders.Clone(), Back == null ? null : Back.Clone(), Chest == null ? null : Chest.Clone(), Shirt == null ? null : Shirt.Clone(),
-                        Tabard == null ? null : Tabard.Clone(), Wrist == null ? null : Wrist.Clone(), Hands == null ? null : Hands.Clone(), Waist == null ? null : Waist.Clone(), Legs == null ? null : Legs.Clone(), Feet == null ? null : Feet.Clone(),
-                        Finger1 == null ? null : Finger1.Clone(),
-                        Finger2 == null ? null : Finger2.Clone(),
-                        Trinket1 == null ? null : Trinket1.Clone(),
-                        Trinket2 == null ? null : Trinket2.Clone(),
-                        MainHand == null ? null : MainHand.Clone(),
-                        OffHand == null ? null : OffHand.Clone(),
-                        Ranged == null ? null : Ranged.Clone(),
-                        Projectile == null ? null : Projectile.Clone(),
-                        ProjectileBag == null ? null : ProjectileBag.Clone()
+                        (object)Head == null ? null : Head.Clone(), (object)Neck == null ? null : Neck.Clone(), (object)Shoulders == null ? null : Shoulders.Clone(), (object)Back == null ? null : Back.Clone(), (object)Chest == null ? null : Chest.Clone(), (object)Shirt == null ? null : Shirt.Clone(),
+                        (object)Tabard == null ? null : Tabard.Clone(), (object)Wrist == null ? null : Wrist.Clone(), (object)Hands == null ? null : Hands.Clone(), (object)Waist == null ? null : Waist.Clone(), (object)Legs == null ? null : Legs.Clone(), (object)Feet == null ? null : Feet.Clone(),
+                        (object)Finger1 == null ? null : Finger1.Clone(),
+                        (object)Finger2 == null ? null : Finger2.Clone(),
+                        (object)Trinket1 == null ? null : Trinket1.Clone(),
+                        (object)Trinket2 == null ? null : Trinket2.Clone(),
+                        (object)MainHand == null ? null : MainHand.Clone(),
+                        (object)OffHand == null ? null : OffHand.Clone(),
+                        (object)Ranged == null ? null : Ranged.Clone(),
+                        (object)Projectile == null ? null : Projectile.Clone(),
+                        (object)ProjectileBag == null ? null : ProjectileBag.Clone()
 						/*this.ExtraWristSocket,
 						this.ExtraHandsSocket,
 						this.ExtraWaistSocket,

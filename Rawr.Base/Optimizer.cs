@@ -569,12 +569,28 @@ namespace Rawr
 
         private void MarkEquippedItemsAsValid(Character character)
         {
-            for (int i = 0; i < 19; i++)
+            for (int i = 0; i < slotCount; i++)
             {
                 ItemInstance item = character[(Character.CharacterSlot)i];
-                if (!slotItems[i].Contains(item))
+                if ((object)item != null && item.Id != 0 && !slotItems[i].Contains(item))
                 {
                     slotItems[i].Add(item);
+                    itemAvailable[item.GemmedId] = true;
+                    KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[i].Find(list => list.Key == item.Id.ToString());
+                    if (list1 == null)
+                    {
+                        list1 = new KeyedList<KeyedList<ItemInstance>>();
+                        list1.Key = item.Id.ToString();
+                        slotItemsRandom[i].Add(list1);
+                    }
+                    KeyedList<ItemInstance> list2 = list1.Find(list => list.Key == item.EnchantId.ToString());
+                    if (list2 == null)
+                    {
+                        list2 = new KeyedList<ItemInstance>();
+                        list2.Key = item.EnchantId.ToString();
+                        list1.Add(list2);
+                    }
+                    list2.Add(item);
                 }
                 /*if (item != null)
                 {
@@ -663,11 +679,11 @@ namespace Rawr
                             List<ComparisonCalculationBase> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
-                            if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
+                            if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                             {
                                 lockedSlot = Character.CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                            if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                             {
                                 lockedSlot = Character.CharacterSlot.Trinket2;
                             }
@@ -779,11 +795,11 @@ namespace Rawr
                     {
                         lockedItems = new List<ItemInstance>() { item };
                         lockedSlot = slot;
-                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Item.Unique && _character.Finger2 != null && _character.Finger2.Id == item.Id)
+                        if (lockedSlot == Character.CharacterSlot.Finger1 && item.Item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
                         {
                             lockedSlot = Character.CharacterSlot.Finger2;
                         }
-                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Item.Unique && _character.Trinket2 != null && _character.Trinket2.Id == item.Id)
+                        if (lockedSlot == Character.CharacterSlot.Trinket1 && item.Item.Unique && (object)_character.Trinket2 != null && _character.Trinket2.Id == item.Id)
                         {
                             lockedSlot = Character.CharacterSlot.Trinket2;
                         }
@@ -806,9 +822,9 @@ namespace Rawr
                             bool injected;
                             bestCharacter = Optimize(null, 0, out best, out bestCalculations, out injected);
                         }
-                        if (bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
+                        if ((object)bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
                         upgradeValue = best - baseValue;
-                        if (upgradeValue < 0 && (saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
+                        if (upgradeValue < 0 && ((object)saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
                         _character = saveCharacter;
                     }
                 }
@@ -832,7 +848,6 @@ namespace Rawr
         Item[] metaGemItems;
         Item[] gemItems;
 		const int slotCount = 19;
-		const int characterSlotCount = 21;
 		int[] pairSlotList = new int[] { (int)Character.CharacterSlot.Finger1, (int)Character.CharacterSlot.MainHand, (int)Character.CharacterSlot.Trinket1 };
         int[] pairSlotMap;
         //SortedList<Item, bool> uniqueItems; not needed since we store the items themselves, we can just check Unique on the item
@@ -842,6 +857,12 @@ namespace Rawr
         //Enchant[] backEnchants, chestEnchants, feetEnchants, fingerEnchants, handsEnchants, headEnchants,
         //    legsEnchants, shouldersEnchants, mainHandEnchants, offHandEnchants, rangedEnchants, wristEnchants;
         List<ItemInstance>[] slotItems = new List<ItemInstance>[slotCount];
+        Dictionary<string, bool> itemAvailable = new Dictionary<string, bool>();
+        private class KeyedList<T> : List<T>
+        {
+            public string Key { get; set; }
+        }
+        List<KeyedList<KeyedList<ItemInstance>>>[] slotItemsRandom = new List<KeyedList<KeyedList<ItemInstance>>>[slotCount];
         Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
         //Dictionary<int, bool>[] slotAvailableEnchants = new Dictionary<int,bool>[slotCount];
         List<ItemInstance> lockedItems;
@@ -952,18 +973,18 @@ namespace Rawr
 
             Dictionary<string, bool> uniqueStore = new Dictionary<string, bool>();
 
-            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = Enchant.FindEnchants(Item.ItemSlot.Back, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = Enchant.FindEnchants(Item.ItemSlot.Chest, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = Enchant.FindEnchants(Item.ItemSlot.Feet, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = Enchant.FindEnchants(Item.ItemSlot.Finger, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = Enchant.FindEnchants(Item.ItemSlot.Hands, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = Enchant.FindEnchants(Item.ItemSlot.Head, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = Enchant.FindEnchants(Item.ItemSlot.Legs, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = Enchant.FindEnchants(Item.ItemSlot.Shoulders, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = Enchant.FindEnchants(Item.ItemSlot.MainHand, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = Enchant.FindEnchants(Item.ItemSlot.OffHand, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = Enchant.FindEnchants(Item.ItemSlot.Ranged, _character, availableItems, model).ToArray();
-            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = Enchant.FindEnchants(Item.ItemSlot.Wrist, _character, availableItems, model).ToArray();
+            slotAvailableEnchants[(int)Character.CharacterSlot.Back] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Back, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Chest] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Chest, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Feet] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Feet, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Finger1] = slotAvailableEnchants[(int)Character.CharacterSlot.Finger2] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Finger, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Hands] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Hands, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Head] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Head, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Legs] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Legs, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Shoulders] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Shoulders, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.MainHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.MainHand, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.OffHand] = FilterList(Enchant.FindEnchants(Item.ItemSlot.OffHand, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Ranged] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Ranged, _character, availableItems, model));
+            slotAvailableEnchants[(int)Character.CharacterSlot.Wrist] = FilterList(Enchant.FindEnchants(Item.ItemSlot.Wrist, _character, availableItems, model));
 
             //Dictionary<Item, bool> uniqueDict = new Dictionary<Item, bool>();
             Item item = null;
@@ -1218,6 +1239,34 @@ namespace Rawr
             slotItems[(int)Character.CharacterSlot.Ranged] = rangedItems = FilterList(rangedItemList);
             slotItems[(int)Character.CharacterSlot.Projectile] = projectileItems = FilterList(projectileItemList);
             slotItems[(int)Character.CharacterSlot.ProjectileBag] = projectileBagItems = FilterList(projectileBagItemList);
+
+            // populate the list for random sampling
+            for (int slot = 0; slot < slotCount; slot++)
+            {
+                slotItemsRandom[slot] = new List<KeyedList<KeyedList<ItemInstance>>>();
+                foreach (ItemInstance itemInstance in slotItems[slot])
+                {
+                    string gemmedId = ((object)itemInstance == null) ? "0.0.0.0.0" : itemInstance.GemmedId;
+                    string key1 = ((object)itemInstance == null) ? "0" : itemInstance.Id.ToString();
+                    string key2 = ((object)itemInstance == null) ? "0" : itemInstance.EnchantId.ToString();
+                    itemAvailable[gemmedId] = true;
+                    KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot].Find(list => list.Key == key1);
+                    if (list1 == null)
+                    {
+                        list1 = new KeyedList<KeyedList<ItemInstance>>();
+                        list1.Key = key1;
+                        slotItemsRandom[slot].Add(list1);
+                    }
+                    KeyedList<ItemInstance> list2 = list1.Find(list => list.Key == key2);
+                    if (list2 == null)
+                    {
+                        list2 = new KeyedList<ItemInstance>();
+                        list2.Key = key2;
+                        list1.Add(list2);
+                    }
+                    list2.Add(itemInstance);
+                }
+            }
 
             pairSlotMap = new int[slotCount];
             pairSlotMap[(int)Character.CharacterSlot.Back] = -1;
@@ -1481,7 +1530,7 @@ namespace Rawr
                 foreach (int slot in pairSlotList)
                 {
                     int pairSlot = pairSlotMap[slot];
-                    if (injectCharacter[(Character.CharacterSlot)slot] != null && injectCharacter[(Character.CharacterSlot)pairSlot] != null && injectCharacter[(Character.CharacterSlot)slot].Id == injectCharacter[(Character.CharacterSlot)pairSlot].Id && injectCharacter[(Character.CharacterSlot)slot].Item.Unique)
+                    if ((object)injectCharacter[(Character.CharacterSlot)slot] != null && (object)injectCharacter[(Character.CharacterSlot)pairSlot] != null && injectCharacter[(Character.CharacterSlot)slot].Id == injectCharacter[(Character.CharacterSlot)pairSlot].Id && injectCharacter[(Character.CharacterSlot)slot].Item.Unique)
                     {
                         injectCharacter = null;
                         break;
@@ -1740,7 +1789,7 @@ namespace Rawr
 			foreach (ItemInstance item in items)
 			{
                 int pairSlot = pairSlotMap[(int)slot];
-                if (item != null && (bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
+                if ((object)item != null && ((object)bestCharacter[slot] == null || bestCharacter[slot].GemmedId != item.GemmedId) && !(pairSlot >= 0 && (object)bestCharacter[(Character.CharacterSlot)pairSlot] != null && bestCharacter[(Character.CharacterSlot)pairSlot].Id == item.Id && item.Item.Unique))
 				{
                     //Enchant enchant = null;
                     //if (slotEnchants[(int)slot] != null) enchant = bestCharacter.GetEnchantBySlot(slot);
@@ -1877,7 +1926,7 @@ namespace Rawr
 
         private Character GeneratorBuildCharacter(GeneratorItemSelector itemSelector)
 		{
-            ItemInstance[] item = new ItemInstance[characterSlotCount];
+            ItemInstance[] item = new ItemInstance[slotCount];
             for (int slot = 0; slot < slotCount; slot++)
             {
                 GeneratorFillSlot(slot, item, itemSelector);
@@ -1885,7 +1934,7 @@ namespace Rawr
             foreach (int slot in pairSlotList)
             {
                 int pairSlot = pairSlotMap[slot];
-                while (item[slot] != null && item[pairSlot] != null && item[slot].Id == item[pairSlot].Id && item[slot].Item.Unique)
+                while ((object)item[slot] != null && (object)item[pairSlot] != null && item[slot].Id == item[pairSlot].Id && item[slot].Item.Unique)
                 {
                     GeneratorFillSlot(slot, item, itemSelector);
                     GeneratorFillSlot(pairSlot, item, itemSelector);
@@ -1908,7 +1957,17 @@ namespace Rawr
             return GeneratorBuildCharacter(
                 delegate(int slot)
                 {
-                    return (lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)];
+                    if (lockedSlot == (Character.CharacterSlot)slot)
+                    {
+                        return lockedItems[rand.Next(lockedItems.Count)];
+                    }
+                    else
+                    {
+                        KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
+                        KeyedList<ItemInstance> list2 = list1[rand.Next(list1.Count)];
+                        return list2[rand.Next(list2.Count)];
+                        //return slotItems[slot][rand.Next(slotItems[slot].Count)];
+                    }
                 }/*,
                 delegate(int slot, Item item)
                 {
@@ -1971,7 +2030,7 @@ namespace Rawr
         /// </summary>
         private Character GeneratorBuildSACharacter(Character parent)
         {
-            ItemInstance[] item = new ItemInstance[characterSlotCount];
+            ItemInstance[] item = new ItemInstance[slotCount];
             //Enchant[] enchant = new Enchant[slotCount];
 
             for (int slot = 0; slot < slotCount; slot++)
@@ -2046,11 +2105,11 @@ namespace Rawr
                 {
                     int slot = rand.Next(slotCount);
                     ItemInstance newitem = ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)]);
-                    if (newitem == null) continue;
+                    if ((object)newitem == null) continue;
                     int pairSlot = pairSlotMap[slot];
-                    if (item[slot] == null || newitem.Id != item[slot].Id)
+                    if ((object)item[slot] == null || newitem.Id != item[slot].Id)
                     {
-                        if (pairSlot != -1 && item[pairSlot] != null && item[pairSlot].Id == newitem.Id && newitem.Item.Unique)
+                        if (pairSlot != -1 && (object)item[pairSlot] != null && item[pairSlot].Id == newitem.Id && newitem.Item.Unique)
                         {
                             continue;
                         }
@@ -2099,7 +2158,7 @@ namespace Rawr
 
         private Character BuildReplaceGemMutantCharacter(Character parent, out bool successful)
         {
-            ItemInstance[] items = new ItemInstance[characterSlotCount];
+            ItemInstance[] items = new ItemInstance[slotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2130,7 +2189,7 @@ namespace Rawr
             List<GemInformation> locationList = new List<GemInformation>();
             for (int slot = 0; slot < slotCount; slot++)
             {
-                if (items[slot] != null)
+                if ((object)items[slot] != null)
                 {
                     for (int i = 1; i <= 3; i++)
                     {
@@ -2164,7 +2223,7 @@ namespace Rawr
                     // make sure the item and item-enchant combo is allowed
                     //Enchant enchant = parent.GetEnchantBySlot(mutation.Slot);
                     //bool valid;
-                    if ((lockedSlot == mutation.Slot && lockedItems.Contains(newItem)) || (lockedSlot != mutation.Slot && slotItems[(int)mutation.Slot].Contains(newItem)))
+                    if ((lockedSlot == mutation.Slot && lockedItems.Contains(newItem)) || (lockedSlot != mutation.Slot && itemAvailable.ContainsKey(newItem.GemmedId)))
                     {
                         items[(int)mutation.Slot] = newItem;
                         successful = true;
@@ -2188,7 +2247,7 @@ namespace Rawr
 
         private Character BuildSwapGemMutantCharacter(Character parent, out bool successful)
         {
-            ItemInstance[] items = new ItemInstance[characterSlotCount];
+            ItemInstance[] items = new ItemInstance[slotCount];
             items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
             items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
             items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
@@ -2220,7 +2279,7 @@ namespace Rawr
             List<GemInformation> locationList = new List<GemInformation>();
             for (int slot = 0; slot < slotCount; slot++)
             {
-                if (items[slot] != null)
+                if ((object)items[slot] != null)
                 {
                     for (int i = 1; i <= 3; i++)
                     {
@@ -2274,7 +2333,7 @@ namespace Rawr
                 Enchant enchant1, enchant2;
                 enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
                 enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
-                if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && slotItems[(int)mutation1.Slot].Contains(item1))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && slotItems[(int)mutation2.Slot].Contains(item2))))
+                if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && itemAvailable.ContainsKey(item1.GemmedId))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && itemAvailable.ContainsKey(item2.GemmedId))))
                 {
                     successful = true;
                     items[(int)mutation1.Slot] = item1;
@@ -2305,7 +2364,24 @@ namespace Rawr
             return GeneratorBuildCharacter(
                 delegate(int slot)
                 {
-                    return rand.NextDouble() < mutationChance ? ((lockedSlot == (Character.CharacterSlot)slot) ? lockedItems[rand.Next(lockedItems.Count)] : slotItems[slot][rand.Next(slotItems[slot].Count)]) : parent[(Character.CharacterSlot)slot];
+                    if (rand.NextDouble() < mutationChance)
+                    {
+                        if (lockedSlot == (Character.CharacterSlot)slot)
+                        {
+                            return lockedItems[rand.Next(lockedItems.Count)];
+                        }
+                        else
+                        {
+                            KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot][rand.Next(slotItemsRandom[slot].Count)];
+                            KeyedList<ItemInstance> list2 = list1[rand.Next(list1.Count)];
+                            return list2[rand.Next(list2.Count)];
+                            //return slotItems[slot][rand.Next(slotItems[slot].Count)];
+                        }
+                    }
+                    else
+                    {
+                        return parent[(Character.CharacterSlot)slot];
+                    }
                 }/*,
                 delegate(int slot, Item item)
                 {
@@ -2588,22 +2664,70 @@ namespace Rawr
                     foreach (Item gem3 in possibleGem3s)
                         foreach (Enchant enchant in possibleEnchants)
                         {
-                            //possibleGemmedItems.Add(ItemCache.Instance.FindItemById(string.Format("{0}.{1}.{2}.{3}", id0, id1, id2, id3), true, false, true));
-                            // skip item cache, since we're creating new gemmings most likely they don't exist
-                            // it will search through all item to find the item we already have and then clone it
-                            // so skip all do that and do cloning ourselves
-                            /*ItemInstance copy = new Item(item.Name, item.Quality, item.Type, item.Id, item.IconPath, item.Slot,
-                                item.SetName, item.Unique, item.Stats.Clone(), item.Sockets.Clone(), 0, 0, 0, item.MinDamage,
-                                item.MaxDamage, item.DamageType, item.Speed, item.RequiredClasses);                            
-                            copy.SetGemInternal(1, gem1);
-                            copy.SetGemInternal(2, gem2);
-                            copy.SetGemInternal(3, gem3);*/
-                            possibleGemmedItems.Add(new ItemInstance(item, gem1, gem2, gem3, enchant));
-                            //ItemCache.AddItem(copy, true, false);
+                            // if gems do not match socket colors then it does not matter in what order they are placed (except for meta)
+                            // make it easy on filtering and only add one canon version of the item in which normal gem ids are nondecreasing
+                            // if that happens to be an ordering that matches colors it doesn't matter since socket bonuses only add value
+                            // either all gems are * or all are specified, obviously if all are specified we can't do this
+                            bool add = true;
+                            if (!Item.GemMatchesSlot(gem1, item.SocketColor1) || !Item.GemMatchesSlot(gem2, item.SocketColor2) || !Item.GemMatchesSlot(gem3, item.SocketColor3))
+                            {
+                                if ((ids.Length <= 1 || (ids.Length > 1 && ids[1] == "*")) && (ids.Length <= 2 || (ids.Length > 2 && ids[2] == "*")) && (ids.Length <= 3 || (ids.Length > 3 && ids[3] == "*")))
+                                {
+                                    List<int> gemOrder = new List<int>();
+                                    if (gem1 != null && gem1.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem1.Id);
+                                    if (gem2 != null && gem2.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem2.Id);
+                                    if (gem3 != null && gem3.Slot != Item.ItemSlot.Meta) gemOrder.Add(gem3.Id);
+                                    for (int i = 0; i < gemOrder.Count - 1; i++)
+                                    {
+                                        if (gemOrder[i] > gemOrder[i + 1])
+                                        {
+                                            add = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (add)
+                            {
+                                possibleGemmedItems.Add(new ItemInstance(item, gem1, gem2, gem3, enchant));
+                            }
                         }	
 
 			return possibleGemmedItems;
 		}
+
+        private Enchant[] FilterList(List<Enchant> unfilteredList)
+        {
+            List<Enchant> filteredList = new List<Enchant>();
+            foreach (Enchant enchant in unfilteredList)
+            {
+                if (enchant == null)
+                {
+                    filteredList.Add(enchant);
+                    continue;
+                }
+
+                bool addEnchant = true;
+                List<Enchant> removeEnchants = new List<Enchant>();
+                foreach (Enchant enchant2 in filteredList)
+                {
+                    ArrayUtils.CompareResult compare = enchant.Stats.CompareTo(enchant2.Stats);
+                    if (compare == ArrayUtils.CompareResult.GreaterThan) //A>B
+                    {
+                        removeEnchants.Add(enchant2);
+                    }
+                    else if (compare == ArrayUtils.CompareResult.Equal || compare == ArrayUtils.CompareResult.LessThan)
+                    {
+                        addEnchant = false;
+                        break;
+                    }
+                }
+                foreach (Enchant removeEnchant in removeEnchants)
+                    filteredList.Remove(removeEnchant);
+                if (addEnchant) filteredList.Add(enchant);
+            }
+            return filteredList.ToArray();
+        }
 
         private Item[] FilterList(List<Item> unfilteredList)
         {
@@ -2655,7 +2779,7 @@ namespace Rawr
 			List<StatsColors> filteredStatsColors = new List<StatsColors>();
 			foreach (ItemInstance gemmedItem in unfilteredList)
 			{
-				if (gemmedItem == null)
+                if ((object)gemmedItem == null)
 				{
 					filteredList.Add(gemmedItem);
 					continue;

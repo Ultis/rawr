@@ -1304,7 +1304,7 @@ namespace Rawr
 
         public static bool operator ==(ItemInstance a, ItemInstance b)
         {
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return ReferenceEquals(a, b);
+            if ((object)b == null || (object)a == null) return (object)a == (object)b;
             return a.GemmedId == b.GemmedId;
         }
 
@@ -1316,7 +1316,7 @@ namespace Rawr
         public override bool Equals(object obj)
         {
             ItemInstance o = obj as ItemInstance;
-            if (o != null)
+            if ((object)o != null)
             {
                 return GemmedId == o.GemmedId;
             }
