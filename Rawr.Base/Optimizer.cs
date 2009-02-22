@@ -1010,7 +1010,15 @@ namespace Rawr
 					if (item.FitsInSlot(Character.CharacterSlot.Feet, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { feetItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 					if (item.FitsInSlot(Character.CharacterSlot.Finger1, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { fingerItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 					if (item.FitsInSlot(Character.CharacterSlot.Trinket1, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { trinketItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
-					if (item.FitsInSlot(Character.CharacterSlot.MainHand, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { mainHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
+					if (item.FitsInSlot(Character.CharacterSlot.MainHand, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) 
+                    {
+                        mainHandItemList.Add(gemmedItem);
+                        if (item.FitsInSlot(Character.CharacterSlot.OffHand, _character))
+                        {
+                            offHandItemList.Add(gemmedItem);
+                        }
+                        uniqueStore.Add(gemmedItem.GemmedId, true); 
+                    }
 					if (item.FitsInSlot(Character.CharacterSlot.OffHand, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { offHandItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 					if (item.FitsInSlot(Character.CharacterSlot.Ranged, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { rangedItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 					if (item.FitsInSlot(Character.CharacterSlot.Projectile, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { projectileItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
