@@ -91,6 +91,10 @@ namespace Rawr.Moonkin
             retVal.Add("I5SR Per Second", String.Format("{0:F}*{1:F0} MP5", ManaRegen5SR, ManaRegen5SR * 5.0f));
             retVal.Add("Sustained DPS Rotation", RotationName);
             retVal.Add("Burst DPS Rotation", DpsRotationName);
+            retVal.Add("Sustained Damage Points", String.Format("{0:F2}",SubPoints[0]));
+            retVal.Add("Burst Damage Points", String.Format("{0:F2}",SubPoints[1]));
+            retVal.Add("Overall Points", String.Format("{0:F2}",SubPoints[0]+SubPoints[1]));
+
             foreach (KeyValuePair<string, RotationData> pair in Rotations)
             {
                 RotationData r = pair.Value;
