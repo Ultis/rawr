@@ -379,6 +379,49 @@ namespace Rawr
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
 
+            if (stats.MongooseProc > 0)
+            {
+                if (character.MainHandEnchant != null & character.MainHandEnchant.Id == 2673)
+                {
+                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
+                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
+                    float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                    float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                    chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier))/ 8333.333333f);
+                    attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                    baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
+                }
+                if (character.OffHandEnchant != null & character.OffHandEnchant.Id == 2673)
+                {
+                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedOHSpeed;
+                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
+                    float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                    float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                    chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
+                    attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                    baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
+                }
+            }
+
+            if (stats.BerserkingProc > 0)
+            {
+                if (character.MainHandEnchant != null & character.MainHandEnchant.Id == 3789)
+                {
+                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
+                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
+                    float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                    float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                    attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                }
+                if (character.OffHandEnchant != null & character.OffHandEnchant.Id == 3789)
+                {
+                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
+                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
+                    float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                    float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                    attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                }
+            }
             //XXX: Only MH WF for now
             float chanceToProcWFPerHit = .2f + (calcOpts.GlyphWF ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
@@ -586,10 +629,10 @@ namespace Rawr
             }
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-			//Stats statsEnchants = GetEnchantsStats(character);
+			// Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-			Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs;
+            Stats statsGearEnchantsBuffs = statsBaseGear + statsBuffs; // +statsEnchants;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
@@ -662,6 +705,8 @@ namespace Rawr
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
+            statsTotal.MongooseProc = statsGearEnchantsBuffs.MongooseProc;
+            statsTotal.BerserkingProc = statsGearEnchantsBuffs.BerserkingProc;
 
 			return statsTotal;
 		}

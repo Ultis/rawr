@@ -249,22 +249,29 @@ namespace Rawr.Enhance
                 case 33506:
                     return "skycall_totem";
                 case 40267:
+                    // increase spellpower of CL & LB by 165
                     return "totem_of_hex";
                 case 40322:
                     return "totem_of_dueling";
                 case 40708:
                     return "totem_of_the_elemental_plane";
                 case 42607:
+                    // LL ability grants +120 AP for 6 sec
                     return "deadly_gladiators_totem_of_indomitability";
                 case 42606:
+                    // LL ability grants +106 AP for 6 sec
                     return "hateful_gladiators_totem_of_indomitability";
                 case 42593:
+                    // LL ability grants +94 AP for 6 sec
                     return "savage_gladiators_totem_of_indomitability";
                 case 42602:
+                    // Shocks grants +70 spellpower for 6 sec
                     return "deadly_gladiators_totem_of_survival";
                 case 42601:
+                    // Shocks grants +62 spellpower for 6 sec
                     return "hateful_gladiators_totem_of_survival";
                 case 42594:
+                    // Shocks grants +52 spellpower for 6 sec
                     return "savage_gladiators_totem_of_survival";
                 default:
                     return "-";
