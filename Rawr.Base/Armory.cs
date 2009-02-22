@@ -277,8 +277,11 @@ namespace Rawr
                 {
                     if (!currentChar.AvailableItems.Contains(item.Id.ToString())) currentChar.AvailableItems.Add(item.Id.ToString());
                     Enchant enchant = item.Enchant;
-                    string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
-                    if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
+                    if (enchant != null && enchant.Id != 0)
+                    {
+                        string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+                        if (!currentChar.AvailableItems.Contains(enchantString)) currentChar.AvailableItems.Add(enchantString);
+                    }
                 }
             }
 		}
