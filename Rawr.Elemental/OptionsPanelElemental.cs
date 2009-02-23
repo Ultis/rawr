@@ -196,9 +196,7 @@ namespace Rawr.Elemental
         public bool UseFSalways = true;
         public bool UseLvBalways = true;
 
-        public bool UseSimulator = false;
-
-        public bool glyphOfFlameShock = true;
+        public bool glyphOfFlameShock = false;
         public bool glyphOfElementalMastery = false;
         public bool glyphOfFlametongue = false;
 
@@ -230,6 +228,9 @@ namespace Rawr.Elemental
                 case 5:
                     glyphOfShocking = value;
                     break;
+                case 6:
+                    glyphOfWaterMastery = value;
+                    break;
             }
         }
 
@@ -249,6 +250,8 @@ namespace Rawr.Elemental
                     return glyphOfLightningBolt;
                 case 5:
                     return glyphOfShocking;
+                case 5:
+                    return glyphOfWaterMastery;
             }
             return false;
         }
@@ -269,6 +272,8 @@ namespace Rawr.Elemental
                     return "Glyph of Lightning Bolt";
                 case 5:
                     return "Glyph of Shocking";
+                case 6:
+                    return "Glyph of Water Mastery";
             }
             return "";
         }
@@ -289,6 +294,8 @@ namespace Rawr.Elemental
                     return "Lightning Bolt";
                 case 5:
                     return "Shocking";
+                case 6:
+                    return "Water Mastery";
             }
             return "";
         }

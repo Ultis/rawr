@@ -206,7 +206,7 @@ namespace Rawr.Elemental
 
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
 
-                    for (int index = 0; index < 6; index++)
+                    for (int index = 0; index < 7; index++)
                     {
                         bool glyphEnabled = calculationOptions.GetGlyph(index);
 
@@ -254,18 +254,18 @@ namespace Rawr.Elemental
                 case "Glyph combinations":
                     calculationOptions = character.CalculationOptions as CalculationOptionsElemental;
 
-                    bool[] currentGlyphs = new bool[6];
-                    for (int index = 0; index < 6; index++) currentGlyphs[index] = calculationOptions.GetGlyph(index);
-                    for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, false);
+                    bool[] currentGlyphs = new bool[7];
+                    for (int index = 0; index < 7; index++) currentGlyphs[index] = calculationOptions.GetGlyph(index);
+                    for (int index = 0; index < 7; index++) calculationOptions.SetGlyph(index, false);
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsElemental;
 
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < 7; i++)
                     {
                         for (int j = 0; j < i; j++)
                         {
                             for (int k = 0; k < j; k++)
                             {
-                                for (int index = 0; index < 6; index++) calculationOptions.SetGlyph(index, false);
+                                for (int index = 0; index < 7; index++) calculationOptions.SetGlyph(index, false);
                                 calculationOptions.SetGlyph(i, true);
                                 calculationOptions.SetGlyph(j, true);
                                 calculationOptions.SetGlyph(k, true);
