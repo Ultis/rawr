@@ -96,6 +96,8 @@ namespace Rawr.Mage
         public bool DisplaySegmentCooldowns { get; set; }
         public bool ComparisonIntegralMana { get; set; }
         public bool DisplayIntegralMana { get; set; }
+        public int FixedSegmentDuration { get; set; }
+        public bool VariableSegmentDuration { get; set; }
 
         public MIPMethod MIPMethod { get; set; }
 
@@ -275,6 +277,7 @@ namespace Rawr.Mage
             PlayerLevel = 80;
             FocusMagicTargetCritRate = 0.2f;
             SnaredTime = 1f;
+            FixedSegmentDuration = 30;
         }
 
         public CalculationOptionsMage(Character character)

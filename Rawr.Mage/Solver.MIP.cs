@@ -1554,7 +1554,7 @@ namespace Rawr.Mage
                 }
             }
             double count = Math.Round(value / unit) * unit;
-            bool valid = (Math.Abs(value - count) < 0.000001);
+            bool valid = (Math.Abs(value - count) < 0.00001);
             int row = -1;
             switch (integralConsumable)
             {
@@ -2224,6 +2224,7 @@ namespace Rawr.Mage
                 if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict all activation of " + effect + " after " + firstActivationSegment);
                 DisableCooldown(branchlp, effect, segmentList.FindIndex(segment => segment.TimeStart >= segmentList[firstActivationSegment].TimeEnd + effectDuration - eps), segmentList.Count - 1);
                 HeapPush(branchlp);
+                return;
             }
             if (-effectDuration <= segmentList[seg2].TimeEnd - segmentList[firstActivationSegment].TimeEnd - effectCooldown)
             {
@@ -2244,11 +2245,11 @@ namespace Rawr.Mage
                 SetCooldownElements(branchlp, row, effect, seg2, 1.0);
                 branchlp.SetConstraintRHS(row, segmentList[seg2].TimeEnd - segmentList[firstActivationSegment].TimeEnd - effectCooldown);
                 // make sure it actually starts in this segment
-                // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
+                // this is kind of a cheat, but I can't think of any better way to enforce this
                 row = branchlp.AddConstraint(false);
-                SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
-                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration + segmentList[firstActivationSegment + 1].Duration);
-                branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentList[firstActivationSegment + 1].Duration));
+                SetCooldownElements(branchlp, row, effect, firstActivationSegment, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
                 // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
                 branchlp.ForceRecalculation(true);
                 HeapPush(branchlp);
@@ -2269,9 +2270,9 @@ namespace Rawr.Mage
                 SetCooldownElements(branchlp, row, effect, seg2 + 1, 1.0);
                 branchlp.SetConstraintRHS(row, segmentList[seg2 + 1].TimeEnd - segmentList[firstActivationSegment].TimeEnd - effectCooldown);
                 row = branchlp.AddConstraint(false);
-                SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
-                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration + segmentList[firstActivationSegment + 1].Duration);
-                branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentList[firstActivationSegment + 1].Duration));
+                SetCooldownElements(branchlp, row, effect, firstActivationSegment, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
                 branchlp.ForceRecalculation(true);
                 HeapPush(branchlp);
             }
@@ -2305,9 +2306,9 @@ namespace Rawr.Mage
                             // make sure it actually starts in this segment
                             // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
                             row = branchlp.AddConstraint(false);
-                            SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
-                            branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration + segmentList[firstActivationSegment + 1].Duration);
-                            branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentList[firstActivationSegment + 1].Duration));
+                            SetCooldownElements(branchlp, row, effect, firstActivationSegment, 1.0);
+                            branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration);
+                            branchlp.SetConstraintLHS(row, 0.1);
                             // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
                             branchlp.ForceRecalculation(true);
                             HeapPush(branchlp);
@@ -2328,9 +2329,9 @@ namespace Rawr.Mage
                 // make sure it actually starts in this segment
                 // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
                 row = branchlp.AddConstraint(false);
-                SetCooldownElements(branchlp, row, effect, firstActivationSegment, firstActivationSegment + 1, 1.0);
-                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration + segmentList[firstActivationSegment + 1].Duration);
-                branchlp.SetConstraintLHS(row, Math.Min(effectDuration, segmentList[firstActivationSegment + 1].Duration));
+                SetCooldownElements(branchlp, row, effect, firstActivationSegment, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[firstActivationSegment].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
                 // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
                 branchlp.ForceRecalculation(true);
                 HeapPush(branchlp);
@@ -3150,7 +3151,7 @@ namespace Rawr.Mage
                                 if (outseg > seg && outseg < lastseg)
                                 {
                                     if (calculationResult.SolutionVariable[index].IsMatch(cooldown, cooldownType)) lp.SetConstraintElement(row, index, -1.0);
-                                    else lp.EraseColumn(index);
+                                    else if (!calculationResult.SolutionVariable[index].IsZeroTime) lp.EraseColumn(index); // don't remove zero-length variables
                                 }
                             }
                             double spanDuration = 0.0;

@@ -203,6 +203,8 @@
             this.textBoxSurvivabilityRating = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.label92 = new System.Windows.Forms.Label();
+            this.checkBoxGlyphOfArcaneMissiles = new System.Windows.Forms.CheckBox();
             this.label93 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfArcaneBlast = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -249,8 +251,10 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label92 = new System.Windows.Forms.Label();
-            this.checkBoxGlyphOfArcaneMissiles = new System.Windows.Forms.CheckBox();
+            this.comboBoxSegmentDuration = new System.Windows.Forms.ComboBox();
+            this.label95 = new System.Windows.Forms.Label();
+            this.label96 = new System.Windows.Forms.Label();
+            this.checkBoxVariableSegmentDuration = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -2097,6 +2101,26 @@
             this.tabPage7.Text = "Glyphs";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(3, 243);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(132, 13);
+            this.label92.TabIndex = 195;
+            this.label92.Text = "Glyph of Arcane Missiles: *";
+            this.toolTipMage.SetToolTip(this.label92, "Increases the critical strike damage bonus of Arcane Missiles by 25%.");
+            // 
+            // checkBoxGlyphOfArcaneMissiles
+            // 
+            this.checkBoxGlyphOfArcaneMissiles.AutoSize = true;
+            this.checkBoxGlyphOfArcaneMissiles.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneMissiles", true));
+            this.checkBoxGlyphOfArcaneMissiles.Location = new System.Drawing.Point(146, 243);
+            this.checkBoxGlyphOfArcaneMissiles.Name = "checkBoxGlyphOfArcaneMissiles";
+            this.checkBoxGlyphOfArcaneMissiles.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxGlyphOfArcaneMissiles.TabIndex = 194;
+            this.checkBoxGlyphOfArcaneMissiles.UseVisualStyleBackColor = true;
+            // 
             // label93
             // 
             this.label93.AutoSize = true;
@@ -2343,6 +2367,10 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.checkBoxVariableSegmentDuration);
+            this.tabPage4.Controls.Add(this.label96);
+            this.tabPage4.Controls.Add(this.comboBoxSegmentDuration);
+            this.tabPage4.Controls.Add(this.label95);
             this.tabPage4.Controls.Add(this.buttonComputeOptimalArcaneCycles);
             this.tabPage4.Controls.Add(this.label99);
             this.tabPage4.Controls.Add(this.checkBoxDebugCooldownSegmentation);
@@ -2373,7 +2401,7 @@
             // 
             // buttonComputeOptimalArcaneCycles
             // 
-            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(3, 274);
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 310);
             this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
             this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
             this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
@@ -2384,7 +2412,7 @@
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(3, 226);
+            this.label99.Location = new System.Drawing.Point(0, 226);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(117, 13);
             this.label99.TabIndex = 176;
@@ -2426,7 +2454,7 @@
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(3, 194);
+            this.label77.Location = new System.Drawing.Point(0, 194);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(148, 13);
             this.label77.TabIndex = 172;
@@ -2456,7 +2484,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(3, 174);
+            this.label32.Location = new System.Drawing.Point(0, 174);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(114, 13);
             this.label32.TabIndex = 169;
@@ -2583,25 +2611,49 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label92
+            // comboBoxSegmentDuration
             // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(3, 243);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(132, 13);
-            this.label92.TabIndex = 195;
-            this.label92.Text = "Glyph of Arcane Missiles: *";
-            this.toolTipMage.SetToolTip(this.label92, "Increases the critical strike damage bonus of Arcane Missiles by 25%.");
+            this.comboBoxSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FixedSegmentDuration", true));
+            this.comboBoxSegmentDuration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSegmentDuration.FormattingEnabled = true;
+            this.comboBoxSegmentDuration.Items.AddRange(new object[] {
+            "10",
+            "20",
+            "30"});
+            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(128, 257);
+            this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
+            this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxSegmentDuration.TabIndex = 179;
             // 
-            // checkBoxGlyphOfArcaneMissiles
+            // label95
             // 
-            this.checkBoxGlyphOfArcaneMissiles.AutoSize = true;
-            this.checkBoxGlyphOfArcaneMissiles.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "GlyphOfArcaneMissiles", true));
-            this.checkBoxGlyphOfArcaneMissiles.Location = new System.Drawing.Point(146, 243);
-            this.checkBoxGlyphOfArcaneMissiles.Name = "checkBoxGlyphOfArcaneMissiles";
-            this.checkBoxGlyphOfArcaneMissiles.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxGlyphOfArcaneMissiles.TabIndex = 194;
-            this.checkBoxGlyphOfArcaneMissiles.UseVisualStyleBackColor = true;
+            this.label95.AutoSize = true;
+            this.label95.Location = new System.Drawing.Point(0, 260);
+            this.label95.Name = "label95";
+            this.label95.Size = new System.Drawing.Size(102, 13);
+            this.label95.TabIndex = 178;
+            this.label95.Text = "Segment Duration: *";
+            this.toolTipMage.SetToolTip(this.label95, "Duration of segments when variable segment duration is not used.");
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(0, 284);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(143, 13);
+            this.label96.TabIndex = 181;
+            this.label96.Text = "Variable Segment Duration: *";
+            this.toolTipMage.SetToolTip(this.label96, "Determine segment durations based on cooldown durations.");
+            // 
+            // checkBoxVariableSegmentDuration
+            // 
+            this.checkBoxVariableSegmentDuration.AutoSize = true;
+            this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true));
+            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(188, 283);
+            this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
+            this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxVariableSegmentDuration.TabIndex = 182;
+            this.checkBoxVariableSegmentDuration.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2854,6 +2906,10 @@
         private System.Windows.Forms.Button buttonComputeOptimalArcaneCycles;
         private System.Windows.Forms.Label label92;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneMissiles;
+        private System.Windows.Forms.CheckBox checkBoxVariableSegmentDuration;
+        private System.Windows.Forms.Label label96;
+        private System.Windows.Forms.ComboBox comboBoxSegmentDuration;
+        private System.Windows.Forms.Label label95;
 
     }
 }

@@ -508,15 +508,57 @@ namespace Rawr.Mage
             return ret;
         }
 
+        private void AddSegmentTicks(List<double> ticks, double cooldownDuration)
+        {
+            for (int i = 0; i * 0.5 * cooldownDuration < calculationOptions.FightDuration; i++)
+            {
+                ticks.Add(i * 0.5 * cooldownDuration);
+            }
+        }
+
         private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats characterStats, out List<double> tpsList)
         {
             // for now replicate 30 sec segments before moving to true variable length segments
             segmentList = new List<Segment>();
             if (segmentCooldowns)
             {
-                for (int i = 0; 30.0 * i < calculationOptions.FightDuration - 0.00001; i++)
+                if (calculationOptions.VariableSegmentDuration)
                 {
-                    segmentList.Add(new Segment() { TimeStart = 30.0 * i, Duration = Math.Min(30.0, calculationOptions.FightDuration - 30.0 * i) });
+                    // variable segment durations to get a better grasp on varied cooldown durations
+                    // create ticks in intervals of half cooldown duration
+                    List<double> ticks = new List<double>();
+                    if (potionOfSpeedAvailable || potionOfWildMagicAvailable || calculationOptions.ManaPotionEnabled)
+                    {
+                        AddSegmentTicks(ticks, 120.0);
+                    }
+                    if (arcanePowerAvailable) AddSegmentTicks(ticks, calculationResult.ArcanePowerCooldown);
+                    if (combustionAvailable) AddSegmentTicks(ticks, 300.0);
+                    if (drumsOfBattleAvailable) AddSegmentTicks(ticks, 120.0);
+                    if (flameCapAvailable || calculationOptions.ManaGemEnabled || manaGemEffectAvailable) AddSegmentTicks(ticks, 60.0);
+                    if (icyVeinsAvailable) AddSegmentTicks(ticks, calculationResult.IcyVeinsCooldown);
+                    if (waterElementalAvailable) AddSegmentTicks(ticks, calculationResult.WaterElementalCooldown);
+                    if (trinket1Available) AddSegmentTicks(ticks, trinket1Cooldown);
+                    if (trinket2Available) AddSegmentTicks(ticks, trinket2Cooldown);
+                    ticks.Sort();
+                    for (int i = 0; i < ticks.Count; i++)
+                    {
+                        if (i == 0 || ticks[i] > ticks[i - 1] + 0.00001)
+                        {
+                            if (segmentList.Count > 0)
+                            {
+                                segmentList[segmentList.Count - 1].Duration = ticks[i] - ticks[i - 1];
+                            }
+                            segmentList.Add(new Segment() { TimeStart = ticks[i] });
+                        }
+                    }
+                    segmentList[segmentList.Count - 1].Duration = calculationOptions.FightDuration - segmentList[segmentList.Count - 1].TimeStart;
+                }
+                else
+                {
+                    for (int i = 0; calculationOptions.FixedSegmentDuration * i < calculationOptions.FightDuration - 0.00001; i++)
+                    {
+                        segmentList.Add(new Segment() { TimeStart = calculationOptions.FixedSegmentDuration * i, Duration = Math.Min(calculationOptions.FixedSegmentDuration, calculationOptions.FightDuration - calculationOptions.FixedSegmentDuration * i) });
+                    }
                 }
             }
             else
