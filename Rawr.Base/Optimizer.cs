@@ -1018,6 +1018,9 @@ namespace Rawr
 
                 if (item != null)
                 {
+                    int slot = (int)Character.GetCharacterSlotByItemSlot(item.Slot);
+                    if (slot < 0 || slot >= slotCount) continue;
+
                     possibleGemmedItems = GetPossibleGemmedItemsForItem(item, gid, gemItems, metaGemItems);
                     if (item.FitsInSlot(Character.CharacterSlot.Head, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { headItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }
 					if (item.FitsInSlot(Character.CharacterSlot.Neck, _character)) foreach (ItemInstance gemmedItem in possibleGemmedItems) if (!uniqueStore.ContainsKey(gemmedItem.GemmedId)) { neckItemList.Add(gemmedItem); uniqueStore.Add(gemmedItem.GemmedId, true); }

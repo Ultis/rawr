@@ -270,7 +270,7 @@ namespace Rawr
 					currentChar.AvailableItems.Add(itemId);
 				}
 			}*/
-            for (Character.CharacterSlot slot = 0; slot <= (Character.CharacterSlot)20; slot++)
+            for (Character.CharacterSlot slot = 0; slot < (Character.CharacterSlot)19; slot++)
             {
                 ItemInstance item = currentChar[slot];
                 if ((object)item != null && item.Id != 0)
