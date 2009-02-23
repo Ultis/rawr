@@ -70,7 +70,8 @@ namespace Rawr.ProtWarr
                             YellowId = gemmingTemplates[i, 1][j],
                             BlueId = gemmingTemplates[i, 2][j],
                             PrismaticId = gemmingTemplates[i, 3][j],
-                            MetaId = gemmingTemplates[i, 4][0]
+                            MetaId = gemmingTemplates[i, 4][0],
+							Enabled = j == 1
                         });
                     }
                 }

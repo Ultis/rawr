@@ -56,57 +56,57 @@ namespace Rawr
                     new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
 						RedId = wicked[0], YellowId = wicked[0], BlueId = wicked[0], PrismaticId = wicked[0], MetaId = relentless },
 
-                   	new GemmingTemplate() { Model = "Enhance", Group = "Rare", //Max Agility
+                   	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Agility
 						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", //Max Attack Power
+                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Attack Power
 						RedId = bright[1], YellowId = bright[1], BlueId = bright[1], PrismaticId = bright[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Expertise
 						RedId = precise[1], YellowId = precise[1], BlueId = precise[1], PrismaticId = precise[1], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+                	new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Hit
 						RedId = rigid[1], YellowId = rigid[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Max Crit
 						RedId = smooth[1], YellowId = smooth[1], BlueId = smooth[1], PrismaticId = smooth[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Expertise/Hit
 						RedId = accurate[1], YellowId = accurate[1], BlueId = accurate[1], PrismaticId = accurate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Agility/Crit
 						RedId = deadly[1], YellowId = deadly[1], BlueId = deadly[1], PrismaticId = deadly[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Agility/Hit
 						RedId = glinting[1], YellowId = glinting[1], BlueId = glinting[1], PrismaticId = glinting[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Attack Power/Hit
 						RedId = pristine[1], YellowId = pristine[1], BlueId = pristine[1], PrismaticId = pristine[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Rare", Enabled = true, //Attack Power/Crit
 						RedId = wicked[1], YellowId = wicked[1], BlueId = wicked[1], PrismaticId = wicked[1], MetaId = relentless },
 
                     new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Agility
 						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
                 	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Attack Power
 						RedId = bright[2], YellowId = bright[2], BlueId = bright[2], PrismaticId = bright[2], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Expertise
 						RedId = precise[2], YellowId = precise[2], BlueId = precise[2], PrismaticId = precise[2], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+                	new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Hit
 						RedId = rigid[2], YellowId = rigid[2], BlueId = rigid[2], PrismaticId = rigid[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Max Crit
 						RedId = smooth[2], YellowId = smooth[2], BlueId = smooth[2], PrismaticId = smooth[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Expertise/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Expertise/Hit
 						RedId = accurate[2], YellowId = accurate[2], BlueId = accurate[2], PrismaticId = accurate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Agility/Crit
 						RedId = deadly[2], YellowId = deadly[2], BlueId = deadly[2], PrismaticId = deadly[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Agility/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Agility/Hit
 						RedId = glinting[2], YellowId = glinting[2], BlueId = glinting[2], PrismaticId = glinting[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Hit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Attack Power/Hit
 						RedId = pristine[2], YellowId = pristine[2], BlueId = pristine[2], PrismaticId = pristine[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Attack Power/Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Epic", //Attack Power/Crit
 						RedId = wicked[2], YellowId = wicked[2], BlueId = wicked[2], PrismaticId = wicked[2], MetaId = relentless },
 
-                    new GemmingTemplate() { Model = "Enhance", Group = "Jewelcrafter", //Max Agility
+                    new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Agility
 						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Jewelcrafter", //Max Attack Power
+                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Attack Power
 						RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Expertise
+                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Expertise
 						RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = relentless },
-                	new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Hit
+                	new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Hit
 						RedId = rigid[3], YellowId = rigid[3], BlueId = rigid[3], PrismaticId = rigid[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Enhance", Group = "Uncommon", //Max Crit
+                    new GemmingTemplate() { Model = "Enhance", Group = "Jeweler", //Max Crit
 						RedId = smooth[3], YellowId = smooth[3], BlueId = smooth[3], PrismaticId = smooth[3], MetaId = relentless },
                };
             }
@@ -329,7 +329,7 @@ namespace Rawr
             }
 
             // glyph stuff
-            float spellCritModifier = calcOpts.GlyphFT & (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
+            float spellCritModifier = calcOpts.GlyphFT && (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
 
             ////////////////////////////
             // Main calculation Block //
@@ -381,7 +381,7 @@ namespace Rawr
 
             if (stats.MongooseProc > 0)
             {
-                if (character.MainHandEnchant != null & character.MainHandEnchant.Id == 2673)
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
                     float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
@@ -391,7 +391,7 @@ namespace Rawr
                     attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
                     baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
                 }
-                if (character.OffHandEnchant != null & character.OffHandEnchant.Id == 2673)
+                if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedOHSpeed;
                     float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
@@ -405,7 +405,7 @@ namespace Rawr
 
             if (stats.BerserkingProc > 0)
             {
-                if (character.MainHandEnchant != null & character.MainHandEnchant.Id == 3789)
+                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
                     float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
@@ -413,7 +413,7 @@ namespace Rawr
                     float berserkingUptime = 15f / timeBetweenBerserkingProcs;
                     attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
                 }
-                if (character.OffHandEnchant != null & character.OffHandEnchant.Id == 3789)
+                if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
                     float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
@@ -502,7 +502,7 @@ namespace Rawr
 
             //3: Lavalash DPS
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
-            if (calcOpts.GlyphLL & calcOpts.OffhandImbue == "flametongue")
+            if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "flametongue")
                 dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
 
             //4: Earth Shock DPS
