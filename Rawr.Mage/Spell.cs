@@ -8822,8 +8822,6 @@ namespace Rawr.Mage
             SpellDistribution = sb.ToString();
         }
 
-        private SpellCycle commonChain;
-
         public override string Sequence
         {
             get

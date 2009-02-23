@@ -136,7 +136,7 @@ namespace Rawr.Mage
                     "Spell Info:AB2ABar3C*AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:AB3AM2MBAM*AB-AB-AB-AM, if first AB procs MB do MBAM at 2 stack",
                     "Spell Info:AB3AM*AB-AB-AB-AM regardless of procs",
-                    "Spell Info:AB3ABar3MBAM*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
+                    "Spell Info:AB3ABar3MBAM*AB-AB-AB-ABar, on MB proc do MBAM at 3 stack",
                     "Spell Info:AB3ABar3C*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:ABSpamMBAM*Spam AB, MBAM as soon as you notice",
                     "Spell Info:ABSpam3MBAM*Spam AB, always ramp up to 3 stack before MBAM",
