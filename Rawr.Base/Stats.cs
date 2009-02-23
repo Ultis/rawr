@@ -56,6 +56,7 @@ namespace Rawr
         DodgeRating,
         DrumsOfBattle,
         DrumsOfWar,
+        EggOfMortalEssenceArcaneMissilesProc,
         EvocationExtension,
         ExecutionerProc,
         Expertise,
@@ -1411,6 +1412,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellHasteFor10SecOnHeal_10_45] = value; }
+        }
+
+        // 10% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Haste (10% 10 sec/AM Cast)")]
+        [Category("Equipment Procs")]
+        public float EggOfMortalEssenceArcaneMissilesProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.EggOfMortalEssenceArcaneMissilesProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.EggOfMortalEssenceArcaneMissilesProc] = value; }
         }
 
         // 10% chance, 45 sec internal cooldown

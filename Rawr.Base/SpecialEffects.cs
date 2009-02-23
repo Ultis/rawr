@@ -792,6 +792,7 @@ namespace Rawr
             {
                 // The Egg of Mortal Essence
                 stats.SpellHasteFor10SecOnHeal_10_45 += 505;
+                stats.EggOfMortalEssenceArcaneMissilesProc = 505;
             }
             else if (line.StartsWith("Your spell critical strikes have a chance to restore 900 mana."))
             {

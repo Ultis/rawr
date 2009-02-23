@@ -616,10 +616,12 @@ namespace Rawr.Mage
             }
 
             // Embrace of the Spider
-            if (baseStats.SpellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
+            float spellHasteFor10SecOnCast_10_45 = baseStats.SpellHasteFor10SecOnCast_10_45;
+            if (Name == "Arcane Missiles") spellHasteFor10SecOnCast_10_45 += baseStats.EggOfMortalEssenceArcaneMissilesProc;
+            if (spellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
             {
                 // hasted casttime
-                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + spellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
                 float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
                 float cast = BaseCastTime / speed + castingState.Latency;
                 cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
@@ -628,7 +630,7 @@ namespace Rawr.Mage
                 CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
                 float castsAffected = 0;
                 for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((10f - c * CastTime / CastProcs) / cast) / CastProcs;
-                Haste += baseStats.SpellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
+                Haste += spellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
                 //Haste += castingState.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
                 CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
 
