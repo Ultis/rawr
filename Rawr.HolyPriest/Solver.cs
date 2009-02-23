@@ -391,8 +391,10 @@ namespace Rawr.HolyPriest
                 float trinketmp5 = 0;
                 if (simstats.Mp5OnCastFor20SecOnUse2Min > 0)
                     trinketmp5 += (20f / avgcastlen) * 21f / 2f * 20f / 120f;
+                /* Memento wrapped into ManaRestoreOnCast_10_45, Trolando
                 if (simstats.MementoProc > 0)
                     trinketmp5 += simstats.MementoProc * 3f * 5f / (45f + 15f * (1f - (float)Math.Pow(1f - 0.1f, 15f / avgcastlen)));
+                 */
                 if (simstats.ManacostReduceWithin15OnHealingCast > 0)
                     trinketmp5 += simstats.ManacostReduceWithin15OnHealingCast * (1f - (float)Math.Pow(1f - 0.02f, castctr)) * 5f / cyclelen;
                 if (simstats.ManaregenFor8SecOnUse5Min > 0)

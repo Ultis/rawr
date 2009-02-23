@@ -511,7 +511,6 @@ namespace Rawr.Elemental
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
                 ExtraSpiritWhileCasting = stats.ExtraSpiritWhileCasting,
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
-                MementoProc = stats.MementoProc,
                 GreatnessProc = stats.GreatnessProc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
             #endregion
@@ -589,7 +588,6 @@ namespace Rawr.Elemental
                 stats.LightningCapacitorProc +
                 stats.ExtraSpiritWhileCasting +
                 stats.SpiritFor20SecOnUse2Min +
-                stats.MementoProc +
                 stats.DarkmoonCardDeathProc +
                 stats.ExtractOfNecromanticPowerProc +
                 stats.GreatnessProc;

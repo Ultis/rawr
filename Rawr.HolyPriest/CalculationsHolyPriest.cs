@@ -741,7 +741,6 @@ namespace Rawr.HolyPriest
                 BonusManaPotion = stats.BonusManaPotion,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
 
-                MementoProc = stats.MementoProc,
                 ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
                 RenewDurationIncrease = stats.RenewDurationIncrease,
                 BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
@@ -802,7 +801,7 @@ namespace Rawr.HolyPriest
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
                 
-                + stats.MementoProc + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
+                + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
                 + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
                 + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
                 + stats.WeakenedSoulDurationDecrease

@@ -257,11 +257,6 @@ namespace Rawr.Tree
         private static float DoTrinketManaRestoreCalcs(CharacterCalculationsTree calcs, float castsPerMinute)
         {
             float mp5FromTrinket = 0.0f;
-            // Memento of Tyrande
-            if (calcs.BasicStats.MementoProc > 0)
-            {
-                calcs.BasicStats.ManaRestoreOnCast_10_45 += 76 * 3;
-            }
             // Spark of Life, Je'Tze's Bell, Memento of Tyrande
             if (calcs.BasicStats.ManaRestoreOnCast_10_45 > 0)
             {
@@ -861,7 +856,6 @@ namespace Rawr.Tree
                 BonusManaPotion = stats.BonusManaPotion,
                 #endregion
                 #region Trinkets
-                MementoProc = stats.MementoProc,
                 AverageHeal = stats.AverageHeal,
                 TrollDivinity = stats.TrollDivinity,
                 ExtraSpiritWhileCasting = stats.ExtraSpiritWhileCasting,
@@ -927,7 +921,7 @@ namespace Rawr.Tree
                 + stats.CritChanceReduction + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier // Blessing of Kings
                 + stats.BonusManaPotion + stats.TrollDivinity + stats.ExtraSpiritWhileCasting 
-                + stats.MementoProc + stats.AverageHeal + /*stats.ManaRestorePerCast_5_15 +*/ stats.BangleProc 
+                + stats.AverageHeal + stats.BangleProc 
                 + stats.SpiritFor20SecOnUse2Min + stats.ManacostReduceWithin15OnUse1Min + stats.FullManaRegenFor15SecOnSpellcast 
                 + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor15SecOnUse90Sec + stats.SpellPowerFor20SecOnUse2Min
                 + stats.SpellPowerFor10SecOnCast_10_45 + stats.GreatnessProc

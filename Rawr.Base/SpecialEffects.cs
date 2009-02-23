@@ -704,10 +704,6 @@ namespace Rawr
                 line = line.Substring("Increases spell power of Holy Light by ".Length);
 				stats.HolyLightSpellPower = float.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
 			}
-			else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
-			{
-				stats.MementoProc = 76;
-			}
 			else if (line.StartsWith("When struck in combat has a chance of increasing your armor by "))
 			{
 				line = line.Substring("When struck in combat has a chance of increasing your armor by ".Length);
@@ -777,6 +773,11 @@ namespace Rawr
             {
                 // Je'Tze's Bell
                 stats.ManaRestoreOnCast_10_45 += 100 * 3;
+            }
+            else if (line.StartsWith("Each time you cast a spell, there is chance you will gain up to 76 mana per 5 for 15 sec."))
+            {
+                // Memento of Tyrande
+                stats.ManaRestoreOnCast_10_45 += 76 * 3;
             }
             else if (line.StartsWith("Each time you cast a spell you gain 18 Spirit for the next 10 sec., stacking up to 10 times."))
             {

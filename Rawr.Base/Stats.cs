@@ -99,7 +99,6 @@ namespace Rawr
         MangleCostReduction,
         RakeCostReduction,
         ShredCostReduction,
-        MementoProc,
         Miss,
         MoonfireDmg,
         MoonfireExtension,
@@ -2207,16 +2206,6 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.HolyLightPercentManaReduction] = value; }
         }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mp5 for 15sec")]
-        [Category("Equipment Procs")]
-        public float MementoProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MementoProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MementoProc] = value; }
-        }
-
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Average Healing")]

@@ -243,56 +243,63 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.ClearCast_LightningBolt = rot.CC_LB;
         }
 
-        private static float CalculateEffect(float value, float duration, float icd, float ecd, float FightDuration)
+        private static float EstimateUptime(float duration, float icd, float pps, float FightDuration)
         {
-            if (ecd + icd > FightDuration) return 0f;
-            if (duration == 0)
+            float averageTimeToProc = pps == 0 ? 0 : 1 / pps;
+            float totalCD = averageTimeToProc + averageTimeToProc;
+            if (averageTimeToProc > FightDuration) return 0f;
+            FightDuration -= averageTimeToProc;
+            if (duration == 0) // instant proc
             {
-                float activity = (float)Math.Floor(FightDuration / (ecd + icd));
+                float activity = (float)Math.Floor(FightDuration / totalCD) + 1;
                 activity /= FightDuration;
-                return value * activity;
+                return activity; // return value per second
             }
             else
             {
-                float activity = (float)Math.Floor(FightDuration / (ecd + icd)) * duration +
-                    Math.Min(Math.Max(0, (FightDuration % (ecd + icd)) - ecd), duration);
+                float activity = (float)Math.Floor(FightDuration / totalCD) * duration + duration +
+                    Math.Min(Math.Max(0, (FightDuration % totalCD) - averageTimeToProc), duration);
                 activity /= FightDuration;
-                return value * activity;
+                return activity; // return uptime per second
             }
+        }
+
+        private static float CalculateEffect(float value, float duration, float icd, float ecd, float FightDuration)
+        {
+            return value * EstimateUptime(duration, icd, 1 / ecd, FightDuration);
         }
 
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float HitsFraction, float CritsFraction, float MissFraction)
         {
             float Power = 0f, Haste = 0f, Mp5 = 0f, SpellCombatManaRegeneration = 0f, Spirit = 0f;
 
-            Power += CalculateEffect(stats.SpellPowerFor10SecOnHit_10_45, 10f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor10SecOnResist, 10f, 0f, 1 / (MissFraction * .10f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor10SecOnCast_10_45, 10f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor10SecOnCast_15_45, 10f, 45f, 1 / (HitsFraction * .15f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor10SecOnCrit_20_45, 10f, 45f, 1 / (CritsFraction * .20f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor15SecOnCrit_20_45, 15f, 45f, 1 / (CritsFraction * .20f), FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor15SecOnUse90Sec, 15f, 90f, 0, FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor15SecOnUse2Min, 15f, 120f, 0, FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor20SecOnUse2Min, 15f, 120f, 0, FightDuration);
-            Power += CalculateEffect(stats.SpellPowerFor20SecOnUse5Min, 15f, 120f, 0, FightDuration);
+            Power += stats.SpellPowerFor10SecOnHit_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
+            Power += stats.SpellPowerFor10SecOnResist * EstimateUptime(10, 0, MissFraction * .10f, FightDuration);
+            Power += stats.SpellPowerFor10SecOnCast_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
+            Power += stats.SpellPowerFor10SecOnCast_15_45 * EstimateUptime(10, 45, HitsFraction * .15f, FightDuration);
+            Power += stats.SpellPowerFor10SecOnCrit_20_45 * EstimateUptime(10, 45, CritsFraction * .20f, FightDuration);
+            Power += stats.SpellPowerFor15SecOnCrit_20_45 * EstimateUptime(15, 45, CritsFraction * .20f, FightDuration);
+            Power += stats.SpellPowerFor15SecOnUse90Sec * EstimateUptime(15, 90, 0, FightDuration);
+            Power += stats.SpellPowerFor15SecOnUse2Min * EstimateUptime(15, 120, 0, FightDuration);
+            Power += stats.SpellPowerFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
+            Power += stats.SpellPowerFor20SecOnUse5Min * EstimateUptime(20, 300, 0, FightDuration);
 
-            Haste += CalculateEffect(stats.SpellHasteFor10SecOnCast_10_45, 10f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Haste += CalculateEffect(stats.SpellHasteFor6SecOnCast_15_45, 6f, 45f, 1 / (HitsFraction * .15f), FightDuration);
-            Haste += CalculateEffect(stats.SpellHasteFor6SecOnHit_10_45, 6f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Haste += CalculateEffect(stats.HasteRatingFor20SecOnUse2Min, 20f, 120f, 0, FightDuration);
+            Haste += stats.SpellHasteFor10SecOnCast_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
+            Haste += stats.SpellHasteFor6SecOnCast_15_45 * EstimateUptime(6, 45, HitsFraction * .15f, FightDuration);
+            Haste += stats.SpellHasteFor6SecOnHit_10_45 * EstimateUptime(6, 45, HitsFraction * .10f, FightDuration);
+            Haste += stats.HasteRatingFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
             // Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. 
             // Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket.
             // For easy calculation, model this as a full stack for 20 seconds. (Real effect is higher)
-            Mp5 += CalculateEffect(stats.Mp5OnCastFor20SecOnUse2Min * 20f * HitsFraction, 20f, 120f, 0, FightDuration);
-            Mp5 += CalculateEffect(5f / 15f * stats.ManaRestoreOnCast_10_45, 15f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            Mp5 += CalculateEffect(stats.ManaRestoreOnCrit_25_45, 0f, 45f, 1 / (CritsFraction * .25f), FightDuration);
-            Mp5 += CalculateEffect(5f / 12f * stats.ManaregenOver20SecOnUse3Min, 12f, 180f, 0, FightDuration);
-            Mp5 += CalculateEffect(5f / 12f * stats.ManaregenOver20SecOnUse5Min, 12f, 300f, 0, FightDuration);
-            Mp5 += CalculateEffect(5f / 12f * stats.ManaRestore5min, 12f, 300f, 0, FightDuration);
-            Mp5 += CalculateEffect(stats.MementoProc, 15f, 45f, 1 / (HitsFraction * .10f), FightDuration);
-            SpellCombatManaRegeneration += CalculateEffect(1f, 15f, 0,
-                1 / ((stats.FullManaRegenFor15SecOnSpellcast / 100f) * HitsFraction), FightDuration);
-            Spirit += CalculateEffect(stats.SpiritFor20SecOnUse2Min, 20f, 120f, 0, FightDuration);
+            Mp5 += stats.Mp5OnCastFor20SecOnUse2Min * 20f * HitsFraction * EstimateUptime(20, 120, 0, FightDuration);
+            Mp5 += stats.ManaRestoreOnCrit_25_45 * EstimateUptime(0, 45, CritsFraction * .25f, FightDuration);
+            Mp5 += 5f / 12f * stats.ManaregenOver20SecOnUse3Min * EstimateUptime(12, 180f, 0, FightDuration);
+            Mp5 += 5f / 12f * stats.ManaregenOver20SecOnUse5Min * EstimateUptime(12, 300f, 0, FightDuration);
+            Mp5 += 5f / 12f * stats.ManaRestore5min * EstimateUptime(12, 300, 0, FightDuration);
+            Mp5 += 5f / 15f * stats.ManaRestoreOnCast_10_45 * EstimateUptime(15, 45, HitsFraction * .10f, FightDuration);
+            SpellCombatManaRegeneration += EstimateUptime(15, 0,
+                HitsFraction * stats.FullManaRegenFor15SecOnSpellcast / 100f, FightDuration);
+            Spirit += stats.SpiritFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
 
             return new Stats()
             {

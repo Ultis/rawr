@@ -978,7 +978,6 @@ namespace Rawr.Elemental.Simulator
             createMP5Use(state, 5f / 12f * stats.ManaregenOver20SecOnUse3Min, 12, 180, false);
             createMP5Use(state, 5f / 12f * stats.ManaregenOver20SecOnUse5Min, 12, 180, false);
             createMP5Use(state, 5f / 12f * stats.ManaRestore5min, 12, 300, false);
-            createMP5Proc(state, 5f / 15f * stats.MementoProc, 15, 45, .1f, 0, 0, 0, 0, 1);
             if (stats.FullManaRegenFor15SecOnSpellcast > 0)
                 createSPCProc(state, 1f, 15f, 0, stats.FullManaRegenFor15SecOnSpellcast / 100f, 0, 0, 0, 0, 1);
             createSpiritUse(state, stats.SpiritFor20SecOnUse2Min, 20, 120, false);
