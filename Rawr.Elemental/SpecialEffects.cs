@@ -3,93 +3,9 @@ using System.Collections.Generic;
 
 namespace Rawr.Elemental
 {
-    class Uncertainty
-    {
-        protected class Part
-        {
-            public float value { get; private set; }
-            public float start { get; private set; }
-            public Part(float value, float start) { this.value = value; this.start = start; }
-        }
-
-        private List<Part> parts;
-        private float Duration;
-        private float Time;
-        private float Max;
-
-        public Uncertainty(float duration, float max)
-        {
-            this.Time = 0f;
-            this.Duration = duration;
-            this.Max = max;
-            this.parts = new List<Part>();
-        }
-
-        public void Add(float value)
-        {
-            if (value != 0)
-            {
-                parts.Add(new Part(value, Time));
-            }
-        }
-
-        public void Run(float dT)
-        {
-            Time += dT;
-            float t = Time - Duration;
-            while (parts.Count > 0 && parts[0].start < t) parts.RemoveAt(0);
-            value = 0;
-        }
-
-        public Uncertainty Clone()
-        {
-            Uncertainty clone = (Uncertainty)this.MemberwiseClone();
-            clone.parts = new List<Part>();
-            parts.ForEach(p => clone.parts.Add(p));
-            return clone;
-        }
-
-        private float value;
-        public float Value
-        {
-            get
-            {
-                if (value == 0)
-                {
-                    parts.ForEach(p => value += p.value);
-                }
-                if (value > Max) value = Max;
-                return value;
-            }
-        }
-    }
-
     public abstract class SpecialEffect
     {
-        /*
-         * How to use this class?
-         * If you are working with a SIMULATOR
-         *  - use = returns "true" if the effect is "Used", use SpecialEffects.Clone(effect).
-         *          if (effect.use(stats, out Dmg, out dT)) newEffects = effects.Clone(effect);
-         *  - proc = on every action that could proc, call this method
-         *  - run = whenever time progresses, use this method
-         * If you are working with an ESTIMATOR
-         *  - estimate = estimates effect strength in a fight
-         */
-        public virtual bool use(Stats stats, out float Damage, out float ProgressTime)
-        {
-            Damage = 0f;
-            ProgressTime = 0f;
-            return false;
-        }
-        public abstract void proc(Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana);
-        public abstract Stats run(float dTime, out float Damage);
         public abstract Stats estimate(float TotalTime, float castsPS, float hitsPS, float critsPS, float missesPS, float ticksPS, out float Damage);
-        public virtual SpecialEffect Clone()
-        {
-            return this.MemberwiseClone() as SpecialEffect;
-        }
-
         public static float EstimateUptime(float duration, float icd, float pps, float FightDuration, out float procs)
         {
             procs = 0;
@@ -122,9 +38,6 @@ namespace Rawr.Elemental
         protected float procOnCrit, procOnHit, procOnMiss, procOnCast, procOnDot;
         protected float Duration;
         protected float internalCD;
-        protected float MaxStack;
-
-        protected Uncertainty activity, cooldown;
 
         public GeneralProc(Stats stats, float dps, float dmg, float mana, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
         {
@@ -139,44 +52,6 @@ namespace Rawr.Elemental
             procOnCrit = onCrit;
             procOnMiss = onMiss;
             procOnDot = onDot;
-            activity = new Uncertainty(duration, maxStack);
-            cooldown = new Uncertainty(iCD, 1);
-        }
-
-        public override void proc(Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            float cdValue = cooldown.Value;
-            if (cdValue <= 1)
-            {
-                float value = cast * procOnCast + hit * procOnHit + crit * procOnCrit + miss * procOnMiss + dot * procOnDot;
-                value *= 1f - cdValue;
-                cooldown.Add(value);
-                activity.Add(value);
-                Damage = damageOnProc * value;
-                Mana = manaOnProc * value;
-            }
-            else
-            {
-                Damage = 0;
-                Mana = 0;
-            }
-        }
-
-        public override Stats run(float dTime, out float Damage)
-        {
-            float value = activity.Value;
-            activity.Run(dTime);
-            cooldown.Run(dTime);
-            Damage = dpsOnProc * dTime * value;
-            return statsOnProc * activity.Value;
-        }
-
-        public override SpecialEffect Clone()
-        {
-            GeneralProc p = this.MemberwiseClone() as GeneralProc;
-            p.activity = activity.Clone();
-            p.cooldown = cooldown.Clone();
-            return p;
         }
 
         public override Stats estimate(float TotalTime, float castsPS, float hitsPS, float critsPS, float missesPS, float ticksPS, out float Damage)
@@ -200,12 +75,6 @@ namespace Rawr.Elemental
         protected float internalCD;
         protected int MaxStack;
 
-        protected float Timeout;
-        protected int stack = 0;
-        protected float value = 0;
-        protected float Time = 0f;
-        protected float Last = float.NegativeInfinity;
-
         public CapacitorProc(float dmg, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, int count)
         {
             damageOnProc = dmg;
@@ -216,50 +85,6 @@ namespace Rawr.Elemental
             procOnMiss = onMiss;
             procOnDot = onDot;
             MaxStack = count;
-        }
-
-        public override void proc(Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            Damage = 0;
-            Mana = 0;
-
-            float plus = cast * procOnCast + hit * procOnHit + crit * procOnCrit + miss * procOnMiss + dot * procOnDot;
-            if (plus > 0)
-            {
-                if (Last != float.NegativeInfinity && Time - Last < internalCD) return;
-                if (MaxStack == 1)
-                {
-                    Last = Time;
-                    // pop
-                    Damage = damageOnProc * plus * (1f + stats.SpellCrit);
-                }
-                else
-                {
-                    value += plus;
-                    //stack++;
-                    Last = Time;
-                    if (value >= MaxStack)
-                    {
-                        // pop
-                        Damage = damageOnProc * (1f + stats.SpellCrit) * (1f + stats.SpellHit);
-                        value -= MaxStack;
-                        // stack = 0;
-                    }
-                }
-            }
-        }
-
-        public override Stats run(float dTime, out float Damage)
-        {
-            Time += dTime;
-            Damage = 0;
-            return new Stats { };
-        }
-
-        public override SpecialEffect Clone()
-        {
-            CapacitorProc p = this.MemberwiseClone() as CapacitorProc;
-            return p;
         }
 
         public override Stats estimate(float TotalTime, float castsPS, float hitsPS, float critsPS, float missesPS, float ticksPS, out float Damage)
@@ -303,61 +128,6 @@ namespace Rawr.Elemental
             Duration = duration;
             internalCD = cooldown;
             gcdOnUse = gcd;
-        }
-
-        public override bool use(Stats stats, out float Damage, out float ProgressTime)
-        {
-            Damage = 0;
-            ProgressTime = 0;
-
-            if (Cooldown > 0f) return false;
-
-            activateOnClone = true;
-            Damage = damageOnProc;
-
-            if (gcdOnUse)
-            {
-                float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
-                float gcd = (float)Math.Round(1.5f / Speed, 4);
-                if (gcd < 1f) gcd = 1f;
-                ProgressTime = gcd;
-            }
-
-            return true;
-        }
-
-        public override void proc(Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            Damage = 0;
-            Mana = 0;
-        }
-
-        public override Stats run(float dTime, out float Damage)
-        {
-            Cooldown -= dTime; // on Use
-            timeLeft -= dTime;
-            if (timeLeft > 0)
-            {
-                Damage = dpsOnProc * dTime;
-                return statsOnProc;
-            }
-            else
-            {
-                Damage = 0;
-                return new Stats { };
-            }
-        }
-
-        public override SpecialEffect Clone()
-        {
-            GeneralUse p = (GeneralUse)this.MemberwiseClone();
-            if (activateOnClone)
-            {
-                p.timeLeft = Duration;
-                p.Cooldown = internalCD;
-                activateOnClone = false;
-            }
-            return p;
         }
 
         public override Stats estimate(float TotalTime, float castsPS, float hitsPS, float critsPS, float missesPS, float ticksPS, out float Damage)
@@ -532,18 +302,6 @@ namespace Rawr.Elemental
             {
                 _effects.Add(new CapacitorProc(550, 0f, 0, 0, 0, 0, .1f, 1));
             }
-        }
-
-        public SpecialEffects Clone(SpecialEffect effect)
-        {
-            SpecialEffects clone = new SpecialEffects();
-            clone._effects = new List<SpecialEffect>();
-            foreach (SpecialEffect e in _effects)
-            {
-                if (e == effect) clone._effects.Add(effect.Clone());
-                else clone._effects.Add(e);
-            }
-            return clone;
         }
 
         private SpecialEffects Clone()

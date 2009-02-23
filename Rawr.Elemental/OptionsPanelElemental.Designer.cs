@@ -37,7 +37,15 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cbThunderstorm = new System.Windows.Forms.CheckBox();
+            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.cbFS = new System.Windows.Forms.CheckBox();
+            this.cbLvB = new System.Windows.Forms.CheckBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cbWaterMastery = new System.Windows.Forms.CheckBox();
+            this.extendedToolTipLabel13 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.cbShocking = new System.Windows.Forms.CheckBox();
             this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -51,13 +59,8 @@
             this.extendedToolTipLabel5 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.extendedToolTipLabel12 = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.cbLvB = new System.Windows.Forms.CheckBox();
-            this.cbFS = new System.Windows.Forms.CheckBox();
-            this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.tkReplenishment = new System.Windows.Forms.TrackBar();
             this.lblReplenishment = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -65,11 +68,9 @@
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.cbSimulate = new System.Windows.Forms.CheckBox();
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkReplenishment)).BeginInit();
@@ -78,8 +79,6 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // extendedToolTipLabel11
@@ -168,7 +167,6 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
@@ -179,8 +177,85 @@
             this.tabPage2.Text = "Fight";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.cbLvB);
+            this.groupBox3.Controls.Add(this.cbFS);
+            this.groupBox3.Controls.Add(this.cbThunderstorm);
+            this.groupBox3.Controls.Add(this.cmbManaAmt);
+            this.groupBox3.Controls.Add(this.label10);
+            this.groupBox3.Location = new System.Drawing.Point(6, 171);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(277, 115);
+            this.groupBox3.TabIndex = 54;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Estimation details";
+            // 
+            // cbThunderstorm
+            // 
+            this.cbThunderstorm.AutoSize = true;
+            this.cbThunderstorm.Location = new System.Drawing.Point(9, 19);
+            this.cbThunderstorm.Name = "cbThunderstorm";
+            this.cbThunderstorm.Size = new System.Drawing.Size(208, 17);
+            this.cbThunderstorm.TabIndex = 51;
+            this.cbThunderstorm.Text = "Use Thunderstorm whenever available";
+            this.cbThunderstorm.UseVisualStyleBackColor = true;
+            this.cbThunderstorm.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // cmbManaAmt
+            // 
+            this.cmbManaAmt.DisplayMember = "2400";
+            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbManaAmt.Items.AddRange(new object[] {
+            "(None) 0",
+            "(Major) 1350-2250, Avg 1800",
+            "(Mad) 1650-2750, Avg 2200",
+            "(Super) 1800-3000, Avg 2400",
+            "(Runic) 4200-4400, Avg 4300"});
+            this.cmbManaAmt.Location = new System.Drawing.Point(86, 39);
+            this.cmbManaAmt.Name = "cmbManaAmt";
+            this.cmbManaAmt.Size = new System.Drawing.Size(185, 21);
+            this.cmbManaAmt.TabIndex = 46;
+            this.cmbManaAmt.ValueMember = "2400";
+            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 42);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(74, 13);
+            this.label10.TabIndex = 47;
+            this.label10.Text = "Mana potions:";
+            // 
+            // cbFS
+            // 
+            this.cbFS.AutoSize = true;
+            this.cbFS.Enabled = false;
+            this.cbFS.Location = new System.Drawing.Point(9, 66);
+            this.cbFS.Name = "cbFS";
+            this.cbFS.Size = new System.Drawing.Size(201, 17);
+            this.cbFS.TabIndex = 52;
+            this.cbFS.Text = "Use Flame Shock whenever possible";
+            this.cbFS.UseVisualStyleBackColor = true;
+            this.cbFS.CheckedChanged += new System.EventHandler(this.cbFS_CheckedChanged);
+            // 
+            // cbLvB
+            // 
+            this.cbLvB.AutoSize = true;
+            this.cbLvB.Enabled = false;
+            this.cbLvB.Location = new System.Drawing.Point(9, 89);
+            this.cbLvB.Name = "cbLvB";
+            this.cbLvB.Size = new System.Drawing.Size(174, 17);
+            this.cbLvB.TabIndex = 53;
+            this.cbLvB.Text = "Only use Lava Burst with FS up";
+            this.cbLvB.UseVisualStyleBackColor = true;
+            this.cbLvB.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
+            // 
             // groupBox10
             // 
+            this.groupBox10.Controls.Add(this.cbWaterMastery);
+            this.groupBox10.Controls.Add(this.extendedToolTipLabel13);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel1);
             this.groupBox10.Controls.Add(this.cbShocking);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel2);
@@ -193,12 +268,33 @@
             this.groupBox10.Controls.Add(this.extendedToolTipLabel4);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel5);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel12);
-            this.groupBox10.Location = new System.Drawing.Point(6, 352);
+            this.groupBox10.Location = new System.Drawing.Point(6, 292);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(277, 135);
+            this.groupBox10.Size = new System.Drawing.Size(277, 167);
             this.groupBox10.TabIndex = 34;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Glyphs";
+            // 
+            // cbWaterMastery
+            // 
+            this.cbWaterMastery.AutoSize = true;
+            this.cbWaterMastery.Location = new System.Drawing.Point(256, 135);
+            this.cbWaterMastery.Name = "cbWaterMastery";
+            this.cbWaterMastery.Size = new System.Drawing.Size(15, 14);
+            this.cbWaterMastery.TabIndex = 10;
+            this.cbWaterMastery.Tag = "Glyph of Innervate";
+            this.cbWaterMastery.UseVisualStyleBackColor = true;
+            this.cbWaterMastery.CheckedChanged += new System.EventHandler(this.chbSomeGlyph_CheckedChanged);
+            // 
+            // extendedToolTipLabel13
+            // 
+            this.extendedToolTipLabel13.AutoSize = true;
+            this.extendedToolTipLabel13.Location = new System.Drawing.Point(6, 135);
+            this.extendedToolTipLabel13.Name = "extendedToolTipLabel13";
+            this.extendedToolTipLabel13.Size = new System.Drawing.Size(118, 13);
+            this.extendedToolTipLabel13.TabIndex = 9;
+            this.extendedToolTipLabel13.Text = "Glyph of Water Mastery";
+            this.extendedToolTipLabel13.ToolTipText = "Increases the passive mana regeneration of your Water Shield spell by 30%";
             // 
             // extendedToolTipLabel1
             // 
@@ -339,39 +435,6 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "General Fight Details";
             // 
-            // cbLvB
-            // 
-            this.cbLvB.AutoSize = true;
-            this.cbLvB.Location = new System.Drawing.Point(6, 66);
-            this.cbLvB.Name = "cbLvB";
-            this.cbLvB.Size = new System.Drawing.Size(174, 17);
-            this.cbLvB.TabIndex = 53;
-            this.cbLvB.Text = "Only use Lava Burst with FS up";
-            this.cbLvB.UseVisualStyleBackColor = true;
-            this.cbLvB.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
-            // 
-            // cbFS
-            // 
-            this.cbFS.AutoSize = true;
-            this.cbFS.Location = new System.Drawing.Point(6, 43);
-            this.cbFS.Name = "cbFS";
-            this.cbFS.Size = new System.Drawing.Size(201, 17);
-            this.cbFS.TabIndex = 52;
-            this.cbFS.Text = "Use Flame Shock whenever possible";
-            this.cbFS.UseVisualStyleBackColor = true;
-            this.cbFS.CheckedChanged += new System.EventHandler(this.cbFS_CheckedChanged);
-            // 
-            // cbThunderstorm
-            // 
-            this.cbThunderstorm.AutoSize = true;
-            this.cbThunderstorm.Location = new System.Drawing.Point(9, 19);
-            this.cbThunderstorm.Name = "cbThunderstorm";
-            this.cbThunderstorm.Size = new System.Drawing.Size(208, 17);
-            this.cbThunderstorm.TabIndex = 51;
-            this.cbThunderstorm.Text = "Use Thunderstorm whenever available";
-            this.cbThunderstorm.UseVisualStyleBackColor = true;
-            this.cbThunderstorm.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
             // tkReplenishment
             // 
             this.tkReplenishment.BackColor = System.Drawing.SystemColors.Control;
@@ -391,32 +454,6 @@
             this.lblReplenishment.Size = new System.Drawing.Size(80, 13);
             this.lblReplenishment.TabIndex = 50;
             this.lblReplenishment.Text = "Replenishment:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 42);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(74, 13);
-            this.label10.TabIndex = 47;
-            this.label10.Text = "Mana potions:";
-            // 
-            // cmbManaAmt
-            // 
-            this.cmbManaAmt.DisplayMember = "2400";
-            this.cmbManaAmt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbManaAmt.Items.AddRange(new object[] {
-            "(None) 0",
-            "(Major) 1350-2250, Avg 1800",
-            "(Mad) 1650-2750, Avg 2200",
-            "(Super) 1800-3000, Avg 2400",
-            "(Runic) 4200-4400, Avg 4300"});
-            this.cmbManaAmt.Location = new System.Drawing.Point(86, 39);
-            this.cmbManaAmt.Name = "cmbManaAmt";
-            this.cmbManaAmt.Size = new System.Drawing.Size(185, 21);
-            this.cmbManaAmt.TabIndex = 46;
-            this.cmbManaAmt.ValueMember = "2400";
-            this.cmbManaAmt.SelectedIndexChanged += new System.EventHandler(this.cmbManaAmt_SelectedIndexChanged);
             // 
             // trkFightLength
             // 
@@ -492,41 +529,6 @@
             this.tabControl1.Size = new System.Drawing.Size(297, 576);
             this.tabControl1.TabIndex = 23;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.cbSimulate);
-            this.groupBox1.Controls.Add(this.cbFS);
-            this.groupBox1.Controls.Add(this.cbLvB);
-            this.groupBox1.Location = new System.Drawing.Point(6, 251);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 95);
-            this.groupBox1.TabIndex = 35;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Simulation details";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.cbThunderstorm);
-            this.groupBox3.Controls.Add(this.cmbManaAmt);
-            this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Location = new System.Drawing.Point(6, 171);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 74);
-            this.groupBox3.TabIndex = 54;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Estimation details";
-            // 
-            // cbSimulate
-            // 
-            this.cbSimulate.AutoSize = true;
-            this.cbSimulate.Location = new System.Drawing.Point(6, 20);
-            this.cbSimulate.Name = "cbSimulate";
-            this.cbSimulate.Size = new System.Drawing.Size(183, 17);
-            this.cbSimulate.TabIndex = 54;
-            this.cbSimulate.Text = "Use simulator instead of estimator";
-            this.cbSimulate.UseVisualStyleBackColor = true;
-            this.cbSimulate.CheckedChanged += new System.EventHandler(this.cbSimulate_CheckedChanged);
-            // 
             // CalculationOptionsPanelElemental
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -538,6 +540,8 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox7.ResumeLayout(false);
@@ -549,10 +553,6 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -597,8 +597,8 @@
         private System.Windows.Forms.TrackBar tbBSRatio;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox cbSimulate;
+        private System.Windows.Forms.CheckBox cbWaterMastery;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel13;
 
     }
 }

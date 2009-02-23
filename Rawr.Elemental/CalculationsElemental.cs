@@ -317,14 +317,7 @@ namespace Rawr.Elemental
             calculatedStats.LocalCharacter = character;
             calcOpts.calculatedStats = calculatedStats;
 
-            if (calcOpts.UseSimulator)
-            {
-                Rawr.Elemental.Simulator.Simulator.solve(stats, character.ShamanTalents, calcOpts);
-            }
-            else
-            {
-                Rawr.Elemental.Estimation.Estimation.solve(calculatedStats, calcOpts);
-            }
+            Rawr.Elemental.Estimation.Estimation.solve(calculatedStats, calcOpts);
 
             return calculatedStats;
 			
@@ -431,6 +424,9 @@ namespace Rawr.Elemental
 
             // Flametongue weapon
             statsTotal.SpellPower += 211 * (1f + character.ShamanTalents.ElementalWeapons * .1f);
+            statsTotal.Mp5 += 100; // Water shield
+            if (calcOpts.glyphOfWaterMastery) statsTotal.Mp5 += 30;
+
             if (calcOpts.glyphOfFlametongue) statsTotal.SpellCrit += .02f;
 
             return statsTotal;

@@ -87,8 +87,6 @@
   <ItemGroup>
     <Compile Include="Estimation.cs" />
     <Compile Include="SpecialEffects.cs" />
-    <Compile Include="Spells2.cs" />
-    <Compile Include="Simulator.cs" />
     <Compile Include="OptionsPanelElemental.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -97,9 +95,7 @@
     </Compile>
     <Compile Include="CalculationsElemental.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sequencer.cs" />
     <Compile Include="Spells.cs" />
-    <Compile Include="CastingState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

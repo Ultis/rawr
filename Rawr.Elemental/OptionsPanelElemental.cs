@@ -54,11 +54,11 @@ namespace Rawr.Elemental
             cbLava.Checked = calcOpts.glyphOfLava;
             cbLightningBolt.Checked = calcOpts.glyphOfLightningBolt;
             cbShocking.Checked = calcOpts.glyphOfShocking;
+            cbWaterMastery.Checked = calcOpts.glyphOfWaterMastery;
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
             cbFS.Checked = calcOpts.UseFSalways;
             cbLvB.Checked = !calcOpts.UseLvBalways;
-            cbSimulate.Checked = calcOpts.UseSimulator;
 
             loading = false;
 
@@ -77,10 +77,11 @@ namespace Rawr.Elemental
                 calcOpts.glyphOfElementalMastery = cbElementalMastery.Checked;
                 calcOpts.glyphOfFlametongue = cbFlametongue.Checked;
                 calcOpts.glyphOfLightningBolt = cbLightningBolt.Checked;
+                calcOpts.glyphOfWaterMastery = cbWaterMastery.Checked;
 
                 //Disable Glyphcheckboxes to enable only X Glyphs (70 = 2, 80 = 3)
                 int maxGlyphs = 3;
-                if ((cbLightningBolt.Checked ? 1 : 0) + (cbFlametongue.Checked ? 1 : 0) + (cbElementalMastery.Checked ? 1 : 0) + (cbLava.Checked ? 1 : 0) + (cbFlameshock.Checked ? 1 : 0) + (cbShocking.Checked ? 1 : 0) >= maxGlyphs)
+                if ((cbLightningBolt.Checked ? 1 : 0) + (cbFlametongue.Checked ? 1 : 0) + (cbElementalMastery.Checked ? 1 : 0) + (cbLava.Checked ? 1 : 0) + (cbFlameshock.Checked ? 1 : 0) + (cbShocking.Checked ? 1 : 0) + (cbWaterMastery.Checked ? 1 : 0) >= maxGlyphs)
                 {
                     cbFlameshock.Enabled = cbFlameshock.Checked;
                     cbShocking.Enabled = cbShocking.Checked;
@@ -88,6 +89,7 @@ namespace Rawr.Elemental
                     cbFlametongue.Enabled = cbFlametongue.Checked;
                     cbLightningBolt.Enabled = cbLightningBolt.Checked;
                     cbLava.Enabled = cbLava.Checked;
+                    cbWaterMastery.Enabled = cbWaterMastery.Checked;
                 }
                 else
                 {
@@ -97,6 +99,7 @@ namespace Rawr.Elemental
                     cbFlametongue.Enabled = true;
                     cbLightningBolt.Enabled = true;
                     cbLava.Enabled = true;
+                    cbWaterMastery.Enabled = true;
                 }
 
                 Character.OnCalculationsInvalidated();
@@ -176,14 +179,6 @@ namespace Rawr.Elemental
             calcOpts.UseLvBalways = !cbLvB.Checked;
             Character.OnCalculationsInvalidated();
         }
-
-        private void cbSimulate_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.UseSimulator = cbSimulate.Checked;
-            Character.OnCalculationsInvalidated();
-        }
     }
 
     [Serializable]
@@ -210,6 +205,8 @@ namespace Rawr.Elemental
         public bool glyphOfLava = false;
         public bool glyphOfLightningBolt = false;
         public bool glyphOfShocking = false;
+
+        public bool glyphOfWaterMastery = false;
 
         public void SetGlyph(int index, bool value)
         {
