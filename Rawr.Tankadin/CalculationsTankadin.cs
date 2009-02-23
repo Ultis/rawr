@@ -11,84 +11,58 @@ namespace Rawr.Tankadin
         {
             get
             {
-				////Relevant Gem IDs for Tankadins
-				//Red
-				int[] subtle = { 39907, 40000, 40115, 42151 };
+                ////Relevant Gem IDs
+                
+                //Blue
+                int[] solid = { 39919, 40008, 40119, 36767 };
+                
+                //Green
+                int[] enduring = { 39976, 40089, 40167 };
+                
+                //Purple
+                int[] sovereign = { 39934, 40022, 40129, };
+                
+                //Meta
+                int austere = 41380;
+                int eternal = 41396;
 
-				//Purple
-				int[] regal = { 39938, 40031, 40138 };
-
-				//Blue
-				int[] solid = { 39919, 40008, 40119, 36767 };
-
-				//Green
-				int[] enduring = { 39976, 40089, 40167 };
-
-				//Yellow
-				int[] thick = { 39916, 40015, 40126, 42157 };
-
-				//Orange
-				int[] stalwart = { 39964, 40056, 40160 };
-
-				//Meta
-				int austere = 41380;
-
-				return new List<GemmingTemplate>()
+                return new List<GemmingTemplate>()
 				{
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Max Defense
-				        RedId = thick[0], YellowId = thick[0], BlueId = thick[0], PrismaticId = thick[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Defense 
-				        RedId = stalwart[0], YellowId = thick[0], BlueId = enduring[0], PrismaticId = thick[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Max Dodge
-				        RedId = subtle[0], YellowId = subtle[0], BlueId = subtle[0], PrismaticId = subtle[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Dodge
-				        RedId = subtle[0], YellowId = stalwart[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Max Stamina
-				        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", //Stamina
-				        RedId = regal[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = eternal },
+					new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+						RedId = sovereign[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+						RedId = sovereign[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = eternal },
+                	
+					new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
+						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
+						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = eternal },
+					new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
+						RedId = sovereign[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
+						RedId = sovereign[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = eternal },
+                	
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = eternal },
+					new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+						RedId = sovereign[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+						RedId = sovereign[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = eternal },
 						
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Max Defense
-				        RedId = thick[1], YellowId = thick[1], BlueId = thick[1], PrismaticId = thick[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Defense 
-				        RedId = stalwart[1], YellowId = thick[1], BlueId = enduring[1], PrismaticId = thick[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Max Dodge
-				        RedId = subtle[1], YellowId = subtle[1], BlueId = subtle[1], PrismaticId = subtle[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Dodge
-				        RedId = subtle[1], YellowId = stalwart[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Max Stamina
-				        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true, //Stamina
-				        RedId = regal[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
-
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Max Defense
-				        RedId = thick[2], YellowId = thick[2], BlueId = thick[2], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Defense 
-				        RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Max Dodge
-				        RedId = subtle[2], YellowId = subtle[2], BlueId = subtle[2], PrismaticId = subtle[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Dodge
-				        RedId = subtle[2], YellowId = stalwart[2], BlueId = regal[2], PrismaticId = subtle[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Max Stamina
-				        RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Epic", //Stamina
-				        RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Max Defense
-				        RedId = thick[3], YellowId = thick[3], BlueId = thick[3], PrismaticId = thick[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Defense 
-				        RedId = thick[3], YellowId = thick[2], BlueId = thick[3], PrismaticId = thick[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Max Dodge
-				        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Dodge
-				        RedId = subtle[2], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[2], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Max Stamina
-				        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
-				    new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler", //Stamina
-				        RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
+					new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler",
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler",
+						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = eternal },
 				};
             }
         }
+
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
         public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -132,8 +106,8 @@ namespace Rawr.Tankadin
                         "Threat Stats:Total Threat",
                         "Threat Stats:ShoR",
                         "Threat Stats:HotR",
-                        "Threat Stats:SoC",
-                        "Threat Stats:JoC",
+                        "Threat Stats:SoV",
+                        "Threat Stats:JoV",
                         "Threat Stats:Consecrate",
                         "Threat Stats:Holy Shield",
                         "Threat Stats:White Damage",
@@ -225,6 +199,19 @@ you are being killed by burst damage, focus on Survival Points.",
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTankadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTankadin(); }
 
+        private string[] _optimizableCalculationLabels = null;
+        public override string[]  OptimizableCalculationLabels
+		{
+			get
+			{
+				if (_optimizableCalculationLabels == null)
+					_optimizableCalculationLabels = new string[] {
+					"Crit Avoidance",
+					};
+				return _optimizableCalculationLabels;
+			}
+		}        
+        
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =
@@ -339,13 +326,13 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
             cs.JoRThreat = cs.JoRDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
-            //Seal of Corruption
-            cs.SoCDamage = (0.016f * stats.SpellPower + 0.032f * stats.AttackPower) * damageMulti * 5f * holyMulti * (1 + .03f * talents.SealsOfThePure);
-            cs.SoCThreat = cs.SoCDamage * holyThreatMod / 3f;
+            //Seal of Vengeance
+            cs.SoVDamage = (0.016f * stats.SpellPower + 0.032f * stats.AttackPower) * damageMulti * 5f * holyMulti * (1 + .03f * talents.SealsOfThePure);
+            cs.SoVThreat = cs.SoVDamage * holyThreatMod / 3f;
 
-            //Judgement of Corruption
-            cs.JoCDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
-            cs.JoCThreat = cs.JoCDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
+            //Judgement of Vengeance
+            cs.JoVDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
+            cs.JoVThreat = cs.JoVDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
             //Holy Shield
             //TODO Implement correct number of blocks, currently just uses 4
@@ -363,13 +350,20 @@ you are being killed by burst damage, focus on Survival Points.",
             //Threat Rotations: (just 1 for now)
 
             // #1: 96969 (Level 70 version)
-
+            /*
             float rot1Time = 18f;
-            cs.Rot1TPS = (3 * cs.HotRThreat + 2 * (cs.HSThreat + cs.JoCThreat + cs.ConsThreat) + (cs.SoCThreat + cs.WhiteThreat) * rot1Time) / rot1Time;
-            float rot1DPS = (3 * cs.HotRDamage + 2 * (cs.HSDamage + cs.JoCDamage + cs.ConsDamage) + (cs.SoCDamage + cs.WhiteDamage) * rot1Time) / rot1Time;
+            cs.Rot1TPS = (3 * cs.HotRThreat + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + (cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time;
+         float rot1DPS = (3 * cs.HotRDamage + 2 * (cs.HSDamage + cs.JoVDamage + cs.ConsDamage) + (cs.SoVDamage + cs.WhiteDamage) * rot1Time) / rot1Time;
 
             cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
+            */
+            
+            // Seal of Vengeance-based Rotation
+            float rot1Time = 18f;
+            cs.Rot1TPS = (3 * (cs.HotRThreat + cs.ShoRThreat) + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + (cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time;
+            float rot1DPS = (3 * (cs.HotRDamage + cs.ShoRDamage) + 2 * (cs.HSDamage + cs.JoVDamage) + cs.ConsDamage + (cs.SoVDamage + cs.WhiteDamage) * rot1Time) / rot1Time;
 
+            cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
             //Incoming Damage Mechanics
 
 

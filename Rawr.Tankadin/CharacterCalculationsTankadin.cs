@@ -77,9 +77,9 @@ namespace Rawr.Tankadin
 
         public float SoRDamage { get; set; }
         public float SoRThreat { get; set; }
-        public float SoCDamage { get; set; }
-        public float SoCThreat { get; set; }
-
+        public float SoVDamage { get; set; }
+        public float SoVThreat { get; set; }
+        
         public float HSDamage { get; set; }
         public float HSThreat { get; set; }
         public float HSProcs { get; set; }
@@ -88,8 +88,8 @@ namespace Rawr.Tankadin
         
         public float JoRDamage { get; set; }
         public float JoRThreat { get; set; }
-        public float JoCDamage { get; set; }
-        public float JoCThreat { get; set; }
+        public float JoVDamage { get; set; }
+        public float JoVThreat { get; set; }
 
         public float WhiteDamage { get; set; }
         public float WhiteThreat { get; set; }
@@ -142,11 +142,21 @@ namespace Rawr.Tankadin
             dict.Add("Holy Shield", string.Format("{0} threat*{1} damage", Math.Round(HSThreat), Math.Round(HSDamage)));
             dict.Add("SoR", string.Format("{0} tps*{1} damage", Math.Round(SoRThreat), Math.Round(SoRDamage)));
             dict.Add("JoR", string.Format("{0} threat*{1} damage", Math.Round(JoRThreat), Math.Round(JoRDamage)));
-            dict.Add("SoC", string.Format("{0} tps*{1} damage per tick", Math.Round(SoCThreat), Math.Round(SoCDamage)));
-            dict.Add("JoC", string.Format("{0} threat*{1} damage", Math.Round(JoCThreat), Math.Round(JoCDamage)));
+            dict.Add("SoV", string.Format("{0} tps*{1} damage per tick", Math.Round(SoVThreat), Math.Round(SoVDamage)));
+            dict.Add("JoV", string.Format("{0} threat*{1} damage", Math.Round(JoVThreat), Math.Round(JoVDamage)));
             dict.Add("White Damage", string.Format("{0} tps*{1} damage", Math.Round(WhiteThreat), Math.Round(WhiteDamage)));
             dict.Add("Total Threat", string.Format("{0} tps", Math.Round(Rot1TPS)));
             return dict;
+        }
+        
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health": return BasicStats.Health;
+                case "Crit Avoidance": return CritAvoidance;
+            }
+            return 0.0f;
         }
     }
 }
