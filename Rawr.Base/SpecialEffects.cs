@@ -1036,9 +1036,9 @@ namespace Rawr
 			else if (line.StartsWith("Restores 900 mana over 12 sec."))
 			{
 				if (stats.Mp5 == 18) // Figurine - Seaspray Albatross, 3 min cooldown
-					stats.ManaregenOver20SecOnUse3Min += 900;
+					stats.ManaregenOver12SecOnUse3Min += 900;
 				else if (stats.Mp5 == 14) // Figurine - Talasite Owl, 5 min cooldown
-					stats.ManaregenOver20SecOnUse5Min += 900;
+					stats.ManaregenOver12SecOnUse5Min += 900;
 				// stats.Mp5 += 5f * 900f / 300f;
 			}
 			// Mind Quickening Gem

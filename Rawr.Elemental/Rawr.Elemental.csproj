@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Estimation.cs" />
+    <Compile Include="SpecialEffects.cs" />
     <Compile Include="Spells2.cs" />
     <Compile Include="Simulator.cs" />
     <Compile Include="OptionsPanelElemental.cs">

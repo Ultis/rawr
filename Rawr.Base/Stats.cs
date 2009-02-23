@@ -193,8 +193,8 @@ namespace Rawr
         HealingDoneFor15SecOnUse2Min,
         ManaregenFor8SecOnUse5Min,
         SpiritFor20SecOnUse2Min,
-        ManaregenOver20SecOnUse3Min,
-        ManaregenOver20SecOnUse5Min,
+        ManaregenOver12SecOnUse3Min,
+        ManaregenOver12SecOnUse5Min,
         ManacostReduceWithin15OnHealingCast,
         BangleProc,
         FullManaRegenFor15SecOnSpellcast,
@@ -2310,21 +2310,21 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana restores over 20 sec. (2 min cd)")]
+        [DisplayName("Mana restores over 12 sec. (2 min cd)")]
         [Category("Equipment Procs")]
-        public float ManaregenOver20SecOnUse3Min
+        public float ManaregenOver12SecOnUse3Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse3Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse3Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse3Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Mana restores over 20 sec. (5 min cd)")]
+        [DisplayName("Mana restores over 12 sec. (5 min cd)")]
         [Category("Equipment Procs")]
-        public float ManaregenOver20SecOnUse5Min
+        public float ManaregenOver12SecOnUse5Min
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse5Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver20SecOnUse5Min] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ManaregenOver12SecOnUse5Min] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

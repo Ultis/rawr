@@ -126,8 +126,9 @@ namespace Rawr.Elemental
 
         public void Initialize(Stats stats)
         {
-            gcd = (float)Math.Round(gcd / (1 + stats.SpellHaste), 4);
-            castTime = (float)Math.Round(castTime / (1 + stats.SpellHaste), 4);
+            float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
+            gcd = (float)Math.Round(gcd / Speed, 4);
+            castTime = (float)Math.Round(castTime / Speed, 4);
             critModifier += .5f*stats.BonusSpellCritMultiplier;
             spellPower += stats.SpellPower;
             crit += stats.SpellCrit;

@@ -756,8 +756,8 @@ namespace Rawr.HolyPriest
                 SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
                 HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                 Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
-                ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
-                ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
+                ManaregenOver12SecOnUse3Min = stats.ManaregenOver12SecOnUse3Min,
+                ManaregenOver12SecOnUse5Min = stats.ManaregenOver12SecOnUse5Min,
                 ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
                 BangleProc = stats.BangleProc,
@@ -808,7 +808,7 @@ namespace Rawr.HolyPriest
 
                 + stats.ManaregenFor8SecOnUse5Min + stats.HealingDoneFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
                 + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
-                + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver20SecOnUse3Min + stats.ManaregenOver20SecOnUse5Min
+                + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver12SecOnUse3Min + stats.ManaregenOver12SecOnUse5Min
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
                 + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45
                 + stats.ManaRestoreOnCast_10_45

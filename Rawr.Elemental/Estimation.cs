@@ -23,7 +23,8 @@ namespace Rawr.Elemental.Estimation
             #region Elemental Mastery
             if (talents.ElementalMastery > 0)
             {
-                float EMmod = CalculateEffect(1f, 30f, 0f, calcOpts.glyphOfElementalMastery ? 150f : 180f, calcOpts.FightDuration);
+                float procs;
+                float EMmod = SpecialEffect.EstimateUptime(30f, calcOpts.glyphOfElementalMastery ? 150f : 180f, 0, calcOpts.FightDuration, out procs);
                 LB.ApplyEM(EMmod);
                 CL.ApplyEM(EMmod);
                 CL3.ApplyEM(EMmod);
@@ -137,12 +138,13 @@ namespace Rawr.Elemental.Estimation
             #region Lightning Bolt Haste Trinket
             stats += new Stats
             {
-                SpellHaste = character.StatConversion.GetSpellHasteFromRating(stats.LightningBoltHasteProc_15_45 * 10f / 55f) / 100f,
+                HasteRating = stats.LightningBoltHasteProc_15_45 * 10f / 55f,
             };
             #endregion
 
             Rotation rot = getRotation(stats, talents, calcOpts);
-            stats += getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction);
+            float damage;
+            stats += getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
             rot = getRotation(stats, talents, calcOpts);
 
             /* Regen variables: (divide by 5 for regen per second)
@@ -168,8 +170,12 @@ namespace Rawr.Elemental.Estimation
 
             // Thunderstorm usage
             #region Thunderstorm
-            if (calcOpts.UseThunderstorm) 
-                rot.MPS -= CalculateEffect(.08f * stats.Mana, 0f, 45f, 0f, calcOpts.FightDuration);
+            if (calcOpts.UseThunderstorm)
+            {
+                float procs;
+                SpecialEffect.EstimateUptime(0, 45f, 0, calcOpts.FightDuration, out procs);
+                rot.MPS -= .08f * stats.Mana * procs / calcOpts.FightDuration;
+            }
             #endregion
 
             // TotalDamage, CastFraction, TimeUntilOOM
@@ -182,24 +188,9 @@ namespace Rawr.Elemental.Estimation
             if (TimeUntilOOM > FightDuration) TimeUntilOOM = FightDuration;
 
             #region Effect from Darkmoon card: Death and Pendulum and Thunder/Lightning Capacitor
-            rot.DPS += CalculateEffect(stats.DarkmoonCardDeathProc, 0f, 45f, 1 / (rot.CastFraction * .35f), TimeUntilOOM);
-            if (stats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                rot.DPS += CalculateEffect(1460 * (1 + stats.SpellCrit), 0f, 45f, 1 / (rot.CastFraction * .15f), TimeUntilOOM);
-            }
-            if (stats.ThunderCapacitorProc > 0)
-            {
-                rot.DPS += CalculateEffect(1276 * (1 + stats.SpellCrit), 0f, 0f, Math.Max(10f, 1 / (rot.CritFraction / 4f)), TimeUntilOOM);
-            }
-            if (stats.LightningCapacitorProc > 0)
-            {
-                rot.DPS += CalculateEffect(750 * (1 + stats.SpellCrit), 0f, 0f, Math.Max(7.5f, 1 / (rot.CritFraction / 3f)), TimeUntilOOM);
-            }
-            if (stats.ExtractOfNecromanticPowerProc > 0)
-            {
-                // Happens every 3 seconds.... 10% chance
-                rot.DPS += CalculateEffect(550 * (1 + stats.SpellCrit), 0f, 0f, Math.Max(7.5f, 1 / (.1f / 3f)), TimeUntilOOM);
-            }
+            getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
+            damage *= (1 + stats.SpellCrit);
+            rot.DPS += damage / calcOpts.FightDuration;
             #endregion
 
             float TotalDamage = TimeUntilOOM * rot.DPS;
@@ -243,72 +234,19 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.ClearCast_LightningBolt = rot.CC_LB;
         }
 
-        private static float EstimateUptime(float duration, float icd, float pps, float FightDuration)
+        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float HitsFraction, float CritsFraction, float MissFraction, float TickFraction, out float Damage)
         {
-            float averageTimeToProc = pps == 0 ? 0 : 1 / pps;
-            float totalCD = averageTimeToProc + averageTimeToProc;
-            if (averageTimeToProc > FightDuration) return 0f;
-            FightDuration -= averageTimeToProc;
-            if (duration == 0) // instant proc
-            {
-                float activity = (float)Math.Floor(FightDuration / totalCD) + 1;
-                activity /= FightDuration;
-                return activity; // return value per second
-            }
-            else
-            {
-                float activity = (float)Math.Floor(FightDuration / totalCD) * duration + duration +
-                    Math.Min(Math.Max(0, (FightDuration % totalCD) - averageTimeToProc), duration);
-                activity /= FightDuration;
-                return activity; // return uptime per second
-            }
-        }
-
-        private static float CalculateEffect(float value, float duration, float icd, float ecd, float FightDuration)
-        {
-            return value * EstimateUptime(duration, icd, 1 / ecd, FightDuration);
-        }
-
-        private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float HitsFraction, float CritsFraction, float MissFraction)
-        {
-            float Power = 0f, Haste = 0f, Mp5 = 0f, SpellCombatManaRegeneration = 0f, Spirit = 0f;
-
-            Power += stats.SpellPowerFor10SecOnHit_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
-            Power += stats.SpellPowerFor10SecOnResist * EstimateUptime(10, 0, MissFraction * .10f, FightDuration);
-            Power += stats.SpellPowerFor10SecOnCast_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
-            Power += stats.SpellPowerFor10SecOnCast_15_45 * EstimateUptime(10, 45, HitsFraction * .15f, FightDuration);
-            Power += stats.SpellPowerFor10SecOnCrit_20_45 * EstimateUptime(10, 45, CritsFraction * .20f, FightDuration);
-            Power += stats.SpellPowerFor15SecOnCrit_20_45 * EstimateUptime(15, 45, CritsFraction * .20f, FightDuration);
-            Power += stats.SpellPowerFor15SecOnUse90Sec * EstimateUptime(15, 90, 0, FightDuration);
-            Power += stats.SpellPowerFor15SecOnUse2Min * EstimateUptime(15, 120, 0, FightDuration);
-            Power += stats.SpellPowerFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
-            Power += stats.SpellPowerFor20SecOnUse5Min * EstimateUptime(20, 300, 0, FightDuration);
-
-            Haste += stats.SpellHasteFor10SecOnCast_10_45 * EstimateUptime(10, 45, HitsFraction * .10f, FightDuration);
-            Haste += stats.SpellHasteFor6SecOnCast_15_45 * EstimateUptime(6, 45, HitsFraction * .15f, FightDuration);
-            Haste += stats.SpellHasteFor6SecOnHit_10_45 * EstimateUptime(6, 45, HitsFraction * .10f, FightDuration);
-            Haste += stats.HasteRatingFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
-            // Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. 
-            // Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket.
-            // For easy calculation, model this as a full stack for 20 seconds. (Real effect is higher)
-            Mp5 += stats.Mp5OnCastFor20SecOnUse2Min * 20f * HitsFraction * EstimateUptime(20, 120, 0, FightDuration);
-            Mp5 += stats.ManaRestoreOnCrit_25_45 * EstimateUptime(0, 45, CritsFraction * .25f, FightDuration);
-            Mp5 += 5f / 12f * stats.ManaregenOver20SecOnUse3Min * EstimateUptime(12, 180f, 0, FightDuration);
-            Mp5 += 5f / 12f * stats.ManaregenOver20SecOnUse5Min * EstimateUptime(12, 300f, 0, FightDuration);
-            Mp5 += 5f / 12f * stats.ManaRestore5min * EstimateUptime(12, 300, 0, FightDuration);
-            Mp5 += 5f / 15f * stats.ManaRestoreOnCast_10_45 * EstimateUptime(15, 45, HitsFraction * .10f, FightDuration);
-            SpellCombatManaRegeneration += EstimateUptime(15, 0,
-                HitsFraction * stats.FullManaRegenFor15SecOnSpellcast / 100f, FightDuration);
-            Spirit += stats.SpiritFor20SecOnUse2Min * EstimateUptime(20, 120, 0, FightDuration);
+            SpecialEffects effects = new SpecialEffects(stats);
+            Stats result = effects.estimateAll(FightDuration, HitsFraction + MissFraction, HitsFraction, CritsFraction, MissFraction, TickFraction, out Damage);
 
             return new Stats()
             {
-                Spirit = Spirit,
-                //HasteRating = Haste,
-                SpellHaste = character.StatConversion.GetSpellHasteFromRating(Haste) / 100f,
-                SpellPower = Power,
-                Mp5 = Mp5,
-                SpellCombatManaRegeneration = SpellCombatManaRegeneration,
+                Spirit = result.Spirit,
+                HasteRating = result.HasteRating,
+                //SpellHaste = character.StatConversion.GetSpellHasteFromRating(result.HasteRating) / 100f,
+                SpellPower = result.SpellPower,
+                Mp5 = result.Mp5,
+                SpellCombatManaRegeneration = result.SpellCombatManaRegeneration,
             };
         }
 

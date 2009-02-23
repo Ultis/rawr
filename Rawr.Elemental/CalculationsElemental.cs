@@ -427,7 +427,6 @@ namespace Rawr.Elemental
 
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f;
-            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
             statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
 
             statsTotal.SpellPower += 211; // Flametongue
@@ -503,8 +502,8 @@ namespace Rawr.Elemental
                 ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
                 ManaRestore5min = stats.ManaRestore5min,
                 FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
-                ManaregenOver20SecOnUse3Min = stats.ManaregenOver20SecOnUse3Min,
-                ManaregenOver20SecOnUse5Min = stats.ManaregenOver20SecOnUse5Min,
+                ManaregenOver12SecOnUse3Min = stats.ManaregenOver12SecOnUse3Min,
+                ManaregenOver12SecOnUse5Min = stats.ManaregenOver12SecOnUse5Min,
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 LightningCapacitorProc = stats.LightningCapacitorProc,
@@ -581,8 +580,8 @@ namespace Rawr.Elemental
                 stats.ManaRestoreOnCrit_25_45 +
                 stats.ManaRestore5min +
                 stats.FullManaRegenFor15SecOnSpellcast +
-                stats.ManaregenOver20SecOnUse3Min +
-                stats.ManaregenOver20SecOnUse5Min +
+                stats.ManaregenOver12SecOnUse3Min +
+                stats.ManaregenOver12SecOnUse5Min +
                 stats.PendulumOfTelluricCurrentsProc +
                 stats.ThunderCapacitorProc +
                 stats.LightningCapacitorProc +

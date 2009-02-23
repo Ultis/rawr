@@ -92,7 +92,7 @@ namespace Rawr.Elemental.Simulator
         public float CooldownTS = 0f;
         
         /* Trinkets */
-        public List<Proc> procs = new List<Proc>();
+        public SpecialEffects effects = null;
 
         /* Elemental Mastery */
         public float TimeLeftEM = 0f;
@@ -127,253 +127,23 @@ namespace Rawr.Elemental.Simulator
             this.Mana = baseStats.Mana;
         }
 
-        public SimuState Clone() 
+        public SimuState Clone(SpecialEffect effect)
         {
             SimuState clone = this.MemberwiseClone() as SimuState;
-            clone.procs = new List<Proc>();
-            procs.ForEach(p => clone.procs.Add(p.Clone()));
+            clone.effects = effects.Clone(effect);
             clone.stats = stats.Clone();
-            if (FlameShockDoT!=null) clone.FlameShockDoT = FlameShockDoT.Clone();
+            if (FlameShockDoT != null) clone.FlameShockDoT = FlameShockDoT.Clone();
             return clone;
         }
 
-    }
-
-    public abstract class Proc
-    {
-        public abstract SimuState use(SimuState state);
-        public abstract void proc(SimuState state, Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana);
-        public abstract Stats run(SimuState state, float dTime, out float Damage);
-        public virtual Proc Clone()
+        public SimuState Clone()
         {
-            return this.MemberwiseClone() as Proc;
-        }
-    }
-
-    public class GeneralProc : Proc
-    {
-        protected Stats statsOnProc;
-        protected float damageOnProc;
-        protected float dpsOnProc;
-        protected float manaOnProc;
-        protected float procOnCrit, procOnHit, procOnMiss, procOnCast, procOnDot;
-        protected float Duration;
-        protected float internalCD;
-        protected float MaxStack;
-
-        protected Uncertainty activity, cooldown;
-
-        protected GeneralProc()
-        {
+            SimuState clone = this.MemberwiseClone() as SimuState;
+            clone.stats = stats.Clone();
+            if (FlameShockDoT != null) clone.FlameShockDoT = FlameShockDoT.Clone();
+            return clone;
         }
 
-        public GeneralProc(Stats stats, float dps, float dmg, float mana, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            statsOnProc = stats;
-            dpsOnProc = dps;
-            damageOnProc = dmg;
-            manaOnProc = mana;
-            Duration = duration;
-            internalCD = iCD;
-            procOnCast = onCast;
-            procOnHit = onHit;
-            procOnCrit = onCrit;
-            procOnMiss = onMiss;
-            procOnDot = onDot;
-            activity = new Uncertainty(duration, maxStack);
-            cooldown = new Uncertainty(iCD, 1);
-        }
-
-        public override SimuState use(SimuState state)
-        {
-            return null;
-        }
-
-        public override void proc(SimuState state, Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            float cdValue = cooldown.Value;
-            if (cdValue <= 1)
-            {
-                float value = cast * procOnCast + hit * procOnHit + crit * procOnCrit + miss * procOnMiss + dot * procOnDot;
-                value *= 1f - cdValue;
-                cooldown.Add(value);
-                activity.Add(value);
-                Damage = damageOnProc * value;
-                Mana = manaOnProc * value;
-            }
-            else 
-            {
-                Damage = 0;
-                Mana = 0;
-            }
-        }
-
-        public override Stats run(SimuState state, float dTime, out float Damage)
-        {
-            float value = activity.Value;
-            activity.Run(dTime);
-            cooldown.Run(dTime);
-            Damage = dpsOnProc * dTime * value;
-            return statsOnProc * value;
-        }
-
-        public override Proc Clone()
-        {
-            GeneralProc p = this.MemberwiseClone() as GeneralProc;
-            p.activity = activity.Clone();
-            p.cooldown = cooldown.Clone();
-            return p;
-        }
-    }
-
-    public class CapacitorProc : Proc
-    {
-        protected float damageOnProc;
-        protected float procOnCrit, procOnHit, procOnMiss, procOnCast, procOnDot;
-        protected float internalCD;
-        protected int MaxStack;
-
-        protected float Timeout;
-        protected int stack = 0;
-        protected float value = 0;
-        protected float Time = 0f;
-        protected float Last = float.NegativeInfinity;
-
-        public CapacitorProc(float dmg, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, int count)
-        {
-            damageOnProc = dmg;
-            internalCD = iCD;
-            procOnCast = onCast;
-            procOnHit = onHit;
-            procOnCrit = onCrit;
-            procOnMiss = onMiss;
-            procOnDot = onDot;
-            MaxStack = count;
-        }
-
-        public override SimuState use(SimuState state)
-        {
-            return null;
-        }
-
-        public override void proc(SimuState state, Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            Damage = 0;
-            Mana = 0;
-
-            float plus = cast * procOnCast + hit * procOnHit + crit * procOnCrit + miss * procOnMiss + dot * procOnDot;
-            if (plus > 0)
-            {
-                if (Last != float.NegativeInfinity && Time - Last < internalCD) return;
-                if (MaxStack == 1)
-                {
-                    Last = Time;
-                    // pop
-                    Damage = damageOnProc * plus * (1f + state.stats.SpellCrit);
-                }
-                else
-                {
-                    value += plus;
-                    //stack++;
-                    Last = Time;
-                    if (value >= MaxStack)
-                    {
-                        // pop
-                        Damage = damageOnProc * (1f + state.stats.SpellCrit) * (1f + state.stats.SpellHit);
-                        value -= MaxStack;
-                        // stack = 0;
-                    }
-                }
-            }
-        }
-
-        public override Stats run(SimuState state, float dTime, out float Damage)
-        {
-            Time += dTime;
-            Damage = 0;
-            return new Stats { };
-        }
-
-        public override Proc Clone()
-        {
-            CapacitorProc p = this.MemberwiseClone() as CapacitorProc;
-            return p;
-        }
-    }
-
-    public class GeneralUse : Proc
-    {
-        protected Stats statsOnProc;
-        protected float damageOnProc;
-        protected float dpsOnProc;
-        protected float manaOnProc;
-        protected float Duration;
-        protected float internalCD;
-        protected float Cooldown;
-        protected bool gcdOnUse;
-        protected float timeLeft = 0f;
-
-        public GeneralUse(Stats stats, float dps, float dmg, float mana, float duration, float cooldown, bool gcd)
-        {
-            statsOnProc = stats;
-            dpsOnProc = dps;
-            damageOnProc = dmg;
-            manaOnProc = mana;
-            Duration = duration;
-            internalCD = cooldown;
-            gcdOnUse = gcd;
-            Cooldown = 0f;
-        }
-
-        public override SimuState use(SimuState state)
-        {
-            if (Cooldown > 0f) return null;
-
-            timeLeft = Duration;
-            Cooldown = internalCD;
-            SimuState newState = state.Clone();
-            Cooldown = 0f;
-            timeLeft = 0f;
-
-            newState.DamageDone += damageOnProc;
-            newState.LastSpell = null;
-
-            if (gcdOnUse)
-            {
-                float gcd = (float)Math.Round(1.5f / (1 + state.stats.SpellHaste), 4);
-                Simulator.progressTime(newState, gcd);
-            }
-
-            return newState;
-        }
-
-        public override void proc(SimuState state, Stats stats, float cast, float hit, float crit, float miss, float dot, out float Damage, out float Mana)
-        {
-            Damage = 0;
-            Mana = 0;
-        }
-
-        public override Stats run(SimuState state, float dTime, out float Damage)
-        {
-            Cooldown -= dTime; // on Use
-            timeLeft -= dTime;
-            if (timeLeft > 0)
-            {
-                Damage = dpsOnProc * dTime;
-                return statsOnProc;
-            }
-            else
-            {
-                Damage = 0;
-                return new Stats { };
-            }
-        }
-
-        public override Proc Clone()
-        {
-            GeneralUse p = (GeneralUse)this.MemberwiseClone();
-            return p;
-        }
     }
 
     public class RotationSim
@@ -381,12 +151,16 @@ namespace Rawr.Elemental.Simulator
         public virtual List<SimuState> successors(SimuState state)
         {
             List<SimuState> newStates = new List<SimuState>();
-            foreach (Proc p in state.procs)
+            foreach (SpecialEffect p in state.effects.Effects)
             {
-                SimuState proc = p.use(state);
-                if (proc != null)
+                float Damage, ProgressTime;
+                if (p.use(state.stats, out Damage, out ProgressTime))
                 {
-                    newStates.Add(proc);
+                    SimuState newState = state.Clone(p);
+                    newState.DamageDone += Damage;
+                    newState.LastSpell = null;
+                    if (ProgressTime != 0f) Simulator.progressTime(newState, ProgressTime);
+                    newStates.Add(newState);
                 }
             }
             SimuState ts = Simulator.runThunderstorm(state);
@@ -439,12 +213,16 @@ namespace Rawr.Elemental.Simulator
             // - if FS not active, use FS
             // - use LB
             List<SimuState> newStates = new List<SimuState>();
-            foreach (Proc p in state.procs)
+            foreach (SpecialEffect p in state.effects.Effects)
             {
-                SimuState proc = p.use(state);
-                if (proc != null)
+                float Damage, ProgressTime;
+                if (p.use(state.stats, out Damage, out ProgressTime))
                 {
-                    newStates.Add(proc);
+                    SimuState newState = state.Clone(p);
+                    newState.DamageDone += Damage;
+                    newState.LastSpell = null;
+                    if (ProgressTime != 0f) Simulator.progressTime(newState, ProgressTime);
+                    newStates.Add(newState);
                     return newStates;
                 }
             }
@@ -502,6 +280,11 @@ namespace Rawr.Elemental.Simulator
     {
         public static void progressTime(SimuState state, float dT)
         {
+            if (dT < 0)
+            {
+                dT += 1;
+                return;
+            }
             state.Time += dT;
             #region Flame Shock DOT and Spell cooldowns
             if (state.FlameShockDoT != null)
@@ -513,10 +296,10 @@ namespace Rawr.Elemental.Simulator
                 int ticks = ticksLeftBefore - ticksLeftAfter;
                 state.DamageDone += ticks * state.FlameShockPeriodickTick * state.FlameShockDoT.Value;
                 #region Procs
-                foreach (Proc p in state.procs)
+                foreach (SpecialEffect p in state.effects.Effects)
                 {
                     float mana, damage;
-                    p.proc(state, state.stats,
+                    p.proc(state.stats,
                         0,
                         0,
                         0,
@@ -539,10 +322,10 @@ namespace Rawr.Elemental.Simulator
             RegenMana(state, dT);
             #region Procs
             state.stats = state.baseStats;
-            foreach (Proc p in state.procs)
+            foreach (SpecialEffect p in state.effects.Effects)
             {
                 float damage;
-                state.stats += p.run(state, dT, out damage);
+                state.stats += p.run(dT, out damage);
                 state.DamageDone += damage;
             }
             #endregion
@@ -582,10 +365,10 @@ namespace Rawr.Elemental.Simulator
             newState.Crits += spell.CritChance * spell.HitChance;
             newState.Misses += spell.MissChance;
             #region Procs
-            foreach (Proc p in newState.procs)
+            foreach (SpecialEffect p in newState.effects.Effects)
             {
                 float mana;
-                p.proc(newState, newState.stats,
+                p.proc(newState.stats,
                     1f,
                     spell.HitChance,
                     spell.CritChance * spell.HitChance,
@@ -648,10 +431,10 @@ namespace Rawr.Elemental.Simulator
             newState.Crits += spell.CritChance;
             newState.Misses += spell.MissChance;
             #region Procs
-            foreach (Proc p in newState.procs)
+            foreach (SpecialEffect p in newState.effects.Effects)
             {
                 float mana;
-                p.proc(newState, newState.stats,
+                p.proc(newState.stats,
                     1f,
                     spell.HitChance,
                     spell.CritChance * spell.HitChance,
@@ -711,10 +494,10 @@ namespace Rawr.Elemental.Simulator
             newState.Crits += spell.CritChance * spell.HitChance;
             newState.Misses += spell.MissChance;
             #region Procs
-            foreach (Proc p in newState.procs)
+            foreach (SpecialEffect p in newState.effects.Effects)
             {
                 float mana;
-                p.proc(newState, newState.stats,
+                p.proc(newState.stats,
                     1f,
                     spell.HitChance,
                     spell.CritChance * spell.HitChance,
@@ -743,10 +526,10 @@ namespace Rawr.Elemental.Simulator
             newState.LastSpell = spell;
             newState.Casts += 1f;
             #region Procs
-            foreach (Proc p in newState.procs)
+            foreach (SpecialEffect p in newState.effects.Effects)
             {
                 float damage, mana;
-                p.proc(newState, newState.stats,
+                p.proc(newState.stats,
                     1f,
                     0,
                     0,
@@ -796,10 +579,10 @@ namespace Rawr.Elemental.Simulator
             newState.Crits += spell.CritChance;
             newState.Misses += spell.MissChance;
             #region Procs
-            foreach (Proc p in newState.procs)
+            foreach (SpecialEffect p in newState.effects.Effects)
             {
                 float mana, damage;
-                p.proc(newState, newState.stats,
+                p.proc(newState.stats,
                     1f,
                     spell.HitChance,
                     spell.CritChance,
@@ -851,154 +634,9 @@ namespace Rawr.Elemental.Simulator
             return state.simulator.successors(state);
         }
 
-        public static void createSpellPowerProc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { SpellPower = value }, 0f, 0f, 0f, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createSpellPowerUse(SimuState state, float value, float duration, float CD, bool gcd)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralUse(new Stats { SpellPower = value }, 0f, 0f, 0f, duration, CD, gcd);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createSpellHasteProc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { HasteRating = value }, 0f, 0f, 0f, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createSpellHasteUse(SimuState state, float value, float duration, float CD, bool gcd)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralUse(new Stats { HasteRating = value }, 0f, 0f, 0f, duration, CD, gcd);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createMP5Proc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { Mp5 = value }, 0f, 0f, 0f, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createMP5Use(SimuState state, float value, float duration, float CD, bool gcd)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralUse(new Stats { Mp5 = value }, 0f, 0f, 0f, duration, CD, gcd);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createManaProc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { }, 0f, 0f, value, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createManaUse(SimuState state, float value, float duration, float CD, bool gcd)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralUse(new Stats { }, 0f, 0f, value, duration, CD, gcd);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createSPCProc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { SpellCombatManaRegeneration = value }, 0f, 0f, 0f, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createSpiritUse(SimuState state, float value, float duration, float CD, bool gcd)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralUse(new Stats { Spirit = value }, 0f, 0f, 0f, duration, CD, gcd);
-                state.procs.Add(p);
-            }
-        }
-
-        public static void createDamageProc(SimuState state, float value, float duration, float iCD, float onCast, float onHit, float onCrit, float onMiss, float onDot, float maxStack)
-        {
-            if (value != 0)
-            {
-                Proc p = new GeneralProc(new Stats { }, 0f, value, 0f, duration, iCD, onCast, onHit, onCrit, onMiss, onDot, maxStack);
-                state.procs.Add(p);
-            }
-        }
-
         public static void handleTrinket(SimuState state, Stats stats)
         {
-            createSpellPowerProc(state, stats.SpellPowerFor10SecOnHit_10_45, 10, 45, 0, .1f, 0, 0, 0, 1);
-            createSpellPowerProc(state, stats.SpellPowerFor10SecOnResist, 10, 0, 0, 0, 0, .1f, 0, 1);
-            createSpellPowerProc(state, stats.SpellPowerFor10SecOnCast_10_45, 10, 45, .1f, 0, 0, 0, 0, 1);
-            createSpellPowerProc(state, stats.SpellPowerFor10SecOnCast_15_45, 10, 45, .15f, 0, 0, 0, 0, 1);
-            createSpellPowerProc(state, stats.SpellPowerFor10SecOnCrit_20_45, 10, 45, 0, 0, .2f, 0, 0, 1);
-            createSpellPowerProc(state, stats.SpellPowerFor15SecOnCrit_20_45, 15, 45, 0, 0, .2f, 0, 0, 1);
-            createSpellPowerUse(state, stats.SpellPowerFor15SecOnUse90Sec, 15, 90, false);
-            createSpellPowerUse(state, stats.SpellPowerFor15SecOnUse2Min, 15, 120, false);
-            createSpellPowerUse(state, stats.SpellPowerFor20SecOnUse2Min, 20, 120, false);
-            createSpellPowerUse(state, stats.SpellPowerFor20SecOnUse5Min, 20, 300, false);
-
-            createSpellHasteProc(state, stats.SpellHasteFor10SecOnCast_10_45, 10, 45, .1f, 0, 0, 0, 0, 1);
-            createSpellHasteProc(state, stats.SpellHasteFor6SecOnCast_15_45, 6, 45, .15f, 0, 0, 0, 0, 1);
-            createSpellHasteProc(state, stats.SpellHasteFor6SecOnHit_10_45, 6, 45, 0, .1f, 0, 0, 0, 1);
-            createSpellHasteUse(state, stats.HasteRatingFor20SecOnUse2Min, 20, 120, false);
-
-            // Each spell cast within 20 seconds will grant a stacking bonus of 21 mana regen per 5 sec. 
-            // Expires after 20 seconds.  Abilities with no mana cost will not trigger this trinket.
-            // For easy calculation, model this as a full stack for 20 seconds. Who cares?
-            // Mp5 += CalculateEffect(stats.Mp5OnCastFor20SecOnUse2Min * 20f * HitsFraction, 20f, 120f, 0, FightDuration);
-            // createMP5Use(state, 5f / 12f * stats.Mp5OnCastFor20SecOnUse2Min, 20, 120, false);
-            createManaProc(state, stats.ManaRestoreOnCrit_25_45, 0, 45, 0, 0, .25f, 0, 0, 1);
-            createMP5Proc(state, 5f / 15f * stats.ManaRestoreOnCast_10_45, 15, 45, .1f, 0, 0, 0, 0, 1);
-            createMP5Use(state, 5f / 12f * stats.ManaregenOver20SecOnUse3Min, 12, 180, false);
-            createMP5Use(state, 5f / 12f * stats.ManaregenOver20SecOnUse5Min, 12, 180, false);
-            createMP5Use(state, 5f / 12f * stats.ManaRestore5min, 12, 300, false);
-            if (stats.FullManaRegenFor15SecOnSpellcast > 0)
-                createSPCProc(state, 1f, 15f, 0, stats.FullManaRegenFor15SecOnSpellcast / 100f, 0, 0, 0, 0, 1);
-            createSpiritUse(state, stats.SpiritFor20SecOnUse2Min, 20, 120, false);
-
-            createDamageProc(state, stats.DarkmoonCardDeathProc, 0, 45f, .35f, 0, 0, 0, 0, 1);
-            if (stats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                createDamageProc(state, 1460, 0, 45, 0, .15f, 0, 0, 0, 1);
-            }
-            if (stats.ThunderCapacitorProc > 0)
-            {
-                state.procs.Add(new CapacitorProc(1276, 2.5f, 0, 0, 1f, 0, 0, 4));
-            }
-            if (stats.LightningCapacitorProc > 0)
-            {
-                state.procs.Add(new CapacitorProc(750, 2.5f, 0, 0, 1f, 0, 0, 3));
-            }
-            if (stats.ExtractOfNecromanticPowerProc > 0)
-            {
-                state.procs.Add(new CapacitorProc(550, 0f, 0, 0, 0, 0, .1f, 1));
-            }
+            state.effects += new SpecialEffects(stats);
         }
 
         protected static List<SimuState> search(Stats baseStats, ShamanTalents talents, CalculationOptionsElemental calcOpts, float maxTime)
@@ -1007,10 +645,11 @@ namespace Rawr.Elemental.Simulator
             Queue<SimuState> queue = new Queue<SimuState>();
             #region Base state
             SimuState baseState = new SimuState(baseStats, talents, calcOpts);
-            if (calcOpts.calculatedStats.LocalCharacter.Trinket1 != null)
+            /*if (calcOpts.calculatedStats.LocalCharacter.Trinket1 != null)
                 handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket1.Item.Stats);
             if (calcOpts.calculatedStats.LocalCharacter.Trinket2 != null)
-                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket2.Item.Stats);
+                handleTrinket(baseState, calcOpts.calculatedStats.LocalCharacter.Trinket2.Item.Stats);*/
+            baseState.effects = new SpecialEffects(baseStats);
             #endregion
             /*SimuState stateSim1 = baseState.Clone();
             stateSim1.simulator = new DefaultRotation { castLvBWithoutFS = true, castFSWheneverPossible = true };
