@@ -578,5 +578,4 @@ namespace Rawr.Elemental
             return c;
         }
     }
-
 }

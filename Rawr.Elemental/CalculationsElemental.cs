@@ -429,7 +429,8 @@ namespace Rawr.Elemental
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f;
             statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
 
-            statsTotal.SpellPower += 211; // Flametongue
+            // Flametongue weapon
+            statsTotal.SpellPower += 211 * (1f + character.ShamanTalents.ElementalWeapons * .1f);
             if (calcOpts.glyphOfFlametongue) statsTotal.SpellCrit += .02f;
 
             return statsTotal;
