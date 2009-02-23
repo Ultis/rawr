@@ -15,7 +15,7 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 16;
+		private const int INTRO_VERSION = 17;
 		private const string INTRO_TEXT =
 @"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
    
