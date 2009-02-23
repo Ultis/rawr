@@ -17,53 +17,15 @@ namespace Rawr
 	{
 		private const int INTRO_VERSION = 16;
 		private const string INTRO_TEXT =
-@" Welcome to Rawr 2.1.9. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
-   •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
-   •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
-   •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
+@"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
+   
+Recent Changes:
+v2.2.0b1
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b1. Thanks!
+ - Gemming Revamp! Rawr will now automatically handle gems, just as you'd expect. See Help > Gemmings for details. NOTE: Rawr 2.2 is not backawards compatible most of your existing data files. Please do not copy data files from previous versions of Rawr. Your existing character files should load into Rawr 2.2 just fine, except you'll have to reselect enchants on your gear.
+ - Models: Tons of model updates; see ReadMe.txt for details on the changes and status of each model.
 
-v2.1.9:
-	Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
-	Updated parsing for a large number of trinkets/gems whose wording changed in WoW 3.0.8.
-	Support for (or more accurate support for) a variety of additional trinkets, in many models.
-	Fixed the data for a few profession bonuses which changed.
-	Updated the tooltips on all talents.
-	Tweaked the Relative Stat Values chart a bit to avoid some anomalies with rounding and stats which provide multiple benefits (ie, both Crit and AP from Agi for Cats).
-	Rawr.Cat/Bear: Fix for crit chance reduction against bosses, and fix for display of crit chance debuffs.
-	Rawr.Tree: Fixes for haste calculations
-	Rawr.Mage: Updates for WoW 3.0.8/hotfix changes. Added Scaling vs Spirit chart.
-	Rawr.RestoSham: Support for some glyphs, and more customizable healing rotations. Also enabled cloth/leather.
-	Rawr.ProtWarr: Major updates. Threat should be accurate, and a variety of minor fixes and additional options
-	Rawr.TankDK/DPSDK: Updated for 3.0.8 changes. A wide variety of major fixes and improvements.
-	Rawr.HolyPriest/ShadowPriest: Added optimizable values that you can create requirements for, or optimize for.
-	Rawr.Elemental: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Elemental in conjunction with other theorycrafting tools.
-
-
-Here's a quick rundown of the status of each model:
-   •Rawr.Base: Fully functional. Gemming system revamp is coming. Global interface for Glyphs is coming.
-   •Rawr.Bear: Fully functional for level 80.
-   •Rawr.Cat: Fully functional for level 80.
-   •Rawr.DPSDK: Fully functional for 3.0 & level 80.
-   •Rawr.DPSWarr: Partially functional for 3.0 & level 80.
-   •Rawr.Elemental: Partially functional for 3.0 & level 80.
-   •Rawr.Enhance: Partially functional for 3.0 & level 80.
-   •Rawr.Healadin: Fully functional for level 80.
-   •Rawr.HolyPriest: Fully functional for level 80.
-   •Rawr.Hunter: Partially functional for 3.0 & level 80.
-   •Rawr.Mage: Fully functional for level 80.
-   •Rawr.Moonkin: Fully functional for level 80.
-   •Rawr.ProtWarr: Partially functional for 3.0 & level 80.
-   •Rawr.RestoSham: Partially functional for 3.0 & level 80.
-   •Rawr.Retribution: Fully functional for level 80.
-   •Rawr.Rogue: Not functional for 3.0.
-   •Rawr.ShadowPriest: Fully functional for level 80.
-   •Rawr.TankDK: Partially functional for 3.0 & level 80.
-   •Rawr.Tankadin: Fully functional for 3.0 & level 80.
-   •Rawr.Tree: Fully functional for 3.0 & level 80.
-   •Rawr.Warlock: Not functional for 3.0.
-    
-    
- As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!";
+If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which aren't fully complete, please contact me at cnervig@hotmail.com. Thanks!";
 	
 
         private string _storedCharacterPath;

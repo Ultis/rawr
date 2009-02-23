@@ -1,11 +1,71 @@
-Rawr v2.1.9
+Rawr v2.2.0b1
 ------------
- Welcome to Rawr 2.1.9. Rawr is now designed for use with WoW 3.0, primarily for characters up to level 80. Some things to note:
-   •We're not done. We've included only the models that have been updated for WoW 3.0; older models are available via our source control only, since they're not of much use until they get updated.
-   •To help you stay updated with the latest changes, Rawr will now check for new available updates, notify you if there's a newer version, and offer to open Rawr's website for you.
-   •We now have support for loading item data from Wowhead. Please note that the Wowhead parsing is brand new, so there are bound to be bugs. Please report any bugs you find, and we'll try to get them fixed asap.
+ Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
    
 Recent Changes:
+
+v2.2.0b1
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b1. Thanks!
+ - Gemming Revamp! Rawr will now automatically handle gems, just as you'd expect. See Help > Gemmings for details. NOTE: Rawr 2.2 is not backawards compatible most of your existing data files. Please do not copy data files from previous versions of Rawr. Your existing character files should load into Rawr 2.2 just fine, except you'll have to reselect enchants on your gear.
+ - Rawr.Bear: Support for Savage Defense.
+ - Rawr.Cat: Fixes for hit calculations.
+ - Rawr.Mage: Support for 3.0.9 changes. Fixes for a few obscure calcultion bugs.
+ - Rawr.Moonkin: Brand new spell calculation engine, powered by WrathCalcs.
+ - Rawr.ProtWarr: Significant improvements to accuracy. Added additional rating choices, and additional customization to existing rating ratios. See the Options tab for details. Added support for parry hasting
+ - Rawr.HolyPriest: Fix for Build Upgrade List, several calculation improvements. Support for 3.1 Mana Regen model.
+ - Rawr.ShadowPriest: Fix for Build Upgrade List, several calculation improvements.
+ - Rawr.Tree: Overhaul of casting system, should provide much more useful results.
+ - Rawr.Elemental: Significant fixes and new features.
+ - Rawr.RestoSham: Now includes Activity, Overhealing, and Burst Healing. Many calculation fixes/improvements.
+ - Rawr.Enhance: Lots of calculation improvements.
+ - Rawr.TankDK: Wide variety of calculation fixes, UI improvements.
+ - Rawr.DPSDK: Many calculation fixes and new features.
+ - Rawr.Tankadin: Fixes for armor calculations.
+ - Rawr.Healadin: Support for 3.0.9 changes.
+ - Rawr.Hunter: Fix for several calculation bugs.
+ - Rawr.Retribution: Many calculation changes, new features, improvements, and bug fixes.
+ - Rawr.Warlock: Initial release. Not fully complete yet, but included in this release of Rawr so that you can see how we're progressing. We still advise using Rawr.Warlock in conjunction with other theorycrafting tools. In particular, pets are not modeled yet, so Demonology specs will be significantly undervalued.
+
+Here's a quick rundown of the status of each model:
+   •Rawr.Base: Fully functional for 3.0 & level 80.
+   •Rawr.Bear: Fully functional for 3.0 & level 80.
+   •Rawr.Cat: Fully functional for 3.0 & level 80.
+   •Rawr.DPSDK: Fully functional for 3.0 & level 80.
+   •Rawr.DPSWarr: Partially functional for 3.0 & level 80.
+   •Rawr.Elemental: Partially functional for 3.0 & level 80.
+   •Rawr.Enhance: Partially functional for 3.0 & level 80.
+   •Rawr.Healadin: Fully functional for 3.0 & level 80.
+   •Rawr.HolyPriest: Fully functional for 3.0 & level 80.
+   •Rawr.Hunter: Partially functional for 3.0 & level 80.
+   •Rawr.Mage: Fully functional for 3.0 & level 80.
+   •Rawr.Moonkin: Fully functional for 3.0 & level 80.
+   •Rawr.ProtWarr: Partially functional for 3.0 & level 80.
+   •Rawr.RestoSham: Partially functional for 3.0 & level 80.
+   •Rawr.Retribution: Fully functional for 3.0 & level 80.
+   •Rawr.Rogue: Not functional for 3.0.
+   •Rawr.ShadowPriest: Fully functional for 3.0 & level 80.
+   •Rawr.TankDK: Partially functional for 3.0 & level 80.
+   •Rawr.Tankadin: Fully functional for 3.0 & level 80.
+   •Rawr.Tree: Fully functional for 3.0 & level 80.
+   •Rawr.Warlock: Partially functional for 3.0 & level 80.
+    
+    
+ As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!
+
+FAQ
+---
+ Q: I get a "Cannot access disposed object." error. How can I fix that?
+ A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
+
+ Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
+ A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
+
+ Q: There's an item missing! Can you please add [Some Item]?
+ A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
+ 
+Version History
+---------------
+
 v2.1.9:
 	Rawr is now accepting donations. Please use Tools > Donate, or goto https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163 if you'd like to donate, to help accelerate the development of Rawr and its models. Thank you!
 	Updated parsing for a large number of trinkets/gems whose wording changed in WoW 3.0.8.
@@ -85,50 +145,14 @@ v2.1.5:
 		
 		
 v2.1.4: Added tracking of item levels, and filtering by item level and a few other item properties. Added support for several additional buffs and enchants. Fixed Wowhead and Armory parsing for a few stats. Fixed CharacterProfiler support. ShadowPriest: Fixes for Optimization, and support for a few more buffs. HolyPriest: Fixes for Optimization and Haste calculations. Moonkin: Added support for a couple trinkets, allowed fist weapons, fixes to Starfire glyph calculations, fix for double application of Kings, and added support for user-defined rotations. Healadin: Added Burst Healing rating, support for Divine Favor and Divine Illumination. ProtWarr: Updated with correct base stats for all races at 80. Mage: Added a 3.0.8 calculation mode. Tree: Fixed haste and crit calculations. Cat: Adjusted base miss rate to 8%, added support for total % damage increases. Bear: Fixed a minor bug in DR calculations.
+
 v2.1.3: Improvements to CharacterProfiler support. Can now load items by exact name, as well as load from Armory and fail over to Wowhead if not found. Support for several new set bonuses and proc/use effects. Fixed base stat calculations in Retribution and Tankadin, and a few more calculation fixes in Retribution. Fixes for a few buff/enchant stats.
+
 v2.1.2: Improvements to launch time, and item editor performance. Support for more set bonuses and abnormal item stats. Fix for crash in Priest models. Updates to base stats and rating conversions for several models. Fixes for requirements and optimization of several gems. Added ghost hit for Frostfire bolt in Mage. Fixed the formula for PW: Shield in HolyPriest. Improved calculations for Cat and Bear, and made Cat results more descriptive.
+
 v2.1.1: Improved calculations for level 80 combat for several models (Cat, Bear, HolyPriest, ShadowPriest, Mage, Moonkin, Tree, Healadin). Added Leatherworking and Inscription self-enchants. Fixed some bugs with mass gem replacement and the optimizer.
+
 v2.1: Updated for level 80 content. Removed models which haven't yet been updated for WoW 3.0. Added two brand new models: Enhance and DPSDK! Welcome to Rawr, Enhancement Shamans and DPS Death Knights!
-
-Here's a quick rundown of the status of each model:
-   •Rawr.Base: Fully functional. Gemming system revamp is coming. Global interface for Glyphs is coming.
-   •Rawr.Bear: Fully functional for level 80.
-   •Rawr.Cat: Fully functional for level 80.
-   •Rawr.DPSDK: Fully functional for 3.0 & level 80.
-   •Rawr.DPSWarr: Partially functional for 3.0 & level 80.
-   •Rawr.Elemental: Partially functional for 3.0 & level 80.
-   •Rawr.Enhance: Partially functional for 3.0 & level 80.
-   •Rawr.Healadin: Fully functional for level 80.
-   •Rawr.HolyPriest: Fully functional for level 80.
-   •Rawr.Hunter: Partially functional for 3.0 & level 80.
-   •Rawr.Mage: Fully functional for level 80.
-   •Rawr.Moonkin: Fully functional for level 80.
-   •Rawr.ProtWarr: Partially functional for 3.0 & level 80.
-   •Rawr.RestoSham: Partially functional for 3.0 & level 80.
-   •Rawr.Retribution: Fully functional for level 80.
-   •Rawr.Rogue: Not functional for 3.0.
-   •Rawr.ShadowPriest: Fully functional for level 80.
-   •Rawr.TankDK: Partially functional for 3.0 & level 80.
-   •Rawr.Tankadin: Fully functional for 3.0 & level 80.
-   •Rawr.Tree: Fully functional for 3.0 & level 80.
-   •Rawr.Warlock: Not functional for 3.0.
-    
-    
- As you can see, we still have alot of work ahead of us, but we're actively working on it. If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which we haven't begun updating for 3.0, please contact me at cnervig@hotmail.com. Thanks, and look forward to frequent updates!
-
-FAQ
----
- Q: I get a "Cannot access disposed object." error. How can I fix that?
- A: There's a bug in the .NET Framework 2.0 which causes this on some machines. The only known fix right now is to uninstall it, and then reinstall the latest .NET Framework from Microsoft.
-
- Q: I get an error on load, "To run this application you must first install..." or "The application failed to initialize properly (0xc0000135)." How do I fix this?
- A: Install .NET Framework 2.0 from Microsoft. If it still doesn't work, uninstall .NET Framework completely, reinstall .NET Framework 2.0, and try Rawr again. Download link for .NET Framework 2.0 from Microsoft: http://go.microsoft.com/fwlink/?linkid=32168 
-
- Q: There's an item missing! Can you please add [Some Item]?
- A: No, Rawr is designed so that we wouldn't need to update it with new items every time a new item was found. You can add items to it yourself, very fast, and very easily. Look the item up on wowhead or thottbot, and remember the item ID # from the URL on wowhead or thottbot. Goto Tools > Edit Items, click Add, type that item ID # in, hit OK, and *poof*, you'll have the item. Another thing you can do, after loading your character from the Armory, is choose Tools > Load Possible Upgrades from Armory. This feature will take *a while*, like 5+ min, but will download all the items that Rawr and the Armory thinks are potential upgrades for you. It's a good idea to run this a few days after a major content patch. However, the Armory is commonly unstable immediately after a major content patch, so expect errors if you don't wait a few days.
- 
-Version History
----------------
 
 v2.0.0
  - First release version targeting WoW 3.0
