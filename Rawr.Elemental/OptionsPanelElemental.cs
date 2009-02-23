@@ -250,7 +250,7 @@ namespace Rawr.Elemental
                     return glyphOfLightningBolt;
                 case 5:
                     return glyphOfShocking;
-                case 5:
+                case 6:
                     return glyphOfWaterMastery;
             }
             return false;
