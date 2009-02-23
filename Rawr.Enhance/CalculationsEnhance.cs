@@ -8,7 +8,8 @@ namespace Rawr
 {
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", Character.CharacterClass.Shaman)]
 	public class CalculationsEnhance : CalculationsBase
-	{
+    {
+        #region Gemming Template
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -111,6 +112,7 @@ namespace Rawr
                };
             }
         }
+        #endregion
 
         private CalculationOptionsPanelBase _calculationOptionsPanel = null;
 		public override CalculationOptionsPanelBase CalculationOptionsPanel
@@ -123,9 +125,10 @@ namespace Rawr
 				}
 				return _calculationOptionsPanel;
 			}
-		}
+        }
 
-		private string[] _characterDisplayCalculationLabels = null;
+        #region Display labels
+        private string[] _characterDisplayCalculationLabels = null;
 		public override string[] CharacterDisplayCalculationLabels
 		{
 			get
@@ -200,9 +203,10 @@ namespace Rawr
 					};
 				return _customChartNames;
 			}
-		}
+        }
+        #endregion 
 
-		private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
+        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
 		public override Dictionary<string, System.Drawing.Color> SubPointNameColors
 		{
 			get
@@ -578,9 +582,10 @@ namespace Rawr
             calculatedStats.SpiritWolf = dpsDogs;
 
 			return calculatedStats;
-		}
+        }
 
-		public override Stats GetCharacterStats(Character character, Item additionalItem)
+        #region Get Character Stats
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
             Stats statsRace = new Stats() { 
                     Mana = 4116f,
@@ -710,8 +715,10 @@ namespace Rawr
 
 			return statsTotal;
 		}
+        #endregion
 
-		public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        #region Custom Chart Data
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
 		{
 			switch (chartName)
 			{
@@ -782,9 +789,11 @@ namespace Rawr
 				default:
 					return new ComparisonCalculationBase[0];
 			}
-		}
+        }
+        #endregion
 
-		public override bool IsItemRelevant(Item item)
+        #region Relevant Stats
+        public override bool IsItemRelevant(Item item)
 		{
 			if ((item.Slot == Item.ItemSlot.Ranged && item.Type != Item.ItemType.Totem)) 
 				return false;
@@ -806,8 +815,7 @@ namespace Rawr
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
 					BloodlustProc = stats.BloodlustProc,
-					TerrorProc = stats.TerrorProc,
-                    WeaponDamage = stats.WeaponDamage,
+					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
@@ -816,7 +824,6 @@ namespace Rawr
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                     Health = stats.Health,
-					MangleCatCostReduction = stats.MangleCatCostReduction,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					DrumsOfBattle = stats.DrumsOfBattle,
@@ -853,9 +860,12 @@ namespace Rawr
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff +
 				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0;
-		}
-	}
+        }
+        #endregion
+    }
+        
 
+    #region Char Calcs Get/Set
     public class CharacterCalculationsEnhance : CharacterCalculationsBase
     {
 		private float _overallPoints = 0f;
@@ -1053,6 +1063,7 @@ namespace Rawr
         }
 
         public List<Buff> ActiveBuffs { get; set; }
+        #endregion
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
@@ -1117,7 +1128,8 @@ namespace Rawr
 		}
     }
 
-	public class ComparisonCalculationEnhance : ComparisonCalculationBase
+    #region Comparison Calcs
+    public class ComparisonCalculationEnhance : ComparisonCalculationBase
 	{
 		private string _name = string.Empty;
 		public override string Name
@@ -1166,10 +1178,12 @@ namespace Rawr
 			get { return _equipped; }
 			set { _equipped = value; }
 		}
+        
 
 		public override string ToString()
 		{
 			return string.Format("{0}: ({1}O {2}DPS)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints));
 		}
-	}
+    }
+    #endregion
 }

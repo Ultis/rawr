@@ -67,6 +67,7 @@
             this.chbGlyphFT = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
@@ -550,10 +551,11 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.tbModuleNotes);
             this.tabPage3.Controls.Add(this.btnEnhSim);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(264, 528);
+            this.tabPage3.Size = new System.Drawing.Size(264, 525);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "EnhSim";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -567,6 +569,18 @@
             this.btnEnhSim.Text = "Export Stats to EnhSim config file";
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
+            // 
+            // tbModuleNotes
+            // 
+            this.tbModuleNotes.AcceptsReturn = true;
+            this.tbModuleNotes.AcceptsTab = true;
+            this.tbModuleNotes.Location = new System.Drawing.Point(3, 68);
+            this.tbModuleNotes.Multiline = true;
+            this.tbModuleNotes.Name = "tbModuleNotes";
+            this.tbModuleNotes.ReadOnly = true;
+            this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
+            this.tbModuleNotes.TabIndex = 1;
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -589,6 +603,7 @@
             this.gbGlyphs.ResumeLayout(false);
             this.gbGlyphs.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -634,6 +649,7 @@
         private System.Windows.Forms.CheckBox chbGlyphFT;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnEnhSim;
+        private System.Windows.Forms.TextBox tbModuleNotes;
 
     }
 }

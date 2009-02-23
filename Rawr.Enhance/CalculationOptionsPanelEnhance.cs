@@ -87,6 +87,17 @@ namespace Rawr
 			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
 			labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
+            tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
+                "For most users the standard model should be quite sufficient.\r\n\r\n" +
+                "If you wish to use the EnhSim Simulator you will need to get the latest version from http://enhsim.wikidot.com\r\n\r\n" +
+                "Once you have installed the simulator to run it you need to edit the config file in a decent text editor (ie: NOT notepad).\r\n\r\n" + 
+                "With the config file open in your text editor croll down to the last section that says you can replace everything below with " +
+                "your paper doll stats. Delete that section in the config file.\r\n\r\nNow press the button above to copy your " +
+                "current Rawr.Enhance data to the clipboard then in your text editor, paste the config values into the end of the file.\r\n\r\n" +
+                "If you now save that config file eg: as a CharacterName.txt file you are then ready to run the sim executable or the sim gui." +
+                "Remember you must select the config file you just saved as the one you want to use.\r\n\r\nRefer to the EnhSim website for " + 
+                "instructions on how to use the sim and its options";
+
 			_loadingCalculationOptions = false;
 		}
 
