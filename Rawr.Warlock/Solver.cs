@@ -174,7 +174,7 @@ namespace Rawr.Warlock
 
             ManaSources = new List<ManaSource>();
             SpellPriority = new List<Spell>(CalculationOptions.SpellPriority.Count);
-            Spell shadowBolt = SpellFactory.CreateSpell("Shadow Bolt", PlayerStats, character);
+            shadowBolt = SpellFactory.CreateSpell("Shadow Bolt", PlayerStats, character);
             lifeTap = SpellFactory.CreateSpell("Life Tap", PlayerStats, character);
             foreach (string spellname in CalculationOptions.SpellPriority)
             {
@@ -483,7 +483,7 @@ namespace Rawr.Warlock
 
             #region Variable calculation
             float corDrops = 0;
-            if (character.WarlockTalents.EverlastingAffliction > 0)
+            if (character.WarlockTalents.EverlastingAffliction > 0 && character.WarlockTalents.Haunt > 0)
             {
                 corDrops = haunt.SpellStatistics.HitCount * (1 - haunt.SpellStatistics.HitChance) + haunt.SpellStatistics.HitCount * haunt.SpellStatistics.HitChance * (Math.Min(1 - character.WarlockTalents.EverlastingAffliction * 0.2f, 0));
                 if (corruption != null)
