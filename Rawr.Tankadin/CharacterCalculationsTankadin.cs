@@ -157,7 +157,8 @@ namespace Rawr.Tankadin
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "Crit Avoidance": return CritAvoidance;
+                case "% Chance to be Crit": return (.05f - CritAvoidance) * 100f;
+                case "Defense": return 400f + Defense;
             }
             return 0.0f;
         }

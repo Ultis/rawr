@@ -208,7 +208,8 @@ you are being killed by burst damage, focus on Survival Points.",
 			{
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
-					"Crit Avoidance",
+					"Defense",
+					"% Chance to be Crit",
 					};
 				return _optimizableCalculationLabels;
 			}
