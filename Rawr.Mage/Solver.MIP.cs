@@ -87,7 +87,11 @@ namespace Rawr.Mage
                         currentNode.Children[currentNode.Index] = null;
                         currentNode.Index++;
                     } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
-                    if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                    if (currentNode.Index >= currentNode.Children.Count)
+                    {
+                        System.Diagnostics.Trace.WriteLine("Full search complete at round = " + round);
+                        break; // we explored the whole search space
+                    }
                     if (value > 0 && currentNode.Depth < highestBacktrack)
                     {
                         highestBacktrack = currentNode.Depth;
@@ -101,6 +105,7 @@ namespace Rawr.Mage
                     if (lp != null)
                     {
                         solution = lp.Solve();
+                        round++;
                         bool valid = IsLpValid();
                         if (valid)
                         {
@@ -218,7 +223,6 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                round++;
             } while (round < sizeLimit);
 
             lp = incumbent;
@@ -280,6 +284,7 @@ namespace Rawr.Mage
                     {
                         lp = lp; // investigate
                     }
+                    round++;
                     bool valid = IsLpValid();
                     if (valid)
                     {
@@ -304,7 +309,6 @@ namespace Rawr.Mage
                         currentNode = currentNode.Children[0];
                     }
                 }
-                round++;
             } while (round < sizeLimit);
         }
 
@@ -447,6 +451,13 @@ namespace Rawr.Mage
                         if (!ValidateActivation(Cooldown.WaterElemental, calculationResult.WaterElementalDuration, calculationResult.WaterElementalCooldown, VariableType.SummonWaterElemental)) return false;
                     }
                 }
+
+                // advanced cooldown validation 2
+                if (arcanePowerAvailable && !ValidateCooldownAdvanced2(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
+                if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
+                if (trinket1Available && !ValidateCooldownAdvanced2(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
+                if (trinket2Available && !ValidateCooldownAdvanced2(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
+                if (manaGemEffectAvailable && !ValidateCooldownAdvanced2(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
             }
 
 #if DEBUG_BRANCHING
@@ -483,6 +494,16 @@ namespace Rawr.Mage
                     currentNode.Children.Add(new BranchNode() { Lp = childLP, Parent = currentNode, Depth = currentNode.Depth + 1 });
                     break;
             }
+#if DEBUG
+            if (childLP.Log != null)
+            {
+                string[] lines = childLP.Log.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length >= 2 && lines[lines.Length - 1] == lines[lines.Length - 2])
+                {
+                    childLP = childLP; // something looks to be buggy
+                }
+            }
+#endif
 #if DEBUG_BRANCHING
             childList.Add(childLP);
 #endif
@@ -664,7 +685,7 @@ namespace Rawr.Mage
                                     // do elimination
                                     // eliminate left
                                     SolverLP hexRemovedLP = lp.Clone();
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing left " + ind1);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing left " + ind1);
                                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
@@ -674,7 +695,7 @@ namespace Rawr.Mage
                                     HeapPush(hexRemovedLP);
                                     // eliminate right
                                     hexRemovedLP = lp.Clone();
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing right " + ind2);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing right " + ind2);
                                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
@@ -685,7 +706,7 @@ namespace Rawr.Mage
                                     // eliminate middle
                                     hexRemovedLP = lp.Clone();
                                     int ind = ind1 | ind2;
-                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle at " + seg + ", removing center " + ind);
+                                    if (hexRemovedLP.Log != null) hexRemovedLP.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", removing center " + ind);
                                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                                     {
                                         CastingState state = calculationResult.SolutionVariable[index].State;
@@ -695,7 +716,7 @@ namespace Rawr.Mage
                                     HeapPush(hexRemovedLP);
                                     // force to full
                                     // this is equivalent to disabling all that are not good (at least I think it is)
-                                    if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle at " + seg + ", force to max");
+                                    if (lp.Log != null) lp.Log.AppendLine("Breaking supergroup cycle " + (Cooldown)ind1 + "-" + (Cooldown)ind2 + " at " + seg + ", force to max");
                                     //int row = lp.AddConstraint(false);
                                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                                     {
@@ -2140,6 +2161,333 @@ namespace Rawr.Mage
             HeapPush(branchlp);
         }
 
+        private void BranchOnLeftPadding(ActivationConstraints act, Cooldown effect)
+        {
+            SolverLP branchlp;
+            int seg = act.Segment;
+            // dropping right link: remove joint items with effect in seg1 or remove items in seg1+1 for each effect from right link
+            for (int cool = 0; cool < cooldownCount; cool++)
+            {
+                Cooldown cooldown = (Cooldown)(1 << cool);
+                if (cooldown != effect && (cooldown & act.RightLink) != 0)
+                {
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove left padding for " + effect + " at " + seg + ", drop right link here " + cooldown);
+                    DisableCooldown(branchlp, effect | cooldown, seg);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove left padding for " + effect + " at " + seg + ", drop right link there " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg + 1);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                }
+            }
+            // dropping left full link: remove items in seg1 or in seg1-1 for all effects from full left link that are not in left link
+            for (int cool = 0; cool < cooldownCount; cool++)
+            {
+                Cooldown cooldown = (Cooldown)(1 << cool);
+                if (cooldown != effect && (cooldown & act.FullLeftLink & ~act.LeftLink) != 0)
+                {
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove left padding for " + effect + " at " + seg + ", drop left full link here " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove left padding for " + effect + " at " + seg + ", drop left full link there " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg - 1);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                }
+            }
+            // increasing left link: for each effect not in left link force there to be some left link+effect items on both sides
+            if (seg > 0)
+            {
+                for (int cool = 0; cool < cooldownCount; cool++)
+                {
+                    Cooldown cooldown = (Cooldown)(1 << cool);
+                    if (cooldown != effect && (cooldown & availableCooldownMask & ~act.LeftLink) != 0)
+                    {
+                        // these are expensive branches, hopefully they die out quick
+                        branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Remove left padding for " + effect + " at " + seg + ", increase left link " + cooldown);
+                        int row = branchlp.AddConstraint(false);
+                        SetCooldownElements(branchlp, row, cooldown, seg - 1, 1.0);
+                        branchlp.SetConstraintRHS(row, segmentList[seg - 1].Duration);
+                        branchlp.SetConstraintLHS(row, 0.1);
+                        row = branchlp.AddConstraint(false);
+                        SetCooldownElements(branchlp, row, effect | cooldown, seg, 1.0);
+                        branchlp.SetConstraintRHS(row, segmentList[seg].Duration);
+                        branchlp.SetConstraintLHS(row, 0.1);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                    }
+                }
+            }
+        }
+
+        private void BranchOnRightPadding(ActivationConstraints act, Cooldown effect)
+        {
+            SolverLP branchlp;
+            int seg = act.Segment;
+            // dropping right link: remove joint items with effect in seg1 or remove items in seg1+1 for each effect from right link
+            for (int cool = 0; cool < cooldownCount; cool++)
+            {
+                Cooldown cooldown = (Cooldown)(1 << cool);
+                if (cooldown != effect && (cooldown & act.LeftLink) != 0)
+                {
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove right padding for " + effect + " at " + seg + ", drop left link here " + cooldown);
+                    DisableCooldown(branchlp, effect | cooldown, seg);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove right padding for " + effect + " at " + seg + ", drop left link there " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg - 1);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                }
+            }
+            // dropping left full link: remove items in seg1 or in seg1-1 for all effects from full left link that are not in left link
+            for (int cool = 0; cool < cooldownCount; cool++)
+            {
+                Cooldown cooldown = (Cooldown)(1 << cool);
+                if (cooldown != effect && (cooldown & act.FullRightLink & ~act.RightLink) != 0)
+                {
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove right padding for " + effect + " at " + seg + ", drop right full link here " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                    branchlp = lp.Clone();
+                    if (branchlp.Log != null) branchlp.Log.AppendLine("Remove right padding for " + effect + " at " + seg + ", drop right full link there " + cooldown);
+                    DisableCooldown(branchlp, cooldown, seg + 1);
+                    branchlp.ForceRecalculation(true);
+                    HeapPush(branchlp);
+                }
+            }
+            // increasing left link: for each effect not in left link force there to be some left link+effect items on both sides
+            if (seg + 1 < segmentList.Count)
+            {
+                for (int cool = 0; cool < cooldownCount; cool++)
+                {
+                    Cooldown cooldown = (Cooldown)(1 << cool);
+                    if (cooldown != effect && (cooldown & availableCooldownMask & ~act.RightLink) != 0)
+                    {
+                        // these are expensive branches, hopefully they die out quick
+                        branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Remove right padding for " + effect + " at " + seg + ", increase right link " + cooldown);
+                        int row = branchlp.AddConstraint(false);
+                        SetCooldownElements(branchlp, row, cooldown, seg + 1, 1.0);
+                        branchlp.SetConstraintRHS(row, segmentList[seg + 1].Duration);
+                        branchlp.SetConstraintLHS(row, 0.1);
+                        row = branchlp.AddConstraint(false);
+                        SetCooldownElements(branchlp, row, effect | cooldown, seg, 1.0);
+                        branchlp.SetConstraintRHS(row, segmentList[seg].Duration);
+                        branchlp.SetConstraintLHS(row, 0.1);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                    }
+                }
+            }
+        }
+
+        private void EnforceEffectCooldown(ActivationConstraints act1, ActivationConstraints act2, Cooldown effect, double effectCooldown, double effectDuration)
+        {
+            const double eps = 0.000001;
+
+            // if we have no padding or if both are fixed use the simpler version
+            if ((act1.LeftPaddding < eps || !act1.Loose) && (act2.RightPadding < eps || !act2.Loose))
+            {
+                EnforceEffectCooldown(act1.MinTime, effect, effectCooldown, effectDuration, false);
+                return;
+            }
+
+            // FullLeft  XX  XXX
+            //
+            // Left      XX
+            // Joint     XXXX
+            // Right     X  X
+            //
+            // FullRight X  X   XX
+
+            // we have to enumerate all possibilities factoring around consecutive activations act1 and act2
+            // possibilities include all options with there actually being activations at act1 and act2
+            // if there is no activation at one of them it can be because there is effect in one segment to left
+            // or because there is no effect in that segment
+
+            int seg1 = act1.Segment;
+            int seg2 = act2.Segment;
+            SolverLP branchlp;
+            // we have activations at seg1 and seg2
+            // what is included in the padding strongly depends on link
+            // therefore we have to branch on possibilities that the link changes
+            // item is included for left padding if it doesn't include all right link
+            // or if it includes more than left link from full left link
+            // we can always add additional restrictions if needed, we just have to make sure
+            // that we don't overrestrict
+            // constraint will be of form
+            // t1 = seg1start + leftPadding
+            // t2 = seg2end - count[seg2] - rightPadding
+            // count[seg2] + rightPadding + leftPadding <= seg2end - seg1start -c
+            // it basically says that things that we think are in the padding there can't be too much of them
+            // so if changes to links make new things to appear in the padding there won't be any problems with this constraint
+            // what we have to worry is if something is no longer a padding, we need to branch on possibilities
+            // that remove something from padding
+            // so looking at the case of left padding, it doesn't depend on full right link
+            // if right link increases it is still a padding
+            // if right link decreases we have to branch on it
+            // if left link decreases or if full left link increases it is still a padding
+            // if left link increases or if full left link decreases we have to branch on it
+            // so the actual branches are:
+            // dropping right link: remove joint items with effect in seg1 or remove items in seg1+1 for each effect from right link
+            // dropping left full link: remove items in seg1 or in seg1-1 for all effects from full left link that are not in left link
+            // increasing left link: for each effect not in left link force there to be some left link+effect items on both sides
+            // analogous for right padding
+            // THERE IS A WHOLE TON OF BRANCHES TO DO, SO MAKE SURE NOT TO CALL THIS IF YOU DON'T HAVE TO
+            // THIS IS SUPPOSED TO HANDLE ONLY THE MOST OBSCURE PROBLEMS
+            // taking the lessons from above, we should only include paddings for things things that actually appear as
+            // padding in the current solution, this way we only have to care for branches that would make those
+            // not in the padding
+            // special case is if there is either no left padding or right padding
+            // treat it as special case to avoid creating too many branches, we already special case if there is no padding
+            if (act1.LeftPaddding < eps || !act1.Loose)
+            {
+                // only right padding
+                BranchOnRightPadding(act2, effect);
+                // either act1 is loose with no padding
+                // t1 = seg1start
+                // t2 = seg2end - count[seg2] - rightPadding
+                // count[seg2] + rightPadding <= seg2end - seg1start -c
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + seg1 + " and " + seg2 + ", act1 loose with no padding");
+                DisableCooldown(branchlp, effect, seg1 + 1, seg2 - 1);
+                int row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                SetRightPaddingElements(branchlp, row, act2, effect, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].TimeEnd - segmentList[seg1].TimeStart - effectCooldown);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+                // or act1 is fixed
+                // t1 = seg1end - count[seg1]
+                // t2 = seg2end - count[seg2] - rightPadding
+                // count[seg2] - count[seg1] + rightPadding <= seg2end - seg1end -c
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + seg1 + " and " + seg2 + ", act1 fixed");
+                DisableCooldown(branchlp, effect, segmentList.FindIndex(segment => segment.TimeStart >= segmentList[seg1].TimeEnd + effectDuration - eps), seg2 - 1);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                SetCooldownElements(branchlp, row, effect, seg1, -1.0);
+                SetRightPaddingElements(branchlp, row, act2, effect, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].TimeEnd - segmentList[seg1].TimeEnd - effectCooldown);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            else if (act2.RightPadding < eps || !act2.Loose)
+            {
+                // only left padding
+                BranchOnLeftPadding(act1, effect);
+                // t1 = seg1start + leftPadding
+                // t2 = seg2end - count[seg2]
+                // count[seg2] + leftPadding <= seg2end - seg1start -c
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + seg1 + " and " + seg2 + ", only left padding");
+                DisableCooldown(branchlp, effect, segmentList.FindIndex(segment => segment.TimeStart >= segmentList[seg1].TimeEnd + effectDuration - eps), seg2 - 1);
+                int row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                SetLeftPaddingElements(branchlp, row, act1, effect, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].TimeEnd - segmentList[seg1].TimeStart - effectCooldown);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            else
+            {
+                // both paddings
+                BranchOnLeftPadding(act1, effect);
+                BranchOnRightPadding(act2, effect);
+                // t1 = seg1start + leftPadding
+                // t2 = seg2end - count[seg2] - rightPadding
+                // count[seg2] + rightPadding + leftPadding <= seg2end - seg1start -c
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + seg1 + " and " + seg2 + ", both paddings");
+                DisableCooldown(branchlp, effect, segmentList.FindIndex(segment => segment.TimeStart >= segmentList[seg1].TimeEnd + effectDuration - eps), seg2 - 1);
+                int row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                SetRightPaddingElements(branchlp, row, act2, effect, 1.0);
+                SetLeftPaddingElements(branchlp, row, act1, effect, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].TimeEnd - segmentList[seg1].TimeStart - effectCooldown);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            // there is effect before seg1
+            if (seg1 >= 1)
+            {
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + " and " + seg2 + ", activation before");
+                int row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg1 - 1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg1 - 1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            // or there is no effect in seg1
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + " and " + seg2 + ", remove effect");
+            DisableCooldown(branchlp, effect, seg1);
+            HeapPush(branchlp);
+            // there is effect before seg2
+            if (seg2 >= 1)
+            {
+                branchlp = lp.Clone();
+                if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + " and " + seg2 + ", activation2 before");
+                int row = branchlp.AddConstraint(false);
+                SetCooldownElements(branchlp, row, effect, seg2 - 1, 1.0);
+                branchlp.SetConstraintRHS(row, segmentList[seg2 - 1].Duration);
+                branchlp.SetConstraintLHS(row, 0.1);
+                branchlp.ForceRecalculation(true);
+                HeapPush(branchlp);
+            }
+            // or there is no effect in seg2
+            branchlp = lp.Clone();
+            if (branchlp.Log != null) branchlp.Log.AppendLine("Enforce cooldown after " + effect + " at " + seg1 + " and " + seg2 + ", remove effect2");
+            DisableCooldown(branchlp, effect, seg2);
+            HeapPush(branchlp);
+        }
+
         private void EnforceEffectCooldown(double firstEffectActivation, Cooldown effect, double effectCooldown, double effectDuration, bool needsToCleanCloseActivations)
         {
             const double eps = 0.000001;
@@ -2341,6 +2689,42 @@ namespace Rawr.Mage
                 {
                     int seg = calculationResult.SolutionVariable[index].Segment;
                     if (seg >= minSegment && seg <= maxSegment) branchlp.SetConstraintElement(row, index, value);
+                }
+            }
+        }
+
+        private void SetLeftPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, Cooldown effect, double value)
+        {
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && calculationResult.SolutionVariable[index].Segment == activation.Segment && !calculationResult.SolutionVariable[index].IsZeroTime)
+                {
+                    Cooldown c = state.Cooldown;
+                    // item is included for left padding if it doesn't include all right link
+                    // or if it includes more than left link from full left link
+                    if ((c & effect) == 0 && ((c & activation.RightLink) != activation.RightLink || ((c & activation.LeftLink) == activation.LeftLink && (c & activation.FullLeftLink) != activation.LeftLink)))
+                    {
+                        branchlp.SetConstraintElement(row, index, value);
+                    }
+                }
+            }
+        }
+
+        private void SetRightPaddingElements(SolverLP branchlp, int row, ActivationConstraints activation, Cooldown effect, double value)
+        {
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                if (state != null && calculationResult.SolutionVariable[index].Segment == activation.Segment && !calculationResult.SolutionVariable[index].IsZeroTime)
+                {
+                    Cooldown c = state.Cooldown;
+                    // item is included for left padding if it doesn't include all right link
+                    // or if it includes more than left link from full left link
+                    if ((c & effect) == 0 && ((c & activation.LeftLink) != activation.LeftLink || ((c & activation.RightLink) == activation.RightLink && (c & activation.FullRightLink) != activation.RightLink)))
+                    {
+                        branchlp.SetConstraintElement(row, index, value);
+                    }
                 }
             }
         }
@@ -2879,7 +3263,7 @@ namespace Rawr.Mage
                             HeapPush(cooldownUsed);
                             return false;
                         }
-                        if (total < fullEffectDuration - eps)
+                        if (total < fullEffectDuration - 0.0001) // loosened tolerance, sometimes it can't enforce
                         {
                             SolverLP cooldownUsed = lp.Clone();
                             if (cooldownUsed.Log != null) cooldownUsed.Log.AppendLine("Force full " + cooldown.ToString() + " at " + seg);
@@ -3153,7 +3537,68 @@ namespace Rawr.Mage
             return true;
         }
 
-        private struct ActivationConstraints
+        private bool ValidateCooldownAdvanced2(Cooldown cooldown, double effectDuration, double cooldownDuration, VariableType cooldownType)
+        {
+            const double eps = 0.00001;
+            double[] segCount = GetSegmentCooldownCount(cooldown, cooldownType);
+
+            // for irregular cooldown durations have to make a special pass verifying everything is in order
+            // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
+            // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
+
+            if (cooldown != Cooldown.None && (!coldsnapAvailable || (cooldown != Cooldown.WaterElemental && cooldown != Cooldown.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
+            {
+                List<ActivationConstraints> activations = new List<ActivationConstraints>();
+                // validate consecutive activations
+                double lastStart = double.NegativeInfinity;
+                ActivationConstraints lastActivation = null;
+                for (int seg = 0; seg < segmentList.Count; seg++)
+                {
+                    if (segCount[seg] > eps && (seg == 0 || segCount[seg - 1] < eps))
+                    {
+                        ActivationConstraints activation = GetActivationConstraints(cooldown, seg, segCount[seg]);
+                        activations.Add(activation);
+                        // activation at the latest (seg + 1) * segmentDuration - segCount[seg]
+                        // make sure (seg + 1) * segmentDuration - segCount[seg] - lastStart >= cooldownDuration
+                        //if (segmentList[seg].TimeEnd - segCount[seg] - lastStart < cooldownDuration - eps)
+                        if (activation.MaxTime - lastStart < cooldownDuration - eps)
+                        {
+                            //EnforceEffectCooldown(lastStart, cooldown, cooldownDuration, effectDuration, false);
+                            EnforceEffectCooldown(lastActivation, activation, cooldown, cooldownDuration, effectDuration);
+                            return false;
+                        }
+                        //lastStart = segmentList[seg].TimeStart;
+                        //if (seg + 1 < segmentList.Count && segCount[seg + 1] > eps) lastStart = segmentList[seg].TimeEnd - segCount[seg];
+                        lastStart = activation.MinTime;
+                        lastActivation = activation;
+                    }
+                }
+
+                /*for (int cooldowns = 2; cooldowns < activations.Count; cooldowns++)
+                {
+                    for (int act = 0; act < activations.Count - cooldowns; act++)
+                    {
+                        int seg1 = activations[act].Segment;
+                        int seg3 = activations[act + cooldowns].Segment;
+                        // first activation at seg1 * segmentDuration or (seg1 + 1) * segmentDuration - segCount[seg1] if activation is right bound
+                        double firstActivation = segmentList[seg1].TimeStart;
+                        if (seg1 + 1 < segmentList.Count && segCount[seg1 + 1] > eps) firstActivation = segmentList[seg1].TimeEnd - segCount[seg1];
+                        // remote activation at (seg3 + 1) * segmentDuration - segCount[seg3]
+                        // make sure (seg3 + 1) * segmentDuration - segCount[seg3] - firstActivation >= cooldowns * cooldownDuration
+                        if (segmentList[seg3].TimeEnd - segCount[seg3] - firstActivation < cooldowns * cooldownDuration - eps)
+                        {
+                            EnforceRemoteEffectCooldown(seg1, seg3, cooldowns, cooldown, cooldownDuration, effectDuration);
+                            return false;
+                        }
+
+                    }
+                }*/
+            }
+
+            return true;
+        }
+
+        private class ActivationConstraints
         {
             public int Segment;
             public bool Loose;
@@ -3162,6 +3607,8 @@ namespace Rawr.Mage
             public Cooldown JointEffect;
             public Cooldown LeftLink;
             public Cooldown RightLink;
+            public Cooldown FullLeftLink;
+            public Cooldown FullRightLink;
             public double LeftPaddding;
             public double RightPadding;
         }
@@ -3170,11 +3617,6 @@ namespace Rawr.Mage
         {
             ActivationConstraints result = new ActivationConstraints();
             result.Segment = segment;
-            if (segment < segmentList.Count - 1 && (hexMask[segment + 1] & (int)effect) == (int)effect)
-            {
-                result.MinTime = result.MaxTime = segmentList[segment].TimeEnd - effectInSegment;
-                return result;
-            }
             result.Loose = true;
             int hex = (int)effect;
             int N = hexList[segment].Count;
@@ -3189,10 +3631,12 @@ namespace Rawr.Mage
             if (segment < segmentList.Count - 1)
             {
                 result.RightLink = (Cooldown)(hex & hexMask[segment + 1]);
+                result.FullRightLink = (Cooldown)(hexMask[segment] & hexMask[segment + 1]);
             }
             if (segment > 0)
             {
                 result.LeftLink = (Cooldown)(hex & hexMask[segment - 1]);
+                result.FullLeftLink = (Cooldown)(hexMask[segment] & hexMask[segment - 1]);
             }
             result.MaxTime = segmentList[segment].TimeEnd - effectInSegment;
             result.MinTime = segmentList[segment].TimeStart;
@@ -3209,54 +3653,8 @@ namespace Rawr.Mage
                     CastingState state = calculationResult.SolutionVariable[index].State;
                     if (state != null && !state.GetCooldown(effect))
                     {
-                        Cooldown leftLink = state.Cooldown & result.LeftLink;
-                        Cooldown leftFullLink = (segment > 0) ? state.Cooldown & (Cooldown)hexMask[segment - 1] : Cooldown.None;
-                        Cooldown rightLink = state.Cooldown & result.RightLink;
-                        Cooldown rightFullLink = (segment < segmentList.Count - 1) ? state.Cooldown & (Cooldown)hexMask[segment + 1] : Cooldown.None;
-                        bool hasToBeLeft = false;
-                        bool hasToBeRight = false;
-                        if (leftLink != Cooldown.None)
-                        {
-                            if ((leftLink & result.LeftLink) != result.LeftLink)
-                            {
-                                hasToBeRight = true;
-                            }
-                            else if (leftFullLink != result.LeftLink)
-                            {
-                                hasToBeLeft = true;
-                            }
-                        }
-                        else if (leftFullLink != Cooldown.None)
-                        {
-                            // cycle
-                            hasToBeLeft = true;
-                            hasToBeRight = true;
-                        }
-                        else if (result.LeftLink != Cooldown.None)
-                        {
-                            hasToBeRight = true;
-                        }
-                        if (rightLink != Cooldown.None)
-                        {
-                            if ((rightLink & result.RightLink) != result.RightLink)
-                            {
-                                hasToBeLeft = true;
-                            }
-                            else if (rightFullLink != result.RightLink)
-                            {
-                                hasToBeRight = true;
-                            }
-                        }
-                        else if (rightFullLink != Cooldown.None)
-                        {
-                            // cycle
-                            hasToBeLeft = true;
-                            hasToBeRight = true;
-                        }
-                        else if (result.RightLink != Cooldown.None)
-                        {
-                            hasToBeLeft = true;
-                        }
+                        bool hasToBeLeft = (state.Cooldown & result.RightLink) != result.RightLink || ((state.Cooldown & result.LeftLink) == result.LeftLink && (state.Cooldown & result.FullLeftLink) != result.LeftLink);
+                        bool hasToBeRight = (state.Cooldown & result.LeftLink) != result.LeftLink || ((state.Cooldown & result.RightLink) == result.RightLink && (state.Cooldown & result.FullRightLink) != result.RightLink);
                         if (hasToBeLeft)
                         {
                             result.MinTime += solution[index];
@@ -3272,59 +3670,13 @@ namespace Rawr.Mage
             }
             for (int index = 0; index < segmentColumn[0]; index++) // fix if variable ordering changes
             {
-                if (solution[index] > eps && calculationResult.SolutionVariable[index].Segment == segment && calculationResult.SolutionVariable[index].Type != VariableType.ManaGem && calculationResult.SolutionVariable[index].Type != VariableType.ManaPotion && calculationResult.SolutionVariable[index].Type != VariableType.ManaOverflow)
+                if (solution[index] > eps && calculationResult.SolutionVariable[index].Segment == segment && !calculationResult.SolutionVariable[index].IsZeroTime)
                 {
                     CastingState state = calculationResult.SolutionVariable[index].State;
                     if (state != null && !state.GetCooldown(effect))
                     {
-                        Cooldown leftLink = state.Cooldown & result.LeftLink;
-                        Cooldown leftFullLink = (segment > 0) ? state.Cooldown & (Cooldown)hexMask[segment - 1] : Cooldown.None;
-                        Cooldown rightLink = state.Cooldown & result.RightLink;
-                        Cooldown rightFullLink = (segment < segmentList.Count - 1) ? state.Cooldown & (Cooldown)hexMask[segment + 1] : Cooldown.None;
-                        bool hasToBeLeft = false;
-                        bool hasToBeRight = false;
-                        if (leftLink != Cooldown.None)
-                        {
-                            if ((leftLink & result.LeftLink) != result.LeftLink)
-                            {
-                                hasToBeRight = true;
-                            }
-                            else if (leftFullLink != result.LeftLink)
-                            {
-                                hasToBeLeft = true;
-                            }
-                        }
-                        else if (leftFullLink != Cooldown.None)
-                        {
-                            // cycle
-                            hasToBeLeft = true;
-                            hasToBeRight = true;
-                        }
-                        else if (result.LeftLink != Cooldown.None)
-                        {
-                            hasToBeRight = true;
-                        }
-                        if (rightLink != Cooldown.None)
-                        {
-                            if ((rightLink & result.RightLink) != result.RightLink)
-                            {
-                                hasToBeLeft = true;
-                            }
-                            else if (rightFullLink != result.RightLink)
-                            {
-                                hasToBeRight = true;
-                            }
-                        }
-                        else if (rightFullLink != Cooldown.None)
-                        {
-                            // cycle
-                            hasToBeLeft = true;
-                            hasToBeRight = true;
-                        }
-                        else if (result.RightLink != Cooldown.None)
-                        {
-                            hasToBeLeft = true;
-                        }
+                        bool hasToBeLeft = (state.Cooldown & result.RightLink) != result.RightLink || ((state.Cooldown & result.LeftLink) == result.LeftLink && (state.Cooldown & result.FullLeftLink) != result.LeftLink);
+                        bool hasToBeRight = (state.Cooldown & result.LeftLink) != result.LeftLink || ((state.Cooldown & result.RightLink) == result.RightLink && (state.Cooldown & result.FullRightLink) != result.RightLink);
                         if (hasToBeLeft)
                         {
                             result.MinTime += solution[index];
@@ -3337,6 +3689,11 @@ namespace Rawr.Mage
                         }
                     }
                 }
+            }
+            if (segment < segmentList.Count - 1 && (hexMask[segment + 1] & (int)effect) == (int)effect)
+            {
+                result.Loose = false;
+                result.MinTime = result.MaxTime = segmentList[segment].TimeEnd - effectInSegment;
             }
             return result;
         }
@@ -3644,7 +4001,7 @@ namespace Rawr.Mage
                     if (solution[i] > 0.01 && calculationResult.SolutionVariable[i].Segment == 0 && calculationResult.SolutionVariable[i].Type == VariableType.Spell)
                     {
                         CastingState state = calculationResult.SolutionVariable[i].State;
-                        if (state != null && !state.GetCooldown(Cooldown.ManaGemEffect))
+                        if (state != null && !state.GetCooldown(trinket))
                         {
                             manaBeforeGem += calculationResult.SolutionVariable[i].Spell.ManaPerSecond * solution[i];
                             time += solution[i];
@@ -3671,7 +4028,7 @@ namespace Rawr.Mage
 
                 double overflow = solution[calculationResult.ColumnManaOverflow];
 
-                if (manaBeforeGem + overflow < calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - eps)
+                if (manaBeforeGem + overflow < calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - 0.0001)
                 {
                     // no gem/trinket at 0
                     SolverLP nogem = lp.Clone();

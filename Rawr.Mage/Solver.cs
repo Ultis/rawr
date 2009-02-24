@@ -14,7 +14,7 @@ namespace Rawr.Mage
             //public int FirstSpellColumn { get; set; }
         }
 
-        private const int cooldownCount = 12;
+        private const int cooldownCount = 13;
         //private const double segmentDuration = 30;
         //private int segments;
         private List<Segment> segmentList;
@@ -58,6 +58,8 @@ namespace Rawr.Mage
         private bool flameCapAvailable;
         private bool waterElementalAvailable;
         private bool manaGemEffectAvailable;
+
+        private Cooldown availableCooldownMask = 0;
 
         private double manaGemEffectDuration;
         private double trinket1Cooldown;
@@ -2451,21 +2453,20 @@ namespace Rawr.Mage
         {
             List<CastingState> list = new List<CastingState>();
 
-            Cooldown availableMask = 0;
             bool canDoubleTrinket = false;
-            if (waterElementalAvailable) availableMask |= Cooldown.WaterElemental;
-            if (moltenFuryAvailable) availableMask |= Cooldown.MoltenFury;
-            if (heroismAvailable) availableMask |= Cooldown.Heroism;
-            if (arcanePowerAvailable) availableMask |= Cooldown.ArcanePower;
-            if (icyVeinsAvailable) availableMask |= Cooldown.IcyVeins;
-            if (combustionAvailable) availableMask |= Cooldown.Combustion;
-            if (drumsOfBattleAvailable) availableMask |= Cooldown.DrumsOfBattle;
-            if (flameCapAvailable) availableMask |= Cooldown.FlameCap;
-            if (potionOfWildMagicAvailable) availableMask |= Cooldown.PotionOfWildMagic;
-            if (potionOfSpeedAvailable) availableMask |= Cooldown.PotionOfSpeed;
-            if (trinket1Available) availableMask |= Cooldown.Trinket1;
-            if (trinket2Available) availableMask |= Cooldown.Trinket2;
-            if (manaGemEffectAvailable) availableMask |= Cooldown.ManaGemEffect;
+            if (waterElementalAvailable) availableCooldownMask |= Cooldown.WaterElemental;
+            if (moltenFuryAvailable) availableCooldownMask |= Cooldown.MoltenFury;
+            if (heroismAvailable) availableCooldownMask |= Cooldown.Heroism;
+            if (arcanePowerAvailable) availableCooldownMask |= Cooldown.ArcanePower;
+            if (icyVeinsAvailable) availableCooldownMask |= Cooldown.IcyVeins;
+            if (combustionAvailable) availableCooldownMask |= Cooldown.Combustion;
+            if (drumsOfBattleAvailable) availableCooldownMask |= Cooldown.DrumsOfBattle;
+            if (flameCapAvailable) availableCooldownMask |= Cooldown.FlameCap;
+            if (potionOfWildMagicAvailable) availableCooldownMask |= Cooldown.PotionOfWildMagic;
+            if (potionOfSpeedAvailable) availableCooldownMask |= Cooldown.PotionOfSpeed;
+            if (trinket1Available) availableCooldownMask |= Cooldown.Trinket1;
+            if (trinket2Available) availableCooldownMask |= Cooldown.Trinket2;
+            if (manaGemEffectAvailable) availableCooldownMask |= Cooldown.ManaGemEffect;
             if (calculationOptions.IncrementalOptimizations)
             {
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
@@ -2487,7 +2488,7 @@ namespace Rawr.Mage
                         bool trinket1 = (index & Cooldown.Trinket1) != 0;
                         bool trinket2 = (index & Cooldown.Trinket2) != 0;
                         bool mg = (index & Cooldown.ManaGemEffect) != 0;
-                        if (((incrementalSetIndex | index) & availableMask) == (incrementalSetIndex | index)) // make sure all are available
+                        if (((incrementalSetIndex | index) & availableCooldownMask) == (incrementalSetIndex | index)) // make sure all are available
                         {
                             if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                             {
@@ -2528,7 +2529,7 @@ namespace Rawr.Mage
                     bool trinket1 = (incrementalSetIndex & Cooldown.Trinket1) != 0;
                     bool trinket2 = (incrementalSetIndex & Cooldown.Trinket2) != 0;
                     bool mg = (incrementalSetIndex & Cooldown.ManaGemEffect) != 0;
-                    if (((incrementalSetIndex) & availableMask) == (incrementalSetIndex)) // make sure all are available
+                    if (((incrementalSetIndex) & availableCooldownMask) == (incrementalSetIndex)) // make sure all are available
                     {
                         if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                         {
