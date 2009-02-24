@@ -15,10 +15,15 @@ namespace Rawr.Elemental
             // Set about text
             tbModuleNotes.Text =
                 "Notes:\r\n" +
-                "For the estimator, it is assumed you use Flametongue weapon.\r\n" +
-                "The estimator is a theoretical estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
+                "For the estimator, it is assumed you use Flametongue weapon and Water Shield.\r\n" +
+                "The estimator is a simple estimation at the moment and only uses a rotation with Flameshock, Lava Blast and Lightning Bolt.\r\n" +
                 "Trinkets, Elemental Mastery and Clearcasting are modelled by calculating their average value during the fight.\r\n" +
-                "The estimator assumes you use Glyph of Flame Shock.";
+                "\r\n" +
+                "Assumed rotation:\r\n"+
+                "- Lava Burst whenever off cooldown and only with Flame Shock on.\r\n" +
+                "- In case of no Glyph of Flameshock, recast Flame Shock immediately after Lava Burst, else cast Flame Shock only when the DoT falls off.\r\n" +
+                "- Cast Thunderstorm whenever available if using Thunderstorm\r\n" +
+                "- Cast Lightning Bolt whenever there's nothing else to do.";
         }
 
         protected override void LoadCalculationOptions()
@@ -57,8 +62,6 @@ namespace Rawr.Elemental
             cbWaterMastery.Checked = calcOpts.glyphOfWaterMastery;
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
-            cbFS.Checked = calcOpts.UseFSalways;
-            cbLvB.Checked = !calcOpts.UseLvBalways;
 
             loading = false;
 
@@ -163,22 +166,6 @@ namespace Rawr.Elemental
             calcOpts.UseThunderstorm = cbThunderstorm.Checked;
             Character.OnCalculationsInvalidated();
         }
-
-        private void cbFS_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.UseFSalways = cbFS.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
-        private void checkBox7_CheckedChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
-            calcOpts.UseLvBalways = !cbLvB.Checked;
-            Character.OnCalculationsInvalidated();
-        }
     }
 
     [Serializable]
@@ -193,8 +180,6 @@ namespace Rawr.Elemental
         public int ManaPot = 0; // none
         public int ReplenishmentUptime = 30;
         public bool UseThunderstorm = true;
-        public bool UseFSalways = true;
-        public bool UseLvBalways = true;
 
         public bool glyphOfFlameShock = false;
         public bool glyphOfElementalMastery = false;

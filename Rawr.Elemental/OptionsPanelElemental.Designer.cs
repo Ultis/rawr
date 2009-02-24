@@ -41,8 +41,6 @@
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.cbFS = new System.Windows.Forms.CheckBox();
-            this.cbLvB = new System.Windows.Forms.CheckBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.cbWaterMastery = new System.Windows.Forms.CheckBox();
             this.extendedToolTipLabel13 = new Rawr.CustomControls.ExtendedToolTipLabel();
@@ -179,14 +177,12 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.cbLvB);
-            this.groupBox3.Controls.Add(this.cbFS);
             this.groupBox3.Controls.Add(this.cbThunderstorm);
             this.groupBox3.Controls.Add(this.cmbManaAmt);
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Location = new System.Drawing.Point(6, 171);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(277, 115);
+            this.groupBox3.Size = new System.Drawing.Size(277, 73);
             this.groupBox3.TabIndex = 54;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Estimation details";
@@ -228,30 +224,6 @@
             this.label10.TabIndex = 47;
             this.label10.Text = "Mana potions:";
             // 
-            // cbFS
-            // 
-            this.cbFS.AutoSize = true;
-            this.cbFS.Enabled = false;
-            this.cbFS.Location = new System.Drawing.Point(9, 66);
-            this.cbFS.Name = "cbFS";
-            this.cbFS.Size = new System.Drawing.Size(201, 17);
-            this.cbFS.TabIndex = 52;
-            this.cbFS.Text = "Use Flame Shock whenever possible";
-            this.cbFS.UseVisualStyleBackColor = true;
-            this.cbFS.CheckedChanged += new System.EventHandler(this.cbFS_CheckedChanged);
-            // 
-            // cbLvB
-            // 
-            this.cbLvB.AutoSize = true;
-            this.cbLvB.Enabled = false;
-            this.cbLvB.Location = new System.Drawing.Point(9, 89);
-            this.cbLvB.Name = "cbLvB";
-            this.cbLvB.Size = new System.Drawing.Size(174, 17);
-            this.cbLvB.TabIndex = 53;
-            this.cbLvB.Text = "Only use Lava Burst with FS up";
-            this.cbLvB.UseVisualStyleBackColor = true;
-            this.cbLvB.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
-            // 
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.cbWaterMastery);
@@ -268,7 +240,7 @@
             this.groupBox10.Controls.Add(this.extendedToolTipLabel4);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel5);
             this.groupBox10.Controls.Add(this.extendedToolTipLabel12);
-            this.groupBox10.Location = new System.Drawing.Point(6, 292);
+            this.groupBox10.Location = new System.Drawing.Point(6, 250);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(277, 167);
             this.groupBox10.TabIndex = 34;
@@ -582,8 +554,6 @@
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel5;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel12;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.CheckBox cbLvB;
-        private System.Windows.Forms.CheckBox cbFS;
         private System.Windows.Forms.CheckBox cbThunderstorm;
         private System.Windows.Forms.TrackBar tkReplenishment;
         private System.Windows.Forms.Label lblReplenishment;

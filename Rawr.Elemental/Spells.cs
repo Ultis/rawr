@@ -82,8 +82,11 @@ namespace Rawr.Elemental
         public float PeriodicTick
         { get { return periodicTick * dotBaseCoef + spellPower * dotSpCoef; } }
 
+        public float PeriodicTicks
+        { get { return periodicTicks; } }
+
         public float TotalDamage
-        { get { return AvgDamage + PeriodicTick * periodicTicks; } }
+        { get { return AvgDamage + PeriodicTick * PeriodicTicks; } }
 
         public float DirectDpS
         { get { return AvgDamage / CastTime; } }

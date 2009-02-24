@@ -37,22 +37,40 @@ namespace Rawr.Elemental.Estimation
             }
             #endregion
             #region Rotation
-            float timeBetweenTS = TS.CDRefreshTime;
-            float timeBetweenFS = FS.PeriodicRefreshTime; // cast whenever DoT drops
-            float timeBetweenLvB = LvB.CDRefreshTime; // cast whenever available
-            float castFractionTS = TS.CastTime / timeBetweenTS;
-            if (!calcOpts.UseThunderstorm) castFractionTS = 0f;
-            float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
-            float castFractionLvBFS = LvBFS.CastTime / timeBetweenLvB; // LvB casting time per second
-            float castFractionLB = 1f - castFractionFS - castFractionLvBFS - castFractionTS; // LB casting time per second
+            /* Rotation
+             * Center of attention is Lava Burst.
+             * If glyphed, cast FS whenever the dot falls off
+             * If unglyphed, cast FS immediately after Lava Burst OR right before Lava Burst
+             * OPTION: cast FS whenever available
+             * 
+             */
+            // Thunderstorm
+            float timeBetweenTS = TS.CDRefreshTime; // cast whenever available
+            float castFractionTS = calcOpts.UseThunderstorm ? TS.CastTime / timeBetweenTS : 0;
             float dpsFromTS = 0f; // assume no targets hit
-            float dpsFromFS = FS.HitChance * FS.TotalDamage / timeBetweenFS;
+            float mpsFromTS = calcOpts.UseThunderstorm ? TS.ManaCost / timeBetweenTS : 0;
+            // Lava Burst
+            float timeBetweenLvB = LvB.CDRefreshTime; // cast whenever available
+            float castFractionLvBFS = LvBFS.CastTime / timeBetweenLvB; // LvB casting time per second
             float dpsFromLvB = LvBFS.HitChance * LvBFS.TotalDamage / timeBetweenLvB;
-            float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
-            float mpsFromTS = TS.ManaCost / timeBetweenTS;
-            if (!calcOpts.UseThunderstorm) mpsFromTS = 0f; // 0 anyway but whatever
-            float mpsFromFS = FS.ManaCost / timeBetweenFS;
             float mpsFromLvB = LvBFS.ManaCost / timeBetweenLvB;
+            // Flame Shock
+            float timeBetweenFS = FS.PeriodicRefreshTime; // cast whenever DoT drops
+            float dpsFromFS = FS.HitChance * FS.TotalDamage / timeBetweenFS;
+            if (!calcOpts.glyphOfFlameShock)
+            {
+                // cast AFTER LvB
+                timeBetweenFS = timeBetweenLvB;
+                if (timeBetweenFS < FS.CDRefreshTime) timeBetweenFS = FS.CDRefreshTime; // Should Not Happen
+                float ticks = (float)Math.Floor((timeBetweenFS - LvB.CastTime) / FS.PeriodicTickTime);
+                if (ticks > FS.PeriodicTicks) ticks = FS.PeriodicTicks; // Should Not Happen
+                dpsFromFS = FS.HitChance * (FS.AvgDamage + FS.PeriodicTick * ticks) / timeBetweenFS;
+            }
+            float mpsFromFS = FS.ManaCost / timeBetweenFS;
+            float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
+            // Lightning Bolt
+            float castFractionLB = 1f - castFractionFS - castFractionLvBFS - castFractionTS; // LB casting time per second
+            float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
             float mpsFromLB = castFractionLB * LB.ManaCost / LB.CastTime;
             float castsPerLvB = timeBetweenLvB * castFractionLB;
             #endregion
@@ -66,13 +84,28 @@ namespace Rawr.Elemental.Estimation
             {
                 float CCchance2LB = 1 - ((1 - critLB * LB.HitChance) * (1 - critLB * LB.HitChance));
                 float CCchanceLvBLB = 1 - ((1 - LvBFS.HitChance) * (1 - critLB * LB.HitChance));
-                clearcastingLB = (
-                    Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
-                    Math.Min(1, castsPerLvB) * CCchanceLvBLB +
-                    Math.Min(LvBFS.HitChance, castsPerLvB - 1) * CCchanceLvBLB
-                    ) / castsPerLvB;
-                clearcastingFS = CCchance2LB;
-                clearcastingLvB = CCchance2LB;
+                float CCchanceLvBFS = 1 - ((1 - LvBFS.HitChance) * (1 - FS.CritChance * FS.HitChance));
+                float CCchanceLBFS = 1 - ((1 - critLB * LB.HitChance) * (1 - FS.CritChance * FS.HitChance));
+                if (calcOpts.glyphOfFlameShock)
+                {
+                    clearcastingLvB = CCchance2LB;
+                    clearcastingFS = CCchance2LB;
+                    clearcastingLB = (
+                        Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
+                        Math.Min(1, castsPerLvB) * CCchanceLvBLB +
+                        Math.Min(LvBFS.HitChance, castsPerLvB - 1) * CCchanceLvBLB
+                        ) / castsPerLvB;
+                }
+                else
+                {
+                    clearcastingLvB = CCchance2LB;
+                    clearcastingFS = CCchanceLvBLB;
+                    clearcastingLB = (
+                        Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
+                        Math.Min(1, castsPerLvB) * CCchanceLBFS +
+                        Math.Min(0, castsPerLvB - 1) * CCchanceLvBFS
+                        ) / castsPerLvB;
+                }
                 mpsFromLB *= 1 - .4f * clearcastingLB;
                 mpsFromLvB *= 1 - .4f * clearcastingLvB;
                 mpsFromFS *= 1 - .4f * clearcastingFS;
@@ -112,7 +145,10 @@ namespace Rawr.Elemental.Estimation
                 FrS = FrS,
                 CC_FS = clearcastingFS,
                 CC_LvB = clearcastingLvB,
-                CC_LB = clearcastingLB
+                CC_LB = clearcastingLB,
+                LBFraction = castFractionLB,
+                LvBFraction = castFractionLvBFS,
+                FSFraction = castFractionFS
             };
         }
 
@@ -226,6 +262,9 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.CastFraction = rot.CastFraction;
             calculatedStats.CritFraction = rot.CritFraction;
             calculatedStats.MissFraction = rot.MissFraction;
+            calculatedStats.LvBFraction = rot.LvBFraction;
+            calculatedStats.FSFraction = rot.FSFraction;
+            calculatedStats.LBFraction = rot.LBFraction;
             calculatedStats.RotationDPS = rot.DPS;
             calculatedStats.RotationMPS = rot.MPS;
             calculatedStats.TotalDPS = TotalDamage / FightDuration;
