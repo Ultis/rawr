@@ -259,9 +259,10 @@ namespace Rawr
 			System.IO.StringReader reader = new System.IO.StringReader(xml);
 			CalculationOptionsEnhance calcOpts = serializer.Deserialize(reader) as CalculationOptionsEnhance;
 			return calcOpts;
-		}
+        }
 
-		public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
+        #region Main Calculations
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
 		{
 			//_cachedCharacter = character;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
@@ -383,47 +384,47 @@ namespace Rawr
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
 
-            if (stats.MongooseProc > 0)
+            if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
             {
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 2673)
+                if (character.MainHandEnchant != null)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
-                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
-                    float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                    float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                    chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier))/ 8333.333333f);
-                    attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
-                    baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
+                    float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
+                    float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedMHSpeed, true);
+                    if (character.MainHandEnchant.Id == 2673)
+                    {
+                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                        chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
+                        attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                        baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
+                    }
+                    if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
+                    {
+                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                    }
                 }
-                if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 2673)
+                if (character.OffHandEnchant != null)
                 {
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedOHSpeed;
-                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
-                    float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                    float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                    chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
-                    attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
-                    baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
-                }
-            }
-
-            if (stats.BerserkingProc > 0)
-            {
-                if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
-                {
-                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
-                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
-                    float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                    float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                    attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
-                }
-                if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
-                {
-                    float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
-                    float yellowAttacksPerSecond = (1f - chanceYellowMiss - chanceDodge) / 3f; //TODO: Calculate this
-                    float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
-                    float berserkingUptime = 15f / timeBetweenBerserkingProcs;
-                    attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                    float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
+                    float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedOHSpeed, false);
+                    if (character.OffHandEnchant.Id == 2673) 
+                    {
+                        float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float mongooseUptime = 15f / timeBetweenMongooseProcs;
+                        chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
+                        attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                        baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
+                    }
+                    if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
+                    {
+                        float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
+                        float berserkingUptime = 15f / timeBetweenBerserkingProcs;
+                        attackPower += 400f * berserkingUptime * (1 + stats.BonusAttackPowerMultiplier);
+                    }
                 }
             }
             //XXX: Only MH WF for now
@@ -583,6 +584,38 @@ namespace Rawr
 
 			return calculatedStats;
         }
+       
+        private float getYellowAttacksPerSecond(Character character, float yellowHitChance, float weaponSpeed, bool mainhand)
+        {
+            float yellowAttacksPerSecond = 0f;
+            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            switch (character.ShamanTalents.ImprovedStormstrike)
+            {
+                case 0:
+                    // 3+5 etc is number of SS and number of LL per time interval
+                    yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
+                    break;
+                case 1:
+                    yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
+                    break;
+                case 2:
+                    yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
+                    break;
+
+            }
+            float WFProcChance = 1f / 6f;
+            if (calcOpts.GlyphWF)
+            {
+                // need to modify WFProcChance if WF Glyph
+            }
+            // now add WF yellow attacks
+            if (calcOpts.MainhandImbue == "windfury" & mainhand)
+                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
+            if (calcOpts.OffhandImbue =="windfury" & !mainhand)
+                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
+            return yellowAttacksPerSecond;
+        }
+        #endregion 
 
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -590,7 +623,7 @@ namespace Rawr
             Stats statsRace = new Stats() { 
                     Mana = 4116f,
                     AttackPower = 140f, 
-                    SpellCritRating = 101f,  // TODO - need to identify what the base spell & melee crit ratings should be
+                    SpellCritRating = 101f,
                     CritMeleeRating = 134f};
 
             switch (character.Race)
