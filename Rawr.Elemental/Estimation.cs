@@ -92,8 +92,8 @@ namespace Rawr.Elemental.Estimation
                     clearcastingFS = CCchance2LB;
                     clearcastingLB = (
                         Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
-                        Math.Min(1, castsPerLvB) * CCchanceLvBLB +
-                        Math.Min(LvBFS.HitChance, castsPerLvB - 1) * CCchanceLvBLB
+                        Math.Min(1, castsPerLvB - 1) * CCchanceLvBLB +
+                        Math.Min(1, castsPerLvB) * CCchanceLvBLB
                         ) / castsPerLvB;
                 }
                 else
@@ -102,8 +102,8 @@ namespace Rawr.Elemental.Estimation
                     clearcastingFS = CCchanceLvBLB;
                     clearcastingLB = (
                         Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
-                        Math.Min(1, castsPerLvB) * CCchanceLBFS +
-                        Math.Min(0, castsPerLvB - 1) * CCchanceLvBFS
+                        Math.Min(1, castsPerLvB - 1) * CCchanceLBFS +
+                        Math.Min(1, castsPerLvB) * CCchanceLvBFS
                         ) / castsPerLvB;
                 }
                 mpsFromLB *= 1 - .4f * clearcastingLB;
