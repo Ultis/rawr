@@ -587,6 +587,7 @@ namespace Rawr.TankDK
             statsTotal.Spirit = (float)Math.Floor(statsGearEnchantsBuffs.Spirit * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier));
 
             statsTotal.Armor = (float)Math.Floor(statsGearEnchantsBuffs.Armor * (1.0f + statsGearEnchantsBuffs.BaseArmorMultiplier) * 1.80f + 2f * statsTotal.Agility);
+            statsTotal.Armor *= 1.0f + statsGearEnchantsBuffs.BonusArmorMultiplier;
 
             statsTotal.BonusArmor = statsGearEnchantsBuffs.BonusArmor;
 
