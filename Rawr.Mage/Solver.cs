@@ -534,7 +534,11 @@ namespace Rawr.Mage
                     if (arcanePowerAvailable) AddSegmentTicks(ticks, calculationResult.ArcanePowerCooldown);
                     if (combustionAvailable) AddSegmentTicks(ticks, 300.0);
                     if (drumsOfBattleAvailable) AddSegmentTicks(ticks, 120.0);
-                    if (flameCapAvailable || calculationOptions.ManaGemEnabled || manaGemEffectAvailable) AddSegmentTicks(ticks, 60.0);
+                    if (flameCapAvailable || calculationOptions.ManaGemEnabled || manaGemEffectAvailable)
+                    {
+                        ticks.Add(10); // get a better grasp on mana overflow
+                        AddSegmentTicks(ticks, 60.0);
+                    }
                     if (icyVeinsAvailable) AddSegmentTicks(ticks, calculationResult.IcyVeinsCooldown);
                     if (waterElementalAvailable) AddSegmentTicks(ticks, calculationResult.WaterElementalCooldown);
                     if (trinket1Available) AddSegmentTicks(ticks, trinket1Cooldown);
