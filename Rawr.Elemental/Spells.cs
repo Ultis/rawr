@@ -13,7 +13,7 @@ namespace Rawr.Elemental
         protected float manaCost = 0f;
         protected float gcd = 1.5f;
         protected float crit = 0f;
-        protected float critModifier = 1.5f;
+        protected float critModifier = 1f;
         protected float cooldown = 0f;
         protected float missChance = 0.17f;
 
@@ -127,17 +127,18 @@ namespace Rawr.Elemental
         public float ManaCost
         { get { return manaCost; } }
 
-        public void Initialize(Stats stats)
+        public void Initialize(Stats stats, ShamanTalents shamanTalents)
         {
             float Speed = (1f + stats.SpellHaste) * (1f + stats.HasteRating * 0.000304971132f);
             gcd = (float)Math.Round(gcd / Speed, 4);
             castTime = (float)Math.Round(castTime / Speed, 4);
-            critModifier += .5f*stats.BonusSpellCritMultiplier;
+            critModifier += .20f * shamanTalents.ElementalFury;
+            critModifier *= 1.5f * (1 + stats.BonusSpellCritMultiplier) - 1;
+            critModifier += 1f;
             spellPower += stats.SpellPower;
             crit += stats.SpellCrit;
             missChance -= stats.SpellHit;
             if (missChance < 0) missChance = 0;
-
         }
 
         public void ApplyEM(float modifier)
@@ -167,7 +168,7 @@ namespace Rawr.Elemental
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
     }
 
@@ -199,7 +200,7 @@ namespace Rawr.Elemental
             totalCoef *= 1f + .04f * shamanTalents.LightningOverload * .5f;
             crit *= 1 + .04f * shamanTalents.LightningOverload;*/
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
 
         public void increaseCritFromOverload(int ranks)
@@ -237,7 +238,7 @@ namespace Rawr.Elemental
             spellPower += stats.LightningSpellPower + stats.SpellNatureDamageRating;
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
 
         public void increaseCritFromOverload(int ranks)
@@ -266,15 +267,16 @@ namespace Rawr.Elemental
             spCoef += .04f * shamanTalents.Shamanism;
             // emulate lightning overload by increasing crit chance
             crit += .05f * shamanTalents.TidalMastery;
-            critModifier += .5f * new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
-            critModifier += .5f * stats.BonusLavaBurstCritDamage / 100f;
+            critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[shamanTalents.LavaFlows];
+            critModifier += stats.BonusLavaBurstCritDamage / 100f;
+            //critModifier *= 1 + stats.BonusLavaBurstCritDamage / 100f;
             baseMinDamage += stats.LavaBurstBonus;
             baseMaxDamage += stats.LavaBurstBonus;
             spellPower += stats.SpellFireDamageRating;
             if (calcOpts.glyphOfLava) spCoef += .1f;
             totalCoef *= 1 + stats.BonusFireDamageMultiplier;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
 
             crit = (1-fs)*crit + fs;
         }
@@ -307,7 +309,7 @@ namespace Rawr.Elemental
             if (calcOpts.glyphOfFlameShock) periodicTicks += 2;
             if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
     }
 
@@ -331,7 +333,7 @@ namespace Rawr.Elemental
             totalCoef *= 1 + stats.BonusNatureDamageMultiplier;
             if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
     }
 
@@ -355,7 +357,7 @@ namespace Rawr.Elemental
             totalCoef *= 1 + stats.BonusFrostDamageMultiplier;
             if (calcOpts.glyphOfShocking) gcd -= 0.5f;
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
     }
 
@@ -369,7 +371,7 @@ namespace Rawr.Elemental
             gcd = 0; // no global cooldown ;)
             #endregion
 
-            base.Initialize(stats);
+            base.Initialize(stats, shamanTalents);
         }
     }
 

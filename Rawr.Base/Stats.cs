@@ -2422,6 +2422,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% bonus critical strike damage for Lava Burst")]
         public float BonusLavaBurstCritDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusLavaBurstCritDamage]; }

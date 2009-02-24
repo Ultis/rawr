@@ -30,14 +30,17 @@ namespace Rawr.Elemental
                     int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5
                     // Yellow
                     int[] quick = { 39918, 41446, 40017, 40128, 42150 }; // haste
+                    int[] rigid = { 39915, 41447, 40014, 40125, 42156 }; // hit
                     // Purple
                     int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
                     // Green
                     int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
+                    int[] lambent = { 39986, 41469, 40100, 40177 }; // hit + mp5
                     // Orange
                     int[] luminous = { 39946, 41494, 40047, 40151 }; // spell power + int
                     int[] reckless = { 39959, 41497, 40051, 40155 }; // spell power + haste
                     int[] potent = { 39956, 41495, 40048, 40152}; // spell power + crit
+                    int[] veiled = { 39957, 41502, 40049, 40153 }; // spell power + hit
 
                     /*
                      * red: runed, royal
@@ -46,36 +49,60 @@ namespace Rawr.Elemental
                      */
 
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect", false, runed[1], royal[1], reckless[1], quick[1], dazzling[1], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, runed[2], royal[2], reckless[2], quick[2], dazzling[2], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", false, runed[3], royal[3], reckless[3], quick[3], dazzling[3], chaotic);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, runed[4], quick[4], lustrous[4], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], rigid[0], veiled[0], lambent[0], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect", false, runed[1], royal[1], reckless[1], quick[1], dazzling[1], rigid[1], veiled[1], lambent[1], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, runed[2], royal[2], reckless[2], quick[2], dazzling[2], rigid[2], veiled[2], lambent[2], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", false, runed[3], royal[3], reckless[3], quick[3], dazzling[3], rigid[3], veiled[3], lambent[3], chaotic);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, runed[4], quick[4], lustrous[4], rigid[4], chaotic);
                 }
                 return _defaultGemmingTemplates;
             }
         }
 
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int royal, int reckless, int quick, int dazzling, int meta)
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int royal, int reckless, int quick, int dazzling, int rigid, int veiled, int lambent, int meta)
         {
-            // if no mana problem, runed is always very good
+            // if no mana problem, runed and rigid are always very good
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            // if mana problem,dazzling is often very good
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = rigid, YellowId = rigid, BlueId = rigid, PrismaticId = rigid, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = veiled, YellowId = veiled, BlueId = veiled, PrismaticId = veiled, MetaId = meta, Enabled = enabled });
+            // if mana problem, dazzling is often very good
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = dazzling, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
 
             /*
              * red: runed, royal
              * yellow: reckless, quick
-             * blue: royal, dazzling(, lustrous)
+             * blue: royal, dazzling, lambent (, lustrous)
              */
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            // +Power and +Crit
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, 
+                MetaId = meta, Enabled = enabled });
+            // +Hit
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = veiled, YellowId = rigid, BlueId = royal, PrismaticId = rigid, 
+                MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = veiled, YellowId = rigid, BlueId = lambent, PrismaticId = rigid, 
+                MetaId = meta, Enabled = enabled });
+            // MP5
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = veiled, YellowId = rigid, BlueId = dazzling, PrismaticId = veiled, 
+                MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, 
+                MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, 
+                MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, 
+                MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
+                RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, 
+                MetaId = meta, Enabled = enabled });
         }
 
-        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int meta)
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int rigid, int meta)
         {
             // Overrides, only "runed" and "seers"
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
@@ -354,7 +381,6 @@ namespace Rawr.Elemental
             Stats statsTalents = new Stats()
             {
                 #region Elemental
-                BonusSpellCritMultiplier = 0.20f * talents.ElementalFury,
                 SpellHit = 0.01f * talents.ElementalPrecision,
                 ManaRegenIntPer5 = 0.04f * talents.UnrelentingStorm,
                 #endregion
