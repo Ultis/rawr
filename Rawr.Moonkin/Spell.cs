@@ -1176,7 +1176,7 @@ namespace Rawr.Moonkin
             // Haste trinkets
             if (calcs.BasicStats.HasteRatingFor20SecOnUse2Min > 0)
             {
-                effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f;
+                effectiveSpellHaste += calcs.BasicStats.HasteRatingFor20SecOnUse2Min * 20.0f / 120.0f / CalculationsMoonkin.hasteRatingConversionFactor;
             }
             // Spell damage trinkets
             if (calcs.BasicStats.SpellPowerFor15SecOnUse90Sec > 0)
