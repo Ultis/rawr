@@ -28,13 +28,13 @@ namespace Rawr.Tankadin
 
                 return new List<GemmingTemplate>()
 				{
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
-						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = false,
+                		RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = false,
 						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = eternal },
-					new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+					new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = false,
 						RedId = sovereign[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = true,
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Uncommon", Enabled = false,
 						RedId = sovereign[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = eternal },
                 	
 					new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
@@ -46,13 +46,13 @@ namespace Rawr.Tankadin
                 	new GemmingTemplate() { Model = "Tankadin", Group = "Rare", Enabled = true,
 						RedId = sovereign[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = eternal },
                 	
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = false,
 						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = false,
 						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = eternal },
-					new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+					new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = false,
 						RedId = sovereign[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
-                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = true,
+                	new GemmingTemplate() { Model = "Tankadin", Group = "Epic", Enabled = false,
 						RedId = sovereign[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = eternal },
 						
 					new GemmingTemplate() { Model = "Tankadin", Group = "Jeweler",
@@ -87,8 +87,10 @@ namespace Rawr.Tankadin
 						"Basic Stats:Health",
 						"Basic Stats:Armor",
 						"Basic Stats:Stamina",
+						"Basic Stats:Strength",
 						"Basic Stats:Agility",
 						"Basic Stats:Defense",
+						"Basic Stats:Resilience",
 						"Basic Stats:Block Value",
 						"Basic Stats:Attack Power",
 						"Basic Stats:Spell Damage",
@@ -248,12 +250,13 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float defDif = (targetLevel - 80) * .002f;
             cs.Defense = stats.Defense;
+            cs.Resilience = stats.Resilience;
             cs.Miss = Math.Min(1f, .04f + cs.Defense * .0004f - defDif);
             cs.Dodge = Math.Min(1f - cs.Miss, stats.Dodge - defDif);
             cs.Parry = Math.Min(1f - cs.Miss - cs.Dodge, stats.Parry - defDif);
             cs.Avoidance = cs.Miss + cs.Dodge + cs.Parry;
             cs.Block = Math.Min(1f - cs.Avoidance, stats.Block + .3f * talents.HolyShield - defDif);
-            cs.CritAvoidance = cs.Defense * .0004f - defDif;
+            cs.CritAvoidance = (cs.Defense * .0004f) + (cs.Resilience * .01f / 81.97497559f) - defDif;
             cs.Crit = Math.Max(0, Math.Min(1f - cs.Avoidance - cs.Block, .05f - cs.CritAvoidance));
             cs.Hit = 1f - cs.Avoidance - cs.Block - cs.Crit;
             cs.BlockValue = stats.BlockValue;
@@ -275,7 +278,7 @@ you are being killed by burst damage, focus on Survival Points.",
             float normalThreatMod = 1 / .7f * (1f + stats.ThreatIncreaseMultiplier);
             float holyThreatMod = normalThreatMod * 1.9f;
             float SotT = 1f + talents.ShieldOfTheTemplar * .1f;
-            float holyMulti = 1f;// stats.BonusHolySpellPowerMultiplier;
+            float holyMulti = 1f + stats.BonusHolyDamageMultiplier;
             float damageMulti = 1f + talents.OneHandedWeaponSpecialization * .02f;
             float expertise = .0025f * stats.Expertise;
 
@@ -296,41 +299,47 @@ you are being killed by burst damage, focus on Survival Points.",
             float nwd = wd * 2.4f / ws;
 
             //TODO Implement better reckoning uptime estimator
-            float reckoning = .25f;
+            //float reckoning = .25f;
+            
+            // New Reckoning Uptime Estimator
+            float reckoningTime = cs.ToLand * talents.Reckoning * 0.02f * 8f / ws;
+            float reckoning = 1.5f * reckoningTime;
 
-            //Hammer of the Righteous
+            //Hammer of the Righteous (Per Hit)
             if (talents.HammerOfTheRighteous > 0)
             {
                 cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti;
                 cs.HotRThreat = cs.HotRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
             }
 
-            //Shield of Righteousness
+            //Shield of Righteousness (Per Hit)
             cs.ShoRDamage = (stats.BlockValue + 300f) * damageMulti * SotT * holyMulti;
             cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
 
-            //Avenger's Shield
+            //Avenger's Shield (Per Hit)
             cs.ASDamage = (940f + .07f * stats.AttackPower + .07f * stats.SpellPower) * damageMulti * SotT * holyMulti;
             cs.ASThreat = cs.ASDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
-            //Consecration
+            //Consecration (Per Cast 8sec)
+            //TODO Implement Glyph of Consecrate, try to find a way to put it into rotation
             cs.ConsDuration = 8f;
             cs.ConsDamage = cs.ConsDuration * (113f + .04f * stats.SpellPower + .04f * stats.AttackPower) * damageMulti * holyMulti;
-            cs.ConsThreat = cs.ConsDamage * holyThreatMod;
+            cs.ConsThreat = cs.ConsDamage * holyThreatMod / 8;
 
-            //Seal of Righteousness
+            //Seal of Righteousness (Per Swing)
             cs.SoRDamage = ws * (.028f * stats.AttackPower + .055f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
             cs.SoRThreat = cs.SoRDamage / ws * cs.ToLand * holyThreatMod * (1f + reckoning);
 
-            //Judgement of Righteousness
+            //Judgement of Righteousness (Per Swing)
             cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
             cs.JoRThreat = cs.JoRDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
-            //Seal of Vengeance
+            //Seal of Vengeance (Damage = Per Tick, Threat = Per Second)
+            //TODO Unify Damage and Threat
             cs.SoVDamage = (0.016f * stats.SpellPower + 0.032f * stats.AttackPower) * damageMulti * 5f * holyMulti * (1 + .03f * talents.SealsOfThePure);
             cs.SoVThreat = cs.SoVDamage * holyThreatMod / 3f;
 
-            //Judgement of Vengeance
+            //Judgement of Vengeance (Per Cast)
             cs.JoVDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
             cs.JoVThreat = cs.JoVDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
@@ -352,16 +361,21 @@ you are being killed by burst damage, focus on Survival Points.",
             // #1: 96969 (Level 70 version)
             /*
             float rot1Time = 18f;
-            cs.Rot1TPS = (3 * cs.HotRThreat + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + (cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time;
-         float rot1DPS = (3 * cs.HotRDamage + 2 * (cs.HSDamage + cs.JoVDamage + cs.ConsDamage) + (cs.SoVDamage + cs.WhiteDamage) * rot1Time) / rot1Time;
+            cs.Rot1TPS = (3 * cs.HotRThreat + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + cs.SoVThreat + ( cs.WhiteThreat * rot1Time) / rot1Time;
+         float rot1DPS = (3 * cs.HotRDamage + 2 * (cs.HSDamage + cs.JoVDamage + cs.ConsDamage) + cs.SoVDamage + ( cs.WhiteDamage * rot1Time) / rot1Time;
 
             cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
             */
             
             // Seal of Vengeance-based Rotation
-            float rot1Time = 18f;
-            cs.Rot1TPS = (3 * (cs.HotRThreat + cs.ShoRThreat) + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + (cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time;
-            float rot1DPS = (3 * (cs.HotRDamage + cs.ShoRDamage) + 2 * (cs.HSDamage + cs.JoVDamage) + cs.ConsDamage + (cs.SoVDamage + cs.WhiteDamage) * rot1Time) / rot1Time;
+//            float rot1Time = 18f;
+//            cs.Rot1TPS = 3 * (cs.HotRThreat + cs.ShoRThreat) + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time);
+//            float rot1DPS = 3 * (cs.HotRDamage + cs.ShoRDamage) + 2 * (cs.HSDamage + cs.JoVDamage) + cs.ConsDamage + (cs.SoVDamage + (s.WhiteDamage) * rot1Time) / rot1Time;
+
+			// Revised Seal of Vengeance Rotation
+			float rotTime = 18f;
+			cs.Rot1TPS = ((3 * cs.HotRThreat) + (3 * cs.ShoRThreat) + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rotTime)) / rotTime;
+			float rot1DPS = ((3 * cs.HotRDamage) + (3 * cs.ShoRDamage) + (2 * cs.HSDamage) + (2 * cs.JoVDamage) + (2 * cs.ConsDamage) + ((cs.SoVDamage + cs.WhiteDamage) * rotTime)) / rotTime;
 
             cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
             //Incoming Damage Mechanics

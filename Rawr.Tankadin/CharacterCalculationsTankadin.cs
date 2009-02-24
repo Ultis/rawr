@@ -38,6 +38,7 @@ namespace Rawr.Tankadin
 
         public float ArmorReduction { get; set; }
         public float Defense { get; set; }
+        public float Resilience {get; set; }
         public float Dodge { get; set; }
         public float Miss { get; set; }
         public float Parry { get; set; }
@@ -103,8 +104,10 @@ namespace Rawr.Tankadin
 			dict.Add("Health", BasicStats.Health.ToString());
             dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
 			dict.Add("Stamina", BasicStats.Stamina.ToString());
+			dict.Add("Strength", BasicStats.Strength.ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
             dict.Add("Defense", Math.Round(Defense + 400f).ToString());
+            dict.Add("Resilience", Math.Round(Resilience).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
             dict.Add("Spell Damage", BasicStats.SpellPower.ToString());
             dict.Add("Block Value", BlockValue.ToString());
