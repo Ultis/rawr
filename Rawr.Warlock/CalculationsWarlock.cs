@@ -103,12 +103,10 @@ namespace Rawr.Warlock
                         _subPointNameColors.Add(string.Format("Mana Usage ({0} total)", _currentChartTotal.ToString("0")), System.Drawing.Color.Blue);
                         break;
                     case "Haste Rating Gain":
-                        _subPointNameColors.Add(string.Format("DPS-Burst"), System.Drawing.Color.Red);
-                        _subPointNameColors.Add(string.Format("DPS-Sustained"), System.Drawing.Color.Blue);
+                        _subPointNameColors.Add(string.Format("DPS"), System.Drawing.Color.Red);
                         break;
                     default:
-                        _subPointNameColors.Add("DPS-Burst", System.Drawing.Color.Red);
-                        _subPointNameColors.Add("DPS-Sustained", System.Drawing.Color.Blue);
+                        _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
                         _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
                         break;
                 }
@@ -136,8 +134,7 @@ namespace Rawr.Warlock
                     "Basic Stats:Hit",
                     "Basic Stats:Haste",
                     "Simulation:Rotation",
-                    "Simulation:Burst DPS",
-                    "Simulation:Sustained DPS",
+                    "Simulation:DPS",
                     "Shadow:Shadow Bolt",
                     "Shadow:Curse of Agony",
                     "Shadow:Curse of Doom",
@@ -527,8 +524,8 @@ namespace Rawr.Warlock
                 PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 ExtractOfNecromanticPowerProc = stats.ExtractOfNecromanticPowerProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
-//                CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
-//                LifeTapBonusSpirit = stats.LifeTapBonusSpirit
+                CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
+                LifeTapBonusSpirit = stats.LifeTapBonusSpirit
             };
         }
 

@@ -520,8 +520,11 @@ namespace Rawr.Warlock
                 spell.SpellStatistics.ManaUsed += manaCost * spell.SpellStatistics.HitCount;
                 currentMana -= manaCost * spell.SpellStatistics.HitCount;
             }
-            fillerSpell.SpellStatistics.ManaUsed -= corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
-            currentMana += corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
+            if (corruption != null)
+            {
+                fillerSpell.SpellStatistics.ManaUsed -= corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
+                currentMana += corDrops * fillerSpell.ManaCost * GetCastTime(corruption) / GetCastTime(fillerSpell);
+            }
 
             double manaGain = simStats.Mana;
             currentMana += manaGain;
@@ -638,7 +641,7 @@ namespace Rawr.Warlock
             #region Damage calculations
             foreach (Spell spell in SpellPriority)
             {
-                if (spell == fillerSpell)
+                if (spell == fillerSpell && corruption != null)
                     spell.SpellStatistics.HitCount -= corDrops * GetCastTime(corruption) / GetCastTime(spell);
                 float directDamage = spell.AvgDirectDamage * spell.SpellStatistics.HitCount;
                 float dotDamage = spell.AvgDotDamage * spell.SpellStatistics.TickCount;

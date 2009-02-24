@@ -143,7 +143,7 @@ namespace Rawr.Warlock
             solver.Calculate(this);
 
             dictValues.Add("Rotation", string.Format("{0}*{1}", solver.Name, solver.Rotation));
-            dictValues.Add("Burst DPS", string.Format("{0}*DPS", solver.DPS.ToString("0")));
+            dictValues.Add("DPS", string.Format("{0}*DPS", solver.DPS.ToString("0")));
 
             dictValues.Add("Shadow Bolt", new ShadowBolt(BasicStats, character).ToString());
             dictValues.Add("Incinerate", new Incinerate(BasicStats, character).ToString());

@@ -47,7 +47,7 @@ namespace Rawr.Warlock
             cbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
             if (calcOpts.SpellPriority == null)
-                calcOpts.SpellPriority = new List<string>(Spell.SpellList);
+                calcOpts.SpellPriority = new List<string>() {"Shadow Bolt"};
             lsSpellPriopity.Items.Clear();
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
             

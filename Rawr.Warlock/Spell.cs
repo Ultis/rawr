@@ -138,7 +138,7 @@ namespace Rawr.Warlock
             }
         }
 
-        public static readonly List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Siphon Life", "Unstable Affliction", "Life Tap", "Dark Pact", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
+        public static readonly List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Siphon Life", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
 
         public string Name { get; protected set; }
 
