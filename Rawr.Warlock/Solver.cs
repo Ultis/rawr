@@ -108,10 +108,13 @@ namespace Rawr.Warlock
                         }
                     case "Conflagrate":
                         {
-                            for (int index = 0; index < events.Count; index++)
-                                if (events.Values[index].Name == "Immolate")
-                                    return spell;
-                            timeTillNextSpell = Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - GetCastTime(spell));
+                            if (spell.SpellStatistics.CooldownReset < time)
+                            {
+                                for (int index = 0; index < events.Count; index++)
+                                    if (events.Values[index].Name == "Immolate")
+                                        return spell;
+                                timeTillNextSpell = Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - GetCastTime(spell));
+                            }
                             break;
                         }
                     default:
@@ -708,7 +711,7 @@ namespace Rawr.Warlock
                     case "Incinerate":
                         {
                             if (simStats.CorruptionTriggersCrit > 0)
-                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f);
+                                directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += CounterBuffedIncinerate * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
                             break;
                         }

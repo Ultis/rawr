@@ -381,11 +381,11 @@ namespace Rawr.Warlock
 
         public override void Calculate(Stats stats, Character character)
         {
-            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.ShadowMastery * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.ShadowMastery * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
@@ -393,9 +393,8 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
@@ -418,19 +417,19 @@ namespace Rawr.Warlock
 
         public override void Calculate(Stats stats, Character character)
         {
-            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            MinBuffedDamage = (BaseMinDamage + 145 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MinBuffedDamage = (BaseMinDamage + 145 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            MaxBuffedDamage = (BaseMaxDamage + 169 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MaxBuffedDamage = (BaseMaxDamage + 169 + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
@@ -438,8 +437,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
@@ -763,8 +761,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
 
@@ -804,8 +801,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -837,8 +833,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -874,8 +869,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
 
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
 
@@ -913,8 +907,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
@@ -980,8 +973,7 @@ namespace Rawr.Warlock
             if (character.WarlockTalents.ImprovedSearingPain == 1) CritChance += 0.04f;
             else if (character.WarlockTalents.ImprovedSearingPain == 2) CritChance += 0.07f;
             else if (character.WarlockTalents.ImprovedSearingPain == 3) CritChance += 0.1f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -1014,8 +1006,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.4f));
 
@@ -1050,8 +1041,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
         }
@@ -1072,11 +1062,11 @@ namespace Rawr.Warlock
 
         public override void Calculate(Stats stats, Character character)
         {
-            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
-            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.4f ))
+            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
@@ -1084,8 +1074,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Cataclysm * 0.01f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
-            CritCoef = BaseCritCoef * (1f + stats.BonusSpellCritMultiplier)
-                     + character.WarlockTalents.Ruin * 0.1f;
+            CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.1f));
 
@@ -1138,7 +1127,7 @@ namespace Rawr.Warlock
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f)*/;
 
-            //CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+            //CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             CritChance = stats.SpellCrit;
 
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
@@ -1171,7 +1160,7 @@ namespace Rawr.Warlock
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f)*/;
 
-            //CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+            //CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             CritChance = stats.SpellCrit;
 
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
@@ -1204,7 +1193,7 @@ namespace Rawr.Warlock
                 * (1 + ((character.PriestTalents.ShadowWeaving > 0) ? 0.1f : 0.0f))
                 * (1 + character.PriestTalents.Shadowform * 0.15f)*/;
 
-            //CritCoef += character.PriestTalents.ShadowPower * 0.1f;
+            //CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
             CritChance = stats.SpellCrit;
 
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
