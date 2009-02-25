@@ -64,7 +64,7 @@ namespace Rawr.Mage
         [XmlIgnore]
         public bool AdviseAdvancedSolver;
         [XmlIgnore]
-        public CharacterCalculationsMage Calculations;
+        public CharacterCalculationsMage Calculations; // calculations that are result of the last display in rawr
 
         [XmlIgnore]
         private Character _character;

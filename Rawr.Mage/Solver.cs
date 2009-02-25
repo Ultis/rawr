@@ -4,16 +4,22 @@ using System.Text;
 
 namespace Rawr.Mage
 {
+    public class Segment
+    {
+        public int Index { get; set; }
+        public double Duration { get; set; }
+        public double TimeStart { get; set; }
+        public double TimeEnd { get { return TimeStart + Duration; } }
+        //public int FirstSpellColumn { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} ({1} - {2})", Index, CalculationsMage.TimeFormat(TimeStart), CalculationsMage.TimeFormat(TimeEnd));
+        }
+    }
+
     public sealed partial class Solver
     {
-        private class Segment
-        {
-            public double Duration { get; set; }
-            public double TimeStart { get; set; }
-            public double TimeEnd { get { return TimeStart + Duration; } }
-            //public int FirstSpellColumn { get; set; }
-        }
-
         private const int cooldownCount = 13;
         //private const double segmentDuration = 30;
         //private int segments;
@@ -584,6 +590,10 @@ namespace Rawr.Mage
             {
                 segmentList.Add(new Segment() { TimeStart = 0, Duration = calculationOptions.FightDuration });
             }
+            for (int i = 0; i < segmentList.Count; i++)
+            {
+                segmentList[i].Index = i;
+            }
             //segments = (segmentCooldowns) ? (int)Math.Ceiling(calculationOptions.FightDuration / segmentDuration) : 1;
             segmentColumn = new int[segmentList.Count + 1];
 
@@ -617,6 +627,7 @@ namespace Rawr.Mage
             tpsList = new List<double>();
             double tps;
             calculationResult.SolutionVariable = new List<SolutionVariable>();
+            calculationResult.SegmentList = segmentList;
 
             fixed (double* pRowScale = SolverLP.rowScale, pColumnScale = SolverLP.columnScale, pCost = LP._cost, pData = SparseMatrix.data, pValue = SparseMatrix.value)
             fixed (int* pRow = SparseMatrix.row, pCol = SparseMatrix.col)

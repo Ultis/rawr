@@ -241,16 +241,21 @@ namespace Rawr.Mage
 				character.Name, character.Region, character.Realm, character.Race);
 
             CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
-            CharacterCalculationsMage calculations;
-            bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
-            CalculationOptions.IncrementalOptimizations = false;
-            calculations = Solver.GetCharacterCalculations(character, null, CalculationOptions, this, CalculationOptions.IncrementalSetArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
-            CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
+            //CharacterCalculationsMage calculations;
+            //bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
+            //CalculationOptions.IncrementalOptimizations = false;
+            //calculations = Solver.GetCharacterCalculations(character, null, CalculationOptions, this, CalculationOptions.IncrementalSetArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
+            //CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
 
-            Dictionary<string, string> dict = calculations.GetCharacterDisplayCalculationValuesInternal();
+            if (CalculationOptions.Calculations == null || CalculationOptions.Calculations.DisplayCalculationValues == null)
+            {
+                return base.GetCharacterStatsString(character);
+            }
+
+            Dictionary<string, string> dict = CalculationOptions.Calculations.DisplayCalculationValues;
 			foreach (KeyValuePair<string, string> kvp in dict)
 			{
-                if (kvp.Key != "Sequence" && kvp.Key != "Spell Cycles")
+                //if (kvp.Key != "Sequence" && kvp.Key != "Spell Cycles")
                 {
                     string[] value = kvp.Value.Split('*');
                     if (value.Length == 2)
@@ -265,7 +270,7 @@ namespace Rawr.Mage
 			}
 
             // spell cycles
-            sb.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
+            /*sb.AppendFormat("\r\n\r\nSpell Cycles:\r\n\r\n");
             if (calculations.MageArmor != null) sb.AppendLine(calculations.MageArmor);
             Dictionary<string, double> combinedSolution = new Dictionary<string, double>();
             Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
@@ -342,7 +347,7 @@ namespace Rawr.Mage
                 string[] value = sequence.Split('*');
                 sb.AppendFormat("\r\n\r\nSequence:\r\n\r\n");
                 sb.Append(value[1]);
-            }
+            }*/
 
 			return sb.ToString();
         }
@@ -1110,7 +1115,7 @@ namespace Rawr.Mage
             return comparisonList.ToArray();
         }
 
-        private static string TimeFormat(double time)
+        public static string TimeFormat(double time)
         {
             TimeSpan span = new TimeSpan((long)(Math.Round(time, 2) / 0.0000001));
             return string.Format("{0:0}:{1:00}", span.Minutes, span.Seconds, span.Milliseconds);

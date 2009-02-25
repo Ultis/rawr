@@ -130,6 +130,7 @@ namespace Rawr.Mage
         public float Tps;
         public double UpperBound = double.PositiveInfinity;
         public double LowerBound = 0;
+        public List<Segment> SegmentList;
 
         public int ColumnIdleRegen = -1;
         public int ColumnWand = -1;
@@ -152,7 +153,6 @@ namespace Rawr.Mage
         public string ReconstructSequence()
         {
             CalculationOptions.SequenceReconstruction = null;
-            CalculationOptions.Calculations = null;
             CalculationOptions.AdviseAdvancedSolver = false;
             if (!CalculationOptions.ReconstructSequence) return "*Disabled";
             if (CalculationOptions.FightDuration > 900) return "*Unavailable";
@@ -254,7 +254,6 @@ namespace Rawr.Mage
             sequence.RemoveIndex(ColumnTimeExtension);
             sequence.Compact(true);
             CalculationOptions.SequenceReconstruction = sequence;
-            CalculationOptions.Calculations = this;
 
             // evaluate sequence
             unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
@@ -292,10 +291,12 @@ namespace Rawr.Mage
         }
 
         public static bool DebugCooldownSegmentation { get; set; }
+        public Dictionary<string, string> DisplayCalculationValues { get; private set; }
 
         internal Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal()
         {
-            Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            CalculationOptions.Calculations = this;
+            Dictionary<string, string> dictValues = DisplayCalculationValues = new Dictionary<string, string>();
             dictValues.Add("Stamina", BaseStats.Stamina.ToString());
             dictValues.Add("Intellect", BaseStats.Intellect.ToString());
             dictValues.Add("Spirit", BaseStats.Spirit.ToString());
@@ -378,23 +379,23 @@ namespace Rawr.Mage
                     {
                         case VariableType.IdleRegen:
                             idleRegen += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", "Idle Regen", Solution[i], SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", "Idle Regen", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Evocation:
                             evocation += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ManaPotion:
                             manaPotion += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Potion", Solution[i], SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Potion", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ManaGem:
                             manaGem += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.DrumsOfBattle:
                             drums += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown, SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Drinking:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
@@ -402,18 +403,18 @@ namespace Rawr.Mage
                         case VariableType.TimeExtension:
                             break;
                         case VariableType.ManaOverflow:
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Overflow", Solution[i], SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Overflow", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.AfterFightRegen:
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
                             break;
                         case VariableType.SummonWaterElemental:
                             we += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ConjureManaGem:
                             cmg += Solution[i];
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SolutionVariable[i].Segment));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Wand:
                         case VariableType.Spell:
@@ -424,7 +425,7 @@ namespace Rawr.Mage
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
                             combinedSolutionData[label] = i;
-                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", label, Solution[i], SolutionVariable[i].Segment.ToString()));
+                            if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", label, Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                     }
                 }
@@ -479,7 +480,7 @@ namespace Rawr.Mage
             contribList.Sort();
             foreach (SpellContribution contrib in contribList)
             {
-                sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\n", contrib.Name, 100.0 * contrib.Damage / totalDamage, contrib.Damage, contrib.Hits);
+                sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\r\n", contrib.Name, 100.0 * contrib.Damage / totalDamage, contrib.Damage, contrib.Hits);
             }
             dictValues.Add("By Spell", sb.ToString());
             return dictValues;
