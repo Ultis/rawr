@@ -221,6 +221,13 @@ namespace Rawr
         TigersFuryCooldownReduction,
         LifebloomCostReduction,
         NourishBonusPerHoT,
+        #region Added by Rawr.Enhance
+        TotemLLAttackPower,
+        TotemShockSpellPower,
+        TotemShockAttackPower,
+        TotemSSHaste,
+        TotemWFAttackPower,
+        #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
         BonusThunderCritChance,
@@ -472,6 +479,7 @@ namespace Rawr
         /// </summary>
         #region Stat Properties
 
+        #region Base Stats
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [CommonStat(MinRange = 80f)]
@@ -612,7 +620,9 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
             set { _rawAdditiveData[(int)AdditiveStat.Spirit] = value; }
         }
+        #endregion
 
+        #region Resistances
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Resistances")]
         [DisplayName("Frost Res")]
@@ -674,6 +684,7 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.MageAllResist]; }
             set { _rawAdditiveData[(int)AdditiveStat.MageAllResist] = value; }
         }
+        #endregion
 
         [Percentage]
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2377,6 +2388,44 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
         }
 
+        #region Added by Rawr.Enhance
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TotemLLAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemLLAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemLLAttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TotemShockSpellPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemShockSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TotemShockAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemShockAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemShockAttackPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TotemSSHaste
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemSSHaste]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemSSHaste] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float TotemWFAttackPower
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.TotemWFAttackPower]; }
+            set { _rawAdditiveData[(int)AdditiveStat.TotemWFAttackPower] = value; }
+        }
+
+        #endregion
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float BonusCritChance

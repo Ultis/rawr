@@ -874,6 +874,40 @@ namespace Rawr
             {
                 stats.CritJudgement_5 = 61f;
             }
+            #region Added by Rawr.Enhance
+            else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
+            {
+                stats.TotemShockAttackPower += 110f;
+            }
+            else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
+            {
+                stats.TotemSSHaste += 60f;
+            }
+            else if (line == "Increases the attack power bonus on Windfury Weapon attacks by ")
+            {
+                line = line.Replace(".", "");
+                line = line.Substring("Increases the attack power bonus on Windfury Weapon attacks by ".Length);
+                stats.TotemWFAttackPower = float.Parse(line);
+            }
+            else if (line.StartsWith("Your Lava Lash ability also grants you "))
+            {
+                Regex r = new Regex("Your Lava Lash ability also grants you (?<attackpower>\\d*) attack power for 6 sec.");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
+                }
+            }
+                else if (line.StartsWith("Your Shock spells grant "))
+            {
+                Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
+                Match m = r.Match(line);
+                if (m.Success)
+                {
+                    stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
+                }
+            }
+            #endregion
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)

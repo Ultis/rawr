@@ -286,7 +286,7 @@ namespace Rawr
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float windfuryTotemHaste = .16f + (.02f * character.ShamanTalents.ImprovedWindfuryTotem);
-            float windfuryWeaponBonus = 1250f;
+            float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
                     windfuryWeaponBonus += windfuryWeaponBonus * .13f;
@@ -297,10 +297,6 @@ namespace Rawr
                 case 3:
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
-            }
-            if (character.Ranged != null) {
-                if(character.Ranged.Id == 40710) // "Totem of Splintering"
-                    windfuryWeaponBonus += 212f;
             }
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
@@ -535,7 +531,8 @@ namespace Rawr
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
-            float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * stats.SpellPower);
+            // stats.LightningSpellPower is for totem of hex/the void/ancestral guidance
+            float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (stats.SpellPower + stats.LightningSpellPower));
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -623,9 +620,16 @@ namespace Rawr
             }
             // now add WF yellow attacks
             if (calcOpts.MainhandImbue == "windfury" && mainhand)
-                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
-            if (calcOpts.OffhandImbue =="windfury" && !mainhand)
-                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
+            {
+                if (calcOpts.OffhandImbue == "windfury")
+                {
+                    // wf on both need to modify chances
+                }
+                else
+                    yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed / WFProcChance);
+            }
+            else if (calcOpts.OffhandImbue =="windfury" & !mainhand)
+                yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed / WFProcChance);
             return yellowAttacksPerSecond;
         }
         #endregion 
@@ -758,6 +762,15 @@ namespace Rawr
 			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
             statsTotal.MongooseProc = statsGearEnchantsBuffs.MongooseProc;
             statsTotal.BerserkingProc = statsGearEnchantsBuffs.BerserkingProc;
+
+            // totem special proc stats
+            statsTotal.LightningSpellPower = statsGearEnchantsBuffs.LightningSpellPower;
+            statsTotal.LightningBoltHasteProc_15_45 = statsGearEnchantsBuffs.LightningBoltHasteProc_15_45;
+            statsTotal.TotemSSHaste = statsGearEnchantsBuffs.TotemSSHaste;
+            statsTotal.TotemLLAttackPower = statsGearEnchantsBuffs.TotemLLAttackPower;
+            statsTotal.TotemShockAttackPower = statsGearEnchantsBuffs.TotemShockAttackPower;
+            statsTotal.TotemShockSpellPower = statsGearEnchantsBuffs.TotemShockSpellPower;
+            statsTotal.TotemWFAttackPower = statsGearEnchantsBuffs.TotemWFAttackPower;
 
 			return statsTotal;
 		}
