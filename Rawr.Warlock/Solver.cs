@@ -824,14 +824,14 @@ namespace Rawr.Warlock
                 Spell Lightweave = new LightweaveProc(simStats, character);
                 DPS += Lightweave.AvgDamage / EffCooldown * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }
-            if (simStats.WarlockGrandFirestone > 0.0f)
-            {   // 15% proc chance, 45s internal cd, shoots a Fire bolt
-                float ProcChance = 0.15f;
+            /*if (simStats.WarlockGrandFirestone > 0.0f)
+            {   // 25% proc chance, 0s internal cd, adds Fire damage
+                float ProcChance = 0.25f;
                 float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
-                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (float)HitsPerSecond / ProcActual;
+                float EffCooldown = 0f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (float)HitsPerSecond / ProcActual;
                 Spell Firestone = new FirestoneProc(simStats, character);
                 DPS += Firestone.AvgDamage / EffCooldown * (1f + simStats.BonusFireDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
-            }
+            }*/
             if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
             {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
                 // Although, All dots tick about every 3s, so in avg cooldown gains another 1.5s, putting it at 16.5
