@@ -1210,4 +1210,53 @@ namespace Rawr.Warlock
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
         }
     }
+
+    public class LightweaveProc : Spell
+    {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
+            new SpellData(1, 0, 1000, 1200, 0)
+        };
+
+        public LightweaveProc(Stats stats, Character character)
+            : base("LightweaveProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
+        {
+            Calculate(stats, character);
+        }
+
+        public override void Calculate(Stats stats, Character character)
+        {
+            MinDamage = BaseMinDamage;
+
+            MaxDamage = BaseMaxDamage;
+
+            CritCoef += 0;
+            CritChance = stats.SpellCrit;
+
+            Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
+        }
+    }
+
+    public class FirestoneProc : Spell
+    {
+        static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
+            new SpellData(1, 0, 116, 174, 0)
+        };
+
+        public FirestoneProc(Stats stats, Character character)
+            : base("FirestoneProc", stats, character, SpellRankTable, 0, 0f, 1.5f, 0, 0f, 0, 0f, Color.Black)
+        {
+            Calculate(stats, character);
+        }
+
+        public override void Calculate(Stats stats, Character character)
+        {
+            MinDamage = BaseMinDamage;
+            MaxDamage = BaseMaxDamage;
+
+            CritCoef += 0;
+            CritChance = stats.SpellCrit;
+
+            Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));
+        }
+    }
 }

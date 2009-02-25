@@ -219,10 +219,13 @@ namespace Rawr.Warlock
             SortedList<double, Spell> CastList = new SortedList<double, Spell>();
             events = new EventList();
             LTUsePercent = (int)CalculationOptions.LTUsePercent;
-            maxTime = CalculationOptions.FightLength * 60f;
+//            maxTime = CalculationOptions.FightLength * 60f;
+            maxTime = 3600f;
 
             bool ImmolateIsUp = false;
             bool ShadowflameIsUp = false;
+            bool CleanBreak = false;
+            bool cleanBreak = CalculationOptions.cleanBreak;
             int AffEffectsNumber = CalculationOptions.AffEffectsNumber;
             int ShadowEmbrace = 0;
             int NightfallCounter = 0;
@@ -235,6 +238,7 @@ namespace Rawr.Warlock
             int CounterDotTicks = 0;
             int CounterAffEffects = 0;
             int CounterDrainTicks = 0;
+            int sequence = SpellPriority.Count - 1;
             float Procs2T7 = 0;
             double elapsedTime = 0;
             Spell lastSpell = null;
@@ -244,7 +248,7 @@ namespace Rawr.Warlock
             time += GetCastTime(SpellPriority[0]);
             Event currentEvent = new Event(SpellPriority[0], "Done casting");
             CastList.Add(0, SpellPriority[0]);
-            while (time < maxTime || currentEvent.Name != "Done casting")
+            while ((time < maxTime || currentEvent.Name != "Done casting") && !CleanBreak)
             {
 //                currentMana += 1000;
                 switch (currentEvent.Name)
@@ -252,6 +256,24 @@ namespace Rawr.Warlock
                     case "Done casting":
                     {
                         Spell spell = currentEvent.Spell;
+
+                        if (spell == SpellPriority[sequence])
+                            sequence++;
+                        else
+                            sequence = 0;
+                        if (sequence > SpellPriority.Count - 1) sequence--;
+                        if (SpellPriority[sequence] == fillerSpell && cleanBreak == true)
+                        {   // Spell sequence just reset, lets take advantage of that.
+                            int i = SpellPriority.IndexOf(fillerSpell);
+                            while (i > 0)
+                            {
+                                CastList.RemoveAt(CastList.Count - i);
+                                i--;
+                            }
+                            Rotation = "Clean break after " + time + "seconds";
+                            CleanBreak = true;
+                            break;
+                        }
 
                         if (spell.Cooldown > 0f)
                             spell.SpellStatistics.CooldownReset = time + GetCastTime(spell) + spell.Cooldown;
@@ -474,16 +496,19 @@ namespace Rawr.Warlock
                         break;
                     }
                 }
-                elapsedTime = events.Keys[0] - time;
-                time = events.Keys[0];
-                currentEvent = events.Values[0];
-                events.RemoveAt(0);
+                if (!CleanBreak)
+                {
+                    elapsedTime = events.Keys[0] - time;
+                    time = events.Keys[0];
+                    currentEvent = events.Values[0];
+                    events.RemoveAt(0);
+                }
             }
             #endregion
 
             #region Variable calculation
             float corDrops = 0;
-            if (character.WarlockTalents.EverlastingAffliction > 0 && character.WarlockTalents.Haunt > 0)
+            if (character.WarlockTalents.EverlastingAffliction > 0 && haunt != null)
             {
                 corDrops = haunt.SpellStatistics.HitCount * (1 - haunt.SpellStatistics.HitChance) + haunt.SpellStatistics.HitCount * haunt.SpellStatistics.HitChance * (Math.Min(1 - character.WarlockTalents.EverlastingAffliction * 0.2f, 0));
                 if (corruption != null)
@@ -787,8 +812,41 @@ namespace Rawr.Warlock
                 OverallDamage += spell.SpellStatistics.DamageDone;
             }
             #endregion
+            
+            DPS = (float)(OverallDamage / time);
 
-            calculatedStats.DpsPoints = DPS = (float)(OverallDamage / time);
+            #region Finalize procs
+            if (simStats.LightweaveEmbroideryProc > 0.0f)
+            {   // 50% proc chance, 45s internal cd, shoots a Holy bolt
+                float ProcChance = 0.5f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
+                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (float)HitsPerSecond / ProcActual;
+                Spell Lightweave = new LightweaveProc(simStats, character);
+                DPS += Lightweave.AvgDamage / EffCooldown * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
+            }
+            if (simStats.WarlockGrandFirestone > 0.0f)
+            {   // 15% proc chance, 45s internal cd, shoots a Fire bolt
+                float ProcChance = 0.15f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
+                float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (float)HitsPerSecond / ProcActual;
+                Spell Firestone = new FirestoneProc(simStats, character);
+                DPS += Firestone.AvgDamage / EffCooldown * (1f + simStats.BonusFireDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
+            }
+            if (simStats.ExtractOfNecromanticPowerProc > 0.0f)
+            {   // 10% proc chance, 15s internal cd, shoots a Shadow Bolt
+                // Although, All dots tick about every 3s, so in avg cooldown gains another 1.5s, putting it at 16.5
+                int dots = 0;
+                foreach (Spell spell in SpellPriority)
+                    if ((spell.DebuffDuration > 0) && (spell.DpS > 0)) dots++;
+                float ProcChance = 0.1f;
+                float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+                float EffCooldown = 16.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / (dots / 3) / ProcActual;
+                Spell Extract = new ExtractProc(simStats, character);
+                DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
+            }
+            #endregion
+
+            calculatedStats.DpsPoints = DPS;
 
             DateTime stopTime = DateTime.Now;
             calcTime = stopTime - startTime;
