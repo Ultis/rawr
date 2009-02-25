@@ -225,9 +225,9 @@ namespace Rawr
 				stats.AttackPower += 120; //Crusade = 120ap
 				stats.SpellPower += 80;
 			}
-            else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 16 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
+            else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 16 attack power for the next 10 sec., stacking up to 20 times."))
             {
-                stats.AttackPower += 320; //Fury of the Five Flights = 120ap
+                stats.AttackPower += 320; //Fury of the Five Flights = 320ap
             }
             else if (line.StartsWith("Each time you cast a damaging or healing spell you gain 20 spell power for the next 10 sec, stacking up to 10 times."))
             {
