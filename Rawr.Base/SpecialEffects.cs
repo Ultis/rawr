@@ -877,7 +877,7 @@ namespace Rawr
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
-                stats.TotemShockAttackPower += 110f;
+                stats.TotemShockAttackPower += 110f * 10f / 45f;
             }
             else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
             {

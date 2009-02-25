@@ -332,6 +332,12 @@ namespace Rawr
             // glyph stuff
             float spellCritModifier = calcOpts.GlyphFT && (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
 
+            //totem procs
+            stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
+            stats.HasteRating += stats.TotemSSHaste * 6f / (10f - character.ShamanTalents.ImprovedStormstrike);
+            stats.SpellPower += stats.TotemShockSpellPower;
+            stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
+
             ////////////////////////////
             // Main calculation Block //
             ////////////////////////////
@@ -759,7 +765,7 @@ namespace Rawr
 			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
 			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
 			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
-			statsTotal.ShatteredSunMightProc = statsRace.ShatteredSunMightProc + statsGearEnchantsBuffs.ShatteredSunMightProc;
+			statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
             statsTotal.MongooseProc = statsGearEnchantsBuffs.MongooseProc;
             statsTotal.BerserkingProc = statsGearEnchantsBuffs.BerserkingProc;
 
@@ -902,7 +908,14 @@ namespace Rawr
 					NatureResistanceBuff = stats.NatureResistanceBuff,
 					FireResistanceBuff = stats.FireResistanceBuff,
 					FrostResistanceBuff = stats.FrostResistanceBuff,
-					ShadowResistanceBuff = stats.ShadowResistanceBuff
+					ShadowResistanceBuff = stats.ShadowResistanceBuff,
+                    LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
+                    LightningSpellPower = stats.LightningSpellPower,
+                    TotemLLAttackPower = stats.TotemLLAttackPower,
+                    TotemShockAttackPower = stats.TotemShockAttackPower,
+                    TotemShockSpellPower = stats.TotemShockSpellPower,
+                    TotemSSHaste = stats.TotemSSHaste,
+                    TotemWFAttackPower = stats.TotemWFAttackPower
 				};
 		}
 
@@ -917,8 +930,10 @@ namespace Rawr
 				stats.BonusSpellPowerMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-				stats.NatureResistanceBuff + stats.FireResistanceBuff +
-				stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0;
+				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + 
+                stats.ShadowResistanceBuff + stats.LightningSpellPower + stats.LightningBoltHasteProc_15_45 +
+				stats.TotemWFAttackPower + stats.TotemSSHaste + stats.TotemShockSpellPower + stats.TotemShockAttackPower +
+                stats.TotemLLAttackPower) > 0;
         }
         #endregion
     }
