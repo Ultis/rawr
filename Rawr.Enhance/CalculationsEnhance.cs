@@ -368,19 +368,32 @@ namespace Rawr
             float hasteBonus = stats.HasteRating / 3278.998947f;
             float unhastedMHSpeed = 0.0f;
             float wdpsMH = 0.0f;
-            if (character != null && character.MainHand != null)
-            {
-                unhastedMHSpeed = character.MainHand.Item.Speed;
-                wdpsMH = character.MainHand.Item.DPS;
-            }
-
             float unhastedOHSpeed = 0.0f;
             float wdpsOH = 0.0f;
-            if (character != null && character.OffHand != null)
+            if (character != null) 
             {
-                unhastedOHSpeed = character.OffHand.Item.Speed;
-                wdpsOH = character.OffHand.Item.DPS;
+                if (character.MainHand != null)
+                {
+                    unhastedMHSpeed = character.MainHand.Item.Speed;
+                    wdpsMH = character.MainHand.Item.DPS;
+                }
+                else // assume a base vendor weapon
+                {
+                    unhastedMHSpeed = 3.0f;
+                    wdpsMH = 46.3f;
+                }
+                if (character.OffHand != null)
+                {
+                    unhastedOHSpeed = character.OffHand.Item.Speed;
+                    wdpsOH = character.OffHand.Item.DPS;
+                }
+                else // assume a base vendor weapon
+                {
+                    unhastedOHSpeed = 3.0f;
+                    wdpsOH = 46.3f;
+                }
             }
+
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
 
@@ -609,9 +622,9 @@ namespace Rawr
                 // need to modify WFProcChance if WF Glyph
             }
             // now add WF yellow attacks
-            if (calcOpts.MainhandImbue == "windfury" & mainhand)
+            if (calcOpts.MainhandImbue == "windfury" && mainhand)
                 yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
-            if (calcOpts.OffhandImbue =="windfury" & !mainhand)
+            if (calcOpts.OffhandImbue =="windfury" && !mainhand)
                 yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed * 100 / WFProcChance);
             return yellowAttacksPerSecond;
         }
