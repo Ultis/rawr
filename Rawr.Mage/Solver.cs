@@ -24,6 +24,8 @@ namespace Rawr.Mage
 
         private SolverLP lp;
         private double[] solution;
+        private double lowerBound;
+        private double upperBound;
         private int[] segmentColumn;
         private CharacterCalculationsMage calculationResult;
         private Character character;
@@ -418,6 +420,17 @@ namespace Rawr.Mage
                 }
 
                 calculationResult.Solution = lp.Solve();
+
+                if (!requiresMIP)
+                {
+                    calculationResult.UpperBound = lp.Value;
+                    calculationResult.LowerBound = 0.0;
+                }
+                else
+                {
+                    calculationResult.UpperBound = upperBound;
+                    calculationResult.LowerBound = lowerBound;
+                }
 
                 if (minimizeTime)
                 {

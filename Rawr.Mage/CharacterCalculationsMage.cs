@@ -128,6 +128,8 @@ namespace Rawr.Mage
         public double[] Solution;
         public List<SolutionVariable> SolutionVariable;
         public float Tps;
+        public double UpperBound = double.PositiveInfinity;
+        public double LowerBound = 0;
 
         public int ColumnIdleRegen = -1;
         public int ColumnWand = -1;
@@ -350,7 +352,7 @@ namespace Rawr.Mage
             bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB) as BaseSpell;
             dictValues.Add("MBAM", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : DpsRating * CalculationOptions.FightDuration;
-            dictValues.Add("Total Damage", String.Format("{0:F}", totalDamage));
+            dictValues.Add("Total Damage", String.Format("{0:F}*Upper Bound: {1:F}\r\nLower Bound: {2:F}", totalDamage, UpperBound, LowerBound));
             dictValues.Add("Score", String.Format("{0:F}", OverallPoints));
             dictValues.Add("Dps", String.Format("{0:F}", DpsRating));
             dictValues.Add("Tps", String.Format("{0:F}", Tps));

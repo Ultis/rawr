@@ -63,12 +63,14 @@ namespace Rawr.Mage
             int sizeLimit = calculationOptions.MaxHeapLimit;
             lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
 
+            upperBound = lp.Value;
+            lowerBound = 0.0;
+
             SolverLP rootCopy = lp.Clone();
             BranchNode root = new BranchNode() { Lp = lp };
 
             currentNode = root;
 
-            double lowerBound = 0.0;
             SolverLP incumbent = null;
 
             int highestBacktrack = int.MaxValue;
@@ -90,6 +92,7 @@ namespace Rawr.Mage
                     if (currentNode.Index >= currentNode.Children.Count)
                     {
                         System.Diagnostics.Trace.WriteLine("Full search complete at round = " + round);
+                        upperBound = lowerBound;
                         break; // we explored the whole search space
                     }
                     if (value > 0 && currentNode.Depth < highestBacktrack)
@@ -139,7 +142,7 @@ namespace Rawr.Mage
                             BranchNode first = null;
                             foreach (BranchNode node in currentNode.Children)
                             {
-                                ProbeDive(node, ref round, ref incumbent, ref lowerBound, sizeLimit);
+                                ProbeDive(node, ref round, ref incumbent, sizeLimit);
                                 if (node.ProbeValue > lowerBound - 0.00001) first = node;
                             }
                             if (first != null)
@@ -159,7 +162,7 @@ namespace Rawr.Mage
                             BranchNode first = null;
                             foreach (BranchNode node in currentNode.Children)
                             {
-                                ProbeDive(node, ref round, ref incumbent, ref lowerBound, sizeLimit);
+                                ProbeDive(node, ref round, ref incumbent, sizeLimit);
                                 if (node.ProbeValue > lowerBound - 0.00001) first = node;
                             }
                             if (first != null)
@@ -230,7 +233,7 @@ namespace Rawr.Mage
             solution = lp.Solve();
         }
 
-        private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, ref double lowerBound, int sizeLimit)
+        private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, int sizeLimit)
         {
             if (node.ProbeValue != 0) return;
             BranchNode store = currentNode;
@@ -319,12 +322,13 @@ namespace Rawr.Mage
             heap = new Heap<SolverLP>(HeapType.MaximumHeap);
             HeapPush(lp);
 
-            double max = lp.Value;
+            upperBound = lp.Value;
+            lowerBound = 0.0;
 
             bool valid = true;
             do
             {
-                if (heap.Head.Value > max + 0.001) // lowered instability threshold, in case it is still an issue just recompute the solution which "should" give a stable result hopefully
+                if (heap.Head.Value > upperBound + 0.001) // lowered instability threshold, in case it is still an issue just recompute the solution which "should" give a stable result hopefully
                 {
                     // recovery measures first
                     double current = heap.Head.Value;
@@ -335,7 +339,7 @@ namespace Rawr.Mage
                     //if (lp.Value <= max + 1.0)
                     //{
                     // give more fudge room in case the previous max was the one that was unstable
-                    max = lp.Value;
+                    upperBound = lp.Value;
                     HeapPush(lp);
                     continue;
                     //}
@@ -345,7 +349,7 @@ namespace Rawr.Mage
                     //break;
                 }
                 lp = heap.Pop();
-                max = lp.Value;
+                upperBound = lp.Value;
                 // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                 // if this one is valid than all others are sub-optimal
                 // validate all segments for each cooldown
@@ -362,6 +366,10 @@ namespace Rawr.Mage
                 }
                 valid = IsLpValid();
             } while (heap.Count > 0 && !valid);
+            if (valid)
+            {
+                lowerBound = upperBound;
+            }
             //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
         }
 
@@ -877,7 +885,7 @@ namespace Rawr.Mage
             for (int seg = 1; seg < segmentList.Count - 1; seg++)
             {
                 int N = hexList[seg].Count;
-                if (N > 0 && segmentFilled[seg] < segmentList[seg].Duration - 0.000001)
+                if (N > 0 && segmentFilled[seg] < segmentList[seg].Duration - 0.00001)
                 {
                     // if any hex links to left and right segment we have a problem
                     List<int> minHexChain = null;
