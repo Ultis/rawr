@@ -235,9 +235,9 @@ namespace Rawr
 						Item.ItemType.Leather,
                         Item.ItemType.Mail,
 						Item.ItemType.Totem,
-						Item.ItemType.Staff,
-						Item.ItemType.TwoHandMace,
-                        Item.ItemType.TwoHandAxe,
+					//	Item.ItemType.Staff,
+					//	Item.ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
+                    //  Item.ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
                         Item.ItemType.Dagger,
                         Item.ItemType.OneHandAxe,
                         Item.ItemType.OneHandMace,
@@ -347,7 +347,7 @@ namespace Rawr
                 // Highest stat
                 if (expectedAgi > expectedStr)
                     if (expectedAgi > expectedInt)
-                        stats.Agility += stats.GreatnessProc * 15f / 47f;
+                        stats.Agility += stats.GreatnessProc * 15f / 47f;  // proc calc lifted from Rawr.Cat odd that its 47sec CD??
                     else
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
                 else
@@ -356,7 +356,22 @@ namespace Rawr
                     else
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
             }
-
+            if (stats.HasteRatingFor20SecOnUse2Min > 0)
+            {
+                stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
+            }
+            if (stats.SpellHasteFor10SecOnCast_10_45 > 0)
+            {
+                stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
+            }
+            if (stats.SpellPowerFor10SecOnCast_15_45 > 0)
+            {
+                stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
+            }
+            if (stats.SpellPowerFor10SecOnHit_10_45 > 0)
+            {
+                stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
+            }
 
             ////////////////////////////
             // Main calculation Block //
@@ -563,6 +578,11 @@ namespace Rawr
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
+            if (stats.PendulumOfTelluricCurrentsProc > 0)
+            {
+                dpsLB += (1168f + 1752) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
+            }
+
 
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
@@ -801,6 +821,11 @@ namespace Rawr
             
             // Trinket special procs
             statsTotal.GreatnessProc = statsGearEnchantsBuffs.GreatnessProc;
+            statsTotal.HasteRatingFor20SecOnUse2Min = statsGearEnchantsBuffs.HasteRatingFor20SecOnUse2Min;
+            statsTotal.SpellHasteFor10SecOnCast_10_45 = statsGearEnchantsBuffs.SpellHasteFor10SecOnCast_10_45;
+            statsTotal.SpellPowerFor10SecOnCast_15_45 = statsGearEnchantsBuffs.SpellPowerFor10SecOnCast_15_45;
+            statsTotal.SpellPowerFor10SecOnHit_10_45 = statsGearEnchantsBuffs.SpellPowerFor10SecOnHit_10_45;
+            statsTotal.PendulumOfTelluricCurrentsProc = statsGearEnchantsBuffs.PendulumOfTelluricCurrentsProc;
 			return statsTotal;
 		}
         #endregion
@@ -939,7 +964,12 @@ namespace Rawr
                     TotemShockSpellPower = stats.TotemShockSpellPower,
                     TotemSSHaste = stats.TotemSSHaste,
                     TotemWFAttackPower = stats.TotemWFAttackPower,
-                    GreatnessProc = stats.GreatnessProc
+                    GreatnessProc = stats.GreatnessProc,
+                    HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
+                    SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
+                    SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
+                    SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
+                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc
 				};
 		}
 
@@ -957,7 +987,9 @@ namespace Rawr
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + 
                 stats.ShadowResistanceBuff + stats.LightningSpellPower + stats.LightningBoltHasteProc_15_45 +
 				stats.TotemWFAttackPower + stats.TotemSSHaste + stats.TotemShockSpellPower + stats.TotemShockAttackPower +
-                stats.TotemLLAttackPower + stats.GreatnessProc) > 0;
+                stats.TotemLLAttackPower + stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min +
+                stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 +
+                stats.SpellPowerFor10SecOnHit_10_45 + stats.PendulumOfTelluricCurrentsProc) > 0;
         }
         #endregion
     }
