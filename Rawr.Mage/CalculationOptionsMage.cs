@@ -98,6 +98,7 @@ namespace Rawr.Mage
         public bool DisplayIntegralMana { get; set; }
         public int FixedSegmentDuration { get; set; }
         public bool VariableSegmentDuration { get; set; }
+        public string AdditionalSegmentSplits { get; set; }
 
         public MIPMethod MIPMethod { get; set; }
 

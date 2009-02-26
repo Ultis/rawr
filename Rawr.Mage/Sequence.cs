@@ -262,7 +262,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     {
                                         SplitAt(k, Math.Min(buffer, threatBuffer / (maxTps - sequence[k].Tps)));
                                     }
-                                    else if (sequence[k].Duration > buffer)
+                                    else if (sequence[k].Duration > buffer + eps)
                                     {
                                         SplitAt(k, buffer);
                                     }
@@ -782,7 +782,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
         private void SplitAt(int index, double time)
         {
-            if (time > 0 && time < sequence[index].Duration)
+            if (time > 0.00001 && time < sequence[index].Duration - 0.00001)
             {
                 double d = sequence[index].Duration;
                 sequence.Insert(index, sequence[index].Clone());
@@ -1104,6 +1104,17 @@ namespace Rawr.Mage.SequenceReconstruction
             return true;
         }
 
+        private bool InActivationDistance(int seg1, int seg2, double effectDuration)
+        {
+            if (seg1 > seg2)
+            {
+                int tmp = seg1;
+                seg1 = seg2;
+                seg2 = tmp;
+            }
+            return SequenceItem.Calculations.SegmentList[seg2].TimeStart - SequenceItem.Calculations.SegmentList[seg1].TimeEnd < effectDuration - 0.00001;
+        }
+
         private List<SequenceGroup> GroupCooldown(List<SequenceItem> cooldownItems, double maxDuration, double cooldown, bool combustionMode, bool coldSnapMode, Cooldown type, VariableType activation, double activationDuration)
         {
             const double eps = 0.00001;
@@ -1244,8 +1255,10 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 if (gap > eps)
                 {
-                    int maxSegDistance = (int)Math.Ceiling(maxDuration / 30.0) + 1;
-                    if (combustionMode) maxSegDistance = (int)Math.Ceiling(15.0 / 30.0) + 1;
+                    //int maxSegDistance = (int)Math.Ceiling(maxDuration / 30.0) + 1;
+                    //if (combustionMode) maxSegDistance = (int)Math.Ceiling(15.0 / 30.0) + 1;
+                    double allowedDistance = maxDuration;
+                    if (combustionMode) allowedDistance = 15.0;
                     for (int j = i + 1; j < partialGroups.Count; j++)
                     {
                         SequenceGroup subgroup = partialGroups[j];
@@ -1269,7 +1282,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 }
                             }
                         }
-                        if (subgroup.Duration > 0 && gapReduction <= gap + eps && activationGapReduction <= activationGap + eps && gap - gapReduction >= activationGap - activationGapReduction - eps && Math.Abs(group.Segment - subgroup.Segment) < maxSegDistance && ItemsCompatible(group.Item, subgroup.Item, 0))
+                        if (subgroup.Duration > 0 && gapReduction <= gap + eps && activationGapReduction <= activationGap + eps && gap - gapReduction >= activationGap - activationGapReduction - eps && InActivationDistance(group.Segment, subgroup.Segment, allowedDistance) && ItemsCompatible(group.Item, subgroup.Item, 0))
                         {
                             gap -= gapReduction;
                             activationGap -= activationGapReduction;
@@ -1292,7 +1305,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         for (int j = 0; j < unchained.Count; j++)
                         {
                             SequenceItem item = unchained[j];
-                            if (group.Segment == -1 || Math.Abs(group.Segment - item.Segment) < maxSegDistance)
+                            if (group.Segment == -1 || InActivationDistance(group.Segment, item.Segment, allowedDistance))
                             {
                                 double gapReduction = 0.0;
                                 double activationGapReduction = 0.0;

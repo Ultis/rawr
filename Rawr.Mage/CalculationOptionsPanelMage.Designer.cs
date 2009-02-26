@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -230,6 +229,10 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.checkBoxVariableSegmentDuration = new System.Windows.Forms.CheckBox();
+            this.label96 = new System.Windows.Forms.Label();
+            this.comboBoxSegmentDuration = new System.Windows.Forms.ComboBox();
+            this.label95 = new System.Windows.Forms.Label();
             this.buttonComputeOptimalArcaneCycles = new System.Windows.Forms.Button();
             this.label99 = new System.Windows.Forms.Label();
             this.checkBoxDebugCooldownSegmentation = new System.Windows.Forms.CheckBox();
@@ -251,19 +254,18 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.comboBoxSegmentDuration = new System.Windows.Forms.ComboBox();
-            this.label95 = new System.Windows.Forms.Label();
-            this.label96 = new System.Windows.Forms.Label();
-            this.checkBoxVariableSegmentDuration = new System.Windows.Forms.CheckBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxAdditionalSegmentSplits = new System.Windows.Forms.TextBox();
+            this.label98 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -325,11 +327,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2367,6 +2364,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.textBoxAdditionalSegmentSplits);
+            this.tabPage4.Controls.Add(this.label98);
             this.tabPage4.Controls.Add(this.checkBoxVariableSegmentDuration);
             this.tabPage4.Controls.Add(this.label96);
             this.tabPage4.Controls.Add(this.comboBoxSegmentDuration);
@@ -2399,9 +2398,54 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // checkBoxVariableSegmentDuration
+            // 
+            this.checkBoxVariableSegmentDuration.AutoSize = true;
+            this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true));
+            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(188, 283);
+            this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
+            this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxVariableSegmentDuration.TabIndex = 182;
+            this.checkBoxVariableSegmentDuration.UseVisualStyleBackColor = true;
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(0, 284);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(143, 13);
+            this.label96.TabIndex = 181;
+            this.label96.Text = "Variable Segment Duration: *";
+            this.toolTipMage.SetToolTip(this.label96, "Determine segment durations based on cooldown durations.");
+            // 
+            // comboBoxSegmentDuration
+            // 
+            this.comboBoxSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FixedSegmentDuration", true));
+            this.comboBoxSegmentDuration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSegmentDuration.FormattingEnabled = true;
+            this.comboBoxSegmentDuration.Items.AddRange(new object[] {
+            "10",
+            "15",
+            "20",
+            "30"});
+            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(128, 257);
+            this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
+            this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
+            this.comboBoxSegmentDuration.TabIndex = 179;
+            // 
+            // label95
+            // 
+            this.label95.AutoSize = true;
+            this.label95.Location = new System.Drawing.Point(0, 260);
+            this.label95.Name = "label95";
+            this.label95.Size = new System.Drawing.Size(102, 13);
+            this.label95.TabIndex = 178;
+            this.label95.Text = "Segment Duration: *";
+            this.toolTipMage.SetToolTip(this.label95, "Duration of segments when variable segment duration is not used.");
+            // 
             // buttonComputeOptimalArcaneCycles
             // 
-            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 310);
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 357);
             this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
             this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
             this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
@@ -2611,49 +2655,29 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // comboBoxSegmentDuration
+            // calculationOptionsMageBindingSource
             // 
-            this.comboBoxSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "FixedSegmentDuration", true));
-            this.comboBoxSegmentDuration.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSegmentDuration.FormattingEnabled = true;
-            this.comboBoxSegmentDuration.Items.AddRange(new object[] {
-            "10",
-            "20",
-            "30"});
-            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(128, 257);
-            this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
-            this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
-            this.comboBoxSegmentDuration.TabIndex = 179;
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
-            // label95
+            // textBoxAdditionalSegmentSplits
             // 
-            this.label95.AutoSize = true;
-            this.label95.Location = new System.Drawing.Point(0, 260);
-            this.label95.Name = "label95";
-            this.label95.Size = new System.Drawing.Size(102, 13);
-            this.label95.TabIndex = 178;
-            this.label95.Text = "Segment Duration: *";
-            this.toolTipMage.SetToolTip(this.label95, "Duration of segments when variable segment duration is not used.");
+            this.textBoxAdditionalSegmentSplits.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AdditionalSegmentSplits", true));
+            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(135, 303);
+            this.textBoxAdditionalSegmentSplits.Name = "textBoxAdditionalSegmentSplits";
+            this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(68, 20);
+            this.textBoxAdditionalSegmentSplits.TabIndex = 184;
             // 
-            // label96
+            // label98
             // 
-            this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(0, 284);
-            this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(143, 13);
-            this.label96.TabIndex = 181;
-            this.label96.Text = "Variable Segment Duration: *";
-            this.toolTipMage.SetToolTip(this.label96, "Determine segment durations based on cooldown durations.");
-            // 
-            // checkBoxVariableSegmentDuration
-            // 
-            this.checkBoxVariableSegmentDuration.AutoSize = true;
-            this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true));
-            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(188, 283);
-            this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
-            this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxVariableSegmentDuration.TabIndex = 182;
-            this.checkBoxVariableSegmentDuration.UseVisualStyleBackColor = true;
+            this.label98.AutoSize = true;
+            this.label98.Location = new System.Drawing.Point(-1, 306);
+            this.label98.Name = "label98";
+            this.label98.Size = new System.Drawing.Size(136, 13);
+            this.label98.TabIndex = 183;
+            this.label98.Text = "Additional Segment Splits: *";
+            this.toolTipMage.SetToolTip(this.label98, "A comma-separated list of segment splits in seconds, useful in combination with d" +
+                    "ebug segmentation.");
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2666,7 +2690,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2679,6 +2702,7 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2910,6 +2934,8 @@
         private System.Windows.Forms.Label label96;
         private System.Windows.Forms.ComboBox comboBoxSegmentDuration;
         private System.Windows.Forms.Label label95;
+        private System.Windows.Forms.TextBox textBoxAdditionalSegmentSplits;
+        private System.Windows.Forms.Label label98;
 
     }
 }
