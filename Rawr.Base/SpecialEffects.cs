@@ -877,23 +877,23 @@ namespace Rawr
             #region Added by Rawr.Enhance
             else if (line == "Your Shock spells have a chance to grant 110 attack power for 10 sec.")
             {
-                stats.TotemShockAttackPower += 110f * 10f / 45f;
+                stats.TotemShockAttackPower += 110f * 10f / 6f; // Stonebreaker's Totem
             }
             else if (line == "Your Storm Strike ability also grants you 60 haste rating for 6 sec.")
             {
-                stats.TotemSSHaste += 60f;
+                stats.TotemSSHaste += 60f; // Totem of Dueling
             }
             else if (line == "Increases the attack power bonus on Windfury Weapon attacks by ")
             {
                 line = line.Replace(".", "");
                 line = line.Substring("Increases the attack power bonus on Windfury Weapon attacks by ".Length);
-                stats.TotemWFAttackPower = float.Parse(line);
+                stats.TotemWFAttackPower = float.Parse(line); // Totem of Astral Winds & Totem of Splintering
             }
             else if (line.StartsWith("Your Lava Lash ability also grants you "))
             {
                 Regex r = new Regex("Your Lava Lash ability also grants you (?<attackpower>\\d*) attack power for 6 sec.");
                 Match m = r.Match(line);
-                if (m.Success)
+                if (m.Success) // XXX Gladiators Totem of Indomitability
                 {
                     stats.TotemLLAttackPower += (float)int.Parse(m.Groups["attackpower"].Value);
                 }
@@ -902,7 +902,7 @@ namespace Rawr
             {
                 Regex r = new Regex("Your Shock spells grant (?<spellpower>\\d*) spell power for 6 sec.");
                 Match m = r.Match(line);
-                if (m.Success)
+                if (m.Success) // XXX Gladiators Totem of Survival
                 {
                     stats.TotemShockSpellPower += (float)int.Parse(m.Groups["spellpower"].Value);
                 }
