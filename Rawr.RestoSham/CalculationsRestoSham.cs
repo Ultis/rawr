@@ -148,10 +148,8 @@ namespace Rawr.RestoSham
                           "Basic Stats:Mana",
                           "Basic Stats:Stamina",
                           "Basic Stats:Intellect",
-                          // "Basic Stats:Spirit",
                           "Basic Stats:Spell Power",
                           "Basic Stats:MP5*Mana regeneration while casting",
-                          // "Basic Stats:MP5 (outside FSR)*Mana regeneration while not casting (outside the 5-second rule)",
                           "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
                           "Basic Stats:Spell Haste",
                           "Totals:Total HPS*Includes Burst and Sustained",
@@ -272,7 +270,7 @@ namespace Rawr.RestoSham
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
             #region MP5 and Mana
-            // calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
+            calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit + 
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes + 
@@ -289,8 +287,6 @@ namespace Rawr.RestoSham
 					(stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
 
             float mp5 = (stats.Mp5 * (1f - (options.OutsideFSRPct / 100f)));
-            // Out of Five Second Rule regen currently removed.
-            // mp5 += (calcStats.Mp5OutsideFSR * (options.OutsideFSRPct / 100f));
             mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) +
                 ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * .85f);

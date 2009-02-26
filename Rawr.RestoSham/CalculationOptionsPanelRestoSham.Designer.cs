@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tipRestoSham = new System.Windows.Forms.ToolTip(this.components);
-            this.txtOutsideFSR = new System.Windows.Forms.TextBox();
             this.cboManaPotAmount = new System.Windows.Forms.ComboBox();
             this.chkManaTide = new System.Windows.Forms.CheckBox();
             this.txtESInterval = new System.Windows.Forms.TextBox();
@@ -42,6 +41,7 @@
             this.chkWaterShield3 = new System.Windows.Forms.CheckBox();
             this.chkELWGlyph = new System.Windows.Forms.CheckBox();
             this.chkGlyphCH = new System.Windows.Forms.CheckBox();
+            this.chkTotemHW1 = new System.Windows.Forms.CheckBox();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -50,35 +50,23 @@
             this.tbBurst_Label = new System.Windows.Forms.Label();
             this.tbBurst = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.chkWaterShield = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).BeginInit();
-            this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // txtOutsideFSR
-            // 
-            this.txtOutsideFSR.Location = new System.Drawing.Point(81, 32);
-            this.txtOutsideFSR.Name = "txtOutsideFSR";
-            this.txtOutsideFSR.Size = new System.Drawing.Size(59, 20);
-            this.txtOutsideFSR.TabIndex = 4;
-            this.tipRestoSham.SetToolTip(this.txtOutsideFSR, "Percentage of the fight you are outside the 5-second rule (FSR)");
-            this.txtOutsideFSR.Validated += new System.EventHandler(this.numericTextBox_Validated);
-            this.txtOutsideFSR.Validating += new System.ComponentModel.CancelEventHandler(this.numericTextBox_Validating);
             // 
             // cboManaPotAmount
             // 
@@ -89,7 +77,7 @@
             "1800",
             "2400",
             "4300"});
-            this.cboManaPotAmount.Location = new System.Drawing.Point(81, 58);
+            this.cboManaPotAmount.Location = new System.Drawing.Point(81, 32);
             this.cboManaPotAmount.Name = "cboManaPotAmount";
             this.cboManaPotAmount.Size = new System.Drawing.Size(75, 21);
             this.cboManaPotAmount.TabIndex = 10;
@@ -100,7 +88,7 @@
             // chkManaTide
             // 
             this.chkManaTide.AutoSize = true;
-            this.chkManaTide.Location = new System.Drawing.Point(6, 154);
+            this.chkManaTide.Location = new System.Drawing.Point(9, 82);
             this.chkManaTide.Name = "chkManaTide";
             this.chkManaTide.Size = new System.Drawing.Size(184, 17);
             this.chkManaTide.TabIndex = 14;
@@ -111,7 +99,7 @@
             // 
             // txtESInterval
             // 
-            this.txtESInterval.Location = new System.Drawing.Point(69, 13);
+            this.txtESInterval.Location = new System.Drawing.Point(111, 122);
             this.txtESInterval.Name = "txtESInterval";
             this.txtESInterval.Size = new System.Drawing.Size(43, 20);
             this.txtESInterval.TabIndex = 11;
@@ -121,7 +109,7 @@
             // chkMT
             // 
             this.chkMT.AutoSize = true;
-            this.chkMT.Location = new System.Drawing.Point(6, 131);
+            this.chkMT.Location = new System.Drawing.Point(9, 59);
             this.chkMT.Name = "chkMT";
             this.chkMT.Size = new System.Drawing.Size(172, 17);
             this.chkMT.TabIndex = 24;
@@ -215,25 +203,36 @@
             this.chkGlyphCH.UseVisualStyleBackColor = true;
             this.chkGlyphCH.CheckedChanged += new System.EventHandler(this.chkGlyphCH_CheckedChanged);
             // 
+            // chkTotemHW1
+            // 
+            this.chkTotemHW1.AutoSize = true;
+            this.chkTotemHW1.Location = new System.Drawing.Point(6, 6);
+            this.chkTotemHW1.Name = "chkTotemHW1";
+            this.chkTotemHW1.Size = new System.Drawing.Size(171, 17);
+            this.chkTotemHW1.TabIndex = 16;
+            this.chkTotemHW1.Text = "Totem of Spontaneous Growth";
+            this.tipRestoSham.SetToolTip(this.chkTotemHW1, "Check if you are using this totem.  Only choose one.");
+            this.chkTotemHW1.UseVisualStyleBackColor = true;
+            this.chkTotemHW1.CheckedChanged += new System.EventHandler(this.chkTotemHW1_CheckedChanged);
+            // 
             // errorRestoSham
             // 
             this.errorRestoSham.ContainerControl = this;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label18);
+            this.tabPage1.Controls.Add(this.txtESInterval);
+            this.tabPage1.Controls.Add(this.label17);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.txtFightLength);
             this.tabPage1.Controls.Add(this.chkMT);
-            this.tabPage1.Controls.Add(this.groupBox3);
             this.tabPage1.Controls.Add(this.chkWaterShield);
             this.tabPage1.Controls.Add(this.chkManaTide);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.txtOutsideFSR);
-            this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.cboManaPotAmount);
             this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -248,7 +247,7 @@
             this.groupBox1.Controls.Add(this.tbOverhealing);
             this.groupBox1.Controls.Add(this.tbBurst_Label);
             this.groupBox1.Controls.Add(this.tbBurst);
-            this.groupBox1.Location = new System.Drawing.Point(6, 200);
+            this.groupBox1.Location = new System.Drawing.Point(6, 148);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(192, 153);
             this.groupBox1.TabIndex = 27;
@@ -269,7 +268,7 @@
             this.tbOverhealing.Location = new System.Drawing.Point(6, 100);
             this.tbOverhealing.Maximum = 100;
             this.tbOverhealing.Name = "tbOverhealing";
-            this.tbOverhealing.Size = new System.Drawing.Size(179, 45);
+            this.tbOverhealing.Size = new System.Drawing.Size(179, 42);
             this.tbOverhealing.TabIndex = 4;
             this.tbOverhealing.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -287,7 +286,7 @@
             this.tbBurst.Location = new System.Drawing.Point(7, 36);
             this.tbBurst.Maximum = 100;
             this.tbBurst.Name = "tbBurst";
-            this.tbBurst.Size = new System.Drawing.Size(179, 45);
+            this.tbBurst.Size = new System.Drawing.Size(179, 42);
             this.tbBurst.TabIndex = 0;
             this.tbBurst.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -300,31 +299,19 @@
             this.label2.TabIndex = 26;
             this.label2.Text = "min";
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label17);
-            this.groupBox3.Controls.Add(this.txtESInterval);
-            this.groupBox3.Controls.Add(this.label18);
-            this.groupBox3.Location = new System.Drawing.Point(6, 85);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(192, 40);
-            this.groupBox3.TabIndex = 19;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Earth Shield";
-            // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 16);
+            this.label17.Location = new System.Drawing.Point(6, 125);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(57, 13);
+            this.label17.Size = new System.Drawing.Size(99, 13);
             this.label17.TabIndex = 10;
-            this.label17.Text = "Cast every";
+            this.label17.Text = "Earthshield Recast:";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(118, 16);
+            this.label18.Location = new System.Drawing.Point(160, 125);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(24, 13);
             this.label18.TabIndex = 12;
@@ -333,7 +320,7 @@
             // chkWaterShield
             // 
             this.chkWaterShield.AutoSize = true;
-            this.chkWaterShield.Location = new System.Drawing.Point(6, 177);
+            this.chkWaterShield.Location = new System.Drawing.Point(9, 105);
             this.chkWaterShield.Name = "chkWaterShield";
             this.chkWaterShield.Size = new System.Drawing.Size(87, 17);
             this.chkWaterShield.TabIndex = 15;
@@ -350,43 +337,27 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Fight Length:";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 35);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Outside FSR:";
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 61);
+            this.label7.Location = new System.Drawing.Point(6, 35);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(75, 13);
             this.label7.TabIndex = 9;
             this.label7.Text = "Mana Potions:";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(141, 35);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(15, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "%";
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(212, 527);
             this.tabControl1.TabIndex = 14;
+            this.tabControl1.Tag = "";
             // 
             // tabPage2
             // 
@@ -404,6 +375,17 @@
             this.tabPage2.Text = "Glyphs";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.chkTotemHW1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(204, 501);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Relics";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelRestoSham
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -418,11 +400,11 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -436,12 +418,8 @@
         private System.Windows.Forms.CheckBox chkWaterShield;
         private System.Windows.Forms.CheckBox chkManaTide;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtOutsideFSR;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cboManaPotAmount;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.TextBox txtESInterval;
         private System.Windows.Forms.Label label18;
@@ -460,6 +438,8 @@
         private System.Windows.Forms.Label tbOverhealing_Label;
         private System.Windows.Forms.TrackBar tbOverhealing;
         private System.Windows.Forms.Label tbBurst_Label;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.CheckBox chkTotemHW1;
 
     }
 }

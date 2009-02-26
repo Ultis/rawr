@@ -21,7 +21,6 @@ namespace Rawr.RestoSham
             InitializeComponent();
 
             txtFightLength.Tag = new NumericField("FightLength", 1f, 20f, false);
-            txtOutsideFSR.Tag = new NumericField("OutsideFSRPct", 0f, 75f, true);
             txtESInterval.Tag = new NumericField("ESInterval", 40f, 1000f, true);
             cboManaPotAmount.Tag = new NumericField("ManaPotAmount", 0f, 3000f, true);
             tbBurst.Tag = new NumericField("BurstPercentage", 0f, 100f, true);
@@ -36,72 +35,34 @@ namespace Rawr.RestoSham
 
             _bLoading = true;
 
-            // Init General tab page:
-
+            #region General tab page:
             txtFightLength.Text = options.FightLength.ToString();
-            txtOutsideFSR.Text = Math.Round(100 * options.OutsideFSRPct, 0).ToString();
             cboManaPotAmount.Text = options.ManaPotAmount.ToString();
             chkManaTide.Checked = options.ManaTideEveryCD;
-            chkManaTide2.Checked = options.ManaTidePlus;
             chkWaterShield.Checked = options.WaterShield;
-            chkWaterShield2.Checked = options.WaterShield2;
-            chkWaterShield3.Checked = options.WaterShield3;
-            chkLHW.Checked = options.LHWPlus;
             chkMT.Checked = options.TankHeal;
-            chkELWGlyph.Checked = options.ELWGlyph;
-            chkGlyphCH.Checked = options.GlyphCH;
             txtESInterval.Text = options.ESInterval.ToString();
-            
             // The track bars
-            tbBurst.Value = (Int32)options.BurstPercentage; 
+            tbBurst.Value = (Int32)options.BurstPercentage;
             UpdateTrackBarLabel(tbBurst);
             tbOverhealing.Value = (Int32)options.OverhealingPercentage;
             UpdateTrackBarLabel(tbOverhealing);
+            #endregion
+            #region Glyphs Page:
+            chkELWGlyph.Checked = options.ELWGlyph;
+            chkGlyphCH.Checked = options.GlyphCH;
+            chkWaterShield2.Checked = options.WaterShield2;
+            chkWaterShield3.Checked = options.WaterShield3;
+            chkLHW.Checked = options.LHWPlus;
+            chkManaTide2.Checked = options.ManaTidePlus;
+            #endregion
+            #region Relics Page:
+            chkTotemHW1.Checked = options.TotemHW1;
+            #endregion
 
             _bLoading = false;
         }
-
-
-        private bool _bInSetRankBoxes = false;
-        private void SetRankBoxes(ComboBox cboMax, ComboBox cboMin, int? maxRank, int? minRank, int maxSpellRank)
-        {
-            if (_bInSetRankBoxes)
-                return;
-            _bInSetRankBoxes = true;
-
-            // Bounds checking:
-
-            int iMax = maxRank ?? maxSpellRank;
-            int iMin = minRank ?? 1;
-
-            if (iMax > maxSpellRank)
-                iMax = maxSpellRank;
-            if (iMax < 2)
-                iMax = 2;
-            if (iMin >= iMax)
-                iMin = iMax - 1;
-
-            // Set textbox values and adjust choices:
-
-            if (maxRank.HasValue)
-            {
-                cboMax.Items.Clear();
-                for (int i = maxSpellRank; i > iMin; i--)
-                    cboMax.Items.Add(i);
-                cboMax.SelectedItem = iMax;
-            }
-            if (minRank.HasValue)
-            {
-                cboMin.Items.Clear();
-                for (int i = iMax - 1; i >= 1; i--)
-                    cboMin.Items.Add(i);
-                cboMin.SelectedItem = iMin;
-            }
-
-            _bInSetRankBoxes = false;
-        }
-
-
+        #region Text box handling
         private void numericTextBox_Validated(object sender, EventArgs e)
         {
             if (_bLoading || Character == null)
@@ -115,8 +76,8 @@ namespace Rawr.RestoSham
             this[info.PropertyName] = float.Parse(txtBox.Text);
             Character.OnCalculationsInvalidated();
         }
-
-
+        #endregion
+        #region Validation on Boxes and Text Handling
         private void numericTextBox_Validating(object sender, CancelEventArgs e)
         {
             Control txtBox = sender as Control;
@@ -180,8 +141,8 @@ namespace Rawr.RestoSham
                     field.SetValue(options, value);
             }
         }
-
-
+        #endregion
+        #region Check Box Handling
         private void chkManaTide_CheckedChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
@@ -263,6 +224,16 @@ namespace Rawr.RestoSham
             }
         }
 
+        private void chkTotemHW1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemHW1"] = chkTotemHW1.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+#endregion
+        #region Trackbar Handling
         private void OnTrackBarScroll(object sender, EventArgs e)
         {
             TrackBar trackBar = sender as TrackBar;
@@ -309,9 +280,10 @@ namespace Rawr.RestoSham
 
             l.Text = re.Replace(l.Text, string.Format("({0}%)", trackBar.Value));
         }
+        #endregion
     }
 
-
+    #region Calculations, do not edit.
     class NumericField
     {
         public NumericField(string szName, float min, float max, bool bzero)
@@ -327,11 +299,12 @@ namespace Rawr.RestoSham
         public float MaxValue = float.MaxValue;
         public bool CanBeZero = false;
     }
-
+    #endregion
 
     [Serializable]
     public class CalculationOptionsRestoSham : ICalculationOptionBase
     {
+        #region GetXml strings
         public string GetXml()
         {
             System.Xml.Serialization.XmlSerializer serializer =
@@ -341,8 +314,8 @@ namespace Rawr.RestoSham
             serializer.Serialize(writer, this);
             return xml.ToString();
         }
-
-
+        #endregion
+        #region Defaults for variables
         /// <summary>
         /// Fight length, in minutes.
         /// </summary>
@@ -404,6 +377,11 @@ namespace Rawr.RestoSham
         public bool ELWGlyph = false;
 
         /// <summary>
+        /// Is the first healing wave totem in use.
+        /// </summary>
+        public bool TotemHW1 = false;
+
+        /// <summary>
         /// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.
         /// </summary>
         public float ESInterval = 60f;
@@ -417,6 +395,7 @@ namespace Rawr.RestoSham
         /// The percentage of healing that is overhealing.
         /// </summary>
         public float OverhealingPercentage = 35f;
+        #endregion
     }
 
 }
