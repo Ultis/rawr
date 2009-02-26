@@ -47,11 +47,11 @@ namespace Rawr.ProtWarr
             this.trackBarMitigationScale = new System.Windows.Forms.TrackBar();
             this.labelMitigationScale = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel4 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipDamageOutput = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.radioButtonDamageOutput = new System.Windows.Forms.RadioButton();
-            this.extendedToolTipLabel3 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.extendedToolTipLabel1 = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipBurstTime = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipMitigtionScale = new Rawr.CustomControls.ExtendedToolTipLabel();
+            this.extendedToolTipTankPoints = new Rawr.CustomControls.ExtendedToolTipLabel();
             this.radioButtonBurstTime = new System.Windows.Forms.RadioButton();
             this.radioButtonTankPoints = new System.Windows.Forms.RadioButton();
             this.radioButtonMitigationScale = new System.Windows.Forms.RadioButton();
@@ -146,7 +146,7 @@ namespace Rawr.ProtWarr
             this.groupBoxWarriorSkills.Controls.Add(this.labelShieldBlockUptime);
             this.groupBoxWarriorSkills.Controls.Add(this.label9);
             this.groupBoxWarriorSkills.Controls.Add(this.trackBarShieldBlockUptime);
-            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 533);
+            this.groupBoxWarriorSkills.Location = new System.Drawing.Point(3, 520);
             this.groupBoxWarriorSkills.Name = "groupBoxWarriorSkills";
             this.groupBoxWarriorSkills.Size = new System.Drawing.Size(364, 91);
             this.groupBoxWarriorSkills.TabIndex = 4;
@@ -303,11 +303,11 @@ namespace Rawr.ProtWarr
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.extendedToolTipLabel4);
+            this.groupBox1.Controls.Add(this.extendedToolTipDamageOutput);
             this.groupBox1.Controls.Add(this.radioButtonDamageOutput);
-            this.groupBox1.Controls.Add(this.extendedToolTipLabel3);
-            this.groupBox1.Controls.Add(this.extendedToolTipLabel2);
-            this.groupBox1.Controls.Add(this.extendedToolTipLabel1);
+            this.groupBox1.Controls.Add(this.extendedToolTipBurstTime);
+            this.groupBox1.Controls.Add(this.extendedToolTipMitigtionScale);
+            this.groupBox1.Controls.Add(this.extendedToolTipTankPoints);
             this.groupBox1.Controls.Add(this.radioButtonBurstTime);
             this.groupBox1.Controls.Add(this.radioButtonTankPoints);
             this.groupBox1.Controls.Add(this.labelThreatScale);
@@ -318,72 +318,74 @@ namespace Rawr.ProtWarr
             this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
             this.groupBox1.Location = new System.Drawing.Point(3, 245);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 212);
+            this.groupBox1.Size = new System.Drawing.Size(364, 199);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
             // 
-            // extendedToolTipLabel4
+            // extendedToolTipDamageOutput
             // 
-            this.extendedToolTipLabel4.Location = new System.Drawing.Point(188, 184);
-            this.extendedToolTipLabel4.Name = "extendedToolTipLabel4";
-            this.extendedToolTipLabel4.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel4.TabIndex = 14;
-            this.extendedToolTipLabel4.Text = "*";
-            this.extendedToolTipLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel4.ToolTipText = "Scale based only on potential DPS output.";
+            this.extendedToolTipDamageOutput.Location = new System.Drawing.Point(108, 176);
+            this.extendedToolTipDamageOutput.Name = "extendedToolTipDamageOutput";
+            this.extendedToolTipDamageOutput.Size = new System.Drawing.Size(96, 18);
+            this.extendedToolTipDamageOutput.TabIndex = 14;
+            this.extendedToolTipDamageOutput.Text = "Damage Output *";
+            this.extendedToolTipDamageOutput.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipDamageOutput.ToolTipText = "Scale based only on potential DPS output.";
+            this.extendedToolTipDamageOutput.Click += new System.EventHandler(this.extendedToolTipDamageOutput_Click);
             // 
             // radioButtonDamageOutput
             // 
             this.radioButtonDamageOutput.AutoSize = true;
-            this.radioButtonDamageOutput.Location = new System.Drawing.Point(95, 187);
+            this.radioButtonDamageOutput.Location = new System.Drawing.Point(95, 179);
             this.radioButtonDamageOutput.Name = "radioButtonDamageOutput";
-            this.radioButtonDamageOutput.Size = new System.Drawing.Size(100, 17);
+            this.radioButtonDamageOutput.Size = new System.Drawing.Size(14, 13);
             this.radioButtonDamageOutput.TabIndex = 13;
-            this.radioButtonDamageOutput.Text = "Damage Output";
             this.radioButtonDamageOutput.UseVisualStyleBackColor = true;
             // 
-            // extendedToolTipLabel3
+            // extendedToolTipBurstTime
             // 
-            this.extendedToolTipLabel3.Location = new System.Drawing.Point(164, 164);
-            this.extendedToolTipLabel3.Name = "extendedToolTipLabel3";
-            this.extendedToolTipLabel3.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel3.TabIndex = 12;
-            this.extendedToolTipLabel3.Text = "*";
-            this.extendedToolTipLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel3.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
+            this.extendedToolTipBurstTime.Location = new System.Drawing.Point(108, 158);
+            this.extendedToolTipBurstTime.Name = "extendedToolTipBurstTime";
+            this.extendedToolTipBurstTime.Size = new System.Drawing.Size(96, 16);
+            this.extendedToolTipBurstTime.TabIndex = 12;
+            this.extendedToolTipBurstTime.Text = "Burst Time *";
+            this.extendedToolTipBurstTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipBurstTime.ToolTipText = "Scale based on the average time an event will occur which has a chance to burst d" +
                 "own the player.";
+            this.extendedToolTipBurstTime.Click += new System.EventHandler(this.extendedToolTipBurstTime_Click);
             // 
-            // extendedToolTipLabel2
+            // extendedToolTipMitigtionScale
             // 
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(188, 118);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel2.TabIndex = 11;
-            this.extendedToolTipLabel2.Text = "*";
-            this.extendedToolTipLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel2.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
+            this.extendedToolTipMitigtionScale.Location = new System.Drawing.Point(108, 120);
+            this.extendedToolTipMitigtionScale.Name = "extendedToolTipMitigtionScale";
+            this.extendedToolTipMitigtionScale.Size = new System.Drawing.Size(96, 15);
+            this.extendedToolTipMitigtionScale.TabIndex = 11;
+            this.extendedToolTipMitigtionScale.Text = "Mitigation Scale *";
+            this.extendedToolTipMitigtionScale.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipMitigtionScale.ToolTipText = "Customizable scale that allows you to weight mitigation vs. effective health. (De" +
                 "fault)";
+            this.extendedToolTipMitigtionScale.Click += new System.EventHandler(this.extendedToolTipMitigtionScale_Click);
             // 
-            // extendedToolTipLabel1
+            // extendedToolTipTankPoints
             // 
-            this.extendedToolTipLabel1.Location = new System.Drawing.Point(168, 141);
-            this.extendedToolTipLabel1.Name = "extendedToolTipLabel1";
-            this.extendedToolTipLabel1.Size = new System.Drawing.Size(10, 17);
-            this.extendedToolTipLabel1.TabIndex = 9;
-            this.extendedToolTipLabel1.Text = "*";
-            this.extendedToolTipLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.extendedToolTipLabel1.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
+            this.extendedToolTipTankPoints.Location = new System.Drawing.Point(108, 141);
+            this.extendedToolTipTankPoints.Name = "extendedToolTipTankPoints";
+            this.extendedToolTipTankPoints.Size = new System.Drawing.Size(96, 13);
+            this.extendedToolTipTankPoints.TabIndex = 9;
+            this.extendedToolTipTankPoints.Text = "TankPoints *";
+            this.extendedToolTipTankPoints.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.extendedToolTipTankPoints.ToolTipText = "Scale based on the average amount of unmitigated base damage needed to kill the p" +
                 "layer.";
+            this.extendedToolTipTankPoints.Click += new System.EventHandler(this.extendedToolTipTankPoints_Click);
             // 
             // radioButtonBurstTime
             // 
             this.radioButtonBurstTime.AutoSize = true;
-            this.radioButtonBurstTime.Location = new System.Drawing.Point(95, 164);
+            this.radioButtonBurstTime.Location = new System.Drawing.Point(95, 160);
             this.radioButtonBurstTime.Name = "radioButtonBurstTime";
-            this.radioButtonBurstTime.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonBurstTime.Size = new System.Drawing.Size(14, 13);
             this.radioButtonBurstTime.TabIndex = 10;
-            this.radioButtonBurstTime.Text = "Burst Time";
             this.radioButtonBurstTime.UseVisualStyleBackColor = true;
             this.radioButtonBurstTime.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -392,9 +394,8 @@ namespace Rawr.ProtWarr
             this.radioButtonTankPoints.AutoSize = true;
             this.radioButtonTankPoints.Location = new System.Drawing.Point(95, 141);
             this.radioButtonTankPoints.Name = "radioButtonTankPoints";
-            this.radioButtonTankPoints.Size = new System.Drawing.Size(79, 17);
+            this.radioButtonTankPoints.Size = new System.Drawing.Size(14, 13);
             this.radioButtonTankPoints.TabIndex = 9;
-            this.radioButtonTankPoints.Text = "TankPoints";
             this.radioButtonTankPoints.UseVisualStyleBackColor = true;
             this.radioButtonTankPoints.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -402,12 +403,11 @@ namespace Rawr.ProtWarr
             // 
             this.radioButtonMitigationScale.AutoSize = true;
             this.radioButtonMitigationScale.Checked = true;
-            this.radioButtonMitigationScale.Location = new System.Drawing.Point(95, 118);
+            this.radioButtonMitigationScale.Location = new System.Drawing.Point(95, 122);
             this.radioButtonMitigationScale.Name = "radioButtonMitigationScale";
-            this.radioButtonMitigationScale.Size = new System.Drawing.Size(100, 17);
+            this.radioButtonMitigationScale.Size = new System.Drawing.Size(14, 13);
             this.radioButtonMitigationScale.TabIndex = 8;
             this.radioButtonMitigationScale.TabStop = true;
-            this.radioButtonMitigationScale.Text = "Mitigation Scale";
             this.radioButtonMitigationScale.UseVisualStyleBackColor = true;
             this.radioButtonMitigationScale.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
@@ -499,7 +499,7 @@ namespace Rawr.ProtWarr
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.checkBoxGlyphOfDevastate);
             this.groupBox3.Controls.Add(this.checkBoxGlyphOfBlocking);
-            this.groupBox3.Location = new System.Drawing.Point(3, 463);
+            this.groupBox3.Location = new System.Drawing.Point(3, 450);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(364, 64);
             this.groupBox3.TabIndex = 6;
@@ -587,13 +587,13 @@ namespace Rawr.ProtWarr
         private System.Windows.Forms.RadioButton radioButtonMitigationScale;
         private System.Windows.Forms.RadioButton radioButtonBurstTime;
         private System.Windows.Forms.RadioButton radioButtonTankPoints;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel1;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel3;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipTankPoints;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipBurstTime;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipMitigtionScale;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfDevastate;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfBlocking;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel4;
+        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipDamageOutput;
         private System.Windows.Forms.RadioButton radioButtonDamageOutput;
 	}
 }

@@ -182,6 +182,30 @@ namespace Rawr.ProtWarr
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void extendedToolTipMitigtionScale_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonMitigationScale.Checked)
+                radioButtonMitigationScale.Checked = true;
+        }
+
+        private void extendedToolTipTankPoints_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonTankPoints.Checked)
+                radioButtonTankPoints.Checked = true;
+        }
+
+        private void extendedToolTipBurstTime_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonBurstTime.Checked)
+                radioButtonBurstTime.Checked = true;
+        }
+
+        private void extendedToolTipDamageOutput_Click(object sender, EventArgs e)
+        {
+            if (!radioButtonDamageOutput.Checked)
+                radioButtonDamageOutput.Checked = true;
+        }
 	}
 
 	[Serializable]
