@@ -338,6 +338,26 @@ namespace Rawr
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
+            //trinket procs
+            if (stats.GreatnessProc > 0)
+            {
+                float expectedAgi = (float)Math.Floor(stats.Agility * (1 + stats.BonusAgilityMultiplier));
+                float expectedStr = (float)Math.Floor(stats.Strength * (1 + stats.BonusStrengthMultiplier));
+                float expectedInt = (float)Math.Floor(stats.Intellect * (1 + stats.BonusIntellectMultiplier));
+                // Highest stat
+                if (expectedAgi > expectedStr)
+                    if (expectedAgi > expectedInt)
+                        stats.Agility += stats.GreatnessProc * 15f / 47f;
+                    else
+                        stats.Intellect += stats.GreatnessProc * 15f / 47f;
+                else
+                    if (expectedAgi > expectedInt)
+                        stats.Strength += stats.GreatnessProc * 15f / 47f;
+                    else
+                        stats.Intellect += stats.GreatnessProc * 15f / 47f;
+            }
+
+
             ////////////////////////////
             // Main calculation Block //
             ////////////////////////////
@@ -442,6 +462,7 @@ namespace Rawr
                     }
                 }
             }
+
             //XXX: Only MH WF for now
             float chanceToProcWFPerHit = .2f + (calcOpts.GlyphWF ? .02f : 0f);
             float avgHitsToProcWF = 1 / chanceToProcWFPerHit;
@@ -777,7 +798,9 @@ namespace Rawr
             statsTotal.TotemShockAttackPower = statsGearEnchantsBuffs.TotemShockAttackPower;
             statsTotal.TotemShockSpellPower = statsGearEnchantsBuffs.TotemShockSpellPower;
             statsTotal.TotemWFAttackPower = statsGearEnchantsBuffs.TotemWFAttackPower;
-
+            
+            // Trinket special procs
+            statsTotal.GreatnessProc = statsGearEnchantsBuffs.GreatnessProc;
 			return statsTotal;
 		}
         #endregion
@@ -915,7 +938,8 @@ namespace Rawr
                     TotemShockAttackPower = stats.TotemShockAttackPower,
                     TotemShockSpellPower = stats.TotemShockSpellPower,
                     TotemSSHaste = stats.TotemSSHaste,
-                    TotemWFAttackPower = stats.TotemWFAttackPower
+                    TotemWFAttackPower = stats.TotemWFAttackPower,
+                    GreatnessProc = stats.GreatnessProc
 				};
 		}
 
@@ -933,7 +957,7 @@ namespace Rawr
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + 
                 stats.ShadowResistanceBuff + stats.LightningSpellPower + stats.LightningBoltHasteProc_15_45 +
 				stats.TotemWFAttackPower + stats.TotemSSHaste + stats.TotemShockSpellPower + stats.TotemShockAttackPower +
-                stats.TotemLLAttackPower) > 0;
+                stats.TotemLLAttackPower + stats.GreatnessProc) > 0;
         }
         #endregion
     }
