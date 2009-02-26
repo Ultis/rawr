@@ -579,11 +579,8 @@ namespace Rawr
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             if (stats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                dpsLB += (1168f + 1752) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
-            }
-
-
+                dpsLB += (1168f + 1752f) / 2f / 45f; // need to put the bonus dmg somewhere this seems as good a place as any, not great place though :(
+            
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
             float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - modArmor);
@@ -610,8 +607,8 @@ namespace Rawr
             float damageFT = damageFTBase + damageFTCoef * stats.SpellPower;
             float dpsFT = hitRollMultiplier * damageFT * hitsPerSOH;
 
-            //10: Doggies!  Assuming 240 dps while the dogs are up
-            float dpsDogs = (240f * 45) / (3 * 60); // TODO - need to get better base figures and calcs for exactly how they scale
+            //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
+            float dpsDogs = (375f + .3f * APDPS) * (45f / 180f); 
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
