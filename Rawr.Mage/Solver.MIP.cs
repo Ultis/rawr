@@ -38,6 +38,7 @@ namespace Rawr.Mage
 
         private List<int>[] hexList;
         private double[][] segmentCooldownCount;
+        private double[] manaList;
         private double[] segmentFilled;
         private int[] hexMask;
 
@@ -422,7 +423,7 @@ namespace Rawr.Mage
                 if (trinket2Available && !ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown)) return false;
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, VariableType.None)) return false;
-                if (manaGemEffectAvailable && !ValidateManaGemEffect(Cooldown.ManaGemEffect)) return false;
+                if (manaGemEffectAvailable && !ValidateManaGemEffect()) return false;
                 // evocation
                 if (calculationOptions.EvocationEnabled && !ValidateCooldown(Cooldown.None, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, VariableType.Evocation)) return false;
             }
@@ -605,25 +606,37 @@ namespace Rawr.Mage
 
         private void AnalyzeSolution()
         {
+            manaList = new double[segmentList.Count];
             segmentCooldownCount = new double[15][];
             hexList = new List<int>[segmentList.Count];
             segmentFilled = new double[segmentList.Count];
             hexMask = new int[segmentList.Count];
             for (int seg = 0; seg < segmentList.Count; seg++)
             {
+                manaList[seg] = calculationResult.StartingMana;
                 hexList[seg] = new List<int>();
-                for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            }
+            for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+            {
+                CastingState state = calculationResult.SolutionVariable[index].State;
+                int iseg = calculationResult.SolutionVariable[index].Segment;
+                if (solution[index] > 0.00001)
                 {
-                    CastingState state = calculationResult.SolutionVariable[index].State;
-                    int iseg = calculationResult.SolutionVariable[index].Segment;
-                    if (state != null && solution[index] > 0 && iseg == seg)
+                    if (!calculationOptions.UnlimitedMana)
+                    {
+                        for (int seg = iseg + 1; seg < segmentList.Count; seg++)
+                        {
+                            manaList[seg] -= solution[index] * lp[rowManaRegen, index];
+                        }
+                    }
+                    if (state != null)
                     {
                         int h = (int)state.Cooldown;
                         if (h != 0)
                         {
-                            hexMask[seg] |= h;
-                            if (!hexList[seg].Contains(h)) hexList[seg].Add(h);
-                            segmentFilled[seg] += solution[index];
+                            hexMask[iseg] |= h;
+                            if (!hexList[iseg].Contains(h)) hexList[iseg].Add(h);
+                            segmentFilled[iseg] += solution[index];
                         }
                     }
                 }
@@ -3922,10 +3935,10 @@ namespace Rawr.Mage
             return valid;
         }
 
-        private bool ValidateManaGemEffect(Cooldown trinket)
+        private bool ValidateManaGemEffect()
         {
             const double eps = 0.00001;
-            double[] trinketCount = GetSegmentCooldownCount(trinket, VariableType.None);
+            double[] trinketCount = GetSegmentCooldownCount(Cooldown.ManaGemEffect, VariableType.None);
             double[] manaGem = GetSegmentCooldownCount(Cooldown.None, VariableType.ManaGem);
 
             // make sure gem is activated together with SCB
@@ -3955,7 +3968,7 @@ namespace Rawr.Mage
                             int row = gem.AddConstraint(false);
                             gem.SetConstraintRHS(row, segmentList[i - 1].Duration);
                             gem.SetConstraintLHS(row, 0.1);
-                            SetCooldownElements(gem, row, trinket, i - 1, 1.0);
+                            SetCooldownElements(gem, row, Cooldown.ManaGemEffect, i - 1, 1.0);
                             gem.ForceRecalculation(true);
                             HeapPush(gem);
                         }
@@ -3964,7 +3977,7 @@ namespace Rawr.Mage
                         for (int index = segmentColumn[i]; index < segmentColumn[i + 1]; index++)
                         {
                             CastingState state = calculationResult.SolutionVariable[index].State;
-                            if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == i)
+                            if (state != null && state.GetCooldown(Cooldown.ManaGemEffect) && calculationResult.SolutionVariable[index].Segment == i)
                             {
                                 lp.EraseColumn(index);
                             }
@@ -3975,101 +3988,122 @@ namespace Rawr.Mage
                 }
             }
 
-            /*double manaBurn = 80;
-            if (calculationOptions.AoeDuration > 0)
+            for (int seg = 0; seg < segmentList.Count; seg++)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (character.MageTalents.EmpoweredFire > 0)
-            {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (character.MageTalents.EmpoweredFrostbolt > 0)
-            {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }
-            else if (character.MageTalents.SpellPower > 0)
-            {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            }*/
-
-            // check border case if we have mana gem in first or last segment
-            if (manaGem[0] > 0 && trinketCount[0] > 0)
-            {
-                // make accurate prediction about mana burn if you can, assume all non-effect comes in front
-                // TODO evaluate what effect this has as the burn rate changes between solutions compared to a static burn value
-                double manaBeforeGem = 0;
-                double time = 0;
-                for (int i = 0; i < calculationResult.SolutionVariable.Count; i++)
+                if (manaGem[seg] > 0 && trinketCount[seg] > 0)
                 {
-                    if (solution[i] > 0.01 && calculationResult.SolutionVariable[i].Segment == 0 && calculationResult.SolutionVariable[i].Type == VariableType.Spell)
-                    {
-                        CastingState state = calculationResult.SolutionVariable[i].State;
-                        if (state != null && !state.GetCooldown(trinket))
-                        {
-                            manaBeforeGem += calculationResult.SolutionVariable[i].Spell.ManaPerSecond * solution[i];
-                            time += solution[i];
-                        }
-                    }
-                }
-                /*if (time > 0)
-                {
-                    manaBurn = mana / time;
-                }*/
-
-                // mana used before gem <= sum x[i] * mps[i]
-                // overflow >= gemValue - mana used before gem
-                // (sum x[i] * mps[i]) + overflow >= gemValue
-
-                // either no activation at 0 or make sure it starts late enough
-                // tgem <= 30 - trinketCount[0]
-                // overflow >= 2400 - tgem * manaBurn
-
-                // 30 - trinketCount[0] >= tgem >= (2400 - overflow) / manaBurn
-
-                // (2400 - overflow) / manaBurn <= 30 - trinketCount[0]
-                // trinketCount[0] - overflow / manaBurn <= 30 - 2400 / manaBurn
-
-                double overflow = solution[calculationResult.ColumnManaOverflow];
-
-                if (manaBeforeGem + overflow < calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - 0.0001)
-                {
-                    // no gem/trinket at 0
-                    SolverLP nogem = lp.Clone();
-                    if (nogem.Log != null) nogem.Log.AppendLine("No SCB at 0");
+                    // make accurate prediction about mana burn if you can, assume all non-effect comes in front (that consumes mana)
+                    double manaSpentBeforeGem = 0;
+                    double manaChangeBeforeGem = 0;
                     for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
                     {
-                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == 0)
+                        if (solution[index] > 0.01 && calculationResult.SolutionVariable[index].Segment == seg)
                         {
-                            nogem.EraseColumn(index);
-                        }
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (state != null && state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0)
-                        {
-                            nogem.EraseColumn(index);
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            if (calculationResult.SolutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            {
+                                double mps = lp[rowManaRegen, index];
+                                manaChangeBeforeGem += mps * solution[index];
+                                if (mps > 0)
+                                {
+                                    manaSpentBeforeGem += mps * solution[index];
+                                }
+                            }
                         }
                     }
-                    HeapPush(nogem);
-                    // restrict SCB/overflow
-                    if (lp.Log != null) lp.Log.AppendLine("Restrict SCB at 0");
-                    int row = lp.AddConstraint(false);
-                    lp.SetConstraintRHS(row, double.PositiveInfinity);
-                    lp.SetConstraintLHS(row, calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem));
-                    for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+
+                    // mana overflow guards
+                    if (calculationResult.BaseStats.Mana - manaList[seg] + manaSpentBeforeGem < calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - 0.0001)
                     {
-                        CastingState state = calculationResult.SolutionVariable[index].State;
-                        if (calculationResult.SolutionVariable[index].Type == VariableType.ManaOverflow && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, 1.0);
-                        else if (state != null && calculationResult.SolutionVariable[index].Type == VariableType.Spell && !state.GetCooldown(trinket) && calculationResult.SolutionVariable[index].Segment == 0) lp.SetConstraintElement(row, index, calculationResult.SolutionVariable[index].Spell.ManaPerSecond);
+                        SolverLP nogem = lp.Clone();
+                        // restrict SCB/overflow
+                        if (lp.Log != null) lp.Log.AppendLine("Restrict overflow gem effect at " + seg);
+                        int row = lp.AddConstraint(false);
+                        lp.SetConstraintRHS(row, double.PositiveInfinity);
+                        lp.SetConstraintLHS(row, calculationResult.ManaGemValue * (1 + calculationResult.BaseStats.BonusManaGem) - calculationResult.BaseStats.Mana + calculationResult.StartingMana);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            int s = calculationResult.SolutionVariable[index].Segment;
+                            if (s < seg)
+                            {
+                                double mps = lp[rowManaRegen, index];
+                                lp.SetConstraintElement(row, index, mps);
+                            }
+                            else if (s == seg && calculationResult.SolutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            {
+                                double mps = lp[rowManaRegen, index];
+                                if (mps > 0) lp.SetConstraintElement(row, index, mps);
+                            }
+                        }
+                        lp.ForceRecalculation(true);
+                        HeapPush(lp);
+                        // no gem/trinket at 0
+                        if (nogem.Log != null) nogem.Log.AppendLine("No gem at " + seg);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == seg)
+                            {
+                                nogem.EraseColumn(index);
+                            }
+                            // you can't do this, all you can say is there is no activation here, could happen that we get effect that continues from previous segment
+                            //CastingState state = calculationResult.SolutionVariable[index].State;
+                            //if (state != null && state.GetCooldown(Cooldown.ManaGemEffect) && calculationResult.SolutionVariable[index].Segment == 0)
+                            //{
+                            //    nogem.EraseColumn(index);
+                            //}
+                        }
+                        HeapPush(nogem);
+                        return false;
                     }
-                    lp.ForceRecalculation(true);
-                    HeapPush(lp);
-                    return false;
+
+                    // mana underflow guards, can only use if mana gem effect activation is fixed
+                    ActivationConstraints activation = GetActivationConstraints(Cooldown.ManaGemEffect, seg, trinketCount[seg]);
+                    if (manaList[seg] - manaChangeBeforeGem < -0.0001 && !activation.Loose)
+                    {
+                        // either make sure gem is popped soon enough
+                        SolverLP branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict underflow gem effect at " + seg);
+                        int row = branchlp.AddConstraint(false);
+                        // mana spending <= start mana
+                        branchlp.SetConstraintRHS(row, calculationResult.StartingMana);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            CastingState state = calculationResult.SolutionVariable[index].State;
+                            int s = calculationResult.SolutionVariable[index].Segment;
+                            if (s < seg)
+                            {
+                                double mps = branchlp[rowManaRegen, index];
+                                branchlp.SetConstraintElement(row, index, mps);
+                            }
+                            else if (s == seg && calculationResult.SolutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
+                            {
+                                double mps = branchlp[rowManaRegen, index];
+                                branchlp.SetConstraintElement(row, index, mps);
+                            }
+                        }
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                        // or make it loose
+                        branchlp = lp.Clone();
+                        if (branchlp.Log != null) branchlp.Log.AppendLine("Remove gem effect at " + (seg + 1));
+                        DisableCooldown(branchlp, Cooldown.ManaGemEffect, seg + 1);
+                        branchlp.ForceRecalculation(true);
+                        HeapPush(branchlp);
+                        // or there is no activation here
+                        if (lp.Log != null) lp.Log.AppendLine("No gem at " + seg);
+                        for (int index = 0; index < calculationResult.SolutionVariable.Count; index++)
+                        {
+                            if (calculationResult.SolutionVariable[index].Type == VariableType.ManaGem && calculationResult.SolutionVariable[index].Segment == seg)
+                            {
+                                lp.EraseColumn(index);
+                            }
+                        }
+                        HeapPush(lp);
+                        return false;
+                    }
                 }
-            }
+            }        
 
             return true;
         }

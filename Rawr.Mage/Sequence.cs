@@ -2649,6 +2649,7 @@ namespace Rawr.Mage.SequenceReconstruction
 
             bool coldsnap = SequenceItem.Calculations.Character.MageTalents.ColdSnap == 1;
             double coldsnapCooldownDuration = SequenceItem.Calculations.ColdsnapCooldown;
+            bool gemActivated = (SequenceItem.Calculations.BaseStats.SpellPowerFor15SecOnManaGem > 0);
 
             int gemCount = 0;
             double potionCooldown = 0;
@@ -2675,6 +2676,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double apTime = double.NegativeInfinity;
             double ivTime = double.NegativeInfinity;
             double weTime = double.NegativeInfinity;
+            double manaGemEffectTime = double.NegativeInfinity;
 
             bool trinket1Active = false;
             bool trinket2Active = false;
@@ -2686,6 +2688,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool moltenFuryActive = false;
             bool heroismActive = false;
             bool apActive = false;
+            bool manaGemEffectActive = false;
             bool ivActive = false;
             bool weActive = false;
 
@@ -2722,7 +2725,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive)
+                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive)
                 {
                     cooldownContinuation = true;
                 }
@@ -2831,6 +2834,11 @@ namespace Rawr.Mage.SequenceReconstruction
                         gemCount++;
                         gemCooldown = 120;
                         gemWarning = false;
+                        if (gemActivated)
+                        {
+                            manaGemEffectActive = true;
+                            manaGemEffectTime = time;
+                        }
                     }
                 }
                 // Evocation
@@ -2937,6 +2945,23 @@ namespace Rawr.Mage.SequenceReconstruction
                             gemWarning = false;
                             flameCapActive = true;
                         }
+                    }
+                }
+                // Mana Gem Effect
+                if (manaGemEffectActive)
+                {
+                    if (state != null && state.ManaGemEffect)
+                    {
+                        if (time + duration > manaGemEffectTime + SequenceItem.Calculations.ManaGemEffectDuration + eps)
+                        {
+                            unexplained += time + duration - manaGemEffectTime - SequenceItem.Calculations.ManaGemEffectDuration;
+                            if (timing != null) timing.AppendLine("WARNING: Mana Gem Effect duration too long!");
+                        }
+                    }
+                    else if (duration > 0 && SequenceItem.Calculations.ManaGemEffectDuration - (time - manaGemEffectTime) > eps)
+                    {
+                        //unexplained += Math.Min(duration, 15 - (time - apTime));
+                        if (timing != null) timing.AppendLine("INFO: Mana Gem Effect is still up!");
                     }
                 }
                 // Potion of Wild Magic
@@ -3396,7 +3421,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     double aftertime = data[0];
                     if (aftertime >= time && aftertime <= time + duration)
                     {
-                        if (!drumsActive && !flameCapActive && !potionOfWildMagicActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive)
+                        if (!drumsActive && !flameCapActive && !potionOfWildMagicActive && !trinket1Active && !trinket2Active && !heroismActive && !moltenFuryActive && !combustionActive && !apActive && !ivActive && !manaGemEffectActive)
                         {
                             return aftertime;
                         }
@@ -3475,6 +3500,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (trinket1Active && Trinket1Duration - (time - trinket1time) <= eps) trinket1Active = false;
                 if (trinket2Active && Trinket2Duration - (time - trinket2time) <= eps) trinket2Active = false;
                 if (drumsActive && 30 - (time - drumsTime) <= 0) drumsActive = false;
+                if (manaGemEffectActive && SequenceItem.Calculations.ManaGemEffectDuration - (time - manaGemEffectTime) <= eps) manaGemEffectActive = false;
             }
             if (timing != null && unexplained > 0)
             {

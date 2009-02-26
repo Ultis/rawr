@@ -144,11 +144,11 @@ namespace Rawr.Mage
 
         public double this[int row, int col]
         {
-            /*get
+            get
             {
                 if (row == -1 || col == -1) return 0;
-                return lp[row, col] / rowScale[row];
-            }*/
+                return lp[row, col] / rowScale[row] / columnScale[col];
+            }
             set
             {
                 if (row == -1 || col == -1) return;
