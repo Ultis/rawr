@@ -44,20 +44,32 @@
             this.chkTotemHW1 = new System.Windows.Forms.CheckBox();
             this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tbOverhealing_Label = new System.Windows.Forms.Label();
             this.tbOverhealing = new System.Windows.Forms.TrackBar();
             this.tbBurst_Label = new System.Windows.Forms.Label();
             this.tbBurst = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
             this.chkWaterShield = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.chkTotemHW2 = new System.Windows.Forms.CheckBox();
+            this.chkTotemHW3 = new System.Windows.Forms.CheckBox();
+            this.chkTotemCH3 = new System.Windows.Forms.CheckBox();
+            this.chkTotemCH2 = new System.Windows.Forms.CheckBox();
+            this.chkTotemCH1 = new System.Windows.Forms.CheckBox();
+            this.chkTotemCH4 = new System.Windows.Forms.CheckBox();
+            this.hwBox = new System.Windows.Forms.GroupBox();
+            this.chBox = new System.Windows.Forms.GroupBox();
+            this.lhwBox = new System.Windows.Forms.GroupBox();
+            this.chkTotemLHW1 = new System.Windows.Forms.CheckBox();
+            this.wsBox = new System.Windows.Forms.GroupBox();
+            this.chkTotemWS1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -66,6 +78,10 @@
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.hwBox.SuspendLayout();
+            this.chBox.SuspendLayout();
+            this.lhwBox.SuspendLayout();
+            this.wsBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // cboManaPotAmount
@@ -206,12 +222,12 @@
             // chkTotemHW1
             // 
             this.chkTotemHW1.AutoSize = true;
-            this.chkTotemHW1.Location = new System.Drawing.Point(6, 6);
+            this.chkTotemHW1.Location = new System.Drawing.Point(6, 18);
             this.chkTotemHW1.Name = "chkTotemHW1";
-            this.chkTotemHW1.Size = new System.Drawing.Size(171, 17);
+            this.chkTotemHW1.Size = new System.Drawing.Size(183, 17);
             this.chkTotemHW1.TabIndex = 16;
-            this.chkTotemHW1.Text = "Totem of Spontaneous Growth";
-            this.tipRestoSham.SetToolTip(this.chkTotemHW1, "Check if you are using this totem.  Only choose one.");
+            this.chkTotemHW1.Text = "Totem of Spontaneous Regrowth";
+            this.tipRestoSham.SetToolTip(this.chkTotemHW1, "Increases spell power of Healing Wave by 88.  Only choose one.");
             this.chkTotemHW1.UseVisualStyleBackColor = true;
             this.chkTotemHW1.CheckedChanged += new System.EventHandler(this.chkTotemHW1_CheckedChanged);
             // 
@@ -240,6 +256,24 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(160, 125);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(24, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "sec";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 125);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(99, 13);
+            this.label17.TabIndex = 10;
+            this.label17.Text = "Earthshield Recast:";
             // 
             // groupBox1
             // 
@@ -298,24 +332,6 @@
             this.label2.Size = new System.Drawing.Size(23, 13);
             this.label2.TabIndex = 26;
             this.label2.Text = "min";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 125);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(99, 13);
-            this.label17.TabIndex = 10;
-            this.label17.Text = "Earthshield Recast:";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(160, 125);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(24, 13);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "sec";
             // 
             // chkWaterShield
             // 
@@ -377,7 +393,10 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.chkTotemHW1);
+            this.tabPage3.Controls.Add(this.wsBox);
+            this.tabPage3.Controls.Add(this.lhwBox);
+            this.tabPage3.Controls.Add(this.chBox);
+            this.tabPage3.Controls.Add(this.hwBox);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -385,6 +404,148 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Relics";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // chkTotemHW2
+            // 
+            this.chkTotemHW2.AutoSize = true;
+            this.chkTotemHW2.Location = new System.Drawing.Point(6, 41);
+            this.chkTotemHW2.Name = "chkTotemHW2";
+            this.chkTotemHW2.Size = new System.Drawing.Size(137, 17);
+            this.chkTotemHW2.TabIndex = 17;
+            this.chkTotemHW2.Text = "Totem of the Maelstrom";
+            this.tipRestoSham.SetToolTip(this.chkTotemHW2, "Reduces the mana cost of Healing Wave by 24.  Only choose one.");
+            this.chkTotemHW2.UseVisualStyleBackColor = true;
+            this.chkTotemHW2.CheckedChanged += new System.EventHandler(this.chkTotemHW2_CheckedChanged);
+            // 
+            // chkTotemHW3
+            // 
+            this.chkTotemHW3.AutoSize = true;
+            this.chkTotemHW3.Location = new System.Drawing.Point(6, 64);
+            this.chkTotemHW3.Name = "chkTotemHW3";
+            this.chkTotemHW3.Size = new System.Drawing.Size(101, 17);
+            this.chkTotemHW3.TabIndex = 18;
+            this.chkTotemHW3.Text = "Totem of Misery";
+            this.tipRestoSham.SetToolTip(this.chkTotemHW3, "Reduces the mana cost of Healing Wave by 79.  Only choose one.");
+            this.chkTotemHW3.UseVisualStyleBackColor = true;
+            this.chkTotemHW3.CheckedChanged += new System.EventHandler(this.chkTotemHW3_CheckedChanged);
+            // 
+            // chkTotemCH3
+            // 
+            this.chkTotemCH3.AutoSize = true;
+            this.chkTotemCH3.Location = new System.Drawing.Point(6, 65);
+            this.chkTotemCH3.Name = "chkTotemCH3";
+            this.chkTotemCH3.Size = new System.Drawing.Size(131, 17);
+            this.chkTotemCH3.TabIndex = 21;
+            this.chkTotemCH3.Text = "Totem of Living Water";
+            this.tipRestoSham.SetToolTip(this.chkTotemCH3, "Equip: Reduces the base mana cost of Chain Heal by 20.  Only choose one.");
+            this.chkTotemCH3.UseVisualStyleBackColor = true;
+            this.chkTotemCH3.CheckedChanged += new System.EventHandler(this.chkTotemCH3_CheckedChanged);
+            // 
+            // chkTotemCH2
+            // 
+            this.chkTotemCH2.AutoSize = true;
+            this.chkTotemCH2.Location = new System.Drawing.Point(7, 42);
+            this.chkTotemCH2.Name = "chkTotemCH2";
+            this.chkTotemCH2.Size = new System.Drawing.Size(107, 17);
+            this.chkTotemCH2.TabIndex = 20;
+            this.chkTotemCH2.Text = "Totem of the Bay";
+            this.tipRestoSham.SetToolTip(this.chkTotemCH2, "Increases the base amount healed by your chain heal by 102.  Only choose one.");
+            this.chkTotemCH2.UseVisualStyleBackColor = true;
+            this.chkTotemCH2.CheckedChanged += new System.EventHandler(this.chkTotemCH2_CheckedChanged);
+            // 
+            // chkTotemCH1
+            // 
+            this.chkTotemCH1.AutoSize = true;
+            this.chkTotemCH1.Location = new System.Drawing.Point(6, 19);
+            this.chkTotemCH1.Name = "chkTotemCH1";
+            this.chkTotemCH1.Size = new System.Drawing.Size(137, 17);
+            this.chkTotemCH1.TabIndex = 19;
+            this.chkTotemCH1.Text = "Totem of Forest Growth";
+            this.tipRestoSham.SetToolTip(this.chkTotemCH1, "Reduces the base mana cost of Chain Heal by 78.  Only choose one.");
+            this.chkTotemCH1.UseVisualStyleBackColor = true;
+            this.chkTotemCH1.CheckedChanged += new System.EventHandler(this.chkTotemCH1_CheckedChanged);
+            // 
+            // chkTotemCH4
+            // 
+            this.chkTotemCH4.AutoSize = true;
+            this.chkTotemCH4.Location = new System.Drawing.Point(6, 88);
+            this.chkTotemCH4.Name = "chkTotemCH4";
+            this.chkTotemCH4.Size = new System.Drawing.Size(137, 17);
+            this.chkTotemCH4.TabIndex = 22;
+            this.chkTotemCH4.Text = "Totem of Healing Rains";
+            this.tipRestoSham.SetToolTip(this.chkTotemCH4, "Equip: Increases the base amount healed by Chain Heal by 87.  Only choose one.");
+            this.chkTotemCH4.UseVisualStyleBackColor = true;
+            this.chkTotemCH4.CheckedChanged += new System.EventHandler(this.chkTotemCH4_CheckedChanged);
+            // 
+            // hwBox
+            // 
+            this.hwBox.Controls.Add(this.chkTotemHW1);
+            this.hwBox.Controls.Add(this.chkTotemHW3);
+            this.hwBox.Controls.Add(this.chkTotemHW2);
+            this.hwBox.Location = new System.Drawing.Point(1, 6);
+            this.hwBox.Name = "hwBox";
+            this.hwBox.Size = new System.Drawing.Size(204, 87);
+            this.hwBox.TabIndex = 25;
+            this.hwBox.TabStop = false;
+            this.hwBox.Text = "Healing Wave Totems";
+            // 
+            // chBox
+            // 
+            this.chBox.Controls.Add(this.chkTotemCH1);
+            this.chBox.Controls.Add(this.chkTotemCH2);
+            this.chBox.Controls.Add(this.chkTotemCH3);
+            this.chBox.Controls.Add(this.chkTotemCH4);
+            this.chBox.Location = new System.Drawing.Point(0, 100);
+            this.chBox.Name = "chBox";
+            this.chBox.Size = new System.Drawing.Size(203, 113);
+            this.chBox.TabIndex = 26;
+            this.chBox.TabStop = false;
+            this.chBox.Text = "Chain Heal Totems";
+            // 
+            // lhwBox
+            // 
+            this.lhwBox.Controls.Add(this.chkTotemLHW1);
+            this.lhwBox.Location = new System.Drawing.Point(1, 219);
+            this.lhwBox.Name = "lhwBox";
+            this.lhwBox.Size = new System.Drawing.Size(204, 42);
+            this.lhwBox.TabIndex = 26;
+            this.lhwBox.TabStop = false;
+            this.lhwBox.Text = "Lesser Healing Wave Totems";
+            // 
+            // chkTotemLHW1
+            // 
+            this.chkTotemLHW1.AutoSize = true;
+            this.chkTotemLHW1.Location = new System.Drawing.Point(6, 18);
+            this.chkTotemLHW1.Name = "chkTotemLHW1";
+            this.chkTotemLHW1.Size = new System.Drawing.Size(117, 17);
+            this.chkTotemLHW1.TabIndex = 16;
+            this.chkTotemLHW1.Text = "Totem of the Plains";
+            this.tipRestoSham.SetToolTip(this.chkTotemLHW1, "Equip: Increases spell power of Lesser Healing Wave by 79.  Only choose one.");
+            this.chkTotemLHW1.UseVisualStyleBackColor = true;
+            this.chkTotemLHW1.CheckedChanged += new System.EventHandler(this.chkTotemLHW1_CheckedChanged);
+            // 
+            // wsBox
+            // 
+            this.wsBox.Controls.Add(this.chkTotemWS1);
+            this.wsBox.Location = new System.Drawing.Point(1, 267);
+            this.wsBox.Name = "wsBox";
+            this.wsBox.Size = new System.Drawing.Size(204, 42);
+            this.wsBox.TabIndex = 27;
+            this.wsBox.TabStop = false;
+            this.wsBox.Text = "Water Shield Totems";
+            // 
+            // chkTotemWS1
+            // 
+            this.chkTotemWS1.AutoSize = true;
+            this.chkTotemWS1.Location = new System.Drawing.Point(6, 18);
+            this.chkTotemWS1.Name = "chkTotemWS1";
+            this.chkTotemWS1.Size = new System.Drawing.Size(135, 17);
+            this.chkTotemWS1.TabIndex = 16;
+            this.chkTotemWS1.Text = "Totem of Thunderhead";
+            this.tipRestoSham.SetToolTip(this.chkTotemWS1, "Your Water Shield ability grants an additional 27 mana each time it triggers and " +
+                    "an additional 2 mana per 5 sec.  Only choose one.");
+            this.chkTotemWS1.UseVisualStyleBackColor = true;
+            this.chkTotemWS1.CheckedChanged += new System.EventHandler(this.chkTotemWS1_CheckedChanged);
             // 
             // CalculationOptionsPanelRestoSham
             // 
@@ -404,7 +565,14 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.hwBox.ResumeLayout(false);
+            this.hwBox.PerformLayout();
+            this.chBox.ResumeLayout(false);
+            this.chBox.PerformLayout();
+            this.lhwBox.ResumeLayout(false);
+            this.lhwBox.PerformLayout();
+            this.wsBox.ResumeLayout(false);
+            this.wsBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -440,6 +608,18 @@
         private System.Windows.Forms.Label tbBurst_Label;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.CheckBox chkTotemHW1;
+        private System.Windows.Forms.CheckBox chkTotemCH4;
+        private System.Windows.Forms.CheckBox chkTotemCH3;
+        private System.Windows.Forms.CheckBox chkTotemCH2;
+        private System.Windows.Forms.CheckBox chkTotemCH1;
+        private System.Windows.Forms.CheckBox chkTotemHW3;
+        private System.Windows.Forms.CheckBox chkTotemHW2;
+        private System.Windows.Forms.GroupBox hwBox;
+        private System.Windows.Forms.GroupBox chBox;
+        private System.Windows.Forms.GroupBox lhwBox;
+        private System.Windows.Forms.CheckBox chkTotemLHW1;
+        private System.Windows.Forms.GroupBox wsBox;
+        private System.Windows.Forms.CheckBox chkTotemWS1;
 
     }
 }

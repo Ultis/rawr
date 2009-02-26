@@ -269,6 +269,18 @@ namespace Rawr.RestoSham
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
+            #region ToDo
+            // To do list, update Totems and remove stats to totems
+            // Totem of Spontaneous Regrowth - 27544 - Equip: Increases spell power of Healing Wave by 88.
+            // Totem of the Maelstrom - 30023 - Equip: Reduces the mana cost of Healing Wave by 24.
+            // Totem of Misery - 39728 - Equip: Reduces the mana cost of Healing Wave by 79.
+            // Totem of Forest Growth - 40709 - Equip: Reduces the base mana cost of Chain Heal by 78.
+            // Totem of the Bay - 38368 - Equip: Increases the base amount healed by your chain heal by 102.
+            // Totem of Living Water - 33505 - Equip: Reduces the base mana cost of Chain Heal by 20.
+            // Totem of Healing Rains - 28523 - Equip: Increases the base amount healed by Chain Heal by 87.
+            // Totem of the Plains - 25645 - Equip: Increases spell power of Lesser Healing Wave by 79.
+            // Totem of Thunderhead - 24413 - Equip: Your Water Shield ability grants an additional 27 mana each time it triggers and an additional 2 mana per 5 sec.
+            #endregion
             #region MP5 and Mana
             calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f

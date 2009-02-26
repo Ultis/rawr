@@ -58,6 +58,14 @@ namespace Rawr.RestoSham
             #endregion
             #region Relics Page:
             chkTotemHW1.Checked = options.TotemHW1;
+            chkTotemHW2.Checked = options.TotemHW2;
+            chkTotemHW3.Checked = options.TotemHW3;
+            chkTotemCH1.Checked = options.TotemCH1;
+            chkTotemCH2.Checked = options.TotemCH2;
+            chkTotemCH3.Checked = options.TotemCH3;
+            chkTotemCH4.Checked = options.TotemCH4;
+            chkTotemLHW1.Checked = options.TotemLHW1;
+            chkTotemWS1.Checked = options.TotemWS1;
             #endregion
 
             _bLoading = false;
@@ -232,6 +240,78 @@ namespace Rawr.RestoSham
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chkTotemHW2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemHW2"] = chkTotemHW2.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemHW3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemHW3"] = chkTotemHW3.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemCH1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemCH1"] = chkTotemCH1.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemCH2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemCH2"] = chkTotemCH2.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemCH3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemCH3"] = chkTotemCH3.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemCH4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemCH4"] = chkTotemCH4.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemLHW1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemLHW1"] = chkTotemLHW1.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkTotemWS1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["TotemWS1"] = chkTotemWS1.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
 #endregion
         #region Trackbar Handling
         private void OnTrackBarScroll(object sender, EventArgs e)
@@ -316,6 +396,7 @@ namespace Rawr.RestoSham
         }
         #endregion
         #region Defaults for variables
+        #region Page One Defaults
         /// <summary>
         /// Fight length, in minutes.
         /// </summary>
@@ -335,12 +416,6 @@ namespace Rawr.RestoSham
         /// Whether a Mana Tide totem is placed every time the cooldown is up.
         /// </summary>
         public bool ManaTideEveryCD = true;
-
-        /// <summary>
-        /// Whether a Mana Tide totem is placed every time the cooldown is up.
-        /// </summary>
-        public bool ManaTidePlus = true;
-
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
@@ -349,37 +424,7 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
-        public bool WaterShield2 = true;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool WaterShield3 = true;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool LHWPlus = true;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
         public bool TankHeal = true;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool GlyphCH = false;
-
-        /// <summary>
-        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
-        /// </summary>
-        public bool ELWGlyph = false;
-
-        /// <summary>
-        /// Is the first healing wave totem in use.
-        /// </summary>
-        public bool TotemHW1 = false;
 
         /// <summary>
         /// Interval of time between Earth Shield casts, in seconds.  Minimum in Calculations of 32.
@@ -396,6 +441,85 @@ namespace Rawr.RestoSham
         /// </summary>
         public float OverhealingPercentage = 35f;
         #endregion
-    }
+        #region Page Two Defaults
+        /// <summary>
+        /// Whether a Mana Tide totem is placed every time the cooldown is up.
+        /// </summary>
+        public bool ManaTidePlus = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool WaterShield2 = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool WaterShield3 = true;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool GlyphCH = false;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool ELWGlyph = false;
+
+        /// <summary>
+        /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
+        /// </summary>
+        public bool LHWPlus = true;
+        #endregion
+        #region Page Three Defaults
+        /// <summary>
+        /// Is the first healing wave totem in use.
+        /// </summary>
+        public bool TotemHW1 = false;
+
+        /// <summary>
+        /// Is the second healing wave totem in use.
+        /// </summary>
+        public bool TotemHW2 = false;
+
+        /// <summary>
+        /// Is the third healing wave totem in use.
+        /// </summary>
+        public bool TotemHW3 = false;
+
+        /// <summary>
+        /// Is the first chain heal totem in use.
+        /// </summary>
+        public bool TotemCH1 = false;
+
+        /// <summary>
+        /// Is the second chain heal totem in use.
+        /// </summary>
+        public bool TotemCH2 = false;
+
+        /// <summary>
+        /// Is the third chain heal totem in use.
+        /// </summary>
+        public bool TotemCH3 = false;
+
+        /// <summary>
+        /// Is the fourth chain heal totem in use.
+        /// </summary>
+        public bool TotemCH4 = false;
+
+        /// <summary>
+        /// Is the first lesser healing wave totem in use.
+        /// </summary>
+        public bool TotemLHW1 = false;
+
+        /// <summary>
+        /// Is the first water shield totem in use.
+        /// </summary>
+        public bool TotemWS1 = false;
+        #endregion
+        #endregion
+
+        }
 
 }
