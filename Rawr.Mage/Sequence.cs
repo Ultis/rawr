@@ -366,7 +366,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     if (sequence[b].MaxTime >= lastSuper.MaxTime + lastSuper.Duration - buffer)
                                     {
                                         // splittable, make a split at max time
-                                        if (lastSuper.MaxTime > t3)
+                                        if (lastSuper.MaxTime > t3 + eps)
                                         {
                                             SplitAt(b, lastSuper.MaxTime - t3);
                                             a++;

@@ -8,7 +8,9 @@ namespace Rawr.Mage
     public enum MIPMethod
     {
         BestBound,
-        DepthFirst
+        DepthFirst,
+        HybridGuided,
+        HybridUnguided
     }
 
     public partial class Solver
@@ -27,9 +29,17 @@ namespace Rawr.Mage
             public double Value;
             public double ProbeValue;
 
+            public double LpValue
+            {
+                get
+                {
+                    return Lp != null ? Lp.Value : Value;
+                }
+            }
+
             int IComparable<BranchNode>.CompareTo(BranchNode other)
             {                
-                return -(this.Lp != null ? this.Lp.Value : this.Value).CompareTo(other.Lp != null ? other.Lp.Value : other.Value);
+                return -LpValue.CompareTo(other.LpValue);
             }
         }
 
@@ -56,7 +66,94 @@ namespace Rawr.Mage
                 case MIPMethod.DepthFirst:
                     DepthFirstSearch();
                     break;
+                case MIPMethod.HybridUnguided:
+                    HybridSearch(false);
+                    break;
+                case MIPMethod.HybridGuided:
+                    HybridSearch(true);
+                    break;
             }
+        }
+
+        private void HybridSearch(bool guided)
+        {
+            int sizeLimit = calculationOptions.MaxHeapLimit;
+            lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
+
+            int round = 0;
+
+            upperBound = lp.Value;
+            lowerBound = 0.0;
+
+            SolverLP incumbent = null;
+
+            LinkedList<BranchNode> leafNodes = new LinkedList<BranchNode>();
+
+            SolverLP rootCopy = lp.Clone();
+            BranchNode root = new BranchNode() { Lp = lp };
+            ProbeDive(root, ref round, ref incumbent, sizeLimit, guided);
+
+            leafNodes.AddFirst(root);
+
+            do
+            {
+                double weight = (double)round / sizeLimit;
+                double maxValue = double.NegativeInfinity;
+                double maxWeightedValue = double.NegativeInfinity;
+                LinkedListNode<BranchNode> bestNode = null;
+
+                for (LinkedListNode<BranchNode> node = leafNodes.First; node != null; )
+                {
+                    if (node.Value.LpValue < lowerBound + 0.00001)
+                    {
+                        LinkedListNode<BranchNode> drop = node;
+                        node = node.Next;
+                        leafNodes.Remove(drop);
+                    }
+                    else
+                    {
+                        if (node.Value.LpValue > maxValue) maxValue = node.Value.LpValue;
+                        double weightedValue = weight * node.Value.LpValue + (1 - weight) * node.Value.ProbeValue;
+                        if (weightedValue > maxWeightedValue)
+                        {
+                            maxWeightedValue = weightedValue;
+                            bestNode = node;
+                        }
+                        node = node.Next;
+                    }
+                }
+
+                if (bestNode != null)
+                {
+                    if (maxValue < upperBound - 0.00001)
+                    {
+                        upperBound = maxValue;
+                        System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + round);
+                    }
+                    // the node was already probed, so at the very least we have the child nodes
+                    // probe each child and add them to leaf nodes
+                    leafNodes.Remove(bestNode);
+                    foreach (BranchNode child in bestNode.Value.Children)
+                    {
+                        if (child.LpValue > lowerBound + 0.00001)
+                        {
+                            ProbeDive(child, ref round, ref incumbent, sizeLimit, guided);
+                            leafNodes.AddLast(child);
+                        }
+                    }
+                }
+            } while (round < sizeLimit && leafNodes.Count > 0);
+
+            if (round < sizeLimit) System.Diagnostics.Trace.WriteLine("Full search complete at round " + round);
+
+            if (leafNodes.Count == 0 && incumbent != null)
+            {
+                upperBound = lowerBound;
+            }
+
+            lp = incumbent;
+            if (lp == null) lp = rootCopy;
+            solution = lp.Solve();
         }
 
         private void DepthFirstSearch()
@@ -143,7 +240,7 @@ namespace Rawr.Mage
                             BranchNode first = null;
                             foreach (BranchNode node in currentNode.Children)
                             {
-                                ProbeDive(node, ref round, ref incumbent, sizeLimit);
+                                ProbeDive(node, ref round, ref incumbent, sizeLimit, true);
                                 if (node.ProbeValue > lowerBound - 0.00001) first = node;
                             }
                             if (first != null)
@@ -163,7 +260,7 @@ namespace Rawr.Mage
                             BranchNode first = null;
                             foreach (BranchNode node in currentNode.Children)
                             {
-                                ProbeDive(node, ref round, ref incumbent, sizeLimit);
+                                ProbeDive(node, ref round, ref incumbent, sizeLimit, true);
                                 if (node.ProbeValue > lowerBound - 0.00001) first = node;
                             }
                             if (first != null)
@@ -234,7 +331,7 @@ namespace Rawr.Mage
             solution = lp.Solve();
         }
 
-        private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, int sizeLimit)
+        private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, int sizeLimit, bool sortedDive)
         {
             if (node.ProbeValue != 0) return;
             BranchNode store = currentNode;
@@ -248,27 +345,45 @@ namespace Rawr.Mage
                 {
                     if (value == 0.0)
                     {
-                        value = -1.0; // if we have a value of 0 then all siblings have a value of 0, so this whole subtree is unfeasible, reprobe
+                        value = -1.0; // if we have a value of 0 then all siblings have a value of 0, so this whole subtree is unfeasible, reprobe (but only in sorted dive)
                         currentNode.ProbeValue = value;
                         if (currentNode == node)
                         {
                             currentNode = store;
                             return;
                         }
-                        currentNode = currentNode.Parent; // this node has all children with value of 0
-                        currentNode.Value = 0.0;
-                        currentNode.ProbeValue = value;
-                        currentNode.Children.Clear(); // clean out the trash, make it available for garbage collection
-                        if (currentNode == node)
+                        // go to the next unprobed child
+                        currentNode = currentNode.Parent;
+                        bool allProbed = true;
+                        if (!sortedDive)
                         {
-                            currentNode = store;
-                            return;
+                            foreach (BranchNode child in currentNode.Children)
+                            {
+                                if (child.ProbeValue == 0)
+                                {
+                                    allProbed = false;
+                                    currentNode = child;
+                                    break;
+                                }
+                            }
                         }
-                        currentNode = currentNode.Parent; // this node has to be reevaluated
-                        // reprobe
-                        currentNode.Children.Sort();
-                        // evaluate child nodes
-                        currentNode = currentNode.Children[0];
+                        if (allProbed)
+                        {
+                            // this node has all children with value of 0
+                            currentNode.Value = 0.0;
+                            currentNode.ProbeValue = value;
+                            currentNode.Children.Clear(); // clean out the trash, make it available for garbage collection
+                            if (currentNode == node)
+                            {
+                                currentNode = store;
+                                return;
+                            }
+                            currentNode = currentNode.Parent; // this node has to be reevaluated
+                            // reprobe
+                            if (sortedDive) currentNode.Children.Sort();
+                            // evaluate child nodes
+                            currentNode = currentNode.Children[0];
+                        }
                     }
                     else
                     {
@@ -302,7 +417,7 @@ namespace Rawr.Mage
                         // we found a new lower bound
                         lowerBound = value;
                         incumbent = lp;
-                        System.Diagnostics.Trace.WriteLine("Probe value = " + lowerBound + ", root = " + currentNode.Value + ", round = " + round);
+                        System.Diagnostics.Trace.WriteLine("Probe value = " + lowerBound + ", root = " + node.Value + ", round = " + round);
                         currentNode.ProbeValue = value;
                         while (currentNode != node)
                         {
@@ -314,7 +429,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        currentNode.Children.Sort();
+                        if (sortedDive) currentNode.Children.Sort();
                         currentNode.Lp = null; // current lp may be reused by one of its children
                         // evaluate child nodes
                         currentNode = currentNode.Children[0];
@@ -378,6 +493,7 @@ namespace Rawr.Mage
             } while (heap.Count > 0 && !valid);
             if (valid)
             {
+                System.Diagnostics.Trace.WriteLine("Full search complete at round = " + heap.Count);
                 lowerBound = upperBound;
             }
             //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
@@ -507,9 +623,11 @@ namespace Rawr.Mage
             switch (calculationOptions.MIPMethod)
             {
                 case MIPMethod.BestBound:
-                    heap.Push(childLP);
+                    if (childLP.Value > 0) heap.Push(childLP);
                     break;
                 case MIPMethod.DepthFirst:
+                case MIPMethod.HybridUnguided:
+                case MIPMethod.HybridGuided:
                     currentNode.Children.Add(new BranchNode() { Lp = childLP, Parent = currentNode, Depth = currentNode.Depth + 1 });
                     break;
             }

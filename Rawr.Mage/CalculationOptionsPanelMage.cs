@@ -14,8 +14,10 @@ namespace Rawr.Mage
 		public CalculationOptionsPanelMage()
 		{
 			InitializeComponent();
-            comboBoxMIPMethod.Items.Add(MIPMethod.BestBound);
-            comboBoxMIPMethod.Items.Add(MIPMethod.DepthFirst);
+            foreach (MIPMethod value in Enum.GetValues(typeof(MIPMethod)))
+            {
+                comboBoxMIPMethod.Items.Add(value);
+            }
 		}
 
         private bool loading = false;
