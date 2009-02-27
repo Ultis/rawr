@@ -155,11 +155,10 @@ namespace Rawr
                     "Complex Stats:Avg OH Speed",
 					"Complex Stats:Armor Mitigation",
                     "Complex Stats:UR Uptime",
-                    "Complex Stats:ED Uptime",
                     "Complex Stats:Flurry Uptime",
+                    "Complex Stats:ED Uptime",
                     "Complex Stats:Avg Time to 5 Stack",
-                    "Complex Stats:Avg Time to Windfury",
-					"Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
+                    "Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Enhancement shamans only care about DPS, so Overall Points will always be identical to DPS Points.",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
@@ -626,10 +625,13 @@ namespace Rawr
             calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
             calculatedStats.AttackSpeed = unhastedOHSpeed / (1f + .3f) / (1f + .2f) / (1f + hasteBonus);
 			calculatedStats.ArmorMitigation = damageReduction * 100f;
+            calculatedStats.AvMHSpeed = hastedMHSpeed;
+            calculatedStats.AvOHSpeed = hastedOHSpeed;
             calculatedStats.EDUptime = edUptime * 100f;
             calculatedStats.URUptime = urUptime  * 100f;
             calculatedStats.FlurryUptime = flurryUptime * 100f;
-
+            calculatedStats.SecondsTo5Stack = secondsToFiveStack;
+            
             calculatedStats.SwingDamage = dpsMelee;
             calculatedStats.Stormstrike = dpsSS;
             calculatedStats.LavaLash = dpsLL;
@@ -1138,6 +1140,27 @@ namespace Rawr
             set { _flurryUptime = value; }
         }
 
+        private float _secondsTo5Stack;
+        public float SecondsTo5Stack
+        {
+            get { return _secondsTo5Stack; }
+            set { _secondsTo5Stack = value; }
+        }
+
+        private float _avMHSpeed;
+        public float AvMHSpeed
+        {
+            get { return _avMHSpeed; }
+            set { _avMHSpeed = value; }
+        }
+
+        private float _avOHSpeed;
+        public float AvOHSpeed
+        {
+            get { return _avOHSpeed; }
+            set { _avOHSpeed = value; }
+        }
+
         private float _meleeDamage;
 		public float MeleeDamage
 		{
@@ -1242,34 +1265,46 @@ namespace Rawr
             dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
+            dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed",
+                        AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
+                        DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
+                        MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Avg MH Speed", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Avg OH Speed", AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%");
             					
             dictValues.Add("UR Uptime", URUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("ED Uptime", EDUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-//            dictValues.Add("Avg Time to 5 Stack", "");
-//            dictValues.Add("Avg Time to Windfury", "");
+            dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
 
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
-            dictValues.Add("White Damage", SwingDamage.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Windfury Attack", WindfuryAttack.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Flametongue Attack", FlameTongueAttack.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Lightning Bolt", LightningBolt.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Earth Shock", EarthShock.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Searing/Magma Totem", SearingMagma.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Stormstrike", Stormstrike.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Spirit Wolf", SpiritWolf.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Lightning Shield", LightningShield.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Lava Lash", LavaLash.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints));
+            dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack,DPSPoints));
+            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack,DPSPoints));
+            dictValues.Add("Lightning Bolt", dpsOutputFormat(LightningBolt,DPSPoints));
+            dictValues.Add("Earth Shock", dpsOutputFormat(EarthShock,DPSPoints));
+            dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma,DPSPoints));
+            dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike,DPSPoints));
+            dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf,DPSPoints));
+            dictValues.Add("Lightning Shield", dpsOutputFormat(LightningShield,DPSPoints));
+            dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-
+            
             dictValues.Add("Enhance Version", typeof(CalculationsEnhance).Assembly.GetName().Version.ToString());
 			
 			return dictValues;
 		}
+
+        private String dpsOutputFormat(float dps, float totaldps)
+        {
+            float percent = dps / totaldps * 100f;
+            return string.Format("{0}*{1}% of total dps", 
+                dps.ToString("F2", CultureInfo.InvariantCulture),
+                percent.ToString("F2", CultureInfo.InvariantCulture));
+        }
 
 		public override float GetOptimizableCalculationValue(string calculation)
 		{
