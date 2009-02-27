@@ -155,6 +155,7 @@ namespace Rawr
                     "Complex Stats:Avg OH Speed",
 					"Complex Stats:Armor Mitigation",
                     "Complex Stats:UR Uptime",
+                    "Complex Stats:ED Uptime",
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:Avg Time to 5 Stack",
                     "Complex Stats:Avg Time to Windfury",
@@ -380,7 +381,7 @@ namespace Rawr
             float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
             float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
             baseArmor = baseArmor * (1 - modPercentDecrease);
-            float modArmor = 1.0f - (baseArmor / (baseArmor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
+            float damageReduction = baseArmor / (baseArmor + (467.5f * 80f - 22167.5f));
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 
@@ -487,7 +488,8 @@ namespace Rawr
             //It's also where we'll figure out GCD interference when we model that.
             //--------------
             float flurryUptime = 1f;
-            float edUptime = 0;
+            float edUptime = 0f;
+            float urUptime = 0f;
             float hastedMHSpeed = baseHastedMHSpeed;
             float hastedOHSpeed = baseHastedOHSpeed;
             float hitsPerSMHSS = (1f - chanceYellowMiss) /stormstrikeSpeed;
@@ -531,7 +533,7 @@ namespace Rawr
                 
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
-            float URUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
+            urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
 
             //1: Melee DPS
             float APDPS = attackPower / 14;
@@ -548,13 +550,13 @@ namespace Rawr
             float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
-            float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances) * weaponMastery * (1 - modArmor);
+            float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances) * weaponMastery * (1-damageReduction);
 
             //2: Stormstrike DPS
             float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
             float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - modArmor);
+            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction);
 
             //3: Lavalash DPS
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
@@ -583,7 +585,7 @@ namespace Rawr
             
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
-            float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - modArmor);
+            float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - damageReduction);
 
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
@@ -623,7 +625,10 @@ namespace Rawr
             calculatedStats.YellowCrit = (float)Math.Floor(chanceYellowCrit * 10000f) / 100f;
             calculatedStats.SpellCrit = (float)Math.Floor(chanceSpellCrit * 10000f) / 100f;
             calculatedStats.AttackSpeed = unhastedOHSpeed / (1f + .3f) / (1f + .2f) / (1f + hasteBonus);
-			calculatedStats.ArmorMitigation = modArmor * 100f;
+			calculatedStats.ArmorMitigation = damageReduction * 100f;
+            calculatedStats.EDUptime = edUptime * 100f;
+            calculatedStats.URUptime = urUptime  * 100f;
+            calculatedStats.FlurryUptime = flurryUptime * 100f;
 
             calculatedStats.SwingDamage = dpsMelee;
             calculatedStats.Stormstrike = dpsSS;
@@ -1112,7 +1117,28 @@ namespace Rawr
 			set { _armorMitigation = value; }
 		}
 
-		private float _meleeDamage;
+        private float _urUptime;
+        public float URUptime
+        {
+            get { return _urUptime; }
+            set { _urUptime = value; }
+        }
+
+        private float _edUptime;
+        public float EDUptime
+        {
+            get { return _edUptime; }
+            set { _edUptime = value; }
+        }
+
+        private float _flurryUptime;
+        public float FlurryUptime
+        {
+            get { return _flurryUptime; }
+            set { _flurryUptime = value; }
+        }
+
+        private float _meleeDamage;
 		public float MeleeDamage
 		{
 			get { return _meleeDamage; }
@@ -1218,6 +1244,12 @@ namespace Rawr
             dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            					
+            dictValues.Add("UR Uptime", URUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("ED Uptime", EDUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Flurry Uptime", FlurryUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
+//            dictValues.Add("Avg Time to 5 Stack", "");
+//            dictValues.Add("Avg Time to Windfury", "");
 
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
@@ -1244,7 +1276,7 @@ namespace Rawr
 			switch (calculation)
 			{
 				case "Health": return BasicStats.Health;
-				case "Avoided Attacks %": return AvoidedAttacks;
+                case "DPS Points": return DPSPoints;
 				case "Nature Resist": return BasicStats.NatureResistance;
 				case "Fire Resist": return BasicStats.FireResistance;
 				case "Frost Resist": return BasicStats.FrostResistance;
