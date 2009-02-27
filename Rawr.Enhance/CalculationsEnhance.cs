@@ -550,16 +550,16 @@ namespace Rawr
             float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
-            float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances) * weaponMastery * (1-damageReduction);
+            float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances) * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss);
 
             //2: Stormstrike DPS
             float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
             float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction);
+            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss);
 
             //3: Lavalash DPS
-            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f; //and no armor reduction yeya!
+            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f * (1 - chanceYellowMiss); //and no armor reduction yeya!
             if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "flametongue")
                 dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
 
@@ -585,7 +585,7 @@ namespace Rawr
             
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
-            float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - damageReduction);
+            float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF * (1 - damageReduction) * (1 - chanceYellowMiss);
 
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
