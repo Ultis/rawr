@@ -10,15 +10,11 @@ namespace Rawr.Mage
         BestBound,
         DepthFirst,
         HybridGuided,
-        HybridUnguided
+        HybridUnguided,
     }
 
     public partial class Solver
     {
-#if DEBUG_BRANCHING
-        private List<SolverLP> childList;
-#endif
-
         private class BranchNode : IComparable<BranchNode>
         {
             public SolverLP Lp;
@@ -55,7 +51,8 @@ namespace Rawr.Mage
         private void RestrictSolution()
         {
 #if DEBUG_BRANCHING
-            childList = new List<SolverLP>();
+            DebugBranching();
+            return;
 #endif
 
             switch (calculationOptions.MIPMethod)
@@ -74,6 +71,86 @@ namespace Rawr.Mage
                     break;
             }
         }
+
+#if DEBUG_BRANCHING
+        private void DebugBranching()
+        {
+            int[] depthCount = new int[10];
+            lp.SolvePrimalDual();
+
+            double rootValue = lp.Value;
+            BranchNode root = new BranchNode() { Lp = lp };
+            currentNode = root;
+
+            lowerBound = 0.995 * rootValue;
+            // explore the top 1% value error of branch tree
+            do
+            {
+                double value = (currentNode.Lp != null) ? currentNode.Lp.Value : currentNode.Value; // force evaluation and get value
+                currentNode.Value = value;
+                if (value < lowerBound + 0.00001)
+                {
+                    // prune this, free space by removing from parent, backtrack
+                    do
+                    {
+                        currentNode = currentNode.Parent;
+                        currentNode.Children[currentNode.Index] = null;
+                        currentNode.Index++;
+                    } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                    if (currentNode.Index >= currentNode.Children.Count)
+                    {
+                        break; // we explored the whole search space
+                    }
+                    currentNode = currentNode.Children[currentNode.Index];
+                }
+                else
+                {
+                    int errorIndex = (int)((1 - value / rootValue) / 0.001);
+                    if (errorIndex >= 0 && errorIndex < 10)
+                    {
+                        depthCount[errorIndex]++;
+                    }
+                    lp = currentNode.Lp;
+                    if (lp != null)
+                    {
+                        solution = lp.Solve();
+                        bool valid = IsLpValid();
+                        if (valid)
+                        {
+                            // now backtrack
+                            if (currentNode.Parent != null)
+                            {
+                                do
+                                {
+                                    currentNode = currentNode.Parent;
+                                    currentNode.Children[currentNode.Index] = null;
+                                    currentNode.Index++;
+                                } while (currentNode.Index >= currentNode.Children.Count && currentNode.Parent != null);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            if (currentNode.Index >= currentNode.Children.Count) break; // we explored the whole search space
+                            currentNode = currentNode.Children[currentNode.Index];
+                        }
+                        else
+                        {
+                            currentNode.Lp = null; // current lp may be reused by one of its children
+                            // evaluate child nodes
+                            currentNode = currentNode.Children[0];
+                        }
+                    }
+                }
+            } while (true);
+
+            for (int i = 0; i < 10; i++)
+            {
+                System.Diagnostics.Trace.WriteLine("Error range " + i + ": " + depthCount[i]);
+            }
+            currentNode = null;
+        }
+#endif
 
         private void HybridSearch(bool guided)
         {
@@ -503,10 +580,6 @@ namespace Rawr.Mage
         {
             AnalyzeSolution();
 
-#if DEBUG_BRANCHING
-                childList.Clear();
-#endif
-
             if (integralMana)
             {
                 if (calculationOptions.ManaPotionEnabled && !ValidateIntegralConsumableOverall(VariableType.ManaPotion, 1.0)) return false;
@@ -523,8 +596,6 @@ namespace Rawr.Mage
                 if (calculationOptions.DrumsOfBattle && !ValidateCooldown(Cooldown.DrumsOfBattle, 30.0, 120.0, true, 30.0, VariableType.None)) return false;
                 // make sure all cooldowns are tightly packed and not fragmented
                 // mf is trivially satisfied
-                // heroism
-                if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1)) return false;
                 // ap
                 if (arcanePowerAvailable && !ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, VariableType.None)) return false;
                 // iv
@@ -538,20 +609,22 @@ namespace Rawr.Mage
                 if (combustionAvailable && !ValidateCooldown(Cooldown.Combustion, 15.0, 180.0 + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
                 if (flameCapAvailable && !ValidateCooldown(Cooldown.FlameCap, 60.0, 180.0, integralMana, 60.0, VariableType.None)) return false;
-                // potion of wild magic
-                if (potionOfWildMagicAvailable && !ValidateCooldown(Cooldown.PotionOfWildMagic, 15, calculationOptions.FightDuration)) return false;
-                // potion of speed
-                if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, calculationOptions.FightDuration)) return false;
                 // t1
-                if (trinket1Available && !ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown)) return false;
+                if (trinket1Available && !ValidateCooldown(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, true, trinket1Duration, VariableType.None)) return false;
                 // t2
-                if (trinket2Available && !ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown)) return false;
+                if (trinket2Available && !ValidateCooldown(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, true, trinket2Duration, VariableType.None)) return false;
                 // mana gem effect
                 if (manaGemEffectAvailable && !ValidateCooldown(Cooldown.ManaGemEffect, manaGemEffectDuration, 120f, true, manaGemEffectDuration, VariableType.None)) return false;
                 if (manaGemEffectAvailable && !ValidateManaGemEffect()) return false;
                 // evocation
                 if (calculationOptions.EvocationEnabled && !ValidateCooldown(Cooldown.None, calculationResult.EvocationDuration, calculationResult.EvocationCooldown, false, 0.0, VariableType.Evocation)) return false;
                 if (calculationOptions.EvocationEnabled && !ValidateEvocation()) return false;
+                // heroism
+                if (heroismAvailable && !ValidateCooldown(Cooldown.Heroism, 40, -1, true, 40, VariableType.None)) return false;
+                // potion of wild magic
+                if (potionOfWildMagicAvailable && !ValidateCooldown(Cooldown.PotionOfWildMagic, 15, -1, true, 15, VariableType.None)) return false;
+                // potion of speed
+                if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, -1, true, 15, VariableType.None)) return false;
             }
 
             if (integralMana)
@@ -595,31 +668,15 @@ namespace Rawr.Mage
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
             }
 
-#if DEBUG_BRANCHING
-                if (!valid)
-                {
-                    bool allLower = true;
-                    foreach (SolverLP childLP in childList)
-                    {
-                        if (childLP.Value >= max - 1.0)
-                        {
-                            allLower = false;
-                            break;
-                        }
-                    }
-                    if (allLower && childList.Count > 0 && childList[0].Log != null)
-                    {
-                        System.Diagnostics.Trace.WriteLine("\n\nProves branch has nontrivially lower value:");
-                        System.Diagnostics.Trace.Write(childList[0].Log.ToString());
-                    }
-                    childList.Clear();
-                }
-#endif
             return true;
         }
 
         private void HeapPush(SolverLP childLP)
         {
+#if DEBUG_BRANCHING
+            currentNode.Children.Add(new BranchNode() { Lp = childLP, Parent = currentNode, Depth = currentNode.Depth + 1 });
+            return;
+#endif
             switch (calculationOptions.MIPMethod)
             {
                 case MIPMethod.BestBound:
@@ -640,9 +697,6 @@ namespace Rawr.Mage
                     childLP = childLP; // something looks to be buggy
                 }
             }
-#endif
-#if DEBUG_BRANCHING
-            childList.Add(childLP);
 #endif
         }
 

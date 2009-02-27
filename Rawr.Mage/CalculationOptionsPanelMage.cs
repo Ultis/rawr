@@ -89,8 +89,21 @@ namespace Rawr.Mage
             CastingState apState = new CastingState(calculationResult, characterStats, calculationOptions, armor, Character, true, false, false, false, false, false, false, false, false, false, false, false, false, false);
 
             StringBuilder sb = new StringBuilder();
+
             sb.AppendLine("Optimal Cycle Palette:");
             sb.AppendLine("");
+            sb.AppendLine("Cycle Code Legend:");
+            sb.AppendLine(@"1) at 0 stack with ABar not on cooldown do: 0 = AB, 1 = ABar, 2 = AM
+2) at 1 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
+3) at 0 stack with ABar on cooldown if you don't see MB do: 0 = AB, 1 = AM
+4) at 0 stack with ABar on cooldown if you see MB do: 0 = AB, 1 = AM
+5) at 1 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
+6) at 2 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
+7) at 2 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
+8) at 3 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
+9) at 3 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
+");
+    
             sb.AppendLine("Base:");
 
             ComputeOptimalCycles(baseState, sb);
