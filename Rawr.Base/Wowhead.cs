@@ -769,6 +769,15 @@ namespace Rawr
 				case "4500": return "The Eye of Eternity";
 				case "4603": return "Vault of Archavon";
                 case "3520": return "Shadowmoon Valley";
+                case "4075": return "Sunwell Plateau";
+                case "3959": return "Black Temple";
+                case "3606": return "Hyjal Summit";
+                case "3607": return "Serpentshrine Cavern";
+                case "3618": return "Gruul's Lair";
+                case "3836": return "Magtheridon's Lair";
+                case "2562": return "Karazhan";
+                case "3842": return "The Eye";
+                case "3805": return "Zul'Aman";
 				default: return "Unknown - " + zoneId;
 			}
 		}
