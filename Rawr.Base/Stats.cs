@@ -493,6 +493,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
+        [CommonStat(MinRange = 100f)]
         public float Health
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Health]; }
@@ -526,7 +527,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float Stamina
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Stamina]; }
@@ -535,7 +536,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 20f)]
         public float AttackPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AttackPower]; }
@@ -589,7 +590,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
         [DisplayName("Penetration Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float ArmorPenetrationRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating]; }
@@ -598,7 +599,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float Intellect
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Intellect]; }
@@ -607,7 +608,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float Spirit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
@@ -711,7 +712,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Power")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float SpellPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
@@ -780,7 +781,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float SpellHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
@@ -807,7 +808,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float SpellHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
@@ -847,7 +848,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Crit Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -857,7 +858,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Crit Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float RangedCritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
@@ -867,7 +868,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Melee Crit")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float CritMeleeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
@@ -886,7 +887,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Hit Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float RangedHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
@@ -896,7 +897,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Hit Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -916,7 +917,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Dodge Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -1020,7 +1021,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Expertise Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 32.79f)]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
@@ -1030,7 +1031,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Haste Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float HasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
@@ -1040,7 +1041,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Haste Rating")]
-        [CommonStat]
+        [CommonStat(MinRange = 10f)]
         public float RangedHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
@@ -1221,7 +1222,6 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.BonusMangleBearDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusMangleBearDamage] = value; }
         }
-
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Rip Damage Per Combo Point Per Tick")]
