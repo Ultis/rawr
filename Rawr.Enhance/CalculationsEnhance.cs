@@ -742,8 +742,6 @@ namespace Rawr
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-			statsGearEnchantsBuffs.AttackPower += statsGearEnchantsBuffs.DrumsOfWar * calcOpts.DrumsOfWarUptime;
-			statsGearEnchantsBuffs.HasteRating += statsGearEnchantsBuffs.DrumsOfBattle * calcOpts.DrumsOfBattleUptime;
 			if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
 				statsGearEnchantsBuffs.BonusDamageMultiplier = ((1f + statsGearEnchantsBuffs.BonusDamageMultiplier) * 
 					(float)Math.Pow(1.03f, calcOpts.NumberOfFerociousInspirations - 1f)) - 1f;
@@ -943,8 +941,6 @@ namespace Rawr
                     Health = stats.Health,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
-					DrumsOfBattle = stats.DrumsOfBattle,
-					DrumsOfWar = stats.DrumsOfWar,
 					ShatteredSunMightProc = stats.ShatteredSunMightProc,
 					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                     SpellPower = stats.SpellPower,
@@ -984,7 +980,7 @@ namespace Rawr
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.HitRating + stats.Stamina +
 				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.DrumsOfBattle + stats.DrumsOfWar + stats.ShatteredSunMightProc + stats.SpellPower +
+				stats.ShatteredSunMightProc + stats.SpellPower +
 				stats.BonusSpellPowerMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +

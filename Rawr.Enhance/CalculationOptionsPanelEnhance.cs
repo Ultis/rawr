@@ -51,10 +51,6 @@ namespace Rawr
 			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
 			//if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
 			//    Character.CalculationOptions["BloodlustUptime"] = "15";
-			//if (!Character.CalculationOptions.ContainsKey("DrumsOfBattleUptime"))
-			//    Character.CalculationOptions["DrumsOfBattleUptime"] = "25";
-			//if (!Character.CalculationOptions.ContainsKey("DrumsOfWarUptime"))
-			//    Character.CalculationOptions["DrumsOfWarUptime"] = "25";
 			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
 			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
@@ -64,8 +60,6 @@ namespace Rawr
 			trackBarExposeWeakness.Value = calcOpts.ExposeWeaknessAPValue;
 			trackBarNumberOfFerociousInspirations.Value = calcOpts.NumberOfFerociousInspirations;
 			trackBarBloodlustUptime.Value = (int)Math.Round(calcOpts.BloodlustUptime * 100);
-			trackBarDrumsOfBattleUptime.Value = (int)Math.Round(calcOpts.DrumsOfBattleUptime * 100);
-			trackBarDrumsOfWarUptime.Value = (int)Math.Round(calcOpts.DrumsOfWarUptime * 100);
             comboBoxMainhandImbue.SelectedItem = calcOpts.MainhandImbue;
             comboBoxOffhandImbue.SelectedItem = calcOpts.OffhandImbue;
 
@@ -84,8 +78,6 @@ namespace Rawr
             labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
 			labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 			labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
-			labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
-			labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
             tbModuleNotes.Text = "The EnhSim export option exists for users that wish to have very detailed analysis of their stats. " +
                 "For most users the standard model should be quite sufficient.\r\n\r\n" +
@@ -111,16 +103,12 @@ namespace Rawr
 				labelExposeWeakness.Text = trackBarExposeWeakness.Value.ToString();
 				labelNumberOfFerociousInspirations.Text = trackBarNumberOfFerociousInspirations.Value.ToString();
 				labelBloodlustUptime.Text = trackBarBloodlustUptime.Value.ToString() + "%";
-				labelDrumsOfBattleUptime.Text = trackBarDrumsOfBattleUptime.Value.ToString() + "%";
-				labelDrumsOfWarUptime.Text = trackBarDrumsOfWarUptime.Value.ToString() + "%";
 
 				CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
 				calcOpts.TargetLevel = int.Parse(comboBoxTargetLevel.SelectedItem.ToString());
 				calcOpts.TargetArmor = trackBarTargetArmor.Value;
 				calcOpts.NumberOfFerociousInspirations = trackBarNumberOfFerociousInspirations.Value;
 				calcOpts.BloodlustUptime = (float)trackBarBloodlustUptime.Value / 100f;
-				calcOpts.DrumsOfBattleUptime = (float)trackBarDrumsOfBattleUptime.Value / 100f;
-				calcOpts.DrumsOfWarUptime = (float)trackBarDrumsOfWarUptime.Value / 100f;
 				calcOpts.ExposeWeaknessAPValue = trackBarExposeWeakness.Value;
                 calcOpts.MainhandImbue = (string) comboBoxMainhandImbue.SelectedItem;
                 calcOpts.OffhandImbue = (string) comboBoxOffhandImbue.SelectedItem;
@@ -223,7 +211,6 @@ namespace Rawr
                 simExport.copyToClipboard();
             }
         }
-
     }
 
 	[Serializable]
@@ -252,8 +239,6 @@ namespace Rawr
 		public int ExposeWeaknessAPValue = 200;
 		public int NumberOfFerociousInspirations = 2;
 		public float BloodlustUptime = 0.15f;
-		public float DrumsOfBattleUptime = 0.25f;
-		public float DrumsOfWarUptime = 0.25f;
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";

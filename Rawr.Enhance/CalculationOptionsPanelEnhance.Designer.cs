@@ -38,18 +38,12 @@
             this.radioButtonScryer = new System.Windows.Forms.RadioButton();
             this.radioButtonAldor = new System.Windows.Forms.RadioButton();
             this.labelNumberOfFerociousInspirations = new System.Windows.Forms.Label();
-            this.labelDrumsOfWarUptime = new System.Windows.Forms.Label();
-            this.labelDrumsOfBattleUptime = new System.Windows.Forms.Label();
             this.labelBloodlustUptime = new System.Windows.Forms.Label();
             this.labelExposeWeakness = new System.Windows.Forms.Label();
             this.trackBarNumberOfFerociousInspirations = new System.Windows.Forms.TrackBar();
-            this.trackBarDrumsOfWarUptime = new System.Windows.Forms.TrackBar();
-            this.trackBarDrumsOfBattleUptime = new System.Windows.Forms.TrackBar();
             this.label6 = new System.Windows.Forms.Label();
             this.trackBarBloodlustUptime = new System.Windows.Forms.TrackBar();
-            this.label9 = new System.Windows.Forms.Label();
             this.trackBarExposeWeakness = new System.Windows.Forms.TrackBar();
-            this.label7 = new System.Windows.Forms.Label();
             this.trackBarTargetArmor = new System.Windows.Forms.TrackBar();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -66,13 +60,11 @@
             this.chbGlyphLB = new System.Windows.Forms.CheckBox();
             this.chbGlyphFT = new System.Windows.Forms.CheckBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
+            this.btnEnhSim = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
@@ -102,18 +94,12 @@
             this.tabPage1.Controls.Add(this.radioButtonScryer);
             this.tabPage1.Controls.Add(this.radioButtonAldor);
             this.tabPage1.Controls.Add(this.labelNumberOfFerociousInspirations);
-            this.tabPage1.Controls.Add(this.labelDrumsOfWarUptime);
-            this.tabPage1.Controls.Add(this.labelDrumsOfBattleUptime);
             this.tabPage1.Controls.Add(this.labelBloodlustUptime);
             this.tabPage1.Controls.Add(this.labelExposeWeakness);
             this.tabPage1.Controls.Add(this.trackBarNumberOfFerociousInspirations);
-            this.tabPage1.Controls.Add(this.trackBarDrumsOfWarUptime);
-            this.tabPage1.Controls.Add(this.trackBarDrumsOfBattleUptime);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.trackBarBloodlustUptime);
-            this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.trackBarExposeWeakness);
-            this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.trackBarTargetArmor);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.label4);
@@ -132,7 +118,7 @@
             // 
             this.labelTargetArmorDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 328);
+            this.labelTargetArmorDescription.Location = new System.Drawing.Point(71, 226);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
             this.labelTargetArmorDescription.Size = new System.Drawing.Size(192, 40);
             this.labelTargetArmorDescription.TabIndex = 34;
@@ -148,7 +134,7 @@
             this.comboBoxOffhandImbue.FormattingEnabled = true;
             this.comboBoxOffhandImbue.Items.AddRange(new object[] {
             "Flametongue"});
-            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 430);
+            this.comboBoxOffhandImbue.Location = new System.Drawing.Point(99, 328);
             this.comboBoxOffhandImbue.Name = "comboBoxOffhandImbue";
             this.comboBoxOffhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxOffhandImbue.TabIndex = 33;
@@ -162,7 +148,7 @@
             this.comboBoxMainhandImbue.FormattingEnabled = true;
             this.comboBoxMainhandImbue.Items.AddRange(new object[] {
             "Windfury"});
-            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 403);
+            this.comboBoxMainhandImbue.Location = new System.Drawing.Point(99, 301);
             this.comboBoxMainhandImbue.Name = "comboBoxMainhandImbue";
             this.comboBoxMainhandImbue.Size = new System.Drawing.Size(159, 21);
             this.comboBoxMainhandImbue.TabIndex = 32;
@@ -170,7 +156,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(4, 433);
+            this.label8.Location = new System.Drawing.Point(4, 331);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 31;
@@ -179,7 +165,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 406);
+            this.label3.Location = new System.Drawing.Point(4, 304);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 30;
@@ -191,7 +177,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonScryer.AutoSize = true;
             this.radioButtonScryer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.radioButtonScryer.Location = new System.Drawing.Point(74, 374);
+            this.radioButtonScryer.Location = new System.Drawing.Point(74, 272);
             this.radioButtonScryer.Name = "radioButtonScryer";
             this.radioButtonScryer.Size = new System.Drawing.Size(55, 17);
             this.radioButtonScryer.TabIndex = 28;
@@ -207,7 +193,7 @@
             this.radioButtonAldor.AutoSize = true;
             this.radioButtonAldor.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
             this.radioButtonAldor.Checked = true;
-            this.radioButtonAldor.Location = new System.Drawing.Point(6, 374);
+            this.radioButtonAldor.Location = new System.Drawing.Point(6, 272);
             this.radioButtonAldor.Name = "radioButtonAldor";
             this.radioButtonAldor.Size = new System.Drawing.Size(49, 17);
             this.radioButtonAldor.TabIndex = 29;
@@ -222,33 +208,11 @@
             this.labelNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelNumberOfFerociousInspirations.AutoSize = true;
-            this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(71, 276);
+            this.labelNumberOfFerociousInspirations.Location = new System.Drawing.Point(71, 174);
             this.labelNumberOfFerociousInspirations.Name = "labelNumberOfFerociousInspirations";
             this.labelNumberOfFerociousInspirations.Size = new System.Drawing.Size(13, 13);
             this.labelNumberOfFerociousInspirations.TabIndex = 11;
             this.labelNumberOfFerociousInspirations.Text = "2";
-            // 
-            // labelDrumsOfWarUptime
-            // 
-            this.labelDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelDrumsOfWarUptime.AutoSize = true;
-            this.labelDrumsOfWarUptime.Location = new System.Drawing.Point(71, 225);
-            this.labelDrumsOfWarUptime.Name = "labelDrumsOfWarUptime";
-            this.labelDrumsOfWarUptime.Size = new System.Drawing.Size(27, 13);
-            this.labelDrumsOfWarUptime.TabIndex = 10;
-            this.labelDrumsOfWarUptime.Text = "25%";
-            // 
-            // labelDrumsOfBattleUptime
-            // 
-            this.labelDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelDrumsOfBattleUptime.AutoSize = true;
-            this.labelDrumsOfBattleUptime.Location = new System.Drawing.Point(71, 174);
-            this.labelDrumsOfBattleUptime.Name = "labelDrumsOfBattleUptime";
-            this.labelDrumsOfBattleUptime.Size = new System.Drawing.Size(27, 13);
-            this.labelDrumsOfBattleUptime.TabIndex = 9;
-            this.labelDrumsOfBattleUptime.Text = "25%";
             // 
             // labelBloodlustUptime
             // 
@@ -277,7 +241,7 @@
             this.trackBarNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(74, 244);
+            this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(74, 142);
             this.trackBarNumberOfFerociousInspirations.Maximum = 4;
             this.trackBarNumberOfFerociousInspirations.Minimum = 1;
             this.trackBarNumberOfFerociousInspirations.Name = "trackBarNumberOfFerociousInspirations";
@@ -285,38 +249,10 @@
             this.trackBarNumberOfFerociousInspirations.TabIndex = 25;
             this.trackBarNumberOfFerociousInspirations.Value = 2;
             // 
-            // trackBarDrumsOfWarUptime
-            // 
-            this.trackBarDrumsOfWarUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarDrumsOfWarUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarDrumsOfWarUptime.Location = new System.Drawing.Point(74, 193);
-            this.trackBarDrumsOfWarUptime.Maximum = 100;
-            this.trackBarDrumsOfWarUptime.Minimum = 20;
-            this.trackBarDrumsOfWarUptime.Name = "trackBarDrumsOfWarUptime";
-            this.trackBarDrumsOfWarUptime.Size = new System.Drawing.Size(184, 45);
-            this.trackBarDrumsOfWarUptime.TabIndex = 26;
-            this.trackBarDrumsOfWarUptime.TickFrequency = 5;
-            this.trackBarDrumsOfWarUptime.Value = 25;
-            // 
-            // trackBarDrumsOfBattleUptime
-            // 
-            this.trackBarDrumsOfBattleUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarDrumsOfBattleUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.trackBarDrumsOfBattleUptime.Location = new System.Drawing.Point(74, 142);
-            this.trackBarDrumsOfBattleUptime.Maximum = 100;
-            this.trackBarDrumsOfBattleUptime.Minimum = 20;
-            this.trackBarDrumsOfBattleUptime.Name = "trackBarDrumsOfBattleUptime";
-            this.trackBarDrumsOfBattleUptime.Size = new System.Drawing.Size(184, 45);
-            this.trackBarDrumsOfBattleUptime.TabIndex = 27;
-            this.trackBarDrumsOfBattleUptime.TickFrequency = 5;
-            this.trackBarDrumsOfBattleUptime.Value = 25;
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 247);
+            this.label6.Location = new System.Drawing.Point(7, 145);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(60, 39);
             this.label6.TabIndex = 13;
@@ -337,16 +273,6 @@
             this.trackBarBloodlustUptime.TickFrequency = 5;
             this.trackBarBloodlustUptime.Value = 15;
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 196);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(54, 39);
-            this.label9.TabIndex = 14;
-            this.label9.Text = "Drums\r\nof War\r\nUptime %:";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // trackBarExposeWeakness
             // 
             this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -363,23 +289,13 @@
             this.trackBarExposeWeakness.TickFrequency = 25;
             this.trackBarExposeWeakness.Value = 200;
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 145);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(54, 39);
-            this.label7.TabIndex = 19;
-            this.label7.Text = "Drums\r\nof Battle\r\nUptime %:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // trackBarTargetArmor
             // 
             this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.trackBarTargetArmor.LargeChange = 1000;
-            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 295);
+            this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 193);
             this.trackBarTargetArmor.Maximum = 15000;
             this.trackBarTargetArmor.Minimum = 3000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
@@ -412,7 +328,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 295);
+            this.label2.Location = new System.Drawing.Point(-1, 193);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 17;
@@ -560,16 +476,6 @@
             this.tabPage3.Text = "EnhSim";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // btnEnhSim
-            // 
-            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
-            this.btnEnhSim.Name = "btnEnhSim";
-            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
-            this.btnEnhSim.TabIndex = 0;
-            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
-            this.btnEnhSim.UseVisualStyleBackColor = true;
-            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
-            // 
             // tbModuleNotes
             // 
             this.tbModuleNotes.AcceptsReturn = true;
@@ -581,6 +487,16 @@
             this.tbModuleNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbModuleNotes.Size = new System.Drawing.Size(258, 454);
             this.tbModuleNotes.TabIndex = 1;
+            // 
+            // btnEnhSim
+            // 
+            this.btnEnhSim.Location = new System.Drawing.Point(21, 23);
+            this.btnEnhSim.Name = "btnEnhSim";
+            this.btnEnhSim.Size = new System.Drawing.Size(208, 28);
+            this.btnEnhSim.TabIndex = 0;
+            this.btnEnhSim.Text = "Export Stats to EnhSim config file";
+            this.btnEnhSim.UseVisualStyleBackColor = true;
+            this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -594,8 +510,6 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfWarUptime)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarDrumsOfBattleUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBloodlustUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarExposeWeakness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
@@ -620,18 +534,12 @@
         private System.Windows.Forms.RadioButton radioButtonScryer;
         private System.Windows.Forms.RadioButton radioButtonAldor;
         private System.Windows.Forms.Label labelNumberOfFerociousInspirations;
-        private System.Windows.Forms.Label labelDrumsOfWarUptime;
-        private System.Windows.Forms.Label labelDrumsOfBattleUptime;
         private System.Windows.Forms.Label labelBloodlustUptime;
         private System.Windows.Forms.Label labelExposeWeakness;
         private System.Windows.Forms.TrackBar trackBarNumberOfFerociousInspirations;
-        private System.Windows.Forms.TrackBar trackBarDrumsOfWarUptime;
-        private System.Windows.Forms.TrackBar trackBarDrumsOfBattleUptime;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TrackBar trackBarBloodlustUptime;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TrackBar trackBarExposeWeakness;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TrackBar trackBarTargetArmor;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
