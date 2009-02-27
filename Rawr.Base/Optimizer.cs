@@ -2654,7 +2654,9 @@ namespace Rawr
 
             if (ids.Length <= 4 || (ids.Length > 4 && ids[4] == "*"))
             {
-                possibleEnchants = slotAvailableEnchants[(int)Character.GetCharacterSlotByItemSlot(item.Slot)];
+				int slotIndex = (int)Character.GetCharacterSlotByItemSlot(item.Slot);
+				if (slotIndex < slotAvailableEnchants.Length)
+					possibleEnchants = slotAvailableEnchants[slotIndex];
                 if (possibleEnchants == null) possibleEnchants = new Enchant[] { null };
             }
             else
