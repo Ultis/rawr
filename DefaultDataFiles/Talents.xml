@@ -85,4 +85,19 @@
     <Class>Mage</Class>
     <Spec>23000523010013015032310250532123050020123000000000000000000000000000000000000000000000</Spec>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Shaman</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000000000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>0/16/54 - Resto (LHW) - 1 Free Point</Name>
+    <Class>Shaman</Class>
+    <Spec>000000000000000000000000005050330000000000000000000005035301055010501122331251</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>0/19/51 - Resto (CH) - 1 Free Point</Name>
+    <Class>Shaman</Class>
+    <Spec>000000000000000000000000305050330000000000000000000050035031055010501122301251</Spec>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
