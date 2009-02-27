@@ -269,18 +269,6 @@ namespace Rawr.RestoSham
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
-            #region ToDo
-            // To do list, update Totems and remove stats to totems
-            // Totem of Spontaneous Regrowth - 27544 - Equip: Increases spell power of Healing Wave by 88.
-            // Totem of the Maelstrom - 30023 - Equip: Reduces the mana cost of Healing Wave by 24.
-            // Totem of Misery - 39728 - Equip: Reduces the mana cost of Healing Wave by 79.
-            // Totem of Forest Growth - 40709 - Equip: Reduces the base mana cost of Chain Heal by 78.
-            // Totem of the Bay - 38368 - Equip: Increases the base amount healed by your chain heal by 102.
-            // Totem of Living Water - 33505 - Equip: Reduces the base mana cost of Chain Heal by 20.
-            // Totem of Healing Rains - 28523 - Equip: Increases the base amount healed by Chain Heal by 87.
-            // Totem of the Plains - 25645 - Equip: Increases spell power of Lesser Healing Wave by 79.
-            // Totem of Thunderhead - 24413 - Equip: Your Water Shield ability grants an additional 27 mana each time it triggers and an additional 2 mana per 5 sec.
-            #endregion
             #region MP5 and Mana
             calcStats.Mp5OutsideFSR = 5f * (.001f + (float)Math.Sqrt((double)stats.Intellect) * stats.Spirit * .009327f) + stats.Mp5;
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
@@ -306,7 +294,6 @@ namespace Rawr.RestoSham
                 stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .1f * 150f);
             if (character.ActiveBuffsContains("Flametongue Totem"))
                 stats.SpellPower += (character.ShamanTalents.EnhancingTotems * .05f * 144);
-            mp5 +=  (options.WaterShield ? 2 : 0) * (stats.TOTH / 27 * 2);
             #endregion
             #region Stats, Talents, and Options
             float CurrentMana = calcStats.TotalManaPool;
@@ -331,8 +318,20 @@ namespace Rawr.RestoSham
                 ELWHPS = (652 + (Healing * (5 / 11)) * (12 / 15)) * Purify;
             #endregion
             #region Water Shield Variables
-            float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (stats.TOTH);
+            // Currently Broken float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (stats.TOTH);
+            float Orb = 400 * (1 + stats.WaterShieldIncrease);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
+            #endregion
+            #region Totem Stats
+            float TotemHW1 = (options.TotemHW1 ? 88 : 0);  // +88 Healing to HW
+            float TotemHW2 = (options.TotemHW2 ? 24 : 0);  // -24 Cost of HW
+            float TotemHW3 = (options.TotemHW3 ? 79 : 0);  // -79 Cost of HW
+            float TotemCH1 = (options.TotemCH1 ? 78 : 0);  // -78 Cost of CH
+            float TotemCH2 = (options.TotemCH2 ? 102 : 0);  // +102 Base Heal CH
+            float TotemCH3 = (options.TotemCH3 ? 20 : 0);  // -20 Cost of CH
+            float TotemCH4 = (options.TotemCH4 ? 87 : 0);  // +87 Base Heal of CH
+            float TotemLHW1 = (options.TotemLHW1 ? 1 : 0); // +79 Spellpower to LHW
+            float TotemWS1 = (options.TotemWS1 ? 1 : 0);  // Totem of Thunderhead: 27 per orb trigger (untested for IWS), 2 MP5
             #endregion
             #region Spell Casting Times
             float WSC = 1.5f * Hasted;
@@ -363,17 +362,19 @@ namespace Rawr.RestoSham
             #endregion
             #region Spell Mana Costs
             float LHWM = (((550) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield * .1f)));
-            float HWM = (((1099 - stats.HWManaReduce) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
-            float CHM = (((835 - stats.CHManaReduce) * Redux));
+            float HWM = (((1099 - (TotemHW2 + TotemHW3)) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)));
+            float CHM = (((835 - (TotemCH2 + TotemCH4)) * Redux));
             float RTM = ((((792) * Redux) - ((Orb * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3)))) * character.ShamanTalents.Riptide;
             #endregion
             #region Spell Healing Amounts
-            float LHWHeal = (((((1720 + (1.88f * stats.LHWHealPlus)) + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
-            float HWHeal = (((((3250 + (1.88f * stats.HWHealPlus)) + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
-            float CHHeal = ((((((1130 + (1.88f * (stats.CHHealPlus_1 + stats.CHHealPlus_2))) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
+            float LHWHeal = (((((1720 + (1.88f * TotemLHW1)) + (Healing * (LHWC / 3.5f))) * Purify) * (Critical + Awaken)) * ((options.LHWPlus ? (options.TankHeal ? 1.2f : 1) : 1))) * TrueHealing;
+            float HWHeal = (((((3250 + (1.88f * TotemHW1)) + (Healing * (HWC / 3.5f))) * (1 + (.06f * character.ShamanTalents.HealingWay)) * Purify)) * (Critical + Awaken)) * TrueHealing;
+            float CHHeal = ((((((1130 + TotemCH1 + TotemCH3) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f))
+                * .02f)) * Purify) * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             float CHRTHeal = 0;
             if (character.ShamanTalents.Riptide > 0)
-                CHRTHeal = ((((((1130f + (1.88f * (stats.CHHealPlus_1 + stats.CHHealPlus_2))) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f)) * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
+                CHRTHeal = ((((((1130 + TotemCH1 + TotemCH3) + (Healing * (CHC / 3.5f))) * (1f + (((character.ShamanTalents.ImprovedChainHeal / 2f))
+                    * .02f)) * Purify) * 1.2f * Critical) * TankCH) * TrueHealing + (ExtraELW * ELWHPS * CHC)) * (1 + stats.CHHWHealIncrease);
             if (character.ShamanTalents.Riptide < 1)
                 CHRTHeal = CHHeal;
             float RTHeal = ((((1670f + (Healing * .5f)) * Purify) * (Critical + Awaken)) * TrueHealing) * character.ShamanTalents.Riptide;
@@ -553,7 +554,6 @@ namespace Rawr.RestoSham
             float IntMultiplier = (1 + statsTotal.BonusIntellectMultiplier) * (1 + (float)Math.Round(.02f * character.ShamanTalents.AncestralKnowledge, 2));
             statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) + 
                 (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect/* + statsEnchants.Intellect*/) * IntMultiplier);
-            // statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
@@ -562,8 +562,8 @@ namespace Rawr.RestoSham
             // Fight options:
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-			float OrbRegen = (options.WaterShield3 ? 130 : 100);
-			statsTotal.Mp5 += (options.WaterShield ? OrbRegen : 0) * (1 + statsBaseGear.WaterShieldIncrease);
+            float OrbRegen = (options.WaterShield3 ? 130 : 100);
+            statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0) * (1 + statsBaseGear.WaterShieldIncrease)) + (options.TotemWS1 ? 2 : 0);
 
             return statsTotal;
         }
@@ -660,13 +660,6 @@ namespace Rawr.RestoSham
                 Mana = stats.Mana,
                 WaterShieldIncrease = stats.WaterShieldIncrease,
                 CHHWHealIncrease = stats.CHHWHealIncrease,
-                TOTH = stats.TOTH,
-                HWHealPlus = stats.HWHealPlus,
-                LHWHealPlus = stats.LHWHealPlus,
-                CHHealPlus_1 = stats.CHHealPlus_1,
-                CHHealPlus_2 = stats.CHHealPlus_2,
-                HWManaReduce = stats.HWManaReduce,
-                CHManaReduce = stats.CHManaReduce,
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
@@ -679,8 +672,7 @@ namespace Rawr.RestoSham
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + 
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
-                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.HWManaReduce + 
-                stats.CHManaReduce + stats.CHHealPlus_1 + stats.CHHealPlus_2 + stats.HWHealPlus + stats.LHWHealPlus + stats.TOTH) > 0;
+                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease) > 0;
         }
 
         #endregion

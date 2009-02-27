@@ -248,13 +248,6 @@ namespace Rawr
         #endregion
         #region Added by Rawr.Restosham
         ManaSpringMp5Increase,
-        TOTH,
-        HWHealPlus, 
-        LHWHealPlus, 
-        CHHealPlus_1, 
-        CHHealPlus_2, 
-        HWManaReduce,
-        CHManaReduce,
         WaterShieldIncrease,
         CHHWHealIncrease,
         CHManaReduction,
@@ -2545,63 +2538,6 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
         }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Reduces the mana cost of Healing Wave by ")]
-        public float HWManaReduce
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HWManaReduce]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HWManaReduce] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Reduces the base mana cost of Chain Heal by ")]
-        public float CHManaReduce
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CHManaReduce]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CHManaReduce] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Increases the base amount healed by your chain heal by ")]
-        public float CHHealPlus_1
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CHHealPlus_1]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CHHealPlus_1] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Increases the base amount healed by Chain Heal by ")]
-        public float CHHealPlus_2
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CHHealPlus_2]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CHHealPlus_2] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Increases spell power of Healing Wave by ")]
-        public float HWHealPlus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HWHealPlus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HWHealPlus] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Increases spell power of Lesser Healing Wave by ")]
-        public float LHWHealPlus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.LHWHealPlus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.LHWHealPlus] = value; }
-        }
-
-        [System.ComponentModel.DefaultValue(0f)]
-        [DisplayName("Your Water Shield ability grants an additional ")]
-        public float TOTH
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.TOTH]; }
-            set { _rawAdditiveData[(int)AdditiveStat.TOTH] = value; }
-        }
-
         #endregion
         #endregion
 
