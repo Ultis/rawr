@@ -42,6 +42,7 @@ namespace Rawr.Mage
 
         private bool restrictThreat;
 
+        private bool advancedConstraints;
         private bool segmentCooldowns;
         private bool segmentNonCooldowns;
         private bool integralMana;
@@ -153,12 +154,13 @@ namespace Rawr.Mage
         private int rowSegmentThreat = -1;
         #endregion
 
-        private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, string armor)
+        private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, bool advancedConstraints, string armor)
         {
             this.character = character;
             this.talents = character.MageTalents;
             this.calculationOptions = calculationOptions;
             this.segmentCooldowns = segmentCooldowns;
+            this.advancedConstraints = advancedConstraints;
             this.integralMana = integralMana;
             this.armor = armor;
             requiresMIP = segmentCooldowns || integralMana;
@@ -273,9 +275,9 @@ namespace Rawr.Mage
 
         private static object calculationLock = new object();
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, bool advancedConstraints)
         {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, armor);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraints, armor);
             return solver.PrivateGetCharacterCalculations(additionalItem, calculations);
         }
 
@@ -436,7 +438,7 @@ namespace Rawr.Mage
                 else
                 {
                     calculationResult.UpperBound = upperBound;
-                    calculationResult.LowerBound = lowerBound;
+                    if (integralMana && segmentCooldowns && advancedConstraints) calculationResult.LowerBound = lowerBound;
                 }
 
                 if (minimizeTime)

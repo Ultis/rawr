@@ -263,10 +263,10 @@ namespace Rawr.Mage
                 bestTiming = timing.ToString();
             }
 
-            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana))
+            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraints))
             {
                 CalculationOptions.AdviseAdvancedSolver = true;
-                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns and integral mana consumables options!\r\n\r\n" + bestTiming.TrimStart('*');
+                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns, integral mana consumables and advanced constraints options!\r\n\r\n" + bestTiming.TrimStart('*');
             }
 
             return bestTiming;
@@ -274,11 +274,11 @@ namespace Rawr.Mage
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
-            if (CalculationOptions.DisplaySegmentCooldowns != CalculationOptions.ComparisonSegmentCooldowns || CalculationOptions.DisplayIntegralMana != CalculationOptions.ComparisonIntegralMana)
+            if (CalculationOptions.DisplaySegmentCooldowns != CalculationOptions.ComparisonSegmentCooldowns || CalculationOptions.DisplayIntegralMana != CalculationOptions.ComparisonIntegralMana || (CalculationOptions.DisplaySegmentCooldowns == true && CalculationOptions.DisplayAdvancedConstraints != CalculationOptions.ComparisonAdvancedConstraints))
             {
                 bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
                 CalculationOptions.IncrementalOptimizations = false;
-                CharacterCalculationsMage smp = Solver.GetCharacterCalculations(Character, null, CalculationOptions, Calculations, MageArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
+                CharacterCalculationsMage smp = Solver.GetCharacterCalculations(Character, null, CalculationOptions, Calculations, MageArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraints);
                 Dictionary<string, string> ret = smp.GetCharacterDisplayCalculationValuesInternal();
                 ret["Dps"] = String.Format("{0:F}*{1:F}% Error margin", smp.DpsRating, Math.Abs(DpsRating - smp.DpsRating) / DpsRating * 100);
                 CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;

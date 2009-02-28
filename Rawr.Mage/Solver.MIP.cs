@@ -82,7 +82,7 @@ namespace Rawr.Mage
             BranchNode root = new BranchNode() { Lp = lp };
             currentNode = root;
 
-            lowerBound = 0.995 * rootValue;
+            lowerBound = 0.998 * rootValue;
             // explore the top 1% value error of branch tree
             do
             {
@@ -160,7 +160,7 @@ namespace Rawr.Mage
             int round = 0;
 
             upperBound = lp.Value;
-            lowerBound = 0.0;
+            lowerBound = calculationOptions.LowerBoundHint;
 
             SolverLP incumbent = null;
 
@@ -171,6 +171,7 @@ namespace Rawr.Mage
             ProbeDive(root, ref round, ref incumbent, sizeLimit, guided);
 
             leafNodes.AddFirst(root);
+            root = null;
 
             do
             {
@@ -189,6 +190,25 @@ namespace Rawr.Mage
                     }
                     else
                     {
+                        if (node.Value.ProbeValue != 0.0 && node.Value.ProbeValue < lowerBound + 0.00001)
+                        {
+                            BranchNode drop = node.Value;
+                            while (drop != null)
+                            {
+                                while (drop.Children.Count > 0 && drop.Children[0].LpValue < lowerBound + 0.00001)
+                                {
+                                    drop.Children.RemoveAt(0);
+                                }
+                                if (drop.Children.Count > 0)
+                                {
+                                    drop = drop.Children[0];
+                                }
+                                else
+                                {
+                                    drop = null;
+                                }
+                            }
+                        }
                         if (node.Value.LpValue > maxValue) maxValue = node.Value.LpValue;
                         double weightedValue = weight * node.Value.LpValue + (1 - weight) * node.Value.ProbeValue;
                         if (weightedValue > maxWeightedValue)
@@ -212,6 +232,7 @@ namespace Rawr.Mage
                     leafNodes.Remove(bestNode);
                     foreach (BranchNode child in bestNode.Value.Children)
                     {
+                        child.Parent = null;
                         if (child.LpValue > lowerBound + 0.00001)
                         {
                             ProbeDive(child, ref round, ref incumbent, sizeLimit, guided);
@@ -229,8 +250,13 @@ namespace Rawr.Mage
             }
 
             lp = incumbent;
-            if (lp == null) lp = rootCopy;
+            if (lp == null)
+            {
+                lp = rootCopy;
+                lowerBound = 0.0;
+            }
             solution = lp.Solve();
+            currentNode = null;
         }
 
         private void DepthFirstSearch()
@@ -239,7 +265,7 @@ namespace Rawr.Mage
             lp.SolvePrimalDual(); // solve primal and recalculate to get a stable starting point
 
             upperBound = lp.Value;
-            lowerBound = 0.0;
+            lowerBound = calculationOptions.LowerBoundHint;
 
             SolverLP rootCopy = lp.Clone();
             BranchNode root = new BranchNode() { Lp = lp };
@@ -258,6 +284,7 @@ namespace Rawr.Mage
                 if (value < lowerBound + 0.00001)
                 {
                     // prune this, free space by removing from parent, backtrack
+                    if (currentNode.Parent == null) break;
                     do
                     {
                         currentNode = currentNode.Parent;
@@ -404,8 +431,13 @@ namespace Rawr.Mage
             } while (round < sizeLimit);
 
             lp = incumbent;
-            if (lp == null) lp = rootCopy;
+            if (lp == null)
+            {
+                lp = rootCopy;
+                lowerBound = 0.0;
+            }
             solution = lp.Solve();
+            currentNode = null;
         }
 
         private void ProbeDive(BranchNode node, ref int round, ref SolverLP incumbent, int sizeLimit, bool sortedDive)
@@ -551,7 +583,11 @@ namespace Rawr.Mage
                     //break;
                 }
                 lp = heap.Pop();
-                upperBound = lp.Value;
+                if (lp.Value < upperBound - 0.00001)
+                {
+                    upperBound = lp.Value;
+                    System.Diagnostics.Trace.WriteLine("Upper bound lowered to " + upperBound + " at round " + heap.Count);
+                }
                 // this is the best non-evaluated option (highest partially-constrained LP, the optimum has to be lower)
                 // if this one is valid than all others are sub-optimal
                 // validate all segments for each cooldown
@@ -573,7 +609,7 @@ namespace Rawr.Mage
                 System.Diagnostics.Trace.WriteLine("Full search complete at round = " + heap.Count);
                 lowerBound = upperBound;
             }
-            //System.Diagnostics.Trace.WriteLine("Heap at solution " + heap.Count);
+            heap = null;
         }
 
         private bool IsLpValid()
@@ -588,7 +624,7 @@ namespace Rawr.Mage
                 if (conjureManaGem && !ValidateIntegralConsumableOverall(VariableType.ConjureManaGem, calculationResult.ConjureManaGem.CastTime)) return false;
             }
 
-            if (segmentCooldowns)
+            if (segmentCooldowns && advancedConstraints)
             {
                 // drums
                 if (calculationOptions.DrumsOfBattle && !ValidateIntegralConsumableOverall(VariableType.DrumsOfBattle, calculationResult.BaseState.GlobalCooldown)) return false;
@@ -627,13 +663,13 @@ namespace Rawr.Mage
                 if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, -1, true, 15, VariableType.None)) return false;
             }
 
-            if (integralMana)
+            if (integralMana && advancedConstraints)
             {
                 if (calculationOptions.ManaPotionEnabled && !ValidateIntegralConsumable(VariableType.ManaPotion)) return false;
                 if (calculationOptions.ManaGemEnabled && !ValidateIntegralConsumable(VariableType.ManaGem)) return false;
             }
 
-            if (segmentCooldowns)
+            if (segmentCooldowns && advancedConstraints)
             {
                 if (flameCapAvailable && !ValidateFlamecap()) return false;
                 if (!ValidateCycling()) return false;
@@ -802,24 +838,21 @@ namespace Rawr.Mage
             {
                 CastingState state = solutionVariable[index].State;
                 int iseg = solutionVariable[index].Segment;
-                if (solution[index] > 0.00001)
+                if (!calculationOptions.UnlimitedMana)
                 {
-                    if (!calculationOptions.UnlimitedMana)
+                    for (int seg = iseg + 1; seg < segmentList.Count; seg++)
                     {
-                        for (int seg = iseg + 1; seg < segmentList.Count; seg++)
-                        {
-                            manaList[seg] -= solution[index] * lp[rowManaRegen, index];
-                        }
+                        manaList[seg] -= solution[index] * lp[rowManaRegen, index];
                     }
-                    if (state != null)
+                }
+                if (solution[index] > 0.00001 && state != null)
+                {
+                    int h = (int)state.Cooldown;
+                    if (h != 0)
                     {
-                        int h = (int)state.Cooldown;
-                        if (h != 0)
-                        {
-                            hexMask[iseg] |= h;
-                            if (!hexList[iseg].Contains(h)) hexList[iseg].Add(h);
-                            segmentFilled[iseg] += solution[index];
-                        }
+                        hexMask[iseg] |= h;
+                        if (!hexList[iseg].Contains(h)) hexList[iseg].Add(h);
+                        segmentFilled[iseg] += solution[index];
                     }
                 }
             }
@@ -925,7 +958,7 @@ namespace Rawr.Mage
                                     {
                                         CastingState state = solutionVariable[index].State;
                                         int iseg = solutionVariable[index].Segment;
-                                        if (state != null && iseg == seg)
+                                        if (state != null && iseg == seg && !solutionVariable[index].IsZeroTime)
                                         {
                                             int hex = (int)state.Cooldown;
                                             if (((int)state.Cooldown & (ind1 | ind2)) == 0) lp.EraseColumn(index);
@@ -934,6 +967,7 @@ namespace Rawr.Mage
                                     }
                                     //lp.SetConstraintRHS(row, -segmentDuration);
                                     //lp.ForceRecalculation(true);
+                                    lp.SetLHS(rowSegment + seg, segmentList[seg].Duration);
                                     HeapPush(lp);
                                     return false;
                                 }
@@ -4196,7 +4230,7 @@ namespace Rawr.Mage
                     double manaChangeBeforeGem = 0;
                     for (int index = 0; index < solutionVariable.Count; index++)
                     {
-                        if (solution[index] > 0.01 && solutionVariable[index].Segment == seg)
+                        if (solutionVariable[index].Segment == seg)
                         {
                             CastingState state = solutionVariable[index].State;
                             if (solutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.GetCooldown(Cooldown.ManaGemEffect)))
@@ -4323,7 +4357,7 @@ namespace Rawr.Mage
                     double manaChangeBefore = 0;
                     for (int index = 0; index < solutionVariable.Count; index++)
                     {
-                        if (solution[index] > 0.01 && solutionVariable[index].Segment == seg)
+                        if (solutionVariable[index].Segment == seg)
                         {
                             if (solutionVariable[index].Type != VariableType.Evocation)
                             {
@@ -4385,7 +4419,7 @@ namespace Rawr.Mage
                     double overflow = 0;
                     for (int index = 0; index < solutionVariable.Count; index++)
                     {
-                        if (solution[index] > 0.01 && solutionVariable[index].Segment == seg)
+                        if (solutionVariable[index].Segment == seg)
                         {
                             if (solutionVariable[index].Type == VariableType.ManaOverflow)
                             {

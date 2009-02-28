@@ -33,6 +33,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -229,6 +230,10 @@
             this.label81 = new System.Windows.Forms.Label();
             this.checkBoxGlyphOfFireball = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.textBoxLowerBoundHint = new System.Windows.Forms.TextBox();
+            this.label100 = new System.Windows.Forms.Label();
+            this.textBoxAdditionalSegmentSplits = new System.Windows.Forms.TextBox();
+            this.label98 = new System.Windows.Forms.Label();
             this.checkBoxVariableSegmentDuration = new System.Windows.Forms.CheckBox();
             this.label96 = new System.Windows.Forms.Label();
             this.comboBoxSegmentDuration = new System.Windows.Forms.ComboBox();
@@ -254,18 +259,18 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxAdditionalSegmentSplits = new System.Windows.Forms.TextBox();
-            this.label98 = new System.Windows.Forms.Label();
+            this.label101 = new System.Windows.Forms.Label();
+            this.checkBoxDisplayAdvancedConstraints = new System.Windows.Forms.CheckBox();
+            this.checkBoxComparisonAdvancedConstraints = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -327,6 +332,11 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2364,6 +2374,11 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label101);
+            this.tabPage4.Controls.Add(this.checkBoxDisplayAdvancedConstraints);
+            this.tabPage4.Controls.Add(this.checkBoxComparisonAdvancedConstraints);
+            this.tabPage4.Controls.Add(this.textBoxLowerBoundHint);
+            this.tabPage4.Controls.Add(this.label100);
             this.tabPage4.Controls.Add(this.textBoxAdditionalSegmentSplits);
             this.tabPage4.Controls.Add(this.label98);
             this.tabPage4.Controls.Add(this.checkBoxVariableSegmentDuration);
@@ -2398,11 +2413,49 @@
             this.tabPage4.Text = "Advanced";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // textBoxLowerBoundHint
+            // 
+            this.textBoxLowerBoundHint.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LowerBoundHint", true));
+            this.textBoxLowerBoundHint.Location = new System.Drawing.Point(135, 346);
+            this.textBoxLowerBoundHint.Name = "textBoxLowerBoundHint";
+            this.textBoxLowerBoundHint.Size = new System.Drawing.Size(68, 20);
+            this.textBoxLowerBoundHint.TabIndex = 186;
+            // 
+            // label100
+            // 
+            this.label100.AutoSize = true;
+            this.label100.Location = new System.Drawing.Point(-1, 349);
+            this.label100.Name = "label100";
+            this.label100.Size = new System.Drawing.Size(102, 13);
+            this.label100.TabIndex = 185;
+            this.label100.Text = "Lower Bound Hint: *";
+            this.toolTipMage.SetToolTip(this.label100, "A lower bound supplied to guide depth-first and hybrid search, if you use this ma" +
+                    "ke sure it is an actual lower bound.");
+            // 
+            // textBoxAdditionalSegmentSplits
+            // 
+            this.textBoxAdditionalSegmentSplits.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AdditionalSegmentSplits", true));
+            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(135, 320);
+            this.textBoxAdditionalSegmentSplits.Name = "textBoxAdditionalSegmentSplits";
+            this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(68, 20);
+            this.textBoxAdditionalSegmentSplits.TabIndex = 184;
+            // 
+            // label98
+            // 
+            this.label98.AutoSize = true;
+            this.label98.Location = new System.Drawing.Point(-1, 323);
+            this.label98.Name = "label98";
+            this.label98.Size = new System.Drawing.Size(136, 13);
+            this.label98.TabIndex = 183;
+            this.label98.Text = "Additional Segment Splits: *";
+            this.toolTipMage.SetToolTip(this.label98, "A comma-separated list of segment splits in seconds, useful in combination with d" +
+                    "ebug segmentation.");
+            // 
             // checkBoxVariableSegmentDuration
             // 
             this.checkBoxVariableSegmentDuration.AutoSize = true;
             this.checkBoxVariableSegmentDuration.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "VariableSegmentDuration", true));
-            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(188, 283);
+            this.checkBoxVariableSegmentDuration.Location = new System.Drawing.Point(188, 300);
             this.checkBoxVariableSegmentDuration.Name = "checkBoxVariableSegmentDuration";
             this.checkBoxVariableSegmentDuration.Size = new System.Drawing.Size(15, 14);
             this.checkBoxVariableSegmentDuration.TabIndex = 182;
@@ -2411,7 +2464,7 @@
             // label96
             // 
             this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(0, 284);
+            this.label96.Location = new System.Drawing.Point(0, 301);
             this.label96.Name = "label96";
             this.label96.Size = new System.Drawing.Size(143, 13);
             this.label96.TabIndex = 181;
@@ -2428,7 +2481,7 @@
             "15",
             "20",
             "30"});
-            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(128, 257);
+            this.comboBoxSegmentDuration.Location = new System.Drawing.Point(128, 274);
             this.comboBoxSegmentDuration.Name = "comboBoxSegmentDuration";
             this.comboBoxSegmentDuration.Size = new System.Drawing.Size(75, 21);
             this.comboBoxSegmentDuration.TabIndex = 179;
@@ -2436,7 +2489,7 @@
             // label95
             // 
             this.label95.AutoSize = true;
-            this.label95.Location = new System.Drawing.Point(0, 260);
+            this.label95.Location = new System.Drawing.Point(0, 277);
             this.label95.Name = "label95";
             this.label95.Size = new System.Drawing.Size(102, 13);
             this.label95.TabIndex = 178;
@@ -2445,7 +2498,7 @@
             // 
             // buttonComputeOptimalArcaneCycles
             // 
-            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 357);
+            this.buttonComputeOptimalArcaneCycles.Location = new System.Drawing.Point(6, 374);
             this.buttonComputeOptimalArcaneCycles.Name = "buttonComputeOptimalArcaneCycles";
             this.buttonComputeOptimalArcaneCycles.Size = new System.Drawing.Size(197, 23);
             this.buttonComputeOptimalArcaneCycles.TabIndex = 177;
@@ -2456,7 +2509,7 @@
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(0, 226);
+            this.label99.Location = new System.Drawing.Point(0, 243);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(117, 13);
             this.label99.TabIndex = 176;
@@ -2466,7 +2519,7 @@
             // checkBoxDebugCooldownSegmentation
             // 
             this.checkBoxDebugCooldownSegmentation.AutoSize = true;
-            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(188, 226);
+            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(188, 243);
             this.checkBoxDebugCooldownSegmentation.Name = "checkBoxDebugCooldownSegmentation";
             this.checkBoxDebugCooldownSegmentation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDebugCooldownSegmentation.TabIndex = 175;
@@ -2498,7 +2551,7 @@
             // label77
             // 
             this.label77.AutoSize = true;
-            this.label77.Location = new System.Drawing.Point(0, 194);
+            this.label77.Location = new System.Drawing.Point(0, 170);
             this.label77.Name = "label77";
             this.label77.Size = new System.Drawing.Size(148, 13);
             this.label77.TabIndex = 172;
@@ -2509,7 +2562,7 @@
             // 
             this.checkBoxDisplayIntegralMana.AutoSize = true;
             this.checkBoxDisplayIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayIntegralMana", true));
-            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(188, 194);
+            this.checkBoxDisplayIntegralMana.Location = new System.Drawing.Point(188, 170);
             this.checkBoxDisplayIntegralMana.Name = "checkBoxDisplayIntegralMana";
             this.checkBoxDisplayIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplayIntegralMana.TabIndex = 171;
@@ -2519,7 +2572,7 @@
             // 
             this.checkBoxComparisonIntegralMana.AutoSize = true;
             this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(167, 194);
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(167, 170);
             this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
             this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonIntegralMana.TabIndex = 170;
@@ -2528,7 +2581,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(0, 174);
+            this.label32.Location = new System.Drawing.Point(0, 190);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(114, 13);
             this.label32.TabIndex = 169;
@@ -2567,7 +2620,7 @@
             // 
             this.checkBoxDisplaySegmentCoodlowns.AutoSize = true;
             this.checkBoxDisplaySegmentCoodlowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplaySegmentCooldowns", true));
-            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(188, 174);
+            this.checkBoxDisplaySegmentCoodlowns.Location = new System.Drawing.Point(188, 190);
             this.checkBoxDisplaySegmentCoodlowns.Name = "checkBoxDisplaySegmentCoodlowns";
             this.checkBoxDisplaySegmentCoodlowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDisplaySegmentCoodlowns.TabIndex = 162;
@@ -2578,7 +2631,7 @@
             // 
             this.checkBoxComparisonSegmentCooldowns.AutoSize = true;
             this.checkBoxComparisonSegmentCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonSegmentCooldowns", true));
-            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(167, 174);
+            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(167, 190);
             this.checkBoxComparisonSegmentCooldowns.Name = "checkBoxComparisonSegmentCooldowns";
             this.checkBoxComparisonSegmentCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonSegmentCooldowns.TabIndex = 160;
@@ -2655,29 +2708,37 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // calculationOptionsMageBindingSource
+            // label101
             // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            this.label101.AutoSize = true;
+            this.label101.Location = new System.Drawing.Point(0, 210);
+            this.label101.Name = "label101";
+            this.label101.Size = new System.Drawing.Size(121, 13);
+            this.label101.TabIndex = 189;
+            this.label101.Text = "Advanced Constraints: *";
+            this.toolTipMage.SetToolTip(this.label101, "Enables advanced constraints that are too expensive for comparisons, but are need" +
+                    "ed for sequence reconstruction (only has effect if segment cooldowns is enabled)" +
+                    ".");
             // 
-            // textBoxAdditionalSegmentSplits
+            // checkBoxDisplayAdvancedConstraints
             // 
-            this.textBoxAdditionalSegmentSplits.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "AdditionalSegmentSplits", true));
-            this.textBoxAdditionalSegmentSplits.Location = new System.Drawing.Point(135, 303);
-            this.textBoxAdditionalSegmentSplits.Name = "textBoxAdditionalSegmentSplits";
-            this.textBoxAdditionalSegmentSplits.Size = new System.Drawing.Size(68, 20);
-            this.textBoxAdditionalSegmentSplits.TabIndex = 184;
+            this.checkBoxDisplayAdvancedConstraints.AutoSize = true;
+            this.checkBoxDisplayAdvancedConstraints.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraints", true));
+            this.checkBoxDisplayAdvancedConstraints.Location = new System.Drawing.Point(188, 210);
+            this.checkBoxDisplayAdvancedConstraints.Name = "checkBoxDisplayAdvancedConstraints";
+            this.checkBoxDisplayAdvancedConstraints.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDisplayAdvancedConstraints.TabIndex = 188;
+            this.checkBoxDisplayAdvancedConstraints.UseVisualStyleBackColor = true;
             // 
-            // label98
+            // checkBoxComparisonAdvancedConstraints
             // 
-            this.label98.AutoSize = true;
-            this.label98.Location = new System.Drawing.Point(-1, 306);
-            this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(136, 13);
-            this.label98.TabIndex = 183;
-            this.label98.Text = "Additional Segment Splits: *";
-            this.toolTipMage.SetToolTip(this.label98, "A comma-separated list of segment splits in seconds, useful in combination with d" +
-                    "ebug segmentation.");
+            this.checkBoxComparisonAdvancedConstraints.AutoSize = true;
+            this.checkBoxComparisonAdvancedConstraints.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraints", true));
+            this.checkBoxComparisonAdvancedConstraints.Location = new System.Drawing.Point(167, 210);
+            this.checkBoxComparisonAdvancedConstraints.Name = "checkBoxComparisonAdvancedConstraints";
+            this.checkBoxComparisonAdvancedConstraints.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxComparisonAdvancedConstraints.TabIndex = 187;
+            this.checkBoxComparisonAdvancedConstraints.UseVisualStyleBackColor = true;
             // 
             // CalculationOptionsPanelMage
             // 
@@ -2690,6 +2751,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2702,7 +2764,6 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -2936,6 +2997,11 @@
         private System.Windows.Forms.Label label95;
         private System.Windows.Forms.TextBox textBoxAdditionalSegmentSplits;
         private System.Windows.Forms.Label label98;
+        private System.Windows.Forms.TextBox textBoxLowerBoundHint;
+        private System.Windows.Forms.Label label100;
+        private System.Windows.Forms.Label label101;
+        private System.Windows.Forms.CheckBox checkBoxDisplayAdvancedConstraints;
+        private System.Windows.Forms.CheckBox checkBoxComparisonAdvancedConstraints;
 
     }
 }
