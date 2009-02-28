@@ -248,7 +248,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (MinTime(k, j - 1) <= t)
                             {
-                                if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
+                                if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0 && !sequence[k].CastingState.ManaGemActivation) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
                                 {
                                     if (minbuffer > eps && sequence[k].Duration > minbuffer + eps)
                                     {
@@ -279,7 +279,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     j++;
                                     k = j;
                                 }
-                                else if (sequence[k].SuperGroup.Duration <= buffer && (minbuffer > eps || (overflowBuffer > eps && sequence[k].SuperGroup.Mps > 0) || (threatBuffer > eps && sequence[k].SuperGroup.Tps < maxTps)))
+                                else if (sequence[k].SuperGroup.Duration <= buffer && (minbuffer > eps || (overflowBuffer > eps && sequence[k].SuperGroup.Mps > 0 && ! sequence[k].SuperGroup.ManaGemActivation) || (threatBuffer > eps && sequence[k].SuperGroup.Tps < maxTps)))
                                 {
                                     int l;
                                     for (l = k + 1; l < sequence.Count; l++)

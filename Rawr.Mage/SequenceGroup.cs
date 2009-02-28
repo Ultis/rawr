@@ -40,6 +40,18 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
+        public bool ManaGemActivation
+        {
+            get
+            {
+                foreach (SequenceItem item in Item)
+                {
+                    if (item.CastingState.ManaGemActivation) return true;
+                }
+                return false;
+            }
+        }
+
         public List<SequenceItem> Item = new List<SequenceItem>();
         public List<CooldownConstraint> Constraint = new List<CooldownConstraint>();
 
