@@ -161,7 +161,7 @@ namespace Rawr.Warlock
         public int ManaCost { get; protected set; }
         public float BaseCastTime { get; protected set; }
         public float CastTime { get; protected set; }
-        public float CritChance { get; protected set; }
+        public float CritChance { get; set; }
         public float BaseCritCoef { get; protected set; }
         public float CritCoef { get; protected set; }
         public float DebuffDuration { get; protected set; }

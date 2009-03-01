@@ -173,7 +173,6 @@ namespace Rawr.Warlock
             {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
                 calcOpts.PetSacrificed = chbPetSacrificed.Checked;
-                calcOpts.cleanBreak = chbPetSacrificed.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -307,7 +306,6 @@ namespace Rawr.Warlock
 	{
         public int TargetLevel { get; set; }
         public int AffEffectsNumber { get; set; }
-        public bool cleanBreak { get; set; }
         public float FightLength { get; set; }
         public float FSRRatio { get; set; }
         public float Delay { get; set; }
