@@ -636,7 +636,7 @@ namespace Rawr.Mage
                 ticks.Sort();
                 for (int i = 0; i < ticks.Count; i++)
                 {
-                    if (i == 0 || ticks[i] > ticks[i - 1] + 0.00001)
+                    if ((i == 0 || ticks[i] > ticks[i - 1] + 0.00001) && ticks[i] < calculationOptions.FightDuration - 0.00001)
                     {
                         if (segmentList.Count > 0)
                         {
