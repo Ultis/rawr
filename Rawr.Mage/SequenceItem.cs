@@ -108,19 +108,19 @@ namespace Rawr.Mage.SequenceReconstruction
             }
         }
 
+        public bool IsEvocation
+        {
+            get
+            {
+                return variableType == VariableType.Evocation || variableType == VariableType.EvocationIV || variableType == VariableType.EvocationHero || variableType == VariableType.EvocationIVHero;
+            }
+        }
+
         public bool IsManaPotionOrGem
         {
             get
             {
                 return variableType == VariableType.ManaPotion || variableType == VariableType.ManaGem;
-            }
-        }
-
-        public bool IsEvocation
-        {
-            get
-            {
-                return variableType == VariableType.Evocation;
             }
         }
 

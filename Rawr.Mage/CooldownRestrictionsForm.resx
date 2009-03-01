@@ -117,19 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="calculationOptionsMageBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>129, 17</value>
-  </metadata>
-  <metadata name="calculationOptionsMageBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>129, 17</value>
-  </metadata>
-  <metadata name="toolTipMage.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolTipMage.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="label44.ToolTip" xml:space="preserve">
-    <value>Setting this to a low value simulates having a limited time to regen mana on chain pulls (value is in seconds, optimizer has the option to continue drinking into the pull if it increases overall damage done, but that time counts toward total time).</value>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>Instructions:
+
+You can use this tool to define cooldown restrictions. This will only take effect if you are using cooldown segmentation.
+
+Each line contains a separate cooldown restriction. Restrictions take the following form:
+
+time1-time2: state description
+
+time1 and time2 define the time interval in seconds from fight start during which every state mush satisfy the state description.
+
+An example of this would be:
+
+120-160: Heroism
+
+This would specify that Heroism must happen 2 minutes into the fight.
+
+State description is defined by composing basic state descriptions using set operations. The basic state descriptions are available in the list below and you can double-click on them to insert them or drag them to the editor. Any correspons to the set of all states, while others correspond to sets of states containing a particular cooldown.
+
+The available set operations are as follows:
+
+Union of several sets: set1 + set2 + set3
+Set difference: set1 - set2
+Intersection: set1 | set2 | set3
+Complement: !set1
+
+You can also group operations using brackets. For example if you would like to specify that Arcane Power must always be used together with Icy Veins you can specify that like this:
+
+0-300: !(Arcane Power - Icy Veins)</value>
   </data>
 </root>

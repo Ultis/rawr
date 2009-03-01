@@ -694,8 +694,8 @@ namespace Rawr.Mage
                 if (B[i] < cols)
                 {
                     double di = d[i];
-                    if (Math.Abs(di - lb[i]) < Math.Abs(lb[i]) * epsPrimalRel + epsPrimalLow) di = lb[i];
-                    else if (Math.Abs(di - ub[i]) < Math.Abs(ub[i]) * epsPrimalRel + epsPrimalLow) di = ub[i];
+                    if (Math.Abs(di - lb[B[i]]) < Math.Abs(lb[B[i]]) * epsPrimalRel + epsPrimalLow || di < lb[B[i]]) di = lb[B[i]];
+                    else if (Math.Abs(di - ub[B[i]]) < Math.Abs(ub[B[i]]) * epsPrimalRel + epsPrimalLow || di > ub[B[i]]) di = ub[B[i]];
                     ret[B[i]] = di;
                     value += cost[B[i]] * di;
                 }

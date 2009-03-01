@@ -7,6 +7,7 @@ namespace Rawr.Mage
     [Flags]
     public enum Cooldown
     {
+        Evocation = 0x2000, // should always be the highest value
         PotionOfSpeed = 0x1000,
         ArcanePower = 0x800,
         Combustion = 0x400,
@@ -23,7 +24,8 @@ namespace Rawr.Mage
         None = 0x0,
         NonItemBasedMask = 0x1FF8,
         ItemBasedMask = 0x7,
-        Mask = ItemBasedMask | NonItemBasedMask
+        Mask = ItemBasedMask | NonItemBasedMask,
+        FullMask = Mask | Evocation,
     }
 
     public sealed class CastingState
@@ -114,6 +116,7 @@ namespace Rawr.Mage
             return (cooldown & Cooldown) == cooldown;
         }
 
+        public bool Evocation { get; set; }
         public bool ArcanePower { get; set; }
         public bool IcyVeins { get; set; }
         public bool MoltenFury { get; set; }
@@ -182,6 +185,11 @@ namespace Rawr.Mage
                 duration += c3 * cast;
             }
             return duration;
+        }
+
+        public CastingState Clone()
+        {
+            return (CastingState)MemberwiseClone();
         }
 
         private CastingState maintainSnareState;

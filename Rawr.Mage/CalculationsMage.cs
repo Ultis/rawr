@@ -1322,7 +1322,7 @@ namespace Rawr.Mage
                             }
                             else
                             {
-                                if (sequence[i].VariableType == VariableType.Evocation)
+                                if (sequence[i].IsEvocation)
                                 {
                                     mps = -(float)calculationOptions.Calculations.EvocationRegen;
                                 }

@@ -20,7 +20,7 @@ namespace Rawr.Mage
 
     public sealed partial class Solver
     {
-        private const int cooldownCount = 13;
+        private const int cooldownCount = 14;
         //private const double segmentDuration = 30;
         //private int segments;
         private List<Segment> segmentList;
@@ -81,6 +81,12 @@ namespace Rawr.Mage
         private int rowManaRegen = -1;
         private int rowFightDuration = -1;
         private int rowEvocation = -1;
+        private int rowEvocationIV = -1;
+        private int rowEvocationHero = -1;
+        private int rowEvocationIVHero = -1;
+        private int rowEvocationIVActivation = -1;
+        private int rowEvocationHeroActivation = -1;
+        private int rowEvocationIVHeroActivation = -1;
         private int rowPotion = -1;
         private int rowManaPotion = -1;
         private int rowConjureManaGem = -1;
@@ -542,7 +548,6 @@ namespace Rawr.Mage
 
         private unsafe void ConstructProblem(Item additionalItem, CalculationsMage calculations, Stats rawStats, Stats characterStats, out List<double> tpsList)
         {
-            // for now replicate 30 sec segments before moving to true variable length segments
             segmentList = new List<Segment>();
             if (segmentCooldowns)
             {
@@ -586,6 +591,46 @@ namespace Rawr.Mage
                         {
                             ticks.Add(tick);
                         }
+                    }
+                }
+                if (!string.IsNullOrEmpty(calculationOptions.CooldownRestrictions) && calculationOptions.CooldownRestrictionList == null)
+                {
+                    StateDescription.Scanner scanner = new StateDescription.Scanner();
+                    StateDescription.Parser parser = new StateDescription.Parser(scanner);
+                    calculationOptions.CooldownRestrictionList = new List<CooldownRestriction>();
+                    string[] lines = calculationOptions.CooldownRestrictions.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string line in lines)
+                    {
+                        string[] tokens = line.Split(new char[] { '-', ':', ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                        if (tokens.Length == 3)
+                        {
+                            CooldownRestriction restriction = new CooldownRestriction();
+                            double value;
+                            if (!double.TryParse(tokens[0], out value)) continue;
+                            restriction.TimeStart = value;
+                            if (!double.TryParse(tokens[1], out value)) continue;
+                            restriction.TimeEnd = value;
+                            StateDescription.ParseTree parseTree = parser.Parse(tokens[2]);
+                            if (parseTree != null && parseTree.Errors.Count == 0)
+                            {
+                                try
+                                {
+                                    restriction.IsMatch = parseTree.Compile();
+                                    calculationOptions.CooldownRestrictionList.Add(restriction);
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+                if (calculationOptions.CooldownRestrictionList != null)
+                {
+                    foreach (CooldownRestriction restriction in calculationOptions.CooldownRestrictionList)
+                    {
+                        ticks.Add(restriction.TimeStart);
+                        ticks.Add(restriction.TimeEnd);
                     }
                 }
                 ticks.Sort();
@@ -759,8 +804,14 @@ namespace Rawr.Mage
                     int evocationSegments = (restrictManaUse) ? segmentList.Count : 1;
                     double evocationDuration = (8f + characterStats.EvocationExtension) / calculationResult.BaseState.CastingSpeed;
                     calculationResult.EvocationDuration = evocationDuration;
+                    calculationResult.EvocationDurationIV = evocationDuration / 1.2;
+                    calculationResult.EvocationDurationHero = evocationDuration / 1.3;
+                    calculationResult.EvocationDurationIVHero = evocationDuration / 1.2 / 1.3;
                     float evocationMana = characterStats.Mana;
                     calculationResult.EvocationRegen = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed;
+                    calculationResult.EvocationRegenIV = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
+                    calculationResult.EvocationRegenHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
+                    calculationResult.EvocationRegenIVHero = calculationResult.BaseState.ManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
                     if (calculationOptions.EvocationWeapon + calculationOptions.EvocationSpirit > 0)
                     {
                         Stats evocationRawStats = rawStats.Clone();
@@ -787,22 +838,42 @@ namespace Rawr.Mage
                         evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
                         evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
                         Stats evocationStats = calculations.GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                        float evocationRegen = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration) + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
+                        double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration);
+                        double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
                         if (evocationRegen > calculationResult.EvocationRegen)
                         {
                             evocationMana = evocationStats.Mana;
                             calculationResult.EvocationRegen = evocationRegen;
+                            calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
+                            calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
+                            calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
                         }
                     }
                     if (calculationResult.EvocationRegen * evocationDuration > characterStats.Mana)
                     {
                         evocationDuration = characterStats.Mana / calculationResult.EvocationRegen;
                         calculationResult.EvocationDuration = evocationDuration;
+                        calculationResult.EvocationDurationIV = characterStats.Mana / calculationResult.EvocationRegenIV;
+                        calculationResult.EvocationDurationHero = characterStats.Mana / calculationResult.EvocationRegenHero;
+                        calculationResult.EvocationDurationIVHero = characterStats.Mana / calculationResult.EvocationRegenIVHero;
                     }
                     calculationResult.MaxEvocation = (int)Math.Max(1, (1 + Math.Floor((calculationOptions.FightDuration - 120f) / calculationResult.EvocationCooldown)));
+                    CastingState evoState = calculationResult.BaseState.Clone();
+                    evoState.Cooldown |= Cooldown.Evocation;
+                    evoState.Evocation = true;
+                    CastingState evoStateIV = calculationResult.BaseState.Clone();
+                    evoStateIV.Cooldown |= Cooldown.Evocation | Cooldown.IcyVeins;
+                    evoStateIV.Evocation = true;
+                    CastingState evoStateHero = calculationResult.BaseState.Clone();
+                    evoStateHero.Cooldown |= Cooldown.Evocation | Cooldown.Heroism;
+                    evoStateHero.Evocation = true;
+                    CastingState evoStateIVHero = calculationResult.BaseState.Clone();
+                    evoStateIVHero.Cooldown |= Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism;
+                    evoStateIVHero.Evocation = true;
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = calculationResult.BaseState });
+                        // base evocation
+                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Evocation, Segment = segment, State = evoState });
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, (evocationSegments > 1) ? evocationDuration : evocationDuration * calculationResult.MaxEvocation);
                         if (segment == 0) calculationResult.ColumnEvocation = column;
@@ -837,6 +908,100 @@ namespace Rawr.Mage
                             for (int ss = segment; ss < segmentList.Count - 1; ss++)
                             {
                                 lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                            }
+                        }
+                        if (calculationOptions.EnableHastedEvocation)
+                        {
+                            if (icyVeinsAvailable)
+                            {
+                                // last tick of icy veins
+                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoStateIV });
+                                column = lp.AddColumnUnsafe();
+                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
+                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
+                                lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0 - calculationResult.EvocationDurationIV / 0.1);
+                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                tpsList.Add(tps);
+                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (segmentCooldowns)
+                                {
+                                    for (int ss = 0; ss < segmentList.Count; ss++)
+                                    {
+                                        double cool = calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20 : 0);
+                                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[ss].TimeStart + cool + 0.00001)/*(int)Math.Floor(ss + cool / segmentDuration)*/ - 1;
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) maxs = segmentList.Count - 1;
+                                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentIcyVeins + ss, column, 1.0);
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) break;
+                                    }
+                                }
+                                if (restrictManaUse)
+                                {
+                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
+                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                                    }
+                                    for (int ss = 0; ss < segmentList.Count; ss++)
+                                    {
+                                        double cool = calculationResult.EvocationCooldown;
+                                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[ss].TimeStart + cool + 0.00001)/*(int)Math.Floor(ss + cool / segmentDuration)*/ - 1;
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) maxs = segmentList.Count - 1;
+                                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentEvocation + ss, column, 1.2);
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) break;
+                                    }
+                                }
+                                if (restrictThreat)
+                                {
+                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                    }
+                                }
+                                // remainder
+                                solutionVariable.Add(new SolutionVariable() { Type = VariableType.EvocationIV, Segment = segment, State = evoState });
+                                column = lp.AddColumnUnsafe();
+                                lp.SetColumnUpperBound(column, (evocationSegments > 1) ? calculationResult.EvocationDurationIV : calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
+                                lp.SetElementUnsafe(rowAfterFightRegenMana, column, -calculationResult.EvocationRegenIV);
+                                lp.SetElementUnsafe(rowManaRegen, column, -calculationResult.EvocationRegenIV);
+                                lp.SetElementUnsafe(rowFightDuration, column, 1.0);
+                                lp.SetElementUnsafe(rowTimeExtension, column, -1.0);
+                                lp.SetElementUnsafe(rowEvocation, column, 1.2);
+                                lp.SetElementUnsafe(rowEvocationIV, column, 1.0);
+                                lp.SetElementUnsafe(rowEvocationIVActivation, column, 1.0);
+                                lp.SetElementUnsafe(rowThreat, column, tps = 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 0.5f * threatFactor); // should split among all targets if more than one, assume one only
+                                lp.SetCostUnsafe(column, minimizeTime ? -1 : 0);
+                                tpsList.Add(tps);
+                                if (segmentNonCooldowns) lp.SetElementUnsafe(rowSegment + segment, column, 1.0);
+                                if (restrictManaUse)
+                                {
+                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentManaUnderflow + ss, column, -calculationResult.EvocationRegen);
+                                        lp.SetElementUnsafe(rowSegmentManaOverflow + ss, column, calculationResult.EvocationRegen);
+                                    }
+                                    for (int ss = 0; ss < segmentList.Count; ss++)
+                                    {
+                                        double cool = calculationResult.EvocationCooldown;
+                                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[ss].TimeStart + cool + 0.00001)/*(int)Math.Floor(ss + cool / segmentDuration)*/ - 1;
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) maxs = segmentList.Count - 1;
+                                        if (segment >= ss && segment <= maxs) lp.SetElementUnsafe(rowSegmentEvocation + ss, column, 1.2);
+                                        if (segmentList[ss].TimeStart + cool >= calculationOptions.FightDuration) break;
+                                    }
+                                }
+                                if (restrictThreat)
+                                {
+                                    for (int ss = segment; ss < segmentList.Count - 1; ss++)
+                                    {
+                                        lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1286,18 +1451,21 @@ namespace Rawr.Mage
                         {
                             if ((calculationOptions.IncrementalSetStateIndexes[index] & stateList[buffset].Cooldown) == calculationOptions.IncrementalSetStateIndexes[index])
                             {
-                                column = lp.AddColumnUnsafe();
-                                Spell s = stateList[buffset].GetSpell(calculationOptions.IncrementalSetSpells[index]);
-                                int seg = calculationOptions.IncrementalSetSegments[index];
-                                if (seg != lastSegment)
+                                if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], stateList[buffset]))
                                 {
-                                    for (; lastSegment < seg; )
+                                    column = lp.AddColumnUnsafe();
+                                    Spell s = stateList[buffset].GetSpell(calculationOptions.IncrementalSetSpells[index]);
+                                    int seg = calculationOptions.IncrementalSetSegments[index];
+                                    if (seg != lastSegment)
                                     {
-                                        segmentColumn[++lastSegment] = column;
+                                        for (; lastSegment < seg; )
+                                        {
+                                            segmentColumn[++lastSegment] = column;
+                                        }
                                     }
+                                    solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
+                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                                 }
-                                solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
-                                SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
                             }
                         }
                     }
@@ -1316,30 +1484,33 @@ namespace Rawr.Mage
                         segmentColumn[seg] = column + 1;
                         for (int buffset = 0; buffset < stateList.Count; buffset++)
                         {
-                            placed.Clear();
-                            for (int spell = 0; spell < spellList.Count; spell++)
+                            if (calculationOptions.CooldownRestrictionsValid(segmentList[seg], stateList[buffset]))
                             {
-                                if (segmentCooldowns && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
-                                if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
-                                if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
-                                Spell s = stateList[buffset].GetSpell(spellList[spell]);
-                                bool skip = false;
-                                foreach (Spell s2 in placed)
+                                placed.Clear();
+                                for (int spell = 0; spell < spellList.Count; spell++)
                                 {
-                                    // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
-                                    // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
-                                    if (!s.AreaEffect && s2.DamagePerSecond >= s.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= s.ManaPerSecond + 0.00001)
+                                    if (segmentCooldowns && stateList[buffset].MoltenFury && seg < firstMoltenFurySegment) continue;
+                                    if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
+                                    if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
+                                    Spell s = stateList[buffset].GetSpell(spellList[spell]);
+                                    bool skip = false;
+                                    foreach (Spell s2 in placed)
                                     {
-                                        skip = true;
-                                        break;
+                                        // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
+                                        // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
+                                        if (!s.AreaEffect && s2.DamagePerSecond >= s.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= s.ManaPerSecond + 0.00001)
+                                        {
+                                            skip = true;
+                                            break;
+                                        }
                                     }
-                                }
-                                if (!skip && (s.AffectedByFlameCap || !stateList[buffset].FlameCap))
-                                {
-                                    placed.Add(s);
-                                    column = lp.AddColumnUnsafe();
-                                    solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
-                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                    if (!skip && (s.AffectedByFlameCap || !stateList[buffset].FlameCap))
+                                    {
+                                        placed.Add(s);
+                                        column = lp.AddColumnUnsafe();
+                                        solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
+                                        SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                    }
                                 }
                             }
                         }
@@ -1474,6 +1645,9 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowFightDuration, calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowTimeExtension, -calculationOptions.FightDuration);
             lp.SetRHSUnsafe(rowEvocation, calculationResult.EvocationDuration * calculationResult.MaxEvocation);
+            if (icyVeinsAvailable) lp.SetRHSUnsafe(rowEvocationIV, calculationResult.EvocationDurationIV * calculationResult.MaxEvocation);
+            if (heroismAvailable) lp.SetRHSUnsafe(rowEvocationHero, calculationResult.EvocationDurationHero);
+            if (icyVeinsAvailable && heroismAvailable) lp.SetRHSUnsafe(rowEvocationIVHero, calculationResult.EvocationDurationIVHero);
             lp.SetRHSUnsafe(rowPotion, calculationResult.MaxManaPotion);
             lp.SetRHSUnsafe(rowManaPotion, calculationResult.MaxManaPotion);
             lp.SetRHSUnsafe(rowManaGem, Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem));
@@ -1721,6 +1895,24 @@ namespace Rawr.Mage
             if (!calculationOptions.UnlimitedMana) rowManaRegen = rowCount++;
             rowFightDuration = rowCount++;
             if (calculationOptions.EvocationEnabled && (needsTimeExtension || restrictManaUse || integralMana)) rowEvocation = rowCount++;
+            if (calculationOptions.EnableHastedEvocation)
+            {
+                if (calculationOptions.EvocationEnabled && icyVeinsAvailable)
+                {
+                    if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationIV = rowCount++;
+                    rowEvocationIVActivation = rowCount++;
+                }
+                if (calculationOptions.EvocationEnabled && heroismAvailable)
+                {
+                    if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationHero = rowCount++;
+                    rowEvocationHeroActivation = rowCount++;
+                }
+                if (calculationOptions.EvocationEnabled && icyVeinsAvailable && heroismAvailable)
+                {
+                    if (needsTimeExtension || restrictManaUse || integralMana) rowEvocationIVHero = rowCount++;
+                    rowEvocationIVHeroActivation = rowCount++;
+                }
+            }
             if (calculationOptions.ManaPotionEnabled || effectPotionAvailable) rowPotion = rowCount++;
             if (calculationOptions.ManaPotionEnabled && integralMana) rowManaPotion = rowCount++;
             if (calculationOptions.ManaGemEnabled)

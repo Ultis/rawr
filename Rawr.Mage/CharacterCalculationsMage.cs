@@ -11,10 +11,13 @@ namespace Rawr.Mage
 {
     public enum VariableType
     {
-        None,
+        None = 0,
         IdleRegen,
         Wand,
         Evocation,
+        EvocationIV,
+        EvocationHero,
+        EvocationIVHero,
         ManaPotion,
         ManaGem,
         DrumsOfBattle,
@@ -44,7 +47,7 @@ namespace Rawr.Mage
 
         public bool IsMatch(Cooldown cooldown, VariableType cooldownType)
         {
-            return ((cooldown != Cooldown.None && State != null && State.GetCooldown(cooldown)) || (Type == cooldownType));
+            return ((cooldown != Cooldown.None && State != null && State.GetCooldown(cooldown) && (cooldownType == VariableType.None || Type == cooldownType)) || (cooldown == Cooldown.None && Type == cooldownType));
         }
     }
 
@@ -98,6 +101,12 @@ namespace Rawr.Mage
 
         public double EvocationDuration;
         public double EvocationRegen;
+        public double EvocationDurationIV;
+        public double EvocationRegenIV;
+        public double EvocationDurationHero;
+        public double EvocationRegenHero;
+        public double EvocationDurationIVHero;
+        public double EvocationRegenIVHero;
         //public double ManaPotionTime = 0.1f;
         public double Trinket1Duration;
         public double Trinket1Cooldown;
@@ -364,6 +373,9 @@ namespace Rawr.Mage
             Dictionary<string, int> combinedSolutionData = new Dictionary<string, int>();
             double idleRegen = 0;
             double evocation = 0;
+            double evocationIV = 0;
+            double evocationHero = 0;
+            double evocationIVHero = 0;
             double manaPotion = 0;
             double manaGem = 0;
             double drums = 0;
@@ -384,6 +396,48 @@ namespace Rawr.Mage
                         case VariableType.Evocation:
                             evocation += Solution[i];
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
+                            break;
+                        case VariableType.EvocationIV:
+                            evocationIV += Solution[i];
+                            if (segmentedOutput)
+                            {
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins))
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                }
+                                else
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Icy Veins)", Solution[i] / EvocationDurationIV, SegmentList[SolutionVariable[i].Segment]));
+                                }
+                            }
+                            break;
+                        case VariableType.EvocationHero:
+                            evocationHero += Solution[i];
+                            if (segmentedOutput)
+                            {
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.Heroism))
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                }
+                                else
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Heroism)", Solution[i] / EvocationDurationHero, SegmentList[SolutionVariable[i].Segment]));
+                                }
+                            }
+                            break;
+                        case VariableType.EvocationIVHero:
+                            evocationIVHero += Solution[i];
+                            if (segmentedOutput)
+                            {
+                                if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism))
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}", "Icy Veins+Heroism+Evocation", Solution[i], SegmentList[SolutionVariable[i].Segment]));
+                                }
+                                else
+                                {
+                                    sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation (Icy Veins+Heroism)", Solution[i] / EvocationDurationIVHero, SegmentList[SolutionVariable[i].Segment]));
+                                }
+                            }
                             break;
                         case VariableType.ManaPotion:
                             manaPotion += Solution[i];
@@ -439,6 +493,18 @@ namespace Rawr.Mage
                 if (evocation > 0)
                 {
                     sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation", evocation / EvocationDuration));
+                }
+                if (evocationIV > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Icy Veins)", evocationIV / EvocationDurationIV));
+                }
+                if (evocationHero > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Heroism)", evocationHero / EvocationDurationHero));
+                }
+                if (evocationIVHero > 0)
+                {
+                    sb.AppendLine(String.Format("{0}: {1:F}x", "Evocation (Icy Veins+Heroism)", evocationIVHero / EvocationDurationIVHero));
                 }
                 if (manaPotion > 0)
                 {

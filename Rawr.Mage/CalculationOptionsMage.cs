@@ -13,6 +13,13 @@ namespace Rawr.Mage
         public float Weight { get; set; }
     }
 
+    public class CooldownRestriction
+    {
+        public double TimeStart { get; set; }
+        public double TimeEnd { get; set; }
+        public StateDescription.StateDescriptionDelegate IsMatch { get; set; }
+    }
+
     [Serializable]
     public sealed class CalculationOptionsMage : ICalculationOptionBase
     {
@@ -88,6 +95,7 @@ namespace Rawr.Mage
             IncrementalSetSegments = null;
             IncrementalSetSortedStates = null;
             IncrementalSetSpells = null;
+            CooldownRestrictionList = null;
         }
 
         public bool ReconstructSequence { get; set; }
@@ -102,6 +110,22 @@ namespace Rawr.Mage
         public bool VariableSegmentDuration { get; set; }
         public string AdditionalSegmentSplits { get; set; }
         public double LowerBoundHint { get; set; }
+        public string CooldownRestrictions { get; set; }
+        public bool EnableHastedEvocation { get; set; }
+        [XmlIgnore]
+        public List<CooldownRestriction> CooldownRestrictionList;
+        public bool CooldownRestrictionsValid(Segment segment, CastingState state)
+        {
+            if (CooldownRestrictionList == null) return true;
+            foreach (CooldownRestriction restriction in CooldownRestrictionList)
+            {
+                if (segment.TimeStart >= restriction.TimeStart && segment.TimeEnd <= restriction.TimeEnd)
+                {
+                    if (!restriction.IsMatch(state.Cooldown)) return false;
+                }
+            }
+            return true;
+        }
 
         public MIPMethod MIPMethod { get; set; }
 

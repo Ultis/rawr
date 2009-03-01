@@ -22,6 +22,8 @@ namespace Rawr.Mage
 
         private bool loading = false;
 
+        private static CooldownRestrictionsForm cooldownRestrictions;
+
 		protected override void LoadCalculationOptions()
 		{
             //if (Character.MageTalents == null) Character.MageTalents = new MageTalents();
@@ -30,6 +32,11 @@ namespace Rawr.Mage
 
             loading = true;
             calculationOptionsMageBindingSource.DataSource = calculationOptions;
+            if (cooldownRestrictions != null && !cooldownRestrictions.IsDisposed)
+            {
+                cooldownRestrictions.Character = Character;
+                //cooldownRestrictions.bindingSourceCalculationOptions.DataSource = calculationOptions;
+            }
 
             loading = false;
         }
@@ -207,6 +214,17 @@ namespace Rawr.Mage
                 //System.Diagnostics.Debug.Write(cycle.Name + ": " + cycle.DamagePerSecond + " dps, " + cycle.ManaPerSecond + " mps\r\n");
             }
             return sb;
+        }
+
+        private void buttonCooldownRestrictionsEditor_Click(object sender, EventArgs e)
+        {
+            if (cooldownRestrictions == null || cooldownRestrictions.IsDisposed)
+            {
+                cooldownRestrictions = new CooldownRestrictionsForm();
+                cooldownRestrictions.Character = Character;
+                //cooldownRestrictions.bindingSourceCalculationOptions.DataSource = calculationOptions;
+            }
+            cooldownRestrictions.Show();
         }
 	}
 }
