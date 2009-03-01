@@ -94,12 +94,18 @@ namespace Rawr.Tankadin
 						"Basic Stats:Block Value",
 						"Basic Stats:Attack Power",
 						"Basic Stats:Spell Damage",
-						"Combat Table:Miss",
-						"Combat Table:Dodge",
-						"Combat Table:Parry",
-						"Combat Table:Block",
-						"Combat Table:Crit",
-						"Combat Table:Hit",
+						"Basic Stats:Expertise",
+						"Boss Combat Table:Miss",
+						"Boss Combat Table:Dodge",
+						"Boss Combat Table:Parry",
+						"Boss Combat Table:Block",
+						"Boss Combat Table:Crit",
+						"Boss Combat Table:Hit",
+						"Self Combat Table:Chance to Miss",
+						"Self Combat Table:Chance to Dodge",
+						"Self Combat Table:Chance to Parry",
+						"Self Combat Table:Chance to Hit",						
+						"Self Combat Table:Chance to Crit",
 						"Defensive Stats:Avoidance*Chance to not get hit by an attack.",
 						"Defensive Stats:Mitigation*How much you reduced damage taken when hit.",
 						"Defensive Stats:Damage Taken*The weighted average damage per hit.",
@@ -116,8 +122,8 @@ namespace Rawr.Tankadin
                         "Threat Stats:Avenger's Shield",
                         "Threat Stats:SoR",
                         "Threat Stats:JoR",
-                        "Threat Stats:Chance to Hit",
-                        "Threat Stats:Chance to Crit"
+                        // "Threat Stats:Chance to Hit",
+                        // "Threat Stats:Chance to Crit"
 /*						@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
@@ -208,8 +214,14 @@ you are being killed by burst damage, focus on Survival Points.",
 			{
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
+					"Health",
 					"Defense",
+					"% Chance to be Hit",
 					"% Chance to be Crit",
+					"TPS",
+					"Block Value",
+					"Expertise",
+					"Chance to hit",
 					};
 				return _optimizableCalculationLabels;
 			}
@@ -263,7 +275,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.BlockValue = stats.BlockValue;
 
             cs.ArmorReduction = Math.Min(.75f, stats.Armor / (stats.Armor + 400f + 85f * (5.5f * targetLevel - 265.5f)));
-            cs.Mitigation = (1f - cs.ArmorReduction) * (1f - .02f * talents.ImprovedRighteousFury) * (1f - .01f * talents.ShieldOfTheTemplar);
+            cs.Mitigation = (1f - cs.ArmorReduction) * (1f - .02f * talents.ImprovedRighteousFury) * (1f - .01f * talents.ShieldOfTheTemplar) * (1f + stats.DamageTakenMultiplier) ;
 
             cs.DamagePerHit = calcOpts.AverageHit * cs.Mitigation;
             cs.DamagePerBlock = cs.DamagePerHit - stats.BlockValue;
@@ -303,7 +315,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //float reckoning = .25f;
             
             // New Reckoning Uptime Estimator
-            float reckoningTime = cs.ToLand * talents.Reckoning * 0.02f * 8f / ws;
+            float reckoningTime = cs.ToLand * (talents.Reckoning * 0.02f) * 8f / 2f;
             float reckoning = 1.5f * reckoningTime;
 
             //Hammer of the Righteous (Per Hit)
@@ -315,7 +327,7 @@ you are being killed by burst damage, focus on Survival Points.",
 
             //Shield of Righteousness (Per Hit)
             cs.ShoRDamage = (stats.BlockValue + 300f) * damageMulti * SotT * holyMulti;
-            cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
+            cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Avenger's Shield (Per Hit)
             cs.ASDamage = (940f + .07f * stats.AttackPower + .07f * stats.SpellPower) * damageMulti * SotT * holyMulti;
@@ -518,7 +530,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue + stats.BaseArmorMultiplier +
                 stats.SpellHitRating + stats.SpellPower + stats.HitRating + stats.ExpertiseRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
-                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit) != 0;
+                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit + stats.DamageTakenMultiplier) != 0;
         }
     }
 

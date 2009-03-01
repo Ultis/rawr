@@ -109,7 +109,8 @@ namespace Rawr.Tankadin
             dict.Add("Defense", Math.Round(Defense + 400f).ToString());
             dict.Add("Resilience", Math.Round(Resilience).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
-            dict.Add("Spell Damage", BasicStats.SpellPower.ToString());
+            dict.Add("Spell Damage", BasicStats.SpellPower.ToString());            
+            dict.Add("Expertise", BasicStats.Expertise.ToString());
             dict.Add("Block Value", BlockValue.ToString());
 			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 2)));
 			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 2)));
@@ -137,6 +138,9 @@ namespace Rawr.Tankadin
 			dict.Add("Threat Points", ThreatPoints.ToString());*/
             dict.Add("Chance to Hit", string.Format("{0}%*{1}% miss\n{2}% dodge\n{3}% parry", Math.Round(ToLand * 100f, 2), Math.Round(ToMiss * 100f, 2),
                 Math.Round(ToDodge * 100, 2), Math.Round(ToParry * 100f, 2)));
+            dict.Add("Chance to Miss", string.Format("{0}%", Math.Round(ToMiss * 100f, 2)));
+            dict.Add("Chance to Dodge", string.Format("{0}%", Math.Round(ToDodge * 100f, 2)));
+            dict.Add("Chance to Parry", string.Format("{0}%", Math.Round(ToParry * 100f, 2)));            
             dict.Add("Chance to Crit", string.Format("{0}%", Math.Round(ToCrit * 100f, 2)));
             dict.Add("Consecrate", string.Format("{0} threat*{1} damage per hit", Math.Round(ConsThreat), Math.Round(ConsDamage/ConsDuration)));
             dict.Add("ShoR", string.Format("{0} threat*{1} damage", Math.Round(ShoRThreat), Math.Round(ShoRDamage)));
@@ -157,8 +161,13 @@ namespace Rawr.Tankadin
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
+                case "% Chance to be Hit": return Hit * 100f;
                 case "% Chance to be Crit": return (.05f - CritAvoidance) * 100f;
                 case "Defense": return 400f + Defense;
+                case "TPS": return Rot1TPS;
+                case "Block Value": return BlockValue;
+                case "Expertise": return BasicStats.Expertise;
+                case "Chance to Hit": return ToLand * 100f;
             }
             return 0.0f;
         }
