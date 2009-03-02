@@ -99,6 +99,7 @@
     <Compile Include="CalculationsWarlock.cs" />
     <Compile Include="CharacterCalculationsWarlock.cs" />
     <Compile Include="ComparisonCalculationWarlock.cs" />
+    <Compile Include="PetCalculations.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="SpellPriorityForm.cs">
       <SubType>Form</SubType>

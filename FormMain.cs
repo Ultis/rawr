@@ -15,16 +15,17 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 18;
+		private const int INTRO_VERSION = 19;
 		private const string INTRO_TEXT =
 @"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
    
 Recent Changes:
-v2.2.0b2
+v2.2.0b3
  - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b2. Thanks!
  - Gemming Revamp! Rawr will now automatically handle gems, just as you'd expect. See Help > Gemmings for details. NOTE: Rawr 2.2 is not backawards compatible most of your existing data files. Please do not copy data files from previous versions of Rawr. Your existing character files should load into Rawr 2.2 just fine, except you'll have to reselect enchants on your gear.
  - Armor Penetration has been adjusted, for all Rawr models, to match new 3.1 Armor Penetration mechanics. Note that Rawr assumes the bugs with ArPen calculations on the current PTR are fixed, and ArPenRating is multiplicative with ArPen debuffs.
  - Fix a crash in Optimizer.
+ - b3 is just a fix for b2 being a bad build. Sorry about that.
  - Models: Tons of model updates; see ReadMe.txt for details on the changes and status of each model.
 
 If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which aren't fully complete, please contact me at cnervig@hotmail.com. Thanks!";
