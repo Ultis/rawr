@@ -221,7 +221,8 @@ you are being killed by burst damage, focus on Survival Points.",
 					"TPS",
 					"Block Value",
 					"Expertise",
-					"Chance to hit",
+					"% Chance to Hit",
+					"Avoidance",
 					};
 				return _optimizableCalculationLabels;
 			}

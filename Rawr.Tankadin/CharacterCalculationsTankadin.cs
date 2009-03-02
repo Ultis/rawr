@@ -167,7 +167,8 @@ namespace Rawr.Tankadin
                 case "TPS": return Rot1TPS;
                 case "Block Value": return BlockValue;
                 case "Expertise": return BasicStats.Expertise;
-                case "Chance to Hit": return ToLand * 100f;
+                case "% Chance to Hit": return ToLand * 100f;
+               case "Avoidance": return Avoidance * 100f;
             }
             return 0.0f;
         }
