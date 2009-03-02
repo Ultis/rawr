@@ -173,33 +173,52 @@ namespace Rawr
 				{
 					case Character.CharacterClass.Warrior:
 						character.WarriorTalents = new WarriorTalents(talentCode);
+						if (character.WarriorTalents.Devastate > 0) character.CurrentModel = "ProtWarr";
+						else character.CurrentModel = "DPSWarr";
 						break;
 					case Character.CharacterClass.Paladin:
 						character.PaladinTalents = new PaladinTalents(talentCode);
+						if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "Tankadin";
+						else if (character.PaladinTalents.CrusaderStrike > 0) character.CurrentModel = "Retribution";
+						else character.CurrentModel = "Healadin";
 						break;
 					case Character.CharacterClass.Hunter:
 						character.HunterTalents = new HunterTalents(talentCode);
+						character.CurrentModel = "Hunter";
 						break;
 					case Character.CharacterClass.Rogue:
 						character.RogueTalents = new RogueTalents(talentCode);
 						break;
 					case Character.CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talentCode);
+						if (character.PriestTalents.Shadowform > 0) character.CurrentModel = "ShadowPriest";
+						else character.CurrentModel = "HolyPriest";
 						break;
 					case Character.CharacterClass.Shaman:
 						character.ShamanTalents = new ShamanTalents(talentCode);
+						if (character.ShamanTalents.ElementalMastery > 0) character.CurrentModel = "Elemental";
+						else if (character.ShamanTalents.Stormstrike > 0) character.CurrentModel = "Enhance";
+						else character.CurrentModel = "RestoSham";
 						break;
 					case Character.CharacterClass.Mage:
 						character.MageTalents = new MageTalents(talentCode);
+						character.CurrentModel = "Mage";
 						break;
 					case Character.CharacterClass.Warlock:
 						character.WarlockTalents = new WarlockTalents(talentCode);
+						character.CurrentModel = "Warlock";
 						break;
 					case Character.CharacterClass.Druid:
 						character.DruidTalents = new DruidTalents(talentCode);
+						if (character.DruidTalents.ProtectorOfThePack > 0) character.CurrentModel = "Bear";
+						else if (character.DruidTalents.LeaderOfThePack > 0) character.CurrentModel = "Cat";
+						else if (character.DruidTalents.MoonkinForm > 0) character.CurrentModel = "Moonkin";
+						else character.CurrentModel = "Tree";
 						break;
 					case Character.CharacterClass.DeathKnight:
 						character.DeathKnightTalents = new DeathKnightTalents(talentCode);
+						if (character.DeathKnightTalents.Lichborne > 0) character.CurrentModel = "TankDK";
+						else character.CurrentModel = "DPSDK";
 						break;
 					default:
 						break;
