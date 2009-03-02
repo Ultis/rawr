@@ -562,8 +562,10 @@ namespace Rawr.Hunter
 
                 autoshotDmg *= talentModifiers;
 
-                double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
-                double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+				int targetArmor = options.TargetArmor;
+				float armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				calculatedStats.BasicStats.ArmorPenetration, calculatedStats.BasicStats.ArmorPenetrationRating);//double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
+                //double armorReduction = (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
                 autoshotDmg *= 1.0 - armorReduction;
 

@@ -307,14 +307,14 @@ namespace Rawr.DPSDK
                 hitRating -= 15.769f;*/
 
             float armorPenetration = BasicStats.ArmorPenetration;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")) ||
-                ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")) ||
-                ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
-                armorPenetration -= 3925f;
-            if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")) ||
-                ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) ||
-                ActiveBuffs.Contains(Buff.GetBuffByName("Sting")))
-                armorPenetration -= 1260f;
+			//if (ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor (x5)")) ||
+			//    ActiveBuffs.Contains(Buff.GetBuffByName("Improved Expose Armor (5cp)")) ||
+			//    ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor (5cp)")))
+			//    armorPenetration -= 3925f;
+			//if (ActiveBuffs.Contains(Buff.GetBuffByName("Curse of Recklessness")) ||
+			//    ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) ||
+			//    ActiveBuffs.Contains(Buff.GetBuffByName("Sting")))
+			//    armorPenetration -= 1260f;
 
             float attackPower = BasicStats.AttackPower;
             if (ActiveBuffs.Contains(Buff.GetBuffByName("Improved Hunter's Mark")))

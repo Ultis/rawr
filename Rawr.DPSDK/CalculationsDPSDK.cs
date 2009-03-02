@@ -455,18 +455,22 @@ namespace Rawr.DPSDK
             {
                 float targetArmor = calcOpts.BossArmor, totalArP = stats.ArmorPenetration;
 
-                // Effective armor after ArP
-                targetArmor -= totalArP;
-                float ratingCoeff = stats.ArmorPenetrationRating / 1539f;
-                targetArmor *= (1 - ratingCoeff);
-                if (targetArmor < 0) targetArmor = 0f;
+                //// Effective armor after ArP
+				//targetArmor -= totalArP;
+				//float ratingCoeff = stats.ArmorPenetrationRating / 1539f;
+				//targetArmor *= (1 - ratingCoeff);
+				//if (targetArmor < 0) targetArmor = 0f;
 
-                // Convert armor to mitigation
-                //mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
-                //mitigation = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
-                mitigation = 1f - (targetArmor / ((467.5f * (float)calcOpts.TargetLevel) + targetArmor - 22167.5f));
-                calcs.EnemyMitigation = 1f - mitigation;
-                calcs.EffectiveArmor = targetArmor;
+                //// Convert armor to mitigation
+                ////mitigation = 1f - (targetArmor/(targetArmor + 10557.5f));
+                ////mitigation = 1f - targetArmor / (targetArmor + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
+                //mitigation = 1f - (targetArmor / ((467.5f * (float)calcOpts.TargetLevel) + targetArmor - 22167.5f));
+
+				mitigation = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+				
+				calcs.EnemyMitigation = 1f - mitigation;
+                //calcs.EffectiveArmor = reducedArmor;
             }
             #endregion
 
@@ -1005,7 +1009,11 @@ namespace Rawr.DPSDK
 
                     //dpsGhoul *= 1f + statsBuffs.BonusPhysicalDamageMultiplier; 
                     // commented out because ghoul doesn't benefit from most bonus physical damage multipliers (ie blood presence, bloody vengeance, etc)
-                    dpsGhoul *= 1f - (calcOpts.BossArmor - stats.ArmorPenetration) / ((calcOpts.BossArmor - stats.ArmorPenetration) + 400f + 85f * (5.5f * (float)calcOpts.TargetLevel - 265.5f));
+					int targetArmor = calcOpts.BossArmor;
+					float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+						stats.ArmorPenetration, stats.ArmorPenetrationRating);
+					
+					dpsGhoul *= modArmor;
                     dpsGhoul *= 1f - .0065f;
 
                     // dpsGhoul *= mitigation;

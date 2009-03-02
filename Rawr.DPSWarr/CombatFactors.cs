@@ -33,21 +33,27 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
+				return 1f - ArmorCalculations.GetDamageReduction(80, _calcOpts.TargetArmor,
+				_stats.ArmorPenetration, _stats.ArmorPenetrationRating);
+                //return (15232.5f / (EffectiveBossArmor + 15232.5f)) > 1f ? 1f : (15232.5f / (EffectiveBossArmor + 15232.5f)); 
             }
         }
 
-        public float EffectiveBossArmor
-        {
-            get
-            {
-                float totalArmor = _calcOpts.TargetArmor;
-                totalArmor *= (MainHand.Type == Item.ItemType.TwoHandMace)?1 - (0.03f * _talents.MaceSpecialization):1.0f;
-                totalArmor -= _stats.ArmorPenetration;
-                totalArmor *= 1-(_stats.ArmorPenetrationRating * WarriorConversions.ArPToArmorPenetration / 100f);
-                return totalArmor;
-            }
-        } 
+		public float EffectiveBossArmor
+		{
+			get
+			{
+				float armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
+				float reducedArmor = (float)_calcOpts.TargetArmor * (armorReductionPercent);
+
+				return reducedArmor;
+				//float totalArmor = _calcOpts.TargetArmor;
+				//totalArmor *= (MainHand.Type == Item.ItemType.TwoHandMace) ? 1 - (0.03f * _talents.MaceSpecialization) : 1.0f;
+				//totalArmor -= _stats.ArmorPenetration;
+				//totalArmor *= 1 - (_stats.ArmorPenetrationRating * WarriorConversions.ArPToArmorPenetration / 100f);
+				//return totalArmor;
+			}
+		} 
 
         public float AvgMhWeaponDmg
         {

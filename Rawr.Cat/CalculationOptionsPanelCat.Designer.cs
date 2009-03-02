@@ -42,6 +42,9 @@
 			this.checkBoxGlyphOfMangle = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+			this.checkBoxGlyphOfSavageRoar = new System.Windows.Forms.CheckBox();
+			this.checkBoxGlyphOfBerserk = new System.Windows.Forms.CheckBox();
+			this.checkBoxGlyphOfShred = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
@@ -82,9 +85,9 @@
 			this.groupBox1.Controls.Add(this.checkBoxFerociousBite);
 			this.groupBox1.Controls.Add(this.comboBoxSavageRoar);
 			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Location = new System.Drawing.Point(5, 105);
+			this.groupBox1.Location = new System.Drawing.Point(3, 151);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(261, 88);
+			this.groupBox1.Size = new System.Drawing.Size(265, 73);
 			this.groupBox1.TabIndex = 7;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Custom Rotation";
@@ -136,7 +139,7 @@
             "5"});
 			this.comboBoxSavageRoar.Location = new System.Drawing.Point(156, 42);
 			this.comboBoxSavageRoar.Name = "comboBoxSavageRoar";
-			this.comboBoxSavageRoar.Size = new System.Drawing.Size(99, 21);
+			this.comboBoxSavageRoar.Size = new System.Drawing.Size(103, 21);
 			this.comboBoxSavageRoar.TabIndex = 1;
 			this.comboBoxSavageRoar.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
@@ -236,13 +239,49 @@
             0});
 			this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
+			// checkBoxGlyphOfSavageRoar
+			// 
+			this.checkBoxGlyphOfSavageRoar.AutoSize = true;
+			this.checkBoxGlyphOfSavageRoar.Location = new System.Drawing.Point(115, 105);
+			this.checkBoxGlyphOfSavageRoar.Name = "checkBoxGlyphOfSavageRoar";
+			this.checkBoxGlyphOfSavageRoar.Size = new System.Drawing.Size(131, 17);
+			this.checkBoxGlyphOfSavageRoar.TabIndex = 1;
+			this.checkBoxGlyphOfSavageRoar.Text = "Glyph of Savage Roar";
+			this.checkBoxGlyphOfSavageRoar.UseVisualStyleBackColor = true;
+			this.checkBoxGlyphOfSavageRoar.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// checkBoxGlyphOfBerserk
+			// 
+			this.checkBoxGlyphOfBerserk.AutoSize = true;
+			this.checkBoxGlyphOfBerserk.Location = new System.Drawing.Point(6, 105);
+			this.checkBoxGlyphOfBerserk.Name = "checkBoxGlyphOfBerserk";
+			this.checkBoxGlyphOfBerserk.Size = new System.Drawing.Size(104, 17);
+			this.checkBoxGlyphOfBerserk.TabIndex = 1;
+			this.checkBoxGlyphOfBerserk.Text = "Glyph of Berserk";
+			this.checkBoxGlyphOfBerserk.UseVisualStyleBackColor = true;
+			this.checkBoxGlyphOfBerserk.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
+			// checkBoxGlyphOfShred
+			// 
+			this.checkBoxGlyphOfShred.AutoSize = true;
+			this.checkBoxGlyphOfShred.Location = new System.Drawing.Point(6, 128);
+			this.checkBoxGlyphOfShred.Name = "checkBoxGlyphOfShred";
+			this.checkBoxGlyphOfShred.Size = new System.Drawing.Size(104, 17);
+			this.checkBoxGlyphOfShred.TabIndex = 1;
+			this.checkBoxGlyphOfShred.Text = "Glyph of Berserk";
+			this.checkBoxGlyphOfShred.UseVisualStyleBackColor = true;
+			this.checkBoxGlyphOfShred.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
+			// 
 			// CalculationOptionsPanelCat
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.AutoScroll = true;
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.checkBoxGlyphOfShred);
+			this.Controls.Add(this.checkBoxGlyphOfBerserk);
 			this.Controls.Add(this.checkBoxGlyphOfMangle);
+			this.Controls.Add(this.checkBoxGlyphOfSavageRoar);
 			this.Controls.Add(this.checkBoxGlyphOfRip);
 			this.Controls.Add(this.numericUpDownDuration);
 			this.Controls.Add(this.label4);
@@ -277,5 +316,8 @@
 		private System.Windows.Forms.CheckBox checkBoxGlyphOfMangle;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.NumericUpDown numericUpDownDuration;
+		private System.Windows.Forms.CheckBox checkBoxGlyphOfSavageRoar;
+		private System.Windows.Forms.CheckBox checkBoxGlyphOfBerserk;
+		private System.Windows.Forms.CheckBox checkBoxGlyphOfShred;
 	}
 }

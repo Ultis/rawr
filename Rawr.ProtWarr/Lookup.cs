@@ -15,10 +15,15 @@ namespace Rawr.ProtWarr
         public static float TargetArmorReduction(Character character, Stats stats)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
-            // Armor Penetration Rating multiplier needs to go into CalculationsProtWarr
-            float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) 
-                                * (1.0f - BonusArmorPenetrationPercentage(character, stats));
-            return Math.Max(0.0f, Math.Min(0.75f, targetArmor / (targetArmor + (467.5f * character.Level - 22167.5f))));
+			int targetArmor = calcOpts.TargetArmor;
+			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating); 
+			return damageReduction;
+			
+			//// Armor Penetration Rating multiplier needs to go into CalculationsProtWarr
+			//float targetArmor = (calcOpts.TargetArmor - stats.ArmorPenetration) 
+			//                    * (1.0f - BonusArmorPenetrationPercentage(character, stats));
+			//return Math.Max(0.0f, Math.Min(0.75f, targetArmor / (targetArmor + (467.5f * character.Level - 22167.5f))));
         }
 
         public static float TargetCritChance(Character character, Stats stats)

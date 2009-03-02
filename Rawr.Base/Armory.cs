@@ -871,7 +871,7 @@ namespace Rawr
                     ItemLevel = itemLevel,
                 };
 
-				item.Stats.ConvertStatsToWotLKEquivalents();
+				//item.Stats.ConvertStatsToWotLKEquivalents();
 
                 return item;
 			}

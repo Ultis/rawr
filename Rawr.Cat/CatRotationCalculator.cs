@@ -11,6 +11,8 @@ namespace Rawr.Cat
 		public float CPPerCPG { get; set; }
 		public bool MaintainMangle { get; set; }
 		public float MangleDuration { get; set; }
+		public float BerserkDuration { get; set; }
+		public bool GlyphOfShred { get; set; }
 		public float RipDuration { get; set; }
 		public float AttackSpeed { get; set; }
 		public bool OmenOfClarity { get; set; }
@@ -32,7 +34,7 @@ namespace Rawr.Cat
 		public float RoarEnergy { get; set; }
 
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
-			float ripDuration, float attackSpeed, bool omenOfClarity, float avoidedAttacks, float cpgEnergyCostMultiplier, 
+			float ripDuration, float berserkDuration, float attackSpeed, bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float cpgEnergyCostMultiplier, 
 			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
 			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
@@ -42,8 +44,10 @@ namespace Rawr.Cat
 			MaintainMangle = maintainMangle;
 			MangleDuration = mangleDuration;
 			RipDuration = ripDuration;
+			BerserkDuration = BerserkDuration;
 			AttackSpeed = attackSpeed;
 			OmenOfClarity = omenOfClarity;
+			GlyphOfShred = glyphOfShred;
 			AvoidedAttacks = avoidedAttacks;
 			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
 
@@ -65,6 +69,8 @@ namespace Rawr.Cat
 		public CatRotationCalculation GetRotationCalculations(bool useShred, bool useRip, bool useFerociousBite, int roarCP)
 		{
 			float totalEnergyAvailable = 100f + (10f * Duration) + ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
+			if (BerserkDuration > 0)
+				totalEnergyAvailable += (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk
 			if (OmenOfClarity)
 			{
 				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least
@@ -124,6 +130,7 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Damage Finishers
+			float ripDuration = GlyphOfShred && useShred ? RipDuration + 6 : RipDuration;
 			float ripCount = 0f;
 			float biteCount = 0f;
 			if (useRip && !useFerociousBite)
@@ -135,7 +142,7 @@ namespace Rawr.Cat
 				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
 
 				float ripCycleEnergy = (5f / CPPerCPG) * cpgEnergy + RipEnergy;
-				float ripCycleCountMax = Duration / RipDuration;
+				float ripCycleCountMax = Duration / ripDuration;
 				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
 				
 				ripCount += ripCycleCount;
@@ -168,7 +175,7 @@ namespace Rawr.Cat
 				totalEnergyAvailable -= RipEnergy * ripCyclesFromAvailableCP;
 
 				float ripCycleEnergy = (5f / CPPerCPG) * cpgEnergy + RipEnergy;
-				float ripCycleCountMax = Duration / RipDuration;
+				float ripCycleCountMax = Duration / ripDuration;
 				float ripCycleCount = Math.Min(ripCycleCountMax - ripCyclesFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
 
 				ripCount += ripCycleCount;
@@ -205,7 +212,7 @@ namespace Rawr.Cat
 			float mangleDamageTotal = mangleCount * MangleDamage;
 			float rakeDamageTotal = rakeCount * RakeDamage;
 			float shredDamageTotal = shredCount * ShredDamage;
-			float ripDamageTotal = ripCount * RipDamage;
+			float ripDamageTotal = ripCount * RipDamage * (ripDuration / 12f);
 			float biteDamageTotal = biteCount * BiteDamage;
 
 			float damageTotal = meleeDamageTotal + mangleDamageTotal + rakeDamageTotal + shredDamageTotal + ripDamageTotal + biteDamageTotal;

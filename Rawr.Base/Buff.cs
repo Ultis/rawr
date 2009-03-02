@@ -889,19 +889,19 @@ namespace Rawr
             {
                 Name = "Acid Spit",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 3925f }
+                Stats = { ArmorPenetration = 0.2f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Expose Armor",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 3925f }
+				Stats = { ArmorPenetration = 0.2f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sunder Armor",
                 Group = "Armor (Major)",
-                Stats = { ArmorPenetration = 3925f }
+				Stats = { ArmorPenetration = 0.2f }
             });
             #endregion
 
@@ -910,19 +910,19 @@ namespace Rawr
             {
                 Name = "Curse of Recklessness",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 1260f }
+                Stats = { ArmorPenetration = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Faerie Fire",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 1260f }
+				Stats = { ArmorPenetration = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Sting",
                 Group = "Armor (Minor)",
-                Stats = { ArmorPenetration = 1260f }
+				Stats = { ArmorPenetration = 0.05f }
             });
             #endregion
 
@@ -1012,13 +1012,13 @@ namespace Rawr
             {
                 Name = "Blood Frenzy",
                 Group = "Physical Vulnerability",
-                Stats = { BonusPhysicalDamageMultiplier = 0.02f }
+                Stats = { BonusPhysicalDamageMultiplier = 0.04f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Savage Combat",
                 Group = "Physical Vulnerability",
-                Stats = { BonusPhysicalDamageMultiplier = 0.02f }
+                Stats = { BonusPhysicalDamageMultiplier = 0.04f }
             });
             #endregion
 

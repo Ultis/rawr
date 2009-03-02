@@ -4,6 +4,21 @@ using System.Text;
 
 namespace Rawr
 {
+	public static class ArmorCalculations
+	{
+		//Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
+		//don't know exactly how, quite yet.
+		public static float GetDamageReduction(int attackerLevel, float targetArmor, 
+			float attackerArmorPenetration, float attackerArmorPenetrationRating)
+		{
+			float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating / 1539.529991f);
+			float reducedArmor = (float)targetArmor * (armorReductionPercent);
+			float damageReduction = (reducedArmor / ((467.5f * attackerLevel) + reducedArmor - 22167.5f));
+			return damageReduction;
+		}
+	}
+
+
     // This class converts combat ratings from Rating to % stat.
     // It convertrs Intellect to Spell Crit (Reliable for lvl 70-80, below 70 only reliable for Mage)
     // It converts Agility to Dodge and Melee Crit as well (Not all classes implemented yet.)

@@ -212,11 +212,11 @@ namespace Rawr.Rogue
                 statsBuffs.HasteRating += (15.76f * 2f) * ((40f * (1f / (60f / character.OffHand.Speed)) / 6f));
             }
 
-            //Executioner
-            if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
-            {
-                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
-            }
+			////Executioner
+			//if (character.MainHand != null && character.MainHandEnchant != null && character.MainHandEnchant.Id == 3225)
+			//{
+			//    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Speed)) / 6f));
+			//}
 
             return statsBuffs;
         }
@@ -264,16 +264,18 @@ namespace Rawr.Rogue
             statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
             statsTotal.ArmorPenetrationRating = statsGearEnchantsBuffs.ArmorPenetrationRating;
 
+			CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+
             switch (character.RogueTalents.SerratedBlades)
             {
                 case 3:
-                    statsTotal.ArmorPenetration += 640;
+                    statsTotal.ArmorPenetration += 640f / (float)calcOpts.TargetArmor;
                     break;
                 case 2:
-                    statsTotal.ArmorPenetration += 434.4f;
+                    statsTotal.ArmorPenetration += 434.4f / (float)calcOpts.TargetArmor;
                     break;
                 case 1:
-                    statsTotal.ArmorPenetration += 213.6f;
+                    statsTotal.ArmorPenetration += 213.6f / (float)calcOpts.TargetArmor;
                     break;
             }
 

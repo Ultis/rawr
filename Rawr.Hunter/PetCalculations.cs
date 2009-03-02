@@ -26,10 +26,12 @@ namespace Rawr.Hunter
             this.calculatedStats = calculatedStats;
             this.options = options;
             this.statsBuffs = statsBuffs;
-            
 
-            double targetArmor = options.TargetArmor - statsBuffs.ArmorPenetration;
-            this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+			int targetArmor = options.TargetArmor;
+			this.armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				statsBuffs.ArmorPenetration, statsBuffs.ArmorPenetrationRating);
+            //double targetArmor = options.TargetArmor - statsBuffs.ArmorPenetration;
+            //this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
             calculatePetStats();
 

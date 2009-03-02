@@ -43,15 +43,28 @@ namespace Rawr.Rogue
 
         public float TotalArmorPenetration
         {
-            get { return _stats.ArmorPenetration + _calcOpts.TargetArmor*_stats.ArmorPenetrationRating*RogueConversions.ArmorPenRatingToArmorReduction/100; }
+			get
+			{
+				float armorReductionPercent = (1f - _stats.ArmorPenetration) * (1f - _stats.ArmorPenetrationRating / 1539.529991f);
+				float reducedArmor = (float)_calcOpts.TargetArmor * (armorReductionPercent);
+				return _calcOpts.TargetArmor - reducedArmor;
+
+
+				//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
+
+				//return _stats.ArmorPenetration + _calcOpts.TargetArmor * _stats.ArmorPenetrationRating * RogueConversions.ArmorPenRatingToArmorReduction / 100;
+			}
         }
 
         public float DamageReduction
         {
             get
             {
-                var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
-                return 1f - (totalArmor / ((467.5f * _calcOpts.TargetLevel) + totalArmor - 22167.5f));
+				return 1f - ArmorCalculations.GetDamageReduction(80, _calcOpts.TargetArmor,
+				_stats.ArmorPenetration, _stats.ArmorPenetrationRating);
+
+                //var totalArmor = _calcOpts.TargetArmor - TotalArmorPenetration;
+                //return 1f - (totalArmor / ((467.5f * _calcOpts.TargetLevel) + totalArmor - 22167.5f));
             }
         } 
 

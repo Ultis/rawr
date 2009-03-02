@@ -349,7 +349,7 @@ the Threat Scale defined on the Options tab.",
 
 			calculatedStats.Miss = missTotal;
 			calculatedStats.Dodge = Math.Min(100f - calculatedStats.Miss, dodgeTotal);
-			calculatedStats.Mitigation = 100f - ((100f - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * (1f + stats.DamageTakenMultiplier));
+			calculatedStats.ConstantDamageReduction = 100f - ((100f - Math.Min(75f, (stats.Armor / (stats.Armor - 22167.5f + (467.5f * targetLevel))) * 100f)) * (1f + stats.DamageTakenMultiplier));
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
 			calculatedStats.CritReduction = (defSkill * 0.04f) + stats.Resilience / (2050f / 52f) + stats.CritChanceReduction * 100f;
@@ -360,7 +360,7 @@ the Threat Scale defined on the Options tab.",
 			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - chanceCrit, calcOpts.TargetAttackSpeed / playerAttackSpeed)) *
 				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - chanceCrit, calcOpts.TargetAttackSpeed / playerAttackSpeed));
 			float blockValue = stats.AttackPower * 0.25f;
-			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - (calculatedStats.Mitigation / 100f)) * calcOpts.TargetDamage));
+			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - (calculatedStats.ConstantDamageReduction / 100f)) * calcOpts.TargetDamage));
 			calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance * 100f, 2);
 			calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
 			calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent * 100f, 2);
@@ -370,15 +370,15 @@ the Threat Scale defined on the Options tab.",
 			//float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
 			float hits = Math.Max(0f, 100f - (crits + calculatedStats.AvoidancePostDR));
 			//Apply armor and multipliers for each attack type...
-			crits *= (100f - calculatedStats.Mitigation) * .02f;
+			crits *= (100f - calculatedStats.ConstantDamageReduction) * .02f;
 			//crushes *= (100f - calculatedStats.Mitigation) * .015f;
-			hits *= (100f - calculatedStats.Mitigation) * .01f;
+			hits *= (100f - calculatedStats.ConstantDamageReduction) * .01f;
 			calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent);
 			calculatedStats.TotalMitigation = 100f - calculatedStats.DamageTaken;
 
-			calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - (calculatedStats.Mitigation / 100f)));
+			calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - (calculatedStats.ConstantDamageReduction / 100f)));
 			double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
-			double survivalRaw = (stats.Health / (1f - (calculatedStats.Mitigation / 100f))) / 1000f;
+			double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000f;
 
 			if (survivalRaw <= survivalCap)
 				calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw;
@@ -395,7 +395,7 @@ the Threat Scale defined on the Options tab.",
 				calculatedStats.SurvivalPoints = 1000f * (float)y;
 			}
 
-			calculatedStats.MitigationPoints = (2000000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
+			calculatedStats.MitigationPoints = (1700000f / calculatedStats.DamageTaken); // / (buffs.ShadowEmbrace ? 0.95f : 1f);
 
             float cappedResist = targetLevel * 5;
 
@@ -418,9 +418,11 @@ the Threat Scale defined on the Options tab.",
 			DruidTalents talents = character.DruidTalents;
 
 			int targetArmor = calcOpts.TargetArmor;
-			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-			baseArmor *= (1f - (stats.ArmorPenetrationRating / 15.39529991f) / 100f);
-			float modArmor = 1f - (baseArmor / ((467.5f * character.Level) + baseArmor - 22167.5f));
+			//float armorPenetrationPercent = stats.ArmorPenetration + stats.ArmorPenetrationRating / 1539.529991f;
+			//float reducedArmor = targetArmor * (1f - armorPenetrationPercent);
+			//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
+			float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
@@ -461,7 +463,7 @@ the Threat Scale defined on the Options tab.",
 			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * modArmor;
 			float faerieFireDamageRaw = (stats.AttackPower * 0.05f + 1f) * (1f + stats.BonusDamageMultiplier);
 			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
-			float lacerateDotDamage = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
+			float lacerateDamageDot = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
 
 			float meleeDamageAverage = (chanceCrit * (meleeDamageRaw * critMultiplier)) + //Damage from crits
 							(chanceGlance * (meleeDamageRaw * glanceMultiplier)) + //Damage from glances
@@ -471,14 +473,15 @@ the Threat Scale defined on the Options tab.",
 			float swipeDamageAverage = (chanceCrit * (swipeDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (swipeDamageRaw));
 			float faerieFireDamageAverage = (0.25f * (faerieFireDamageRaw * spellCritMultiplier)) + (0.65f * (faerieFireDamageRaw)); //TODO: Assumes 25% spell crit and 10% spell miss
 			float lacerateDamageAverage = (chanceCrit * (lacerateDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (lacerateDamageRaw));
-			
+			float lacerateDamageDotAverage = (chanceCrit * (lacerateDamageDot * spellCritMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (lacerateDamageDot));
+
 			float meleeThreatRaw = bearThreatMultiplier * meleeDamageRaw;
 			float maulThreatRaw = bearThreatMultiplier * (maulDamageRaw + 424f / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
 			float mangleThreatRaw = bearThreatMultiplier * mangleDamageRaw * (1 + stats.BonusMangleBearThreat);
 			float swipeThreatRaw = bearThreatMultiplier * swipeDamageRaw * 1.5f;
 			float faerieFireThreatRaw = bearThreatMultiplier * (faerieFireDamageRaw + 632f);
 			float lacerateThreatRaw = bearThreatMultiplier * (lacerateDamageRaw + 1031f) / 2f;
-			float lacerateDotThreat = bearThreatMultiplier * lacerateDotDamage / 2f;
+			float lacerateDotThreat = bearThreatMultiplier * lacerateDamageDotAverage / 2f;
 			
 			float meleeThreatAverage = bearThreatMultiplier * meleeDamageAverage;
 			float maulThreatAverage = bearThreatMultiplier * (maulDamageAverage + (424f * (1 - chanceAvoided)) / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
@@ -526,7 +529,7 @@ the Threat Scale defined on the Options tab.",
 			float lacerateDPR = lacerateDamageAverage / lacerateRageAverage;
 
 			BearRotationCalculator rotationCalculator = new BearRotationCalculator(meleeDamageAverage, maulDamageAverage, mangleDamageAverage, swipeDamageAverage,
-				faerieFireDamageAverage, lacerateDamageAverage, lacerateDotDamage, meleeThreatAverage, maulThreatAverage, mangleThreatAverage, swipeThreatAverage,
+				faerieFireDamageAverage, lacerateDamageAverage, lacerateDamageDot, meleeThreatAverage, maulThreatAverage, mangleThreatAverage, swipeThreatAverage,
 				faerieFireThreatAverage, lacerateThreatAverage, lacerateDotThreat, 6f - stats.MangleCooldownReduction, attackSpeed);
 
 			BearRotationCalculator.BearRotationCalculation rotationCalculationDPS, rotationCalculationTPS;
@@ -590,7 +593,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.LacerateThreatRaw = (float)Math.Round(lacerateThreatRaw);
 			calculatedStats.LacerateThreatAverage = (float)Math.Round(lacerateThreatAverage);
 
-			calculatedStats.LacerateDotDamage = (float)Math.Round(lacerateDotDamage);
+			calculatedStats.LacerateDotDamage = (float)Math.Round(lacerateDamageDot);
 			calculatedStats.LacerateDotThreat = (float)Math.Round(lacerateDotThreat);
 
 			calculatedStats.MaulTPR = maulTPR;
@@ -682,24 +685,24 @@ the Threat Scale defined on the Options tab.",
 			Stats statsTalents = new Stats()
 			{
 				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
-					0 : 0.05f * talents.LeaderOfThePack),
+					0f : 0.05f * talents.LeaderOfThePack),
 				Dodge = 0.02f * talents.FeralSwiftness + 0.02f * talents.NaturalReaction,
-				BonusStaminaMultiplier = (1 + 0.04f * talents.HeartOfTheWild) * (1 + 0.02f * talents.SurvivalOfTheFittest) - 1,
-				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
-				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
+				BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+				BonusAgilityMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+				BonusStrengthMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusAttackPowerMultiplier = 0.02f * talents.ProtectorOfThePack,
-				BonusPhysicalDamageMultiplier = (1 + 0.02f * talents.Naturalist) * (1 + 0.02f * talents.MasterShapeshifter) - 1,
+				BonusPhysicalDamageMultiplier = (1f + 0.02f * talents.Naturalist) * (1f + 0.02f * talents.MasterShapeshifter) - 1,
 				BonusMangleDamageMultiplier = 0.1f * talents.SavageFury,
-				BonusMaulDamageMultiplier = (1 + 0.1f * talents.SavageFury) * (1 + 0.04f * talents.RendAndTear) - 1f,
+				BonusMaulDamageMultiplier = (1f + 0.1f * talents.SavageFury) * (1f + 0.04f * talents.RendAndTear) - 1f,
 				BonusEnrageDamageMultiplier = 0.05f * talents.KingOfTheJungle,
 				MangleCooldownReduction = (0.5f * talents.ImprovedMangle),
 				BonusRageOnCrit = (2.5f * talents.PrimalFury),
-				Expertise = 5 * talents.PrimalPrecision,
+				Expertise = 5f * talents.PrimalPrecision,
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
                 DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
-				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0 : 0.3f * talents.Mangle),
+				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0f : 0.3f * talents.Mangle),
 				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.22f * talents.SurvivalOfTheFittest) - 1f,
 			};
 			
@@ -1286,7 +1289,7 @@ the Threat Scale defined on the Options tab.",
 		public int TargetLevel { get; set; }
 		public float Dodge { get; set; }
 		public float Miss { get; set; }
-		public float Mitigation { get; set; }
+		public float ConstantDamageReduction { get; set; }
 		public float AvoidancePreDR { get; set; }
 		public float AvoidancePostDR { get; set; }
 		public float TotalMitigation { get; set; }
@@ -1402,13 +1405,13 @@ the Threat Scale defined on the Options tab.",
 			dictValues.Add("Dodge", Dodge.ToString() + "%");
 			dictValues.Add("Miss", Miss.ToString() + "%");
 			if (BasicStats.Armor == armorCap)
-				dictValues.Add("Mitigation", Mitigation.ToString()
+				dictValues.Add("Mitigation", ConstantDamageReduction.ToString()
 					+ string.Format("%*Exactly at the armor cap against level {0} mobs.", TargetLevel));
 			else if (BasicStats.Armor > armorCap)
-				dictValues.Add("Mitigation", Mitigation.ToString()
+				dictValues.Add("Mitigation", ConstantDamageReduction.ToString()
 					+ string.Format("%*Over the armor cap by {0} armor.", BasicStats.Armor - armorCap));
 			else
-				dictValues.Add("Mitigation", Mitigation.ToString()
+				dictValues.Add("Mitigation", ConstantDamageReduction.ToString()
 					+ string.Format("%*Short of the armor cap by {0} armor.", armorCap - BasicStats.Armor));
 			dictValues.Add("Avoidance PreDR", AvoidancePreDR.ToString() + "%");
 			dictValues.Add("Avoidance PostDR", AvoidancePostDR.ToString() + "%");
@@ -1468,7 +1471,7 @@ the Threat Scale defined on the Options tab.",
 				case "Expertise Rating": return BasicStats.ExpertiseRating;
 				case "Haste Rating": return BasicStats.HasteRating;
 				case "Avoided Attacks %": return AvoidedAttacks;
-				case "Mitigation % from Armor": return Mitigation;
+				case "Mitigation % from Armor": return ConstantDamageReduction;
 				case "Avoidance %": return AvoidancePostDR;
 				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 80))) - CritReduction);
 				case "Nature Survival": return NatureSurvivalPoints;

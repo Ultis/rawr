@@ -16,7 +16,6 @@ namespace Rawr
         ArcaneResistance,
         Armor,
         BonusArmor,
-        ArmorPenetration,
         ArmorPenetrationRating,
         AshtongueTrinketProc,
         AttackPower,
@@ -282,7 +281,7 @@ namespace Rawr
 
     enum MultiplicativeStat : int
     {
-        BonusMangleBearThreat,
+		BonusMangleBearThreat,
         BonusAgilityMultiplier,
         BonusArcaneDamageMultiplier,
         BaseArmorMultiplier,
@@ -344,7 +343,8 @@ namespace Rawr
 
     enum InverseMultiplicativeStat : int
     {
-        ThreatReductionMultiplier
+		ArmorPenetration,
+		ThreatReductionMultiplier
     }
 
     enum NonStackingStat : int
@@ -493,7 +493,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat(MinRange = 100f)]
+        [CommonStat(]
         public float Health
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Health]; }
@@ -527,7 +527,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float Stamina
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Stamina]; }
@@ -562,7 +562,6 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat]
         public float WeaponDamage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.WeaponDamage]; }
@@ -579,18 +578,18 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Penetration")]
-        public float ArmorPenetration
+		[Percentage]
+		[DisplayName("% Armor Penetration")]
+		public float ArmorPenetration
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetration]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ArmorPenetration] = value; }
+            get { return _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration]; }
+			set { _rawInverseMultiplicativeData[(int)InverseMultiplicativeStat.ArmorPenetration] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [DisplayName("Penetration Rating")]
-        [CommonStat(MinRange = 10f)]
+        [DisplayName("Armor Penetration Rating")]
+        [CommonStat]
         public float ArmorPenetrationRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating]; }
@@ -599,7 +598,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float Intellect
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Intellect]; }
@@ -608,7 +607,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float Spirit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Spirit]; }
@@ -712,7 +711,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Power")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float SpellPower
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPower]; }
@@ -781,7 +780,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Hit Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float SpellHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHitRating]; }
@@ -808,7 +807,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Spell Combat Ratings")]
         [DisplayName("Spell Haste Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float SpellHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellHasteRating]; }
@@ -848,7 +847,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Crit Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float CritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritRating]; }
@@ -858,7 +857,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Crit Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float RangedCritRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedCritRating]; }
@@ -868,7 +867,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Melee Crit")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float CritMeleeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritMeleeRating]; }
@@ -887,7 +886,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Hit Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float RangedHitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHitRating]; }
@@ -897,7 +896,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Hit Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float HitRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HitRating]; }
@@ -917,7 +916,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Dodge Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float DodgeRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DodgeRating]; }
@@ -1021,7 +1020,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Expertise Rating")]
-        [CommonStat(MinRange = 32.79f)]
+        [CommonStat]
         public float ExpertiseRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ExpertiseRating]; }
@@ -1031,7 +1030,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Haste Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float HasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HasteRating]; }
@@ -1041,7 +1040,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Combat Ratings")]
         [DisplayName("Ranged Haste Rating")]
-        [CommonStat(MinRange = 10f)]
+        [CommonStat]
         public float RangedHasteRating
         {
             get { return _rawAdditiveData[(int)AdditiveStat.RangedHasteRating]; }
@@ -3648,16 +3647,15 @@ namespace Rawr
             return clone;
         }
 
-        public void ConvertStatsToWotLKEquivalents()
-        {
-            HitRating = Math.Max(HitRating, SpellHitRating);
-            CritRating = Math.Max(CritRating, SpellCritRating);
-            HasteRating = Math.Max(HasteRating, SpellHasteRating);
-            SpellPower = Math.Max(SpellPower, Math.Max(SpellDamageRating, (float)Math.Floor(Healing / 1.88f)));
-            ArmorPenetrationRating = Math.Max(ArmorPenetrationRating, (float)Math.Floor(ArmorPenetration / 7f));
-
-            SpellHitRating = SpellCritRating = SpellHasteRating = SpellDamageRating = Healing = ArmorPenetration = 0;
-        }
+		//public void ConvertStatsToWotLKEquivalents()
+		//{
+		//    HitRating = Math.Max(HitRating, SpellHitRating);
+		//    CritRating = Math.Max(CritRating, SpellCritRating);
+		//    HasteRating = Math.Max(HasteRating, SpellHasteRating);
+		//    SpellPower = Math.Max(SpellPower, Math.Max(SpellDamageRating, (float)Math.Floor(Healing / 1.88f)));
+		//    ArmorPenetrationRating = Math.Max(ArmorPenetrationRating, (float)Math.Floor(ArmorPenetration / 7f));
+		//    SpellHitRating = SpellCritRating = SpellHasteRating = SpellDamageRating = Healing = ArmorPenetration = 0;
+		//}
 
         #region Multiplicative Handling
         private static PropertyInfo[] _propertyInfoCache = null;

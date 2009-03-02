@@ -59,12 +59,19 @@ namespace Rawr.Hunter
             this.weaponDamageAverage = weaponDamageAverage;
             this.ammoDamage = ammoDamage;
             this.talentModifiers = talentModifiers;
-            double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
-            this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
-            targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0) - character.HunterTalents.PiercingShots * 0.02);
+			int targetArmor = options.TargetArmor;
+			this.armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				calculatedStats.BasicStats.ArmorPenetration, calculatedStats.BasicStats.ArmorPenetrationRating);
+			//double targetArmor = (options.TargetArmor - calculatedStats.BasicStats.ArmorPenetration) * (1.0 - calculatedStats.BasicStats.ArmorPenetrationRating / (ratings.ARP_RATING_PER_PERCENT * 100.0));
+            //this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+
+            //reducedArmor *= (1f - character.HunterTalents.PiercingShots * 0.02f);
             
-            this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
+            this.talentedArmorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				1f - (1f - calculatedStats.BasicStats.ArmorPenetration) * (1f - character.HunterTalents.PiercingShots * 0.02f),
+				calculatedStats.BasicStats.ArmorPenetrationRating);
+			//this.talentedArmorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
         }
 
 

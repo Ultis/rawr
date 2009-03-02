@@ -224,11 +224,14 @@ namespace Rawr.Cat
 			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
-			float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-			baseArmor *= (1f - (stats.ArmorPenetrationRating / 15.39529991f) / 100f);
-			float modArmor = 1f - (baseArmor / ((467.5f * character.Level) + baseArmor - 22167.5f));
+			//float armorReductionPercent = (1f - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
+			//float reducedArmor = (float)targetArmor * (armorReductionPercent);
+			//float modArmor = 1f - (reducedArmor / ((467.5f * character.Level) + reducedArmor - 22167.5f));
+			float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, calcOpts.TargetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
+			float critMultiplierBleed = 1.5f * (1 + stats.BonusCritMultiplier);
 			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
@@ -293,7 +296,7 @@ namespace Rawr.Cat
 			float shredDamageRaw = (baseDamage * 2.25f + 742.5f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
 			float rakeDamageRaw = (190 + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float rakeDamageDot = (1161 + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((12f + stats.BonusRipDuration) / 12f);
+			float ripDamageRaw = (3204 + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
 			float biteDamageRaw = (1640 + stats.AttackPower * 0.24f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
 
 			float meleeDamageAverage =	chanceGlance * meleeDamageRaw * glanceMultiplier +
@@ -301,8 +304,9 @@ namespace Rawr.Cat
 										chanceHitNonGlance * meleeDamageRaw;
 			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
-			float rakeDamageAverage = (1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier + rakeDamageDot;
-			float ripDamageAverage = ripDamageRaw;
+			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + 
+										((1f - chanceCrit) * rakeDamageDot + chanceCrit * rakeDamageDot * critMultiplierBleed);
+			float ripDamageAverage = ((1f - chanceCrit) * ripDamageRaw + chanceCrit * ripDamageRaw * critMultiplierBleed);
 			float biteDamageAverage = (1f - chanceCritBite) * biteDamageRaw + chanceCritBite * biteDamageRaw * critMultiplier;
 			#endregion
 
@@ -327,8 +331,10 @@ namespace Rawr.Cat
 
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-				maintainMangle, calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration, attackSpeed, 
-				character.DruidTalents.OmenOfClarity > 0, chanceAvoided, cpgEnergyCostMultiplier, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
+				maintainMangle, calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration,
+				character.DruidTalents.Berserk > 0 ? (calcOpts.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
+				character.DruidTalents.OmenOfClarity > 0, calcOpts.GlyphOfShred, chanceAvoided, 
+				cpgEnergyCostMultiplier, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
@@ -347,6 +353,8 @@ namespace Rawr.Cat
 								rotationCalculationDPS = rotationCalculation;
 						}
 
+			float ripDurationMultiplier = (calcOpts.GlyphOfShred && rotationCalculationDPS.ShredDamageTotal > 0 ? 
+				rotationCalculator.RipDuration + 6 : rotationCalculator.RipDuration) / 12f;
 
 			calculatedStats.HighestDPSRotation = rotationCalculationDPS;
 			calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
@@ -369,8 +377,8 @@ namespace Rawr.Cat
 			calculatedStats.ShredDamagePerSwing = shredDamageAverage * chanceNonAvoided;
 			calculatedStats.RakeDamagePerHit = rakeDamageRaw + rakeDamageDot;
 			calculatedStats.RakeDamagePerSwing = rakeDamageAverage * chanceNonAvoided;
-			calculatedStats.RipDamagePerHit = ripDamageRaw;
-			calculatedStats.RipDamagePerSwing = ripDamageAverage * chanceNonAvoided;
+			calculatedStats.RipDamagePerHit = ripDamageRaw * ripDurationMultiplier;
+			calculatedStats.RipDamagePerSwing = ripDamageAverage * chanceNonAvoided * ripDurationMultiplier;
 			calculatedStats.BiteDamagePerHit = biteDamageRaw;
 			calculatedStats.BiteDamagePerSwing = biteDamageAverage * chanceNonAvoided;
 
@@ -597,6 +605,8 @@ namespace Rawr.Cat
 
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
+			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
+
 			Stats statsRace = character.Race == Character.CharacterRace.NightElf ?
 				new Stats() {
 					Health = 7237f,
@@ -605,7 +615,7 @@ namespace Rawr.Cat
 					Stamina = 96f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusAttackPowerMultiplier = 0.4f, //Savage Roar
+					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
 					PhysicalCrit = 0.075f } : 
 				new Stats() {
 					Health = 7599f,
@@ -614,8 +624,9 @@ namespace Rawr.Cat
 					Stamina = 100f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusAttackPowerMultiplier = 0.4f, //Savage Roar
-					PhysicalCrit = 0.075f };
+					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
+					PhysicalCrit = 0.075f
+				};
 
 			Stats statsItems = GetItemStats(character, additionalItem);
 			//Stats statsEnchants = GetEnchantsStats(character);
@@ -629,9 +640,9 @@ namespace Rawr.Cat
 				PhysicalCrit = 0.02f * talents.SharpenedClaws + (character.ActiveBuffsContains("Leader of the Pack") ?
 					0 : 0.05f * talents.LeaderOfThePack) + 0.02f * talents.MasterShapeshifter,
 				Dodge = 0.02f * talents.FeralSwiftness,
-				BonusStaminaMultiplier = 0.02f * talents.SurvivalOfTheFittest,
-				BonusAgilityMultiplier = 0.02f * talents.SurvivalOfTheFittest,
-				BonusStrengthMultiplier = 0.02f * talents.SurvivalOfTheFittest,
+				BonusStaminaMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+				BonusAgilityMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
+				BonusStrengthMultiplier = (1f + 0.02f * talents.SurvivalOfTheFittest) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
 				BonusAttackPowerMultiplier = 0.02f * talents.HeartOfTheWild,
 				CritChanceReduction = 0.02f * talents.SurvivalOfTheFittest,
 				BonusPhysicalDamageMultiplier = 0.02f * talents.Naturalist,
@@ -644,7 +655,7 @@ namespace Rawr.Cat
 				RakeCostReduction = 1f * talents.Ferocity,
 				ShredCostReduction = 9f * talents.ShreddingAttacks,
 				BonusCPOnCrit = 0.5f * talents.PrimalFury,
-				Expertise = 5 * talents.PrimalPrecision,
+				Expertise = 5f * talents.PrimalPrecision,
 				FinisherEnergyOnAvoid = 0.4f * talents.PrimalPrecision,
 				AttackPower = (character.Level / 2f) * talents.PredatoryStrikes,
 				BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f), 
@@ -655,8 +666,6 @@ namespace Rawr.Cat
 			Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             statsGearEnchantsBuffs.Agility += statsGearEnchantsBuffs.AverageAgility;
 			statsGearEnchantsBuffs.Strength += statsGearEnchantsBuffs.CatFormStrength;
-
-			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 

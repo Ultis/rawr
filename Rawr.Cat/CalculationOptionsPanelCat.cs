@@ -31,7 +31,10 @@ namespace Rawr
 			checkBoxShred.Checked = calcOpts.CustomUseShred;
 			comboBoxSavageRoar.SelectedItem = calcOpts.CustomCPSavageRoar.ToString();
 			checkBoxGlyphOfMangle.Checked = calcOpts.GlyphOfMangle;
+			checkBoxGlyphOfShred.Checked = calcOpts.GlyphOfShred;
 			checkBoxGlyphOfRip.Checked = calcOpts.GlyphOfRip;
+			checkBoxGlyphOfBerserk.Checked = calcOpts.GlyphOfBerserk;
+			checkBoxGlyphOfSavageRoar.Checked = calcOpts.GlyphOfSavageRoar;
 			numericUpDownDuration.Value = calcOpts.Duration;
 			
 			_loadingCalculationOptions = false;
@@ -50,7 +53,10 @@ namespace Rawr
 				calcOpts.CustomUseShred = checkBoxShred.Checked;
 				calcOpts.CustomCPSavageRoar = int.Parse(comboBoxSavageRoar.SelectedItem.ToString());
 				calcOpts.GlyphOfMangle = checkBoxGlyphOfMangle.Checked;
+				calcOpts.GlyphOfShred = checkBoxGlyphOfShred.Checked;
 				calcOpts.GlyphOfRip = checkBoxGlyphOfRip.Checked;
+				calcOpts.GlyphOfBerserk = checkBoxGlyphOfBerserk.Checked;
+				calcOpts.GlyphOfSavageRoar = checkBoxGlyphOfSavageRoar.Checked;
 				calcOpts.Duration = (int)numericUpDownDuration.Value;
 				
 				Character.OnCalculationsInvalidated();
@@ -79,7 +85,10 @@ namespace Rawr
 		public bool CustomUseFerociousBite = false;
 		public int CustomCPSavageRoar = 2;
 		public bool GlyphOfMangle = true;
+		public bool GlyphOfShred = true;
 		public bool GlyphOfRip = true;
+		public bool GlyphOfBerserk = true;
+		public bool GlyphOfSavageRoar = true;
 		public int Duration = 300;
 	}
 }

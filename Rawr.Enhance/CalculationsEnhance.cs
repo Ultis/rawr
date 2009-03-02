@@ -377,10 +377,14 @@ namespace Rawr
             // Main calculation Block //
             ////////////////////////////
 
-            float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-            float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
-            baseArmor = baseArmor * (1 - modPercentDecrease);
-            float damageReduction = baseArmor / (baseArmor + (467.5f * 80f - 22167.5f));
+
+			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+
+			//float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
+			//float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
+			//baseArmor = baseArmor * (1 - modPercentDecrease);
+			//float modArmor = 1.0f - (baseArmor / (baseArmor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
 

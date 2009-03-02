@@ -12,7 +12,7 @@ namespace Rawr.DPSWarr
             _dictValues.Add(DisplayValue.Strength, stats.Strength.ToString());
             _dictValues.Add(DisplayValue.Agility, stats.Agility.ToString());
             _dictValues.Add(DisplayValue.AttackPower, stats.AttackPower.ToString());
-            _dictValues.Add(DisplayValue.ArmorPenetration, stats.ArmorPenetration.ToString());    
+            _dictValues.Add(DisplayValue.ArmorPenetration, (stats.ArmorPenetration * 100f).ToString() + "%");    
             _dictValues.Add(DisplayValue.TotalDPS, "0");
         }
 

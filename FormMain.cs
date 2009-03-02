@@ -600,9 +600,12 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
         private void LoadCharacterIntoForm(Character character, bool unsavedChanges)
         {
+			string characterModel = character.CurrentModel;
             Character = character;
             _unsavedChanges = unsavedChanges;
             SetTitle();
+			LoadModel(characterModel);
+			comboBoxModel.SelectedItem = characterModel;
         }
 
         public void LoadBatchCharacter(BatchCharacter character)

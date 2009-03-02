@@ -247,9 +247,13 @@ namespace Rawr.Retribution
             calc.ToResist = (float)Math.Max(0.17f - stats.SpellHit, 0f);
 
             #region Mitigation
-            float targetArmor = (13083 - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
-            //TODO: Check this out, make sure its right
-            float armorReduction = 1f - targetArmor / ((467.5f * character.Level) + targetArmor - 22167.5f);
+			int targetArmor = 13083;
+			float armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+				stats.ArmorPenetration, stats.ArmorPenetrationRating);
+
+			//float targetArmor = (13083 - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
+			////TODO: Check this out, make sure its right
+			//float armorReduction = 1f - targetArmor / ((467.5f * character.Level) + targetArmor - 22167.5f);
             #endregion
 
             #region Weapon Damage

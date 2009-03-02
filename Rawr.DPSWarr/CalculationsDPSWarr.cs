@@ -233,10 +233,10 @@ namespace Rawr.DPSWarr
             }
 
             //Executioner
-            if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 3225)))
-            {
-                statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
-            }
+			//if (character.MainHand != null && (character.MainHandEnchant != null && (character.MainHandEnchant.Id == 3225)))
+			//{
+			//    statsBuffs.ArmorPenetration += 840f * ((40f * (1f / (60f / character.MainHand.Item.Speed)) / 6f));
+			//}
 
             return statsBuffs;
         }
