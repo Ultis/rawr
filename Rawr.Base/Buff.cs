@@ -2452,6 +2452,26 @@ namespace Rawr
                 SetThreshold = 4
             });
             
+            efaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { HammerOfTheRighteousMultiplier = .1f },
+                SetName = "Redemption Plate",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Redemption Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DivineProtectionDurationBonus = 3f },
+                SetName = "Redemption Plate",
+                SetThreshold = 4
+            });
+            
 			#endregion
 
             #region Profession Buffs

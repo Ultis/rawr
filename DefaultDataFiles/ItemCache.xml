@@ -22018,7 +22018,9 @@
     <ItemLevel>200</ItemLevel>
     <IconPath>INV_Relics_LibramofTruth</IconPath>
     <Slot>Ranged</Slot>
-    <Stats />
+    <Stats>
+  		<JudgementBlockValue>352</JudgementBlockValue>
+  	</Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <RequiredClasses>Paladin</RequiredClasses>

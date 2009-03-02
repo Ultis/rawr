@@ -326,12 +326,12 @@ you are being killed by burst damage, focus on Survival Points.",
             //Hammer of the Righteous (Per Hit)
             if (talents.HammerOfTheRighteous > 0)
             {
-                cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti;
+            	cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti * (1f + stats.HammerOfTheRighteousMultiplier);
                 cs.HotRThreat = cs.HotRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
             }
 
             //Shield of Righteousness (Per Hit)
-            cs.ShoRDamage = (stats.BlockValue + 300f) * damageMulti * SotT * holyMulti;
+            cs.ShoRDamage = ((stats.BlockValue - 0.22f * stats.JudgementBlockValue ) + 300f) * damageMulti * SotT * holyMulti;
             cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Avenger's Shield (Per Hit)
@@ -341,7 +341,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //Consecration (Per Cast 8sec)
             //TODO Implement Glyph of Consecrate, try to find a way to put it into rotation
             cs.ConsDuration = 8f;
-            cs.ConsDamage = cs.ConsDuration * (113f + .04f * stats.SpellPower + .04f * stats.AttackPower) * damageMulti * holyMulti;
+            cs.ConsDamage = cs.ConsDuration * (113f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * damageMulti * holyMulti;
             cs.ConsThreat = cs.ConsDamage * holyThreatMod / 8;
 
             //Seal of Righteousness (Per Swing)

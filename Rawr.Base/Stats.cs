@@ -274,6 +274,11 @@ namespace Rawr
         CritJudgement_5,
         JudgementCDReduction,
         #endregion
+        #region Added by Rawr.Tankadin
+        JudgementBlockValue,
+        HammerOfTheRighteousMultiplier,
+        DivineProtectionDurationBonus,
+        #endregion
         #region Warlock set bonuses
         LifeTapBonusSpirit,
         #endregion
