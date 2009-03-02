@@ -268,7 +268,7 @@
 			this.checkBoxGlyphOfShred.Name = "checkBoxGlyphOfShred";
 			this.checkBoxGlyphOfShred.Size = new System.Drawing.Size(104, 17);
 			this.checkBoxGlyphOfShred.TabIndex = 1;
-			this.checkBoxGlyphOfShred.Text = "Glyph of Berserk";
+			this.checkBoxGlyphOfShred.Text = "Glyph of Shred";
 			this.checkBoxGlyphOfShred.UseVisualStyleBackColor = true;
 			this.checkBoxGlyphOfShred.CheckedChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
