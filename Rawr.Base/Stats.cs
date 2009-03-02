@@ -493,7 +493,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [CommonStat(]
+        [CommonStat]
         public float Health
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Health]; }
