@@ -1638,6 +1638,15 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.StarfireDmg]; }
             set { _rawAdditiveData[(int)AdditiveStat.StarfireDmg] = value; }
         }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Judgement Block Value")]
+        [Category("Equipment Procs")]
+        public float JudgementBlockValue
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
+        }
 
         // Moonfire idol
         [System.ComponentModel.DefaultValueAttribute(0f)]

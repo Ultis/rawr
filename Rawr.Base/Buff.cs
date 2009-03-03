@@ -2452,7 +2452,7 @@ namespace Rawr
                 SetThreshold = 4
             });
             
-            efaultBuffs.Add(new Buff()
+            defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
