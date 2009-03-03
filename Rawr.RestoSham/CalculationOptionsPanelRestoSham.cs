@@ -58,15 +58,32 @@ namespace Rawr.RestoSham
             chkManaTide2.Checked = options.ManaTidePlus;
             #endregion
             #region Relics Page:
-            chkTotemHW1.Checked = options.TotemHW1;
-            chkTotemHW2.Checked = options.TotemHW2;
-            chkTotemHW3.Checked = options.TotemHW3;
-            chkTotemCH1.Checked = options.TotemCH1;
-            chkTotemCH2.Checked = options.TotemCH2;
-            chkTotemCH3.Checked = options.TotemCH3;
-            chkTotemCH4.Checked = options.TotemCH4;
-            chkTotemLHW1.Checked = options.TotemLHW1;
-            chkTotemWS1.Checked = options.TotemWS1;
+            // Check for what totem is equipped and check the appropriate option on the totems page
+            if (Character != null && Character.Ranged != null)
+            {
+                foreach (Control groupControl in this.RelicsPage.Controls)
+                {
+                    if (groupControl is GroupBox)
+                    {
+                        foreach (Control c in groupControl.Controls)
+                        {
+                            if (c is CheckBox && c.Tag != null)
+                            {
+                                if (Character.Ranged.Item.Name == ((CheckBox)c).Text)
+                                {
+                                    ((CheckBox)c).Checked = true;
+                                    this[c.Tag.ToString()] = true;
+                                }
+                                else
+                                {
+                                    ((CheckBox)c).Checked = false;
+                                    this[c.Tag.ToString()] = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             #endregion
 
             _bLoading = false;
@@ -86,6 +103,7 @@ namespace Rawr.RestoSham
             Character.OnCalculationsInvalidated();
         }
         #endregion
+
         #region Validation on Boxes and Text Handling
         private void numericTextBox_Validating(object sender, CancelEventArgs e)
         {
@@ -151,7 +169,8 @@ namespace Rawr.RestoSham
             }
         }
         #endregion
-        #region Check Box Handling
+
+        #region CheckBox Handling
         private void chkManaTide_CheckedChanged(object sender, EventArgs e)
         {
             if (!_bLoading)
@@ -232,88 +251,8 @@ namespace Rawr.RestoSham
                 Character.OnCalculationsInvalidated();
             }
         }
+        #endregion
 
-        private void chkTotemHW1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemHW1"] = chkTotemHW1.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemHW2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemHW2"] = chkTotemHW2.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemHW3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemHW3"] = chkTotemHW3.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemCH1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemCH1"] = chkTotemCH1.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemCH2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemCH2"] = chkTotemCH2.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemCH3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemCH3"] = chkTotemCH3.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemCH4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemCH4"] = chkTotemCH4.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemLHW1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemLHW1"] = chkTotemLHW1.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkTotemWS1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_bLoading)
-            {
-                this["TotemWS1"] = chkTotemWS1.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-#endregion
         #region Trackbar Handling
         private void OnTrackBarScroll(object sender, EventArgs e)
         {
@@ -362,6 +301,49 @@ namespace Rawr.RestoSham
             l.Text = re.Replace(l.Text, string.Format("({0}%)", trackBar.Value));
         }
         #endregion
+
+        #region Relic CheckBox Handling
+        private void Relic_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                if (sender is CheckBox)
+                {
+                    CheckBox cb = sender as CheckBox;
+                    if (cb.Tag == null)
+                        return;
+
+                    string key = cb.Tag.ToString();
+                    this[key] = cb.Checked;
+                    
+                    // Uncheck all other options
+                    _bLoading = true;
+                    foreach (Control groupControl in this.RelicsPage.Controls)
+                    {
+                        if (groupControl is GroupBox)
+                        {
+                            foreach (Control c in groupControl.Controls)
+                            {
+                                if (c is CheckBox)
+                                {
+                                    CheckBox cb2 = c as CheckBox;
+                                    if (cb2.Checked && cb2.Tag != null && cb2.Name != cb.Name)
+                                    {
+                                        this[c.Tag.ToString()] = false;
+                                        cb2.Checked = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    _bLoading = false;
+
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+        #endregion
+
         #region Combo Box Handling
         private void cboHealingStyle_TextChanged(object sender, EventArgs e)
         {

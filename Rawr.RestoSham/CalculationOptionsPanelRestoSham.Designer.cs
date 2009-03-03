@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tipRestoSham = new System.Windows.Forms.ToolTip(this.components);
             this.cboManaPotAmount = new System.Windows.Forms.ComboBox();
+            this.cboHealingStyle = new System.Windows.Forms.ComboBox();
             this.chkManaTide = new System.Windows.Forms.CheckBox();
             this.txtESInterval = new System.Windows.Forms.TextBox();
             this.chkMT = new System.Windows.Forms.CheckBox();
@@ -50,10 +51,11 @@
             this.chkTotemCH4 = new System.Windows.Forms.CheckBox();
             this.chkTotemLHW1 = new System.Windows.Forms.CheckBox();
             this.chkTotemWS1 = new System.Windows.Forms.CheckBox();
-            this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.errorRestoSham = new System.Windows.Forms.ErrorProvider(this.components);
+            this.GeneralPage = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tbOverhealing_Label = new System.Windows.Forms.Label();
             this.tbOverhealing = new System.Windows.Forms.TrackBar();
@@ -64,22 +66,24 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.GlyphsPage = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.RelicsPage = new System.Windows.Forms.TabPage();
             this.wsBox = new System.Windows.Forms.GroupBox();
             this.lhwBox = new System.Windows.Forms.GroupBox();
             this.chBox = new System.Windows.Forms.GroupBox();
             this.hwBox = new System.Windows.Forms.GroupBox();
-            this.cboHealingStyle = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).BeginInit();
-            this.tabPage1.SuspendLayout();
+            this.GeneralPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.GlyphsPage.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.RelicsPage.SuspendLayout();
             this.wsBox.SuspendLayout();
             this.lhwBox.SuspendLayout();
             this.chBox.SuspendLayout();
@@ -118,7 +122,7 @@
             this.cboHealingStyle.Size = new System.Drawing.Size(75, 21);
             this.cboHealingStyle.TabIndex = 28;
             this.tipRestoSham.SetToolTip(this.cboHealingStyle, "Choose the style of healing that fits you.");
-            this.cboHealingStyle.TextChanged +=new System.EventHandler(cboHealingStyle_TextChanged);
+            this.cboHealingStyle.TextChanged += new System.EventHandler(this.cboHealingStyle_TextChanged);
             // 
             // chkManaTide
             // 
@@ -167,7 +171,7 @@
             // chkLHW
             // 
             this.chkLHW.AutoSize = true;
-            this.chkLHW.Location = new System.Drawing.Point(6, 52);
+            this.chkLHW.Location = new System.Drawing.Point(6, 65);
             this.chkLHW.Name = "chkLHW";
             this.chkLHW.Size = new System.Drawing.Size(199, 17);
             this.chkLHW.TabIndex = 25;
@@ -179,7 +183,7 @@
             // chkManaTide2
             // 
             this.chkManaTide2.AutoSize = true;
-            this.chkManaTide2.Location = new System.Drawing.Point(6, 75);
+            this.chkManaTide2.Location = new System.Drawing.Point(6, 88);
             this.chkManaTide2.Name = "chkManaTide2";
             this.chkManaTide2.Size = new System.Drawing.Size(181, 17);
             this.chkManaTide2.TabIndex = 24;
@@ -191,7 +195,7 @@
             // chkWaterShield2
             // 
             this.chkWaterShield2.AutoSize = true;
-            this.chkWaterShield2.Location = new System.Drawing.Point(6, 121);
+            this.chkWaterShield2.Location = new System.Drawing.Point(6, 19);
             this.chkWaterShield2.Name = "chkWaterShield2";
             this.chkWaterShield2.Size = new System.Drawing.Size(158, 17);
             this.chkWaterShield2.TabIndex = 26;
@@ -203,7 +207,7 @@
             // chkWaterShield3
             // 
             this.chkWaterShield3.AutoSize = true;
-            this.chkWaterShield3.Location = new System.Drawing.Point(6, 98);
+            this.chkWaterShield3.Location = new System.Drawing.Point(6, 111);
             this.chkWaterShield3.Name = "chkWaterShield3";
             this.chkWaterShield3.Size = new System.Drawing.Size(166, 17);
             this.chkWaterShield3.TabIndex = 27;
@@ -215,7 +219,7 @@
             // chkELWGlyph
             // 
             this.chkELWGlyph.AutoSize = true;
-            this.chkELWGlyph.Location = new System.Drawing.Point(6, 6);
+            this.chkELWGlyph.Location = new System.Drawing.Point(6, 19);
             this.chkELWGlyph.Name = "chkELWGlyph";
             this.chkELWGlyph.Size = new System.Drawing.Size(190, 17);
             this.chkELWGlyph.TabIndex = 28;
@@ -228,7 +232,7 @@
             // chkGlyphCH
             // 
             this.chkGlyphCH.AutoSize = true;
-            this.chkGlyphCH.Location = new System.Drawing.Point(6, 29);
+            this.chkGlyphCH.Location = new System.Drawing.Point(6, 42);
             this.chkGlyphCH.Name = "chkGlyphCH";
             this.chkGlyphCH.Size = new System.Drawing.Size(144, 17);
             this.chkGlyphCH.TabIndex = 29;
@@ -245,10 +249,11 @@
             this.chkTotemHW1.Name = "chkTotemHW1";
             this.chkTotemHW1.Size = new System.Drawing.Size(183, 17);
             this.chkTotemHW1.TabIndex = 16;
+            this.chkTotemHW1.Tag = "TotemHW1";
             this.chkTotemHW1.Text = "Totem of Spontaneous Regrowth";
             this.tipRestoSham.SetToolTip(this.chkTotemHW1, "Increases spell power of Healing Wave by 88.  Only choose one.");
             this.chkTotemHW1.UseVisualStyleBackColor = true;
-            this.chkTotemHW1.CheckedChanged += new System.EventHandler(this.chkTotemHW1_CheckedChanged);
+            this.chkTotemHW1.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemHW2
             // 
@@ -257,10 +262,11 @@
             this.chkTotemHW2.Name = "chkTotemHW2";
             this.chkTotemHW2.Size = new System.Drawing.Size(137, 17);
             this.chkTotemHW2.TabIndex = 17;
+            this.chkTotemHW2.Tag = "TotemHW2";
             this.chkTotemHW2.Text = "Totem of the Maelstrom";
             this.tipRestoSham.SetToolTip(this.chkTotemHW2, "Reduces the mana cost of Healing Wave by 24.  Only choose one.");
             this.chkTotemHW2.UseVisualStyleBackColor = true;
-            this.chkTotemHW2.CheckedChanged += new System.EventHandler(this.chkTotemHW2_CheckedChanged);
+            this.chkTotemHW2.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemHW3
             // 
@@ -269,10 +275,11 @@
             this.chkTotemHW3.Name = "chkTotemHW3";
             this.chkTotemHW3.Size = new System.Drawing.Size(101, 17);
             this.chkTotemHW3.TabIndex = 18;
+            this.chkTotemHW3.Tag = "TotemHW3";
             this.chkTotemHW3.Text = "Totem of Misery";
             this.tipRestoSham.SetToolTip(this.chkTotemHW3, "Reduces the mana cost of Healing Wave by 79.  Only choose one.");
             this.chkTotemHW3.UseVisualStyleBackColor = true;
-            this.chkTotemHW3.CheckedChanged += new System.EventHandler(this.chkTotemHW3_CheckedChanged);
+            this.chkTotemHW3.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemCH3
             // 
@@ -281,10 +288,11 @@
             this.chkTotemCH3.Name = "chkTotemCH3";
             this.chkTotemCH3.Size = new System.Drawing.Size(131, 17);
             this.chkTotemCH3.TabIndex = 21;
+            this.chkTotemCH3.Tag = "TotemCH3";
             this.chkTotemCH3.Text = "Totem of Living Water";
             this.tipRestoSham.SetToolTip(this.chkTotemCH3, "Equip: Reduces the base mana cost of Chain Heal by 20.  Only choose one.");
             this.chkTotemCH3.UseVisualStyleBackColor = true;
-            this.chkTotemCH3.CheckedChanged += new System.EventHandler(this.chkTotemCH3_CheckedChanged);
+            this.chkTotemCH3.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemCH2
             // 
@@ -293,10 +301,11 @@
             this.chkTotemCH2.Name = "chkTotemCH2";
             this.chkTotemCH2.Size = new System.Drawing.Size(107, 17);
             this.chkTotemCH2.TabIndex = 20;
+            this.chkTotemCH2.Tag = "TotemCH2";
             this.chkTotemCH2.Text = "Totem of the Bay";
             this.tipRestoSham.SetToolTip(this.chkTotemCH2, "Increases the base amount healed by your chain heal by 102.  Only choose one.");
             this.chkTotemCH2.UseVisualStyleBackColor = true;
-            this.chkTotemCH2.CheckedChanged += new System.EventHandler(this.chkTotemCH2_CheckedChanged);
+            this.chkTotemCH2.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemCH1
             // 
@@ -305,10 +314,11 @@
             this.chkTotemCH1.Name = "chkTotemCH1";
             this.chkTotemCH1.Size = new System.Drawing.Size(137, 17);
             this.chkTotemCH1.TabIndex = 19;
+            this.chkTotemCH1.Tag = "TotemCH1";
             this.chkTotemCH1.Text = "Totem of Forest Growth";
             this.tipRestoSham.SetToolTip(this.chkTotemCH1, "Reduces the base mana cost of Chain Heal by 78.  Only choose one.");
             this.chkTotemCH1.UseVisualStyleBackColor = true;
-            this.chkTotemCH1.CheckedChanged += new System.EventHandler(this.chkTotemCH1_CheckedChanged);
+            this.chkTotemCH1.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemCH4
             // 
@@ -317,10 +327,11 @@
             this.chkTotemCH4.Name = "chkTotemCH4";
             this.chkTotemCH4.Size = new System.Drawing.Size(137, 17);
             this.chkTotemCH4.TabIndex = 22;
+            this.chkTotemCH4.Tag = "TotemCH4";
             this.chkTotemCH4.Text = "Totem of Healing Rains";
             this.tipRestoSham.SetToolTip(this.chkTotemCH4, "Equip: Increases the base amount healed by Chain Heal by 87.  Only choose one.");
             this.chkTotemCH4.UseVisualStyleBackColor = true;
-            this.chkTotemCH4.CheckedChanged += new System.EventHandler(this.chkTotemCH4_CheckedChanged);
+            this.chkTotemCH4.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemLHW1
             // 
@@ -329,10 +340,11 @@
             this.chkTotemLHW1.Name = "chkTotemLHW1";
             this.chkTotemLHW1.Size = new System.Drawing.Size(117, 17);
             this.chkTotemLHW1.TabIndex = 16;
+            this.chkTotemLHW1.Tag = "TotemLHW1";
             this.chkTotemLHW1.Text = "Totem of the Plains";
             this.tipRestoSham.SetToolTip(this.chkTotemLHW1, "Equip: Increases spell power of Lesser Healing Wave by 79.  Only choose one.");
             this.chkTotemLHW1.UseVisualStyleBackColor = true;
-            this.chkTotemLHW1.CheckedChanged += new System.EventHandler(this.chkTotemLHW1_CheckedChanged);
+            this.chkTotemLHW1.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // chkTotemWS1
             // 
@@ -341,48 +353,12 @@
             this.chkTotemWS1.Name = "chkTotemWS1";
             this.chkTotemWS1.Size = new System.Drawing.Size(135, 17);
             this.chkTotemWS1.TabIndex = 16;
+            this.chkTotemWS1.Tag = "TotemWS1";
             this.chkTotemWS1.Text = "Totem of Thunderhead";
             this.tipRestoSham.SetToolTip(this.chkTotemWS1, "Your Water Shield ability grants an additional 27 mana each time it triggers and " +
                     "an additional 2 mana per 5 sec.  Only choose one.");
             this.chkTotemWS1.UseVisualStyleBackColor = true;
-            this.chkTotemWS1.CheckedChanged += new System.EventHandler(this.chkTotemWS1_CheckedChanged);
-            // 
-            // errorRestoSham
-            // 
-            this.errorRestoSham.ContainerControl = this;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.cboHealingStyle);
-            this.tabPage1.Controls.Add(this.label18);
-            this.tabPage1.Controls.Add(this.txtESInterval);
-            this.tabPage1.Controls.Add(this.label17);
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.txtFightLength);
-            this.tabPage1.Controls.Add(this.chkMT);
-            this.tabPage1.Controls.Add(this.chkWaterShield);
-            this.tabPage1.Controls.Add(this.chkManaTide);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.cboManaPotAmount);
-            this.tabPage1.Controls.Add(this.label7);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(204, 501);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "General";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(160, 154);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(24, 13);
-            this.label18.TabIndex = 12;
-            this.label18.Text = "sec";
+            this.chkTotemWS1.CheckedChanged += new System.EventHandler(this.Relic_CheckedChanged);
             // 
             // label17
             // 
@@ -394,6 +370,52 @@
             this.label17.Text = "Earthshield Recast:";
             this.tipRestoSham.SetToolTip(this.label17, "Set to 0 to not use.");
             // 
+            // errorRestoSham
+            // 
+            this.errorRestoSham.ContainerControl = this;
+            // 
+            // GeneralPage
+            // 
+            this.GeneralPage.Controls.Add(this.label3);
+            this.GeneralPage.Controls.Add(this.cboHealingStyle);
+            this.GeneralPage.Controls.Add(this.label18);
+            this.GeneralPage.Controls.Add(this.txtESInterval);
+            this.GeneralPage.Controls.Add(this.label17);
+            this.GeneralPage.Controls.Add(this.groupBox1);
+            this.GeneralPage.Controls.Add(this.label2);
+            this.GeneralPage.Controls.Add(this.txtFightLength);
+            this.GeneralPage.Controls.Add(this.chkMT);
+            this.GeneralPage.Controls.Add(this.chkWaterShield);
+            this.GeneralPage.Controls.Add(this.chkManaTide);
+            this.GeneralPage.Controls.Add(this.label1);
+            this.GeneralPage.Controls.Add(this.cboManaPotAmount);
+            this.GeneralPage.Controls.Add(this.label7);
+            this.GeneralPage.Location = new System.Drawing.Point(4, 22);
+            this.GeneralPage.Name = "GeneralPage";
+            this.GeneralPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GeneralPage.Size = new System.Drawing.Size(292, 579);
+            this.GeneralPage.TabIndex = 0;
+            this.GeneralPage.Text = "General";
+            this.GeneralPage.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(72, 13);
+            this.label3.TabIndex = 29;
+            this.label3.Text = "Healing Style:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(160, 154);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(24, 13);
+            this.label18.TabIndex = 12;
+            this.label18.Text = "sec";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tbOverhealing_Label);
@@ -402,7 +424,7 @@
             this.groupBox1.Controls.Add(this.tbBurst);
             this.groupBox1.Location = new System.Drawing.Point(6, 177);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(192, 153);
+            this.groupBox1.Size = new System.Drawing.Size(280, 153);
             this.groupBox1.TabIndex = 27;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Healing Style";
@@ -421,7 +443,7 @@
             this.tbOverhealing.Location = new System.Drawing.Point(6, 100);
             this.tbOverhealing.Maximum = 100;
             this.tbOverhealing.Name = "tbOverhealing";
-            this.tbOverhealing.Size = new System.Drawing.Size(179, 42);
+            this.tbOverhealing.Size = new System.Drawing.Size(268, 45);
             this.tbOverhealing.TabIndex = 4;
             this.tbOverhealing.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -439,7 +461,7 @@
             this.tbBurst.Location = new System.Drawing.Point(7, 36);
             this.tbBurst.Maximum = 100;
             this.tbBurst.Name = "tbBurst";
-            this.tbBurst.Size = new System.Drawing.Size(179, 42);
+            this.tbBurst.Size = new System.Drawing.Size(267, 45);
             this.tbBurst.TabIndex = 0;
             this.tbBurst.Scroll += new System.EventHandler(this.OnTrackBarScroll);
             // 
@@ -483,53 +505,73 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.GeneralPage);
+            this.tabControl1.Controls.Add(this.GlyphsPage);
+            this.tabControl1.Controls.Add(this.RelicsPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(212, 527);
+            this.tabControl1.Size = new System.Drawing.Size(300, 605);
             this.tabControl1.TabIndex = 14;
             this.tabControl1.Tag = "";
             // 
-            // tabPage2
+            // GlyphsPage
             // 
-            this.tabPage2.Controls.Add(this.chkGlyphCH);
-            this.tabPage2.Controls.Add(this.chkELWGlyph);
-            this.tabPage2.Controls.Add(this.chkWaterShield3);
-            this.tabPage2.Controls.Add(this.chkWaterShield2);
-            this.tabPage2.Controls.Add(this.chkLHW);
-            this.tabPage2.Controls.Add(this.chkManaTide2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(204, 501);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Glyphs";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.GlyphsPage.Controls.Add(this.groupBox3);
+            this.GlyphsPage.Controls.Add(this.groupBox2);
+            this.GlyphsPage.Location = new System.Drawing.Point(4, 22);
+            this.GlyphsPage.Name = "GlyphsPage";
+            this.GlyphsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.GlyphsPage.Size = new System.Drawing.Size(292, 579);
+            this.GlyphsPage.TabIndex = 1;
+            this.GlyphsPage.Text = "Glyphs";
+            this.GlyphsPage.UseVisualStyleBackColor = true;
             // 
-            // tabPage3
+            // groupBox3
             // 
-            this.tabPage3.Controls.Add(this.wsBox);
-            this.tabPage3.Controls.Add(this.lhwBox);
-            this.tabPage3.Controls.Add(this.chBox);
-            this.tabPage3.Controls.Add(this.hwBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(204, 501);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Relics";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.groupBox3.Controls.Add(this.chkWaterShield2);
+            this.groupBox3.Location = new System.Drawing.Point(6, 150);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(280, 45);
+            this.groupBox3.TabIndex = 31;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Minor Glyphs";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.chkELWGlyph);
+            this.groupBox2.Controls.Add(this.chkManaTide2);
+            this.groupBox2.Controls.Add(this.chkGlyphCH);
+            this.groupBox2.Controls.Add(this.chkLHW);
+            this.groupBox2.Controls.Add(this.chkWaterShield3);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(280, 138);
+            this.groupBox2.TabIndex = 30;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Major Glyphs";
+            // 
+            // RelicsPage
+            // 
+            this.RelicsPage.Controls.Add(this.wsBox);
+            this.RelicsPage.Controls.Add(this.lhwBox);
+            this.RelicsPage.Controls.Add(this.chBox);
+            this.RelicsPage.Controls.Add(this.hwBox);
+            this.RelicsPage.Location = new System.Drawing.Point(4, 22);
+            this.RelicsPage.Name = "RelicsPage";
+            this.RelicsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.RelicsPage.Size = new System.Drawing.Size(292, 579);
+            this.RelicsPage.TabIndex = 2;
+            this.RelicsPage.Text = "Relics";
+            this.RelicsPage.UseVisualStyleBackColor = true;
             // 
             // wsBox
             // 
             this.wsBox.Controls.Add(this.chkTotemWS1);
             this.wsBox.Location = new System.Drawing.Point(1, 267);
             this.wsBox.Name = "wsBox";
-            this.wsBox.Size = new System.Drawing.Size(204, 42);
+            this.wsBox.Size = new System.Drawing.Size(285, 42);
             this.wsBox.TabIndex = 27;
             this.wsBox.TabStop = false;
             this.wsBox.Text = "Water Shield Totems";
@@ -539,7 +581,7 @@
             this.lhwBox.Controls.Add(this.chkTotemLHW1);
             this.lhwBox.Location = new System.Drawing.Point(1, 219);
             this.lhwBox.Name = "lhwBox";
-            this.lhwBox.Size = new System.Drawing.Size(204, 42);
+            this.lhwBox.Size = new System.Drawing.Size(285, 42);
             this.lhwBox.TabIndex = 26;
             this.lhwBox.TabStop = false;
             this.lhwBox.Text = "Lesser Healing Wave Totems";
@@ -552,7 +594,7 @@
             this.chBox.Controls.Add(this.chkTotemCH4);
             this.chBox.Location = new System.Drawing.Point(0, 100);
             this.chBox.Name = "chBox";
-            this.chBox.Size = new System.Drawing.Size(203, 113);
+            this.chBox.Size = new System.Drawing.Size(286, 113);
             this.chBox.TabIndex = 26;
             this.chBox.TabStop = false;
             this.chBox.Text = "Chain Heal Totems";
@@ -564,19 +606,10 @@
             this.hwBox.Controls.Add(this.chkTotemHW2);
             this.hwBox.Location = new System.Drawing.Point(1, 6);
             this.hwBox.Name = "hwBox";
-            this.hwBox.Size = new System.Drawing.Size(204, 87);
+            this.hwBox.Size = new System.Drawing.Size(285, 87);
             this.hwBox.TabIndex = 25;
             this.hwBox.TabStop = false;
             this.hwBox.Text = "Healing Wave Totems";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 13);
-            this.label3.TabIndex = 29;
-            this.label3.Text = "Healing Style:";
             // 
             // CalculationOptionsPanelRestoSham
             // 
@@ -584,18 +617,21 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
             this.Name = "CalculationOptionsPanelRestoSham";
-            this.Size = new System.Drawing.Size(212, 527);
+            this.Size = new System.Drawing.Size(300, 605);
             ((System.ComponentModel.ISupportInitialize)(this.errorRestoSham)).EndInit();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.GeneralPage.ResumeLayout(false);
+            this.GeneralPage.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOverhealing)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbBurst)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
+            this.GlyphsPage.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.RelicsPage.ResumeLayout(false);
             this.wsBox.ResumeLayout(false);
             this.wsBox.PerformLayout();
             this.lhwBox.ResumeLayout(false);
@@ -613,7 +649,7 @@
         private System.Windows.Forms.ToolTip tipRestoSham;
         private System.Windows.Forms.ErrorProvider errorRestoSham;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage GeneralPage;
         private System.Windows.Forms.CheckBox chkWaterShield;
         private System.Windows.Forms.CheckBox chkManaTide;
         private System.Windows.Forms.Label label1;
@@ -625,7 +661,7 @@
         private System.Windows.Forms.CheckBox chkMT;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtFightLength;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage GlyphsPage;
         private System.Windows.Forms.CheckBox chkWaterShield2;
         private System.Windows.Forms.CheckBox chkLHW;
         private System.Windows.Forms.CheckBox chkManaTide2;
@@ -637,7 +673,7 @@
         private System.Windows.Forms.Label tbOverhealing_Label;
         private System.Windows.Forms.TrackBar tbOverhealing;
         private System.Windows.Forms.Label tbBurst_Label;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage RelicsPage;
         private System.Windows.Forms.CheckBox chkTotemHW1;
         private System.Windows.Forms.CheckBox chkTotemCH4;
         private System.Windows.Forms.CheckBox chkTotemCH3;
@@ -653,6 +689,8 @@
         private System.Windows.Forms.CheckBox chkTotemWS1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cboHealingStyle;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
 
     }
 }
