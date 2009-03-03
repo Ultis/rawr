@@ -377,20 +377,12 @@ namespace Rawr
             // Main calculation Block //
             ////////////////////////////
 
-
 			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
 				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
-			//float baseArmor = Math.Max(0f, targetArmor - stats.ArmorPenetration);
-			//float modPercentDecrease = stats.ArmorPenetrationRating / 1539.529991f;
-			//baseArmor = baseArmor * (1 - modPercentDecrease);
-			//float modArmor = 1.0f - (baseArmor / (baseArmor + 400.0f + 85.0f * (targetLevel + 4.5f * (targetLevel - 59.0f))));
-
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
-
             float hitBonus = stats.HitRating / 3278.998947f;
-            float expertiseBonus = (float)Math.Floor((stats.ExpertiseRating / 32.78998947f) * 4f) * .0025f; 
-
+            float expertiseBonus = stats.ExpertiseRating / 3278.998947f; 
             float glancingRate = 0.25f;
 
             float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS + .000001f); //fudge factor for rounding
@@ -407,33 +399,10 @@ namespace Rawr
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
             float hasteBonus = stats.HasteRating / 3278.998947f;
-            float unhastedMHSpeed = 0.0f;
-            float wdpsMH = 0.0f;
-            float unhastedOHSpeed = 0.0f;
-            float wdpsOH = 0.0f;
-            if (character != null) 
-            {
-                if (character.MainHand != null)
-                {
-                    unhastedMHSpeed = character.MainHand.Item.Speed;
-                    wdpsMH = character.MainHand.Item.DPS;
-                }
-                else // assume a base vendor weapon
-                {
-                    unhastedMHSpeed = 3.0f;
-                    wdpsMH = 46.3f;
-                }
-                if (character.OffHand != null)
-                {
-                    unhastedOHSpeed = character.OffHand.Item.Speed;
-                    wdpsOH = character.OffHand.Item.DPS;
-                }
-                else // assume a base vendor weapon
-                {
-                    unhastedOHSpeed = 3.0f;
-                    wdpsOH = 46.3f;
-                }
-            }
+            float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
+            float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
+            float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
+            float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
 
             float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
             float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
@@ -453,7 +422,7 @@ namespace Rawr
                         attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
-                    if (character.MainHandEnchant != null && character.MainHandEnchant.Id == 3789)
+                    if (character.MainHandEnchant.Id == 3789)
                     {
                         float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float berserkingUptime = 15f / timeBetweenBerserkingProcs;
@@ -473,7 +442,7 @@ namespace Rawr
                         attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
-                    if (character.OffHandEnchant != null && character.OffHandEnchant.Id == 3789)
+                    if (character.OffHandEnchant.Id == 3789)
                     {
                         float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float berserkingUptime = 15f / timeBetweenBerserkingProcs;
@@ -772,6 +741,7 @@ namespace Rawr
 			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
 			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
             statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
 			statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
             statsTotal.Intellect = intBase + (float)Math.Floor((intBase * statsBuffs.BonusIntellectMultiplier) + intBonus * (1 + statsBuffs.BonusIntellectMultiplier));
             statsTotal.Mana = statsRace.Mana + statsBuffs.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
@@ -932,6 +902,7 @@ namespace Rawr
 					Stamina = stats.Stamina,
 					HasteRating = stats.HasteRating,
 					ExpertiseRating = stats.ExpertiseRating,
+                    ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
 					BloodlustProc = stats.BloodlustProc,
 					WeaponDamage = stats.WeaponDamage,
