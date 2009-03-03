@@ -42,6 +42,7 @@ namespace Rawr.RestoSham
             chkWaterShield.Checked = options.WaterShield;
             chkMT.Checked = options.TankHeal;
             txtESInterval.Text = options.ESInterval.ToString();
+            cboHealingStyle.Text = options.HealingStyle.ToString();
             // The track bars
             tbBurst.Value = (Int32)options.BurstPercentage;
             UpdateTrackBarLabel(tbBurst);
@@ -361,6 +362,16 @@ namespace Rawr.RestoSham
             l.Text = re.Replace(l.Text, string.Format("({0}%)", trackBar.Value));
         }
         #endregion
+        #region Combo Box Handling
+        private void cboHealingStyle_TextChanged(object sender, EventArgs e)
+        {
+            if (!_bLoading)
+            {
+                this["HealingStyle"] = cboHealingStyle.Text;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        #endregion
     }
 
     #region Calculations, do not edit.
@@ -432,9 +443,14 @@ namespace Rawr.RestoSham
         public float ESInterval = 60f;
 
         /// <summary>
+        /// Your style of healing.
+        /// </summary>
+        public string HealingStyle = "LHW Spam";
+
+        /// <summary>
         /// The percentage of healing that is intended to be burst.
         /// </summary>
-        public float BurstPercentage = 25f;
+        public float BurstPercentage = 85f;
 
         /// <summary>
         /// The percentage of healing that is overhealing.
