@@ -276,7 +276,6 @@ namespace Rawr
         #endregion
         #region Added by Rawr.Tankadin
         JudgementBlockValue,
-        HammerOfTheRighteousMultiplier,
         DivineProtectionDurationBonus,
         #endregion
         #region Warlock set bonuses
@@ -340,7 +339,8 @@ namespace Rawr
         DamageTakenMultiplier,
         #region Added by Rawr.Elemental
         BonusLavaBurstDamage,
-        #endregion
+        #endregion        
+        HammerOfTheRighteousMultiplier,
         #region Warlock set bonuses
         CorruptionTriggersCrit,
         #endregion
@@ -1241,6 +1241,14 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDuration]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRipDuration] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Divine Protection Duration Bonus")]
+        public float DivineProtectionDurationBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2590,6 +2598,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hammer of the Righteous Damage")]
+        public float HammerOfTheRighteousMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
