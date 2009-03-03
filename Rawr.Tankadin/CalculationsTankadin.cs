@@ -469,7 +469,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
             stats.Defense += character.StatConversion.GetDefenseFromRating(stats.DefenseRating);
-            stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
+            stats.BlockValue = (float)Math.Round((stats.BlockValue + (5f / 9f * stats.JudgementBlockValue) + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
             stats.Block += .05f + stats.Defense * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
 
             float fullDodge = stats.Defense * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
@@ -525,7 +525,9 @@ you are being killed by burst damage, focus on Survival Points.",
                 SpellCrit = stats.SpellCrit,
                 ArmorPenetration = stats.ArmorPenetration,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
-                WeaponDamage = stats.WeaponDamage
+                WeaponDamage = stats.WeaponDamage,
+                JudgementBlockValue = stats.JudgementBlockValue,
+                ConsecrationSpellPower = stats.ConsecrationSpellPower
             };
         }
 
@@ -535,7 +537,7 @@ you are being killed by burst damage, focus on Survival Points.",
                 stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier + stats.BonusHolyDamageMultiplier +
                 stats.Miss + stats.Resilience + stats.Stamina + stats.ParryRating + stats.BlockRating + stats.BlockValue + stats.BaseArmorMultiplier +
                 stats.SpellHitRating + stats.SpellPower + stats.HitRating + stats.ExpertiseRating + stats.ArmorPenetrationRating + stats.ArmorPenetration + stats.WeaponDamage + stats.Strength +
-                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit + stats.DamageTakenMultiplier) != 0;
+                stats.AttackPower + stats.ThreatIncreaseMultiplier + stats.CritRating + stats.PhysicalCrit + stats.SpellCrit + stats.DamageTakenMultiplier + stats.JudgementBlockValue + stats.ConsecrationSpellPower) != 0;
         }
     }
 
