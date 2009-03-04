@@ -112,8 +112,9 @@ namespace Rawr.Tankadin
             dict.Add("Spell Damage", BasicStats.SpellPower.ToString());            
             dict.Add("Expertise", BasicStats.Expertise.ToString());
             dict.Add("Block Value", BlockValue.ToString());
-			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 2)));
-			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 2)));
+			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 3)));
+			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 3)));
+			//dict.Add("Dodge", string.Format("{0}%", Dodge * 100f));
 			dict.Add("Parry", string.Format("{0}%", Math.Round(Parry * 100f, 2)));
 			dict.Add("Block", string.Format("{0}%", Math.Round(Block * 100f, 2)));
 			dict.Add("Crit", string.Format("{0}%", Math.Round(Crit * 100f, 2)));

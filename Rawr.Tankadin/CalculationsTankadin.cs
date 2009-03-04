@@ -249,6 +249,11 @@ you are being killed by burst damage, focus on Survival Points.",
             return .01f / (1 / 47.003525644f + .00956f / parry);
         }
 
+        private float DRMiss(float miss)
+        {
+            if (miss <= 0) return 0;
+            return .01f / (1 / 16f + .00956f / miss);
+        }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
@@ -265,7 +270,8 @@ you are being killed by burst damage, focus on Survival Points.",
             float defDif = (targetLevel - 80) * .002f;
             cs.Defense = stats.Defense;
             cs.Resilience = stats.Resilience;
-            cs.Miss = Math.Min(1f, .04f + cs.Defense * .0004f - defDif);
+            //cs.Miss = Math.Min(1f, .05f + cs.Defense * .0004f - defDif);
+            cs.Miss = Math.Min(1f, stats.Miss - defDif);
             cs.Dodge = Math.Min(1f - cs.Miss, stats.Dodge - defDif);
             cs.Parry = Math.Min(1f - cs.Miss - cs.Dodge, stats.Parry - defDif);
             cs.Avoidance = cs.Miss + cs.Dodge + cs.Parry;
@@ -440,6 +446,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsRace.AttackPower = 190f;
             statsRace.Health = 6754f;
             statsRace.Mana = 4114;
+            // statsRace.Miss = 0.05f;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
@@ -474,11 +481,13 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float fullDodge = stats.Defense * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
                 + character.StatConversion.GetDodgeFromRating(stats.DodgeRating) * .01f;
-            stats.Dodge = stats.Dodge + character.PaladinTalents.Anticipation * .01f + character.StatConversion.GetDodgeFromAgility(statsRace.Agility) * .01f
+            stats.Dodge = statsRace.Dodge + character.PaladinTalents.Anticipation * .01f + character.StatConversion.GetDodgeFromAgility(statsRace.Agility)
                 + DRDodge(fullDodge);
 
             float fullParry = stats.Defense * .0004f + character.StatConversion.GetParryFromRating(stats.ParryRating) * .01f;
             stats.Parry = stats.Parry + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
+            
+            stats.Miss = .05f + DRMiss(stats.DefenseRating / 12300f);
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight;
             return stats;
