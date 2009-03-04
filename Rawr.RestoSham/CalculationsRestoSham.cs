@@ -76,11 +76,11 @@ namespace Rawr.RestoSham
 						RedId = Runed[1], YellowId = Reckless[1], BlueId = Energized[1], PrismaticId = Quick[1], MetaId = Ember },
 					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
 						RedId = Runed[1], YellowId = Potent[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
 						RedId = Potent[1], YellowId = Smooth[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", 
 						RedId = Reckless[1], YellowId = Quick[1], BlueId = Energized[1], PrismaticId = Quick[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
+					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", 
 						RedId = Luminous[1], YellowId = Brilliant[1], BlueId = Dazzling[1], PrismaticId = Brilliant[1], MetaId = Ember },
 
 
@@ -181,8 +181,7 @@ namespace Rawr.RestoSham
         {
             get
             {
-                return new string[]{"Time to OOM",
-                                      "Stat Relative Weights"};
+                return new string[]{"Stat Relative Weights"};
             }
         }
 
@@ -279,8 +278,10 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             float mp5 = stats.Mp5;
             mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
-            calcStats.TotalManaPool = stats.Mana + onUse + (mp5 * (60f / 5f) * options.FightLength) +
-                ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * (options.BurstPercentage * .01f));
+            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * (stats.Mana * (.24f + 
+                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) + stats.Mana + onUse + (mp5 * (60f / 5f) * 
+                options.FightLength) + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * 
+                (options.BurstPercentage * .01f));
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit +
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes +
@@ -291,11 +292,8 @@ namespace Rawr.RestoSham
             #endregion
             #region Water Shield and Mana Calculations
             float WSC = (float)Math.Max((1.6 * (1 - (stats.HasteRating / 3279))), 1.1f);
-            float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease));
+            float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (options.TotemWS1 ? 27 : 0);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
-            if (options.ManaTideEveryCD)
-                onUse += (((float)Math.Truncate(options.FightLength / 5.025f) + 1) *
-                    (stats.Mana * (.24f + ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem;
             #endregion
             #region Non-stat based static Calcs
             float Time = (options.FightLength * 60f);
@@ -335,9 +333,9 @@ namespace Rawr.RestoSham
             #endregion
             #region Chain Heal Calculations
             float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
-            float CHMana = (((835 - (TotemCH2 + TotemCH4)) * (1f - ((character.ShamanTalents.TidalFocus) * .01f))));
+            float CHMana = (((835 - (TotemCH1 + TotemCH3)) * (1f - ((character.ShamanTalents.TidalFocus) * .01f))));
             float CHCast = (float)Math.Max((2.6 * (1 - (stats.HasteRating / 3279))), 1.1f);
-            float CHHeal = ((((((1130 + TotemCH1 + TotemCH3) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) *
+            float CHHeal = ((((((1130 + TotemCH2 + TotemCH4) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) *
                 (1f + ((character.ShamanTalents.Purification) * .02f))) * Critical) * TankCH)  + (ExtraELW * ELWHPS * CHCast / 2f)) * (1f + stats.CHHWHealIncrease);
             float CHHPS = CHHeal / CHCast;
             float CHMPS = CHMana / CHCast;
