@@ -285,7 +285,6 @@ namespace Rawr
             float staticShockChance = .02f * character.ShamanTalents.StaticShock;
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
-            float windfuryTotemHaste = .16f + (.02f * character.ShamanTalents.ImprovedWindfuryTotem);
             float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
@@ -330,8 +329,9 @@ namespace Rawr
             }
 
             // glyph stuff
-            float spellCritModifier = calcOpts.GlyphFT && (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue") ? .02f : 0f;
-
+            float spellCritModifier = stats.SpellCrit;
+            spellCritModifier += (calcOpts.GlyphFT && (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue")) ? .02f : 0f;
+            
             //totem procs
             stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
             stats.HasteRating += stats.TotemSSHaste * 6f / (10f - character.ShamanTalents.ImprovedStormstrike);
@@ -372,22 +372,26 @@ namespace Rawr
 				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
-            float hitBonus = stats.HitRating / 3278.998947f;
+            float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
             float expertiseBonus = stats.ExpertiseRating / 3278.998947f; 
             float glancingRate = 0.25f;
 
+            float meleeCritModifier = stats.PhysicalCrit;
             float baseMeleeCrit = (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS;
-            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * baseMeleeCrit + .000001f); //fudge factor for rounding
+            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
-            float hitBonusSpell = stats.HitRating / 2623.199272f;
+            float hitBonusSpell = stats.SpellHit + (stats.HitRating / 2623.199272f);
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float baseSpellCrit = (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS;
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
-            float bonusDamage = stats.BonusDamageMultiplier;
+            float bonusSpellDamage = stats.BonusDamageMultiplier;
+            float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
+            float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
+            float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
@@ -397,8 +401,8 @@ namespace Rawr
             float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
             float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
 
-            float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
-            float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + windfuryTotemHaste);
+            float baseHastedMHSpeed = unhastedMHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
+            float baseHastedOHSpeed = unhastedOHSpeed / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
 
             if (stats.MongooseProc > 0 | stats.BerserkingProc > 0)
             {
@@ -519,16 +523,16 @@ namespace Rawr
             float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
             float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances)
-                        * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusDamage);
+                        * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
             //2: Stormstrike DPS
             float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
             float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusDamage);
+            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage);
 
             //3: Lavalash DPS
-            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f * (1 - chanceYellowMiss) * (1 + bonusDamage); //and no armor reduction yeya!
+            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f * (1 - chanceYellowMiss) * (1 + bonusFireDamage); //and no armor reduction yeya!
             if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "Flametongue")
                 dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
 
@@ -539,14 +543,14 @@ namespace Rawr
             float coefES = .3858f;
             float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * spellDamage);
             float hitRollMultiplier = (1 - chanceSpellMiss) + chanceSpellCrit * (critMultiplierSpell - 1);
-            float dpsES = (hitRollMultiplier * damageES / shockSpeed) * (1 + bonusDamage);
+            float dpsES = (hitRollMultiplier * damageES / shockSpeed) * (1 + bonusNatureDamage);
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
-            float dpsLB = (hitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusDamage);
+            float dpsLB = (hitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
             if (stats.PendulumOfTelluricCurrentsProc > 0)
@@ -555,14 +559,14 @@ namespace Rawr
             //6: Windfury DPS
             float damageWFHit = damageMHSwing + (windfuryWeaponBonus * unhastedMHSpeed / 14);
             float dpsWF = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageWFHit * weaponMastery * hitsPerSWF
-                        * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusDamage);
+                        * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusPhysicalDamage);
 
             //7: Lightning Shield DPS
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
             float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
-            float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusDamage);
+            float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage);
             if (calcOpts.GlyphLS)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
@@ -570,7 +574,7 @@ namespace Rawr
             float damageSTBase = 105;
             float damageSTCoef = .1667f;
             float damageST = damageSTBase + damageSTCoef * totemBonus;
-            float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusDamage);
+            float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusFireDamage);
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
@@ -580,11 +584,11 @@ namespace Rawr
                 // however that figure "varies according to weapon speed"
                 float damageFTCoef = .1f;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage + stats.BonusFlametongueDamage;
-                dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusDamage);
+                dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
-            float dpsDogs = ((375f + .3f * APDPS) * (45f / 180f)) * (1 + bonusDamage); 
+            float dpsDogs = ((375f + .3f * APDPS) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
             #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
@@ -879,6 +883,9 @@ namespace Rawr
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                    BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
+                    BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                    BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                     Health = stats.Health,
                     Mana = stats.Mana,
 					ExposeWeakness = stats.ExposeWeakness,
@@ -901,7 +908,13 @@ namespace Rawr
                     SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                     SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
                     SpellPowerFor10SecOnHit_10_45 = stats.SpellPowerFor10SecOnHit_10_45,
-                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc
+                    PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
+                    PhysicalHit = stats.PhysicalHit,
+                    PhysicalHaste = stats.PhysicalHaste,
+                    PhysicalCrit = stats.PhysicalCrit,
+                    SpellHit = stats.SpellHit,
+                    SpellHaste = stats.SpellHaste,
+                    SpellCrit = stats.SpellCrit
 				};
 		}
 
@@ -919,7 +932,9 @@ namespace Rawr
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
                 stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusFlametongueDamage +
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 +
-                stats.SpellPowerFor10SecOnHit_10_45 + stats.PendulumOfTelluricCurrentsProc) > 0;
+                stats.SpellPowerFor10SecOnHit_10_45 + stats.PendulumOfTelluricCurrentsProc + stats.PhysicalCrit + 
+                stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste +
+                stats.BonusPhysicalDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0;
         }
         #endregion
     }
