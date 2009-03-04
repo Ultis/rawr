@@ -455,8 +455,9 @@ namespace Rawr
             float flurryUptime = 1f;
             float edUptime = 0f;
             float urUptime = 0f;
-            float hastedMHSpeed = baseHastedMHSpeed;
-            float hastedOHSpeed = baseHastedOHSpeed;
+            float bloodlustHaste = 1 + (calcOpts.BloodlustUptime * stats.Bloodlust);
+            float hastedMHSpeed = baseHastedMHSpeed / bloodlustHaste;
+            float hastedOHSpeed = baseHastedOHSpeed / bloodlustHaste;
             float hitsPerSMHSS = (1f - chanceYellowMiss) /stormstrikeSpeed;
             float hitsPerSOHSS = (hitsPerSMHSS - chanceYellowMiss) / stormstrikeSpeed; //OH only swings if MH connects
             float hitsPerSLL = (1f - chanceYellowMiss) / 6f;
@@ -472,8 +473,8 @@ namespace Rawr
             float hitsPerSWF = 0f;
             for (int i = 0; i < 5; i++)
             {
-                hastedMHSpeed = baseHastedMHSpeed / (1f + (flurryUptime * flurryHasteBonus));
-                hastedOHSpeed = baseHastedOHSpeed / (1f + (flurryUptime * flurryHasteBonus));
+                hastedMHSpeed = baseHastedMHSpeed / (1f + (flurryUptime * flurryHasteBonus)) / bloodlustHaste;
+                hastedOHSpeed = baseHastedOHSpeed / (1f + (flurryUptime * flurryHasteBonus)) / bloodlustHaste;
                 swingsPerSMHMelee = 1f / hastedMHSpeed;
                 swingsPerSOHMelee = 1f / hastedOHSpeed;
                 //Flat Windfury Society
@@ -862,15 +863,13 @@ namespace Rawr
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
-					BloodlustProc = stats.BloodlustProc,
-                    MongooseProc = stats.MongooseProc,
+					MongooseProc = stats.MongooseProc,
                     BerserkingProc = stats.BerserkingProc,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 					BonusCritMultiplier = stats.BonusCritMultiplier,
 					BonusDamageMultiplier = stats.BonusDamageMultiplier,
-					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
@@ -901,9 +900,9 @@ namespace Rawr
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.Intellect +
+			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
+				stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + 
 				stats.Strength + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating +
 				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
