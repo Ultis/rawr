@@ -263,12 +263,12 @@ namespace Rawr
 
         #region Main Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
-		{
-			//_cachedCharacter = character;
+        {
+            #region Applied Stats
+            //_cachedCharacter = character;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             int targetLevel = calcOpts.TargetLevel;
             float targetArmor = calcOpts.TargetArmor;
-            float exposeWeaknessAPValue = calcOpts.ExposeWeaknessAPValue;
             float bloodlustUptime = calcOpts.BloodlustUptime;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
@@ -356,44 +356,37 @@ namespace Rawr
                     else
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
             }
-            if (stats.HasteRatingFor20SecOnUse2Min > 0)
-            {
-                stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
-            }
-            if (stats.SpellHasteFor10SecOnCast_10_45 > 0)
-            {
-                stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
-            }
-            if (stats.SpellPowerFor10SecOnCast_15_45 > 0)
-            {
-                stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
-            }
-            if (stats.SpellPowerFor10SecOnHit_10_45 > 0)
-            {
-                stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
-            }
+            stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
+            stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
+            stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
+            stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
+            stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
+            #endregion
 
             ////////////////////////////
             // Main calculation Block //
             ////////////////////////////
 
-			float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
+			#region Damage Model
+            float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
 				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
-            float attackPower = stats.AttackPower + (stats.ExposeWeakness * exposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
+            float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.HitRating / 3278.998947f;
             float expertiseBonus = stats.ExpertiseRating / 3278.998947f; 
             float glancingRate = 0.25f;
 
-            float chanceCrit = Math.Min(0.75f, (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS + .000001f); //fudge factor for rounding
+            float baseMeleeCrit = (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS;
+            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * baseMeleeCrit + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
             float hitBonusSpell = stats.HitRating / 2623.199272f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float chanceSpellCrit = Math.Min(0.75f, (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS + spellCritModifier + .000001f); //fudge factor for rounding
-            float spellDamage = stats.SpellPower;
+            float baseSpellCrit = (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS;
+            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
+            float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
 
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
@@ -506,7 +499,9 @@ namespace Rawr
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
+            #endregion
 
+            #region Individual DPS
             //1: Melee DPS
             float APDPS = attackPower / 14;
             float adjustedMHDPS = wdpsMH + APDPS;
@@ -540,15 +535,15 @@ namespace Rawr
             float stormstrikeMultiplier = 1.2f + ssGlyphBonus;
             float damageESBase = 872f;
             float coefES = .3858f;
-            float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * stats.SpellPower);
+            float damageES = stormstrikeMultiplier * spellMultiplier * (damageESBase + coefES * spellDamage);
             float hitRollMultiplier = (1 - chanceSpellMiss) + chanceSpellCrit * (critMultiplierSpell - 1);
             float dpsES =  hitRollMultiplier * damageES / shockSpeed;
 
             //5: Lightning Bolt DPS
             float damageLBBase = 765f;
             float coefLB = .7143f;
-            // stats.LightningSpellPower is for totem of hex/the void/ancestral guidance
-            float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (stats.SpellPower + stats.LightningSpellPower));
+            // LightningSpellPower is for totem of hex/the void/ancestral guidance
+            float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
             float dpsLB = hitRollMultiplier * damageLB / secondsToFiveStack;
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -563,7 +558,7 @@ namespace Rawr
             float staticShockProcsPerS = (hitsPerSMH + hitsPerSOH) * staticShockChance;
             float damageLSBase = 380;
             float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
-            float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * stats.SpellPower);
+            float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
             float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS;
             if (calcOpts.GlyphLS)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
@@ -578,11 +573,12 @@ namespace Rawr
             float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
                                                     // however that figure "varies according to weapon speed"
             float damageFTCoef = .1f;
-            float damageFT = damageFTBase + damageFTCoef * stats.SpellPower;
+            float damageFT = damageFTBase + damageFTCoef * spellDamage;
             float dpsFT = hitRollMultiplier * damageFT * hitsPerSOH;
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             float dpsDogs = (375f + .3f * APDPS) * (45f / 180f); 
+            #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
 			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
@@ -729,24 +725,20 @@ namespace Rawr
             float staBase = (float)Math.Floor(statsRace.Stamina);  // need to add mining bonus if have profession
 			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
 						
-			Stats statsTotal = new Stats();
-			statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
+			Stats statsTotal = GetRelevantStats(statsRace + statsGearEnchantsBuffs);
+            statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
 			statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
-            statsTotal.Agility = agiBase + (float)Math.Floor((agiBase * statsBuffs.BonusAgilityMultiplier) + agiBonus * (1 + statsBuffs.BonusAgilityMultiplier));
-			statsTotal.Strength = strBase + (float)Math.Floor((strBase * statsBuffs.BonusStrengthMultiplier) + strBonus * (1 + statsBuffs.BonusStrengthMultiplier));
-			statsTotal.Stamina = staBase + (float)Math.Round((staBase * statsBuffs.BonusStaminaMultiplier) + staBonus * (1 + statsBuffs.BonusStaminaMultiplier));
-			statsTotal.Resilience = statsRace.Resilience + statsGearEnchantsBuffs.Resilience;
-            statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
-            statsTotal.ArmorPenetration = statsGearEnchantsBuffs.ArmorPenetration;
-			statsTotal.ArmorPenetrationRating = statsRace.ArmorPenetrationRating + statsGearEnchantsBuffs.ArmorPenetrationRating;
-            statsTotal.Intellect = intBase + (float)Math.Floor((intBase * statsBuffs.BonusIntellectMultiplier) + intBonus * (1 + statsBuffs.BonusIntellectMultiplier));
-            statsTotal.Mana = statsRace.Mana + statsBuffs.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
-            statsTotal.Spirit = statsRace.Spirit + statsBuffs.Spirit + statsGearEnchantsBuffs.Spirit;
-
+            statsTotal.Agility = (float)Math.Floor((agiBase + agiBonus) * (1 + statsBuffs.BonusAgilityMultiplier));
+			statsTotal.Strength = (float)Math.Floor((strBase + strBonus) * (1 + statsBuffs.BonusStrengthMultiplier));
+			statsTotal.Stamina = (float)Math.Round((staBase + staBonus) * (1 + statsBuffs.BonusStaminaMultiplier));
+			statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Intellect = (float)Math.Floor((intBase + intBonus) * (1 + statsBuffs.BonusIntellectMultiplier));
+            statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
+           
             int MD = character.ShamanTalents.MentalDexterity;
             float intBonusToAP = 0.0f;
             switch (MD)
@@ -763,46 +755,12 @@ namespace Rawr
             }
 
             statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Agility + statsTotal.Strength + intBonusToAP) * (1f + statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.BloodlustProc = statsRace.BloodlustProc + statsGearEnchantsBuffs.BloodlustProc;
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-			
-			statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
-            statsTotal.SpellCritRating = statsRace.SpellCritRating + statsGearEnchantsBuffs.SpellCritRating;
-            statsTotal.CritMeleeRating = statsRace.CritMeleeRating + statsGearEnchantsBuffs.CritMeleeRating;
-
+						
             int MQ = character.ShamanTalents.MentalQuickness;
             statsTotal.BonusFlametongueDamage = (float) Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
-
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
-			statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
-			statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            statsTotal.HasteRatingOnPhysicalAttack = statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack;
-            statsTotal.HasteRating += statsTotal.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
-            statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
-			statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
-			statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
-			statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
-			statsTotal.ShatteredSunMightProc = statsGearEnchantsBuffs.ShatteredSunMightProc;
-            statsTotal.MongooseProc = statsGearEnchantsBuffs.MongooseProc;
-            statsTotal.BerserkingProc = statsGearEnchantsBuffs.BerserkingProc;
-
-            // totem special proc stats
-            statsTotal.LightningSpellPower = statsGearEnchantsBuffs.LightningSpellPower;
-            statsTotal.LightningBoltHasteProc_15_45 = statsGearEnchantsBuffs.LightningBoltHasteProc_15_45;
-            statsTotal.TotemSSHaste = statsGearEnchantsBuffs.TotemSSHaste;
-            statsTotal.TotemLLAttackPower = statsGearEnchantsBuffs.TotemLLAttackPower;
-            statsTotal.TotemShockAttackPower = statsGearEnchantsBuffs.TotemShockAttackPower;
-            statsTotal.TotemShockSpellPower = statsGearEnchantsBuffs.TotemShockSpellPower;
-            statsTotal.TotemWFAttackPower = statsGearEnchantsBuffs.TotemWFAttackPower;
-            
-            // Trinket special procs
-            statsTotal.GreatnessProc = statsGearEnchantsBuffs.GreatnessProc;
-            statsTotal.HasteRatingFor20SecOnUse2Min = statsGearEnchantsBuffs.HasteRatingFor20SecOnUse2Min;
-            statsTotal.SpellHasteFor10SecOnCast_10_45 = statsGearEnchantsBuffs.SpellHasteFor10SecOnCast_10_45;
-            statsTotal.SpellPowerFor10SecOnCast_15_45 = statsGearEnchantsBuffs.SpellPowerFor10SecOnCast_15_45;
-            statsTotal.SpellPowerFor10SecOnHit_10_45 = statsGearEnchantsBuffs.SpellPowerFor10SecOnHit_10_45;
-            statsTotal.PendulumOfTelluricCurrentsProc = statsGearEnchantsBuffs.PendulumOfTelluricCurrentsProc;
-			return statsTotal;
+            return statsTotal;
 		}
         #endregion
 
@@ -905,6 +863,8 @@ namespace Rawr
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
 					BloodlustProc = stats.BloodlustProc,
+                    MongooseProc = stats.MongooseProc,
+                    BerserkingProc = stats.BerserkingProc,
 					WeaponDamage = stats.WeaponDamage,
 					BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
 					BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
@@ -912,27 +872,17 @@ namespace Rawr
 					BonusDamageMultiplier = stats.BonusDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
+                    BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                     Health = stats.Health,
+                    Mana = stats.Mana,
 					ExposeWeakness = stats.ExposeWeakness,
 					Bloodlust = stats.Bloodlust,
 					ShatteredSunMightProc = stats.ShatteredSunMightProc,
-					ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
-                    SpellPower = stats.SpellPower,
+					SpellPower = stats.SpellPower,
                     SpellCritRating = stats.SpellCritRating,
                     CritMeleeRating = stats.CritMeleeRating,
-					AllResist = stats.AllResist,
-					ArcaneResistance = stats.ArcaneResistance,
-					NatureResistance = stats.NatureResistance,
-					FireResistance = stats.FireResistance,
-					FrostResistance = stats.FrostResistance,
-					ShadowResistance = stats.ShadowResistance,
-					ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
-					NatureResistanceBuff = stats.NatureResistanceBuff,
-					FireResistanceBuff = stats.FireResistanceBuff,
-					FrostResistanceBuff = stats.FrostResistanceBuff,
-					ShadowResistanceBuff = stats.ShadowResistanceBuff,
-                    LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
+					LightningBoltHasteProc_15_45 = stats.LightningBoltHasteProc_15_45,
                     LightningSpellPower = stats.LightningSpellPower,
                     TotemLLAttackPower = stats.TotemLLAttackPower,
                     TotemShockAttackPower = stats.TotemShockAttackPower,
@@ -940,6 +890,7 @@ namespace Rawr
                     TotemSSHaste = stats.TotemSSHaste,
                     TotemWFAttackPower = stats.TotemWFAttackPower,
                     GreatnessProc = stats.GreatnessProc,
+                    HasteRatingOnPhysicalAttack = stats.HasteRatingOnPhysicalAttack,
                     HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                     SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
                     SpellPowerFor10SecOnCast_15_45 = stats.SpellPowerFor10SecOnCast_15_45,
@@ -953,16 +904,14 @@ namespace Rawr
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.Intellect +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + stats.HitRating + stats.Stamina +
-				stats.Strength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
-				stats.ShatteredSunMightProc + stats.SpellPower +
-				stats.BonusSpellPowerMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
-				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
-				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + 
-                stats.ShadowResistanceBuff + stats.LightningSpellPower + stats.LightningBoltHasteProc_15_45 +
-				stats.TotemWFAttackPower + stats.TotemSSHaste + stats.TotemShockSpellPower + stats.TotemShockAttackPower +
-                stats.TotemLLAttackPower + stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min +
+				stats.HasteRating + stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + 
+				stats.Strength + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating +
+				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
+                stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
+                stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + 
+                stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
+                stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
+                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min +
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 +
                 stats.SpellPowerFor10SecOnHit_10_45 + stats.PendulumOfTelluricCurrentsProc) > 0;
         }
