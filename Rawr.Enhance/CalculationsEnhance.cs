@@ -529,7 +529,7 @@ namespace Rawr
 
             //3: Lavalash DPS
             float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f * (1 - chanceYellowMiss) * (1 + bonusDamage); //and no armor reduction yeya!
-            if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "flametongue")
+            if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "Flametongue")
                 dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
 
             //4: Earth Shock DPS
@@ -573,11 +573,15 @@ namespace Rawr
             float dpsST = (hitRollMultiplier * damageST / 2) * (1 + bonusDamage);
 
             //9: Flametongue Weapon DPS
-            float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
-                                                    // however that figure "varies according to weapon speed"
-            float damageFTCoef = .1f;
-            float damageFT = damageFTBase + damageFTCoef * spellDamage + stats.BonusFlametongueDamage;
-            float dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusDamage);
+            float dpsFT = 0f;
+            if (calcOpts.MainhandImbue == "Flametongue" | calcOpts.OffhandImbue == "Flametongue")
+            {
+                float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
+                // however that figure "varies according to weapon speed"
+                float damageFTCoef = .1f;
+                float damageFT = damageFTBase + damageFTCoef * spellDamage + stats.BonusFlametongueDamage;
+                dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusDamage);
+            } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             float dpsDogs = ((375f + .3f * APDPS) * (45f / 180f)) * (1 + bonusDamage); 
