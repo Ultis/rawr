@@ -8,14 +8,14 @@ namespace Rawr.Enhance
 {
     public class EnhSim
     {
-        private String _configText = null;
-        private String _metagem = null;
-        private String _mhEnchant = null;
-        private String _ohEnchant = null;
-        private String _trinket1name = null;
-        private String _trinket2name = null;
-        private String _totemname = null;
-
+        private String _configText = String.Empty;
+        private String _metagem = String.Empty;
+        private String _mhEnchant = String.Empty;
+        private String _ohEnchant = String.Empty;
+        private String _trinket1name = String.Empty;
+        private String _trinket2name = String.Empty;
+        private String _totemname = String.Empty;
+      
         public EnhSim(Character character)
         {
             CalculationsEnhance ce = new CalculationsEnhance();
@@ -68,9 +68,8 @@ namespace Rawr.Enhance
                 weaponType = "axe";
             sb.AppendLine("mh_weapon                       " + weaponType);
             sb.AppendLine("oh_enchant                      " + _ohEnchant);
-            if (character.OffHand == null)
-                weaponType = "-";
-            else
+            weaponType = "-";
+            if (character.OffHand != null)
             {
                 if (character.OffHand.Type == Item.ItemType.OneHandAxe)
                     weaponType = "axe";
@@ -83,8 +82,8 @@ namespace Rawr.Enhance
             sb.AppendLine("trinket2                        " + _trinket2name);
             sb.AppendLine();
             sb.AppendLine("totem                           " + _totemname); 
-            sb.AppendLine("set_bonus                       - # not yet implemented in Rawr Export"); 
-            sb.AppendLine("metagem                         - # not yet implemented in Rawr Export" ); 
+            sb.AppendLine("set_bonus                       " + getSetBonus(character)); 
+            sb.AppendLine("metagem                         " + _metagem); 
             sb.AppendLine();
 
             addGlyphs(calcOpts, sb);
@@ -205,9 +204,25 @@ namespace Rawr.Enhance
             stats.ArmorPenetrationRating = (float)Math.Ceiling(stats.ArmorPenetrationRating);
         }
 
-        private String adjustMetaGemStats(ItemInstance gem, Stats stats)
+        private String adjustMetaGemStats(ItemInstance head, Stats stats)
         {
-            return "-";
+            switch (head.Gem1Id)
+            {
+                case 32409 :
+                    return "relentless_earthstorm_diamond";
+                case 32410 :
+                    return "thundering_skyfire_diamond";
+                case 34220 :
+                    return "chaotic_skyfire_diamond";
+                case 41285 :
+                    return "chaotic_skyflare_diamond";
+                case 41333 :
+                    return "ember_skyflare_diamond";
+                case 41398 :
+                    return "relentless_earthsiege_diamond";
+                default:
+                    return "-";
+            }
         }
 
         private String adjustWeaponEnchantStats(Enchant enchant, Stats stats)
@@ -400,6 +415,11 @@ namespace Rawr.Enhance
                 default:
                     return "-";
             }
+        }
+
+        private String getSetBonus(Character character)
+        {
+            return "- # Not yet implemented in Rawr.Enhance model";
         }
     }
 }
