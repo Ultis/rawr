@@ -294,7 +294,7 @@ namespace Rawr.Retribution
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * spellPowerMulti * talentMulti * partialResist * judgeCrit;
-            calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / 7f;
+            calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / (8f - stats.JudgementCDReduction);
             #endregion
 
             #region Consecration
@@ -323,8 +323,9 @@ namespace Rawr.Retribution
             calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge) / fightLength;
             #endregion
 
-            calc.OverallPoints = calc.DPSPoints = calc.WhiteDPS + calc.SealDPS + (judgeAvgHit * sol.Judgement + csAvgHit * sol.CrusaderStrike +
-                dsAvgHit * sol.DivineStorm + exoAvgHit * sol.Exorcism + consAvgHit * sol.Consecration + howAvgHit * sol.HammerOfWrath) / fightLength;
+            calc.OverallPoints = calc.DPSPoints = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * sol.Judgement + 
+                csAvgHit * sol.CrusaderStrike + (dsAvgHit + dsRightVen) * sol.DivineStorm + exoAvgHit * sol.Exorcism +
+                consAvgHit * sol.Consecration + howAvgHit * sol.HammerOfWrath) / fightLength;
 
             return calc;
         }
@@ -353,10 +354,10 @@ namespace Rawr.Retribution
                     statsRace = new Stats() { Strength = 19f, Agility = 22f, Stamina = 20f, Intellect = 24f, Spirit = 20f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 23f, Agility = 17f, Stamina = 21f, Intellect = 21f, Spirit = 20f, PhysicalHit = .01f, SpellHit = .01f };
+                    statsRace = new Stats() { Strength = 23f, Agility = 17f, Stamina = 21f, Intellect = 21f, Spirit = 20f };
                     break;
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f, BonusSpiritMultiplier = 0.1f, };
+                    statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f };
                     //Expertise for Humans
                     if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.TwoHandMace || character.MainHand.Type == Item.ItemType.TwoHandSword))
                         statsRace.Expertise = 3f;
@@ -383,7 +384,6 @@ namespace Rawr.Retribution
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
             Stats stats = statsBaseGear + statsBuffs + statsRace;
-            Stats statsOther = statsBaseGear + statsBuffs;
 
             Rotation rot = new Rotation(calcOpts.Priorities, fightLength, calcOpts.TimeUnder20, stats.JudgementCDReduction > 0 ? true : false, calcOpts.GlyphConsecration);
             RotationSolution sol = RotationSimulator.SimulateRotation(rot);
@@ -391,14 +391,12 @@ namespace Rawr.Retribution
             float berserkingAP = stats.BerserkingProc * 140f;
 
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
-            stats.Strength = (float)Math.Floor((statsOther.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
+            stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             float libramAP = stats.APCrusaderStrike_6 * 6f * sol.CrusaderStrike / fightLength;
-            stats.AttackPower = (float)Math.Floor((stats.AttackPower + berserkingAP +libramAP + stats.Strength * 2)
-                * (1 + stats.BonusAttackPowerMultiplier));
-            stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
-            stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
-                + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
-            stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
+            stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
+            stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
+            stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
+            stats.Health = stats.Health + stats.Stamina * 10;
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f;
