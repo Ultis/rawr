@@ -56,13 +56,6 @@ namespace Rawr.RestoSham
 						RedId = Runed[0], YellowId = Reckless[0], BlueId = Energized[0], PrismaticId = Quick[0], MetaId = Ember },
 					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //SP Crit
 						RedId = Runed[0], YellowId = Potent[0], BlueId = Sundered[0], PrismaticId = Smooth[0], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //Max Crit
-						RedId = Potent[0], YellowId = Smooth[0], BlueId = Sundered[0], PrismaticId = Smooth[0], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //Max Haste
-						RedId = Reckless[0], YellowId = Quick[0], BlueId = Energized[0], PrismaticId = Quick[0], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", //Max Int
-						RedId = Luminous[0], YellowId = Brilliant[0], BlueId = Dazzling[0], PrismaticId = Brilliant[0], MetaId = Ember },
-
 
 					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
 						RedId = Runed[1], YellowId = Runed[1], BlueId = Runed[1], PrismaticId = Runed[1], MetaId = Ember },
@@ -76,13 +69,6 @@ namespace Rawr.RestoSham
 						RedId = Runed[1], YellowId = Reckless[1], BlueId = Energized[1], PrismaticId = Quick[1], MetaId = Ember },
 					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true,
 						RedId = Runed[1], YellowId = Potent[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare",
-						RedId = Potent[1], YellowId = Smooth[1], BlueId = Sundered[1], PrismaticId = Smooth[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", 
-						RedId = Reckless[1], YellowId = Quick[1], BlueId = Energized[1], PrismaticId = Quick[1], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Rare", 
-						RedId = Luminous[1], YellowId = Brilliant[1], BlueId = Dazzling[1], PrismaticId = Brilliant[1], MetaId = Ember },
-
 
 					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Max Spellpower
 						RedId = Runed[2], YellowId = Runed[2], BlueId = Runed[2], PrismaticId = Runed[2], MetaId = Ember },
@@ -96,13 +82,6 @@ namespace Rawr.RestoSham
 						RedId = Runed[2], YellowId = Reckless[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Ember },
 					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //SP Crit
 						RedId = Runed[2], YellowId = Potent[2], BlueId = Sundered[2], PrismaticId = Smooth[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Max Crit
-						RedId = Potent[2], YellowId = Smooth[2], BlueId = Sundered[2], PrismaticId = Smooth[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Max Haste
-						RedId = Reckless[2], YellowId = Quick[2], BlueId = Energized[2], PrismaticId = Quick[2], MetaId = Ember },
-					new GemmingTemplate() { Model = "RestoSham", Group = "Epic", //Max Int
-						RedId = Luminous[2], YellowId = Brilliant[2], BlueId = Dazzling[2], PrismaticId = Brilliant[2], MetaId = Ember },
-
 
 					new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", //Max Spellpower
 						RedId = Runed[3], YellowId = Runed[3], BlueId = Runed[3], PrismaticId = Runed[3], MetaId = Ember },
@@ -152,7 +131,7 @@ namespace Rawr.RestoSham
                           "Basic Stats:MP5*Mana regeneration while casting",
                           "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
                           "Basic Stats:Spell Haste",
-                          "Totals:Total HPS*This is averaged including the time you are OOM, acutal HPS during is below",
+                          "Totals:Total HPS*This is averaged including the time you are OOM and your overhealing %, acutal HPS during is below",
                           "Totals:Time to OOM*In Seconds",
                           "Totals:Total Healed*Includes Burst and Sustained",
                           "Healing Style Breakdowns:Chosen Sequence",
@@ -536,9 +515,7 @@ namespace Rawr.RestoSham
                 calcStats.FightMPS = calcStats.RTCHMPS;
             #endregion
             #region Final Stats
-            float OOM1 = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
-            float RealMP5 = OOM1 / 5 * stats.Mp5;
-            calcStats.TillOOM = (calcStats.TotalManaPool + RealMP5) / calcStats.FightMPS;
+            calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
             calcStats.TotalHPS = calcStats.FightHPS;
             calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
