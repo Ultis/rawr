@@ -278,17 +278,14 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             float mp5 = stats.Mp5;
             mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
-            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * (stats.Mana * (.24f + 
-                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) + stats.Mana + onUse + (mp5 * (60f / 5f) * 
-                options.FightLength) + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) * 
-                (options.BurstPercentage * .01f));
+            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * (stats.Mana * (.24f +
+                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+                (options.BurstPercentage * .01f)) + (((float)Math.Truncate(options.FightLength / 5.025f) + 1) * stats.ManaRestore5min);
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit +
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes +
                 (character.ShamanTalents.BlessingOfTheEternals * 2)));
             float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
-            if (character.ShamanTalents.TidalForce > 0)
-                Critical += (1.2f / 180) / 2;
             #endregion
             #region Water Shield and Mana Calculations
             float WSC = (float)Math.Max((1.6 * (1 - (stats.HasteRating / 3279))), 1.1f);
@@ -502,36 +499,37 @@ namespace Rawr.RestoSham
             calcStats.FightHPS = 0;
             calcStats.FightMPS = 0;
             if (options.HealingStyle.Equals("CH Spam"))
-                calcStats.FightHPS = calcStats.CHSpamHPS;
+                calcStats.FightHPS = calcStats.CHSpamHPS * TrueHealing;
             if (options.HealingStyle.Equals("CH Spam"))
                 calcStats.FightMPS = calcStats.CHSpamMPS;
             if (options.HealingStyle.Equals("HW Spam"))
-                calcStats.FightHPS = calcStats.HWSpamHPS;
+                calcStats.FightHPS = calcStats.HWSpamHPS * TrueHealing;
             if (options.HealingStyle.Equals("HW Spam"))
                 calcStats.FightMPS = calcStats.HWSpamMPS;
             if (options.HealingStyle.Equals("LHW Spam"))
-                calcStats.FightHPS = calcStats.LHWSpamHPS;
+                calcStats.FightHPS = calcStats.LHWSpamHPS * TrueHealing;
             if (options.HealingStyle.Equals("LHW Spam"))
                 calcStats.FightMPS = calcStats.LHWSpamMPS;
             if (options.HealingStyle.Equals("RT+HW"))
-                calcStats.FightHPS = calcStats.RTHWHPS;
+                calcStats.FightHPS = calcStats.RTHWHPS * TrueHealing;
             if (options.HealingStyle.Equals("RT+HW"))
                 calcStats.FightMPS = calcStats.RTHWMPS;
             if (options.HealingStyle.Equals("RT+LHW"))
-                calcStats.FightHPS = calcStats.RTLHWHPS;
+                calcStats.FightHPS = calcStats.RTLHWHPS * TrueHealing;
             if (options.HealingStyle.Equals("RT+LHW"))
                 calcStats.FightMPS = calcStats.RTLHWMPS;
             if (options.HealingStyle.Equals("RT+CH"))
-                calcStats.FightHPS = calcStats.RTCHHPS;
+                calcStats.FightHPS = calcStats.RTCHHPS * TrueHealing;
             if (options.HealingStyle.Equals("RT+CH"))
                 calcStats.FightMPS = calcStats.RTCHMPS;
-
             #endregion
             #region Final Stats
+            float OOM1 = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
+            float RealMP5 = OOM1 / 5 * stats.Mp5;
+            calcStats.TillOOM = (calcStats.TotalManaPool + RealMP5) / calcStats.FightMPS;
             calcStats.ManaPer5Needed = (((options.FightLength * 60f) * calcStats.FightMPS) - calcStats.TotalManaPool) / 5;
-            calcStats.TillOOM = calcStats.TotalManaPool / calcStats.FightMPS;
-            calcStats.TotalHPS = calcStats.FightHPS * TrueHealing * (calcStats.TillOOM / (options.FightLength * 60f));
-            calcStats.TotalHealed = calcStats.TotalHPS * (options.FightLength * 60f);
+            calcStats.TotalHPS = calcStats.FightHPS;
+            calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
             calcStats.SubPoints[0] = calcStats.TotalHealed / 10f;
 
