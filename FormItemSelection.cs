@@ -406,9 +406,12 @@ namespace Rawr
                 _button.SelectedItem = item;
             if (_buttonEnchant != null)
             {
-                ItemInstance copy = _buttonEnchant.SelectedItem.Clone();
-                copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
-                _buttonEnchant.SelectedItem = copy;
+                if(_buttonEnchant.SelectedItem != null)
+                {
+                    ItemInstance copy = _buttonEnchant.SelectedItem.Clone();
+                    copy.EnchantId = item == null ? 0 : Math.Abs(item.Id % 10000);
+                    _buttonEnchant.SelectedItem = copy;
+                }
             }
             _characterSlot = Character.CharacterSlot.None;
             ItemToolTip.Instance.Hide(this);
