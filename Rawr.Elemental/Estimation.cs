@@ -4,22 +4,105 @@ using System.Text;
 
 namespace Rawr.Elemental.Estimation
 {
-    public static class Estimation
+    public class Estimation
     {
-        public static Rotation getRotation(Stats stats, ShamanTalents talents, CalculationOptionsElemental calcOpts)
+        #region Spells
+        LightningBolt[] LB;
+        ChainLightning[] CL;
+        ChainLightning[] CL3;
+        ChainLightning[] CL4;
+        LavaBurst[] LvB;
+        LavaBurst[] LvBFS;
+        FlameShock[] FS;
+        EarthShock[] ES;
+        FrostShock[] FrS;
+        Thunderstorm[] TS;
+        #endregion
+
+        int num;
+
+        private Stats baseStats, procStats;
+        private ShamanTalents talents;
+        private CalculationOptionsElemental calcOpts;
+
+        public Estimation(Stats baseStats, Stats procStats, ShamanTalents talents, CalculationOptionsElemental calcOpts, int num)
         {
+            this.baseStats = baseStats;
+            this.procStats = procStats;
+            this.talents = talents;
+            this.calcOpts = calcOpts;
+            this.num = num;
             #region Spells
-            Spell LB = new LightningBolt(stats, talents, calcOpts);
-            Spell CL = new ChainLightning(stats, talents, calcOpts, 0);
-            Spell CL3 = new ChainLightning(stats, talents, calcOpts, 3);
-            Spell CL4 = new ChainLightning(stats, talents, calcOpts, 4);
-            Spell LvB = new LavaBurst(stats, talents, calcOpts, 0);
-            Spell LvBFS = new LavaBurst(stats, talents, calcOpts, 1);
-            Spell FS = new FlameShock(stats, talents, calcOpts);
-            Spell ES = new EarthShock(stats, talents, calcOpts);
-            Spell FrS = new FrostShock(stats, talents, calcOpts);
-            Spell TS = new Thunderstorm(stats, talents, calcOpts);
+            LB = new LightningBolt[num];
+            CL = new ChainLightning[num];
+            CL3 = new ChainLightning[num];
+            CL4 = new ChainLightning[num];
+            LvB = new LavaBurst[num];
+            LvBFS = new LavaBurst[num];
+            FS = new FlameShock[num];
+            ES = new EarthShock[num];
+            FrS = new FrostShock[num];
+            TS = new Thunderstorm[num];
+            if (num == 1)
+            {
+                LB[0] = new LightningBolt(baseStats + procStats, talents, calcOpts);
+                CL[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 0);
+                CL3[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 3);
+                CL4[0] = new ChainLightning(baseStats + procStats, talents, calcOpts, 4);
+                LvB[0] = new LavaBurst(baseStats + procStats, talents, calcOpts, 0);
+                LvBFS[0] = new LavaBurst(baseStats + procStats, talents, calcOpts, 1);
+                FS[0] = new FlameShock(baseStats + procStats, talents, calcOpts);
+                ES[0] = new EarthShock(baseStats + procStats, talents, calcOpts);
+                FrS[0] = new FrostShock(baseStats + procStats, talents, calcOpts);
+                TS[0] = new Thunderstorm(baseStats + procStats, talents, calcOpts);
+            }
+            else
+            {
+                int k;
+                float delta = num > 1 ? 2f / (num - 1) : 0;
+                for (k = 0; k < num; k++)
+                {
+                    LB[k] = new LightningBolt(baseStats + procStats * (k * delta), talents, calcOpts);
+                    CL[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 0);
+                    CL3[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 3);
+                    CL4[k] = new ChainLightning(baseStats + procStats * (k * delta), talents, calcOpts, 4);
+                    LvB[k] = new LavaBurst(baseStats + procStats * (k * delta), talents, calcOpts, 0);
+                    LvBFS[k] = new LavaBurst(baseStats + procStats * (k * delta), talents, calcOpts, 1);
+                    FS[k] = new FlameShock(baseStats + procStats * (k * delta), talents, calcOpts);
+                    ES[k] = new EarthShock(baseStats + procStats * (k * delta), talents, calcOpts);
+                    FrS[k] = new FrostShock(baseStats + procStats * (k * delta), talents, calcOpts);
+                    TS[k] = new Thunderstorm(baseStats + procStats * (k * delta), talents, calcOpts);
+                }
+            }
             #endregion
+        }
+
+        public Rotation getAvgRotation(int type)
+        {
+            Rotation result = getPriorityRotation(0, type);
+            if (num == 1) return result;
+            int k;
+            for (k = 1; k < num; k++)
+            {
+                result += getPriorityRotation(k, type);
+            }
+            return result * (1f/num);
+        }
+
+        private Rotation getPriorityRotation(int ix, int type)
+        {
+            LightningBolt LB = (LightningBolt)this.LB[ix].Clone();
+            LavaBurst LvB = (LavaBurst)this.LvBFS[ix].Clone();
+            Thunderstorm TS = (Thunderstorm)this.TS[ix].Clone();
+            FlameShock FS = (FlameShock)this.FS[ix].Clone();
+
+            LavaBurst LvBNoFS = (LavaBurst)this.LvB[ix].Clone();
+            ChainLightning CL = (ChainLightning)this.CL[ix].Clone();
+            ChainLightning CL3 = (ChainLightning)this.CL3[ix].Clone();
+            ChainLightning CL4 = (ChainLightning)this.CL4[ix].Clone();
+            EarthShock ES = (EarthShock)this.ES[ix].Clone();
+            FrostShock FrS = (FrostShock)this.FrS[ix].Clone();
+
             #region Elemental Mastery
             if (talents.ElementalMastery > 0)
             {
@@ -27,52 +110,126 @@ namespace Rawr.Elemental.Estimation
                 float EMmod = SpecialEffect.EstimateUptime(30f, calcOpts.glyphOfElementalMastery ? 150f : 180f, 0, calcOpts.FightDuration, out procs);
                 LB.ApplyEM(EMmod);
                 CL.ApplyEM(EMmod);
+                LvB.ApplyEM(EMmod);
+                TS.ApplyEM(EMmod);
+                FS.ApplyEM(EMmod);
                 CL3.ApplyEM(EMmod);
                 CL4.ApplyEM(EMmod);
-                LvB.ApplyEM(EMmod);
-                LvBFS.ApplyEM(EMmod);
-                FS.ApplyEM(EMmod);
                 ES.ApplyEM(EMmod);
                 FrS.ApplyEM(EMmod);
+                LvBNoFS.ApplyEM(EMmod);
             }
             #endregion
             #region Rotation
             /* Rotation
-             * Center of attention is Lava Burst.
-             * If glyphed, cast FS whenever the dot falls off
-             * If unglyphed, cast FS immediately after Lava Burst OR right before Lava Burst
-             * OPTION: cast FS whenever available
-             * 
+             * Always cast LvB when possible
+             * If glyphed, cast FS right before every second Lava Burst
+             * If unglyphed, cast FS immediately after every Lava Burst
              */
             // Thunderstorm
-            float timeBetweenTS = TS.CDRefreshTime; // cast whenever available
-            float castFractionTS = calcOpts.UseThunderstorm ? TS.CastTime / timeBetweenTS : 0;
-            float dpsFromTS = 0f; // assume no targets hit
-            float mpsFromTS = calcOpts.UseThunderstorm ? TS.ManaCost / timeBetweenTS : 0;
+            // float timeBetweenTS = TS.CDRefreshTime; // cast whenever available
+            // float castFractionTS = calcOpts.UseThunderstorm ? TS.CastTime / timeBetweenTS : 0;
             // Lava Burst
             float timeBetweenLvB = LvB.CDRefreshTime; // cast whenever available
-            float castFractionLvBFS = LvBFS.CastTime / timeBetweenLvB; // LvB casting time per second
-            float dpsFromLvB = LvBFS.HitChance * LvBFS.TotalDamage / timeBetweenLvB;
-            float mpsFromLvB = LvBFS.ManaCost / timeBetweenLvB;
             // Flame Shock
             float timeBetweenFS = FS.PeriodicRefreshTime; // cast whenever DoT drops
+            if (!calcOpts.glyphOfFlameShock)
+            {
+                timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+            }
+            else
+            {
+                timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                timeBetweenFS = 2 * timeBetweenLvB;
+            }
+            // Lightning Bolt
+            float nLBfirst = (timeBetweenLvB - LvB.CastTime) / LB.CastTime;
+            float nLBsecond = (timeBetweenLvB - LvB.CastTime - FS.CastTime) / LB.CastTime;
+            if (!calcOpts.glyphOfFlameShock) nLBfirst = nLBsecond;
+            //float castFractionLB = 1f - castFractionFS - castFractionLvB; // LB casting time per second
+            //float castsPerLvB = timeBetweenLvB * castFractionLB / LB.CastTime;
+            float timeWasted = 0;
+            // You can't cast a half LB
+            // Options: 
+            // 0. finish the cast both times 
+            // 1. don't finish the cast, just wait both times
+            // 2. finish the first time, wait the second time
+            // 3. wait the first time, finish the second time
+            if (type == 0)
+            {
+                float shift = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
+                nLBfirst = (float)Math.Ceiling(nLBfirst);
+                shift += ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
+                nLBsecond = (float)Math.Ceiling(nLBsecond);
+                timeBetweenLvB += shift;
+                if (!calcOpts.glyphOfFlameShock)
+                {
+                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+                }
+                else
+                {
+                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenFS = 2 * timeBetweenLvB;
+                }
+            }
+            else if (type == 1)
+            {
+                timeWasted += (nLBfirst - (float)Math.Floor(nLBfirst)) * LB.CastTime;
+                nLBfirst = (float)Math.Floor(nLBfirst);
+                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
+                nLBsecond = (float)Math.Floor(nLBsecond);
+            }
+            else if (type == 2)
+            {
+                float shift = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
+                nLBfirst = (float)Math.Ceiling(nLBfirst);
+                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
+                nLBsecond = (float)Math.Floor(nLBsecond);
+                timeBetweenLvB += shift;
+                if (!calcOpts.glyphOfFlameShock)
+                {
+                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+                }
+                else
+                {
+                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenFS = 2 * timeBetweenLvB;
+                }
+            }
+            else if (type == 3)
+            {
+                timeWasted += (nLBfirst - (float)Math.Floor(nLBfirst)) * LB.CastTime;
+                nLBfirst = (float)Math.Floor(nLBfirst);
+                float shift = ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
+                nLBsecond = (float)Math.Ceiling(nLBsecond);
+                timeBetweenLvB += shift;
+                if (!calcOpts.glyphOfFlameShock)
+                {
+                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+                }
+                else
+                {
+                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenFS = 2 * timeBetweenLvB;
+                }
+            }
+            float castFractionLvB = LvB.CastTime / timeBetweenLvB; // LvB casting time per second
+            float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
+            float castFractionLB = LB.CastTime * (nLBfirst + nLBsecond) / (2 * timeBetweenLvB);
+            float mpsFromTS = calcOpts.UseThunderstorm ? TS.ManaCost / TS.CDRefreshTime : 0;
+            float dpsFromLvB = LvB.HitChance * LvB.TotalDamage / timeBetweenLvB;
+            float mpsFromLvB = LvB.ManaCost / timeBetweenLvB;
+            float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
+            float mpsFromLB = castFractionLB * LB.ManaCost / LB.CastTime;
             float dpsFromFS = FS.HitChance * FS.TotalDamage / timeBetweenFS;
             if (!calcOpts.glyphOfFlameShock)
             {
-                // cast AFTER LvB
-                timeBetweenFS = timeBetweenLvB;
-                if (timeBetweenFS < FS.CDRefreshTime) timeBetweenFS = FS.CDRefreshTime; // Should Not Happen
-                float ticks = (float)Math.Floor((timeBetweenFS - LvB.CastTime) / FS.PeriodicTickTime);
-                if (ticks > FS.PeriodicTicks) ticks = FS.PeriodicTicks; // Should Not Happen
+                float ticks = (float)Math.Min(
+                    Math.Floor((timeBetweenFS - LvB.CastTime) / FS.PeriodicTickTime),
+                    FS.PeriodicTicks);
                 dpsFromFS = FS.HitChance * (FS.AvgDamage + FS.PeriodicTick * ticks) / timeBetweenFS;
             }
             float mpsFromFS = FS.ManaCost / timeBetweenFS;
-            float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
-            // Lightning Bolt
-            float castFractionLB = 1f - castFractionFS - castFractionLvBFS - castFractionTS; // LB casting time per second
-            float dpsFromLB = LB.HitChance * LB.DpCT * castFractionLB;
-            float mpsFromLB = castFractionLB * LB.ManaCost / LB.CastTime;
-            float castsPerLvB = timeBetweenLvB * castFractionLB;
             #endregion
             #region Lightning Overload
             float critLB = LB.CritChance * (1f + .04f * talents.LightningOverload);
@@ -83,28 +240,29 @@ namespace Rawr.Elemental.Estimation
             if (talents.ElementalFocus > 0)
             {
                 float CCchance2LB = 1 - ((1 - critLB * LB.HitChance) * (1 - critLB * LB.HitChance));
-                float CCchanceLvBLB = 1 - ((1 - LvBFS.HitChance) * (1 - critLB * LB.HitChance));
-                float CCchanceLvBFS = 1 - ((1 - LvBFS.HitChance) * (1 - FS.CritChance * FS.HitChance));
+                float CCchanceLvBLB = 1 - ((1 - LvB.HitChance) * (1 - critLB * LB.HitChance));
+                float CCchanceLvBFS = 1 - ((1 - LvB.HitChance) * (1 - FS.CritChance * FS.HitChance));
                 float CCchanceLBFS = 1 - ((1 - critLB * LB.HitChance) * (1 - FS.CritChance * FS.HitChance));
                 if (calcOpts.glyphOfFlameShock)
                 {
-                    clearcastingLvB = CCchance2LB;
+                    clearcastingLvB = (CCchanceLBFS + CCchance2LB) / 2f;
                     clearcastingFS = CCchance2LB;
                     clearcastingLB = (
-                        Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
-                        Math.Min(1, castsPerLvB - 1) * CCchanceLvBLB +
-                        Math.Min(1, castsPerLvB) * CCchanceLvBLB
-                        ) / castsPerLvB;
+                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB +
+                        Math.Min(2, nLBsecond + nLBfirst - 2) * CCchanceLvBLB +
+                        Math.Min(1, nLBsecond) * CCchanceLvBLB +
+                        Math.Min(1, nLBfirst) * CCchanceLvBFS
+                        ) / (nLBsecond + nLBfirst);
                 }
                 else
                 {
                     clearcastingLvB = CCchance2LB;
                     clearcastingFS = CCchanceLvBLB;
                     clearcastingLB = (
-                        Math.Max(castsPerLvB - 2, 0) * CCchance2LB +
-                        Math.Min(1, castsPerLvB - 1) * CCchanceLBFS +
-                        Math.Min(1, castsPerLvB) * CCchanceLvBFS
-                        ) / castsPerLvB;
+                        Math.Max(nLBsecond + nLBfirst - 4, 0) * CCchance2LB +
+                        Math.Min(2, nLBsecond + nLBfirst - 2) * CCchanceLvBLB +
+                        Math.Min(2, nLBsecond + nLBfirst) * CCchanceLvBFS
+                        ) / (nLBsecond + nLBfirst);
                 }
                 mpsFromLB *= 1 - .4f * clearcastingLB;
                 mpsFromLvB *= 1 - .4f * clearcastingLvB;
@@ -117,29 +275,26 @@ namespace Rawr.Elemental.Estimation
 
             return new Rotation()
             {
-                DPS = dpsFromFS + dpsFromLvB + dpsFromLB + dpsFromTS,
+                DPS = dpsFromFS + dpsFromLvB + dpsFromLB,
                 MPS = mpsFromFS + mpsFromLvB + mpsFromLB + mpsFromTS,
                 CastFraction = (
-                    castFractionTS / TS.CastTime +
                     castFractionFS / FS.CastTime +
-                    castFractionLvBFS / LvBFS.CastTime +
+                    castFractionLvB / LvB.CastTime +
                     castFractionLB / LB.CastTime),
                 CritFraction = (
-                    TS.CritChance * castFractionTS / TS.CastTime +
                     FS.CritChance * castFractionFS / FS.CastTime +
-                    LvBFS.CritChance * castFractionLvBFS / LvBFS.CastTime +
+                    LvB.CritChance * castFractionLvB / LvB.CastTime +
                     critLB * castFractionLB / LB.CastTime),
                 MissFraction = (
-                    TS.MissChance * castFractionTS / TS.CastTime +
                     FS.MissChance * castFractionFS / FS.CastTime +
-                    LvBFS.MissChance * castFractionLvBFS / LvBFS.CastTime +
+                    LvB.MissChance * castFractionLvB / LvB.CastTime +
                     LB.MissChance * castFractionLB / LB.CastTime),
                 LB = LB,
                 CL = CL,
                 CL3 = CL3,
                 CL4 = CL4,
-                LvB = LvB,
-                LvBFS = LvBFS,
+                LvB = LvBNoFS,
+                LvBFS = LvB,
                 FS = FS,
                 ES = ES,
                 FrS = FrS,
@@ -147,8 +302,14 @@ namespace Rawr.Elemental.Estimation
                 CC_LvB = clearcastingLvB,
                 CC_LB = clearcastingLB,
                 LBFraction = castFractionLB,
-                LvBFraction = castFractionLvBFS,
-                FSFraction = castFractionFS
+                LvBFraction = castFractionLvB,
+                FSFraction = castFractionFS,
+                LBPerSecond = castFractionLB / LB.CastTime,
+                LvBPerSecond = castFractionLvB / LvB.CastTime,
+                FSPerSecond = castFractionFS / FS.CastTime,
+                nLBfirst = nLBfirst,
+                nLBsecond = nLBsecond,
+                WaitAfterLB = timeWasted
             };
         }
 
@@ -167,10 +328,10 @@ namespace Rawr.Elemental.Estimation
              * 
              * Assume LvB used on CD and FS either after LvB, on dot drop or before LvB
              * Filler: LB 
-             * Optional: use CL after every LB
+             * NYI Optional: use CL after every LB
+             * Optional: finish LB cast, or wait until LvB available
              */
 
-            // Assume: glyph of flame shock, LvB on every cd, refresh FS when it falls off, no CL use
             #region Lightning Bolt Haste Trinket
             stats += new Stats
             {
@@ -178,10 +339,21 @@ namespace Rawr.Elemental.Estimation
             };
             #endregion
 
-            Rotation rot = getRotation(stats, talents, calcOpts);
+            Estimation e;
+            Rotation rot;
             float damage;
-            stats += getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
-            rot = getRotation(stats, talents, calcOpts);
+            Stats procStats;
+            // WITHOUT PROCS
+            e = new Estimation(stats, new Stats{}, talents, calcOpts, 1);
+            rot = e.getAvgRotation(0);
+            // WITH PROCS
+            int nPasses = 2, k;
+            for (k = 0; k < nPasses; k++)
+            {
+                procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
+                e = new Estimation(stats, procStats, talents, calcOpts, 1); // 4+k
+                rot = e.getAvgRotation(0);
+            }
 
             /* Regen variables: (divide by 5 for regen per second)
              * While casting: ManaRegInFSR
@@ -265,12 +437,18 @@ namespace Rawr.Elemental.Estimation
             calculatedStats.LvBFraction = rot.LvBFraction;
             calculatedStats.FSFraction = rot.FSFraction;
             calculatedStats.LBFraction = rot.LBFraction;
+            calculatedStats.LvBPerSecond = rot.LvBPerSecond;
+            calculatedStats.LBPerSecond = rot.LBPerSecond;
+            calculatedStats.FSPerSecond = rot.FSPerSecond;
             calculatedStats.RotationDPS = rot.DPS;
             calculatedStats.RotationMPS = rot.MPS;
             calculatedStats.TotalDPS = TotalDamage / FightDuration;
             calculatedStats.ClearCast_FlameShock = rot.CC_FS;
             calculatedStats.ClearCast_LavaBurst = rot.CC_LvB;
             calculatedStats.ClearCast_LightningBolt = rot.CC_LB;
+            calculatedStats.nLBfirst = rot.nLBfirst;
+            calculatedStats.nLBsecond = rot.nLBsecond;
+            calculatedStats.WaitAfterLB = rot.WaitAfterLB;
         }
 
         private static Stats getTrinketStats(Character character, Stats stats, float FightDuration, float HitsFraction, float CritsFraction, float MissFraction, float TickFraction, out float Damage)
@@ -289,7 +467,7 @@ namespace Rawr.Elemental.Estimation
             };
         }
 
-        public static float CalculateManaRegen(float intel, float spi)
+        private static float CalculateManaRegen(float intel, float spi)
         {
             float baseRegen = 0.005575f;
             return (float)Math.Round(5f * (0.001f + (float)Math.Sqrt(intel) * spi * baseRegen));

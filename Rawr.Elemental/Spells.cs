@@ -24,6 +24,50 @@ namespace Rawr.Elemental
         protected float dotSpCoef = 0f;
         protected float spellPower = 0f;
 
+        protected static void add(Spell sp1, Spell sp2, Spell nS)
+        {
+            nS.baseMinDamage = (sp1.baseMinDamage + sp2.baseMaxDamage);
+            nS.baseMaxDamage = (sp1.baseMaxDamage + sp2.baseMaxDamage);
+            nS.castTime = (sp1.castTime + sp2.castTime);
+            nS.periodicTick = (sp1.periodicTick + sp2.periodicTick);
+            nS.periodicTicks = (sp1.periodicTicks + sp2.periodicTicks);
+            nS.periodicTickTime = (sp1.periodicTickTime + sp2.periodicTickTime);
+            nS.manaCost = (sp1.manaCost + sp2.manaCost);
+            nS.gcd = (sp1.gcd + sp2.gcd);
+            nS.crit = (sp1.crit + sp2.crit);
+            nS.critModifier = (sp1.critModifier + sp2.critModifier);
+            nS.cooldown = (sp1.cooldown + sp2.cooldown);
+            nS.missChance = (sp1.missChance + sp2.missChance);
+            nS.totalCoef = (sp1.totalCoef + sp2.totalCoef);
+            nS.baseCoef = (sp1.baseCoef + sp2.baseCoef);
+            nS.spCoef = (sp1.spCoef + sp2.spCoef);
+            nS.dotBaseCoef = (sp1.dotBaseCoef + sp2.dotBaseCoef);
+            nS.dotSpCoef = (sp1.dotSpCoef + sp2.dotSpCoef);
+            nS.spellPower = (sp1.spellPower + sp2.spellPower);
+        }
+
+        protected static void multiply(Spell sp1, float c, Spell nS)
+        {
+            nS.baseMinDamage = sp1.baseMinDamage * c;
+            nS.baseMaxDamage = sp1.baseMaxDamage * c;
+            nS.castTime = sp1.castTime * c;
+            nS.periodicTick = sp1.periodicTick * c;
+            nS.periodicTicks = sp1.periodicTicks * c;
+            nS.periodicTickTime = sp1.periodicTickTime * c;
+            nS.manaCost = sp1.manaCost * c;
+            nS.gcd = sp1.gcd * c;
+            nS.crit = sp1.crit * c;
+            nS.critModifier = sp1.critModifier * c;
+            nS.cooldown = sp1.cooldown * c;
+            nS.missChance = sp1.missChance * c;
+            nS.totalCoef = sp1.totalCoef * c;
+            nS.baseCoef = sp1.baseCoef * c;
+            nS.spCoef = sp1.spCoef * c;
+            nS.dotBaseCoef = sp1.dotBaseCoef * c;
+            nS.dotSpCoef = sp1.dotSpCoef * c;
+            nS.spellPower = sp1.spellPower * c;
+        }
+
         public float MinHit
         { get { return totalCoef * (baseMinDamage * baseCoef + spellPower * spCoef); } }
 
@@ -123,6 +167,7 @@ namespace Rawr.Elemental
 
         public float CDRefreshTime
         { get { return cooldown > CastTime ? cooldown + castTime : CastTime; } }
+        //{ get { return cooldown + CastTime; } }
 
         public float ManaCost
         { get { return manaCost; } }
@@ -145,6 +190,11 @@ namespace Rawr.Elemental
         {
             crit += modifier * .2f;
             manaCost *= 1 - modifier * .2f;
+        }
+
+        public virtual Spell Clone()
+        {
+            return (Spell)this.MemberwiseClone();
         }
     }
 
@@ -169,6 +219,20 @@ namespace Rawr.Elemental
             totalCoef *= 1 + stats.LightningBoltDamageModifier / 100f;
 
             base.Initialize(stats, shamanTalents);
+        }
+
+        public static Thunderstorm operator +(Thunderstorm A, Thunderstorm B)
+        {
+            Thunderstorm C = (Thunderstorm)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static Thunderstorm operator *(Thunderstorm A, float b)
+        {
+            Thunderstorm C = (Thunderstorm)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
         }
     }
 
@@ -207,6 +271,21 @@ namespace Rawr.Elemental
         {
             crit *= (1f + .04f * ranks);
         }
+
+        public static LightningBolt operator +(LightningBolt A, LightningBolt B)
+        {
+            LightningBolt C = (LightningBolt)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static LightningBolt operator *(LightningBolt A, float b)
+        {
+            LightningBolt C = (LightningBolt)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+
     }
 
     public class ChainLightning : Spell
@@ -245,6 +324,21 @@ namespace Rawr.Elemental
         {
             crit *= (1f + .04f * ranks);
         }
+
+        public static ChainLightning operator +(ChainLightning A, ChainLightning B)
+        {
+            ChainLightning C = (ChainLightning)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static ChainLightning operator *(ChainLightning A, float b)
+        {
+            ChainLightning C = (ChainLightning)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+
     }
 
     public class LavaBurst : Spell
@@ -280,6 +374,21 @@ namespace Rawr.Elemental
 
             crit = (1-fs)*crit + fs;
         }
+
+        public static LavaBurst operator +(LavaBurst A, LavaBurst B)
+        {
+            LavaBurst C = (LavaBurst)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static LavaBurst operator *(LavaBurst A, float b)
+        {
+            LavaBurst C = (LavaBurst)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+
     }
 
     public class FlameShock : Spell
@@ -311,6 +420,21 @@ namespace Rawr.Elemental
 
             base.Initialize(stats, shamanTalents);
         }
+
+        public static FlameShock operator +(FlameShock A, FlameShock B)
+        {
+            FlameShock C = (FlameShock)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static FlameShock operator *(FlameShock A, float b)
+        {
+            FlameShock C = (FlameShock)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+
     }
 
     public class EarthShock : Spell
@@ -335,6 +459,21 @@ namespace Rawr.Elemental
 
             base.Initialize(stats, shamanTalents);
         }
+
+        public static EarthShock operator +(EarthShock A, EarthShock B)
+        {
+            EarthShock C = (EarthShock)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static EarthShock operator *(EarthShock A, float b)
+        {
+            EarthShock C = (EarthShock)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
+
     }
 
     public class FrostShock : Spell
@@ -359,6 +498,20 @@ namespace Rawr.Elemental
 
             base.Initialize(stats, shamanTalents);
         }
+
+        public static FrostShock operator +(FrostShock A, FrostShock B)
+        {
+            FrostShock C = (FrostShock)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static FrostShock operator *(FrostShock A, float b)
+        {
+            FrostShock C = (FrostShock)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
+        }
     }
 
     public class ElementalMastery : Spell
@@ -372,6 +525,21 @@ namespace Rawr.Elemental
             #endregion
 
             base.Initialize(stats, shamanTalents);
+        }
+
+
+        public static ElementalMastery operator +(ElementalMastery A, ElementalMastery B)
+        {
+            ElementalMastery C = (ElementalMastery)A.MemberwiseClone();
+            add(A, B, C);
+            return C;
+        }
+
+        public static ElementalMastery operator *(ElementalMastery A, float b)
+        {
+            ElementalMastery C = (ElementalMastery)A.MemberwiseClone();
+            multiply(A, b, C);
+            return C;
         }
     }
 

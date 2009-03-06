@@ -153,6 +153,7 @@ namespace Rawr.Elemental
                     "Attacks:Frost Shock",
 					
 					"Simulation:Simulation",
+					"Simulation:Rotation",
 				};
 				return _characterDisplayCalculationLabels;
 			}
@@ -653,9 +654,17 @@ namespace Rawr.Elemental
         public float LvBFraction;
         public float FSFraction;
 
+        public float LBPerSecond;
+        public float LvBPerSecond;
+        public float FSPerSecond;
+
         public float ClearCast_FlameShock;
         public float ClearCast_LavaBurst;
         public float ClearCast_LightningBolt;
+
+        public float nLBfirst;
+        public float nLBsecond;
+        public float WaitAfterLB;
 
         public Character LocalCharacter { get; set; }
 
@@ -705,14 +714,25 @@ namespace Rawr.Elemental
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
             dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString());
 
-            dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Mana cost: "+Math.Round(LightningBolt.ManaCost).ToString()+"\nCrit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %\nClearcast uptime: " + Math.Round(100f * ClearCast_LightningBolt, 2).ToString() + " %");
-            dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Mana cost: " + Math.Round(ChainLightning.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %\n3 adds: " + Math.Round(ChainLightning3.MinHit).ToString() + "-" + Math.Round(ChainLightning3.MaxHit).ToString() + " / " + Math.Round(ChainLightning3.MinCrit).ToString() + "-" + Math.Round(ChainLightning3.MaxCrit).ToString() + "\n4 adds: " + Math.Round(ChainLightning4.MinHit).ToString() + "-" + Math.Round(ChainLightning4.MaxHit).ToString() + " / " + Math.Round(ChainLightning4.MinCrit).ToString() + "-" + Math.Round(ChainLightning4.MaxCrit).ToString());
-            dictValues.Add("Lava Burst", Math.Round(LavaBurst.MinHit).ToString() + "-" + Math.Round(LavaBurst.MaxHit).ToString() + " / " + Math.Round(LavaBurst.MinCrit).ToString() + "-" + Math.Round(LavaBurst.MaxCrit).ToString() + "*Mana cost: " + Math.Round(LavaBurst.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * LavaBurst.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurst.MissChance, 2).ToString() + " %\nClearcast uptime: " + Math.Round(100f * ClearCast_LavaBurst, 2).ToString() + " %");
-            dictValues.Add("Flame Shock", Math.Round(FlameShock.AvgHit).ToString() + " / " + Math.Round(FlameShock.AvgCrit).ToString() + " + " + Math.Round(FlameShock.PeriodicTick).ToString() + " (every 3s)*Mana cost: " + Math.Round(FlameShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %\nClearcast uptime: " + Math.Round(100f * ClearCast_FlameShock, 2).ToString() + " %");
-            dictValues.Add("Earth Shock", Math.Round(EarthShock.MinHit).ToString() + "-" + Math.Round(EarthShock.MaxHit).ToString() + " / " + Math.Round(EarthShock.MinCrit).ToString() + "-" + Math.Round(EarthShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(EarthShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * EarthShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * EarthShock.MissChance, 2).ToString() + " %");
-            dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FrostShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %");
+            dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Mana cost: "+Math.Round(LightningBolt.ManaCost).ToString()+"\nCrit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(LightningBolt.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_LightningBolt, 2).ToString() + " %");
+            dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Mana cost: " + Math.Round(ChainLightning.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(ChainLightning.CastTime, 2) + " sec.\n3 adds: " + Math.Round(ChainLightning3.MinHit).ToString() + "-" + Math.Round(ChainLightning3.MaxHit).ToString() + " / " + Math.Round(ChainLightning3.MinCrit).ToString() + "-" + Math.Round(ChainLightning3.MaxCrit).ToString() + "\n4 adds: " + Math.Round(ChainLightning4.MinHit).ToString() + "-" + Math.Round(ChainLightning4.MaxHit).ToString() + " / " + Math.Round(ChainLightning4.MinCrit).ToString() + "-" + Math.Round(ChainLightning4.MaxCrit).ToString());
+            dictValues.Add("Lava Burst", Math.Round(LavaBurst.MinHit).ToString() + "-" + Math.Round(LavaBurst.MaxHit).ToString() + " / " + Math.Round(LavaBurst.MinCrit).ToString() + "-" + Math.Round(LavaBurst.MaxCrit).ToString() + "*Mana cost: " + Math.Round(LavaBurst.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * LavaBurst.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LavaBurst.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(LavaBurst.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_LavaBurst, 2).ToString() + " %");
+            dictValues.Add("Flame Shock", Math.Round(FlameShock.AvgHit).ToString() + " / " + Math.Round(FlameShock.AvgCrit).ToString() + " + " + Math.Round(FlameShock.PeriodicTick).ToString() + " (every 3s)*Mana cost: " + Math.Round(FlameShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FlameShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FlameShock.MissChance, 2).ToString() + " %\nCast time + GCD: " + Math.Round(FlameShock.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_FlameShock, 2).ToString() + " %");
+            dictValues.Add("Earth Shock", Math.Round(EarthShock.MinHit).ToString() + "-" + Math.Round(EarthShock.MaxHit).ToString() + " / " + Math.Round(EarthShock.MinCrit).ToString() + "-" + Math.Round(EarthShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(EarthShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * EarthShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * EarthShock.MissChance, 2).ToString() + " %GCD: " + Math.Round(EarthShock.CastTime, 2) + " sec.\n");
+            dictValues.Add("Frost Shock", Math.Round(FrostShock.MinHit).ToString() + "-" + Math.Round(FrostShock.MaxHit).ToString() + " / " + Math.Round(FrostShock.MinCrit).ToString() + "-" + Math.Round(FrostShock.MaxCrit).ToString() + "*Mana cost: " + Math.Round(FrostShock.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FrostShock.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FrostShock.MissChance, 2).ToString() + " %GCD: " + Math.Round(FrostShock.CastTime, 2) + " sec.\n");
 
-            dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBFraction, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSFraction, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBFraction, 1).ToString() + " Lightning Bolts per minute\n");
+            dictValues.Add("Simulation", Math.Round(TotalDPS).ToString() + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastFraction, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritFraction, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissFraction, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n");
+            CalculationOptionsElemental calcOpts = (CalculationOptionsElemental)LocalCharacter.CalculationOptions;
+            if (calcOpts.glyphOfFlameShock)
+            {
+                dictValues.Add("Rotation", "FS/LvB/"+Math.Round(nLBfirst, 2).ToString() + "LB/LvB/"+Math.Round(nLBsecond, 2).ToString() + "LB");
+            }
+            else
+            {
+                dictValues.Add("Rotation", "LvB/FS/" + Math.Round(nLBfirst, 2).ToString() + "LB/LvB/FS/" + Math.Round(nLBsecond, 2).ToString() + "LB");
+            }
+
+            
 
             return dictValues;
         }
@@ -792,19 +812,92 @@ namespace Rawr.Elemental
         public float LvBFraction;
         public float FSFraction;
 
+        public float LBPerSecond;
+        public float LvBPerSecond;
+        public float FSPerSecond;
+
         public float CC_FS;
         public float CC_LvB;
         public float CC_LB;
 
-        public Spell LB;
-        public Spell CL;
-        public Spell CL3;
-        public Spell CL4;
-        public Spell LvB;
-        public Spell LvBFS;
-        public Spell FS;
-        public Spell ES;
-        public Spell FrS;
+        public float nLBfirst, nLBsecond;
+        public float WaitAfterLB;
+
+        public LightningBolt LB;
+        public ChainLightning CL;
+        public ChainLightning CL3;
+        public ChainLightning CL4;
+        public LavaBurst LvB;
+        public LavaBurst LvBFS;
+        public FlameShock FS;
+        public EarthShock ES;
+        public FrostShock FrS;
+
+        public static Rotation operator +(Rotation A, Rotation B)
+        {
+            return new Rotation()
+            {
+                DPS = (A.DPS + B.DPS),
+                MPS = (A.MPS + B.MPS),
+                CastFraction = (A.CastFraction + B.CastFraction),
+                CritFraction = (A.CritFraction + B.CritFraction),
+                MissFraction = (A.MissFraction + B.MissFraction),
+                LB = (LightningBolt)A.LB + B.LB,
+                CL = (ChainLightning)A.CL + B.CL,
+                CL3 = (ChainLightning)A.CL3 + B.CL3,
+                CL4 = (ChainLightning)A.CL4 + B.CL4,
+                LvB = (LavaBurst)A.LvB + B.LvB,
+                LvBFS = (LavaBurst)A.LvBFS + B.LvBFS,
+                FS = (FlameShock)A.FS + B.FS,
+                ES = (EarthShock)A.ES + B.ES,
+                FrS = (FrostShock)A.FrS + B.FrS,
+                CC_FS = A.CC_FS + B.CC_FS,
+                CC_LvB = A.CC_LvB + B.CC_LvB,
+                CC_LB = A.CC_LB + B.CC_LB,
+                LBFraction = (A.LBFraction + B.LBFraction),
+                LvBFraction = (A.LvBFraction + B.LvBFraction),
+                FSFraction = (A.FSFraction + B.FSFraction),
+                LBPerSecond = (A.LBPerSecond + B.LBPerSecond),
+                LvBPerSecond = (A.LvBPerSecond + B.LvBPerSecond),
+                FSPerSecond = (A.FSPerSecond + B.FSPerSecond),
+                nLBfirst = (A.nLBfirst + B.nLBfirst),
+                nLBsecond = (A.nLBsecond + B.nLBsecond),
+                WaitAfterLB = (A.WaitAfterLB + B.WaitAfterLB)
+            };
+        }
+
+        public static Rotation operator *(Rotation A, float b)
+        {
+            return new Rotation()
+            {
+                DPS = b * A.DPS,
+                MPS = b * A.MPS,
+                CastFraction = b * A.CastFraction,
+                CritFraction = b * A.CritFraction,
+                MissFraction = b * A.MissFraction,
+                LB = (LightningBolt)A.LB * b,
+                CL = (ChainLightning)A.CL * b,
+                CL3 = (ChainLightning)A.CL3 * b,
+                CL4 = (ChainLightning)A.CL4 * b,
+                LvB = (LavaBurst)A.LvB * b,
+                LvBFS = (LavaBurst)A.LvBFS * b,
+                FS = (FlameShock)A.FS * b,
+                ES = (EarthShock)A.ES * b,
+                FrS = (FrostShock)A.FrS * b,
+                CC_FS = A.CC_FS * b,
+                CC_LvB = A.CC_LvB * b,
+                CC_LB = A.CC_LB * b,
+                LBFraction = A.LBFraction * b,
+                LvBFraction = A.LvBFraction * b,
+                FSFraction = A.FSFraction * b,
+                LBPerSecond = A.LBPerSecond * b,
+                LvBPerSecond = A.LvBPerSecond * b,
+                FSPerSecond = A.FSPerSecond * b,
+                nLBfirst = A.nLBfirst * b,
+                nLBsecond = A.nLBsecond * b,
+                WaitAfterLB = A.WaitAfterLB * b
+            };
+        }
     }
 
     public static class Constants
