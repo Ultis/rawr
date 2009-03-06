@@ -154,7 +154,6 @@ namespace Rawr.RestoSham
                           "Basic Stats:Spell Haste",
                           "Totals:Total HPS*This is averaged including the time you are OOM, acutal HPS during is below",
                           "Totals:Time to OOM*In Seconds",
-                          "Totals:MP5 to 100% Fight Time",
                           "Totals:Total Healed*Includes Burst and Sustained",
                           "Healing Style Breakdowns:Chosen Sequence",
                           "Healing Style Breakdowns:RT+HW Spam HPS",
@@ -173,7 +172,20 @@ namespace Rawr.RestoSham
                 return _characterDisplayCalcLabels;
             }
         }
-
+        private string[] _optimizableCalculationLabels = null;
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {
+                    "Time to OOM",
+                    "Total HPS",
+                    "Health",
+					};
+                return _optimizableCalculationLabels;
+            }
+        }
         //
         // Custom chart names:
         //
@@ -527,7 +539,6 @@ namespace Rawr.RestoSham
             float OOM1 = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
             float RealMP5 = OOM1 / 5 * stats.Mp5;
             calcStats.TillOOM = (calcStats.TotalManaPool + RealMP5) / calcStats.FightMPS;
-            calcStats.ManaPer5Needed = (((options.FightLength * 60f) * calcStats.FightMPS) - calcStats.TotalManaPool) / 5;
             calcStats.TotalHPS = calcStats.FightHPS;
             calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;

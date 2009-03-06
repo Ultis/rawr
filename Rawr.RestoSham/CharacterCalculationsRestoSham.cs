@@ -37,7 +37,6 @@ namespace Rawr.RestoSham
         public float TotalHPS { get; set; }
         public float TillOOM { get; set; }
         public float FightHPS { get; set; }
-        public float ManaPer5Needed { get; set; }
         public string ChosenSequence { get; set; }
         public float HWSpamHPS { get; set; }
         public float HWSpamMPS { get; set; }
@@ -68,7 +67,6 @@ namespace Rawr.RestoSham
                        Math.Round(BasicStats.HasteRating / 32.79, 2), BasicStats.HasteRating.ToString()));
             values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
             values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
-            values.Add("MP5 to 100% Fight Time", Math.Round(ManaPer5Needed, 0).ToString());
             values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
             values.Add("Chosen Sequence", ChosenSequence.ToString());
             values.Add("RT+HW Spam HPS", Math.Round(RTHWHPS, 0).ToString());
@@ -85,6 +83,19 @@ namespace Rawr.RestoSham
             values.Add("CH Spam MPS", Math.Round(CHSpamMPS, 0).ToString());
 
             return values;
+        }
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Total HPS":
+                    return FightHPS;
+                case "Time to OOM": 
+                    return TillOOM;
+                case "Health":
+                    return BasicStats.Health;
+            }
+            return 0f;
         }
     }
 }
