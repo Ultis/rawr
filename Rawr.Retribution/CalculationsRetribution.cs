@@ -414,7 +414,7 @@ namespace Rawr.Retribution
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating) * .01f) - 1f;
 
-            stats.SpellPower += (float)Math.Floor(stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f);
+            stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
 
             return stats;
         }
