@@ -391,7 +391,7 @@ namespace Rawr
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float baseSpellCrit = (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS;
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
-            float spellDamage = (stats.SpellPower + stats.BonusFlametongueDamage) * (1 + stats.BonusSpellPowerMultiplier);
+            float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
@@ -519,15 +519,13 @@ namespace Rawr
             float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
             float damageOHSwing = adjustedOHDPS * unhastedOHSpeed;
         
-            float dpsMHMeleeHits = adjustedMHDPS;
             float dpsMHMeleeCrits = adjustedMHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsMHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
-            float dpsOHMeleeHits = adjustedOHDPS * weaponMastery;
             float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
-            float dpsMelee = (dpsMHMeleeHits + dpsMHMeleeCrits + dpsMHMeleeGlances + dpsOHMeleeHits + dpsOHMeleeCrits + dpsOHMeleeGlances)
+            float dpsMelee = (adjustedMHDPS + dpsMHMeleeCrits + dpsMHMeleeGlances + adjustedOHDPS + dpsOHMeleeCrits + dpsOHMeleeGlances)
                         * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
             //2: Stormstrike DPS
@@ -537,9 +535,14 @@ namespace Rawr
             float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage);
 
             //3: Lavalash DPS
-            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * 1.25f * (1 - chanceYellowMiss) * (1 + bonusFireDamage); //and no armor reduction yeya!
-            if (calcOpts.GlyphLL && calcOpts.OffhandImbue == "Flametongue")
-                dpsLL *= 1.1f; // 10% bonus dmg if Lava Lash Glyph & Flametongue imbue in OH
+            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * (1 - chanceYellowMiss) * (1 + bonusFireDamage); //and no armor reduction yeya!
+            if (calcOpts.OffhandImbue == "Flametongue")
+            {  // 25% bonus dmg if FT imbue in OH
+                if (calcOpts.GlyphLL)
+                    dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
+                else
+                    dpsLL *= 1.25f;  
+            }
 
             //4: Earth Shock DPS
             float ssGlyphBonus = calcOpts.GlyphSS ? .08f : 0f;
@@ -906,7 +909,6 @@ namespace Rawr
                     TotemShockSpellPower = stats.TotemShockSpellPower,
                     TotemSSHaste = stats.TotemSSHaste,
                     TotemWFAttackPower = stats.TotemWFAttackPower,
-                    BonusFlametongueDamage = stats.BonusFlametongueDamage,
                     GreatnessProc = stats.GreatnessProc,
                     BonusLSDamage = stats.BonusLSDamage,
                     BonusFlurryHaste = stats.BonusFlurryHaste,
@@ -937,7 +939,7 @@ namespace Rawr
                 stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + 
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
-                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusFlametongueDamage +
+                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + 
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
                 stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
                 stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
