@@ -277,7 +277,7 @@ namespace Rawr
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             
             //Set up some talent variables
-            int ET = character.ShamanTalents.EnhancingTotems;
+            // int ET = character.ShamanTalents.EnhancingTotems;
             int TS = character.ShamanTalents.ThunderingStrikes;
             int DWS = character.ShamanTalents.DualWieldSpecialization;
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
@@ -286,6 +286,7 @@ namespace Rawr
             float shieldBonus = 1f + .05f * character.ShamanTalents.ImprovedShields;
             float totemBonus = 1f + .05f * character.ShamanTalents.CallOfFlame;
             float windfuryWeaponBonus = 1250f + stats.TotemWFAttackPower;
+            float callOfThunder = .05f * character.ShamanTalents.CallOfThunder;
             switch (character.ShamanTalents.ElementalWeapons){
                 case 1:
                     windfuryWeaponBonus += windfuryWeaponBonus * .13f;
@@ -328,9 +329,12 @@ namespace Rawr
                 }
             }
 
-            // glyph stuff
             float spellCritModifier = stats.SpellCrit;
-            spellCritModifier += (calcOpts.GlyphFT && (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue")) ? .02f : 0f;
+            if (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue")
+            {
+                spellCritModifier += calcOpts.GlyphFT ? .02f : 0f;
+                stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
+            }
             
             //totem procs
             stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
@@ -387,7 +391,7 @@ namespace Rawr
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float baseSpellCrit = (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS;
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
-            float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
+            float spellDamage = (stats.SpellPower + stats.BonusFlametongueDamage) * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
@@ -551,6 +555,7 @@ namespace Rawr
             float coefLB = .7143f;
             // LightningSpellPower is for totem of hex/the void/ancestral guidance
             float damageLB = stormstrikeMultiplier * spellMultiplier * (damageLBBase + coefLB * (spellDamage + stats.LightningSpellPower));
+            hitRollMultiplier = (1 - chanceSpellMiss) + (chanceSpellCrit + callOfThunder) * (critMultiplierSpell - 1);
             float dpsLB = (hitRollMultiplier * damageLB / secondsToFiveStack) * (1 + bonusNatureDamage);
             if (calcOpts.GlyphLB)
                 dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -584,7 +589,7 @@ namespace Rawr
                 float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
                 // however that figure "varies according to weapon speed"
                 float damageFTCoef = .1f;
-                float damageFT = damageFTBase + damageFTCoef * spellDamage + stats.BonusFlametongueDamage;
+                float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
             } 
 
@@ -770,7 +775,6 @@ namespace Rawr
 			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
 						
             int MQ = character.ShamanTalents.MentalQuickness;
-            statsTotal.BonusFlametongueDamage = (float) Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
             return statsTotal;
 		}
