@@ -29,11 +29,16 @@ namespace Rawr.Enhance
             sb.AppendLine("### Rawr.Enhance Data Export to EnhSim ###");
             sb.AppendLine("##########################################");
             sb.AppendLine();
+            float MHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
+            float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
+            float OHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
+            float wdpsOH = character.OffHand == null ? 46.3f : character.OffHand.Item.DPS;
+
             sb.AppendLine("race                            " + character.Race.ToString().ToLower());
-            sb.AppendLine("mh_speed                        " + character.MainHand.Speed.ToString());
-            sb.AppendLine("oh_speed                        " + character.OffHand.Speed.ToString());
-            sb.AppendLine("mh_dps                          " + character.MainHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
-            sb.AppendLine("oh_dps                          " + character.OffHand.Item.DPS.ToString("F1", CultureInfo.InvariantCulture));
+            sb.AppendLine("mh_speed                        " + MHSpeed.ToString());
+            sb.AppendLine("oh_speed                        " + OHSpeed.ToString());
+            sb.AppendLine("mh_dps                          " + wdpsMH.ToString("F1", CultureInfo.InvariantCulture));
+            sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             float hitBonus = stats.HitRating / 32.78998947f;
@@ -45,7 +50,7 @@ namespace Rawr.Enhance
             float hasteBonus = stats.HasteRating / 32.78998947f;
             sb.AppendLine("haste                           " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
             float armourPenBonus = stats.ArmorPenetrationRating / 15.39529991f;
-            sb.AppendLine("armor_penetration               " + armourPenBonus.ToString("F2", CultureInfo.InvariantCulture)); 
+            sb.AppendLine("armor_penetration               " + armourPenBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("str                             " + stats.Strength.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("agi                             " + stats.Agility.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("int                             " + stats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
@@ -62,10 +67,13 @@ namespace Rawr.Enhance
             sb.AppendLine();
             sb.AppendLine("mh_enchant                      " + _mhEnchant);
             String weaponType = "-";
-            if (character.MainHand.Type == Item.ItemType.OneHandAxe)
-                weaponType = "axe";
-            else if (character.MainHand.Type == Item.ItemType.TwoHandAxe)
-                weaponType = "axe";
+            if (character.MainHand != null)
+            {
+                if (character.MainHand.Type == Item.ItemType.OneHandAxe)
+                    weaponType = "axe";
+                else if (character.MainHand.Type == Item.ItemType.TwoHandAxe)
+                    weaponType = "axe";
+            }
             sb.AppendLine("mh_weapon                       " + weaponType);
             sb.AppendLine("oh_enchant                      " + _ohEnchant);
             weaponType = "-";
@@ -76,20 +84,20 @@ namespace Rawr.Enhance
                 else if (character.OffHand.Type == Item.ItemType.TwoHandAxe)
                     weaponType = "axe";
             }
-            sb.AppendLine("oh_weapon                       " + weaponType); 
+            sb.AppendLine("oh_weapon                       " + weaponType);
             sb.AppendLine();
             sb.AppendLine("trinket1                        " + _trinket1name);
             sb.AppendLine("trinket2                        " + _trinket2name);
             sb.AppendLine();
-            sb.AppendLine("totem                           " + _totemname); 
-            sb.AppendLine("set_bonus                       " + getSetBonus(character)); 
-            sb.AppendLine("metagem                         " + _metagem); 
+            sb.AppendLine("totem                           " + _totemname);
+            sb.AppendLine("set_bonus                       " + getSetBonus(character));
+            sb.AppendLine("metagem                         " + _metagem);
             sb.AppendLine();
 
             addGlyphs(calcOpts, sb);
             sb.AppendLine();
-            sb.AppendLine("glyph_minor1                    -"); 
-            sb.AppendLine("glyph_minor2                    -"); 
+            sb.AppendLine("glyph_minor1                    -");
+            sb.AppendLine("glyph_minor2                    -");
             sb.AppendLine("glyph_minor3                    -");
             sb.AppendLine();
             sb.AppendLine("###########");
@@ -206,22 +214,29 @@ namespace Rawr.Enhance
 
         private String adjustMetaGemStats(ItemInstance head, Stats stats)
         {
-            switch (head.Gem1Id)
+            if (head != null)
             {
-                case 32409 :
-                    return "relentless_earthstorm_diamond";
-                case 32410 :
-                    return "thundering_skyfire_diamond";
-                case 34220 :
-                    return "chaotic_skyfire_diamond";
-                case 41285 :
-                    return "chaotic_skyflare_diamond";
-                case 41333 :
-                    return "ember_skyflare_diamond";
-                case 41398 :
-                    return "relentless_earthsiege_diamond";
-                default:
-                    return "-";
+                switch (head.Gem1Id)
+                {
+                    case 32409:
+                        return "relentless_earthstorm_diamond";
+                    case 32410:
+                        return "thundering_skyfire_diamond";
+                    case 34220:
+                        return "chaotic_skyfire_diamond";
+                    case 41285:
+                        return "chaotic_skyflare_diamond";
+                    case 41333:
+                        return "ember_skyflare_diamond";
+                    case 41398:
+                        return "relentless_earthsiege_diamond";
+                    default:
+                        return "-";
+                }
+            }
+            else
+            {
+                return "-";
             }
         }
 
@@ -419,7 +434,34 @@ namespace Rawr.Enhance
 
         private String getSetBonus(Character character)
         {
-            return "- # Not yet implemented in Rawr.Enhance model";
+            Dictionary<string, int> setCounts = new Dictionary<string, int>();
+            ItemInstance[] items = { character.Head, character.Chest, character.Hands, character.Shoulders, character.Legs,
+                                     character.Wrist, character.Waist, character.Feet }; // last 3 are for tier 6 eight piece set
+            for (int i = 0; i < items.Length; i++ )
+            {
+                if ((object)items[i] != null && !string.IsNullOrEmpty(items[i].Item.SetName))
+                {
+                    int count;
+                    setCounts.TryGetValue(items[i].Item.SetName, out count);
+                    setCounts[items[i].Item.SetName] = count + 1;
+                }
+            }
+            if (setCounts.Count > 0)
+            {
+                foreach (KeyValuePair<string, int> kvp in setCounts)
+                {
+                    switch (kvp.Key)
+                    {
+                        case "Earthshatter Battlegear" :
+                            if (kvp.Value >= 4)
+                                return "naxx_melee_4";
+                            if (kvp.Value >= 2)
+                                return "naxx_melee_2";
+                            break;
+                    }
+                }
+            }
+            return "-";
         }
     }
 }
