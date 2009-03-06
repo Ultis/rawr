@@ -950,12 +950,26 @@ namespace Rawr
 			Stats allStats = new Stats();
 			for (int i = 0; i < allStats._rawAdditiveData.Length; i++) allStats._rawAdditiveData[i] = 1f;
 			
+            float divisor = 1.0f;
             IDictionary<PropertyInfo, float> relevantStats = Calculations.GetRelevantStats(allStats).Values(x => x > 0);
             foreach (KeyValuePair<PropertyInfo, float> pair in relevantStats)
             {
                 ComparisonCalculationBase ccb = GetRelativeStatValue(character, pair.Key);
-                if (ccb != null && ccb.OverallPoints > 0f) { retComparisonCalcutions.Add(ccb); }
+                if (ccb != null && ccb.OverallPoints > 0f) { 
+                    retComparisonCalcutions.Add(ccb); 
+                    if(ccb.getBaseStatOption(character) && ccb.Name.Equals(ccb.BaseStat))
+                        divisor = ccb.OverallPoints;
+                }
             }
+            // apply Relative stats divisor to adjust scaling to 1.00 for Base Stat
+            if (divisor != 1.0f && divisor != 0.0f)
+                foreach (ComparisonCalculationBase ccb in retComparisonCalcutions)
+                {
+                    for (int i = 0; i < ccb.SubPoints.Length; i++)
+                        ccb.SubPoints[i] /= divisor;
+                    ccb.OverallPoints /= divisor;
+                }
+
             // Return results
             return retComparisonCalcutions.ToArray();
         }
@@ -1218,6 +1232,16 @@ namespace Rawr
         /// are based. Used by optimizer upgrade calculations.
         /// </summary>
         public Character Character { get; set; }
+ 
+        /// <summary>
+        /// Name of the Stat to set to 1.00 for relative stats calcs
+        /// </summary>
+        public virtual String BaseStat { get; set; }
+        
+        /// <summary>
+        /// User Option whether to use the Base Stat feature for relative stats calcs
+        /// </summary>
+        public virtual bool getBaseStatOption(Character character) { return false; }
     }
 
 	/// <summary>

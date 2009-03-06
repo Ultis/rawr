@@ -1313,9 +1313,19 @@ namespace Rawr
 			get { return _equipped; }
 			set { _equipped = value; }
 		}
-        
 
-		public override string ToString()
+        public override String BaseStat
+        {
+            get { return " Attack Power"; }
+        }
+
+        public override bool getBaseStatOption(Character character) 
+        {
+            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            return calcOpts.BaseStatOption;
+        }
+
+       	public override string ToString()
 		{
 			return string.Format("{0}: ({1}O {2}DPS)", Name, Math.Round(OverallPoints), Math.Round(DPSPoints));
 		}

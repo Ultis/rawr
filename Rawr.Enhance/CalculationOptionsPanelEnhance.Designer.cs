@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.comboBoxOffhandImbue = new System.Windows.Forms.ComboBox();
             this.comboBoxMainhandImbue = new System.Windows.Forms.ComboBox();
@@ -86,6 +87,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chbBaseStatOption);
             this.tabPage1.Controls.Add(this.labelTargetArmorDescription);
             this.tabPage1.Controls.Add(this.comboBoxOffhandImbue);
             this.tabPage1.Controls.Add(this.comboBoxMainhandImbue);
@@ -113,6 +115,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chbBaseStatOption
+            // 
+            this.chbBaseStatOption.AutoSize = true;
+            this.chbBaseStatOption.Location = new System.Drawing.Point(10, 364);
+            this.chbBaseStatOption.Name = "chbBaseStatOption";
+            this.chbBaseStatOption.Size = new System.Drawing.Size(211, 17);
+            this.chbBaseStatOption.TabIndex = 35;
+            this.chbBaseStatOption.Text = "Use AEP values in Relative Stats Chart";
+            this.chbBaseStatOption.UseVisualStyleBackColor = true;
+            this.chbBaseStatOption.CheckedChanged += new System.EventHandler(this.chbBaseStatOption_CheckedChanged);
             // 
             // labelTargetArmorDescription
             // 
@@ -558,6 +571,7 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
+        private System.Windows.Forms.CheckBox chbBaseStatOption;
 
     }
 }

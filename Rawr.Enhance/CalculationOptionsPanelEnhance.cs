@@ -205,10 +205,20 @@ namespace Rawr
 
         private void btnEnhSim_Click(object sender, EventArgs e)
         {
-            if (!_loadingCalculationOptions & Character.Name != null)
+            if (!_loadingCalculationOptions)
             {
                 Enhance.EnhSim simExport = new Enhance.EnhSim(Character);
                 simExport.copyToClipboard();
+            }
+        }
+
+        private void chbBaseStatOption_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.BaseStatOption = chbBaseStatOption.Checked;
+                Character.OnCalculationsInvalidated();
             }
         }
     }
@@ -223,6 +233,7 @@ namespace Rawr
         public bool GlyphShocking { get; set; }
         public bool GlyphSS { get; set; }
         public bool GlyphWF { get; set; }
+        public bool BaseStatOption { get; set; }
        
         public string GetXml()
 		{
