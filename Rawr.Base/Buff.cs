@@ -2180,6 +2180,28 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Enhancement Shaman Tier 7 Set Bonuses
+            
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Battlegear",
+                Stats = { BonusLSDamage = 0.1f },
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Earthshatter Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Earthshatter Battlegear",
+                Stats = { BonusFlurryHaste = 0.05f },
+                SetThreshold = 4
+            });
+
             //Hunter Set Bonuses
             defaultBuffs.Add(new Buff()
             {

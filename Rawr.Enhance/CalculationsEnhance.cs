@@ -297,7 +297,7 @@ namespace Rawr
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
             }
-            float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1,character.ShamanTalents.Flurry);
+            float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1, character.ShamanTalents.Flurry) + stats.BonusFlurryHaste;
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
@@ -392,6 +392,7 @@ namespace Rawr
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier) - 1f;
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) - 1f;
+            float bonusLSDamage = stats.BonusLSDamage; // 2 piece T7 set bonus
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
@@ -566,7 +567,7 @@ namespace Rawr
             float damageLSBase = 380;
             float damageLSCoef = 1f; // co-efficient from www.wowwiki.com/Spell_power_coefficient
             float damageLS = stormstrikeMultiplier * shieldBonus * (damageLSBase + damageLSCoef * spellDamage);
-            float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage);
+            float dpsLS = (1 - chanceSpellMiss) * staticShockProcsPerS * damageLS * (1 + bonusNatureDamage) * (1 + bonusLSDamage);
             if (calcOpts.GlyphLS)
                 dpsLS *= 1.2f; // 20% bonus dmg if Lightning Shield Glyph
 
@@ -903,6 +904,8 @@ namespace Rawr
                     TotemWFAttackPower = stats.TotemWFAttackPower,
                     BonusFlametongueDamage = stats.BonusFlametongueDamage,
                     GreatnessProc = stats.GreatnessProc,
+                    BonusLSDamage = stats.BonusLSDamage,
+                    BonusFlurryHaste = stats.BonusFlurryHaste,
                     HasteRatingOnPhysicalAttack = stats.HasteRatingOnPhysicalAttack,
                     HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                     SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
@@ -922,19 +925,20 @@ namespace Rawr
 		{
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-				stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + 
-				stats.Strength + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating +
+                stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
+                stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength + 
+				stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating +
 				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
                 stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
                 stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + 
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
                 stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusFlametongueDamage +
-                stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 +
-                stats.SpellPowerFor10SecOnHit_10_45 + stats.PendulumOfTelluricCurrentsProc + stats.PhysicalCrit + 
-                stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit + stats.SpellHit + stats.SpellHaste +
-                stats.BonusPhysicalDamageMultiplier + stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0;
+                stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
+                stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
+                stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
+                stats.SpellHit + stats.SpellHaste + stats.BonusPhysicalDamageMultiplier + 
+                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0;
         }
         #endregion
     }
