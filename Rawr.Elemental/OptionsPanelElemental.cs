@@ -63,6 +63,9 @@ namespace Rawr.Elemental
 
             cbThunderstorm.Checked = calcOpts.UseThunderstorm;
 
+            cbNup.Checked = (calcOpts.rotationType & 1) == 0;
+            cbMup.Checked = (calcOpts.rotationType & 2) == 0;
+
             loading = false;
 
             //Enable/Disable Glyph Checkboxes
@@ -166,6 +169,24 @@ namespace Rawr.Elemental
             calcOpts.UseThunderstorm = cbThunderstorm.Checked;
             Character.OnCalculationsInvalidated();
         }
+
+        private void cbNupdown_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            if (cbNup.Checked) calcOpts.rotationType &= ~1;
+            else calcOpts.rotationType |= 1;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbMupdown_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsElemental calcOpts = Character.CalculationOptions as CalculationOptionsElemental;
+            if (cbMup.Checked) calcOpts.rotationType &= ~2;
+            else calcOpts.rotationType |= 2;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -190,6 +211,8 @@ namespace Rawr.Elemental
         public bool glyphOfShocking = false;
 
         public bool glyphOfWaterMastery = false;
+
+        public int rotationType = 0;
 
         public void SetGlyph(int index, bool value)
         {

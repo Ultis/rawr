@@ -152,9 +152,9 @@ namespace Rawr.Elemental.Estimation
             // You can't cast a half LB
             // Options: 
             // 0. finish the cast both times 
-            // 1. don't finish the cast, just wait both times
+            // 1. wait the first time, finish the second time
             // 2. finish the first time, wait the second time
-            // 3. wait the first time, finish the second time
+            // 3. don't finish the cast, just wait both times
             if (type == 0)
             {
                 float shift = ((float)Math.Ceiling(nLBfirst) - nLBfirst) * LB.CastTime;
@@ -176,8 +176,18 @@ namespace Rawr.Elemental.Estimation
             {
                 timeWasted += (nLBfirst - (float)Math.Floor(nLBfirst)) * LB.CastTime;
                 nLBfirst = (float)Math.Floor(nLBfirst);
-                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
-                nLBsecond = (float)Math.Floor(nLBsecond);
+                float shift = ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
+                nLBsecond = (float)Math.Ceiling(nLBsecond);
+                timeBetweenLvB += shift;
+                if (!calcOpts.glyphOfFlameShock)
+                {
+                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
+                }
+                else
+                {
+                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
+                    timeBetweenFS = 2 * timeBetweenLvB;
+                }
             }
             else if (type == 2)
             {
@@ -200,18 +210,8 @@ namespace Rawr.Elemental.Estimation
             {
                 timeWasted += (nLBfirst - (float)Math.Floor(nLBfirst)) * LB.CastTime;
                 nLBfirst = (float)Math.Floor(nLBfirst);
-                float shift = ((float)Math.Ceiling(nLBsecond) - nLBsecond) * LB.CastTime;
-                nLBsecond = (float)Math.Ceiling(nLBsecond);
-                timeBetweenLvB += shift;
-                if (!calcOpts.glyphOfFlameShock)
-                {
-                    timeBetweenFS = Math.Max(timeBetweenLvB, FS.CDRefreshTime);
-                }
-                else
-                {
-                    timeBetweenLvB = Math.Max(LvB.CDRefreshTime, timeBetweenFS / 2);
-                    timeBetweenFS = 2 * timeBetweenLvB;
-                }
+                timeWasted += (nLBfirst - (float)Math.Floor(nLBsecond)) * LB.CastTime;
+                nLBsecond = (float)Math.Floor(nLBsecond);
             }
             float castFractionLvB = LvB.CastTime / timeBetweenLvB; // LvB casting time per second
             float castFractionFS = FS.CastTime / timeBetweenFS; // FS casting time per second
@@ -345,14 +345,14 @@ namespace Rawr.Elemental.Estimation
             Stats procStats;
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts, 1);
-            rot = e.getAvgRotation(0);
+            rot = e.getAvgRotation(calcOpts.rotationType);
             // WITH PROCS
             int nPasses = 2, k;
             for (k = 0; k < nPasses; k++)
             {
                 procStats = getTrinketStats(character, stats, calcOpts.FightDuration, rot.CastFraction, rot.CritFraction, rot.MissFraction, 1f / 3f, out damage);
-                e = new Estimation(stats, procStats, talents, calcOpts, 1); // 4+k
-                rot = e.getAvgRotation(0);
+                e = new Estimation(stats, procStats, talents, calcOpts, 4+k); // 4+k
+                rot = e.getAvgRotation(calcOpts.rotationType);
             }
 
             /* Regen variables: (divide by 5 for regen per second)

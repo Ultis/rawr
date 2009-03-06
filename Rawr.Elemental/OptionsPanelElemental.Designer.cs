@@ -37,6 +37,10 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbMup = new System.Windows.Forms.CheckBox();
+            this.cbNup = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbThunderstorm = new System.Windows.Forms.CheckBox();
             this.cmbManaAmt = new System.Windows.Forms.ComboBox();
@@ -68,6 +72,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -164,6 +169,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.groupBox7);
@@ -174,6 +180,49 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Fight";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cbMup);
+            this.groupBox1.Controls.Add(this.cbNup);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Location = new System.Drawing.Point(6, 423);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(277, 98);
+            this.groupBox1.TabIndex = 55;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Rotation details";
+            // 
+            // cbMup
+            // 
+            this.cbMup.AutoSize = true;
+            this.cbMup.Location = new System.Drawing.Point(9, 55);
+            this.cbMup.Name = "cbMup";
+            this.cbMup.Size = new System.Drawing.Size(162, 17);
+            this.cbMup.TabIndex = 2;
+            this.cbMup.Text = "Round m up instead of down";
+            this.cbMup.UseVisualStyleBackColor = true;
+            this.cbMup.CheckedChanged += new System.EventHandler(this.cbMupdown_CheckedChanged);
+            // 
+            // cbNup
+            // 
+            this.cbNup.AutoSize = true;
+            this.cbNup.Location = new System.Drawing.Point(9, 32);
+            this.cbNup.Name = "cbNup";
+            this.cbNup.Size = new System.Drawing.Size(160, 17);
+            this.cbNup.TabIndex = 1;
+            this.cbNup.Text = "Round n up instead of down";
+            this.cbNup.UseVisualStyleBackColor = true;
+            this.cbNup.CheckedChanged += new System.EventHandler(this.cbNupdown_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 16);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(186, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Rotation: FS/LavaB/nLB/LavaB/nLB";
             // 
             // groupBox3
             // 
@@ -512,6 +561,8 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox10.ResumeLayout(false);
@@ -569,6 +620,10 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbWaterMastery;
         private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel13;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox cbMup;
+        private System.Windows.Forms.CheckBox cbNup;
+        private System.Windows.Forms.Label label1;
 
     }
 }
