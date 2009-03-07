@@ -119,7 +119,7 @@ namespace Rawr.Tree
 
             spell = new HealingTouch(this);
             dictValues.Add("HT Heal", Math.Round(spell.AverageHealing, 2) + "*" + Math.Round(spell.MinHeal, 2) + " - " + Math.Round(spell.MaxHeal, 2) + "\n" + Math.Round(spell.MinHeal * 1.5f, 2) + " - " + Math.Round(spell.MaxHeal * 1.5f, 2) + "\n" + spell.CritPercent + "% Crit");
-            dictValues.Add("HT HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime" + (spell.castTime < spell.CastTime ? ", GCD capped" : ""));
+            dictValues.Add("HT HPS", Math.Round(spell.HPS, 2) + "*" + Math.Round(spell.CastTime, 2) + "sec Casttime" + (spell.castTimeBeforeHaste < spell.CastTime ? ", GCD capped" : ""));
             dictValues.Add("HT HPM", Math.Round(spell.HPM, 2) + "*" + Math.Round(spell.TotalAverageHealing, 2) + " Health\n" + Math.Round(spell.manaCost, 2) + " Manacost");
 
             spell = new WildGrowth(this);

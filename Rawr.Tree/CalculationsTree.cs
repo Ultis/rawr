@@ -345,6 +345,7 @@ namespace Rawr.Tree
             #endregion
 
             #region Primary Heal
+            primaryHeal.calculateNaturesGrace(primaryHeal.CritPercent);
             float tpsHealing = 1f - (hotsCastTime + wgCastTime);
             tpsHealing *= primaryFrac;
             float hpsHealing = 0;
