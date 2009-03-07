@@ -402,7 +402,7 @@ namespace Rawr.Retribution
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f;
-            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) * 4f;
+            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating * (calcOpts.Mode31 ? 1.25f : 1f)) * 4f;
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
