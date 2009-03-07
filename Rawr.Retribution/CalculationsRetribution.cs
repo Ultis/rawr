@@ -233,7 +233,7 @@ namespace Rawr.Retribution
             float critBonus = 2f * (1f + stats.BonusCritMultiplier);
             float spellCritBonus = 1.5f * (1f + stats.BonusSpellCritMultiplier);
             float aow = 1f + .05f * talents.TheArtOfWar;
-            float rightVen = .08f * talents.RighteousVengeance;
+            float rightVen = .1f * talents.RighteousVengeance;
 
             float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - talents.SanctifiedWrath * 30f));
             float aw = 1f + ((awTimes * 20f) / fightLength) * 1.2f;
@@ -289,7 +289,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Judgement
-            float judgeCrit = stats.PhysicalCrit + .05f * talents.Fanaticism;
+            float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
             float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
