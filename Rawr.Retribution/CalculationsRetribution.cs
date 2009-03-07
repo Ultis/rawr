@@ -285,7 +285,7 @@ namespace Rawr.Retribution
             #region Divine Storm
             float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
             float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
-            float dsRightVen = dsDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit);
+            float dsRightVen = dsDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : (spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit));
             calc.DivineStormDPS = (dsAvgHit + dsRightVen) / 10f;
             #endregion
 
@@ -294,7 +294,7 @@ namespace Rawr.Retribution
             float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
-            float judgeRightVen = judgeDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : spellPowerMulti * talentMulti * partialResist * judgeCrit);
+            float judgeRightVen = judgeDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : (spellPowerMulti * talentMulti * partialResist * judgeCrit));
             calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / (8f - stats.JudgementCDReduction);
             #endregion
 
@@ -414,8 +414,7 @@ namespace Rawr.Retribution
             stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating + libramCrit) * .01f
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating) * .01f) - 1f
-                * (calcOpts.Mode31 ? 1.3f : 1f);
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating * (calcOpts.Mode31 ? 1.3f : 1f)) * .01f) - 1f;
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
 
