@@ -72,7 +72,7 @@ namespace Rawr.Tankadin
         public float ASThreat { get; set; }
 
         public float ConsDamage { get; set; }
-        public float ConsThreat { get; set; }
+        public float ConsTPS { get; set; }
         public float ConsDuration { get; set; }
 
         public float HotRDamage { get; set; }
@@ -81,7 +81,7 @@ namespace Rawr.Tankadin
         public float SoRDamage { get; set; }
         public float SoRThreat { get; set; }
         public float SoVDamage { get; set; }
-        public float SoVThreat { get; set; }
+        public float SoVTPS { get; set; }
         
         public float HSDamage { get; set; }
         public float HSThreat { get; set; }
@@ -98,7 +98,8 @@ namespace Rawr.Tankadin
         public float WhiteThreat { get; set; }
 
         public float Rot1TPS { get; set; }
-
+		public float Rot2TPS { get; set; }
+        
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -151,17 +152,18 @@ namespace Rawr.Tankadin
             dict.Add("Chance to Dodge", string.Format("{0}%", Math.Round(ToDodge * 100f, 2)));
             dict.Add("Chance to Parry", string.Format("{0}%", Math.Round(ToParry * 100f, 2)));            
             dict.Add("Chance to Crit", string.Format("{0}%", Math.Round(ToCrit * 100f, 2)));
-            dict.Add("Consecrate", string.Format("{0} threat*{1} damage per hit", Math.Round(ConsThreat), Math.Round(ConsDamage/ConsDuration)));
+            dict.Add("Consecrate", string.Format("{0} threat*{1} damage per hit", Math.Round(ConsTPS), Math.Round(ConsDamage/ConsDuration)));
             dict.Add("ShoR", string.Format("{0} threat*{1} damage", Math.Round(ShoRThreat), Math.Round(ShoRDamage)));
             dict.Add("HotR", string.Format("{0} threat*{1} damage", Math.Round(HotRThreat), Math.Round(HotRDamage)));
             dict.Add("Avenger's Shield", string.Format("{0} threat*{1} damage", Math.Round(ASThreat), Math.Round(ASDamage)));
             dict.Add("Holy Shield", string.Format("{0} threat*{1} damage", Math.Round(HSThreat), Math.Round(HSDamage)));
             dict.Add("SoR", string.Format("{0} tps*{1} damage", Math.Round(SoRThreat), Math.Round(SoRDamage)));
             dict.Add("JoR", string.Format("{0} threat*{1} damage", Math.Round(JoRThreat), Math.Round(JoRDamage)));
-            dict.Add("SoV", string.Format("{0} tps*{1} damage per tick", Math.Round(SoVThreat), Math.Round(SoVDamage)));
+            dict.Add("SoV", string.Format("{0} tps*{1} damage per tick", Math.Round(SoVTPS), Math.Round(SoVDamage)));
             dict.Add("JoV", string.Format("{0} threat*{1} damage", Math.Round(JoVThreat), Math.Round(JoVDamage)));
             dict.Add("White Damage", string.Format("{0} tps*{1} damage", Math.Round(WhiteThreat), Math.Round(WhiteDamage)));
-            dict.Add("Total Threat", string.Format("{0} tps", Math.Round(Rot1TPS)));
+            dict.Add("Total Threat (SoV)", string.Format("{0} tps", Math.Round(Rot1TPS)));
+            dict.Add("Total Threat (SoR)", string.Format("{0} tps", Math.Round(Rot2TPS)));
             return dict;
         }
         
@@ -173,7 +175,8 @@ namespace Rawr.Tankadin
                 case "% Chance to be Hit": return Hit * 100f;
                 case "% Chance to be Crit": return (.05f - CritAvoidance) * 100f;
                 case "Defense": return 400f + Defense;
-                case "TPS": return Rot1TPS;
+                case "SoV TPS": return Rot1TPS;
+                case "SoR TPS": return Rot2TPS;
                 case "Block Value": return BlockValue;
                 case "Expertise": return BasicStats.Expertise;
                 case "% Chance to Hit": return ToLand * 100f;

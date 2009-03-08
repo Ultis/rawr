@@ -111,7 +111,8 @@ namespace Rawr.Tankadin
 						"Defensive Stats:Damage Taken*The weighted average damage per hit.",
 						"Defensive Stats:Damage When Hit*How much damage you take when hit.",
 						"Defensive Stats:Chance to be Crit",
-                        "Threat Stats:Total Threat",
+                        "Threat Stats:Total Threat (SoV)",
+                        "Threat Stats:Total Threat (SoR)",
                         "Threat Stats:ShoR",
                         "Threat Stats:HotR",
                         "Threat Stats:SoV",
@@ -175,7 +176,7 @@ you are being killed by burst damage, focus on Survival Points.",
                     _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
                     _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.DarkOliveGreen);
+                    _subPointNameColors.Add("Threat", System.Drawing.Color.Yellow);
                 }
                 return _subPointNameColors;
             }
@@ -218,7 +219,8 @@ you are being killed by burst damage, focus on Survival Points.",
 					"Defense",
 					"% Chance to be Hit",
 					"% Chance to be Crit",
-					"TPS",
+					"SoV TPS",
+					"SoR TPS",
 					"Block Value",
 					"Expertise",
 					"% Chance to Hit",
@@ -352,11 +354,11 @@ you are being killed by burst damage, focus on Survival Points.",
             //TODO Implement Glyph of Consecrate, try to find a way to put it into rotation
             cs.ConsDuration = 8f;
             cs.ConsDamage = cs.ConsDuration * (113f + .04f * (stats.SpellPower + stats.ConsecrationSpellPower) + .04f * stats.AttackPower) * damageMulti * holyMulti;
-            cs.ConsThreat = cs.ConsDamage * holyThreatMod / 8;
+            cs.ConsTPS = cs.ConsDamage * holyThreatMod / 8;
 
             //Seal of Righteousness (Per Swing)
             cs.SoRDamage = ws * (.028f * stats.AttackPower + .055f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
-            cs.SoRThreat = cs.SoRDamage / ws * cs.ToLand * holyThreatMod * (1f + reckoning);
+            cs.SoRThreat = cs.SoRDamage / ws * cs.ToLand * holyThreatMod;
 
             //Judgement of Righteousness (Per Swing)
             cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
@@ -365,7 +367,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //Seal of Vengeance (Damage = Per Tick, Threat = Per Second)
             //TODO Unify Damage and Threat
             cs.SoVDamage = (0.016f * stats.SpellPower + 0.032f * stats.AttackPower) * damageMulti * 5f * holyMulti * (1 + .03f * talents.SealsOfThePure);
-            cs.SoVThreat = cs.SoVDamage * holyThreatMod / 3f;
+            cs.SoVTPS = cs.SoVDamage * holyThreatMod / 3f;
 
             //Judgement of Vengeance (Per Cast)
             cs.JoVDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
@@ -382,34 +384,24 @@ you are being killed by burst damage, focus on Survival Points.",
 
             //White Attacks
             cs.WhiteDamage = wd * targetReduction * damageMulti;
-            cs.WhiteThreat = cs.WhiteDamage / ws * cs.ToLand * normalThreatMod * (1f + reckoning);
+            cs.WhiteThreat = cs.WhiteDamage / ws * cs.ToLand * normalThreatMod;
 
-            //Threat Rotations: (just 1 for now)
-
-            // #1: 96969 (Level 70 version)
-            /*
-            float rot1Time = 18f;
-            cs.Rot1TPS = (3 * cs.HotRThreat + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + cs.SoVThreat + ( cs.WhiteThreat * rot1Time) / rot1Time;
-         float rot1DPS = (3 * cs.HotRDamage + 2 * (cs.HSDamage + cs.JoVDamage + cs.ConsDamage) + cs.SoVDamage + ( cs.WhiteDamage * rot1Time) / rot1Time;
-
-            cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
-            */
-            
-            // Seal of Vengeance-based Rotation
-//            float rot1Time = 18f;
-//            cs.Rot1TPS = 3 * (cs.HotRThreat + cs.ShoRThreat) + 2 * (cs.HSThreat + cs.JoVThreat + cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rot1Time) / rot1Time);
-//            float rot1DPS = 3 * (cs.HotRDamage + cs.ShoRDamage) + 2 * (cs.HSDamage + cs.JoVDamage) + cs.ConsDamage + (cs.SoVDamage + (s.WhiteDamage) * rot1Time) / rot1Time;
-
-			// Revised Seal of Vengeance Rotation
 			float rotTime = 18f;
-			cs.Rot1TPS = ((3 * cs.HotRThreat) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rotTime)) / rotTime;
-			float rot1DPS = ((3 * cs.HotRDamage) + (2 * cs.ShoRDamage) + cs.ShoRJBVDamage + (2 * cs.HSDamage) + (2 * cs.JoVDamage) + (2 * cs.ConsDamage) + ((cs.SoVDamage + cs.WhiteDamage) * rotTime)) / rotTime;
-
-            cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
-            //Incoming Damage Mechanics
-
-
-
+			// Rotation #1: Seal of Vengeance
+			cs.Rot1TPS = ((3 * cs.HotRThreat) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsTPS) + ((cs.SoVTPS + cs.WhiteThreat * (1f + reckoning)) * rotTime)) / rotTime;
+			// Rotation #2 Seal of Righteousness 
+			cs.Rot2TPS = ((3 * (cs.HotRThreat + cs.SoRThreat)) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoRThreat) + (2 * cs.ConsTPS) + ((cs.SoRThreat + cs.WhiteThreat) * (1f + reckoning) * rotTime)) / rotTime;
+			
+			switch (calcOpts.ThreatRotationChoice)
+			{
+				case 2:
+					cs.ThreatPoints = cs.Rot2TPS * calcOpts.ThreatScale;
+					break;
+				default:
+					cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
+					break;
+			}
+           
             cs.OverallPoints = cs.ThreatPoints + cs.MitigationPoints + cs.SurvivalPoints;
             return cs;
         }
@@ -465,7 +457,8 @@ you are being killed by burst damage, focus on Survival Points.",
                 + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
             stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
             stats.Health *= (1f + stats.BonusHealthMultiplier);
-            stats.Armor = (float)Math.Round((stats.Armor * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
+            // stats.Armor = (float)Math.Round((stats.Armor * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
+			stats.Armor = (float)Math.Round((stats.Armor  * (1f + talents.Toughness * .02f) * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier));
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 

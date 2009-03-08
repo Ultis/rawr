@@ -33,6 +33,8 @@ namespace Rawr.Tankadin
             trackBarThreatScale.Value = calcOpts.ThreatScale;
             lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
+            radioButtonSoR.Checked = (calcOpts.ThreatRotationChoice == 1);
+            radioButtonSoV.Checked = (calcOpts.ThreatRotationChoice == 2);
 
         }
 
@@ -80,6 +82,23 @@ namespace Rawr.Tankadin
         }
 
 
+        
+        void RadioButtonCheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                if (radioButtonSoR.Checked)
+                {
+                	calcOpts.ThreatRotationChoice = 2;
+                }
+                else
+                {
+                	calcOpts.ThreatRotationChoice = 1;
+                }
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
@@ -102,6 +121,7 @@ namespace Rawr.Tankadin
         public int TargetArmor = 10000;
         public int ThreatScale = 10;
         public int MitigationScale = 7000;
+        public int ThreatRotationChoice = 1;
     }
 
 }
