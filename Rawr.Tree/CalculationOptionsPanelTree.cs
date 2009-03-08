@@ -28,7 +28,10 @@ namespace Rawr.Tree
                 "Haste procs like Embrace of the Spider are modelled with 17% uptime)\r\n" +
                 "\r\n"+
                 "Currently unmodelled trinkets:\r\n" +
-                "Darkmoon Card: Blue Dragon, various Figurines, Soul Preserver";
+                "Darkmoon Card: Blue Dragon, various Figurines, Soul Preserver\r\n"+
+                "\r\n"+
+                "HealBurst is the HPS you can expect with your current rotation until you go out of mana, but with 100% casting Primary healing spell outside keeping HoTs on the tank(s).\r\n"+
+                "HealSustained is the HPS from your current rotation for the entire fight.";
         }
 
         protected override void LoadCalculationOptions()
