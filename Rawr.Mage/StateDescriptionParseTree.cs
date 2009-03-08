@@ -321,6 +321,7 @@ namespace Rawr.Mage.StateDescription
                 }
             }
             StateDescriptionDelegate[] list = nodelist.ToArray();
+            if (list.Length == 1) return list[0];
             return delegate(Cooldown cooldown)
             {
                 for (int i = 0; i < list.Length; i++)
@@ -398,6 +399,7 @@ namespace Rawr.Mage.StateDescription
             else
             {
                 StateDescriptionDelegate[] list = nodelist.ToArray();
+                if (list.Length == 1) return list[0];
                 return delegate(Cooldown cooldown)
                 {
                     for (int i = 0; i < list.Length; i++)

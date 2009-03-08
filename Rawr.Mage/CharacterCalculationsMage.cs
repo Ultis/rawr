@@ -117,7 +117,7 @@ namespace Rawr.Mage
         public string Trinket2Name;
         public int MaxManaPotion;
         public int MaxManaGem;
-        public int MaxEvocation;
+        public double MaxEvocation;
         public double EvocationTps;
         public double ManaGemTps;
         public double ManaPotionTps;
@@ -255,6 +255,7 @@ namespace Rawr.Mage
                     }
                 }
             }
+            sequence.GroupEvocation();
             sequence.SortGroups();
 
             // mana gem/pot/evo positioning
@@ -312,7 +313,7 @@ namespace Rawr.Mage
             dictValues.Add("Armor", BaseStats.Armor.ToString());
             dictValues.Add("Health", BaseStats.Health.ToString());
             dictValues.Add("Mana", BaseStats.Mana.ToString());
-            dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * BaseState.SpellCrit, BaseStats.CritRating));
+            dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * Math.Max(0, BaseState.SpellCrit), BaseStats.CritRating));
             float levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (CalculationOptions.PlayerLevel - 70) / 10f));
             // hit rating = hitrate * 800 / levelScalingFactor
             dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating\r\nArcane\t{2:F}%{3}\r\nFire\t{4:F}%{5}\r\nFrost\t{6:F}%{7}", 100 * BaseState.SpellHit, BaseStats.HitRating, 100 * BaseState.ArcaneHitRate, (BaseState.ArcaneHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.ArcaneHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FireHitRate, (BaseState.FireHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FireHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FrostHitRate, (BaseState.FrostHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FrostHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : ""));

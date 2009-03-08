@@ -7,8 +7,7 @@ namespace Rawr.Mage
     public unsafe class LP
     {
         internal SparseMatrix A;
-        private double[] extraConstraints;
-        private List<bool> extraConstraintEditable;
+        private int[] extraConstraintsUsed;
         private int numExtraConstraints;
         private int baseRows;
         private int rows;
@@ -18,6 +17,9 @@ namespace Rawr.Mage
         private int[] _V;
         LU lu;
 
+        private static Dictionary<string, int> extraConstraintMap = new Dictionary<string,int>();
+        private static int[] extraReferenceCount;
+        private static double[] extraConstraints;
         private static double[] _d;
         private static double[] _x;
         private static double[] _w;
@@ -25,6 +27,7 @@ namespace Rawr.Mage
         private static double[] _wd;
         private static double[] _u;
         private static double[] _c;
+        private static double*[] _pD;
         //internal static double[] _b;
         internal static double[] _cost;
         private static double[] _costWorking;
@@ -65,6 +68,7 @@ namespace Rawr.Mage
         private double* cost;
         private double* sparseValue;
         private double* D;
+        private double** pD;
         private int* B;
         private int* V;
         private int* sparseRow;
@@ -77,11 +81,13 @@ namespace Rawr.Mage
 
         private static int maxRows = 0;
         private static int maxCols = 0;
+        private static int maxExtra = 0;
+        private static int maxExtraRows = 0;
 
         private const double epsPrimal = 1.0e-7;
         private const double epsPrimalLow = 1.0e-6;
         private const double epsPrimalRel = 1.0e-9;
-        private const double epsDual = 1.0e-7; 
+        private const double epsDual = 1.0e-7;
         private const double epsDualI = 1.0e-8;
         private const double epsPivot = 1.0e-5;
         private const double epsPivot2 = 1.0e-7;
@@ -93,6 +99,9 @@ namespace Rawr.Mage
             maxRows = 200;
             maxCols = 5000;
             RecreateArrays();
+            maxExtraRows = 32;
+            extraConstraints = new double[maxExtraRows * maxCols];
+            extraReferenceCount = new int[maxExtraRows];
         }
 
         private static void RecreateArrays()
@@ -137,8 +146,12 @@ namespace Rawr.Mage
             clone._ub = (double[])_ub.Clone();
             if (numExtraConstraints > 0)
             {
-                clone.extraConstraints = (double[])extraConstraints.Clone();
-                clone.extraConstraintEditable = new List<bool>(extraConstraintEditable);
+                clone.extraConstraintsUsed = (int[])extraConstraintsUsed.Clone();
+                // increase reference count
+                for (int i = 0; i < numExtraConstraints; i++)
+                {
+                    extraReferenceCount[extraConstraintsUsed[i]]++;
+                }
             }
             return clone;
         }
@@ -191,6 +204,11 @@ namespace Rawr.Mage
             }
         }
 
+        public double GetLowerBound(int col)
+        {
+            return _lb[col];
+        }
+
         public void SetLowerBound(int col, double value)
         {
             _lb[col] = value;
@@ -235,6 +253,12 @@ namespace Rawr.Mage
             if (_ub[col] < _lb[col] - epsZero) hardInfeasibility = true;
         }
 
+        public double GetRHS(int row)
+        {
+            //_b[row] = value;
+            return -GetLowerBound(cols + row);
+        }
+
         public void SetRHS(int row, double value)
         {
             //_b[row] = value;
@@ -248,12 +272,12 @@ namespace Rawr.Mage
 
         public double GetConstraintElement(int index, int col)
         {
-            return extraConstraints[index * cols + col];
+            return extraConstraints[extraConstraintsUsed[index] * cols + col];
         }
 
         public void SetConstraintElement(int index, int col, double value)
         {
-            extraConstraints[index * cols + col] = value;
+            extraConstraints[extraConstraintsUsed[index] * cols + col] = value;
         }
 
         public double GetConstraintRHS(int index)
@@ -294,14 +318,76 @@ namespace Rawr.Mage
             _cost[cols] = 0.0;
             _ub[cols] = double.PositiveInfinity;
             _flags[cols] = flagNLB | flagLB;
-            cols++;            
+            cols++;
             return A.AddColumn();
         }
 
         private int maxSize;
 
+        private int GetConstraint(string name, out bool newConstraint)
+        {
+            int index;
+            if (name == null || !extraConstraintMap.TryGetValue(name, out index))
+            {
+                // first check if we have any free constraints
+                for (index = 0; index < maxExtraRows; index++)
+                {
+                    if (extraReferenceCount[index] == 0)
+                    {
+                        // if it was used by a named constraint we have to invalidate it
+                        string key = null;
+                        foreach (KeyValuePair<string, int> kvp in extraConstraintMap)
+                        {
+                            if (kvp.Value == index)
+                            {
+                                key = kvp.Key;
+                                break;
+                            }
+                        }
+                        if (key != null)
+                        {
+                            extraConstraintMap.Remove(key);
+                        }
+                        // clean it
+                        Array.Clear(extraConstraints, cols * index, cols);
+                        break;
+                    }
+                }
+                if (index == maxExtraRows)
+                {
+                    maxExtraRows += 32;
+                    if (extraConstraints.Length < cols * maxExtraRows)
+                    {
+                        double[] newArray = new double[cols * maxExtraRows];
+                        if (extraConstraints != null) Array.Copy(extraConstraints, newArray, extraConstraints.Length);
+                        extraConstraints = newArray;
+                    }
+                    int[] newRefCount = new int[maxExtraRows];
+                    if (extraReferenceCount != null) Array.Copy(extraReferenceCount, newRefCount, extraReferenceCount.Length);
+                    extraReferenceCount = newRefCount;
+                }
+                if (name != null) extraConstraintMap[name] = index;
+                newConstraint = true;
+            }
+            else
+            {
+                newConstraint = false;
+            }
+            extraReferenceCount[index]++;
+            return index;
+        }
+
+        public void ReleaseConstraints()
+        {
+            for (int i = 0; i < numExtraConstraints; i++)
+            {
+                extraReferenceCount[extraConstraintsUsed[i]]--;
+            }
+            numExtraConstraints = 0;
+        }
+
         // should only add extra constraints that are tight when primal feasible
-        public int AddConstraint(bool editable)
+        public int AddConstraint(string name, out bool newConstraint)
         {
             if (cols + rows >= maxSize)
             {
@@ -315,11 +401,20 @@ namespace Rawr.Mage
                 maxRows = rows + 10;
                 ExtendArrays();
             }
-            double[] newArray = new double[(cols + 1) * numExtraConstraints];
-            if (extraConstraints != null) Array.Copy(extraConstraints, newArray, cols * (numExtraConstraints - 1));
-            extraConstraints = newArray;
-            if (extraConstraintEditable == null) extraConstraintEditable = new List<bool>();
-            extraConstraintEditable.Add(editable);
+            if (numExtraConstraints > maxExtra)
+            {
+                maxExtra += 32;
+                _pD = new double*[maxExtra];
+            }
+            if (extraConstraintsUsed == null) extraConstraintsUsed = new int[32];
+            if (numExtraConstraints > extraConstraintsUsed.Length)
+            {
+                int[] newArray = new int[extraConstraintsUsed.Length + 32];
+                if (extraConstraintsUsed != null) Array.Copy(extraConstraintsUsed, newArray, extraConstraintsUsed.Length);
+                extraConstraintsUsed = newArray;
+            }
+            int index = GetConstraint(name, out newConstraint);
+            extraConstraintsUsed[numExtraConstraints - 1] = index;
             _ub[cols + rows - 1] = double.PositiveInfinity;
             _flags[cols + rows - 1] = flagLB | flagB;
             _cost[cols + rows - 1] = 0.0;
@@ -356,6 +451,10 @@ namespace Rawr.Mage
             for (int j = 0; j < cols; j++)
             {
                 _V[j] = j;
+            }
+            if (extraConstraints.Length < maxExtraRows * cols)
+            {
+                extraConstraints = new double[maxExtraRows * cols];
             }
             constructed = true;
         }
@@ -395,6 +494,8 @@ namespace Rawr.Mage
             this.cols = 0;
             maxSize = rows + 500;
             ExtendInstanceArrays();
+            if (extraReferenceCount != null) Array.Clear(extraReferenceCount, 0, extraReferenceCount.Length);
+            extraConstraintMap.Clear();
 
             A = new SparseMatrix(baseRows, maxCols + baseRows);
             lu = new LU(rows);
@@ -408,11 +509,20 @@ namespace Rawr.Mage
 
         private bool ColdStart;
 
+        private unsafe void SetupExtraConstraints()
+        {
+            for (int i = 0; i < numExtraConstraints; i++)
+            {
+                pD[i] = D + (extraConstraintsUsed[i] * cols);
+            }
+        }
+
         public unsafe double[] SolvePrimal(bool prepareForDual)
         {
             if (hardInfeasibility) return new double[cols + 1];
             double[] ret = null;
 
+            fixed (double** pD = _pD)
             fixed (double* a = SparseMatrix.data, U = LU._U, sL = LU.sparseL, column = LU.column, column2 = LU.column2, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, cost = _cost, costw = _costWorking, sparseValue = SparseMatrix.value, D = extraConstraints, lb = _lb, ub = _ub)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col, P = LU._P, Q = LU._Q, LJ = LU._LJ, sLI = LU.sparseLI, sLstart = LU.sparseLstart, flags = _flags)
             {
@@ -435,6 +545,9 @@ namespace Rawr.Mage
                 this.flags = flags;
                 this.lb = lb;
                 this.ub = ub;
+                this.pD = pD;
+
+                SetupExtraConstraints();
 
                 lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
                 if (prepareForDual)
@@ -458,6 +571,7 @@ namespace Rawr.Mage
                 this.cost = null;
                 this.sparseValue = null;
                 this.D = null;
+                this.pD = null;
                 this.B = null;
                 this.V = null;
                 this.sparseRow = null;
@@ -484,7 +598,7 @@ namespace Rawr.Mage
                     }
                     for (int k = 0; k < numExtraConstraints; k++, i++)
                     {
-                        U[i * rows + j] = D[k * cols + col];
+                        U[i * rows + j] = pD[k][col];
                     }
                 }
                 else
@@ -508,6 +622,15 @@ namespace Rawr.Mage
                 int vindex = Array.IndexOf(_V, slackColumn);
                 V[vindex] = B[singularColumn];
                 B[singularColumn] = slackColumn;
+                if ((flags[V[vindex]] & flagLB) != 0)
+                {
+                    flags[V[vindex]] = (flags[V[vindex]] | flagNLB) & ~flagB & ~flagDis;
+                }
+                else
+                {
+                    flags[V[vindex]] = (flags[V[vindex]] | flagNUB) & ~flagB & ~flagDis;
+                }
+                flags[B[singularColumn]] = (flags[B[singularColumn]] | flagB) & ~flagN & ~flagDis;
             }
         }
 
@@ -576,7 +699,7 @@ namespace Rawr.Mage
                         }
                         for (int k = 0; k < numExtraConstraints; k++)
                         {
-                            d[baseRows + k] -= D[k * cols + col] * v;
+                            d[baseRows + k] -= pD[k][col] * v;
                         }
                     }
                     else
@@ -627,7 +750,7 @@ namespace Rawr.Mage
                     }
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
-                        costcol -= D[k * cols + col] * u[baseRows + k];
+                        costcol -= pD[k][col] * u[baseRows + k];
                     }
                     c[j] = costcol;
                 }
@@ -674,7 +797,7 @@ namespace Rawr.Mage
                     }
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
-                        costcol -= D[k * cols + col] * x[baseRows + k];
+                        costcol -= pD[k][col] * x[baseRows + k];
                     }
                     c[j] = costcol;
                 }
@@ -807,7 +930,7 @@ namespace Rawr.Mage
                 }
                 for (int k = 0; k < numExtraConstraints; k++, i++)
                 {
-                    w[i] = D[k * cols + maxcol];
+                    w[i] = pD[k][maxcol];
                 }
             }
             else
@@ -1025,7 +1148,7 @@ namespace Rawr.Mage
                     }
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
-                        *wdj += D[k * cols + col] * x[baseRows + k];
+                        *wdj += pD[k][col] * x[baseRows + k];
                     }
                 }
                 else
@@ -1101,7 +1224,7 @@ namespace Rawr.Mage
             int allavailable = 0;
             bool retried = false;
 
-            RETRY:
+        RETRY:
             // mark eligible pivots and compute max step
             double maxstep = double.PositiveInfinity;
             double* cj = c;
@@ -1256,7 +1379,7 @@ namespace Rawr.Mage
                         }
                         if (r < maxstep) maxstep = r;
                     }
-                } 
+                }
 
                 minj = -1;
                 double minv = 0.0;
@@ -1353,7 +1476,7 @@ namespace Rawr.Mage
                     }
                     for (int k = 0; k < numExtraConstraints; k++)
                     {
-                        *cc -= rd * D[k * cols + col] * x[baseRows + k];
+                        *cc -= rd * pD[k][col] * x[baseRows + k];
                     }
                 }
                 else
@@ -1377,7 +1500,7 @@ namespace Rawr.Mage
                 }
                 for (int k = 0; k < numExtraConstraints; k++, i++)
                 {
-                    w[i] = D[k * cols + mincol];
+                    w[i] = pD[k][mincol];
                 }
             }
             else
@@ -1454,7 +1577,7 @@ namespace Rawr.Mage
                 // reduced costs of all nonbasic variable which could lead to loss of feasibility
                 //if ((flags[i] & flagFix) == 0)
                 //{
-                    cost[i] -= 0.5 * (100.0 * epsDual + Math.Abs(cost[i]) * 1.0e-5) * (1 + rnd.NextDouble()); // perturb in negative direction since all variables/slacks have lower bound
+                cost[i] -= 0.5 * (100.0 * epsDual + Math.Abs(cost[i]) * 1.0e-5) * (1 + rnd.NextDouble()); // perturb in negative direction since all variables/slacks have lower bound
                 //}
             }
             costWorkingDirty = true;
@@ -1538,7 +1661,7 @@ namespace Rawr.Mage
                             }
                             for (int k = 0; k < numExtraConstraints; k++)
                             {
-                                x[baseRows + k] += v * D[k * cols + col];
+                                x[baseRows + k] += v * pD[k][col];
                             }
                         }
                         else
@@ -1600,7 +1723,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        v = D[(i - baseRows) * cols + col];
+                        v = pD[i - baseRows][col];
                     }
                     if (Math.Abs(v) > epsZero)
                     {
@@ -1644,7 +1767,7 @@ namespace Rawr.Mage
                         }
                         else
                         {
-                            v = D[(i - baseRows) * cols + singlecol];
+                            v = pD[i - baseRows][singlecol];
                         }
                         if (v > 0)
                         {
@@ -1682,7 +1805,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        v = D[(i - baseRows) * cols + col];
+                        v = pD[i - baseRows][col];
                     }
                     if (Math.Abs(v) > epsZero)
                     {
@@ -1709,7 +1832,7 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        v = D[(i - baseRows) * cols + col];
+                        v = pD[i - baseRows][col];
                     }
                     if (Math.Abs(v) > epsZero)
                     {
@@ -1938,10 +2061,12 @@ namespace Rawr.Mage
                         for (i = 0; i < rows; i++)
                         {
                             B[i] = cols + i;
+                            flags[cols + i] = (flags[cols + i] | flagB) & ~flagN & ~flagDis;
                         }
                         for (j = 0; j < cols; j++)
                         {
                             V[j] = j;
+                            flags[j] = (flags[j] | flagNLB) & ~flagB & ~flagDis;
                         }
                         redecompose = 0;
                         ColdStart = true;
@@ -2024,11 +2149,29 @@ namespace Rawr.Mage
             return new double[cols + 1];
         }
 
+        public void ValidateBaseIntegrity()
+        {
+            for (int i = 0; i < cols + rows; i++)
+            {
+                if ((_flags[i] & flagN) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_V, i) != -1, "Basis corruption");
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_B, i) == -1, "Basis corruption");
+                }
+                if ((_flags[i] & flagB) != 0)
+                {
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_V, i) == -1, "Basis corruption");
+                    System.Diagnostics.Trace.Assert(Array.IndexOf(_B, i) != -1, "Basis corruption");
+                }
+            }
+        }
+
         public unsafe double[] SolveDual(bool startWithPhaseI)
         {
             if (hardInfeasibility) return new double[cols + 1];
             double[] ret = null;
 
+            fixed (double** pD = _pD)
             fixed (double* a = SparseMatrix.data, U = LU._U, sL = LU.sparseL, column = LU.column, column2 = LU.column2, d = _d, x = _x, w = _w, ww = _ww, wd = _wd, c = _c, u = _u, cost = _costWorking, sparseValue = SparseMatrix.value, D = extraConstraints, lb = _lb, ub = _ub/*, beta = _beta, betaBackup = _betaBackup*/)
             fixed (int* B = _B, V = _V, sparseRow = SparseMatrix.row, sparseCol = SparseMatrix.col, P = LU._P, Q = LU._Q, LJ = LU._LJ, sLI = LU.sparseLI, sLstart = LU.sparseLstart, flags = _flags)
             {
@@ -2051,8 +2194,11 @@ namespace Rawr.Mage
                 this.flags = flags;
                 this.lb = lb;
                 this.ub = ub;
+                this.pD = pD;
                 //this.beta = beta;
                 //this.betaBackup = betaBackup;
+
+                SetupExtraConstraints();
 
                 lu.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
                 LoadCost();
@@ -2111,6 +2257,7 @@ namespace Rawr.Mage
                 this.u = null;
                 this.cost = null;
                 this.sparseValue = null;
+                this.pD = null;
                 this.D = null;
                 this.B = null;
                 this.V = null;

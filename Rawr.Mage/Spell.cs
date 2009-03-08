@@ -546,6 +546,7 @@ namespace Rawr.Mage
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+            if (CritRate < 0.0f) CritRate = 0.0f;
 
             CastingSpeed = castingState.CastingSpeed;
 

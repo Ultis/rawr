@@ -454,7 +454,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     maxPush = Math.Min(maxPush, sequence[k].MaxTime - tkk);
                     tkk += sequence[k].Duration;
                 }
-                if (k < sequence.Count && maxPush > 0)
+                if (k < sequence.Count && maxPush > eps)
                 {
                     int kk = k; double kT = 0;
                     double currentPush = 0;
@@ -998,6 +998,28 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
             GroupCooldown(list, SequenceItem.Calculations.ArcanePowerDuration, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
+        }
+
+        public void GroupEvocation()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.VariableType == VariableType.EvocationIV) list.Add(item);
+            }
+            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIV, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
+            list.Clear();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.VariableType == VariableType.EvocationHero) list.Add(item);
+            }
+            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationHero, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
+            list.Clear();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.VariableType == VariableType.EvocationIVHero) list.Add(item);
+            }
+            GroupCooldown(list, SequenceItem.Calculations.EvocationDurationIVHero, SequenceItem.Calculations.EvocationCooldown, Cooldown.Evocation);
         }
 
         public void GroupIcyVeins()
@@ -2857,21 +2879,121 @@ namespace Rawr.Mage.SequenceReconstruction
                 // Evocation
                 if (type == VariableType.Evocation)
                 {
-                    if (evocationCooldown > eps)
+                    if (i == 0 || sequence[i - 1].VariableType != VariableType.Evocation)
                     {
-                        unexplained += duration;
-                        if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        if (evocationCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (duration > EvocationDuration)
+                            {
+                                unexplained += duration - EvocationDuration;
+                                if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
+                            }
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
+                            mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
+                            evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
+                        }
                     }
                     else
                     {
-                        if (duration > EvocationDuration)
-                        {
-                            unexplained += duration - EvocationDuration;
-                            if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
-                        }
-                        if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (" + Math.Round(mana).ToString() + " mana)");
                         mana += Math.Min(EvocationDuration, duration) * EvocationRegen;
-                        evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
+                    }
+                }
+                if (type == VariableType.EvocationIV)
+                {
+                    if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationIV)
+                    {
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.IcyVeins) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.IcyVeins))))
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation (Icy Veins) without Icy Veins to activate it!");
+                        }
+                        else if (evocationCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (duration > SequenceItem.Calculations.EvocationDurationIV)
+                            {
+                                unexplained += duration - SequenceItem.Calculations.EvocationDurationIV;
+                                if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
+                            }
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins) (" + Math.Round(mana).ToString() + " mana)");
+                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
+                            evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
+                        }
+                    }
+                    else
+                    {
+                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationIV, duration) * SequenceItem.Calculations.EvocationRegenIV;
+                    }
+                }
+                if (type == VariableType.EvocationHero)
+                {
+                    if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationHero)
+                    {
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.Heroism))))
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation (Heroism) without Heroism to activate it!");
+                        }
+                        else if (evocationCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (duration > SequenceItem.Calculations.EvocationDurationHero)
+                            {
+                                unexplained += duration - SequenceItem.Calculations.EvocationDurationHero;
+                                if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
+                            }
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Heroism) (" + Math.Round(mana).ToString() + " mana)");
+                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
+                            evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
+                        }
+                    }
+                    else
+                    {
+                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationHero, duration) * SequenceItem.Calculations.EvocationRegenHero;
+                    }
+                }
+                if (type == VariableType.EvocationIVHero)
+                {
+                    if (i == 0 || sequence[i - 1].VariableType != VariableType.EvocationIVHero)
+                    {
+                        if (!(sequence[i].CastingState != null && sequence[i].CastingState.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism) || (i > 0 && sequence[i - 1].CastingState != null && sequence[i - 1].CastingState.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism))))
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation (Icy Veins+Heroism) without Icy Veins+Heroism to activate it!");
+                        }
+                        else if (evocationCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null) timing.AppendLine("WARNING: Evocation cooldown not ready!");
+                        }
+                        else
+                        {
+                            if (duration > SequenceItem.Calculations.EvocationDurationIVHero)
+                            {
+                                unexplained += duration - SequenceItem.Calculations.EvocationDurationIVHero;
+                                if (timing != null) timing.AppendLine("WARNING: Evocation duration too long!");
+                            }
+                            if (timing != null) timing.AppendLine(TimeFormat(time) + ": Evocation (Icy Veins+Heroism) (" + Math.Round(mana).ToString() + " mana)");
+                            mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
+                            evocationCooldown = SequenceItem.Calculations.EvocationCooldown;
+                        }
+                    }
+                    else
+                    {
+                        mana += Math.Min(SequenceItem.Calculations.EvocationDurationIVHero, duration) * SequenceItem.Calculations.EvocationRegenIVHero;
                     }
                 }
                 if (mana < 0) mana = 0;

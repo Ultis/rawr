@@ -362,6 +362,7 @@ namespace Rawr.Mage
 
             int targetLevel = calculationOptions.TargetLevel;
             int playerLevel = calculationOptions.PlayerLevel;
+            // if (targetLevel >= playerLevel + 3) SpellCrit -= 0.021f; boss crit depression, disproved
             float maxHitRate = 1.00f;
             ArcaneHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * character.MageTalents.ArcaneFocus);
             FireHitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);

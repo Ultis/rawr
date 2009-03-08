@@ -1324,7 +1324,21 @@ namespace Rawr.Mage
                             {
                                 if (sequence[i].IsEvocation)
                                 {
-                                    mps = -(float)calculationOptions.Calculations.EvocationRegen;
+                                    switch (sequence[i].VariableType)
+                                    {
+                                        case VariableType.Evocation:
+                                            mps = -(float)calculationOptions.Calculations.EvocationRegen;
+                                            break;
+                                        case VariableType.EvocationIV:
+                                            mps = -(float)calculationOptions.Calculations.EvocationRegenIV;
+                                            break;
+                                        case VariableType.EvocationHero:
+                                            mps = -(float)calculationOptions.Calculations.EvocationRegenHero;
+                                            break;
+                                        case VariableType.EvocationIVHero:
+                                            mps = -(float)calculationOptions.Calculations.EvocationRegenIVHero;
+                                            break;
+                                    }
                                 }
                                 float partTime = duration;
                                 if (mana - mps * duration < 0) partTime = mana / mps;
