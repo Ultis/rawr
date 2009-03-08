@@ -267,7 +267,8 @@ you are being killed by burst damage, focus on Survival Points.",
             CharacterCalculationsTankadin cs = new CharacterCalculationsTankadin();
 			cs.BasicStats = stats;
 
-            float defDif = (targetLevel - 80) * .002f;
+            //float defDif = (targetLevel - 80) * .002f;
+            float defDif = levelDif * .002f;
             cs.Defense = stats.Defense;
             cs.Resilience = stats.Resilience;
             //cs.Miss = Math.Min(1f, .05f + cs.Defense * .0004f - defDif);
@@ -276,8 +277,9 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.Parry = Math.Min(1f - cs.Miss - cs.Dodge, stats.Parry - defDif);
             cs.Avoidance = cs.Miss + cs.Dodge + cs.Parry;
             cs.Block = Math.Min(1f - cs.Avoidance, stats.Block + .3f * talents.HolyShield - defDif);
-            cs.CritAvoidance = (cs.Defense * .0004f) + (cs.Resilience * .01f / 81.97497559f) - defDif;
-            cs.Crit = Math.Max(0, Math.Min(1f - cs.Avoidance - cs.Block, .05f - cs.CritAvoidance));
+            cs.CritAvoidance = cs.Defense * .0004f + (cs.Resilience * .01f / 81.97497559f) - defDif;
+            //cs.Crit = Math.Max(0, Math.Min(1f - cs.Avoidance - cs.Block, .05f - cs.CritAvoidance)); 
+            cs.Crit = Math.Max(0, Math.Min(1f - cs.Avoidance - cs.Block, .05f - ((float)Math.Floor(stats.Defense) * .0004f - defDif)));//TODO Resilience
             cs.Hit = 1f - cs.Avoidance - cs.Block - cs.Crit;
             cs.BlockValue = stats.BlockValue;
 
@@ -285,7 +287,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.Mitigation = (1f - cs.ArmorReduction) * (1f - .02f * talents.ImprovedRighteousFury) * (1f - .01f * talents.ShieldOfTheTemplar) * (1f + stats.DamageTakenMultiplier) ;
 
             cs.DamagePerHit = calcOpts.AverageHit * cs.Mitigation;
-            cs.DamagePerBlock = cs.DamagePerHit - stats.BlockValue;
+            cs.DamagePerBlock = cs.DamagePerHit - (stats.BlockValue + 5f / (10f - talents.ImprovedJudgements) * stats.JudgementBlockValue);
             cs.DamageTaken = ((cs.Crit * 2 + cs.Hit) * cs.DamagePerHit + cs.Block * cs.DamagePerBlock) / calcOpts.AverageHit;
 
             cs.MitigationPoints = calcOpts.MitigationScale / cs.DamageTaken;
@@ -337,8 +339,10 @@ you are being killed by burst damage, focus on Survival Points.",
             }
 
             //Shield of Righteousness (Per Hit)
-            cs.ShoRDamage = ((stats.BlockValue - 0.22f * stats.JudgementBlockValue ) + 300f) * damageMulti * SotT * holyMulti;
+            cs.ShoRDamage = (stats.BlockValue + 400f) * damageMulti * SotT * holyMulti;
             cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
+            cs.ShoRJBVDamage = (stats.BlockValue + stats.JudgementBlockValue + 400f) * damageMulti * SotT * holyMulti;
+            cs.ShoRJBVThreat = cs.ShoRJBVDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Avenger's Shield (Per Hit)
             cs.ASDamage = (940f + .07f * stats.AttackPower + .07f * stats.SpellPower) * damageMulti * SotT * holyMulti;
@@ -398,8 +402,8 @@ you are being killed by burst damage, focus on Survival Points.",
 
 			// Revised Seal of Vengeance Rotation
 			float rotTime = 18f;
-			cs.Rot1TPS = ((3 * cs.HotRThreat) + (3 * cs.ShoRThreat) + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rotTime)) / rotTime;
-			float rot1DPS = ((3 * cs.HotRDamage) + (3 * cs.ShoRDamage) + (2 * cs.HSDamage) + (2 * cs.JoVDamage) + (2 * cs.ConsDamage) + ((cs.SoVDamage + cs.WhiteDamage) * rotTime)) / rotTime;
+			cs.Rot1TPS = ((3 * cs.HotRThreat) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsThreat) + ((cs.SoVThreat + cs.WhiteThreat) * rotTime)) / rotTime;
+			float rot1DPS = ((3 * cs.HotRDamage) + (2 * cs.ShoRDamage) + cs.ShoRJBVDamage + (2 * cs.HSDamage) + (2 * cs.JoVDamage) + (2 * cs.ConsDamage) + ((cs.SoVDamage + cs.WhiteDamage) * rotTime)) / rotTime;
 
             cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
             //Incoming Damage Mechanics
@@ -476,18 +480,22 @@ you are being killed by burst damage, focus on Survival Points.",
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
             stats.Defense += character.StatConversion.GetDefenseFromRating(stats.DefenseRating);
-            stats.BlockValue = (float)Math.Round((stats.BlockValue + (5f / 9f * stats.JudgementBlockValue) + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
-            stats.Block += .05f + stats.Defense * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
+            //stats.BlockValue = (float)Math.Round((stats.BlockValue + (5f / 9f * stats.JudgementBlockValue) + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
+            stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1f + talents.Redoubt * .1f)) * (1 + stats.BonusBlockValueMultiplier);
+            stats.JudgementBlockValue = (float)Math.Round((stats.JudgementBlockValue) * (1f + talents.Redoubt * .1f));
+            stats.Block += .05f + (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
 
-            float fullDodge = stats.Defense * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
+            float fullDodge = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
                 + character.StatConversion.GetDodgeFromRating(stats.DodgeRating) * .01f;
             stats.Dodge = statsRace.Dodge + character.PaladinTalents.Anticipation * .01f + character.StatConversion.GetDodgeFromAgility(statsRace.Agility)
                 + DRDodge(fullDodge);
 
-            float fullParry = stats.Defense * .0004f + character.StatConversion.GetParryFromRating(stats.ParryRating) * .01f;
-            stats.Parry = stats.Parry + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
+            float fullParry = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetParryFromRating(stats.ParryRating) * .01f;
+            stats.Parry = .05f + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
             
-            stats.Miss = .05f + DRMiss(stats.DefenseRating / 12300f);
+            //stats.Miss = .05f + DRMiss(stats.DefenseRating / 12300f);
+            float fullMiss = (float)Math.Floor(stats.Defense) * .0004f;
+            stats.Miss = .05f + DRMiss(fullMiss);
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight;
             return stats;

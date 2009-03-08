@@ -65,6 +65,8 @@ namespace Rawr.Tankadin
 
         public float ShoRDamage { get; set; }
         public float ShoRThreat { get; set; }
+        public float ShoRJBVDamage { get; set; }
+        public float ShoRJBVThreat { get; set; }
 
         public float ASDamage { get; set; }
         public float ASThreat { get; set; }
@@ -104,16 +106,17 @@ namespace Rawr.Tankadin
 			dict.Add("Health", BasicStats.Health.ToString());
             dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
 			dict.Add("Stamina", BasicStats.Stamina.ToString());
-			dict.Add("Strength", BasicStats.Strength.ToString());
+			dict.Add("Strength", Math.Round(BasicStats.Strength).ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
-            dict.Add("Defense", Math.Round(Defense + 400f).ToString());
+            //dict.Add("Defense", Math.Round(Defense + 400f).ToString());
+            dict.Add("Defense", string.Format("{0}*{1} Defense Rating", Math.Floor(Defense + 400f), BasicStats.DefenseRating));
             dict.Add("Resilience", Math.Round(Resilience).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
-            dict.Add("Spell Damage", BasicStats.SpellPower.ToString());            
+			dict.Add("Spell Damage", Math.Round(BasicStats.SpellPower).ToString());
             dict.Add("Expertise", BasicStats.Expertise.ToString());
             dict.Add("Block Value", BlockValue.ToString());
-			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 3)));
-			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 3)));
+			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 2)));
+			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 2)));
 			//dict.Add("Dodge", string.Format("{0}%", Dodge * 100f));
 			dict.Add("Parry", string.Format("{0}%", Math.Round(Parry * 100f, 2)));
 			dict.Add("Block", string.Format("{0}%", Math.Round(Block * 100f, 2)));
@@ -124,15 +127,20 @@ namespace Rawr.Tankadin
             dict.Add("Damage Taken", string.Format("{0}%", Math.Round(DamageTaken * 100f, 2)));
 			dict.Add("Damage When Hit", string.Format("{0}*{1} on blocks\n{2} normal", 
 				Math.Round(DamageWhenHit), Math.Round(DamagePerBlock), Math.Round(DamagePerHit)));
-            if (CritAvoidance == .05f)
-                dict.Add("Chance to be Crit", string.Format("{0}%*Exactly enough defense rating/resilience to be uncrittable.",
-                    Math.Round((.05f - CritAvoidance) * 100f, 2)));
-            else if (CritAvoidance < .05f)
-                dict.Add("Chance to be Crit", string.Format("{0}%*CRITTABLE! Short by {1} defense rating or {2} resilience to be uncrittable.",
-                    Math.Round((.05f - CritAvoidance) * 100f, 2), "<nyi>", "<nyi>"));
+            if (.05f - CritAvoidance < 0)
+            	if (Math.Abs(.05f - CritAvoidance)< .00008133f)
+            		dict.Add("Chance to be Crit", string.Format("{0}%*Exactly enough defense rating/resilience to be uncrittable.",
+                    	Math.Round((.05f - CritAvoidance) * 100f, 2)));
+            	else
+            		dict.Add("Chance to be Crit", string.Format("{0}%*Uncrittable. {1} defense rating or {2} resilience over the cap.",
+            			Math.Round((.05f - CritAvoidance) * 100f, 2), 
+            			Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.18498039f),
+            			Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));//"<nyi>", "<nyi>"));
             else
-                dict.Add("Chance to be Crit", string.Format("{0}%*Uncrittable. {1} defense rating or {2} resilience over the cap.",
-                    Math.Round((.05f - CritAvoidance) * 100f, 2), "<nyi>", "<nyi>"));
+            	dict.Add("Chance to be Crit", string.Format("{0}%*CRITTABLE! Short by {1} defense rating or {2} resilience to be uncrittable.",
+                    Math.Round((.05f - CritAvoidance) * 100f, 2), 
+                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.18498039f),
+                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));//"<nyi>", "<nyi>"));
 /*			dict.Add("Overall Points", OverallPoints.ToString());
 			dict.Add("Mitigation Points", MitigationPoints.ToString());
 			dict.Add("Survival Points", SurvivalPoints.ToString());
