@@ -415,7 +415,6 @@ namespace Rawr.Tree
             coefDH = 0.645f; 
             coefHoT = 0.6684f / 7f;
             manaCost = 0.14f * TreeConstants.BaseMana;
-            if (calcOpts.newManaRegen) manaCost *= 2;
             healingBonus = calculatedStats.SpellPower + 
                 calculatedStats.AverageHeal * calcOpts.averageSpellpowerUsage / 100f;
             critPercent = calculatedStats.SpellCrit;
@@ -495,7 +494,7 @@ namespace Rawr.Tree
             coefDH = 0f;
 
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)calcs.LocalCharacter.CalculationOptions;
-            if (calcOpts.newManaRegen) manaCost /= 2;
+            if (calcOpts.newManaRegen) manaCost *= 2;
         }
     }
 
