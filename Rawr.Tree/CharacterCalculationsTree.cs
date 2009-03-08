@@ -37,6 +37,8 @@ namespace Rawr.Tree
         public float ManaRegInFSR { get; set; }
         public float ManaRegOutFSR { get; set; }
 
+        public float ManaFromInnervate { get; set; }
+
         public float TimeUntilOOM { get; set; }
         public float TotalHealing { get; set; }
 
@@ -61,7 +63,7 @@ namespace Rawr.Tree
             dictValues.Add("Healing", (BasicStats.SpellPower + BasicStats.TreeOfLifeAura).ToString() + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " ToL Bonus\n" + BasicStats.AverageHeal + " average spell power" + (BasicStats.TrollDivinity>0?"\n58 Troll Divinity bonus":""));
 
             bool hasSpiWhileCasting = BasicStats.ExtraSpiritWhileCasting > 0;
-            dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + replenishRegen.ToString() + " From Replenishment" + (hasSpiWhileCasting?"\n(values include extra Spirit while casting)":""));
+            dictValues.Add("MP5", ManaRegInFSR.ToString() + "*" + ManaRegOutFSR.ToString() + " Out of FSR\n" + replenishRegen.ToString() + " From Replenishment\n" + (hasSpiWhileCasting ? "(values include extra Spirit while casting)\n" : "\n") + ManaFromInnervate.ToString() + " extra mana from each Innervate");
             dictValues.Add("Spell Crit", BasicStats.SpellCrit.ToString());
             float hr_from_trinkets = (BasicStats.SpellHasteFor10SecOnCast_10_45 + BasicStats.SpellHasteFor10SecOnHeal_10_45) * .17f / TreeConstants.HasteRatingToHaste;
             float haste = (1 + BasicStats.HasteRating / TreeConstants.HasteRatingToHaste);

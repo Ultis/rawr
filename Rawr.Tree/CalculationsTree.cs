@@ -713,11 +713,23 @@ namespace Rawr.Tree
             #endregion
 
             #region Innervates
+            // Wildebees : 20090308 : Reworked Innervate region to:
+            //                          move the glyth scaling before the maximum check,
+            //                          fixed the maximum mana check, 
+            //                          catered for glyph without self-innervate,
+            //                          add the out of FSR effect (effectively 4.5 to 5 times regen based on talents) and            
+            //                          saves ManaFromInnervate for display in mp5 tooltip 
+            float manaFromInnervate = spiritRegenPlusMDF * (5-calculatedStats.BasicStats.SpellCombatManaRegeneration) * 4; // (Adds 400% + moves out of FSR), 20 seconds = 4 * mp5, 
+            if (calcOpts.glyphOfInnervate) 
+                manaFromInnervate *= (calcOpts.Innervates + 0.2f);      // Only works for 1 innervate in the fight
+            else
+                manaFromInnervate *= calcOpts.Innervates;
             // lets assume the mana return is maximally 95% of your mana
-            float manaFromInnervate = spiritRegenPlusMDF * 4 * 4; // 400%, 20 seconds = 4 * mp5
-            manaFromInnervate = Math.Max(manaFromInnervate, .95f * calculatedStats.BasicStats.Mana);
-            if (calcOpts.glyphOfInnervate) extraMana *= 1.2f;
-            extraMana += calcOpts.Innervates * manaFromInnervate;
+            // thus take the smaller value of 95% of mana pool and total mana regenerated
+            manaFromInnervate = Math.Min(manaFromInnervate, .95f * calculatedStats.BasicStats.Mana);
+
+            calculatedStats.ManaFromInnervate = manaFromInnervate;
+            extraMana += manaFromInnervate;
             #endregion
 
             #region Calculate total healing in the fight
