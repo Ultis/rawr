@@ -178,12 +178,6 @@ namespace Rawr.RestoSham
             }
         }
 
-        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
-        {
-            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
-            return base.EnchantFitsInSlot(enchant, character, slot);
-        }
-
         public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
         {
             if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
@@ -284,7 +278,7 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             float mp5 = stats.Mp5;
             mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
-            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * (stats.Mana * (.24f +
+            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + (((float)Math.Truncate(options.FightLength / 5.025f) + 1) * stats.ManaRestore5min);
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
@@ -693,7 +687,9 @@ namespace Rawr.RestoSham
                 BonusManaPotion = stats.BonusManaPotion,
                 ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-				BonusCritHealMultiplier = stats.BonusCritHealMultiplier
+				BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                BonusManaMultiplier = stats.BonusManaMultiplier
 			};
         }
 
@@ -702,7 +698,8 @@ namespace Rawr.RestoSham
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + 
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
-                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste) > 0;
+                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
+                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier) > 0;
         }
 
         #endregion

@@ -403,7 +403,7 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Average amount restored by a mana potion.
         /// </summary>
-        public float ManaPotAmount = 2400f;
+        public float ManaPotAmount = 0f;
 
         /// <summary>
         /// Whether a Mana Tide totem is placed every time the cooldown is up.
@@ -427,7 +427,7 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Your style of healing.
         /// </summary>
-        public string HealingStyle = "LHW Spam";
+        public string HealingStyle = "CH Spam";
 
         /// <summary>
         /// The percentage of healing that is intended to be burst.
@@ -443,17 +443,17 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Whether a Mana Tide totem is placed every time the cooldown is up.
         /// </summary>
-        public bool ManaTidePlus = true;
+        public bool ManaTidePlus = false;
 
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
-        public bool WaterShield2 = true;
+        public bool WaterShield2 = false;
 
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
-        public bool WaterShield3 = true;
+        public bool WaterShield3 = false;
 
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
@@ -468,7 +468,7 @@ namespace Rawr.RestoSham
         /// <summary>
         /// Whether we keep Water Shield up or not (could use Earth Shield during some fights).
         /// </summary>
-        public bool LHWPlus = true;
+        public bool LHWPlus = false;
         #endregion
         #region Page Three Defaults
         /// <summary>
