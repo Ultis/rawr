@@ -121,8 +121,10 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 			Calculations_ModelChanged(null, null); // this will trigger items changed event which triggers loading of item cache
 
+			//_loadingCharacter = true;
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
+			//_loadingCharacter = false;
 
             // items are already loaded on model change, see above
             //ItemCache.Load(); // make sure item filters are loaded before creating drop down
@@ -933,7 +935,8 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 					}
 				}
 			}
-			LoadComparisonData();
+			if (!_loadingCharacter)
+				LoadComparisonData();
 			this.Cursor = Cursors.Default;
 		}
 

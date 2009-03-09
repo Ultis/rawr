@@ -175,7 +175,7 @@ namespace Rawr
             }
             set
             {
-                if (Character != null)
+                if (Character != null && !Character.IsLoading)
                     Character[CharacterSlot] = value;
                 else
                 {
