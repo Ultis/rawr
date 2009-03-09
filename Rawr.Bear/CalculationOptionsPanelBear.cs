@@ -133,9 +133,9 @@ namespace Rawr
 
 		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			numericUpDownThreatValue.Enabled = comboBoxThreatValue.SelectedIndex == 6;
-			if (comboBoxThreatValue.SelectedIndex < 6)
-				numericUpDownThreatValue.Value = (new decimal[] { 90000, 110000, 120000, 140000, 150000, 170000 })[comboBoxThreatValue.SelectedIndex];
+			numericUpDownTargetDamage.Enabled = comboBoxTargetDamage.SelectedIndex == 6;
+			if (comboBoxTargetDamage.SelectedIndex < 6)
+				numericUpDownTargetDamage.Value = (new decimal[] { 90000, 110000, 120000, 140000, 150000, 170000 })[comboBoxTargetDamage.SelectedIndex];
 		}
 	}
 

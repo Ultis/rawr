@@ -62,7 +62,7 @@ namespace Rawr
                     bool seenEquippedItem = (Character[slot] == null);
 					
 					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
-					DateTime before = DateTime.Now;
+					//DateTime before = DateTime.Now;
                     foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
@@ -105,6 +105,7 @@ namespace Rawr
                 else
                 { //Gems/Metas
 					List<Item> relevantItems = Character.GetRelevantItems(slot);
+					//DateTime before = DateTime.Now;
 					foreach (Item item in relevantItems)
 					{
 						if (Calculations.SupportsMultithreading)
@@ -117,6 +118,7 @@ namespace Rawr
 					{
 						Thread.Sleep(10);
 					}
+					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
                 }
             }
 
