@@ -37,6 +37,10 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
+			this.numericUpDownCountGemmingsShown = new System.Windows.Forms.NumericUpDown();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountGemmingsShown)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -52,7 +56,7 @@
 			// 
 			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonOK.Location = new System.Drawing.Point(258, 387);
+			this.buttonOK.Location = new System.Drawing.Point(258, 483);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(75, 23);
 			this.buttonOK.TabIndex = 10;
@@ -70,7 +74,7 @@
 			this.panelGemmingTemplates.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.panelGemmingTemplates.Location = new System.Drawing.Point(12, 74);
 			this.panelGemmingTemplates.Name = "panelGemmingTemplates";
-			this.panelGemmingTemplates.Size = new System.Drawing.Size(321, 307);
+			this.panelGemmingTemplates.Size = new System.Drawing.Size(321, 338);
 			this.panelGemmingTemplates.TabIndex = 14;
 			// 
 			// label2
@@ -133,12 +137,52 @@
 			this.label7.Text = "Meta";
 			this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// numericUpDownCountTopGemmings
+			// 
+			this.numericUpDownCountGemmingsShown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.numericUpDownCountGemmingsShown.Location = new System.Drawing.Point(144, 418);
+			this.numericUpDownCountGemmingsShown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numericUpDownCountGemmingsShown.Name = "numericUpDownCountTopGemmings";
+			this.numericUpDownCountGemmingsShown.Size = new System.Drawing.Size(51, 20);
+			this.numericUpDownCountGemmingsShown.TabIndex = 15;
+			this.numericUpDownCountGemmingsShown.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+			// 
+			// label8
+			// 
+			this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(12, 420);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(126, 13);
+			this.label8.TabIndex = 4;
+			this.label8.Text = "Top Gemmings to Show: ";
+			// 
+			// label9
+			// 
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label9.Location = new System.Drawing.Point(12, 441);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(321, 39);
+			this.label9.TabIndex = 4;
+			this.label9.Text = "Rawr will show the top {0} gemmings for an item, plus any equipped or custom gemm" +
+				"ings, if not already included in the top {0}.";
+			// 
 			// FormGemmingTemplates
 			// 
 			this.AcceptButton = this.buttonOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(345, 422);
+			this.ClientSize = new System.Drawing.Size(345, 518);
+			this.ControlBox = false;
+			this.Controls.Add(this.numericUpDownCountGemmingsShown);
 			this.Controls.Add(this.panelGemmingTemplates);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.label7);
@@ -147,15 +191,18 @@
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
+			this.Controls.Add(this.label9);
+			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label1);
 			this.MaximizeBox = false;
-			this.ControlBox = false;
 			this.MaximumSize = new System.Drawing.Size(361, 2048);
 			this.MinimumSize = new System.Drawing.Size(361, 300);
 			this.Name = "FormGemmingTemplates";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Rawr Gemming Templates";
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownCountGemmingsShown)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
@@ -170,5 +217,8 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.NumericUpDown numericUpDownCountGemmingsShown;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
     }
 }

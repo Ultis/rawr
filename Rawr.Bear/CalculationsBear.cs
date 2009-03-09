@@ -365,11 +365,11 @@ the Threat Scale defined on the Options tab.",
 			if (stats.MongooseProc + stats.TerrorProc > 0)
 			{
 				//Add stats for Mongoose/Terror
-				float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
+				float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
 				attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 
 				float hitBonus = stats.HitRating / 32.78998947f / 100f;
-				float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+				float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 				float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 				float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
 				float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
@@ -503,12 +503,12 @@ the Threat Scale defined on the Options tab.",
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
 
-			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
+			float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
             float attackSpeed = (2.5f) / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
 			float hitBonus = stats.HitRating / 32.78998947f / 100f;
-			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
             float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
             float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?

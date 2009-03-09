@@ -44,8 +44,6 @@ namespace Rawr.DPSDK
 			tbFightLength.Value = calcOpts.FightLength;
 			lblFightLengthNum.Text = tbFightLength.Value.ToString();
 
-            checkBoxMeta.Checked = calcOpts.EnforceMetagemRequirements;
-
             nudTargetArmor.Value = calcOpts.BossArmor;
 
             cbWindfuryEffect.Checked = calcOpts.Windfury;
@@ -192,13 +190,6 @@ namespace Rawr.DPSDK
 
             Graph graph = new Graph(_prerenderedGraph);
             graph.Show();
-        }
-
-        private void checkBoxMeta_CheckedChanged(object sender, EventArgs e)
-        {
-			CalculationOptionsDPSDK calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
-			Character.EnforceMetagemRequirements = checkBoxMeta.Checked;
-            Character.OnCalculationsInvalidated();
         }
 
         private void nudTargetArmor_ValueChanged(object sender, EventArgs e)

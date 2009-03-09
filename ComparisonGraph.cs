@@ -37,6 +37,15 @@ namespace Rawr
             }
         }
 
+		public void LoadItemCalculationsPreSorted(ComparisonCalculationBase[] itemCalculations)
+		{
+			_itemCalculations = itemCalculations;
+			if (_prerenderedGraph != null)
+				_prerenderedGraph.Dispose();
+			_prerenderedGraph = null;
+			this.Invalidate();
+		}
+
         public bool CustomRendered { get; set; }
         public string CustomRenderedChartName { get; set; }
 
@@ -147,7 +156,7 @@ namespace Rawr
             //return tooltip;
         }
 
-        protected int CompareItemCalculations(ComparisonCalculationBase a, ComparisonCalculationBase b)
+        public int CompareItemCalculations(ComparisonCalculationBase a, ComparisonCalculationBase b)
         {
             if (Sort == ComparisonSort.Overall)
                 return b.OverallPoints.CompareTo(a.OverallPoints);
@@ -758,12 +767,12 @@ namespace Rawr
         private void ShowHideTooltip()
         {
             if (_tooltipItem != null && _tooltipLocation != Point.Empty)
-            {
-                ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, this, _tooltipLocation);
+			{
+				ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, EquipSlot, this, _tooltipLocation);
             }
             else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty)
             {
-                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipItemCharacter, this, _tooltipLocation);
+                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipItemCharacter, EquipSlot, this, _tooltipLocation);
             }
             else
             {

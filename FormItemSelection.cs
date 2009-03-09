@@ -355,6 +355,8 @@ namespace Rawr
 					ctrl.IsEnchant = true;
 				}
 				ctrl.ItemCalculation = calc;
+				ctrl.Character = Character;
+				ctrl.CharacterSlot = _characterSlot;
 				ctrl.Sort = this.Sort;
 				ctrl.HideToolTip();
 				bool visible = string.IsNullOrEmpty(this.toolStripTextBoxFilter.Text) || calc.Name.ToLower().Contains(this.toolStripTextBoxFilter.Text.ToLower());

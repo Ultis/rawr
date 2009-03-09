@@ -68,7 +68,6 @@ namespace Rawr
         }
 
         private ItemInstance _currentItemInstance = null;
-
         private ItemInstance CurrentItemInstance
         {
             get { return _currentItemInstance; }
@@ -90,7 +89,30 @@ namespace Rawr
                     }
                 }
             }
-        }
+		}
+
+		private Character.CharacterSlot _currentSlot = Character.CharacterSlot.None;
+		private Character.CharacterSlot CurrentSlot
+		{
+			get { return _currentSlot; }
+			set
+			{
+				if (resetItem)
+				{
+					_currentSlot = Character.CharacterSlot.None;
+					resetItem = false;
+				}
+				if (_currentSlot != value)
+				{
+					_currentSlot = value;
+					if (_cachedToolTipImage != null)
+					{
+						_cachedToolTipImage.Dispose();
+						_cachedToolTipImage = null;
+					}
+				}
+			}
+		}
 
         private Item _currentItem = null;
 
@@ -257,11 +279,15 @@ namespace Rawr
 
                             int numTinyItems = 0;
                             int tinyItemSize = 18;
-                            if (CurrentItemCharacter != null)
+							if (CurrentItemCharacter != null)
                             {
                                 foreach (Character.CharacterSlot slot in Character.CharacterSlots)
                                 {
-                                    if (CurrentItemCharacter[slot] != null && CurrentItemCharacter[slot].GemmedId != _currentItemInstance.GemmedId) numTinyItems++;
+									if (CurrentItemCharacter[slot] != null)
+									{
+										if (_currentItemInstance == null || CurrentItemCharacter[slot].GemmedId != _currentItemInstance.GemmedId)
+											numTinyItems++;
+									}
                                 }
                             }
 
@@ -396,9 +422,20 @@ namespace Rawr
                                                 icon = null;
                                             }
 
-                                            Character characterWithItemEquipped = Character.Clone();
-                                            characterWithItemEquipped[Character.CharacterSlot.Head] = CurrentItemInstance;
-                                            bool active = gem.MeetsRequirements(characterWithItemEquipped);
+                                            bool active = true;
+											if (Character.IsEquipped(CurrentItemInstance))
+											{
+												active = gem.MeetsRequirements(Character);
+											}
+											else
+											{
+												Character.CharacterSlot slotToEquip = CurrentSlot;
+												if (slotToEquip == Character.CharacterSlot.None)
+													slotToEquip = Character.GetCharacterSlotByItemSlot(CurrentItemInstance.Slot);
+												Character characterWithItemEquipped = Character.Clone();
+												characterWithItemEquipped[slotToEquip] = CurrentItemInstance;
+												active = gem.MeetsRequirements(characterWithItemEquipped);
+											}
 
                                             string[] stats = gem.Stats.ToString().Split(',');
 
@@ -496,10 +533,10 @@ namespace Rawr
 
                             if (CurrentItemCharacter != null)
                             {
-                                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+								foreach (Character.CharacterSlot slot in Character.CharacterSlots)
                                 {
                                     ItemInstance tinyItem = CurrentItemCharacter[slot];
-                                    if (tinyItem != null && tinyItem.GemmedId != _currentItemInstance.GemmedId)
+                                    if (tinyItem != null && (_currentItemInstance == null || tinyItem.GemmedId != _currentItemInstance.GemmedId))
                                     {
                                         Image icon = ItemIcons.GetItemIcon(tinyItem.Item, true);
                                         if (icon != null)
@@ -575,13 +612,14 @@ namespace Rawr
 
         public void Show(Item item, IWin32Window window, Point point)
         {
-            Show(item, null, window, point);
+            Show(item, null, Character.CharacterSlot.None, window, point);
         }
 
-		public void Show(Item item, Character itemCharacter, IWin32Window window, Point point)
+		public void Show(Item item, Character itemCharacter, Character.CharacterSlot slot, IWin32Window window, Point point)
 		{
 			CurrentItem = item;
             CurrentItemCharacter = itemCharacter;
+			CurrentSlot = slot;
             if (CachedToolTipImage != null && CurrentItem != null)
             {
                 base.Show(item.Name, window, point);
@@ -590,13 +628,14 @@ namespace Rawr
 
         public void Show(ItemInstance item, IWin32Window window, Point point)
         {
-            Show(item, null, window, point);
+            Show(item, null, Character.CharacterSlot.None, window, point);
         }
 
-        public void Show(ItemInstance item, Character itemCharacter, IWin32Window window, Point point)
+        public void Show(ItemInstance item, Character itemCharacter, Character.CharacterSlot slot, IWin32Window window, Point point)
         {
             CurrentItemInstance = item;
             CurrentItemCharacter = itemCharacter;
+			CurrentSlot = slot;
             if (CachedToolTipImage != null && CurrentItemInstance != null)
             {
                 base.Show(item.Item.Name, window, point);

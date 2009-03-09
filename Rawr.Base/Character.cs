@@ -443,7 +443,7 @@ namespace Rawr //O O . .
 		}
 
 		[XmlIgnore]
-		public bool EnforceMetagemRequirements
+		public bool EnforceGemRequirements
 		{
 			get { return _enforceMetagemRequirements; }
 			set { _enforceMetagemRequirements = value; }
@@ -1003,7 +1003,8 @@ namespace Rawr //O O . .
         private int redGemCount;
         private int yellowGemCount;
         private int blueGemCount;
-        private int jewelersGemCount;
+		private int jewelersGemCount;
+		private int stormjewelCount;
 
         public int RedGemCount
         {
@@ -1039,7 +1040,16 @@ namespace Rawr //O O . .
                 ComputeGemCount();
                 return jewelersGemCount;
             }
-        }
+		}
+
+		public int StormjewelCount
+		{
+			get
+			{
+				ComputeGemCount();
+				return stormjewelCount;
+			}
+		}
 
         private void ComputeGemCount()
         {
@@ -1049,6 +1059,7 @@ namespace Rawr //O O . .
                 yellowGemCount = GetGemColorCount(Item.ItemSlot.Yellow);
                 blueGemCount = GetGemColorCount(Item.ItemSlot.Blue);
                 jewelersGemCount = GetJewelersGemCount();
+				stormjewelCount = GetStormjewelGemCount();
 
                 gemCountValid = true;
             }
@@ -1074,7 +1085,29 @@ namespace Rawr //O O . .
                 count += GetItemJewelersGemCount(this[slot]);
 			}
             return count;
-        }
+		}
+
+		private int GetItemStormjewelGemCount(ItemInstance item)
+		{
+			int count = 0;
+			if ((object)item != null)
+			{
+				if (item.Gem1 != null && item.Gem1.IsStormjewel) count++;
+				if (item.Gem2 != null && item.Gem2.IsStormjewel) count++;
+				if (item.Gem3 != null && item.Gem3.IsStormjewel) count++;
+			}
+			return count;
+		}
+
+		private int GetStormjewelGemCount()
+		{
+			int count = 0;
+			foreach (CharacterSlot slot in CharacterSlots)
+			{
+				count += GetItemStormjewelGemCount(this[slot]);
+			}
+			return count;
+		}
 
         private int GetItemGemColorCount(ItemInstance item, Item.ItemSlot slotColor)
         {
@@ -1128,7 +1161,61 @@ namespace Rawr //O O . .
             //if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
             
             return count;
-        }
+		}
+
+		private int GetItemGemIdCount(ItemInstance item, int id)
+		{
+			int count = 0;
+			if ((object)item != null)
+			{
+				if (item.Gem1 != null && item.Gem1.Id == id) count++;
+				if (item.Gem2 != null && item.Gem2.Id == id) count++;
+				if (item.Gem3 != null && item.Gem3.Id == id) count++;
+			}
+			return count;
+		}
+
+		public int GetGemIdCount(int id)
+		{
+			int count = 0;
+			/*foreach (CharacterSlot slot in CharacterSlots)
+			{
+				Item item = this[slot];
+				if (item == null) continue;
+
+				if (Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
+				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
+				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
+			}*/
+			// unroll loop because the switch in this[slot] is very expensive
+			count += GetItemGemIdCount(Head, id);
+			count += GetItemGemIdCount(Neck, id);
+			count += GetItemGemIdCount(Shoulders, id);
+			count += GetItemGemIdCount(Back, id);
+			count += GetItemGemIdCount(Chest, id);
+			count += GetItemGemIdCount(Shirt, id);
+			count += GetItemGemIdCount(Tabard, id);
+			count += GetItemGemIdCount(Wrist, id);
+			count += GetItemGemIdCount(Hands, id);
+			count += GetItemGemIdCount(Waist, id);
+			count += GetItemGemIdCount(Legs, id);
+			count += GetItemGemIdCount(Feet, id);
+			count += GetItemGemIdCount(Finger1, id);
+			count += GetItemGemIdCount(Finger2, id);
+			count += GetItemGemIdCount(Trinket1, id);
+			count += GetItemGemIdCount(Trinket2, id);
+			count += GetItemGemIdCount(MainHand, id);
+			count += GetItemGemIdCount(OffHand, id);
+			count += GetItemGemIdCount(Ranged, id);
+			count += GetItemGemIdCount(Projectile, id);
+			count += GetItemGemIdCount(ProjectileBag, id);
+
+			//if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
+			//if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
+			//if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
+
+			return count;
+		}
 		
 		public event EventHandler AvailableItemsChanged;
 		public void OnAvailableItemsChanged()
@@ -1631,7 +1718,7 @@ namespace Rawr //O O . .
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this);
-			clone.EnforceMetagemRequirements = this.EnforceMetagemRequirements;
+			clone.EnforceGemRequirements = this.EnforceGemRequirements;
             clone.CurrentModel = this.CurrentModel;
 			return clone;
 		}

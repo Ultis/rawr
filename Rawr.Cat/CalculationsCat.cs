@@ -36,6 +36,7 @@ namespace Rawr.Cat
 				int[] fierce = { 39951, 40041, 40146 };
 				int[] glinting = { 39953, 40044, 40148 };
 				int[] stalwart = { 39964, 40056, 40160 };
+				int[] deadly = { 39952, 40043, 40147 };
 
 				//Meta
 				int austere = 41380;
@@ -43,31 +44,31 @@ namespace Rawr.Cat
 
 				return new List<GemmingTemplate>()
 				{
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max Strength
-						RedId = bold[0], YellowId = bold[0], BlueId = bold[0], PrismaticId = bold[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Str/Haste
-						RedId = bold[0], YellowId = fierce[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Str/Hit
-						RedId = bold[0], YellowId = etched[0], BlueId = sovereign[0], PrismaticId = bold[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Max Agility
+						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Crit
+						RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+					//new GemmingTemplate() { Model = "Cat", Group = "Uncommon", //Agi/Hit
+					//    RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
 
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Max Strength
-						RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Str/Haste 
-						RedId = bold[1], YellowId = fierce[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Str/Hit
-						RedId = bold[1], YellowId = etched[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Max Agility
+						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Agi/Crit 
+						RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
+					//new GemmingTemplate() { Model = "Cat", Group = "Rare", Enabled = true, //Agi/Hit
+					//    RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
 						
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Max Strength
-						RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Str/Haste 
-						RedId = bold[2], YellowId = fierce[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Str/Hit
-						RedId = bold[2], YellowId = etched[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Max Agility
+						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Epic", //Agi/Crit 
+						RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
+					//new GemmingTemplate() { Model = "Cat", Group = "Epic", //Agi/Hit
+					//    RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
 						
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Strength
-						RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = relentless },
-					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Strength Heavy
-						RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Max Agility
+						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
+					new GemmingTemplate() { Model = "Cat", Group = "Jeweler", //Agility Heavy
+						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
 				};
 			}
         }
@@ -230,14 +231,14 @@ namespace Rawr.Cat
 			float modArmor = 1f - ArmorCalculations.GetDamageReduction(character.Level, calcOpts.TargetArmor,
 				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
-			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
-			float critMultiplierBleed = 1.5f * (1 + stats.BonusCritMultiplier);
-			float hasteBonus = stats.HasteRating / 32.78998947f / 100f;
+			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
+			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
+			float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
 			float hitBonus = stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
-			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
@@ -616,7 +617,7 @@ namespace Rawr.Cat
 					Dodge = 0.04951f,
 					AttackPower = 140f,
 					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
-					PhysicalCrit = 0.075f } : 
+					PhysicalCrit = 0.07476f } : 
 				new Stats() {
 					Health = 7599f,
 					Strength = 95f,
@@ -625,7 +626,7 @@ namespace Rawr.Cat
 					Dodge = 0.04951f,
 					AttackPower = 140f,
 					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
-					PhysicalCrit = 0.075f
+					PhysicalCrit = 0.07476f
 				};
 
 			Stats statsItems = GetItemStats(character, additionalItem);

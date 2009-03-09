@@ -1951,7 +1951,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
 			character.Class = _character.Class;
 			character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            character.EnforceGemRequirements = _character.EnforceGemRequirements;
 			return character;
 		}
 
@@ -2127,7 +2127,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            character.EnforceGemRequirements = _character.EnforceGemRequirements;
 
             return character;
 
@@ -2243,7 +2243,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
         }
@@ -2353,7 +2353,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
         }
@@ -2487,7 +2487,7 @@ namespace Rawr
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceMetagemRequirements = _character.EnforceMetagemRequirements;
+            character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
 			return character;
 		}

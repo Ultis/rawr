@@ -11,7 +11,7 @@ namespace Rawr
 		public static float GetDamageReduction(int attackerLevel, float targetArmor, 
 			float attackerArmorPenetration, float attackerArmorPenetrationRating)
 		{
-			float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating / 1539.529991f);
+			float armorReductionPercent = (1f - attackerArmorPenetration) * (1f - attackerArmorPenetrationRating * 1.25f / 1539.529991f);
 			float reducedArmor = (float)targetArmor * (armorReductionPercent);
 			float damageReduction = (reducedArmor / ((467.5f * attackerLevel) + reducedArmor - 22167.5f));
 			return damageReduction;

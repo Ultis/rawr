@@ -45,7 +45,8 @@ namespace Rawr
         
             InitializeComponent();
 			CreateGemmingTemplateControls();
-        }
+			numericUpDownCountGemmingsShown.Value = Properties.Recent.Default.CountGemmingsShown;
+		}
 
 		public void CreateGemmingTemplateControls()
 		{
@@ -213,7 +214,9 @@ namespace Rawr
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)
-        {             
+        {
+			Properties.Recent.Default.CountGemmingsShown = (int)numericUpDownCountGemmingsShown.Value;
+			Properties.Recent.Default.Save();
 			ItemCache.OnItemsChanged();
         }
 

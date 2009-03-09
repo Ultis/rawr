@@ -209,7 +209,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 					textBoxRealm.Text = Character.Realm;
 					comboBoxRegion.Text = Character.Region.ToString();
 					comboBoxRace.Text = Character.Race.ToString();
-					checkBoxEnforceMetagemRequirements.Checked = Character.EnforceMetagemRequirements;
+					checkBoxEnforceGemRequirements.Checked = Character.EnforceGemRequirements;
                     checkBoxWaistBlacksmithingSocket.Checked = Character.WaistBlacksmithingSocketEnabled;
                     checkBoxWristBlacksmithingSocket.Checked = Character.WristBlacksmithingSocketEnabled;
                     checkBoxHandsBlacksmithingSocket.Checked = Character.HandsBlacksmithingSocketEnabled;
@@ -1351,11 +1351,11 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			}
 		}
 
-		private void checkBoxEnforceMetagemRequirements_CheckedChanged(object sender, EventArgs e)
+		private void checkBoxEnforceGemRequirements_CheckedChanged(object sender, EventArgs e)
 		{
 			if (!_loadingCharacter && _character != null)
 			{
-				Character.EnforceMetagemRequirements = checkBoxEnforceMetagemRequirements.Checked;
+				Character.EnforceGemRequirements = checkBoxEnforceGemRequirements.Checked;
 				Character.OnCalculationsInvalidated();
 			}
 		}

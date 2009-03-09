@@ -111,11 +111,11 @@ namespace Rawr
 					tipX = -249;
                 if (_itemCalculation.ItemInstance != null)
                 {
-                    ItemToolTip.Instance.Show(_itemCalculation.ItemInstance.Id == 0 ? null : _itemCalculation.ItemInstance, this, new Point(tipX, 0));
+                    ItemToolTip.Instance.Show(_itemCalculation.ItemInstance.Id == 0 ? null : _itemCalculation.ItemInstance, null, CharacterSlot, this, new Point(tipX, 0));
                 }
                 else
                 {
-                    ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, this, new Point(tipX, 0));
+					ItemToolTip.Instance.Show(_itemCalculation.Item.Id == 0 ? null : _itemCalculation.Item, null, CharacterSlot, this, new Point(tipX, 0));
                 }
 
 				//UpdateBackColors();
@@ -392,6 +392,13 @@ namespace Rawr
 		//            panelBottom.BackColor = (_itemCalculation.Equipped ? Color.FromArgb(212, 212, 255) : SystemColors.Control);
 		//    }
 		//}
+
+		private Character _character;
+		public Character Character
+		{
+			get { return _character; }
+			set { _character = value; }
+		}
 
 		private Character.CharacterSlot _characterSlot;
 		public Character.CharacterSlot CharacterSlot

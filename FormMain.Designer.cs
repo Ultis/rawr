@@ -28,6 +28,7 @@ namespace Rawr
         /// </summary>
         private void InitializeComponent()
         {
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
 			this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
 			this.checkBoxWaistBlacksmithingSocket = new System.Windows.Forms.CheckBox();
@@ -38,7 +39,7 @@ namespace Rawr
 			this.calculationDisplay1 = new Rawr.CalculationDisplay();
 			this.label32 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.checkBoxEnforceMetagemRequirements = new System.Windows.Forms.CheckBox();
+			this.checkBoxEnforceGemRequirements = new System.Windows.Forms.CheckBox();
 			this.comboBoxRegion = new System.Windows.Forms.ComboBox();
 			this.comboBoxModel = new System.Windows.Forms.ComboBox();
 			this.comboBoxClass = new System.Windows.Forms.ComboBox();
@@ -170,13 +171,14 @@ namespace Rawr
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rawrWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.rawrHelpPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.gemmingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.rawrHelpPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tourOfRawrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.gemmingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.gearOptimizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.itemFilteringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tourOfRawrToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
 			this.toolStripContainer1.ContentPanel.SuspendLayout();
 			this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
 			this.toolStripContainer1.SuspendLayout();
@@ -319,7 +321,7 @@ namespace Rawr
 			// 
 			// groupBox3
 			// 
-			this.groupBox3.Controls.Add(this.checkBoxEnforceMetagemRequirements);
+			this.groupBox3.Controls.Add(this.checkBoxEnforceGemRequirements);
 			this.groupBox3.Controls.Add(this.comboBoxRegion);
 			this.groupBox3.Controls.Add(this.comboBoxModel);
 			this.groupBox3.Controls.Add(this.comboBoxClass);
@@ -339,16 +341,18 @@ namespace Rawr
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Character Definition";
 			// 
-			// checkBoxEnforceMetagemRequirements
+			// checkBoxEnforceGemRequirements
 			// 
-			this.checkBoxEnforceMetagemRequirements.AutoSize = true;
-			this.checkBoxEnforceMetagemRequirements.Location = new System.Drawing.Point(6, 92);
-			this.checkBoxEnforceMetagemRequirements.Name = "checkBoxEnforceMetagemRequirements";
-			this.checkBoxEnforceMetagemRequirements.Size = new System.Drawing.Size(178, 17);
-			this.checkBoxEnforceMetagemRequirements.TabIndex = 5;
-			this.checkBoxEnforceMetagemRequirements.Text = "Enforce Metagem Requirements";
-			this.checkBoxEnforceMetagemRequirements.UseVisualStyleBackColor = true;
-			this.checkBoxEnforceMetagemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceMetagemRequirements_CheckedChanged);
+			this.checkBoxEnforceGemRequirements.AutoSize = true;
+			this.checkBoxEnforceGemRequirements.Location = new System.Drawing.Point(6, 92);
+			this.checkBoxEnforceGemRequirements.Name = "checkBoxEnforceGemRequirements";
+			this.checkBoxEnforceGemRequirements.Size = new System.Drawing.Size(160, 17);
+			this.checkBoxEnforceGemRequirements.TabIndex = 5;
+			this.checkBoxEnforceGemRequirements.Text = "Enforce Gem Requirements*";
+			this.toolTipMain.SetToolTip(this.checkBoxEnforceGemRequirements, "If enabled, metagems will only be counted if their gem color requirements are met" +
+					", and gems will only be counted if their uniqueness is met.");
+			this.checkBoxEnforceGemRequirements.UseVisualStyleBackColor = true;
+			this.checkBoxEnforceGemRequirements.CheckedChanged += new System.EventHandler(this.checkBoxEnforceGemRequirements_CheckedChanged);
 			// 
 			// comboBoxRegion
 			// 
@@ -1662,6 +1666,11 @@ namespace Rawr
 			this.donateToolStripMenuItem.Text = "Donate...";
 			this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
 			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
+			// 
 			// rawrHelpPageToolStripMenuItem
 			// 
 			this.rawrHelpPageToolStripMenuItem.Name = "rawrHelpPageToolStripMenuItem";
@@ -1669,17 +1678,19 @@ namespace Rawr
 			this.rawrHelpPageToolStripMenuItem.Text = "Rawr Help Page";
 			this.rawrHelpPageToolStripMenuItem.Click += new System.EventHandler(this.rawrHelpPageToolStripMenuItem_Click);
 			// 
+			// tourOfRawrToolStripMenuItem
+			// 
+			this.tourOfRawrToolStripMenuItem.Name = "tourOfRawrToolStripMenuItem";
+			this.tourOfRawrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+			this.tourOfRawrToolStripMenuItem.Text = "  Tour of Rawr";
+			this.tourOfRawrToolStripMenuItem.Click += new System.EventHandler(this.tourOfRawrToolStripMenuItem_Click);
+			// 
 			// gemmingsToolStripMenuItem
 			// 
 			this.gemmingsToolStripMenuItem.Name = "gemmingsToolStripMenuItem";
 			this.gemmingsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
 			this.gemmingsToolStripMenuItem.Text = "  Gemmings";
 			this.gemmingsToolStripMenuItem.Click += new System.EventHandler(this.gemmingsToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator3
-			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
 			// 
 			// gearOptimizationToolStripMenuItem
 			// 
@@ -1701,13 +1712,6 @@ namespace Rawr
 			this.itemFilteringToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
 			this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
 			this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
-			// 
-			// tourOfRawrToolStripMenuItem
-			// 
-			this.tourOfRawrToolStripMenuItem.Name = "tourOfRawrToolStripMenuItem";
-			this.tourOfRawrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-			this.tourOfRawrToolStripMenuItem.Text = "  Tour of Rawr";
-			this.tourOfRawrToolStripMenuItem.Click += new System.EventHandler(this.tourOfRawrToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
@@ -1875,7 +1879,7 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem defaultGemControlToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem talentSpecsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem talentsMenuItem;
-		private System.Windows.Forms.CheckBox checkBoxEnforceMetagemRequirements;
+		private System.Windows.Forms.CheckBox checkBoxEnforceGemRequirements;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonFilter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemFilterOther;
@@ -1895,6 +1899,7 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem gearOptimizationToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem itemFilteringToolStripMenuItem;
+		private System.Windows.Forms.ToolTip toolTipMain;
         
     }
 }

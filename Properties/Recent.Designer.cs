@@ -58,5 +58,17 @@ namespace Rawr.Properties {
                 this["SeenIntroVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int CountGemmingsShown {
+            get {
+                return ((int)(this["CountGemmingsShown"]));
+            }
+            set {
+                this["CountGemmingsShown"] = value;
+            }
+        }
     }
 }

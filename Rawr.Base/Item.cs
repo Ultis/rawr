@@ -523,6 +523,14 @@ namespace Rawr
 			}
 		}
 
+		public bool IsStormjewel
+		{
+			get
+			{
+				return Name.EndsWith("Stormjewel");
+			}
+		}
+
 		public Item() { }
 		public Item(string name, ItemQuality quality, ItemType type, int id, string iconPath, ItemSlot slot, string setName, bool unique, Stats stats, Stats socketBonus, ItemSlot socketColor1, ItemSlot socketColor2, ItemSlot socketColor3, int minDamage, int maxDamage, ItemDamageType damageType, float speed, string requiredClasses)
 		{
@@ -707,123 +715,159 @@ namespace Rawr
 		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
 			volatileRequirements = false;
-			int redGems = 0, yellowGems = 0, blueGems = 0;
-			if (character != null)
-			{
-				/*redGems = character.GetGemColorCount(ItemSlot.Red);
-				yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
-				blueGems = character.GetGemColorCount(ItemSlot.Blue);*/
-				redGems = character.RedGemCount;
-				yellowGems = character.YellowGemCount;
-				blueGems = character.BlueGemCount;
-			}
 			bool meetsRequirements = false;
 
-			//TODO: Make this dynamic, by loading the gem requirements from the armory
-			switch (this.Id)
+			if (this.Slot == ItemSlot.Meta)
 			{
-				case 25899:
-				case 25890:
-				case 25901:
-				case 32409:
-				case 32410:
-					volatileRequirements = true; //2 of each
-					meetsRequirements = redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
-					break;
-				case 41307:
-				case 41401:
-				case 41400:
-				case 41375:
-				case 44078:
-				case 44089:
-				case 41382:
-				case 41398:
-					volatileRequirements = true; //1 of each
-					meetsRequirements = redGems >= 1 && yellowGems >= 1 && blueGems >= 1;
-					break;
-				case 25897:
-					volatileRequirements = true; //More reds than blues
-					meetsRequirements = redGems > blueGems;
-					break;
-				case 25895:
-					volatileRequirements = true; //More reds than yellows
-					meetsRequirements = redGems > yellowGems;
-					break;
-				case 25893:
-				case 32640:
-					volatileRequirements = true; //More blues than yellows
-					meetsRequirements = blueGems > yellowGems;
-					break;
-				case 34220:
-				case 41285:
-					volatileRequirements = true; //2 blues
-					meetsRequirements = blueGems >= 2;
-					break;
-				case 41376:
-					volatileRequirements = true; //2 reds
-					meetsRequirements = redGems >= 2;
-					break;
-				case 25896:
-				case 44087:
-					volatileRequirements = true; //3 blues
-					meetsRequirements = blueGems >= 3;
-					break;
-				case 25898:
-					volatileRequirements = true; //5 blues
-					meetsRequirements = blueGems >= 5;
-					break;
-				case 32641:
-					volatileRequirements = true; //exactly 3 yellows
-					meetsRequirements = yellowGems == 3;
-					break;
-				case 41333:
-					volatileRequirements = true; //3 red
-					meetsRequirements = redGems >= 3;
-					break;
-				case 25894:
-				case 28557:
-				case 28556:
-				case 41339:
-				case 44076:
-					volatileRequirements = true; //2 yellows, 1 red
-					meetsRequirements = yellowGems >= 2 && redGems >= 1;
-					break;
-				case 35501:
-				case 44088:
-					volatileRequirements = true; //1 yellow, 2 blue
-					meetsRequirements = yellowGems >= 1 && blueGems >= 2;
-					break;
-				case 41378:
-				case 44084:
-				case 41381:
-					volatileRequirements = true; //2 yellow, 1 blue
-					meetsRequirements = yellowGems >= 2 && blueGems >= 1;
-					break;
-				case 41380:
-				case 41377:
-				case 44082:
-				case 41385:
-					volatileRequirements = true; //2 blue, 1 red
-					meetsRequirements = blueGems >= 2 && redGems >= 1;
-					break;
-				case 41335:
-				case 41389:
-					volatileRequirements = true; //2 red, 1 yellow
-					meetsRequirements = redGems >= 2 && yellowGems >= 1;
-					break;
-				case 41379:
-				case 44081:
-				case 41396:
-				case 41395:
-					volatileRequirements = true; //2 red, 1 blue
-					meetsRequirements = redGems >= 2 && blueGems >= 1;
-					break;
-				default:
+				#region Metagem Requirements
+				volatileRequirements = true;
+				if (character == null || !character.EnforceGemRequirements) return true;
+
+				int redGems = 0, yellowGems = 0, blueGems = 0;
+				if (character != null)
+				{
+					/*redGems = character.GetGemColorCount(ItemSlot.Red);
+					yellowGems = character.GetGemColorCount(ItemSlot.Yellow);
+					blueGems = character.GetGemColorCount(ItemSlot.Blue);*/
+					redGems = character.RedGemCount;
+					yellowGems = character.YellowGemCount;
+					blueGems = character.BlueGemCount;
+				}
+
+				//TODO: Make this dynamic, by loading the gem requirements from the armory
+				switch (this.Id)
+				{
+					case 25899:
+					case 25890:
+					case 25901:
+					case 32409:
+					case 32410:
+						volatileRequirements = true; //2 of each
+						meetsRequirements = redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
+						break;
+					case 41307:
+					case 41401:
+					case 41400:
+					case 41375:
+					case 44078:
+					case 44089:
+					case 41382:
+					case 41398:
+						volatileRequirements = true; //1 of each
+						meetsRequirements = redGems >= 1 && yellowGems >= 1 && blueGems >= 1;
+						break;
+					case 25897:
+						volatileRequirements = true; //More reds than blues
+						meetsRequirements = redGems > blueGems;
+						break;
+					case 25895:
+						volatileRequirements = true; //More reds than yellows
+						meetsRequirements = redGems > yellowGems;
+						break;
+					case 25893:
+					case 32640:
+						volatileRequirements = true; //More blues than yellows
+						meetsRequirements = blueGems > yellowGems;
+						break;
+					case 34220:
+					case 41285:
+						volatileRequirements = true; //2 blues
+						meetsRequirements = blueGems >= 2;
+						break;
+					case 41376:
+						volatileRequirements = true; //2 reds
+						meetsRequirements = redGems >= 2;
+						break;
+					case 25896:
+					case 44087:
+						volatileRequirements = true; //3 blues
+						meetsRequirements = blueGems >= 3;
+						break;
+					case 25898:
+						volatileRequirements = true; //5 blues
+						meetsRequirements = blueGems >= 5;
+						break;
+					case 32641:
+						volatileRequirements = true; //exactly 3 yellows
+						meetsRequirements = yellowGems == 3;
+						break;
+					case 41333:
+						volatileRequirements = true; //3 red
+						meetsRequirements = redGems >= 3;
+						break;
+					case 25894:
+					case 28557:
+					case 28556:
+					case 41339:
+					case 44076:
+						volatileRequirements = true; //2 yellows, 1 red
+						meetsRequirements = yellowGems >= 2 && redGems >= 1;
+						break;
+					case 35501:
+					case 44088:
+						volatileRequirements = true; //1 yellow, 2 blue
+						meetsRequirements = yellowGems >= 1 && blueGems >= 2;
+						break;
+					case 41378:
+					case 44084:
+					case 41381:
+						volatileRequirements = true; //2 yellow, 1 blue
+						meetsRequirements = yellowGems >= 2 && blueGems >= 1;
+						break;
+					case 41380:
+					case 41377:
+					case 44082:
+					case 41385:
+						volatileRequirements = true; //2 blue, 1 red
+						meetsRequirements = blueGems >= 2 && redGems >= 1;
+						break;
+					case 41335:
+					case 41389:
+						volatileRequirements = true; //2 red, 1 yellow
+						meetsRequirements = redGems >= 2 && yellowGems >= 1;
+						break;
+					case 41379:
+					case 44081:
+					case 41396:
+					case 41395:
+						volatileRequirements = true; //2 red, 1 blue
+						meetsRequirements = redGems >= 2 && blueGems >= 1;
+						break;
+					default:
+						meetsRequirements = true;
+						break;
+				}
+				#endregion
+			}
+			else
+			{
+				#region Gem Requirements
+				if (IsJewelersGem)
+				{
+					volatileRequirements = true;
+					if (character == null || !character.EnforceGemRequirements) return true;
+					meetsRequirements = character.JewelersGemCount <= 3;
+				}
+				else if (IsStormjewel)
+				{
+					volatileRequirements = true;
+					if (character == null || !character.EnforceGemRequirements) return true;
+					meetsRequirements = character.StormjewelCount <= 1;
+				}
+				else if (Unique)
+				{
+					volatileRequirements = true;
+					if (character == null || !character.EnforceGemRequirements) return true;
+					meetsRequirements = character.GetGemIdCount(Id) <= 1;
+				}
+				else
+				{
+					volatileRequirements = false;
 					meetsRequirements = true;
-					break;
+				}
+				#endregion
 			}
 
-			if (character == null || !character.EnforceMetagemRequirements) return true;
 			return meetsRequirements;
 		}
 
