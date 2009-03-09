@@ -50,6 +50,7 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.numericUpDownTargetAttackSpeed = new System.Windows.Forms.NumericUpDown();
 			this.comboBoxTargetDamage = new System.Windows.Forms.ComboBox();
+			this.comboBoxSurvivalSoftCap = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownThreatValue)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetArmor)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -78,9 +79,9 @@
             "81",
             "82",
             "83"});
-			this.comboBoxTargetLevel.Location = new System.Drawing.Point(100, 3);
+			this.comboBoxTargetLevel.Location = new System.Drawing.Point(146, 3);
 			this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-			this.comboBoxTargetLevel.Size = new System.Drawing.Size(157, 21);
+			this.comboBoxTargetLevel.Size = new System.Drawing.Size(111, 21);
 			this.comboBoxTargetLevel.TabIndex = 1;
 			this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
 			// 
@@ -99,14 +100,14 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.numericUpDownThreatValue.DecimalPlaces = 3;
 			this.numericUpDownThreatValue.Enabled = false;
-			this.numericUpDownThreatValue.Location = new System.Drawing.Point(101, 58);
+			this.numericUpDownThreatValue.Location = new System.Drawing.Point(146, 58);
 			this.numericUpDownThreatValue.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
 			this.numericUpDownThreatValue.Name = "numericUpDownThreatValue";
-			this.numericUpDownThreatValue.Size = new System.Drawing.Size(156, 20);
+			this.numericUpDownThreatValue.Size = new System.Drawing.Size(111, 20);
 			this.numericUpDownThreatValue.TabIndex = 3;
 			this.numericUpDownThreatValue.Value = new decimal(new int[] {
             1,
@@ -127,9 +128,9 @@
             "OT",
             "Crazy About Threat",
             "Custom Factor"});
-			this.comboBoxThreatValue.Location = new System.Drawing.Point(101, 30);
+			this.comboBoxThreatValue.Location = new System.Drawing.Point(146, 30);
 			this.comboBoxThreatValue.Name = "comboBoxThreatValue";
-			this.comboBoxThreatValue.Size = new System.Drawing.Size(156, 21);
+			this.comboBoxThreatValue.Size = new System.Drawing.Size(111, 21);
 			this.comboBoxThreatValue.TabIndex = 1;
 			this.comboBoxThreatValue.SelectedIndexChanged += new System.EventHandler(this.comboBoxThreatValue_SelectedIndexChanged);
 			// 
@@ -137,18 +138,18 @@
 			// 
 			this.numericUpDownTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(101, 110);
+			this.numericUpDownTargetArmor.Location = new System.Drawing.Point(146, 137);
 			this.numericUpDownTargetArmor.Maximum = new decimal(new int[] {
             15000,
             0,
             0,
             0});
 			this.numericUpDownTargetArmor.Name = "numericUpDownTargetArmor";
-			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(156, 20);
+			this.numericUpDownTargetArmor.Size = new System.Drawing.Size(111, 20);
 			this.numericUpDownTargetArmor.TabIndex = 3;
 			this.numericUpDownTargetArmor.ThousandsSeparator = true;
 			this.numericUpDownTargetArmor.Value = new decimal(new int[] {
-            13083,
+            10645,
             0,
             0,
             0});
@@ -157,7 +158,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 112);
+			this.label3.Location = new System.Drawing.Point(3, 139);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(71, 13);
 			this.label3.TabIndex = 0;
@@ -174,7 +175,7 @@
 			this.groupBox1.Controls.Add(this.radioButtonMaul);
 			this.groupBox1.Controls.Add(this.radioButtonMelee);
 			this.groupBox1.Controls.Add(this.radioButtonNoAuto);
-			this.groupBox1.Location = new System.Drawing.Point(7, 136);
+			this.groupBox1.Location = new System.Drawing.Point(7, 163);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(250, 88);
 			this.groupBox1.TabIndex = 4;
@@ -264,7 +265,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(3, 86);
+			this.label4.Location = new System.Drawing.Point(3, 87);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(92, 13);
 			this.label4.TabIndex = 0;
@@ -279,14 +280,14 @@
             0,
             0,
             0});
-			this.numericUpDownSurvivalSoftCap.Location = new System.Drawing.Point(101, 84);
+			this.numericUpDownSurvivalSoftCap.Location = new System.Drawing.Point(146, 111);
 			this.numericUpDownSurvivalSoftCap.Maximum = new decimal(new int[] {
             999999,
             0,
             0,
             0});
 			this.numericUpDownSurvivalSoftCap.Name = "numericUpDownSurvivalSoftCap";
-			this.numericUpDownSurvivalSoftCap.Size = new System.Drawing.Size(156, 20);
+			this.numericUpDownSurvivalSoftCap.Size = new System.Drawing.Size(111, 20);
 			this.numericUpDownSurvivalSoftCap.TabIndex = 3;
 			this.numericUpDownSurvivalSoftCap.ThousandsSeparator = true;
 			this.numericUpDownSurvivalSoftCap.Value = new decimal(new int[] {
@@ -299,7 +300,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(4, 233);
+			this.label5.Location = new System.Drawing.Point(3, 260);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(115, 13);
 			this.label5.TabIndex = 0;
@@ -314,14 +315,14 @@
             0,
             0,
             0});
-			this.numericUpDownTargetDamage.Location = new System.Drawing.Point(146, 257);
+			this.numericUpDownTargetDamage.Location = new System.Drawing.Point(146, 284);
 			this.numericUpDownTargetDamage.Maximum = new decimal(new int[] {
             999999,
             0,
             0,
             0});
 			this.numericUpDownTargetDamage.Name = "numericUpDownTargetDamage";
-			this.numericUpDownTargetDamage.Size = new System.Drawing.Size(110, 20);
+			this.numericUpDownTargetDamage.Size = new System.Drawing.Size(111, 20);
 			this.numericUpDownTargetDamage.TabIndex = 3;
 			this.numericUpDownTargetDamage.ThousandsSeparator = true;
 			this.numericUpDownTargetDamage.Value = new decimal(new int[] {
@@ -334,7 +335,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(3, 285);
+			this.label6.Location = new System.Drawing.Point(3, 312);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(137, 13);
 			this.label6.TabIndex = 0;
@@ -350,14 +351,14 @@
             0,
             0,
             65536});
-			this.numericUpDownTargetAttackSpeed.Location = new System.Drawing.Point(146, 283);
+			this.numericUpDownTargetAttackSpeed.Location = new System.Drawing.Point(146, 310);
 			this.numericUpDownTargetAttackSpeed.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
 			this.numericUpDownTargetAttackSpeed.Name = "numericUpDownTargetAttackSpeed";
-			this.numericUpDownTargetAttackSpeed.Size = new System.Drawing.Size(110, 20);
+			this.numericUpDownTargetAttackSpeed.Size = new System.Drawing.Size(111, 20);
 			this.numericUpDownTargetAttackSpeed.TabIndex = 3;
 			this.numericUpDownTargetAttackSpeed.Value = new decimal(new int[] {
             2,
@@ -380,11 +381,31 @@
             "Normal T8 Raids",
             "Heroic T8 Raids",
             "Custom..."});
-			this.comboBoxTargetDamage.Location = new System.Drawing.Point(146, 230);
+			this.comboBoxTargetDamage.Location = new System.Drawing.Point(146, 257);
 			this.comboBoxTargetDamage.Name = "comboBoxTargetDamage";
-			this.comboBoxTargetDamage.Size = new System.Drawing.Size(110, 21);
+			this.comboBoxTargetDamage.Size = new System.Drawing.Size(111, 21);
 			this.comboBoxTargetDamage.TabIndex = 1;
 			this.comboBoxTargetDamage.SelectedIndexChanged += new System.EventHandler(this.comboBoxTargetDamage_SelectedIndexChanged);
+			// 
+			// comboBoxSurvivalSoftCap
+			// 
+			this.comboBoxSurvivalSoftCap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.comboBoxSurvivalSoftCap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.comboBoxSurvivalSoftCap.FormattingEnabled = true;
+			this.comboBoxSurvivalSoftCap.Items.AddRange(new object[] {
+            "Normal Dungeons",
+            "Heroic Dugeons",
+            "Normal T7 Raids",
+            "Heroic T7 Raids",
+            "Normal T8 Raids",
+            "Heroic T8 Raids",
+            "Custom..."});
+			this.comboBoxSurvivalSoftCap.Location = new System.Drawing.Point(146, 84);
+			this.comboBoxSurvivalSoftCap.Name = "comboBoxSurvivalSoftCap";
+			this.comboBoxSurvivalSoftCap.Size = new System.Drawing.Size(111, 21);
+			this.comboBoxSurvivalSoftCap.TabIndex = 1;
+			this.comboBoxSurvivalSoftCap.SelectedIndexChanged += new System.EventHandler(this.comboBoxSurvivalSoftCap_SelectedIndexChanged);
 			// 
 			// CalculationOptionsPanelBear
 			// 
@@ -396,6 +417,7 @@
 			this.Controls.Add(this.numericUpDownTargetDamage);
 			this.Controls.Add(this.numericUpDownTargetArmor);
 			this.Controls.Add(this.numericUpDownThreatValue);
+			this.Controls.Add(this.comboBoxSurvivalSoftCap);
 			this.Controls.Add(this.comboBoxTargetDamage);
 			this.Controls.Add(this.comboBoxThreatValue);
 			this.Controls.Add(this.label6);
@@ -443,5 +465,6 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.NumericUpDown numericUpDownTargetAttackSpeed;
 		private System.Windows.Forms.ComboBox comboBoxTargetDamage;
+		private System.Windows.Forms.ComboBox comboBoxSurvivalSoftCap;
 	}
 }

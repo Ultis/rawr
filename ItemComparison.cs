@@ -47,11 +47,12 @@ namespace Rawr
             InitializeComponent();
         }
 
-		private List<ComparisonCalculationBase> _itemCalculations = null;
+		private int _calculationCount = 0;
+		private ComparisonCalculationBase[] _itemCalculations = null;
         public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
 			Calculations.ClearCache();
-            _itemCalculations = new List<ComparisonCalculationBase>();
+            //_itemCalculations = new List<ComparisonCalculationBase>();
 			_characterSlot = slot;
 			bool presorted = false;
             if (Character != null)
@@ -62,8 +63,10 @@ namespace Rawr
                     bool seenEquippedItem = (Character[slot] == null);
 					
 					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
+					_itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
+					_calculationCount = 0;
 					//DateTime before = DateTime.Now;
-                    foreach (ItemInstance item in relevantItemInstances)
+					foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
 						//Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
@@ -74,7 +77,7 @@ namespace Rawr
 							GetItemInstanceCalculations(item);
 					}
 					//Wait for all items to be processed
-					while (_itemCalculations.Count < relevantItemInstances.Count)
+					while (_calculationCount < relevantItemInstances.Count)
 					{
 						Thread.Sleep(10);
 					}
@@ -82,14 +85,15 @@ namespace Rawr
 					//Trace.WriteLine("Finished all Calculations");
 
                     // add item
+					List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
                     if (!seenEquippedItem)
-                        _itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
+                        listItemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-					_itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
+					listItemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
 					Dictionary<int, int> countItem = new Dictionary<int, int>();
 					List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
 
-					foreach (ComparisonCalculationBase itemCalculation in _itemCalculations)
+					foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
 					{
 						int itemId = itemCalculation.ItemInstance.Id;
 						if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
@@ -100,11 +104,13 @@ namespace Rawr
 							filteredItemCalculations.Add(itemCalculation);
 						}
 					}
-					_itemCalculations = filteredItemCalculations;
+					_itemCalculations = filteredItemCalculations.ToArray();
                 }
                 else
                 { //Gems/Metas
 					List<Item> relevantItems = Character.GetRelevantItems(slot);
+					_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
+					_calculationCount = 0;
 					//DateTime before = DateTime.Now;
 					foreach (Item item in relevantItems)
 					{
@@ -114,7 +120,7 @@ namespace Rawr
 							GetItemCalculations(item);
 					}
 					//Wait for all items to be processed
-					while (_itemCalculations.Count < relevantItems.Count)
+					while (_calculationCount < relevantItems.Count)
 					{
 						Thread.Sleep(10);
 					}
@@ -125,24 +131,27 @@ namespace Rawr
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
 			if (presorted)
-				comparisonGraph1.LoadItemCalculationsPreSorted(_itemCalculations.ToArray());
+				comparisonGraph1.LoadItemCalculationsPreSorted(_itemCalculations);
 			else
-				comparisonGraph1.ItemCalculations = _itemCalculations.ToArray();
+				comparisonGraph1.ItemCalculations = _itemCalculations;
             comparisonGraph1.EquipSlot = slot == Character.CharacterSlot.Gems || slot == Character.CharacterSlot.Metas ?
 				Character.CharacterSlot.None : slot;
         }
 
+
 		private void GetItemInstanceCalculations(object item)
 		{
 			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
-			_itemCalculations.Add(Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot));
+			ComparisonCalculationBase result = Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot);
+			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
 			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
 		}
 
 		private void GetItemCalculations(object item)
 		{
 			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
-			_itemCalculations.Add(Calculations.GetItemCalculations((Item)item, Character, _characterSlot));
+			ComparisonCalculationBase result = Calculations.GetItemCalculations((Item)item, Character, _characterSlot);
+			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
 			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
 		}
 
