@@ -438,6 +438,7 @@ you are being killed by burst damage, focus on Survival Points.",
             statsRace.Intellect += 78f;
             statsRace.Spirit += 82f;
             statsRace.Dodge = .032685f;
+            statsRace.PhysicalCrit = .032685f;
             statsRace.Parry = .05f;
             statsRace.AttackPower = 190f;
             statsRace.Health = 6754f;
@@ -462,12 +463,12 @@ you are being killed by burst damage, focus on Survival Points.",
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 
-            stats.Expertise += (float)Math.Round(talents.CombatExpertise * 2f + stats.ExpertiseRating / 32.78998947f * 4f);
+            stats.Expertise += talents.CombatExpertise * 2f + (float)Math.Floor(stats.ExpertiseRating / 32.78998947f * 4f);
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
-            stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +
+            stats.PhysicalCrit = statsRace.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +
                 character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating) * .01f
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;

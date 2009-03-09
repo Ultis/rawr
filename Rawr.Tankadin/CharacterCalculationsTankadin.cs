@@ -109,7 +109,6 @@ namespace Rawr.Tankadin
 			dict.Add("Stamina", BasicStats.Stamina.ToString());
 			dict.Add("Strength", Math.Round(BasicStats.Strength).ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
-            //dict.Add("Defense", Math.Round(Defense + 400f).ToString());
             dict.Add("Defense", string.Format("{0}*{1} Defense Rating", Math.Floor(Defense + 400f), BasicStats.DefenseRating));
             dict.Add("Resilience", Math.Round(Resilience).ToString());
 			dict.Add("Attack Power", BasicStats.AttackPower.ToString());
@@ -118,7 +117,6 @@ namespace Rawr.Tankadin
             dict.Add("Block Value", BlockValue.ToString());
 			dict.Add("Miss", string.Format("{0}%", Math.Round(Miss * 100f, 2)));
 			dict.Add("Dodge", string.Format("{0}%", Math.Round(Dodge * 100f, 2)));
-			//dict.Add("Dodge", string.Format("{0}%", Dodge * 100f));
 			dict.Add("Parry", string.Format("{0}%", Math.Round(Parry * 100f, 2)));
 			dict.Add("Block", string.Format("{0}%", Math.Round(Block * 100f, 2)));
 			dict.Add("Crit", string.Format("{0}%", Math.Round(Crit * 100f, 2)));
@@ -135,13 +133,13 @@ namespace Rawr.Tankadin
             	else
             		dict.Add("Chance to be Crit", string.Format("{0}%*Uncrittable. {1} defense rating or {2} resilience over the cap.",
             			Math.Round((.05f - CritAvoidance) * 100f, 2), 
-            			Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.18498039f),
-            			Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));//"<nyi>", "<nyi>"));
+            			Math.Floor(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.918498039f),
+            			Math.Floor(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));
             else
             	dict.Add("Chance to be Crit", string.Format("{0}%*CRITTABLE! Short by {1} defense rating or {2} resilience to be uncrittable.",
                     Math.Round((.05f - CritAvoidance) * 100f, 2), 
-                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.18498039f),
-                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));//"<nyi>", "<nyi>"));
+                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.918498039f),
+                    Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));
 /*			dict.Add("Overall Points", OverallPoints.ToString());
 			dict.Add("Mitigation Points", MitigationPoints.ToString());
 			dict.Add("Survival Points", SurvivalPoints.ToString());
@@ -180,7 +178,7 @@ namespace Rawr.Tankadin
                 case "Block Value": return BlockValue;
                 case "Expertise": return BasicStats.Expertise;
                 case "% Chance to Hit": return ToLand * 100f;
-               case "Avoidance": return Avoidance * 100f;
+                case "Avoidance": return Avoidance * 100f;
             }
             return 0.0f;
         }
