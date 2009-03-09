@@ -1252,7 +1252,25 @@ namespace Rawr
 				if (Gem3 != null && Gem3.MeetsRequirements(character, out volatileGem)) totalItemStats.AccumulateUnsafe(Gem3.Stats);
 				volatileItem = volatileItem || volatileGem;
 				if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(Item.SocketBonus);
-                totalItemStats.AccumulateUnsafe(Enchant.Stats);
+				bool eligibleForEnchant = false;
+				if (Enchant.Slot == Item.ItemSlot.OneHand)
+				{
+					eligibleForEnchant = (this.Slot == Item.ItemSlot.OneHand ||
+										(this.Slot == Item.ItemSlot.OffHand && 
+											this.Type != Item.ItemType.Shield && 
+											this.Type != Item.ItemType.None) ||
+										this.Slot == Item.ItemSlot.MainHand ||
+										this.Slot == Item.ItemSlot.TwoHand);
+				}
+				else if (Enchant.Slot == Item.ItemSlot.OffHand)
+				{
+					eligibleForEnchant = this.Type == Item.ItemType.Shield;
+				}
+				else
+				{
+					eligibleForEnchant = (Enchant.Slot == this.Slot);
+				}		
+				if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(Enchant.Stats);
 				if (!volatileItem)
 				{
                     cachedTime = DateTime.Now;
