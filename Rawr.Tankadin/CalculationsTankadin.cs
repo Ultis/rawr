@@ -292,7 +292,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.DamagePerBlock = cs.DamagePerHit - (stats.BlockValue + 5f / (10f - talents.ImprovedJudgements) * stats.JudgementBlockValue);
             cs.DamageTaken = ((cs.Crit * 2 + cs.Hit) * cs.DamagePerHit + cs.Block * cs.DamagePerBlock) / calcOpts.AverageHit;
 
-            cs.MitigationPoints = calcOpts.MitigationScale / cs.DamageTaken;
+            cs.MitigationPoints = calcOpts.MitigationScalePercent * .01f * 7000f / cs.DamageTaken;
 
             float beHit = cs.Block + cs.Crit + cs.Hit;
             cs.DamageWhenHit = cs.Block / beHit * cs.DamagePerBlock + cs.Hit / beHit * cs.DamagePerHit + cs.Crit / beHit * cs.DamagePerHit * 2;

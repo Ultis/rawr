@@ -86,16 +86,14 @@
         	this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
         	this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-        	this.trackBarMitigationScale.LargeChange = 1000;
+        	this.trackBarMitigationScale.LargeChange = 10;
         	this.trackBarMitigationScale.Location = new System.Drawing.Point(72, 131);
-        	this.trackBarMitigationScale.Maximum = 15000;
-        	this.trackBarMitigationScale.Minimum = 1000;
+        	this.trackBarMitigationScale.Maximum = 300;
         	this.trackBarMitigationScale.Name = "trackBarMitigationScale";
         	this.trackBarMitigationScale.Size = new System.Drawing.Size(222, 45);
-        	this.trackBarMitigationScale.SmallChange = 50;
         	this.trackBarMitigationScale.TabIndex = 11;
-        	this.trackBarMitigationScale.TickFrequency = 1000;
-        	this.trackBarMitigationScale.Value = 4000;
+        	this.trackBarMitigationScale.TickFrequency = 10;
+        	this.trackBarMitigationScale.Value = 100;
         	this.trackBarMitigationScale.Scroll += new System.EventHandler(this.trackBarMitigationScale_Scroll);
         	// 
         	// trackBarThreatScale
@@ -169,9 +167,9 @@
         	this.lblMitigationScaleValue.AutoSize = true;
         	this.lblMitigationScaleValue.Location = new System.Drawing.Point(72, 163);
         	this.lblMitigationScaleValue.Name = "lblMitigationScaleValue";
-        	this.lblMitigationScaleValue.Size = new System.Drawing.Size(31, 13);
+        	this.lblMitigationScaleValue.Size = new System.Drawing.Size(25, 13);
         	this.lblMitigationScaleValue.TabIndex = 12;
-        	this.lblMitigationScaleValue.Text = "4000";
+        	this.lblMitigationScaleValue.Text = "400";
         	// 
         	// lblThreatScaleValue
         	// 
@@ -227,7 +225,6 @@
         	this.radioButtonSoV.TabStop = true;
         	this.radioButtonSoV.Text = "Seal of Vengeance";
         	this.radioButtonSoV.UseVisualStyleBackColor = true;
-        	this.radioButtonSoR.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
         	// 
         	// CalculationOptionsPanelTankadin
         	// 

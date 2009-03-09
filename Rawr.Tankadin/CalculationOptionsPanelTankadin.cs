@@ -28,8 +28,8 @@ namespace Rawr.Tankadin
             nudTargetLevel.Value = (decimal)calcOpts.TargetLevel;
             trackBarBossAttackValue.Value = calcOpts.AverageHit;
             lblBossAttackValue.Text = calcOpts.AverageHit.ToString();
-            trackBarMitigationScale.Value = calcOpts.MitigationScale;
-            lblMitigationScaleValue.Text = calcOpts.MitigationScale.ToString();
+            trackBarMitigationScale.Value = calcOpts.MitigationScalePercent;
+            lblMitigationScaleValue.Text = calcOpts.MitigationScalePercent.ToString() + "%";
             trackBarThreatScale.Value = calcOpts.ThreatScale;
             lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
@@ -75,8 +75,8 @@ namespace Rawr.Tankadin
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
-                calcOpts.MitigationScale = trackBarMitigationScale.Value;
-                lblMitigationScaleValue.Text = trackBarMitigationScale.Value.ToString();
+                calcOpts.MitigationScalePercent = trackBarMitigationScale.Value;
+                lblMitigationScaleValue.Text = trackBarMitigationScale.Value.ToString() + "%";
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -120,7 +120,7 @@ namespace Rawr.Tankadin
         public int NumberAttackers = 1;
         public int TargetArmor = 10000;
         public int ThreatScale = 10;
-        public int MitigationScale = 7000;
+        public int MitigationScalePercent = 100;
         public int ThreatRotationChoice = 1;
     }
 
