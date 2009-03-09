@@ -161,6 +161,8 @@ namespace Rawr.RestoSham
                     "Time to OOM",
                     "Total HPS",
                     "Health",
+                    "Haste %",
+                    "Crit %",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -176,6 +178,17 @@ namespace Rawr.RestoSham
             }
         }
 
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        {
+            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot);
+        }
 
         //
         // Calculations options panel:
@@ -256,11 +269,12 @@ namespace Rawr.RestoSham
             CharacterCalculationsRestoSham calcStats = new CharacterCalculationsRestoSham();
             calcStats.BasicStats = stats;
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
-            #region Spell Power Based Calcs
+            #region Spell Power and Haste Based Calcs
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .1f * 150f);
             if (character.ActiveBuffsContains("Flametongue Totem"))
                 stats.SpellPower += (character.ShamanTalents.EnhancingTotems * .05f * 144);
+            calcStats.SpellHaste = (stats.HasteRating / 3270) + stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
             #endregion
             #region Intellect and MP5 Based Calcs
@@ -279,13 +293,13 @@ namespace Rawr.RestoSham
             float Critical = 1f + ((calcStats.SpellCrit + stats.BonusCritHealMultiplier) / 2f);
             #endregion
             #region Water Shield and Mana Calculations
-            float WSC = (float)Math.Max((1.6 * (1 - (stats.HasteRating / 3279))), 1.1f);
+            float WSC = (float)Math.Max((1.6 * (1 - (calcStats.SpellHaste))), 1.1f);
             float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (options.TotemWS1 ? 27 : 0);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
             #endregion
             #region Non-stat based static Calcs
             float Time = (options.FightLength * 60f);
-            float Hasted = (1 - (stats.HasteRating / 3279));
+            float Hasted = (1 - (calcStats.SpellHaste));
             #endregion
             #region Totem Stats
             float TotemHW1 = (options.TotemHW1 ? 88 : 0);  // +88 Healing to HW
@@ -322,7 +336,7 @@ namespace Rawr.RestoSham
             #region Chain Heal Calculations
             float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
             float CHMana = (((835 - (TotemCH1 + TotemCH3)) * (1f - ((character.ShamanTalents.TidalFocus) * .01f))));
-            float CHCast = (float)Math.Max((2.6 * (1 - (stats.HasteRating / 3279))), 1.1f);
+            float CHCast = (float)Math.Max((2.6 * (1 - (calcStats.SpellHaste))), 1.1f);
             float CHHeal = ((((((1130 + TotemCH2 + TotemCH4) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) *
                 (1f + ((character.ShamanTalents.Purification) * .02f))) * Critical) * TankCH)  + (ExtraELW * ELWHPS * CHCast / 2f)) * (1f + stats.CHHWHealIncrease);
             float CHHPS = CHHeal / CHCast;
@@ -331,7 +345,7 @@ namespace Rawr.RestoSham
             #region Lesser Healing Wave Calculations
             float LHWMana = (((550) * (1f - ((character.ShamanTalents.TidalFocus * .01f)))) - ((Orb * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .1f)));
-            float LHWCast = (float)Math.Max(((1.5f * (1 - (stats.HasteRating / 3279)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
+            float LHWCast = (float)Math.Max(((1.5f * (1 - (calcStats.SpellHaste)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .2f));
             float LHWHeal = ((((((1720 + (1.88f * (TotemLHW1 * (1 + (.02f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.02f * 
                 character.ShamanTalents.TidalWaves)))) * (1.5f / 3.5f))) * (1f + ((character.ShamanTalents.Purification) * .02f))))
@@ -343,7 +357,7 @@ namespace Rawr.RestoSham
             #region Healing Wave Calculations
             float HWMana = (((1099 - (TotemHW2 + TotemHW3)) * (1f - ((character.ShamanTalents.TidalFocus * .01f)))) - ((Orb * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield / 3)));
-            float HWCast = (float)Math.Max((((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) * (1 - (stats.HasteRating / 3279)))), 1.1f)
+            float HWCast = (float)Math.Max((((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) * (1 - (calcStats.SpellHaste)))), 1.1f)
                 + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float HWHeal = (((((3250 + (1.88f * (TotemHW1 * (1 + (.04f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.04f * 
                 character.ShamanTalents.TidalWaves)))) * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f))) * 
@@ -354,7 +368,7 @@ namespace Rawr.RestoSham
             #region Lesser Healing Wave Calculations with Tidal Waves up
             float LHWTCMana = (((550) * (1f - ((character.ShamanTalents.TidalFocus * .01f)))) - ((Orb * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .2f)));
-            float LHWTCCast = (float)Math.Max((((1.5f * (1 - (character.ShamanTalents.TidalWaves * .06f))) * (1 - (stats.HasteRating / 3279)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
+            float LHWTCCast = (float)Math.Max((((1.5f * (1 - (character.ShamanTalents.TidalWaves * .06f))) * (1 - (calcStats.SpellHaste)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .2f));
             float LHWTCHeal = ((((((1720 + (1.88f * (TotemLHW1 * (1 + (.02f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.02f *
                 character.ShamanTalents.TidalWaves)))) * (1.5f / 3.5f))) * (1f + (character.ShamanTalents.Purification * .02f))))
@@ -365,8 +379,8 @@ namespace Rawr.RestoSham
             #region Healing Wave Calculations with Tidal Waves up
             float HWTCMana = (((1099 - (TotemHW2 + TotemHW3)) * (1f - ((character.ShamanTalents.TidalFocus * .01f)))) - ((Orb * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .1f)));
-            float HWTCCast = (float)Math.Max((((((3 - (character.ShamanTalents.ImprovedHealingWave * .1f))) * (1 - (character.ShamanTalents.TidalWaves * .06f))) 
-                * (1 - (stats.HasteRating / 3279)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
+            float HWTCCast = (float)Math.Max((((((3 - (character.ShamanTalents.ImprovedHealingWave * .1f))) * (1 - (character.ShamanTalents.TidalWaves * .06f)))
+                * (1 - (calcStats.SpellHaste)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) * (character.ShamanTalents.ImprovedWaterShield / 3));
             float HWTCHeal = (((((3250 + (1.88f * (TotemHW1 * (1 + (.04f * character.ShamanTalents.TidalWaves)))) + ((Healing * (1 + (.04f *
                 character.ShamanTalents.TidalWaves)))) * ((3 - (character.ShamanTalents.ImprovedHealingWave * .1f)) / 3.5f))) *
                 (1f + ((character.ShamanTalents.Purification) * .02f))))) * (1 + (character.ShamanTalents.HealingWay * .06f));
@@ -376,7 +390,7 @@ namespace Rawr.RestoSham
             #region Riptide Calculations
             float RTMana = (((792) * (1f - ((character.ShamanTalents.TidalFocus * .01f)))) - ((Orb * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield * .1f)));
-            float RTCast = (float)Math.Max(((1.5f * (1 - (stats.HasteRating / 3279)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
+            float RTCast = (float)Math.Max(((1.5f * (1 - (calcStats.SpellHaste)))), 1.1f) + ((WSC / Orbs * stats.SpellCrit) *
                 (character.ShamanTalents.ImprovedWaterShield / 3));
             float RTHeal = ((((1670f + (Healing * .5f)) * (1f + ((character.ShamanTalents.Purification) * .02f))))) * 
                 character.ShamanTalents.Riptide;
@@ -516,6 +530,8 @@ namespace Rawr.RestoSham
             #endregion
             #region Final Stats
             calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
+            if (calcStats.TillOOM > 300)
+                calcStats.TillOOM = 300;
             calcStats.TotalHPS = calcStats.FightHPS;
             calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
@@ -672,6 +688,7 @@ namespace Rawr.RestoSham
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
                 HasteRating = stats.HasteRating,
+                SpellHaste = stats.SpellHaste,
                 Health = stats.Health,
                 Mana = stats.Mana,
                 WaterShieldIncrease = stats.WaterShieldIncrease,
@@ -688,7 +705,7 @@ namespace Rawr.RestoSham
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating + 
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
-                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease) > 0;
+                stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste) > 0;
         }
 
         #endregion

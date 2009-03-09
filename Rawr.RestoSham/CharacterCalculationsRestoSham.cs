@@ -31,6 +31,7 @@ namespace Rawr.RestoSham
 
         public float Mp5OutsideFSR { get; set; }
         public float SpellCrit { get; set; }
+        public float SpellHaste { get; set; }
         public float TotalManaPool { get; set; }
         public float TotalHealed { get; set; }
         public float FightMPS { get; set; }
@@ -64,7 +65,7 @@ namespace Rawr.RestoSham
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
             values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
-                       Math.Round(BasicStats.HasteRating / 32.79, 2), BasicStats.HasteRating.ToString()));
+                       Math.Round(SpellHaste * 100, 2),BasicStats.HasteRating.ToString()));
             values.Add("Total HPS", Math.Round(TotalHPS, 0).ToString());
             values.Add("Time to OOM", Math.Round(TillOOM, 0).ToString());
             values.Add("Total Healed", Math.Round(TotalHealed, 0).ToString());
@@ -90,10 +91,14 @@ namespace Rawr.RestoSham
             {
                 case "Total HPS":
                     return FightHPS;
-                case "Time to OOM": 
+                case "Time to OOM":
                     return TillOOM;
                 case "Health":
                     return BasicStats.Health;
+                case "Haste %":
+                    return (float)Math.Round(SpellHaste * 100, 2);
+                case "Crit %":
+                    return (float)Math.Round(SpellCrit * 100, 2);
             }
             return 0f;
         }
