@@ -220,6 +220,11 @@ namespace Rawr
 			ItemCache.OnItemsChanged();
         }
 
+		private void numericUpDownCountGemmingsShown_ValueChanged(object sender, EventArgs e)
+		{
+			labelCountGemmingsShownDescription.Text = string.Format(labelCountGemmingsShownDescription.Tag.ToString(), (int)numericUpDownCountGemmingsShown.Value);
+		}
+
         /* Old Gemming System
         private Button removeButton(GroupBox parentBox){
         
