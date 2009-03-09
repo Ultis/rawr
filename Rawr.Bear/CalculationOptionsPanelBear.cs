@@ -66,6 +66,37 @@ namespace Rawr
 					break;
 			}
 
+			switch (numericUpDownTargetDamage.Value.ToString())
+			{
+				case "90000":
+					comboBoxThreatValue.SelectedIndex = 0;
+					break;
+
+				case "110000":
+					comboBoxThreatValue.SelectedIndex = 1;
+					break;
+
+				case "120000":
+					comboBoxThreatValue.SelectedIndex = 2;
+					break;
+
+				case "140000":
+					comboBoxThreatValue.SelectedIndex = 3;
+					break;
+
+				case "150000":
+					comboBoxThreatValue.SelectedIndex = 4;
+					break;
+
+				case "170000":
+					comboBoxThreatValue.SelectedIndex = 5;
+					break;
+
+				default:
+					comboBoxThreatValue.SelectedIndex = 6;
+					break;
+			}
+
 			_loadingCalculationOptions = false;
 		}
 	
@@ -98,6 +129,13 @@ namespace Rawr
 			numericUpDownThreatValue.Enabled = comboBoxThreatValue.SelectedIndex == 4;
 			if (comboBoxThreatValue.SelectedIndex < 4)
 				numericUpDownThreatValue.Value = (new decimal[] { 0.0001M, 10, 50, 100 })[comboBoxThreatValue.SelectedIndex];
+		}
+
+		private void comboBoxTargetDamage_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			numericUpDownThreatValue.Enabled = comboBoxThreatValue.SelectedIndex == 6;
+			if (comboBoxThreatValue.SelectedIndex < 6)
+				numericUpDownThreatValue.Value = (new decimal[] { 90000, 110000, 120000, 140000, 150000, 170000 })[comboBoxThreatValue.SelectedIndex];
 		}
 	}
 

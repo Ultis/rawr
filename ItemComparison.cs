@@ -6,12 +6,14 @@ using System.Data;
 using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Rawr
 {
     public partial class ItemComparison : UserControl
     {
-		private Character.CharacterSlot _gearSlotView = Character.CharacterSlot.None;
+		private Character.CharacterSlot _characterSlot = Character.CharacterSlot.None;
         public ComparisonGraph.ComparisonSort Sort
         {
             get
@@ -21,8 +23,8 @@ namespace Rawr
             set
             {
                 comparisonGraph1.Sort = value;
-				if (_gearSlotView != Character.CharacterSlot.None)
-					LoadGearBySlot(_gearSlotView);
+				if (_characterSlot != Character.CharacterSlot.None)
+					LoadGearBySlot(_characterSlot);
             }
         }
 
@@ -45,10 +47,12 @@ namespace Rawr
             InitializeComponent();
         }
 
+		private List<ComparisonCalculationBase> _itemCalculations = null;
         public void LoadGearBySlot(Character.CharacterSlot slot)
-        {
+		{
 			Calculations.ClearCache();
-            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+            _itemCalculations = new List<ComparisonCalculationBase>();
+			_characterSlot = slot;
 			bool presorted = false;
             if (Character != null)
             {
@@ -56,20 +60,36 @@ namespace Rawr
                 { //Normal Gear Slots
 					presorted = true;
                     bool seenEquippedItem = (Character[slot] == null);
-                    foreach (ItemInstance item in Character.GetRelevantItemInstances(slot))
+					
+					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
+					DateTime before = DateTime.Now;
+                    foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
-                    }
+						//Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
+						//Queue each item into the ThreadPool
+						if (Calculations.SupportsMultithreading)
+							ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+						else
+							GetItemInstanceCalculations(item);
+					}
+					//Wait for all items to be processed
+					while (_itemCalculations.Count < relevantItemInstances.Count)
+					{
+						Thread.Sleep(10);
+					}
+					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
+					//Trace.WriteLine("Finished all Calculations");
+
                     // add item
                     if (!seenEquippedItem)
-                        itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
+                        _itemCalculations.Add(Calculations.GetItemCalculations(Character[slot], Character, slot));
 
-					itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
+					_itemCalculations.Sort(new System.Comparison<ComparisonCalculationBase>(comparisonGraph1.CompareItemCalculations));
 					Dictionary<int, int> countItem = new Dictionary<int, int>();
 					List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
 
-					foreach (ComparisonCalculationBase itemCalculation in itemCalculations)
+					foreach (ComparisonCalculationBase itemCalculation in _itemCalculations)
 					{
 						int itemId = itemCalculation.ItemInstance.Id;
 						if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
@@ -80,27 +100,49 @@ namespace Rawr
 							filteredItemCalculations.Add(itemCalculation);
 						}
 					}
-					itemCalculations = filteredItemCalculations;
+					_itemCalculations = filteredItemCalculations;
                 }
                 else
                 { //Gems/Metas
-                    foreach (Item item in Character.GetRelevantItems(slot))
-                    {
-                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, slot));
-                    }
+					List<Item> relevantItems = Character.GetRelevantItems(slot);
+					foreach (Item item in relevantItems)
+					{
+						if (Calculations.SupportsMultithreading)
+							ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+						else
+							GetItemCalculations(item);
+					}
+					//Wait for all items to be processed
+					while (_itemCalculations.Count < relevantItems.Count)
+					{
+						Thread.Sleep(10);
+					}
                 }
             }
 
             comparisonGraph1.RoundValues = true;
             comparisonGraph1.CustomRendered = false;
 			if (presorted)
-				comparisonGraph1.LoadItemCalculationsPreSorted(itemCalculations.ToArray());
+				comparisonGraph1.LoadItemCalculationsPreSorted(_itemCalculations.ToArray());
 			else
-				comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
+				comparisonGraph1.ItemCalculations = _itemCalculations.ToArray();
             comparisonGraph1.EquipSlot = slot == Character.CharacterSlot.Gems || slot == Character.CharacterSlot.Metas ?
 				Character.CharacterSlot.None : slot;
-			_gearSlotView = slot;
         }
+
+		private void GetItemInstanceCalculations(object item)
+		{
+			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
+			_itemCalculations.Add(Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot));
+			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
+		}
+
+		private void GetItemCalculations(object item)
+		{
+			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
+			_itemCalculations.Add(Calculations.GetItemCalculations((Item)item, Character, _characterSlot));
+			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
+		}
 
         public void LoadEnchantsBySlot(Item.ItemSlot slot, CharacterCalculationsBase currentCalculations)
         {
@@ -110,7 +152,7 @@ namespace Rawr
                 comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetEnchantCalculations(slot, Character, currentCalculations).ToArray();
 				comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-				_gearSlotView = Character.CharacterSlot.None;
+				_characterSlot = Character.CharacterSlot.None;
             }
         }
 
@@ -122,7 +164,7 @@ namespace Rawr
                 comparisonGraph1.CustomRendered = false;
                 comparisonGraph1.ItemCalculations = Calculations.GetBuffCalculations(Character, currentCalculations, activeOnly).ToArray();
 				comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-				_gearSlotView = Character.CharacterSlot.None;
+				_characterSlot = Character.CharacterSlot.None;
             }
         }
 
@@ -256,7 +298,7 @@ namespace Rawr
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
             comparisonGraph1.EquipSlot = Character.CharacterSlot.AutoSelect;
 			comparisonGraph1.SlotMap = slotMap;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         public ComparisonGraph.GraphDisplayMode DisplayMode
@@ -286,7 +328,7 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = itemCalculations.ToArray();
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         public void LoadTalents()
@@ -316,7 +358,7 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         public void LoadTalentSpecs(TalentPicker picker)
@@ -354,7 +396,7 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = talentCalculations.ToArray();
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         public void LoadRelativeStatValues()
@@ -363,7 +405,7 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = CalculationsBase.GetRelativeStatValues(Character);
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         public void LoadCustomChart(string chartName)
@@ -372,7 +414,7 @@ namespace Rawr
             comparisonGraph1.CustomRendered = false;
             comparisonGraph1.ItemCalculations = Calculations.GetCustomChartData(Character, chartName);
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
 
         internal void LoadCustomRenderedChart(string chartName)
@@ -382,7 +424,7 @@ namespace Rawr
             comparisonGraph1.CustomRenderedChartName = chartName;
             comparisonGraph1.ItemCalculations = null;
 			comparisonGraph1.EquipSlot = Character.CharacterSlot.None;
-			_gearSlotView = Character.CharacterSlot.None;
+			_characterSlot = Character.CharacterSlot.None;
         }
     }
 }

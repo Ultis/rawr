@@ -155,7 +155,11 @@ namespace Rawr
 		//{
 		//    get { return Instance.CachedCharacter; } 
 		//}
-        public static bool CanUseAmmo
+		public static bool SupportsMultithreading
+		{
+			get { return Instance.SupportsMultithreading; }
+		}
+		public static bool CanUseAmmo
         {
             get { return Instance.CanUseAmmo; }
         }
@@ -315,8 +319,15 @@ namespace Rawr
 	/// </summary>
 	public abstract class CalculationsBase
 	{
-        // name of the model, when loaded in model cache it's assigned the value of its corresponding key
+        /// <summary>
+        /// Name of the model. When loaded in model cache, it's assigned the value of its corresponding key
+        /// </summary>
         public string Name;
+
+		/// <summary>
+		/// If true, the ThreadPool will be used to more quickly run calculations on different items
+		/// </summary>
+		public virtual bool SupportsMultithreading { get { return true; } }
 
 		protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
 		protected Character.CharacterSlot _cachedSlot = Character.CharacterSlot.Shirt;
