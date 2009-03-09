@@ -234,6 +234,7 @@ namespace Rawr.Cat
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
 			float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
@@ -1114,8 +1115,7 @@ namespace Rawr.Cat
 			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 			
 			dictValues.Add("Health", BasicStats.Health.ToString());
-			dictValues.Add("Attack Power", string.Format("{0}*{0} with Savage Roar\r\n{1} without Savage Roar", 
-				BasicStats.AttackPower.ToString(), (BasicStats.AttackPower / 1.4f).ToString()));
+			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Strength", BasicStats.Strength.ToString());
 			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());

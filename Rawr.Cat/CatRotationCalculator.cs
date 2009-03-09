@@ -44,7 +44,7 @@ namespace Rawr.Cat
 			MaintainMangle = maintainMangle;
 			MangleDuration = mangleDuration;
 			RipDuration = ripDuration;
-			BerserkDuration = BerserkDuration;
+			BerserkDuration = berserkDuration;
 			AttackSpeed = attackSpeed;
 			OmenOfClarity = omenOfClarity;
 			GlyphOfShred = glyphOfShred;
