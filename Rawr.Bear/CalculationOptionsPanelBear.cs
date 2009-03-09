@@ -69,31 +69,31 @@ namespace Rawr
 			switch (numericUpDownTargetDamage.Value.ToString())
 			{
 				case "90000":
-					comboBoxThreatValue.SelectedIndex = 0;
+					comboBoxTargetDamage.SelectedIndex = 0;
 					break;
 
 				case "110000":
-					comboBoxThreatValue.SelectedIndex = 1;
+					comboBoxTargetDamage.SelectedIndex = 1;
 					break;
 
 				case "120000":
-					comboBoxThreatValue.SelectedIndex = 2;
+					comboBoxTargetDamage.SelectedIndex = 2;
 					break;
 
 				case "140000":
-					comboBoxThreatValue.SelectedIndex = 3;
+					comboBoxTargetDamage.SelectedIndex = 3;
 					break;
 
 				case "150000":
-					comboBoxThreatValue.SelectedIndex = 4;
+					comboBoxTargetDamage.SelectedIndex = 4;
 					break;
 
 				case "170000":
-					comboBoxThreatValue.SelectedIndex = 5;
+					comboBoxTargetDamage.SelectedIndex = 5;
 					break;
 
 				default:
-					comboBoxThreatValue.SelectedIndex = 6;
+					comboBoxTargetDamage.SelectedIndex = 6;
 					break;
 			}
 
