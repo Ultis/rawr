@@ -69,7 +69,7 @@ namespace Rawr
 						//Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
 						//Queue each item into the ThreadPool
 						if (Calculations.SupportsMultithreading)
-							ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
+							ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
 						else
 							GetItemInstanceCalculations(item);
 					}
