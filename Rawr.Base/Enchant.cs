@@ -204,13 +204,6 @@ namespace Rawr
 
         public static List<Enchant> FindEnchants(Item.ItemSlot slot, Character character, List<string> availableIds, CalculationsBase model)
         {
-            //List<Item.ItemSlot> validSlots = new List<Item.ItemSlot>();
-            //if (slot != Item.ItemSlot.MainHand)
-            //    validSlots.Add(slot);
-            //if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.MainHand)
-            //    validSlots.Add(Item.ItemSlot.OneHand);
-            //if (slot == Item.ItemSlot.MainHand)
-            //    validSlots.Add(Item.ItemSlot.TwoHand);
             return AllEnchants.FindAll(new Predicate<Enchant>(
                 delegate(Enchant enchant)
                 {

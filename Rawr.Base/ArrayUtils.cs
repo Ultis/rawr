@@ -73,12 +73,22 @@ namespace Rawr
 				{
 					haveLessThan = true;
 					if (!allowLessThan) return false;
-				}
+                    if (haveGreaterThan)
+                    {
+                        compareResult = CompareResult.Unequal;
+                        return allowGreaterThan || allowLessThan || allowEqual;
+                    }
+                }
 				else if (val > 0)
 				{
 					haveGreaterThan = true;
 					if (!allowGreaterThan) return false;
-				}
+                    if (haveLessThan)
+                    {
+                        compareResult = CompareResult.Unequal;
+                        return allowGreaterThan || allowLessThan || allowEqual;
+                    }
+                }
 			}
 			if (haveGreaterThan && haveLessThan) compareResult = CompareResult.Unequal;
 			else if (haveGreaterThan) compareResult = CompareResult.GreaterThan;

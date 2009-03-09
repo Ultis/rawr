@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.IO;
+using Rawr.Optimizer;
 
 namespace Rawr
 {
@@ -17,7 +18,7 @@ namespace Rawr
 
         FormMain formMain;
 
-        Optimizer _optimizer;
+        ItemInstanceOptimizer _optimizer;
 
         private enum AsyncOperation
         {
@@ -99,7 +100,7 @@ namespace Rawr
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, statusStrip1.Height));
             statusProgressBar.Dock = DockStyle.Fill;
 
-            _optimizer = new Optimizer();
+            _optimizer = new ItemInstanceOptimizer();
             _optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(_optimizer_OptimizeCharacterProgressChanged);
             _optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(_optimizer_OptimizeCharacterCompleted);
             _optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(_optimizer_ComputeUpgradesProgressChanged);
@@ -179,7 +180,7 @@ namespace Rawr
 
                         CurrentBatchCharacter.UnsavedChanges = true;
                         //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
-                        CurrentBatchCharacter.NewScore = Optimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
+                        CurrentBatchCharacter.NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
 
                         optimizerRound = 0;
                     }
@@ -792,7 +793,7 @@ namespace Rawr
             if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.Optimize;
-            Optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             buttonCancel.Enabled = true;
 
             batchIndex = 0;
@@ -831,7 +832,7 @@ namespace Rawr
             if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.BuildUpgradeList;
-            Optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             buttonCancel.Enabled = true;
 
             batchIndex = 0;
@@ -881,7 +882,7 @@ namespace Rawr
                     absolutePath = Path.GetFullPath(relativePath);
                     Directory.SetCurrentDirectory(curDir);
 
-                    score = Optimizer.GetOptimizationValue(Character, Model);
+                    score = ItemInstanceOptimizer.GetOptimizationValue(Character, Model);
 
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                     if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Score"));

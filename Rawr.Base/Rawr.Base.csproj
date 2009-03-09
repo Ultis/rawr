@@ -92,6 +92,8 @@
   <ItemGroup>
     <Compile Include="Armory.cs" />
     <Compile Include="ArrayUtils.cs" />
+    <Compile Include="AvailableItemGenerator.cs" />
+    <Compile Include="BatchOptimizer.cs" />
     <Compile Include="Buff.cs" />
     <Compile Include="Calculations.cs">
       <SubType>UserControl</SubType>

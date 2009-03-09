@@ -5,13 +5,14 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Rawr.Optimizer;
 
 namespace Rawr
 {
 	public partial class FormOptimize : Form
 	{
 		private Character _character;
-        private Optimizer _optimizer;
+        private ItemInstanceOptimizer _optimizer;
         private Item _itemToEvaluate;
 
         public void EvaluateUpgrades(Item itemToEvaluate)
@@ -25,7 +26,7 @@ namespace Rawr
 		{
 			InitializeComponent();
 			_character = character;
-            _optimizer = new Optimizer();
+            _optimizer = new ItemInstanceOptimizer();
             _optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(_optimizer_OptimizeCharacterProgressChanged);
             _optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(_optimizer_OptimizeCharacterCompleted);
             _optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(_optimizer_ComputeUpgradesProgressChanged);
@@ -172,7 +173,7 @@ namespace Rawr
                 trackBarThoroughness.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            Optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
@@ -484,7 +485,7 @@ namespace Rawr
                 trackBarThoroughness.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            Optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
+            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
             _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
         }
 

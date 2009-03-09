@@ -706,6 +706,8 @@ namespace Rawr
 			return MeetsRequirements(character, out temp);
 		}
 
+        public static bool OptimizerManagedVolatiliy { get; set; }
+
 		/// <summary>
 		/// Checks whether item meets the requirements to activate its stats.
 		/// </summary>
@@ -715,7 +717,7 @@ namespace Rawr
 		public bool MeetsRequirements(Character character, out bool volatileRequirements)
 		{
 			volatileRequirements = false;
-			bool meetsRequirements = false;
+			bool meetsRequirements = true;
 
 			if (this.Slot == ItemSlot.Meta)
 			{
@@ -839,7 +841,7 @@ namespace Rawr
 				}
 				#endregion
 			}
-			else
+            else if (!OptimizerManagedVolatiliy)
 			{
 				#region Gem Requirements
 				if (IsJewelersGem)
@@ -893,10 +895,8 @@ namespace Rawr
 		/// <summary>
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
-        //[XmlIgnore]
-        //internal Dictionary<int, bool> EnchantValid;
-        //[XmlIgnore]
-        //internal List<Enchant> EnchantValidList;
+        [XmlIgnore]
+        internal Optimizer.OptimizerItemInformation OptimizerItemInformation;
 
 		#region IComparable<Item> Members
 

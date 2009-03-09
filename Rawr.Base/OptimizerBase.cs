@@ -4,8 +4,37 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading;
 
-namespace Rawr
+namespace Rawr.Optimizer
 {
+    /// <summary>
+    /// Abstract class that is used by the optimizer to validate a certain range of slots in an
+    /// individual. When optimizer is constructing an individual it will call the validator after
+    /// it constructs the individual up to EndSlot, if validation fails optimizer restarts construction
+    /// at StartSlot.
+    /// </summary>
+    /// <typeparam name="TItem">Type of items.</typeparam>
+    public abstract class OptimizerRangeValidatorBase<TItem>
+    {
+        /// <summary>
+        /// Gets or sets the first slot of validation range.
+        /// </summary>
+        public int StartSlot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last slot of validation range.
+        /// </summary>
+        public int EndSlot { get; set; }
+
+        /// <summary>
+        /// Checks whether the range of items is valid.
+        /// </summary>
+        /// <param name="items">Array of items that define an individual.</param>
+        /// <returns>True if the range of items is valid, False otherwise.</returns>
+        /// <remarks>Validation should only depend on items between StartSlot and EndSlot. Items after EndSlot
+        /// may not be initialized.</remarks>
+        public abstract bool IsValid(TItem[] items);
+    }
+
     /// <summary>
     /// Abstract optimizer class that supports optimization of individuals that are defined by a list of items
     /// that fill slots where each slot has a list of valid items that can fill it and there can be restrictions
@@ -21,16 +50,21 @@ namespace Rawr
 
         public static OptimizationMethod OptimizationMethod { get; set; }
 
-        protected OptimizerBase(int slotCount)
-		{
-            this.slotCount = slotCount;
-            slotItems = new List<TItem>[slotCount];
-        }
-
+        /// <summary>
+        /// Number of item slots that define an individual.
+        /// </summary>
         protected int slotCount;
+        /// <summary>
+        /// Array of lists for each slot of potential items to fill the slot. This should be populated
+        /// unless a custom implementation of GetRandomItem and LookForDirectItemUpgrades is provided.
+        /// </summary>
         protected List<TItem>[] slotItems;
+        /// <summary>
+        /// List of validators sorted in the order they should be executed.
+        /// </summary>
+        protected List<OptimizerRangeValidatorBase<TItem>> validators;
 
-        public void CancelAsync()
+        public virtual void CancelAsync()
         {
             cancellationPending = true;
         }
@@ -39,7 +73,7 @@ namespace Rawr
 
         protected abstract void ReportProgress(int progressPercentage, float bestValue);
 
-		private Random rand;
+		protected Random rand;
 
         protected TIndividual Optimize(out float bestValue)
         {
@@ -51,22 +85,31 @@ namespace Rawr
         protected TIndividual Optimize(TIndividual injectIndividual, out float bestValue, out bool injected)
         {
             TValuation bestValuation;
-            return Optimize(injectIndividual, GetOptimizationValue(injectIndividual), out bestValue, out bestValuation, out injected);
+            return Optimize(injectIndividual, injectIndividual != null ? GetOptimizationValue(injectIndividual) : 0.0f, out bestValue, out bestValuation, out injected);
         }
 
         protected TIndividual Optimize(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
         {
-            switch (OptimizationMethod)
+            bool oldVolatility = Item.OptimizerManagedVolatiliy;
+            try
             {
-                case OptimizationMethod.GeneticAlgorithm:
-                    return OptimizeGA(injectIndividual, injectValue, out bestValue, out bestValuation, out injected);
-                case OptimizationMethod.SimulatedAnnealing:
-                    return OptimizeSA(injectIndividual, injectValue, out bestValue, out bestValuation, out injected);
+                Item.OptimizerManagedVolatiliy = true;
+                switch (OptimizationMethod)
+                {
+                    case OptimizationMethod.GeneticAlgorithm:
+                        return OptimizeGA(injectIndividual, injectValue, out bestValue, out bestValuation, out injected);
+                    case OptimizationMethod.SimulatedAnnealing:
+                        return OptimizeSA(injectIndividual, injectValue, out bestValue, out bestValuation, out injected);
+                }
+                bestValue = 0.0f;
+                bestValuation = default(TValuation);
+                injected = false;
+                return null;
             }
-            bestValue = 0.0f;
-            bestValuation = default(TValuation);
-            injected = false;
-            return null;
+            finally
+            {
+                Item.OptimizerManagedVolatiliy = oldVolatility;
+            }
         }
 
         /// <summary>
@@ -81,7 +124,6 @@ namespace Rawr
             injected = false;
 
             rand = new Random();
-            injected = false;
 
             TIndividual currentIndividual = BuildRandomIndividual();
             double currentValue = GetOptimizationValue(currentIndividual);
@@ -218,6 +260,10 @@ namespace Rawr
 			else
 			{
 				bestIndividual = injectIndividual;
+                if (bestIndividual == null)
+                {
+                    bestIndividual = BuildRandomIndividual();
+                }
                 bestValue = GetOptimizationValue(injectIndividual);
 			}
 
@@ -377,11 +423,13 @@ namespace Rawr
             bestValuation = default(TValuation);
 			float value;
 			bool foundUpgrade = false;
-			foreach (TItem item in items)
+            TItem[] itemList = (TItem[])GetItems(bestIndividual).Clone();
+            foreach (TItem item in items)
 			{
-                swappedIndividual = BuildSingleItemSwapIndividual(bestIndividual, slot, item);
-                if (IsIndividualValid(swappedIndividual))
+                itemList[slot] = item;
+                if (IsIndividualValid(itemList))
                 {
+                    swappedIndividual = GenerateIndividual(itemList);
                     TValuation valuation;
                     value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
                     if (value > best)
@@ -403,30 +451,61 @@ namespace Rawr
             return GetOptimizationValue(individual, GetValuation(individual));
         }
 
-        protected virtual TItem GetRandomItem(int slot)
+        // items can be used as a context to limit the choices if not all in the list are valid
+        protected virtual TItem GetRandomItem(int slot, TItem[] items)
         {
             return slotItems[slot][rand.Next(slotItems[slot].Count)];
         }
 
+        protected virtual bool IsIndividualValid(TItem[] items)
+        {
+            foreach (OptimizerRangeValidatorBase<TItem> validator in validators)
+            {
+                if (!validator.IsValid(items)) return false;
+            }
+            return true;
+        }
+
+        protected virtual bool IsIndividualValid(TIndividual individual)
+        {
+            return IsIndividualValid(GetItems(individual));
+        }
+
         protected abstract TValuation GetValuation(TIndividual individual);
         protected abstract float GetOptimizationValue(TIndividual individual, TValuation valuation);
-        protected abstract bool IsIndividualValid(TIndividual individual);
-        protected abstract bool IsIndividualValid(TItem[] individual);
         protected abstract TItem GetItem(TIndividual individual, int slot);
-        protected abstract TIndividual GenerateIndividual(TItem[] individual);
+        /// <remarks>The returned array will be treated as readonly.</remarks>
+        protected abstract TItem[] GetItems(TIndividual individual);
+        /// <remarks>If you need to store the array make a copy, because it might be modified.</remarks>
+        protected abstract TIndividual GenerateIndividual(TItem[] items);
 
-        protected delegate TItem GeneratorItemSelector(int slot);
+        protected delegate TItem GeneratorItemSelector(int slot, TItem[] items);
 
         protected virtual TIndividual GeneratorBuildIndividual(GeneratorItemSelector itemSelector)
 		{
             TItem[] item = new TItem[slotCount];
-            do
+            int validatorIndex = 0;
+            for (int slot = 0; slot < slotCount; slot++)
             {
-                for (int slot = 0; slot < slotCount; slot++)
+                item[slot] = itemSelector(slot, item);
+                // check if we have to validate
+                while (validatorIndex < validators.Count && validators[validatorIndex].EndSlot == slot)
                 {
-                    item[slot] = itemSelector(slot);
+                    // validate
+                    if (!validators[validatorIndex].IsValid(item))
+                    {
+                        // rewind
+                        slot = validators[validatorIndex].StartSlot - 1; // for will increment it
+                        validatorIndex = validators.FindIndex(validator => validator.EndSlot > slot);
+                        if (validatorIndex == -1) validatorIndex = validators.Count;
+                        break;
+                    }
+                    else
+                    {
+                        validatorIndex++; // move to next validator
+                    }
                 }
-            } while (!IsIndividualValid(item));
+            }
 
             return GenerateIndividual(item);
 		}
@@ -439,7 +518,7 @@ namespace Rawr
 		protected virtual TIndividual BuildChildIndividual(TIndividual father, TIndividual mother)
 		{
             return GeneratorBuildIndividual(
-                delegate(int slot)
+                delegate(int slot, TItem[] items)
                 {
                     return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
                 });
@@ -490,7 +569,7 @@ namespace Rawr
                 // Make sure to change one item
                 // There are better methods to make sure to change one item (shuffled list of all slots) but this works
                 int slot = rand.Next(slotCount);
-                TItem newitem = GetRandomItem(slot);
+                TItem newitem = GetRandomItem(slot, item);
                 TItem oldItem = item[slot];
                 item[slot] = newitem;
                 if (IsIndividualValid(item))
@@ -513,11 +592,11 @@ namespace Rawr
 			double mutationChance = (double)targetMutations / 32d;
 
             return GeneratorBuildIndividual(
-                delegate(int slot)
+                delegate(int slot, TItem[] items)
                 {
                     if (rand.NextDouble() < mutationChance)
                     {
-                        return GetRandomItem(slot);
+                        return GetRandomItem(slot, items);
                     }
                     else
                     {
@@ -529,10 +608,7 @@ namespace Rawr
 		protected virtual TIndividual BuildSingleItemSwapIndividual(TIndividual baseIndividual, int replaceSlot, TItem replaceItem)
 		{
             TItem[] item = new TItem[slotCount];
-            for (int slot = 0; slot < slotCount; slot++)
-            {
-                item[slot] = GetItem(baseIndividual, slot);
-            }
+            Array.Copy(GetItems(baseIndividual), item, slotCount);
             item[replaceSlot] = replaceItem;
             return GenerateIndividual(item);
 		}

@@ -412,7 +412,7 @@ namespace Rawr
         internal int[] _sparseIndices;
         internal int _sparseAdditiveCount;
         internal int _sparseMultiplicativeCount;
-        internal int _spareInverseMultiplicativeCount;
+        internal int _sparseInverseMultiplicativeCount;
         internal int _sparseNoStackCount;
 
         public void InvalidateSparseData()
@@ -445,12 +445,12 @@ namespace Rawr
                     indices.Add(i);
                 }
             }
-            _spareInverseMultiplicativeCount = 0;
+            _sparseInverseMultiplicativeCount = 0;
             for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
             {
                 if (_rawInverseMultiplicativeData[i] != 0.0f)
                 {
-                    _spareInverseMultiplicativeCount++;
+                    _sparseInverseMultiplicativeCount++;
                     //data.Add(_rawInverseMultiplicativeData[i]);
                     indices.Add(i);
                 }
@@ -3540,7 +3540,7 @@ namespace Rawr
                     float* pa = pRawMultiplicativeData + index;
                     *pa = (1 + *pa) * (1 + data._rawMultiplicativeData[index]) - 1;
                 }
-                for (int a = 0; a < data._spareInverseMultiplicativeCount; a++, i++)
+                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
                 {
                     int index = data._sparseIndices[i];
                     _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - data._rawInverseMultiplicativeData[index]);
@@ -3601,9 +3601,242 @@ namespace Rawr
         {
             if (ReferenceEquals(other, null))
                 return 0;
-            return ArrayUtils.And(ArrayUtils.AllCompare(this._rawAdditiveData, other._rawAdditiveData), ArrayUtils.And(
-                ArrayUtils.AllCompare(this._rawMultiplicativeData, other._rawMultiplicativeData),
-                ArrayUtils.AllCompare(this._rawNoStackData, other._rawNoStackData)));
+            if (this._sparseIndices != null && other._sparseIndices != null)
+            {
+                bool haveGreaterThan = false, haveLessThan = false;
+                int j = 0;
+                int i = 0;
+                int b = 0;
+                for (int a = 0; a < other._sparseAdditiveCount; a++, i++)
+                {
+                    int index = other._sparseIndices[i];
+                    while (b < _sparseAdditiveCount && _sparseIndices[j] < index)
+                    {
+                        b++;
+                        j++;
+                        haveGreaterThan = true;
+                        if (haveLessThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                    if (b < _sparseAdditiveCount && _sparseIndices[j] == index)
+                    {
+                        int val = _rawAdditiveData[index].CompareTo(other._rawAdditiveData[index]);
+                        if (val < 0)
+                        {
+                            haveLessThan = true;
+                            if (haveGreaterThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        else if (val > 0)
+                        {
+                            haveGreaterThan = true;
+                            if (haveLessThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        b++;
+                        j++;
+                    }
+                    else
+                    {
+                        haveLessThan = true;
+                        if (haveGreaterThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                }
+                while (b < _sparseAdditiveCount)
+                {
+                    b++;
+                    j++;
+                    haveGreaterThan = true;
+                    if (haveLessThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                }
+                b = 0;
+                for (int a = 0; a < other._sparseMultiplicativeCount; a++, i++)
+                {
+                    int index = other._sparseIndices[i];
+                    while (b < _sparseMultiplicativeCount && _sparseIndices[j] < index)
+                    {
+                        b++;
+                        j++;
+                        haveGreaterThan = true;
+                        if (haveLessThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                    if (b < _sparseMultiplicativeCount && _sparseIndices[j] == index)
+                    {
+                        int val = _rawMultiplicativeData[index].CompareTo(other._rawMultiplicativeData[index]);
+                        if (val < 0)
+                        {
+                            haveLessThan = true;
+                            if (haveGreaterThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        else if (val > 0)
+                        {
+                            haveGreaterThan = true;
+                            if (haveLessThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        b++;
+                        j++;
+                    }
+                    else
+                    {
+                        haveLessThan = true;
+                        if (haveGreaterThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                }
+                while (b < _sparseMultiplicativeCount)
+                {
+                    b++;
+                    j++;
+                    haveGreaterThan = true;
+                    if (haveLessThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                }
+                b = 0;
+                for (int a = 0; a < other._sparseInverseMultiplicativeCount; a++, i++)
+                {
+                    int index = other._sparseIndices[i];
+                    while (b < _sparseInverseMultiplicativeCount && _sparseIndices[j] < index)
+                    {
+                        b++;
+                        j++;
+                        haveGreaterThan = true;
+                        if (haveLessThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                    if (b < _sparseInverseMultiplicativeCount && _sparseIndices[j] == index)
+                    {
+                        int val = _rawInverseMultiplicativeData[index].CompareTo(other._rawInverseMultiplicativeData[index]);
+                        if (val < 0)
+                        {
+                            haveLessThan = true;
+                            if (haveGreaterThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        else if (val > 0)
+                        {
+                            haveGreaterThan = true;
+                            if (haveLessThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        b++;
+                        j++;
+                    }
+                    else
+                    {
+                        haveLessThan = true;
+                        if (haveGreaterThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                }
+                while (b < _sparseInverseMultiplicativeCount)
+                {
+                    b++;
+                    j++;
+                    haveGreaterThan = true;
+                    if (haveLessThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                }
+                b = 0;
+                for (int a = 0; a < other._sparseNoStackCount; a++, i++)
+                {
+                    int index = other._sparseIndices[i];
+                    while (b < _sparseNoStackCount && _sparseIndices[j] < index)
+                    {
+                        b++;
+                        j++;
+                        haveGreaterThan = true;
+                        if (haveLessThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                    if (b < _sparseNoStackCount && _sparseIndices[j] == index)
+                    {
+                        int val = _rawNoStackData[index].CompareTo(other._rawNoStackData[index]);
+                        if (val < 0)
+                        {
+                            haveLessThan = true;
+                            if (haveGreaterThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        else if (val > 0)
+                        {
+                            haveGreaterThan = true;
+                            if (haveLessThan)
+                            {
+                                return ArrayUtils.CompareResult.Unequal;
+                            }
+                        }
+                        b++;
+                        j++;
+                    }
+                    else
+                    {
+                        haveLessThan = true;
+                        if (haveGreaterThan)
+                        {
+                            return ArrayUtils.CompareResult.Unequal;
+                        }
+                    }
+                }
+                while (b < _sparseNoStackCount)
+                {
+                    b++;
+                    j++;
+                    haveGreaterThan = true;
+                    if (haveLessThan)
+                    {
+                        return ArrayUtils.CompareResult.Unequal;
+                    }
+                }
+                if (haveGreaterThan && haveLessThan) return ArrayUtils.CompareResult.Unequal;
+                else if (haveGreaterThan) return ArrayUtils.CompareResult.GreaterThan;
+                else if (haveLessThan) return ArrayUtils.CompareResult.LessThan;
+                else return ArrayUtils.CompareResult.Equal;
+            }
+            else
+            {
+                return ArrayUtils.And(ArrayUtils.AllCompare(this._rawAdditiveData, other._rawAdditiveData), ArrayUtils.And(
+                    ArrayUtils.AllCompare(this._rawMultiplicativeData, other._rawMultiplicativeData),
+                    ArrayUtils.AllCompare(this._rawNoStackData, other._rawNoStackData)));
+            }
         }
         //int IComparable.CompareTo(object other)
         //{

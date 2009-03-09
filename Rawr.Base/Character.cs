@@ -27,7 +27,7 @@ namespace Rawr //O O . .
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
         [XmlIgnore]
-        private ItemInstance[] _item = new ItemInstance[21];
+        internal ItemInstance[] _item = new ItemInstance[21];
         private string GetGemmedId(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
@@ -1005,6 +1005,7 @@ namespace Rawr //O O . .
         private int blueGemCount;
 		private int jewelersGemCount;
 		private int stormjewelCount;
+        private bool meetsGemRequirements;
 
         public int RedGemCount
         {
@@ -1051,117 +1052,55 @@ namespace Rawr //O O . .
 			}
 		}
 
+        public bool MeetsGemRequirements
+        {
+            get
+            {
+                ComputeGemCount();
+                return meetsGemRequirements;
+            }
+        }
+
         private void ComputeGemCount()
         {
             if (!gemCountValid)
             {
-                redGemCount = GetGemColorCount(Item.ItemSlot.Red);
-                yellowGemCount = GetGemColorCount(Item.ItemSlot.Yellow);
-                blueGemCount = GetGemColorCount(Item.ItemSlot.Blue);
-                jewelersGemCount = GetJewelersGemCount();
-				stormjewelCount = GetStormjewelGemCount();
+                Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
+                meetsGemRequirements = true;
+                for (int slot = 0; slot < 19; slot++)
+                {
+                    ItemInstance item = _item[slot];
+                    if (item == null) continue;
+                    for (int gemIndex = 1; gemIndex <= 3; gemIndex++)
+                    {
+                        Item gem = item.GetGem(gemIndex);
+                        if (gem != null)
+                        {
+                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Red)) redGemCount++;
+                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Yellow)) yellowGemCount++;
+                            if (Item.GemMatchesSlot(gem, Item.ItemSlot.Blue)) blueGemCount++;
+                            if (gem.IsJewelersGem) jewelersGemCount++;
+                            else if (gem.IsStormjewel) stormjewelCount++;
+                            else if (gem.Unique) // needs else, it seems jewelers gems are marked as unique
+                            {
+                                if (uniqueMap.ContainsKey(gem.Id))
+                                {
+                                    meetsGemRequirements = false;
+                                }
+                                else
+                                {
+                                    uniqueMap[gem.Id] = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (jewelersGemCount > 3) meetsGemRequirements = false;
+                if (stormjewelCount > 1) meetsGemRequirements = false;
 
                 gemCountValid = true;
             }
         }
-
-        private int GetItemJewelersGemCount(ItemInstance item)
-        {
-            int count = 0;
-            if ((object)item != null)
-            {
-                if (item.Gem1 != null && item.Gem1.IsJewelersGem) count++;
-                if (item.Gem2 != null && item.Gem2.IsJewelersGem) count++;
-                if (item.Gem3 != null && item.Gem3.IsJewelersGem) count++;
-            }
-            return count;
-        }
-
-        private int GetJewelersGemCount()
-        {
-            int count = 0;
-            foreach (CharacterSlot slot in CharacterSlots)
-			{
-                count += GetItemJewelersGemCount(this[slot]);
-			}
-            return count;
-		}
-
-		private int GetItemStormjewelGemCount(ItemInstance item)
-		{
-			int count = 0;
-			if ((object)item != null)
-			{
-				if (item.Gem1 != null && item.Gem1.IsStormjewel) count++;
-				if (item.Gem2 != null && item.Gem2.IsStormjewel) count++;
-				if (item.Gem3 != null && item.Gem3.IsStormjewel) count++;
-			}
-			return count;
-		}
-
-		private int GetStormjewelGemCount()
-		{
-			int count = 0;
-			foreach (CharacterSlot slot in CharacterSlots)
-			{
-				count += GetItemStormjewelGemCount(this[slot]);
-			}
-			return count;
-		}
-
-        private int GetItemGemColorCount(ItemInstance item, Item.ItemSlot slotColor)
-        {
-            int count = 0;
-            if ((object)item != null)
-            {
-                if (item.Gem1 != null && Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
-                if (item.Gem2 != null && Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
-                if (item.Gem3 != null && Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
-            }
-            return count;
-        }
-
-        public int GetGemColorCount(Item.ItemSlot slotColor)
-        {
-            int count = 0;
-            /*foreach (CharacterSlot slot in CharacterSlots)
-			{
-				Item item = this[slot];
-				if (item == null) continue;
-
-				if (Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
-				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
-				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
-			}*/
-            // unroll loop because the switch in this[slot] is very expensive
-            count += GetItemGemColorCount(Head, slotColor);
-            count += GetItemGemColorCount(Neck, slotColor);
-            count += GetItemGemColorCount(Shoulders, slotColor);
-            count += GetItemGemColorCount(Back, slotColor);
-            count += GetItemGemColorCount(Chest, slotColor);
-            count += GetItemGemColorCount(Shirt, slotColor);
-            count += GetItemGemColorCount(Tabard, slotColor);
-            count += GetItemGemColorCount(Wrist, slotColor);
-            count += GetItemGemColorCount(Hands, slotColor);
-            count += GetItemGemColorCount(Waist, slotColor);
-            count += GetItemGemColorCount(Legs, slotColor);
-            count += GetItemGemColorCount(Feet, slotColor);
-            count += GetItemGemColorCount(Finger1, slotColor);
-            count += GetItemGemColorCount(Finger2, slotColor);
-            count += GetItemGemColorCount(Trinket1, slotColor);
-            count += GetItemGemColorCount(Trinket2, slotColor);
-            count += GetItemGemColorCount(MainHand, slotColor);
-            count += GetItemGemColorCount(OffHand, slotColor);
-            count += GetItemGemColorCount(Ranged, slotColor);
-            count += GetItemGemColorCount(Projectile, slotColor);
-            count += GetItemGemColorCount(ProjectileBag, slotColor);
-
-            //if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
-            //if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
-            //if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
-            
-            return count;
-		}
 
 		private int GetItemGemIdCount(ItemInstance item, int id)
 		{
@@ -1187,7 +1126,6 @@ namespace Rawr //O O . .
 				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
 				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
 			}*/
-			// unroll loop because the switch in this[slot] is very expensive
 			count += GetItemGemIdCount(Head, id);
 			count += GetItemGemIdCount(Neck, id);
 			count += GetItemGemIdCount(Shoulders, id);
