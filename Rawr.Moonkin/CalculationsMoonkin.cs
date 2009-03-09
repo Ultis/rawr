@@ -153,6 +153,14 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot);
         }
 
+        public override bool SupportsMultithreading
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
