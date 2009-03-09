@@ -49,6 +49,7 @@ namespace Rawr
 
 		private int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
+		private AutoResetEvent _autoResetEvent = null;
         public void LoadGearBySlot(Character.CharacterSlot slot)
 		{
 			Calculations.ClearCache();
@@ -65,7 +66,8 @@ namespace Rawr
 					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
 					_itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
 					_calculationCount = 0;
-					//DateTime before = DateTime.Now;
+					_autoResetEvent = new AutoResetEvent(!Calculations.SupportsMultithreading);
+					DateTime before = DateTime.Now;
 					foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
@@ -77,10 +79,7 @@ namespace Rawr
 							GetItemInstanceCalculations(item);
 					}
 					//Wait for all items to be processed
-					while (_calculationCount < relevantItemInstances.Count)
-					{
-						Thread.Sleep(10);
-					}
+					_autoResetEvent.WaitOne();
 					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
 					//Trace.WriteLine("Finished all Calculations");
 
@@ -111,6 +110,7 @@ namespace Rawr
 					List<Item> relevantItems = Character.GetRelevantItems(slot);
 					_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
 					_calculationCount = 0;
+					_autoResetEvent = new AutoResetEvent(!Calculations.SupportsMultithreading);
 					//DateTime before = DateTime.Now;
 					foreach (Item item in relevantItems)
 					{
@@ -120,10 +120,7 @@ namespace Rawr
 							GetItemCalculations(item);
 					}
 					//Wait for all items to be processed
-					while (_calculationCount < relevantItems.Count)
-					{
-						Thread.Sleep(10);
-					}
+					_autoResetEvent.WaitOne();
 					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
                 }
             }
@@ -144,6 +141,7 @@ namespace Rawr
 			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
 			ComparisonCalculationBase result = Calculations.GetItemCalculations((ItemInstance)item, Character, _characterSlot);
 			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
 			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
 		}
 
@@ -152,6 +150,7 @@ namespace Rawr
 			//Trace.WriteLine("Starting Calculation for: " + item.ToString());
 			ComparisonCalculationBase result = Calculations.GetItemCalculations((Item)item, Character, _characterSlot);
 			_itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
+			if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
 			//Trace.WriteLine("Finished Calculation for: " + item.ToString());
 		}
 
