@@ -276,6 +276,7 @@ namespace Rawr.RestoSham
                 stats.SpellPower += (character.ShamanTalents.EnhancingTotems * .05f * 144);
             calcStats.SpellHaste = (stats.HasteRating / 3270) + stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
+            float Time = (options.FightLength * 60f);
             #endregion
             #region Intellect and MP5 Based Calcs
             float onUse = 0.0f;
@@ -296,10 +297,6 @@ namespace Rawr.RestoSham
             float WSC = (float)Math.Max((1.6 * (1 - (calcStats.SpellHaste))), 1.1f);
             float Orb = ((400 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease)) + (options.TotemWS1 ? 27 : 0);
             float Orbs = 3 + (options.WaterShield2 ? 1 : 0);
-            #endregion
-            #region Non-stat based static Calcs
-            float Time = (options.FightLength * 60f);
-            float Hasted = (1 - (calcStats.SpellHaste));
             #endregion
             #region Totem Stats
             float TotemHW1 = (options.TotemHW1 ? 88 : 0);  // +88 Healing to HW
