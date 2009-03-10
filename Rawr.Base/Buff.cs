@@ -100,8 +100,27 @@ namespace Rawr
                 Buff[] allBuffArray = new Buff[allBuffs.Count];
                 allBuffs.Values.CopyTo(allBuffArray, 0);
                 _allBuffs = new List<Buff>(allBuffs.Values);
+                CacheSetBonuses(); // cache it at the start because we don't like on demand caching with multithreading
             }
             catch { }
+        }
+
+        private static void CacheSetBonuses()
+        {
+            foreach (Buff buff in AllBuffs)
+            {
+                string setName = buff.SetName;
+                if (!string.IsNullOrEmpty(setName))
+                {
+                    List<Buff> setBonuses;
+                    if (!setBonusesByName.TryGetValue(setName, out setBonuses))
+                    {
+                        setBonuses = new List<Buff>();
+                        setBonusesByName[setName] = setBonuses;
+                    }
+                    setBonuses.Add(buff);
+                }
+            }
         }
 
         //you're in agreement
@@ -165,8 +184,7 @@ namespace Rawr
             List<Buff> setBonuses;
             if (!setBonusesByName.TryGetValue(setName, out setBonuses))
             {
-                setBonuses = AllBuffs.FindAll(buff => buff.SetName == setName);
-                setBonusesByName[setName] = setBonuses;
+                return new List<Buff>(); // if it's not cached we know we don't have any
             }
             return setBonuses;
         }

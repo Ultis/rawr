@@ -6,35 +6,46 @@ using System.Threading;
 
 namespace Rawr.Optimizer
 {
-    public delegate void BatchOptimizeCharacterCompletedEventHandler(object sender, BatchOptimizeCharacterCompletedEventArgs e);
+    public delegate void OptimizeBatchCompletedEventHandler(object sender, OptimizeBatchCompletedEventArgs e);
 
-    public class BatchOptimizeCharacterCompletedEventArgs : AsyncCompletedEventArgs
+    public class OptimizeBatchCompletedEventArgs : AsyncCompletedEventArgs
     {
-        private BatchIndividual optimizedCharacter;
-        private float optimizedCharacterValue;
+        private BatchIndividual optimizedBatch;
+        private BatchValuation optimizedBatchValuation;
+        private float optimizedBatchValue;
 
-        public BatchOptimizeCharacterCompletedEventArgs(BatchIndividual optimizedCharacter, float optimizedCharacterValue, Exception error, bool cancelled)
+        public OptimizeBatchCompletedEventArgs(BatchIndividual optimizedBatch, BatchValuation optimizedBatchValuation, float optimizedBatchValue, Exception error, bool cancelled)
             : base(error, cancelled, null)
         {
-            this.optimizedCharacter = optimizedCharacter;
-            this.optimizedCharacterValue = optimizedCharacterValue;
+            this.optimizedBatch = optimizedBatch;
+            this.optimizedBatchValue = optimizedBatchValue;
+            this.optimizedBatchValuation = optimizedBatchValuation;
         }
 
-        public BatchIndividual OptimizedCharacter
+        public BatchIndividual OptimizedBatch
         {
             get
             {
                 RaiseExceptionIfNecessary();
-                return optimizedCharacter;
+                return optimizedBatch;
             }
         }
 
-        public float OptimizedCharacterValue
+        public BatchValuation OptimizedBatchValuation
         {
             get
             {
                 RaiseExceptionIfNecessary();
-                return optimizedCharacterValue;
+                return optimizedBatchValuation;
+            }
+        }
+
+        public float OptimizedBatchValue
+        {
+            get
+            {
+                RaiseExceptionIfNecessary();
+                return optimizedBatchValue;
             }
         }
     }
@@ -100,10 +111,8 @@ namespace Rawr.Optimizer
 
     public class BatchOptimizer : OptimizerBase<object, BatchIndividual, BatchValuation>
     {
-        private Character _character;
-        private string _calculationToOptimize;
-        private OptimizationRequirement[] _requirements;
-        private CalculationsBase model;
+        //private Character _character;
+        //private CalculationsBase model;
 
         private class BatchCharacter
         {
@@ -119,6 +128,8 @@ namespace Rawr.Optimizer
         private Character optimizedCharacter;
         private float optimizedValue;
 
+        private int optimizerThoroughness;
+
         private class ItemAvailableValidator : OptimizerRangeValidatorBase<object>
         {
             private BatchOptimizer optimizer;
@@ -127,8 +138,9 @@ namespace Rawr.Optimizer
             {
                 Item item;
                 int index = StartSlot / 4;
-                if (index == optimizer.itemList.Count && optimizer.upgradeItems != null)
+                if (index == optimizer.itemList.Count)
                 {
+                    if (optimizer.upgradeItems == null) return true;
                     Item gem1 = items[StartSlot] as Item;
                     Item gem2 = items[StartSlot + 1] as Item;
                     Item gem3 = items[StartSlot + 2] as Item;
@@ -171,10 +183,11 @@ namespace Rawr.Optimizer
 
         public BatchOptimizer(List<KeyValuePair<Character, float>> batchList)
         {
+            if (batchList == null || batchList.Count == 0) throw new ArgumentException("Batch list must have at least one element.");
             this.batchList = new List<BatchCharacter>();
             foreach (KeyValuePair<Character, float> kvp in batchList)
             {
-                this.batchList.Add(new BatchCharacter() { Character = kvp.Key, Model = Calculations.GetModel(kvp.Key.CurrentModel), Weight = kvp.Value });
+                this.batchList.Add(new BatchCharacter() { Character = kvp.Key.Clone(), Model = Calculations.GetModel(kvp.Key.CurrentModel), Weight = kvp.Value });
             }
 
             optimizer = new ItemInstanceOptimizer();
@@ -182,15 +195,17 @@ namespace Rawr.Optimizer
             optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(optimizer_OptimizeCharacterProgressChanged);
             optimizerComplete = new AutoResetEvent(false);
 
-            optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterProgressChanged);
-            optimizeCharacterCompletedDelegate = new SendOrPostCallback(PrivateOptimizeCharacterCompleted);
-            optimizeCharacterThreadStartDelegate = new OptimizeCharacterThreadStartDelegate(OptimizeCharacterThreadStart);
+            optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeBatchProgressChanged);
+            optimizeBatchCompletedDelegate = new SendOrPostCallback(PrivateOptimizeBatchCompleted);
+            optimizeCharacterThreadStartDelegate = new OptimizeBatchThreadStartDelegate(OptimizeBatchThreadStart);
             computeUpgradesProgressChangedDelegate = new SendOrPostCallback(PrivateComputeUpgradesProgressChanged);
             computeUpgradesCompletedDelegate = new SendOrPostCallback(PrivateComputeUpgradesCompleted);
             computeUpgradesThreadStartDelegate = new ComputeUpgradesThreadStartDelegate(ComputeUpgradesThreadStart);
             evaluateUpgradeProgressChangedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeProgressChanged);
             evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
+
+            OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
         }
 
         void optimizer_OptimizeCharacterProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
@@ -213,8 +228,8 @@ namespace Rawr.Optimizer
 
         public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
         {
-            _character = character;
-            this.model = model;
+            //_character = character;
+            //this.model = model;
 
             if (templateGemsEnabled)
             {
@@ -250,31 +265,31 @@ namespace Rawr.Optimizer
         private OptimizationOperation currentOperation;
 
         #region Asynchronous Pattern Implementation
-        private void PrivateOptimizeCharacterProgressChanged(object state)
+        private void PrivateOptimizeBatchProgressChanged(object state)
         {
-            OnOptimizeCharacterProgressChanged(state as OptimizeCharacterProgressChangedEventArgs);
+            OnOptimizeBatchProgressChanged(state as OptimizeCharacterProgressChangedEventArgs);
         }
 
-        protected void OnOptimizeCharacterProgressChanged(OptimizeCharacterProgressChangedEventArgs e)
+        protected void OnOptimizeBatchProgressChanged(OptimizeCharacterProgressChangedEventArgs e)
         {
-            if (OptimizeCharacterProgressChanged != null)
+            if (OptimizeBatchProgressChanged != null)
             {
-                OptimizeCharacterProgressChanged(this, e);
+                OptimizeBatchProgressChanged(this, e);
             }
         }
 
-        private void PrivateOptimizeCharacterCompleted(object state)
+        private void PrivateOptimizeBatchCompleted(object state)
         {
             isBusy = false;
             cancellationPending = false;
-            OnOptimizeCharacterCompleted(state as BatchOptimizeCharacterCompletedEventArgs);
+            OnOptimizeBatchCompleted(state as OptimizeBatchCompletedEventArgs);
         }
 
-        protected void OnOptimizeCharacterCompleted(BatchOptimizeCharacterCompletedEventArgs e)
+        protected void OnOptimizeBatchCompleted(OptimizeBatchCompletedEventArgs e)
         {
-            if (OptimizeCharacterCompleted != null)
+            if (OptimizeBatchCompleted != null)
             {
-                OptimizeCharacterCompleted(this, e);
+                OptimizeBatchCompleted(this, e);
             }
         }
 
@@ -345,20 +360,20 @@ namespace Rawr.Optimizer
         }
 
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeCharacterThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter);
-        private delegate void ComputeUpgradesThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade);
+        private delegate void OptimizeBatchThreadStartDelegate(int batchThoroughness, int thoroughness);
+        private delegate void ComputeUpgradesThreadStartDelegate(int batchThoroughness, int thoroughness, Item singleItemUpgrades);
+        private delegate void EvaluateUpgradeThreadStartDelegate(int batchThoroughness, int thoroughness, ItemInstance upgrade);
 
-        public event BatchOptimizeCharacterCompletedEventHandler OptimizeCharacterCompleted;
-        public event OptimizeCharacterProgressChangedEventHandler OptimizeCharacterProgressChanged;
+        public event OptimizeBatchCompletedEventHandler OptimizeBatchCompleted;
+        public event OptimizeCharacterProgressChangedEventHandler OptimizeBatchProgressChanged;
         public event ComputeUpgradesProgressChangedEventHandler ComputeUpgradesProgressChanged;
         public event ComputeUpgradesCompletedEventHandler ComputeUpgradesCompleted;
         public event ProgressChangedEventHandler EvaluateUpgradeProgressChanged;
         public event EvaluateUpgradeCompletedEventHandler EvaluateUpgradeCompleted;
 
         private SendOrPostCallback optimizeCharacterProgressChangedDelegate;
-        private SendOrPostCallback optimizeCharacterCompletedDelegate;
-        private OptimizeCharacterThreadStartDelegate optimizeCharacterThreadStartDelegate;
+        private SendOrPostCallback optimizeBatchCompletedDelegate;
+        private OptimizeBatchThreadStartDelegate optimizeCharacterThreadStartDelegate;
         private SendOrPostCallback computeUpgradesProgressChangedDelegate;
         private SendOrPostCallback computeUpgradesCompletedDelegate;
         private ComputeUpgradesThreadStartDelegate computeUpgradesThreadStartDelegate;
@@ -366,26 +381,27 @@ namespace Rawr.Optimizer
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
         private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
 
-        public void OptimizeCharacterAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        public void OptimizeCharacterAsync(int batchThoroughness, int thoroughness)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            optimizeCharacterThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, injectCharacter, null, null);
+            optimizeCharacterThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, null, null);
         }
 
-        private void OptimizeCharacterThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        private void OptimizeBatchThreadStart(int batchThoroughness, int thoroughness)
         {
             Exception error = null;
-            BatchIndividual optimizedCharacter = null;
-            float optimizedCharacterValue = 0.0f;
+            BatchIndividual optimizedBatch = null;
+            BatchValuation optimizedValuation = null;
+            float optimizedBatchValue = 0.0f;
             try
             {
-                optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, out error);
-                if (optimizedCharacter != null)
+                optimizedBatch = PrivateOptimizeBatch(batchThoroughness, thoroughness, out optimizedValuation, out error);
+                if (optimizedBatch != null)
                 {
-                    optimizedCharacterValue = GetOptimizationValue(optimizedCharacter);
+                    optimizedBatchValue = GetOptimizationValue(optimizedBatch);
                 }
                 else
                 {
@@ -396,30 +412,30 @@ namespace Rawr.Optimizer
             {
                 error = ex;
             }
-            asyncOperation.PostOperationCompleted(optimizeCharacterCompletedDelegate, new BatchOptimizeCharacterCompletedEventArgs(optimizedCharacter, optimizedCharacterValue, error, cancellationPending));
+            asyncOperation.PostOperationCompleted(optimizeBatchCompletedDelegate, new OptimizeBatchCompletedEventArgs(optimizedBatch, optimizedValuation, optimizedBatchValue, error, cancellationPending));
         }
 
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness)
+        public void ComputeUpgradesAsync(int batchThoroughness, int thoroughness)
         {
-            ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, null);
+            ComputeUpgradesAsync(batchThoroughness, thoroughness, null);
         }
 
-        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public void ComputeUpgradesAsync(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            computeUpgradesThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, null, null);
+            computeUpgradesThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, singleItemUpgrades, null, null);
         }
 
-        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        private void ComputeUpgradesThreadStart(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
             try
             {
-                upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+                upgrades = PrivateComputeUpgrades(batchThoroughness, thoroughness, singleItemUpgrades, out error);
             }
             catch (Exception ex)
             {
@@ -428,22 +444,22 @@ namespace Rawr.Optimizer
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
-        public void EvaluateUpgradeAsync(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
+        public void EvaluateUpgradeAsync(int batchThoroughness, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(character, calculationToOptimize, requirements, thoroughness, upgrade, null, null);
+            evaluateUpgradeThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, upgrade, null, null);
         }
 
-        private void EvaluateUpgradeThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
+        private void EvaluateUpgradeThreadStart(int batchThoroughness, int thoroughness, ItemInstance upgrade)
         {
             Exception error = null;
             float upgradeValue = 0f;
             try
             {
-                upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
+                upgradeValue = PrivateEvaluateUpgrade(batchThoroughness, thoroughness, upgrade, out error);
             }
             catch (Exception ex)
             {
@@ -472,32 +488,32 @@ namespace Rawr.Optimizer
             }
         }
 
-        public BatchIndividual OptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, bool injectCharacter)
+        public BatchIndividual OptimizeCharacter(int batchThoroughness, int thoroughness, out BatchValuation bestValuation)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            BatchIndividual optimizedCharacter = PrivateOptimizeCharacter(character, calculationToOptimize, requirements, thoroughness, out error);
+            BatchIndividual optimizedBatch = PrivateOptimizeBatch(batchThoroughness, thoroughness, out bestValuation, out error);
             if (error != null) throw error;
             isBusy = false;
-            return optimizedCharacter;
+            return optimizedBatch;
         }
 
-        private BatchIndividual PrivateOptimizeCharacter(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, out Exception error)
+        private BatchIndividual PrivateOptimizeBatch(int batchThoroughness, int thoroughness, out BatchValuation bestValuation, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
-            _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
+            //_character = character;
+            //model = Calculations.GetModel(_character.CurrentModel);
+            _thoroughness = batchThoroughness;
+            optimizerThoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.OptimizeCharacter;
             BatchIndividual optimizedCharacter = null;
             float bestValue = 0.0f;
+            bestValuation = null;
             upgradeItems = null;
 
             try
@@ -507,11 +523,12 @@ namespace Rawr.Optimizer
                     // if we just start from current character and look for direct upgrades
                     // then we have to deal with items that are currently equipped, but are not
                     // currently available
-                    MarkEquippedItemsAsValid(_character);
+                    //MarkEquippedItemsAsValid(_character);
                 }
 
+                bool injected;
                 slotCount = itemList.Count * 4;
-                optimizedCharacter = Optimize(out bestValue);
+                optimizedCharacter = Optimize(null, 0.0f, out bestValue, out bestValuation, out injected);
             }
             catch (Exception ex)
             {
@@ -522,14 +539,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(batchThoroughness, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -538,51 +555,25 @@ namespace Rawr.Optimizer
         private int itemProgressPercentage = 0;
         private string currentItem = "";
 
-        private void MarkEquippedItemsAsValid(Character character)
-        {
-            for (int i = 0; i < slotCount; i++)
-            {
-                ItemInstance item = character[(Character.CharacterSlot)i];
-                if ((object)item != null && item.Id != 0)
-                {
-                    Item it = item.Item;
-                    if (!itemList.Contains(it))
-                    {
-                        itemList.Add(it);
-                    }
-                    if (it.OptimizerItemInformation == null)
-                    {
-                        GenerateOptimizerItemInformation(it);
-                    }
-                    if (!it.OptimizerItemInformation.ItemAvailable.ContainsKey(item.GemmedId))
-                    {
-                        it.OptimizerItemInformation.ItemList.Add(item);
-                        it.OptimizerItemInformation.ItemAvailable[item.GemmedId] = true;
-                    }
-                }
-            }
-        }
-
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(int batchThoroughness, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
-            _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
+            //_character = character;
+            //model = Calculations.GetModel(_character.CurrentModel);
+            _thoroughness = batchThoroughness;
+            optimizerThoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
-                MarkEquippedItemsAsValid(_character);
+                //MarkEquippedItemsAsValid(_character);
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
-                Item[] items = ItemCache.GetRelevantItems(model);
+                Item[] items = ItemCache.GetRelevantItems(batchList[0].Model);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationBase>();
@@ -620,7 +611,7 @@ namespace Rawr.Optimizer
                     ReportProgress(0, 0);
                     foreach (Character.CharacterSlot slot in slots)
                     {
-                        if (item.FitsInSlot(slot, _character))
+                        if (item.FitsInSlot(slot, batchList[0].Character))
                         {
                             List<ComparisonCalculationBase> comparisons = upgrades[slot];
                             PopulateUpgradeItems(item);
@@ -666,33 +657,32 @@ namespace Rawr.Optimizer
             return upgrades;
         }
 
-        public float EvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade)
+        public float EvaluateUpgrade(int batchThoroughness, int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            float upgradeValue = PrivateEvaluateUpgrade(character, calculationToOptimize, requirements, thoroughness, upgrade, out error);
+            float upgradeValue = PrivateEvaluateUpgrade(batchThoroughness, thoroughness, upgrade, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgradeValue;
         }
 
-        private float PrivateEvaluateUpgrade(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, ItemInstance upgrade, out Exception error)
+        private float PrivateEvaluateUpgrade(int batchThoroughness, int thoroughness, ItemInstance upgrade, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
-            _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
-            _calculationToOptimize = calculationToOptimize;
-            _requirements = requirements;
-            _thoroughness = thoroughness;
+            //_character = character;
+            //model = Calculations.GetModel(_character.CurrentModel);
+            _thoroughness = batchThoroughness;
+            optimizerThoroughness = thoroughness;
 
             slotCount = (itemList.Count + 1) * 4; // one extra slot for upgrade evaluations
 
             currentOperation = OptimizationOperation.EvaluateUpgrade;
-            Character saveCharacter = _character;
+            //Character saveCharacter = _character;
             float upgradeValue = 0f;
             try
             {
@@ -733,6 +723,7 @@ namespace Rawr.Optimizer
         int upgradeGemCount;
         Dictionary<string, bool> upgradeAvailable;
         List<Item> itemList = new List<Item>();
+        Dictionary<int, int> indexFromId = new Dictionary<int, int>();
 
         AvailableItemGenerator itemGenerator;
 
@@ -749,7 +740,7 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, _character, model);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, batchList[0].Character, batchList[0].Model);
             foreach (Item item in ItemCache.Items.Values)
             {
                 item.OptimizerItemInformation = null;
@@ -758,6 +749,7 @@ namespace Rawr.Optimizer
 
             Dictionary<int, bool> itemUnique = new Dictionary<int, bool>();
             itemList = new List<Item>();
+            indexFromId = new Dictionary<int, int>();
             for (int i = 0; i < slotList.Length; i++)
             {
                 foreach (ItemInstance itemInstance in slotList[i])
@@ -776,6 +768,7 @@ namespace Rawr.Optimizer
                         }
                         if (!itemUnique.ContainsKey(itemInstance.Id))
                         {
+                            indexFromId[item.Id] = itemList.Count;
                             itemList.Add(item);
                             itemUnique[itemInstance.Id] = true;
                         }
@@ -801,7 +794,7 @@ namespace Rawr.Optimizer
         private int GetItemGemCount(Item item)
         {
             int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && _character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && _character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && _character.WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && batchList[0].Character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && batchList[0].Character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && batchList[0].Character.WristBlacksmithingSocketEnabled);
             switch (item.SocketColor1)
             {
                 case Item.ItemSlot.Meta:
@@ -880,7 +873,21 @@ namespace Rawr.Optimizer
             for (int i = 0; i < batchList.Count; i++)
             {
                 optimizer.Model = batchList[i].Model;
-                optimizer.OptimizeCharacterAsync(batchList[i].Character, _calculationToOptimize, _requirements, _thoroughness, false);
+                // set up the character with currently available item instances
+                for (int slot = 0; slot < characterSlots; slot++)
+                {
+                    int index;
+                    ItemInstance current = batchList[i].Character[(Character.CharacterSlot)slot];
+                    if (current != null && indexFromId.TryGetValue(current.Id, out index))
+                    {
+                        batchList[i].Character[(Character.CharacterSlot)slot] = individual.AvailableItems[index];
+                    }
+                    else
+                    {
+                        batchList[i].Character[(Character.CharacterSlot)slot] = null;
+                    }
+                }
+                optimizer.OptimizeCharacterAsync(batchList[i].Character, batchList[i].Character.CalculationToOptimize, batchList[i].Character.OptimizationRequirements.ToArray(), optimizerThoroughness, true);
                 optimizerComplete.WaitOne();
                 if (cancellationPending) break;
                 valuation.OptimizedBatchCharacter.Add(optimizedCharacter);

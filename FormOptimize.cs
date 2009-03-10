@@ -173,7 +173,7 @@ namespace Rawr
                 trackBarThoroughness.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             _optimizer.OptimizeCharacterAsync(_character, _calculationToOptimize, _requirements, _thoroughness, false);
 		}
 
@@ -485,7 +485,7 @@ namespace Rawr
                 trackBarThoroughness.Enabled = false;
             buttonCancel.DialogResult = DialogResult.None;
 
-            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
+            _optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod; 
             _optimizer.ComputeUpgradesAsync(_character, _calculationToOptimize, _requirements, _thoroughness, _itemToEvaluate);
         }
 

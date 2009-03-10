@@ -48,7 +48,7 @@ namespace Rawr.Optimizer
     {
         protected int _thoroughness;
 
-        public static OptimizationMethod OptimizationMethod { get; set; }
+        public OptimizationMethod OptimizationMethod { get; set; }
 
         /// <summary>
         /// Number of item slots that define an individual.

@@ -2509,7 +2509,6 @@ namespace Rawr.Optimizer
         {
             _character = character;
             Model = model;
-            ThreadPoolValuation = model.SupportsMultithreading;
 
             if (templateGemsEnabled)
             {
@@ -3681,7 +3680,7 @@ namespace Rawr.Optimizer
         {
             bool successful;
             Character mutant = null;
-            if (rand.NextDouble() < 0.9)
+            if (itemGenerator == null || rand.NextDouble() < 0.9)
             {
                 return base.BuildMutantIndividual(parent);
             }

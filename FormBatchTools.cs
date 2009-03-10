@@ -18,13 +18,16 @@ namespace Rawr
 
         FormMain formMain;
 
-        ItemInstanceOptimizer _optimizer;
+        ItemInstanceOptimizer optimizer;
+        BatchOptimizer batchOptimizer;
 
         private enum AsyncOperation
         {
             None,
             Optimize,
-            BuildUpgradeList
+            BuildUpgradeList,
+            BatchOptimize,
+            BuildBatchUpgradeList
         }
 
         AsyncOperation currentOperation;
@@ -100,17 +103,18 @@ namespace Rawr
             layout.RowStyles.Add(new RowStyle(SizeType.Absolute, statusStrip1.Height));
             statusProgressBar.Dock = DockStyle.Fill;
 
-            _optimizer = new ItemInstanceOptimizer();
-            _optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(_optimizer_OptimizeCharacterProgressChanged);
-            _optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(_optimizer_OptimizeCharacterCompleted);
-            _optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(_optimizer_ComputeUpgradesProgressChanged);
-            _optimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(_optimizer_ComputeUpgradesCompleted);
-            _optimizer.EvaluateUpgradeProgressChanged += new ProgressChangedEventHandler(_optimizer_EvaluateUpgradeProgressChanged);
-            _optimizer.EvaluateUpgradeCompleted += new EvaluateUpgradeCompletedEventHandler(_optimizer_EvaluateUpgradeCompleted);
+            optimizer = new ItemInstanceOptimizer();
+            optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(_optimizer_OptimizeCharacterProgressChanged);
+            optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(_optimizer_OptimizeCharacterCompleted);
+            optimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(_optimizer_ComputeUpgradesProgressChanged);
+            optimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(_optimizer_ComputeUpgradesCompleted);
+            optimizer.EvaluateUpgradeProgressChanged += new ProgressChangedEventHandler(_optimizer_EvaluateUpgradeProgressChanged);
+            optimizer.EvaluateUpgradeCompleted += new EvaluateUpgradeCompletedEventHandler(_optimizer_EvaluateUpgradeCompleted);
 
             checkBoxOverrideRegem.Checked = Properties.Optimizer.Default.OverrideRegem;
             checkBoxOverrideReenchant.Checked = Properties.Optimizer.Default.OverrideReenchant;
             trackBarThoroughness.Value = Properties.Optimizer.Default.Thoroughness;
+            trackBarBatchThoroughness.Value = Properties.Optimizer.Default.BatchThoroughness;
         }
 
         void _optimizer_OptimizeCharacterProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
@@ -389,7 +393,7 @@ namespace Rawr
 
         private void FormBatchTools_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = _optimizer.IsBusy || !PromptToSaveBeforeClosing();
+            e.Cancel = optimizer.IsBusy || !PromptToSaveBeforeClosing();
         }
 
         private void FormBatchTools_FormClosed(object sender, FormClosedEventArgs e)
@@ -793,7 +797,7 @@ namespace Rawr
             if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.Optimize;
-            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             buttonCancel.Enabled = true;
 
             batchIndex = 0;
@@ -809,16 +813,16 @@ namespace Rawr
             {
                 bool _overrideRegem = checkBoxOverrideRegem.Checked;
                 bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-                _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+                optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
             }
-            _optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
+            optimizer.OptimizeCharacterAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, true);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            if (currentOperation != AsyncOperation.None && _optimizer.IsBusy)
+            if (currentOperation != AsyncOperation.None && optimizer.IsBusy)
             {
-                _optimizer.CancelAsync();
+                optimizer.CancelAsync();
             }
         }
 
@@ -832,7 +836,7 @@ namespace Rawr
             if (currentOperation != AsyncOperation.None) return;
 
             currentOperation = AsyncOperation.BuildUpgradeList;
-            ItemInstanceOptimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
+            optimizer.OptimizationMethod = Properties.Optimizer.Default.OptimizationMethod;
             buttonCancel.Enabled = true;
 
             batchIndex = 0;
@@ -846,8 +850,8 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
-            _optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
+            optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+            optimizer.ComputeUpgradesAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness);
         }
 
         private void EvaluateUpgradeCurrentBatchCharacter(bool initializeCache)
@@ -855,8 +859,123 @@ namespace Rawr
             int _thoroughness = trackBarThoroughness.Value;
             bool _overrideRegem = checkBoxOverrideRegem.Checked;
             bool _overrideReenchant = checkBoxOverrideReenchant.Checked;
-            if (initializeCache) _optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
-            _optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item);
+            if (initializeCache) optimizer.InitializeItemCache(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.AvailableItems, _overrideRegem, _overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, CurrentBatchCharacter.Model);
+            optimizer.EvaluateUpgradeAsync(CurrentBatchCharacter.Character, CurrentBatchCharacter.Character.CalculationToOptimize, CurrentBatchCharacter.Character.OptimizationRequirements.ToArray(), _thoroughness, upgradeListEnumerator.Current.Item);
+        }
+
+        private void bathcOptimizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int thoroughness = trackBarThoroughness.Value;
+            int batchThoroughness = trackBarBatchThoroughness.Value;
+            bool overrideRegem = checkBoxOverrideRegem.Checked;
+            bool overrideReenchant = checkBoxOverrideReenchant.Checked;
+
+            List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
+            batchOptimizer = new BatchOptimizer(batchList);
+            batchOptimizer.OptimizeBatchProgressChanged += new OptimizeCharacterProgressChangedEventHandler(batchOptimizer_OptimizeBatchProgressChanged);
+            batchOptimizer.OptimizeBatchCompleted += new OptimizeBatchCompletedEventHandler(batchOptimizer_OptimizeBatchCompleted);
+
+            currentOperation = AsyncOperation.BatchOptimize;
+            buttonCancel.Enabled = true;
+
+            batchOptimizer.InitializeItemCache(batchList[0].Key, batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, BatchCharacterList[0].Model);
+            batchOptimizer.OptimizeCharacterAsync(batchThoroughness, thoroughness);
+        }
+
+        void batchOptimizer_OptimizeBatchCompleted(object sender, OptimizeBatchCompletedEventArgs e)
+        {
+            if (e.Cancelled || e.Error != null)
+            {
+                currentOperation = AsyncOperation.None;
+                buttonCancel.Enabled = false;
+                statusLabel.Text = "";
+                statusProgressBar.Value = 0;
+                return;
+            }
+            for (int i = 0; i < BatchCharacterList.Count; i++)
+            {
+                Character _character = BatchCharacterList[i].Character;
+                Character bestCharacter = e.OptimizedBatchValuation.OptimizedBatchCharacter[i];
+
+                _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
+                _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
+                _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
+                _character.Finger1 = bestCharacter.Finger1 == null ? null : bestCharacter.Finger1.Clone();
+                _character.Finger2 = bestCharacter.Finger2 == null ? null : bestCharacter.Finger2.Clone();
+                _character.Hands = bestCharacter.Hands == null ? null : bestCharacter.Hands.Clone();
+                _character.Head = bestCharacter.Head == null ? null : bestCharacter.Head.Clone();
+                _character.Legs = bestCharacter.Legs == null ? null : bestCharacter.Legs.Clone();
+                _character.MainHand = bestCharacter.MainHand == null ? null : bestCharacter.MainHand.Clone();
+                _character.Neck = bestCharacter.Neck == null ? null : bestCharacter.Neck.Clone();
+                _character.OffHand = bestCharacter.OffHand == null ? null : bestCharacter.OffHand.Clone();
+                _character.Projectile = bestCharacter.Projectile == null ? null : bestCharacter.Projectile.Clone();
+                _character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : bestCharacter.ProjectileBag.Clone();
+                _character.Ranged = bestCharacter.Ranged == null ? null : bestCharacter.Ranged.Clone();
+                _character.Shoulders = bestCharacter.Shoulders == null ? null : bestCharacter.Shoulders.Clone();
+                _character.Trinket1 = bestCharacter.Trinket1 == null ? null : bestCharacter.Trinket1.Clone();
+                _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
+                _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
+                _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
+                _character.BackEnchant = bestCharacter.BackEnchant;
+                _character.ChestEnchant = bestCharacter.ChestEnchant;
+                _character.FeetEnchant = bestCharacter.FeetEnchant;
+                _character.Finger1Enchant = bestCharacter.Finger1Enchant;
+                _character.Finger2Enchant = bestCharacter.Finger2Enchant;
+                _character.HandsEnchant = bestCharacter.HandsEnchant;
+                _character.HeadEnchant = bestCharacter.HeadEnchant;
+                _character.LegsEnchant = bestCharacter.LegsEnchant;
+                _character.MainHandEnchant = bestCharacter.MainHandEnchant;
+                _character.OffHandEnchant = bestCharacter.OffHandEnchant;
+                _character.RangedEnchant = bestCharacter.RangedEnchant;
+                _character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
+                _character.WristEnchant = bestCharacter.WristEnchant;
+                _character.OnCalculationsInvalidated();
+
+                BatchCharacterList[i].UnsavedChanges = true;
+                //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
+                BatchCharacterList[i].NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
+            }
+            currentOperation = AsyncOperation.None;
+            buttonCancel.Enabled = false;
+            statusLabel.Text = "";
+            statusProgressBar.Value = 0;
+        }
+
+        void batchOptimizer_OptimizeBatchProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
+        {
+            statusLabel.Text = string.Format("{0}", e.BestValue);
+            statusProgressBar.Value = e.ProgressPercentage;
+        }
+
+        private void buildBatchUpgradeListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int thoroughness = trackBarThoroughness.Value;
+            int batchThoroughness = trackBarBatchThoroughness.Value;
+            bool overrideRegem = checkBoxOverrideRegem.Checked;
+            bool overrideReenchant = checkBoxOverrideReenchant.Checked;
+
+            List<KeyValuePair<Character, float>> batchList = BatchCharacterList.GetBatchOptimizerList();
+            batchOptimizer = new BatchOptimizer(batchList);
+            batchOptimizer.ComputeUpgradesProgressChanged += new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
+            batchOptimizer.ComputeUpgradesCompleted += new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
+
+            currentOperation = AsyncOperation.BuildBatchUpgradeList;
+            buttonCancel.Enabled = true;
+
+            batchOptimizer.InitializeItemCache(batchList[0].Key, batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, Properties.Optimizer.Default.TemplateGemsEnabled, BatchCharacterList[0].Model);
+            batchOptimizer.ComputeUpgrades(batchThoroughness, thoroughness, null);
+        }
+
+        void batchOptimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)
+        {
+            FormUpgradeComparison.Instance.LoadData(formMain.Character, e.Upgrades, null);
+            FormUpgradeComparison.Instance.Show();
+        }
+
+        void batchOptimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)
+        {
+            statusLabel.Text = e.CurrentItem;
+            statusProgressBar.Value = e.ProgressPercentage;
         }
     }
 
@@ -1033,6 +1152,16 @@ namespace Rawr
             System.IO.StreamWriter writer = new System.IO.StreamWriter(path);
             serializer.Serialize(writer, this);
             writer.Close();
+        }
+
+        public List<KeyValuePair<Character, float>> GetBatchOptimizerList()
+        {
+            List<KeyValuePair<Character, float>> list = new List<KeyValuePair<Character, float>>();
+            foreach (BatchCharacter batchCharacter in this)
+            {
+                list.Add(new KeyValuePair<Character, float>(batchCharacter.Character, batchCharacter.Weight));
+            }
+            return list;
         }
     }
 }

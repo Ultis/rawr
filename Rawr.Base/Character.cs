@@ -26,8 +26,9 @@ namespace Rawr //O O . .
         public List<Buff> _activeBuffs = new List<Buff>();
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
+        private const int slotCount = 21;
         [XmlIgnore]
-        internal ItemInstance[] _item = new ItemInstance[21];
+        internal ItemInstance[] _item = new ItemInstance[slotCount];
         private string GetGemmedId(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
@@ -498,9 +499,11 @@ namespace Rawr //O O . .
             List<ItemInstance> items;
             if (!_relevantItemInstances.TryGetValue(slot, out items))
             {
+                Dictionary<int, bool> itemChecked = new Dictionary<int, bool>();
                 items = new List<ItemInstance>();
                 foreach (Item item in ItemCache.RelevantItems)
                 {
+                    itemChecked[item.Id] = true;
                     if (item.FitsInSlot(slot, this))
                     {
                         List<ItemInstance> itemInstances = new List<ItemInstance>();
@@ -526,6 +529,32 @@ namespace Rawr //O O . .
                 // add available instances
                 foreach (string availableItem in AvailableItems)
                 {
+                    string[] ids = availableItem.Split('.');
+                    if (ids.Length == 1 || ids[1] == "*")
+                    {
+                        // we have an available item that might be filtered out
+                        Item item = ItemCache.FindItemById(int.Parse(ids[0]));
+                        if (item != null && !itemChecked.ContainsKey(item.Id))
+                        {
+                            if (item.FitsInSlot(slot, this))
+                            {
+                                List<ItemInstance> itemInstances = new List<ItemInstance>();
+                                foreach (GemmingTemplate template in GemmingTemplate.CurrentTemplates)
+                                {
+                                    if (template.Enabled)
+                                    {
+                                        ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
+                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    }
+                                }
+                                items.AddRange(itemInstances);
+                            }
+                            itemChecked[item.Id] = true;
+                        }
+                    }
+                }
+                foreach (string availableItem in AvailableItems)
+                {
                     // only have to worry about items with gems, others should be visible already
                     string[] ids = availableItem.Split('.');
                     if (ids.Length > 1 && ids[1] != "*")
@@ -537,7 +566,7 @@ namespace Rawr //O O . .
                             if (!items.Contains(instance)) items.Add(instance);
                         }
                     }
-                }
+                } 
                 _relevantItemInstances[slot] = items;
             }
             return items;
@@ -978,7 +1007,7 @@ namespace Rawr //O O . .
         public void SetEnchantBySlot(Character.CharacterSlot slot, Enchant enchant)
         {
             int i = (int)slot;
-            if (i < 0 || i > 20) return;
+            if (i < 0 || i >= slotCount) return;
             ItemInstance item = this[slot];
             if ((object)item != null) item.Enchant = enchant;
 			OnCalculationsInvalidated();
@@ -1065,6 +1094,11 @@ namespace Rawr //O O . .
         {
             if (!gemCountValid)
             {
+                redGemCount = 0;
+                yellowGemCount = 0;
+                blueGemCount = 0;
+                jewelersGemCount = 0;
+                stormjewelCount = 0;
                 Dictionary<int, bool> uniqueMap = new Dictionary<int, bool>();
                 meetsGemRequirements = true;
                 for (int slot = 0; slot < 19; slot++)
@@ -1244,13 +1278,13 @@ namespace Rawr //O O . .
             get
             {
                 int i = (int)slot;
-                if (i < 0 || i > 20) return null;
+                if (i < 0 || i >= slotCount) return null;
                 return _item[i];
             }
             set
             {
                 int i = (int)slot;
-                if (i < 0 || i > 20) return;
+                if (i < 0 || i >= slotCount) return;
                 // should we track id changes? for now assume assume we don't have to
                 _item[i] = value;
                 OnCalculationsInvalidated();
@@ -1545,23 +1579,6 @@ namespace Rawr //O O . .
             Ranged = ranged;
 			Projectile = projectile;
 			ProjectileBag = projectileBag;
-			/*ExtraWristSocket = extraWristSocket;
-			ExtraHandsSocket = extraHandsSocket;
-			ExtraWaistSocket = extraWaistSocket;
-
-            HeadEnchant = enchantHead;
-            ShouldersEnchant = enchantShoulders;
-            BackEnchant = enchantBack;
-            ChestEnchant = enchantChest;
-            WristEnchant = enchantWrist;
-            HandsEnchant = enchantHands;
-            LegsEnchant = enchantLegs;
-            FeetEnchant = enchantFeet;
-            Finger1Enchant = enchantFinger1;
-            Finger2Enchant = enchantFinger2;
-            MainHandEnchant = enchantMainHand;
-            OffHandEnchant = enchantOffHand;
-            RangedEnchant = enchantRanged;*/
             IsLoading = false;
             RecalculateSetBonuses();
         }
@@ -1622,42 +1639,22 @@ namespace Rawr //O O . .
 
 		public Character Clone()
 		{
-            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race,
-                        (object)Head == null ? null : Head.Clone(), (object)Neck == null ? null : Neck.Clone(), (object)Shoulders == null ? null : Shoulders.Clone(), (object)Back == null ? null : Back.Clone(), (object)Chest == null ? null : Chest.Clone(), (object)Shirt == null ? null : Shirt.Clone(),
-                        (object)Tabard == null ? null : Tabard.Clone(), (object)Wrist == null ? null : Wrist.Clone(), (object)Hands == null ? null : Hands.Clone(), (object)Waist == null ? null : Waist.Clone(), (object)Legs == null ? null : Legs.Clone(), (object)Feet == null ? null : Feet.Clone(),
-                        (object)Finger1 == null ? null : Finger1.Clone(),
-                        (object)Finger2 == null ? null : Finger2.Clone(),
-                        (object)Trinket1 == null ? null : Trinket1.Clone(),
-                        (object)Trinket2 == null ? null : Trinket2.Clone(),
-                        (object)MainHand == null ? null : MainHand.Clone(),
-                        (object)OffHand == null ? null : OffHand.Clone(),
-                        (object)Ranged == null ? null : Ranged.Clone(),
-                        (object)Projectile == null ? null : Projectile.Clone(),
-                        (object)ProjectileBag == null ? null : ProjectileBag.Clone()
-						/*this.ExtraWristSocket,
-						this.ExtraHandsSocket,
-						this.ExtraWaistSocket,
-                        this.HeadEnchant,
-                        this.ShouldersEnchant,
-                        this.BackEnchant,
-                        this.ChestEnchant,
-                        this.WristEnchant,
-                        this.HandsEnchant,
-                        this.LegsEnchant,
-                        this.FeetEnchant,
-                        this.Finger1Enchant,
-                        this.Finger2Enchant,
-                        this.MainHandEnchant,
-                        this.OffHandEnchant,
-                        this.RangedEnchant, false*/);
-			foreach (Buff buff in this.ActiveBuffs) 
-				if (!clone.ActiveBuffs.Contains(buff))
-					clone.ActiveBuffs.Add(buff);
+            ItemInstance[] clonedItemInstances = new ItemInstance[slotCount];
+            for (int i = 0; i < clonedItemInstances.Length; i++)
+            {
+                ItemInstance itemInstance = _item[i];
+                if (itemInstance != null) clonedItemInstances[i] = itemInstance.Clone();
+            }
+            Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, clonedItemInstances, ActiveBuffs, CurrentModel);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this);
 			clone.EnforceGemRequirements = this.EnforceGemRequirements;
-            clone.CurrentModel = this.CurrentModel;
+            clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
+            clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;
+            clone.HandsBlacksmithingSocketEnabled = this.HandsBlacksmithingSocketEnabled;
+            clone.OptimizationRequirements = this.OptimizationRequirements;
+            clone.CalculationToOptimize = this.CalculationToOptimize;
 			return clone;
 		}
     
