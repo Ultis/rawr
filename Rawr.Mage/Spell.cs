@@ -8470,7 +8470,8 @@ namespace Rawr.Mage
         {
             Name = name;
 
-            LU M = new LU(12);
+            ArraySet arraySet = ArrayPool.RequestArraySet(12, 12);
+            LU M = new LU(12, arraySet);
 
             double[] X = new double[12];
 
@@ -8591,9 +8592,9 @@ namespace Rawr.Mage
 
             double MB = 0.04f * castingState.MageTalents.MissileBarrage;
 
-            fixed (double* U = LU._U, x = X)
-            fixed (double* sL = LU.sparseL, column = LU.column, column2 = LU.column2)
-            fixed (int* P = LU._P, Q = LU._Q, LJ = LU._LJ, sLI = LU.sparseLI, sLstart = LU.sparseLstart)
+            fixed (double* U = arraySet.LU_U, x = X)
+            fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
+            fixed (int* P = arraySet.LU_P, Q = arraySet.LU_Q, LJ = arraySet.LU_LJ, sLI = arraySet.LUsparseLI, sLstart = arraySet.LUsparseLstart)
             {
                 M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
 
@@ -8823,6 +8824,7 @@ namespace Rawr.Mage
             AppendFormat(sb, "MBAMABarClip3:\t{0:F}%\r\n", 100.0 * (S31 * X74 + S32 * X84));
 
             SpellDistribution = sb.ToString();
+            ArrayPool.ReleaseArraySet(arraySet);
         }
 
         public override string Sequence

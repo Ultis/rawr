@@ -6,41 +6,9 @@ namespace Rawr.Mage
 {
     public unsafe class LU
     {
-        private static int etaMax;
-        private static int sizeMax;
-        public static int[] _P;
-        public static int[] _Q;
-        public static double[] sparseL; // packed non-zero elements of eta vectors
-        public static int[] sparseLI; // indices of non-zero elements
-        public static int[] sparseLstart; // start index of non-zero elements of eta vector i
-        public static int[] _LJ; // col/row eta index   Li = I + L[i*size:(i+1)*size-1] * e_LI[i]'
-        public static double[] column;
-        public static double[] column2;
-        public static double[] _U;
-
         private int size;
         public int etaSize;
-
-        static LU()
-        {
-            sizeMax = 200;
-            RecreateArrays();
-        }
-
-        private static void RecreateArrays()
-        {
-            _U = new double[sizeMax * sizeMax];
-            etaMax = Math.Max(sizeMax + 100, 2 * sizeMax);
-            _P = new int[sizeMax];
-            _Q = new int[sizeMax];
-            //_L = new double[etaMax * size];
-            _LJ = new int[etaMax];
-            sparseL = new double[etaMax * sizeMax];
-            sparseLI = new int[etaMax * sizeMax];
-            sparseLstart = new int[etaMax];
-            column = new double[sizeMax];
-            column2 = new double[sizeMax];
-        }
+        private ArraySet arraySet;
 
         // Ln...L0 B = P U Q
         // B = (Ln...L0)inv P U Q
@@ -117,14 +85,15 @@ namespace Rawr.Mage
         public int Rank { get; set; }
 
         // data will be modified, if you need to retain it clean pass a clone
-        public LU(int size)
+        public LU(int size, ArraySet arraySet)
         {
             this.size = size;
+            this.arraySet = arraySet;
             etaSize = 0;
-            if (size > sizeMax)
+            if (size > arraySet.LUsizeMax)
             {
-                sizeMax = size;
-                RecreateArrays();
+                arraySet.LUsizeMax = size;
+                arraySet.RecreateLUArrays();
             }
         }
 
@@ -370,7 +339,7 @@ namespace Rawr.Mage
 
                 // eliminate, construct eta vector
 
-                if (etaSize >= etaMax) throw new InvalidOperationException();
+                if (etaSize >= arraySet.LUetaMax) throw new InvalidOperationException();
 
                 if (!Singular && Math.Abs(max) < 0.000001)
                 {
@@ -459,7 +428,7 @@ namespace Rawr.Mage
             // P E P' = I + P ep eta' P'
             // eta' P' = (P eta)'
 
-            if (etaSize >= etaMax) throw new InvalidOperationException();
+            if (etaSize >= arraySet.LUetaMax) throw new InvalidOperationException();
 
             sLstart[etaSize + 1] = sLstart[etaSize];
 

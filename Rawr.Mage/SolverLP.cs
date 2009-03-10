@@ -21,24 +21,6 @@ namespace Rawr.Mage
         private double* pCost;
         private SparseMatrix sparseMatrix;
 
-        private static int maxRows = 0;
-        private static int maxCols = 0;
-        internal static double[] rowScale;
-        internal static double[] columnScale;
-
-        static SolverLP()
-        {
-            maxRows = 200;
-            maxCols = 5000;
-            RecreateArrays();
-        }
-
-        private static void RecreateArrays()
-        {
-            rowScale = new double[maxRows];
-            columnScale = new double[maxCols];
-        }
-
         public void BeginUnsafe(double* pRowScale, double* pColumnScale, double* pCost, double* pData, double* pValue, int* pRow, int* pCol)
         {
             this.pRowScale = pRowScale;
@@ -86,11 +68,12 @@ namespace Rawr.Mage
 
         public SolverLP(int baseRows, int maximumColumns, CharacterCalculationsMage calculations, int segments)
         {
-            if (baseRows > maxRows || maximumColumns > maxCols)
+            arraySet = ArrayPool.RequestArraySet(baseRows, maximumColumns);
+            if (baseRows > arraySet.maxSolverRows || maximumColumns > arraySet.maxSolverCols)
             {
-                maxRows = Math.Max(baseRows, maxRows);
-                maxCols = Math.Max(maximumColumns, maxCols);
-                RecreateArrays();
+                arraySet.maxSolverRows = Math.Max(baseRows, arraySet.maxSolverRows);
+                arraySet.maxSolverCols = Math.Max(maximumColumns, arraySet.maxSolverCols);
+                arraySet.RecreateSolverArrays();
             }
 
             this.calculations = calculations;
@@ -100,16 +83,16 @@ namespace Rawr.Mage
 
             for (int i = 0; i <= cRows; i++)
             {
-                rowScale[i] = 1.0;
+                arraySet.rowScale[i] = 1.0;
             }
 
-            lp = new LP(cRows, maximumColumns);
+            lp = new LP(cRows, maximumColumns, arraySet);
         }
 
         public void SetRowScale(int row, double value)
         {
             if (row == -1) return;
-            rowScale[row] = value;
+            arraySet.rowScale[row] = value;
         }
 
         public void SetRowScaleUnsafe(int row, double value)
@@ -120,7 +103,7 @@ namespace Rawr.Mage
 
         public void SetColumnScale(int col, double value)
         {
-            columnScale[col] = value;
+            arraySet.columnScale[col] = value;
         }
 
         public void SetColumnScaleUnsafe(int col, double value)
@@ -130,7 +113,7 @@ namespace Rawr.Mage
 
         public int AddColumn()
         {
-            columnScale[cCols] = 1.0;
+            arraySet.columnScale[cCols] = 1.0;
             cCols++;
             return lp.AddColumn();
         }
@@ -147,12 +130,12 @@ namespace Rawr.Mage
             get
             {
                 if (row == -1 || col == -1) return 0;
-                return lp[row, col] / rowScale[row] / columnScale[col];
+                return lp[row, col] / arraySet.rowScale[row] / arraySet.columnScale[col];
             }
             set
             {
                 if (row == -1 || col == -1) return;
-                lp[row, col] = value * rowScale[row] * columnScale[col];
+                lp[row, col] = value * arraySet.rowScale[row] * arraySet.columnScale[col];
                 compactSolution = null;
             }
         }
@@ -171,19 +154,19 @@ namespace Rawr.Mage
         public void SetRHS(int row, double value)
         {
             if (row == -1) return;
-            lp.SetRHS(row, value * rowScale[row]);
+            lp.SetRHS(row, value * arraySet.rowScale[row]);
         }
 
         public double GetRHS(int row)
         {
             if (row == -1) return double.PositiveInfinity;
-            return lp.GetRHS(row) / rowScale[row];
+            return lp.GetRHS(row) / arraySet.rowScale[row];
         }
 
         public void SetLHS(int row, double value)
         {
             if (row == -1) return;
-            lp.SetLHS(row, value * rowScale[row]);
+            lp.SetLHS(row, value * arraySet.rowScale[row]);
         }
 
         public void SetRHSUnsafe(int row, double value)
@@ -201,7 +184,7 @@ namespace Rawr.Mage
         public void SetCost(int col, double value)
         {
             if (col == -1) return;
-            lp.SetCost(col, value * rowScale[cRows] * columnScale[col]);
+            lp.SetCost(col, value * arraySet.rowScale[cRows] * arraySet.columnScale[col]);
         }
 
         public void SetCostUnsafe(int col, double value)
@@ -211,12 +194,12 @@ namespace Rawr.Mage
 
         public void SetColumnLowerBound(int col, double value)
         {
-            lp.SetLowerBound(col, value / columnScale[col]);
+            lp.SetLowerBound(col, value / arraySet.columnScale[col]);
         }
 
         public void SetColumnUpperBound(int col, double value)
         {
-            lp.SetUpperBound(col, value / columnScale[col]);
+            lp.SetUpperBound(col, value / arraySet.columnScale[col]);
         }
 
         //private int rowMaximizeSegment = -1;
@@ -283,7 +266,7 @@ namespace Rawr.Mage
 
         public void SetConstraintElement(int index, int col, double value)
         {
-            lp.SetConstraintElement(index, col, columnScale[col] * value);
+            lp.SetConstraintElement(index, col, arraySet.columnScale[col] * value);
         }
 
         /*public void AddColdsnapConstraints(int segments)
@@ -310,6 +293,15 @@ namespace Rawr.Mage
             lp.SetConstraintRHS(rowColdsnap + index, value);
         }*/
 
+        private ArraySet arraySet;
+        public ArraySet ArraySet
+        {
+            get
+            {
+                return arraySet;
+            }
+        }
+
         private void SolveInternal()
         {
             if (compactSolution == null)
@@ -331,10 +323,10 @@ namespace Rawr.Mage
 
         private void UnscaleSolution()
         {
-            compactSolution[compactSolution.Length - 1] /= rowScale[cRows];
+            compactSolution[compactSolution.Length - 1] /= arraySet.rowScale[cRows];
             for (int i = 0; i < compactSolution.Length - 1; i++)
             {
-                compactSolution[i] *= columnScale[i];
+                compactSolution[i] *= arraySet.columnScale[i];
             }
         }
 

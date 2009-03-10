@@ -93,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayPool.cs" />
     <Compile Include="CalculationOptionsMage.cs" />
     <Compile Include="CalculationOptionsPanelMage.cs">
       <SubType>UserControl</SubType>

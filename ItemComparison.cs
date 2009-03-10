@@ -47,7 +47,7 @@ namespace Rawr
             InitializeComponent();
         }
 
-		private int _calculationCount = 0;
+		private volatile int _calculationCount = 0;
 		private ComparisonCalculationBase[] _itemCalculations = null;
 		private AutoResetEvent _autoResetEvent = null;
         public void LoadGearBySlot(Character.CharacterSlot slot)

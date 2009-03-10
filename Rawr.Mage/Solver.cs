@@ -286,8 +286,6 @@ namespace Rawr.Mage
             return total;
         }
 
-        private static object calculationLock = new object();
-
         public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, bool advancedConstraints)
         {
             Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraints, armor);
@@ -296,184 +294,182 @@ namespace Rawr.Mage
 
         private CharacterCalculationsMage PrivateGetCharacterCalculations(Item additionalItem, CalculationsMage calculations)
         {
-            lock (calculationLock)
+            List<Buff> autoActivatedBuffs = new List<Buff>();
+            Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
+            Stats characterStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
+
+            //if (useSMP) calculationOptions.SmartOptimization = true;
+
+            calculationResult = new CharacterCalculationsMage();
+            calculationResult.Calculations = calculations;
+            calculationResult.BaseStats = characterStats;
+            calculationResult.Character = character;
+            calculationResult.CalculationOptions = calculationOptions;
+
+            restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
+            heroismAvailable = calculationOptions.HeroismAvailable;
+            arcanePowerAvailable = !calculationOptions.DisableCooldowns && (talents.ArcanePower == 1);
+            icyVeinsAvailable = !calculationOptions.DisableCooldowns && (talents.IcyVeins == 1);
+            combustionAvailable = !calculationOptions.DisableCooldowns && (talents.Combustion == 1);
+            moltenFuryAvailable = talents.MoltenFury > 0;
+            trinket1Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket1);
+            trinket2Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket2);
+            coldsnapAvailable = !calculationOptions.DisableCooldowns && (talents.ColdSnap == 1);
+            potionOfWildMagicAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfWildMagic;
+            potionOfSpeedAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfSpeed;
+            effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
+            flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
+            drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
+            waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
+            manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
+            calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
+            calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
+            calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
+            calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
+            calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
+            calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
+            calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
+            if (calculationOptions.PlayerLevel < 77)
             {
-                List<Buff> autoActivatedBuffs = new List<Buff>();
-                Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
-                Stats characterStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
-
-                //if (useSMP) calculationOptions.SmartOptimization = true;
-
-                calculationResult = new CharacterCalculationsMage();
-                calculationResult.Calculations = calculations;
-                calculationResult.BaseStats = characterStats;
-                calculationResult.Character = character;
-                calculationResult.CalculationOptions = calculationOptions;
-
-                restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
-                heroismAvailable = calculationOptions.HeroismAvailable;
-                arcanePowerAvailable = !calculationOptions.DisableCooldowns && (talents.ArcanePower == 1);
-                icyVeinsAvailable = !calculationOptions.DisableCooldowns && (talents.IcyVeins == 1);
-                combustionAvailable = !calculationOptions.DisableCooldowns && (talents.Combustion == 1);
-                moltenFuryAvailable = talents.MoltenFury > 0;
-                trinket1Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket1);
-                trinket2Available = !calculationOptions.DisableCooldowns && IsItemActivatable(character.Trinket2);
-                coldsnapAvailable = !calculationOptions.DisableCooldowns && (talents.ColdSnap == 1);
-                potionOfWildMagicAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfWildMagic;
-                potionOfSpeedAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PotionOfSpeed;
-                effectPotionAvailable = potionOfWildMagicAvailable || potionOfSpeedAvailable;
-                flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
-                drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
-                waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
-                manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
-                calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
-                calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
-                calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
-                calculationResult.ArcanePowerDuration = 15.0 + (calculationOptions.GlyphOfArcanePower ? 3.0 : 0.0);
-                calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
-                calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
-                calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
-                if (calculationOptions.PlayerLevel < 77)
-                {
-                    calculationResult.ManaGemValue = 2400.0;
-                    calculationResult.MaxManaGemValue = 2460.0;
-                }
-                else
-                {
-                    calculationResult.ManaGemValue = 3415.0;
-                    calculationResult.MaxManaGemValue = 3500.0;
-                }
-                if (calculationOptions.PlayerLevel <= 70)
-                {
-                    calculationResult.ManaPotionValue = 2400.0;
-                    calculationResult.MaxManaPotionValue = 3000.0;
-                }
-                else
-                {
-                    calculationResult.ManaPotionValue = 4300.0;
-                    calculationResult.MaxManaPotionValue = 4400.0;
-                }
-
-                #region Setup Trinkets
-                if (trinket1Available)
-                {
-                    Stats s = character.Trinket1.Item.Stats;
-                    if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                    {
-                        trinket1Duration = 20;
-                        trinket1Cooldown = 120;
-                    }
-                    if (s.SpellPowerFor15SecOnUse90Sec > 0)
-                    {
-                        trinket1Duration = 15;
-                        trinket1Cooldown = 90;
-                    }
-                    if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
-                    {
-                        trinket1Duration = 20;
-                        trinket1Cooldown = 300;
-                    }
-                    if (s.SpellPowerFor15SecOnUse2Min > 0)
-                    {
-                        trinket1Duration = 15;
-                        trinket1Cooldown = 120;
-                    }
-                    calculationResult.Trinket1Duration = trinket1Duration;
-                    calculationResult.Trinket1Cooldown = trinket1Cooldown;
-                    calculationResult.Trinket1Name = character.Trinket1.Item.Name;
-                }
-                if (trinket2Available)
-                {
-                    Stats s = character.Trinket2.Item.Stats;
-                    if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
-                    {
-                        trinket2Duration = 20;
-                        trinket2Cooldown = 120;
-                    }
-                    if (s.SpellPowerFor15SecOnUse90Sec > 0)
-                    {
-                        trinket2Duration = 15;
-                        trinket2Cooldown = 90;
-                    }
-                    if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
-                    {
-                        trinket2Duration = 20;
-                        trinket2Cooldown = 300;
-                    }
-                    if (s.SpellPowerFor15SecOnUse2Min > 0)
-                    {
-                        trinket2Duration = 15;
-                        trinket2Cooldown = 120;
-                    }
-                    calculationResult.Trinket2Duration = trinket2Duration;
-                    calculationResult.Trinket2Cooldown = trinket2Cooldown;
-                    calculationResult.Trinket2Name = character.Trinket2.Item.Name;
-                }
-                if (manaGemEffectAvailable)
-                {
-                    if (characterStats.SpellPowerFor15SecOnManaGem > 0)
-                    {
-                        manaGemEffectDuration = 15;
-                    }
-                    calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
-                }
-                #endregion
-
-                if (armor == null)
-                {
-                    if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mage Armor"))) armor = "Mage Armor";
-                    else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Molten Armor"))) armor = "Molten Armor";
-                    else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ice Armor"))) armor = "Ice Armor";
-                }
-
-                stateList = GetStateList(characterStats);
-                spellList = GetSpellList();
-
-                calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
-                calculationResult.MageArmor = armor;
-
-                List<double> tpsList;
-
-                ConstructProblem(additionalItem, calculations, rawStats, characterStats, out tpsList);
-
-                if (requiresMIP)
-                {
-                    RestrictSolution();
-                }
-
-                calculationResult.Solution = lp.Solve();
-
-                if (!requiresMIP)
-                {
-                    calculationResult.UpperBound = lp.Value;
-                    calculationResult.LowerBound = 0.0;
-                }
-                else
-                {
-                    calculationResult.UpperBound = upperBound;
-                    if (integralMana && segmentCooldowns && advancedConstraints) calculationResult.LowerBound = lowerBound;
-                }
-
-                if (minimizeTime)
-                {
-                    calculationResult.SubPoints[0] = -(float)(calculationOptions.TargetDamage / calculationResult.Solution[calculationResult.Solution.Length - 1]);
-                }
-                else
-                {
-                    calculationResult.SubPoints[0] = ((float)calculationResult.Solution[calculationResult.Solution.Length - 1] /*+ calculationResult.WaterElementalDamage*/) / calculationOptions.FightDuration;
-                }
-                calculationResult.SubPoints[1] = EvaluateSurvivability(characterStats);
-                calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
-
-                float threat = 0;
-                for (int i = 0; i < tpsList.Count; i++)
-                {
-                    threat += (float)(tpsList[i] * calculationResult.Solution[i]);
-                }
-                calculationResult.Tps = threat / calculationOptions.FightDuration;
-
-                return calculationResult;
+                calculationResult.ManaGemValue = 2400.0;
+                calculationResult.MaxManaGemValue = 2460.0;
             }
+            else
+            {
+                calculationResult.ManaGemValue = 3415.0;
+                calculationResult.MaxManaGemValue = 3500.0;
+            }
+            if (calculationOptions.PlayerLevel <= 70)
+            {
+                calculationResult.ManaPotionValue = 2400.0;
+                calculationResult.MaxManaPotionValue = 3000.0;
+            }
+            else
+            {
+                calculationResult.ManaPotionValue = 4300.0;
+                calculationResult.MaxManaPotionValue = 4400.0;
+            }
+
+            #region Setup Trinkets
+            if (trinket1Available)
+            {
+                Stats s = character.Trinket1.Item.Stats;
+                if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    trinket1Duration = 20;
+                    trinket1Cooldown = 120;
+                }
+                if (s.SpellPowerFor15SecOnUse90Sec > 0)
+                {
+                    trinket1Duration = 15;
+                    trinket1Cooldown = 90;
+                }
+                if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
+                {
+                    trinket1Duration = 20;
+                    trinket1Cooldown = 300;
+                }
+                if (s.SpellPowerFor15SecOnUse2Min > 0)
+                {
+                    trinket1Duration = 15;
+                    trinket1Cooldown = 120;
+                }
+                calculationResult.Trinket1Duration = trinket1Duration;
+                calculationResult.Trinket1Cooldown = trinket1Cooldown;
+                calculationResult.Trinket1Name = character.Trinket1.Item.Name;
+            }
+            if (trinket2Available)
+            {
+                Stats s = character.Trinket2.Item.Stats;
+                if (s.SpellPowerFor20SecOnUse2Min + s.HasteRatingFor20SecOnUse2Min + s.Mp5OnCastFor20SecOnUse2Min > 0)
+                {
+                    trinket2Duration = 20;
+                    trinket2Cooldown = 120;
+                }
+                if (s.SpellPowerFor15SecOnUse90Sec > 0)
+                {
+                    trinket2Duration = 15;
+                    trinket2Cooldown = 90;
+                }
+                if (s.HasteRatingFor20SecOnUse5Min + s.SpellPowerFor20SecOnUse5Min > 0)
+                {
+                    trinket2Duration = 20;
+                    trinket2Cooldown = 300;
+                }
+                if (s.SpellPowerFor15SecOnUse2Min > 0)
+                {
+                    trinket2Duration = 15;
+                    trinket2Cooldown = 120;
+                }
+                calculationResult.Trinket2Duration = trinket2Duration;
+                calculationResult.Trinket2Cooldown = trinket2Cooldown;
+                calculationResult.Trinket2Name = character.Trinket2.Item.Name;
+            }
+            if (manaGemEffectAvailable)
+            {
+                if (characterStats.SpellPowerFor15SecOnManaGem > 0)
+                {
+                    manaGemEffectDuration = 15;
+                }
+                calculationResult.ManaGemEffectDuration = manaGemEffectDuration;
+            }
+            #endregion
+
+            if (armor == null)
+            {
+                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Mage Armor"))) armor = "Mage Armor";
+                else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Molten Armor"))) armor = "Molten Armor";
+                else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ice Armor"))) armor = "Ice Armor";
+            }
+
+            stateList = GetStateList(characterStats);
+            spellList = GetSpellList();
+
+            calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
+            calculationResult.MageArmor = armor;
+
+            List<double> tpsList;
+
+            ConstructProblem(additionalItem, calculations, rawStats, characterStats, out tpsList);
+
+            if (requiresMIP)
+            {
+                RestrictSolution();
+            }
+
+            calculationResult.Solution = lp.Solve();
+            ArrayPool.ReleaseArraySet(lp.ArraySet);
+
+            if (!requiresMIP)
+            {
+                calculationResult.UpperBound = lp.Value;
+                calculationResult.LowerBound = 0.0;
+            }
+            else
+            {
+                calculationResult.UpperBound = upperBound;
+                if (integralMana && segmentCooldowns && advancedConstraints) calculationResult.LowerBound = lowerBound;
+            }
+
+            if (minimizeTime)
+            {
+                calculationResult.SubPoints[0] = -(float)(calculationOptions.TargetDamage / calculationResult.Solution[calculationResult.Solution.Length - 1]);
+            }
+            else
+            {
+                calculationResult.SubPoints[0] = ((float)calculationResult.Solution[calculationResult.Solution.Length - 1] /*+ calculationResult.WaterElementalDamage*/) / calculationOptions.FightDuration;
+            }
+            calculationResult.SubPoints[1] = EvaluateSurvivability(characterStats);
+            calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
+
+            float threat = 0;
+            for (int i = 0; i < tpsList.Count; i++)
+            {
+                threat += (float)(tpsList[i] * calculationResult.Solution[i]);
+            }
+            calculationResult.Tps = threat / calculationOptions.FightDuration;
+
+            return calculationResult;
         }
 
         private float EvaluateSurvivability(Stats characterStats)
@@ -722,8 +718,8 @@ namespace Rawr.Mage
             calculationResult.SolutionVariable = solutionVariable = new List<SolutionVariable>();
             calculationResult.SegmentList = segmentList;
 
-            fixed (double* pRowScale = SolverLP.rowScale, pColumnScale = SolverLP.columnScale, pCost = LP._cost, pData = SparseMatrix.data, pValue = SparseMatrix.value)
-            fixed (int* pRow = SparseMatrix.row, pCol = SparseMatrix.col)
+            fixed (double* pRowScale = lp.ArraySet.rowScale, pColumnScale = lp.ArraySet.columnScale, pCost = lp.ArraySet._cost, pData = lp.ArraySet.SparseMatrixData, pValue = lp.ArraySet.SparseMatrixValue)
+            fixed (int* pRow = lp.ArraySet.SparseMatrixRow, pCol = lp.ArraySet.SparseMatrixCol)
             {
                 lp.BeginUnsafe(pRowScale, pColumnScale, pCost, pData, pValue, pRow, pCol);
 

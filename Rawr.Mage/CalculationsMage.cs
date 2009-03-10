@@ -58,8 +58,6 @@ namespace Rawr.Mage
             }
         }
 
-		public override bool SupportsMultithreading { get { return false; } }
-
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
             System.Xml.Serialization.XmlSerializer serializer =
