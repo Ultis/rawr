@@ -758,31 +758,6 @@ namespace Rawr.Tree
             calculatedStats.BurstPoints = burstHPS;
 
             calculatedStats.SustainedPoints = calculatedStats.TotalHealing / calcOpts.FightDuration;
-            if (calculatedStats.TimeUntilOOM < calcOpts.FightDuration)
-            {
-                float frac = calculatedStats.TimeUntilOOM / calcOpts.FightDuration;
-                float frac2 = 1 - frac;
-                //float invpenalty = 1 - .02f * calcOpts.OOMPenalty; // -1 .. 1, -1 is 100% penalty
-                //float penalty1 = 1 + invpenalty; // 0 .. 2, 0 = 100% penalty, 1 = 50% penalty
-                //float penalty2 = invpenalty - 1; // -2 .. 0*/
-                float pen = 1 - 0.01f * calcOpts.OOMPenalty;
-                //if (pen == 0) calculatedStats.SustainedPoints = 0;
-                float c;
-                /*if (frac < .5f || calcOpts.OOMPenalty == 100)
-                {
-                    c = 0;
-                }
-                else
-                {
-                    c = (float)Math.Pow(2 * frac - 1, .01f * calcOpts.OOMPenalty);
-                }*/
-                c = (float)Math.Pow(frac, 1 + 0.1f * calcOpts.OOMPenalty) / frac;
-                calculatedStats.SustainedPoints *= c;
-                //calculatedStats.SustainedPoints *= Math.Min(1 - frac2 / pen, 0);
-                //frac /= invpenalty;
-                //calculatedStats.SustainedPoints *= frac;
-                //calculatedStats.SustainedPoints *= 1 - .01f * calcOpts.OOMPenalty;
-            }
 
             //Survival Points
             int health = (int)calculatedStats.BasicStats.Health;
@@ -792,6 +767,19 @@ namespace Rawr.Tree
             calculatedStats.SurvivalPoints =
                 ((calcOpts.SurvScaleBelowTarget > 0) ? healthBelow / 10F * (calcOpts.SurvScaleBelowTarget / 100F) : 0) +
                 (healthAbove / 100F);
+
+            // Penalty
+            if (calculatedStats.TimeUntilOOM < calcOpts.FightDuration)
+            {
+                float frac = calculatedStats.TimeUntilOOM / calcOpts.FightDuration;
+                float mod = (float)Math.Pow(frac, 1 + 0.2f * calcOpts.OOMPenalty) / frac;
+                calculatedStats.SustainedPoints *= mod;
+                if (calcOpts.PenalizeEverything)
+                {
+                    calculatedStats.BurstPoints *= mod;
+                    calculatedStats.SurvivalPoints *= mod;
+                }
+            }
 
             // ADJUST POINT VALUE (BURST SUSTAINED RATIO)
             float bsRatio = ((float)calcOpts.BSRatio) * 0.01f;

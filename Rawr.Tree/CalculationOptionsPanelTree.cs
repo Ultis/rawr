@@ -83,7 +83,8 @@ namespace Rawr.Tree
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
             tbOOMPenalty.Value = calcOpts.OOMPenalty;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .1f;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .2f;
+            cbApplyMore.Checked = calcOpts.PenalizeEverything;
 
             loading = false;
 
@@ -269,7 +270,15 @@ namespace Rawr.Tree
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.OOMPenalty = tbOOMPenalty.Value;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .1f;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .2f;
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cbApplyMore_CheckedChanged(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.PenalizeEverything = cbApplyMore.Checked;
             Character.OnCalculationsInvalidated();
         }
     }
@@ -291,16 +300,18 @@ namespace Rawr.Tree
 
         public int BSRatio = 75; // goes from 0 to 100
 
-        public int FightDuration = 360; // 6 Minutes
+        public int FightDuration = 180; // 3 Minutes
         public int Rotation = 6; // default: group regrowth and heal 1 tank
-        public int ManaPot = 0; // none
-        public int FSRRatio = 90;
-        public int ReplenishmentUptime = 50;
-        public int WildGrowthPerMinute = 4;
-        public int MainSpellFraction = 50;
+        public int ManaPot = 4; // best pot
+        public int FSRRatio = 100;
+        public int ReplenishmentUptime = 70;
+        public int WildGrowthPerMinute = 3;
+        public int MainSpellFraction = 60;
         public int Innervates = 1;
 
-        public int OOMPenalty = 0;
+        public int OOMPenalty = 20;
+
+        public bool PenalizeEverything = false;
 
         public bool glyphOfHealingTouch = false;
         public bool glyphOfRegrowth = false;

@@ -48,6 +48,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.cbApplyMore = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tbOOMPenalty = new System.Windows.Forms.TrackBar();
             this.lblOOMPenalty = new System.Windows.Forms.Label();
@@ -308,6 +309,7 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.cbApplyMore);
             this.groupBox7.Controls.Add(this.label1);
             this.groupBox7.Controls.Add(this.tbOOMPenalty);
             this.groupBox7.Controls.Add(this.lblOOMPenalty);
@@ -322,19 +324,32 @@
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 390);
+            this.groupBox7.Size = new System.Drawing.Size(277, 433);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
+            // 
+            // cbApplyMore
+            // 
+            this.cbApplyMore.AutoSize = true;
+            this.cbApplyMore.Location = new System.Drawing.Point(9, 403);
+            this.cbApplyMore.Name = "cbApplyMore";
+            this.cbApplyMore.Size = new System.Drawing.Size(190, 17);
+            this.cbApplyMore.TabIndex = 56;
+            this.cbApplyMore.Text = "Also apply penalty to burst/survival";
+            this.cbApplyMore.UseVisualStyleBackColor = true;
+            this.cbApplyMore.CheckedChanged += new System.EventHandler(this.cbApplyMore_CheckedChanged);
             // 
             // label1
             // 
             this.label1.AutoEllipsis = true;
             this.label1.Location = new System.Drawing.Point(6, 344);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(262, 29);
+            this.label1.Size = new System.Drawing.Size(262, 56);
             this.label1.TabIndex = 55;
-            this.label1.Text = "(If going out of mana, the Sustained HPS is decreased by above percentage:)";
+            this.label1.Text = "The Penalty value will punish going out of mana by scaling down the sustained hea" +
+                "ling points. If you go out of mana earlier or select a higher penalty, the susta" +
+                "ined points will be decreased more.";
             // 
             // tbOOMPenalty
             // 
@@ -344,6 +359,7 @@
             this.tbOOMPenalty.Name = "tbOOMPenalty";
             this.tbOOMPenalty.Size = new System.Drawing.Size(262, 45);
             this.tbOOMPenalty.TabIndex = 54;
+            this.tbOOMPenalty.TickFrequency = 5;
             this.tbOOMPenalty.Scroll += new System.EventHandler(this.tbOOMPenalty_Scroll);
             // 
             // lblOOMPenalty
@@ -858,5 +874,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TrackBar tbOOMPenalty;
         private System.Windows.Forms.Label lblOOMPenalty;
+        private System.Windows.Forms.CheckBox cbApplyMore;
     }
 }
