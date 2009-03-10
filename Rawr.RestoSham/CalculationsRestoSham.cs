@@ -521,8 +521,8 @@ namespace Rawr.RestoSham
             #endregion
             #region Final Stats
             calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
-            if (calcStats.TillOOM > 300)
-                calcStats.TillOOM = 300;
+            if (calcStats.TillOOM > (60 * options.FightLength))
+                calcStats.TillOOM = 60 * options.FightLength;
             calcStats.TotalHPS = calcStats.FightHPS;
             calcStats.TotalHealed = (calcStats.FightHPS * (calcStats.TillOOM / (options.FightLength * 60f))) * (options.FightLength * 60f);
             calcStats.OverallPoints = calcStats.TotalHealed / 10f;
