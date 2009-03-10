@@ -13,11 +13,11 @@ namespace Rawr.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "9.0.0.0")]
-    internal sealed partial class Recent : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class GeneralSettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Recent defaultInstance = ((Recent)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Recent())));
+        private static GeneralSettings defaultInstance = ((GeneralSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new GeneralSettings())));
         
-        public static Recent Default {
+        public static GeneralSettings Default {
             get {
                 return defaultInstance;
             }
@@ -25,37 +25,25 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string RecentFiles {
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int CountGemmingsShown {
             get {
-                return ((string)(this["RecentFiles"]));
+                return ((int)(this["CountGemmingsShown"]));
             }
             set {
-                this["RecentFiles"] = value;
+                this["CountGemmingsShown"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Bear")]
-        public string RecentModel {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseMultithreading {
             get {
-                return ((string)(this["RecentModel"]));
+                return ((bool)(this["UseMultithreading"]));
             }
             set {
-                this["RecentModel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int SeenIntroVersion {
-            get {
-                return ((int)(this["SeenIntroVersion"]));
-            }
-            set {
-                this["SeenIntroVersion"] = value;
+                this["UseMultithreading"] = value;
             }
         }
     }

@@ -2543,7 +2543,7 @@ namespace Rawr.Optimizer
             set
             {
                 model = value;
-                ThreadPoolValuation = model.SupportsMultithreading;
+                ThreadPoolValuation = model.SupportsMultithreading && Properties.GeneralSettings.Default.UseMultithreading;
             }
         }
 
@@ -3727,7 +3727,7 @@ namespace Rawr.Optimizer
             set
             {
                 model = value;
-                ThreadPoolValuation = model.SupportsMultithreading;
+				ThreadPoolValuation = model.SupportsMultithreading && Properties.GeneralSettings.Default.UseMultithreading;
             }
         }
 

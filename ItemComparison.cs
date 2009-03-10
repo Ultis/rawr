@@ -55,6 +55,7 @@ namespace Rawr
 			Calculations.ClearCache();
             //_itemCalculations = new List<ComparisonCalculationBase>();
 			_characterSlot = slot;
+			bool useMultithreading = Calculations.SupportsMultithreading && Rawr.Properties.GeneralSettings.Default.UseMultithreading;
 			bool presorted = false;
             if (Character != null)
             {
@@ -66,14 +67,14 @@ namespace Rawr
 					List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(slot);
 					_itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
 					_calculationCount = 0;
-					_autoResetEvent = new AutoResetEvent(!Calculations.SupportsMultithreading);
+					_autoResetEvent = new AutoResetEvent(!useMultithreading);
 					DateTime before = DateTime.Now;
 					foreach (ItemInstance item in relevantItemInstances)
                     {
                         if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
 						//Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
 						//Queue each item into the ThreadPool
-						if (Calculations.SupportsMultithreading)
+						if (useMultithreading)
 							ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
 						else
 							GetItemInstanceCalculations(item);
@@ -96,7 +97,7 @@ namespace Rawr
 					{
 						int itemId = itemCalculation.ItemInstance.Id;
 						if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
-						if (countItem[itemId]++ < Properties.Recent.Default.CountGemmingsShown ||
+						if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
 							itemCalculation.Equipped || 
 							Character.CustomItemInstances.Contains(itemCalculation.ItemInstance))
 						{
@@ -110,11 +111,11 @@ namespace Rawr
 					List<Item> relevantItems = Character.GetRelevantItems(slot);
 					_itemCalculations = new ComparisonCalculationBase[relevantItems.Count];
 					_calculationCount = 0;
-					_autoResetEvent = new AutoResetEvent(!Calculations.SupportsMultithreading);
+					_autoResetEvent = new AutoResetEvent(!useMultithreading);
 					//DateTime before = DateTime.Now;
 					foreach (Item item in relevantItems)
 					{
-						if (Calculations.SupportsMultithreading)
+						if (useMultithreading)
 							ThreadPool.QueueUserWorkItem(GetItemCalculations, item);
 						else
 							GetItemCalculations(item);

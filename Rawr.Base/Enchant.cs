@@ -40,8 +40,15 @@ namespace Rawr
             {
                 string shortName = Name.Replace("Arcanum of the ", "").Replace("Arcanum of ", "").Replace("Inscription of the ", "")
                     .Replace("Inscription of ", "").Replace("Greater", "Great").Replace("Exceptional", "Excep").Replace("Defense", "Def")
-                    .Replace("Armor Kit", "ArmKit").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "")
-                    .Replace(" Spellthread", "").Replace("Lining - ", "");
+                    .Replace("Armor Kit", "").Replace("Arcanum of ", "").Replace(" Leg Armor", "").Replace(" Scope", "")
+					.Replace(" Spellthread", "").Replace("Lining - ", "").Replace("Strength", "Str").Replace("Agility", "Agi")
+					.Replace("Stamina", "Sta").Replace("Intellect", "Int").Replace("Spirit", "Spr").Replace("Heavy", "Hvy")
+					.Replace("Jormungar Leg Reinforcements", "Jorm Reinf").Replace(" Leg Reinforcements", "")
+					.Replace("Powerful", "Power").Replace("Swiftness", "Swift").Replace("Knothide", "Knot")
+					.Replace("Savage", "Sav").Replace("Mighty Armor", "Mighty Arm").Replace("Shadow Armor", "Shadow Arm")
+					.Replace("Attack Power", "AP").Replace("Rune of the ", "").Replace(" Gargoyle", "")
+					.Replace("speed Accelerators", "").Replace(" Mysteries", "").Replace(" Embroidery", "")
+					.Replace("Mana Restoration", "Mp5").Replace("Restore Mana", "Mp5");
                 return shortName.Substring(0, Math.Min(shortName.Length, 12));
             }
         }
@@ -50,7 +57,7 @@ namespace Rawr
         /// The slot that the enchant is applied to. If the enchant is available on multiple slots,
         /// define the enchant multiple times, once for each slot.
         /// 
-        /// IMPORTANT: Currently, all weapon enchants should be defined as applying to the MainHand slot.
+        /// IMPORTANT: Shield enchants should be defined 
         /// </summary>
         public Item.ItemSlot Slot = Item.ItemSlot.Head;
 

@@ -410,6 +410,10 @@
       <DependentUpon>TalentTree.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Options\GeneralSettings.resx">
+      <DependentUpon>GeneralSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\Options\OptimizerSettings.resx">
       <DependentUpon>OptimizerSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -446,6 +450,12 @@
     </Compile>
     <Compile Include="TalentTree.Designer.cs">
       <DependentUpon>TalentTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Options\GeneralSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Options\GeneralSettings.Designer.cs">
+      <DependentUpon>GeneralSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Options\OptimizerSettings.cs">
       <SubType>UserControl</SubType>
