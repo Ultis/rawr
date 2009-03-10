@@ -2508,7 +2508,8 @@ namespace Rawr.Optimizer
         public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
         {
             _character = character;
-            this.model = model;
+            Model = model;
+            ThreadPoolValuation = model.SupportsMultithreading;
 
             if (templateGemsEnabled)
             {
@@ -2543,6 +2544,7 @@ namespace Rawr.Optimizer
             set
             {
                 model = value;
+                ThreadPoolValuation = model.SupportsMultithreading;
             }
         }
 
@@ -2892,7 +2894,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -2980,7 +2982,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -3129,7 +3131,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -3717,6 +3719,19 @@ namespace Rawr.Optimizer
         private OptimizationRequirement[] _requirements;
         private CalculationsBase model;
 
+        public CalculationsBase Model
+        {
+            get
+            {
+                return model;
+            }
+            set
+            {
+                model = value;
+                ThreadPoolValuation = model.SupportsMultithreading;
+            }
+        }
+
         private class UniqueItemValidator : OptimizerRangeValidatorBase<object>
         {
             public override bool IsValid(object[] items)
@@ -3807,7 +3822,7 @@ namespace Rawr.Optimizer
         public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
         {
             _character = character;
-            this.model = model;
+            Model = model;
 
             if (templateGemsEnabled)
             {
@@ -4087,7 +4102,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -4175,7 +4190,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;
@@ -4321,7 +4336,7 @@ namespace Rawr.Optimizer
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             _character = character;
-            model = Calculations.GetModel(_character.CurrentModel);
+            Model = Calculations.GetModel(_character.CurrentModel);
             _calculationToOptimize = calculationToOptimize;
             _requirements = requirements;
             _thoroughness = thoroughness;

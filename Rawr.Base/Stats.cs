@@ -424,49 +424,55 @@ namespace Rawr
         public void GenerateSparseData()
         {
             //List<float> data = new List<float>();
-            List<int> indices = new List<int>();
-            _sparseAdditiveCount = 0;
-            for (int i = 0; i < _rawAdditiveData.Length; i++)
+            lock (_rawAdditiveData)
             {
-                if (_rawAdditiveData[i] != 0.0f)
+                if (_sparseIndices == null)
                 {
-                    _sparseAdditiveCount++;
-                    //data.Add(_rawAdditiveData[i]);
-                    indices.Add(i);
+                    List<int> indices = new List<int>();
+                    _sparseAdditiveCount = 0;
+                    for (int i = 0; i < _rawAdditiveData.Length; i++)
+                    {
+                        if (_rawAdditiveData[i] != 0.0f)
+                        {
+                            _sparseAdditiveCount++;
+                            //data.Add(_rawAdditiveData[i]);
+                            indices.Add(i);
+                        }
+                    }
+                    _sparseMultiplicativeCount = 0;
+                    for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+                    {
+                        if (_rawMultiplicativeData[i] != 0.0f)
+                        {
+                            _sparseMultiplicativeCount++;
+                            //data.Add(_rawMultiplicativeData[i]);
+                            indices.Add(i);
+                        }
+                    }
+                    _sparseInverseMultiplicativeCount = 0;
+                    for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                    {
+                        if (_rawInverseMultiplicativeData[i] != 0.0f)
+                        {
+                            _sparseInverseMultiplicativeCount++;
+                            //data.Add(_rawInverseMultiplicativeData[i]);
+                            indices.Add(i);
+                        }
+                    }
+                    _sparseNoStackCount = 0;
+                    for (int i = 0; i < _rawNoStackData.Length; i++)
+                    {
+                        if (_rawNoStackData[i] != 0.0f)
+                        {
+                            _sparseNoStackCount++;
+                            //data.Add(_rawNoStackData[i]);
+                            indices.Add(i);
+                        }
+                    }
+                    //_sparseData = data.ToArray();
+                    _sparseIndices = indices.ToArray();
                 }
             }
-            _sparseMultiplicativeCount = 0;
-            for (int i = 0; i < _rawMultiplicativeData.Length; i++)
-            {
-                if (_rawMultiplicativeData[i] != 0.0f)
-                {
-                    _sparseMultiplicativeCount++;
-                    //data.Add(_rawMultiplicativeData[i]);
-                    indices.Add(i);
-                }
-            }
-            _sparseInverseMultiplicativeCount = 0;
-            for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
-            {
-                if (_rawInverseMultiplicativeData[i] != 0.0f)
-                {
-                    _sparseInverseMultiplicativeCount++;
-                    //data.Add(_rawInverseMultiplicativeData[i]);
-                    indices.Add(i);
-                }
-            }
-            _sparseNoStackCount = 0;
-            for (int i = 0; i < _rawNoStackData.Length; i++)
-            {
-                if (_rawNoStackData[i] != 0.0f)
-                {
-                    _sparseNoStackCount++;
-                    //data.Add(_rawNoStackData[i]);
-                    indices.Add(i);
-                }
-            }
-            //_sparseData = data.ToArray();
-            _sparseIndices = indices.ToArray();
         }
 
         /// <summary>

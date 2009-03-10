@@ -64,6 +64,8 @@ namespace Rawr.Optimizer
         /// </summary>
         protected List<OptimizerRangeValidatorBase<TItem>> validators;
 
+        public bool ThreadPoolValuation { get; set; }
+
         public virtual void CancelAsync()
         {
             cancellationPending = true;
@@ -215,6 +217,23 @@ namespace Rawr.Optimizer
             return bestIndividual;
         }
 
+        private TIndividual[] population;
+        private TValuation[] valuation;
+        private AutoResetEvent valuationsComplete = new AutoResetEvent(false);
+        private int threadPoolStarted;
+        private int threadPoolComplete;
+        private int threadPoolSize;
+
+        private void GetThreadPoolValuation(object state)
+        {
+            int i = Interlocked.Increment(ref threadPoolStarted) - 1;
+            valuation[i] = GetValuation(population[i]);
+            if (Interlocked.Increment(ref threadPoolComplete) == threadPoolSize)
+            {
+                valuationsComplete.Set();
+            }
+        }
+
 		private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
 		{
 			//Begin Genetic
@@ -233,7 +252,8 @@ namespace Rawr.Optimizer
             int islandStagnationLimit = 50;
             int islandCount = (popSize - 1) / islandSize + 1;
 			int cycleLimit = _thoroughness;
-            TIndividual[] population = new TIndividual[popSize];
+            population = new TIndividual[popSize];
+            valuation = new TValuation[popSize];
             TIndividual[] popCopy = new TIndividual[popSize];
 			float[] values = new float[popSize];
             float[] minIsland = new float[islandCount];
@@ -283,11 +303,28 @@ namespace Rawr.Optimizer
                     }
 				    //minv = 10000000;
 				    //maxv = -10000000;
+                    if (ThreadPoolValuation)
+                    {
+                        threadPoolStarted = 0;
+                        threadPoolComplete = 0;
+                        threadPoolSize = popSize;
+                        for (int i = 0; i < popSize; i++)
+                        {
+                            ThreadPool.QueueUserWorkItem(GetThreadPoolValuation);
+                        }
+                        valuationsComplete.WaitOne();
+                    }
+                    else
+                    {
+                        for (int i = 0; i < popSize; i++)
+                        {
+                            valuation[i] = GetValuation(population[i]);
+                        }
+                    }
 				    for (int i = 0; i < popSize; i++)
 				    {
                         int island = i / islandSize;
-                        TValuation valuation;
-                        values[i] = GetOptimizationValue(population[i], valuation = GetValuation(population[i]));
+                        values[i] = GetOptimizationValue(population[i], valuation[i]);
                         if (values[i] < minIsland[island]) minIsland[island] = values[i];
                         if (values[i] > maxIsland[island]) maxIsland[island] = values[i];
                         if (values[i] > bestIsland[island])
@@ -299,7 +336,7 @@ namespace Rawr.Optimizer
                         if (values[i] > bestValue)
 					    {
 						    bestValue = values[i];
-                            bestValuation = valuation;
+                            bestValuation = valuation[i];
 						    bestIndividual = population[i];
 						    noImprove = -1;
                             //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
@@ -390,14 +427,14 @@ namespace Rawr.Optimizer
                 {
                     //last try, look for single direct upgrades
                     KeyValuePair<float, TIndividual> results;
-                    TValuation valuation;
+                    TValuation directValuation;
                     for (int slot = 0; slot < slotCount; slot++)
                     {
-                        results = LookForDirectItemUpgrades(slotItems[slot], slot, bestValue, bestIndividual, out valuation);
-                        if (results.Key > bestValue) 
+                        results = LookForDirectItemUpgrades(slotItems[slot], slot, bestValue, bestIndividual, out directValuation);
+                        if (results.Key > bestValue)
                         {
-                            bestValue = results.Key; 
-                            bestValuation = valuation; 
+                            bestValue = results.Key;
+                            bestValuation = directValuation; 
                             bestIndividual = results.Value; 
                             noImprove = 0;
                             population[0] = bestIndividual;
@@ -417,6 +454,33 @@ namespace Rawr.Optimizer
 			return bestIndividual;
 		}
 
+        private object directValuationLock = new object();
+        private TIndividual bestDirectIndividual;
+        private TValuation bestDirectValuation;
+        private float bestDirectValue;
+        private int directValuationsComplete;
+        private int directValuationsQueued;
+        private bool directValuationFoundUpgrade;
+
+        private void ThreadPoolDirectUpgradeValuation(object state)
+        {
+            TIndividual swappedIndividual = (TIndividual)state;
+            TValuation valuation;
+            float value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
+            lock (directValuationLock)
+            {
+                directValuationsComplete++;
+                if (value > bestDirectValue)
+                {
+                    bestDirectValue = value;
+                    bestDirectValuation = valuation;
+                    bestDirectIndividual = swappedIndividual;
+                    directValuationFoundUpgrade = true;
+                }
+                if (directValuationsComplete >= directValuationsQueued) Monitor.Pulse(directValuationLock);
+            }
+        }
+
 		protected virtual KeyValuePair<float, TIndividual> LookForDirectItemUpgrades(List<TItem> items, int slot, float best, TIndividual bestIndividual, out TValuation bestValuation)
 		{
 			TIndividual swappedIndividual;
@@ -424,23 +488,52 @@ namespace Rawr.Optimizer
 			float value;
 			bool foundUpgrade = false;
             TItem[] itemList = (TItem[])GetItems(bestIndividual).Clone();
+            if (ThreadPoolValuation)
+            {
+                bestDirectValue = best;
+                directValuationFoundUpgrade = false;
+                directValuationsQueued = 0;
+                directValuationsComplete = 0;
+            }
             foreach (TItem item in items)
 			{
                 itemList[slot] = item;
                 if (IsIndividualValid(itemList))
                 {
                     swappedIndividual = GenerateIndividual(itemList);
-                    TValuation valuation;
-                    value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
-                    if (value > best)
+                    if (ThreadPoolValuation)
                     {
-                        best = value;
-                        bestValuation = valuation;
-                        bestIndividual = swappedIndividual;
-                        foundUpgrade = true;
+                        directValuationsQueued++;
+                        ThreadPool.QueueUserWorkItem(ThreadPoolDirectUpgradeValuation, swappedIndividual);
+                    }
+                    else
+                    {
+                        TValuation valuation;
+                        value = GetOptimizationValue(swappedIndividual, valuation = GetValuation(swappedIndividual));
+                        if (value > best)
+                        {
+                            best = value;
+                            bestValuation = valuation;
+                            bestIndividual = swappedIndividual;
+                            foundUpgrade = true;
+                        }
                     }
                 }
 			}
+            if (ThreadPoolValuation)
+            {
+                lock (directValuationLock)
+                {
+                    while (directValuationsComplete < directValuationsQueued) Monitor.Wait(directValuationLock);
+                    if (directValuationFoundUpgrade)
+                    {
+                        best = bestDirectValue;
+                        bestValuation = bestDirectValuation;
+                        bestIndividual = bestDirectIndividual;
+                        foundUpgrade = true;
+                    }
+                }
+            }
 			if (foundUpgrade)
 				return new KeyValuePair<float, TIndividual>(best, bestIndividual);
 			return new KeyValuePair<float, TIndividual>(float.NegativeInfinity, null);
