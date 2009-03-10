@@ -82,6 +82,9 @@ namespace Rawr.Tree
             tbPrimaryHealFrac.Value = calcOpts.MainSpellFraction;
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
+            tbOOMPenalty.Value = calcOpts.OOMPenalty;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .1f;
+
             loading = false;
 
             //Enable/Disable Glyph Checkboxes
@@ -260,6 +263,15 @@ namespace Rawr.Tree
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
             Character.OnCalculationsInvalidated();
         }
+
+        private void tbOOMPenalty_Scroll(object sender, EventArgs e)
+        {
+            if (loading) return;
+            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
+            calcOpts.OOMPenalty = tbOOMPenalty.Value;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .1f;
+            Character.OnCalculationsInvalidated();
+        }
     }
 
     [Serializable]
@@ -287,6 +299,8 @@ namespace Rawr.Tree
         public int WildGrowthPerMinute = 4;
         public int MainSpellFraction = 50;
         public int Innervates = 1;
+
+        public int OOMPenalty = 0;
 
         public bool glyphOfHealingTouch = false;
         public bool glyphOfRegrowth = false;

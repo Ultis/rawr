@@ -48,6 +48,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbOOMPenalty = new System.Windows.Forms.TrackBar();
+            this.lblOOMPenalty = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.tbPrimaryHealFrac = new System.Windows.Forms.TrackBar();
             this.lblPrimaryHeal = new System.Windows.Forms.Label();
@@ -92,6 +95,7 @@
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOOMPenalty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -304,6 +308,9 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Controls.Add(this.tbOOMPenalty);
+            this.groupBox7.Controls.Add(this.lblOOMPenalty);
             this.groupBox7.Controls.Add(this.label7);
             this.groupBox7.Controls.Add(this.tbPrimaryHealFrac);
             this.groupBox7.Controls.Add(this.lblPrimaryHeal);
@@ -315,15 +322,43 @@
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 286);
+            this.groupBox7.Size = new System.Drawing.Size(277, 390);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
             // 
+            // label1
+            // 
+            this.label1.AutoEllipsis = true;
+            this.label1.Location = new System.Drawing.Point(6, 344);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(262, 29);
+            this.label1.TabIndex = 55;
+            this.label1.Text = "(If going out of mana, the Sustained HPS is decreased by above percentage:)";
+            // 
+            // tbOOMPenalty
+            // 
+            this.tbOOMPenalty.BackColor = System.Drawing.SystemColors.Control;
+            this.tbOOMPenalty.Location = new System.Drawing.Point(6, 296);
+            this.tbOOMPenalty.Maximum = 100;
+            this.tbOOMPenalty.Name = "tbOOMPenalty";
+            this.tbOOMPenalty.Size = new System.Drawing.Size(262, 45);
+            this.tbOOMPenalty.TabIndex = 54;
+            this.tbOOMPenalty.Scroll += new System.EventHandler(this.tbOOMPenalty_Scroll);
+            // 
+            // lblOOMPenalty
+            // 
+            this.lblOOMPenalty.AutoSize = true;
+            this.lblOOMPenalty.Location = new System.Drawing.Point(6, 280);
+            this.lblOOMPenalty.Name = "lblOOMPenalty";
+            this.lblOOMPenalty.Size = new System.Drawing.Size(148, 13);
+            this.lblOOMPenalty.TabIndex = 53;
+            this.lblOOMPenalty.Text = "Penalty for going out of mana:";
+            // 
             // label7
             // 
             this.label7.AutoEllipsis = true;
-            this.label7.Location = new System.Drawing.Point(6, 250);
+            this.label7.Location = new System.Drawing.Point(6, 251);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(262, 29);
             this.label7.TabIndex = 42;
@@ -745,6 +780,7 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbOOMPenalty)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbPrimaryHealFrac)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbWildGrowth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
@@ -819,5 +855,8 @@
         private System.Windows.Forms.TrackBar trkTimeInFSR;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbInnervate;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TrackBar tbOOMPenalty;
+        private System.Windows.Forms.Label lblOOMPenalty;
     }
 }

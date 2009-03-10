@@ -538,9 +538,9 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                         burstHPS = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 2,
-                            new Regrowth(calculatedStats, true),
-                            1, HealTargetTypes.TankHealing)[0];
+                            true, false, true, 1,
+                            new Regrowth(calculatedStats, false),
+                            1, HealTargetTypes.RaidHealing)[0];
                     }
                     break;
                 case 7:
@@ -555,9 +555,9 @@ namespace Rawr.Tree
                         MPS = calculatedStats.Simulation[1];
                         burstHPS = SimulateHealing(
                             calculatedStats, calcOpts.WildGrowthPerMinute,
-                            true, true, true, 2,
-                            new Regrowth(calculatedStats, true),
-                            1, HealTargetTypes.TankHealing)[0];
+                            true, false, true, 2,
+                            new Regrowth(calculatedStats, false),
+                            1, HealTargetTypes.RaidHealing)[0];
                     }
                     break;
                 case 8:
@@ -758,6 +758,31 @@ namespace Rawr.Tree
             calculatedStats.BurstPoints = burstHPS;
 
             calculatedStats.SustainedPoints = calculatedStats.TotalHealing / calcOpts.FightDuration;
+            if (calculatedStats.TimeUntilOOM < calcOpts.FightDuration)
+            {
+                float frac = calculatedStats.TimeUntilOOM / calcOpts.FightDuration;
+                float frac2 = 1 - frac;
+                //float invpenalty = 1 - .02f * calcOpts.OOMPenalty; // -1 .. 1, -1 is 100% penalty
+                //float penalty1 = 1 + invpenalty; // 0 .. 2, 0 = 100% penalty, 1 = 50% penalty
+                //float penalty2 = invpenalty - 1; // -2 .. 0*/
+                float pen = 1 - 0.01f * calcOpts.OOMPenalty;
+                //if (pen == 0) calculatedStats.SustainedPoints = 0;
+                float c;
+                /*if (frac < .5f || calcOpts.OOMPenalty == 100)
+                {
+                    c = 0;
+                }
+                else
+                {
+                    c = (float)Math.Pow(2 * frac - 1, .01f * calcOpts.OOMPenalty);
+                }*/
+                c = (float)Math.Pow(frac, 1 + 0.1f * calcOpts.OOMPenalty) / frac;
+                calculatedStats.SustainedPoints *= c;
+                //calculatedStats.SustainedPoints *= Math.Min(1 - frac2 / pen, 0);
+                //frac /= invpenalty;
+                //calculatedStats.SustainedPoints *= frac;
+                //calculatedStats.SustainedPoints *= 1 - .01f * calcOpts.OOMPenalty;
+            }
 
             //Survival Points
             int health = (int)calculatedStats.BasicStats.Health;
