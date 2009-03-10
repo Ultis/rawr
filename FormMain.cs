@@ -720,7 +720,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
                 // TODO: log this to the status screen.
                 MessageBox.Show(e.Error.Message);
             }
-            else
+            else if (e.Result != null)
             {
                 Character character = e.Result as Character;
                 LoadCharacterIntoForm(character);
