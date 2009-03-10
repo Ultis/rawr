@@ -580,7 +580,7 @@ namespace Rawr.RestoSham
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
-
+            statsTotal.SpellPower += (float)Math.Floor((statsTotal.Intellect) * (.05f * character.ShamanTalents.NaturesBlessing));
 
             // Fight options:
 
@@ -627,11 +627,11 @@ namespace Rawr.RestoSham
             {
                 case "Stat Relative Weights":
                     StatRelativeWeight[] stats = new StatRelativeWeight[] {
-                      new StatRelativeWeight("Int", new Stats() { Intellect = 1f }),
-                      new StatRelativeWeight("Haste", new Stats() { HasteRating = 1f }),
-                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 1f}),
-                      new StatRelativeWeight("Mp5", new Stats() { Mp5 = 1f }),
-                      new StatRelativeWeight("Spell Crit", new Stats() { CritRating = 1f })};
+                      new StatRelativeWeight("Int", new Stats() { Intellect = 10f }),
+                      new StatRelativeWeight("Haste", new Stats() { HasteRating = 10f }),
+                      new StatRelativeWeight("+Heal", new Stats() { SpellPower = 10f}),
+                      new StatRelativeWeight("Mp5", new Stats() { Mp5 = 10f }),
+                      new StatRelativeWeight("Spell Crit", new Stats() { CritRating = 10f })};
 
                     // Get the percentage total healing is changed by a change in a single stat:
 
@@ -639,7 +639,7 @@ namespace Rawr.RestoSham
                     foreach (StatRelativeWeight weight in stats)
                     {
                         CharacterCalculationsRestoSham statCalc = (CharacterCalculationsRestoSham)GetCharacterCalculations(character, null, weight.Stat);
-                        weight.PctChange = (statCalc.TotalHealed - calc.TotalHealed) / calc.TotalHealed;
+                        weight.PctChange = ((statCalc.TotalHealed - calc.TotalHealed) / calc.TotalHealed);
                         if (weight.Name == "+Heal")
                             healPct = weight.PctChange;
                     }
