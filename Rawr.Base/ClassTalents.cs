@@ -3550,7 +3550,7 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 
 	public class ShamanTalents : TalentsBase, ICloneable
 	{
-		private int[] _data = new int[78];
+		private int[] _data = new int[79];
 		public override int[] Data { get { return _data; } }public ShamanTalents() { }
 		public ShamanTalents(string talents)
 		{
@@ -3790,11 +3790,11 @@ You call down a bolt of lightning, energizing you and damaging nearby enemies wi
 		public int Anticipation { get { return _data[33]; } set { _data[33] = value; } }
 
 		[TalentData(34, "Flurry", 5, 1, 2, 4, 28, new string[] {
+@"Increases your attack speed by 5% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 10% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 15% for your next 3 swings after dealing a critical strike.",
 @"Increases your attack speed by 20% for your next 3 swings after dealing a critical strike.",
-@"Increases your attack speed by 25% for your next 3 swings after dealing a critical strike.",
-@"Increases your attack speed by 30% for your next 3 swings after dealing a critical strike.",})]
+@"Increases your attack speed by 25% for your next 3 swings after dealing a critical strike.",})]
 		public int Flurry { get { return _data[34]; } set { _data[34] = value; } }
 
 		[TalentData(35, "Toughness", 5, 1, 3, 4, -1, new string[] {
@@ -3820,12 +3820,10 @@ You call down a bolt of lightning, energizing you and damaging nearby enemies wi
 @"Increases your Attack Power by 100% of your intellect.",})]
 		public int MentalDexterity { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(39, "Unleashed Rage", 5, 1, 1, 6, -1, new string[] {
-@"Causes your critical hits with melee attacks to increase all party members' attack power by 2% if within 45 yards of the Shaman. Lasts 10 sec.",
-@"Causes your critical hits with melee attacks to increase all party members' attack power by 4% if within 45 yards of the Shaman. Lasts 10 sec.",
-@"Causes your critical hits with melee attacks to increase all party members' attack power by 6% if within 45 yards of the Shaman. Lasts 10 sec.",
-@"Causes your critical hits with melee attacks to increase all party members' attack power by 8% if within 45 yards of the Shaman. Lasts 10 sec.",
-@"Causes your critical hits with melee attacks to increase all party members' attack power by 10% if within 45 yards of the Shaman. Lasts 10 sec.",})]
+		[TalentData(39, "Unleashed Rage", 3, 1, 1, 6, -1, new string[] {
+@"Increases your expertise by 3, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 4% if within 45 yards of the Shaman.  Lasts 10 sec.",
+@"Increases your expertise by 6, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 7% if within 45 yards of the Shaman.  Lasts 10 sec.",
+@"Increases your expertise by 9, and causes your critical hits with melee attacks to increase all party and raid members' attack power by 10% if within 45 yards of the Shaman.  Lasts 10 sec.",})]
 		public int UnleashedRage { get { return _data[39]; } set { _data[39] = value; } }
 
 		[TalentData(40, "Weapon Mastery", 3, 1, 3, 6, -1, new string[] {
@@ -3834,213 +3832,218 @@ You call down a bolt of lightning, energizing you and damaging nearby enemies wi
 @"Increases the damage you deal with all weapons by 10%.",})]
 		public int WeaponMastery { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(41, "Dual Wield Specialization", 3, 1, 1, 7, 42, new string[] {
+		[TalentData(41, "Frozen Power", 2, 1, 4, 6, -1, new string[] {
+@"Increases the damage done by your Lightning Bolt, Chain Lightning, Lava Lash and Shock spells by 5% on targets afflicted by your Frostbrand Attack effect, and your Frost Shock has a 50% chance to root the target in Ice for 5 sec. when used on targets at or further than 15 yards from you.",
+@"Increases the damage done by your Lightning Bolt, Chain Lightning, Lava Lash and Shock spells by 10% on targets afflicted by your Frostbrand Attack effect, and your Frost Shock has a 100% chance to root the target in Ice for 5 sec. when used on targets at or further than 15 yards from you.",})]
+		public int FrozenPower { get { return _data[41]; } set { _data[41] = value; } }
+
+        [TalentData(43, "Dual Wield", 1, 1, 2, 7, 37, new string[] {
+@"Allows one-hand and off-hand weapons to be equipped in the off-hand.",})]
+        public int DualWield { get { return _data[43]; } set { _data[43] = value; } }
+
+        [TalentData(42, "Dual Wield Specialization", 3, 1, 1, 7, 43, new string[] {
 @"Increases your chance to hit while dual wielding by an additional 2%.",
 @"Increases your chance to hit while dual wielding by an additional 4%.",
 @"Increases your chance to hit while dual wielding by an additional 6%.",})]
-		public int DualWieldSpecialization { get { return _data[41]; } set { _data[41] = value; } }
+		public int DualWieldSpecialization { get { return _data[42]; } set { _data[42] = value; } }
 
-		[TalentData(42, "Dual Wield", 1, 1, 2, 7, 37, new string[] {
-@"Allows one-hand and off-hand weapons to be equipped in the off-hand.",})]
-		public int DualWield { get { return _data[42]; } set { _data[42] = value; } }
-
-		[TalentData(43, "Stormstrike", 1, 1, 3, 7, -1, new string[] {
+		[TalentData(44, "Stormstrike", 1, 1, 3, 7, -1, new string[] {
 @"351 Mana,Melee Range,
 Instant cast,10 sec cooldown,
 Requires Melee Weapon,
 Instantly attack with both weapons. In addition, the next 2 sources of Nature damage dealt to the target are increased by 20%. Lasts 12 sec.",})]
-		public int Stormstrike { get { return _data[43]; } set { _data[43] = value; } }
+		public int Stormstrike { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(44, "Static Shock", 3, 1, 1, 8, -1, new string[] {
+		[TalentData(45, "Static Shock", 3, 1, 1, 8, -1, new string[] {
 @"You have a 2% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 2.",
 @"You have a 4% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 4.",
 @"You have a 6% chance to hit your target with a Lightning Shield Orb charge when you do damage, and increases the number of charges of your Lightning Shield by 6.",})]
-		public int StaticShock { get { return _data[44]; } set { _data[44] = value; } }
+		public int StaticShock { get { return _data[45]; } set { _data[45] = value; } }
 
-		[TalentData(45, "Lava Lash", 1, 1, 2, 8, 42, new string[] {
+		[TalentData(46, "Lava Lash", 1, 1, 2, 8, 43, new string[] {
 @"164 Mana,Melee Range,
 Instant,6 sec cooldown,
 You charge your off-hand weapon with lava, instantly dealing 100% off-hand Weapon damage. Damage is increased by 25% if your off-hand weapon is enchanted with Flametongue.",})]
-		public int LavaLash { get { return _data[45]; } set { _data[45] = value; } }
+		public int LavaLash { get { return _data[46]; } set { _data[46] = value; } }
 
-		[TalentData(46, "Improved Stormstrike", 2, 1, 3, 8, 43, new string[] {
+		[TalentData(47, "Improved Stormstrike", 2, 1, 3, 8, 44, new string[] {
 @"Increases the amount of Stormstrike charges by 1, and reduces the cooldown by 1 sec.",
 @"Increases the amount of Stormstrike charges by 2, and reduces the cooldown by 2 sec.",})]
-		public int ImprovedStormstrike { get { return _data[46]; } set { _data[46] = value; } }
+		public int ImprovedStormstrike { get { return _data[47]; } set { _data[47] = value; } }
 
-		[TalentData(47, "Mental Quickness", 3, 1, 1, 9, -1, new string[] {
+		[TalentData(48, "Mental Quickness", 3, 1, 1, 9, -1, new string[] {
 @"Reduces the mana cost of your instant cast Shaman spells by 2% and increases your spell power by an amount equal to 10% of your attack power.",
 @"Reduces the mana cost of your instant cast Shaman spells by 4% and increases your spell power by an amount equal to 20% of your attack power.",
 @"Reduces the mana cost of your instant cast Shaman spells by 6% and increases your spell power by an amount equal to 30% of your attack power.",})]
-		public int MentalQuickness { get { return _data[47]; } set { _data[47] = value; } }
+		public int MentalQuickness { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(48, "Shamanistic Rage", 1, 1, 2, 9, -1, new string[] {
+		[TalentData(49, "Shamanistic Rage", 1, 1, 2, 9, -1, new string[] {
 @"Instant,2 min cooldown,
 Reduces all damage taken by 30% and gives your successful melee attacks a chance to regenerate mana equal to 30% of your attack power.  Lasts 15 sec.",})]
-		public int ShamanisticRage { get { return _data[48]; } set { _data[48] = value; } }
+		public int ShamanisticRage { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(49, "Earthen Power", 2, 1, 3, 9, -1, new string[] {
+		[TalentData(50, "Earthen Power", 2, 1, 3, 9, -1, new string[] {
 @"Your Earthbind Totem has a 50% chance to also remove all snare effects from you and nearby friendly targets when it pulses.",
 @"Your Earthbind Totem has a 100% chance to also remove all snare effects from you and nearby friendly targets when it pulses.",})]
-		public int EarthenPower { get { return _data[49]; } set { _data[49] = value; } }
+		public int EarthenPower { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(50, "Maelstrom Weapon", 5, 1, 2, 10, -1, new string[] {
+		[TalentData(51, "Maelstrom Weapon", 5, 1, 2, 10, -1, new string[] {
 @"When you deal damage with a melee weapon, you have a chance to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Chain Heal or Healing Wave Spell by 20%. Stacks up to 5 times. Lasts 30 seconds.",
 @"When you deal damage with a melee weapon, you have a chance (higher than rank 1) to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Chain Heal or Healing Wave Spell by 20%. Stacks up to 5 times. Lasts 30 seconds.",
 @"When you deal damage with a melee weapon, you have a chance (higher than rank 2) to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Chain Heal or Healing Wave Spell by 20%. Stacks up to 5 times. Lasts 30 seconds.",
 @"When you deal damage with a melee weapon, you have a chance (higher than rank 3) to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Chain Heal or Healing Wave Spell by 20%. Stacks up to 5 times. Lasts 30 seconds.",
 @"When you deal damage with a melee weapon, you have a chance (higher than rank 4) to reduce the cast time of your next Lightning Bolt, Chain Lightning, Lesser Healing Wave, Chain Heal or Healing Wave Spell by 20%. Stacks up to 5 times. Lasts 30 seconds.",})]
-		public int MaelstromWeapon { get { return _data[50]; } set { _data[50] = value; } }
+		public int MaelstromWeapon { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(51, "Feral Spirit", 1, 1, 2, 11, -1, new string[] {
+		[TalentData(52, "Feral Spirit", 1, 1, 2, 11, -1, new string[] {
 @"495 Mana,30 yd range,
 Instant,3 min cooldown,
 Summons two Spirit Wolves under the command of the Shaman, lasting 45 sec.",})]
-		public int FeralSpirit { get { return _data[51]; } set { _data[51] = value; } }
+		public int FeralSpirit { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(52, "Improved Healing Wave", 5, 2, 2, 1, -1, new string[] {
+		[TalentData(53, "Improved Healing Wave", 5, 2, 2, 1, -1, new string[] {
 @"Reduces the casting time of your Healing Wave spell by 0.1 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.2 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.3 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.4 sec.",
 @"Reduces the casting time of your Healing Wave spell by 0.5 sec.",})]
-		public int ImprovedHealingWave { get { return _data[52]; } set { _data[52] = value; } }
+		public int ImprovedHealingWave { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(53, "Totemic Focus", 5, 2, 3, 1, -1, new string[] {
+		[TalentData(54, "Totemic Focus", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the Mana cost of your totems by 5%.",
 @"Reduces the Mana cost of your totems by 10%.",
 @"Reduces the Mana cost of your totems by 15%.",
 @"Reduces the Mana cost of your totems by 20%.",
 @"Reduces the Mana cost of your totems by 25%.",})]
-		public int TotemicFocus { get { return _data[53]; } set { _data[53] = value; } }
+		public int TotemicFocus { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(54, "Improved Reincarnation", 2, 2, 1, 2, -1, new string[] {
+		[TalentData(55, "Improved Reincarnation", 2, 2, 1, 2, -1, new string[] {
 @"Reduces the cooldown of your Reincarnation spell by 10 min and increases the amount of health and mana you reincarnate with by an additional 10%.",
 @"Reduces the cooldown of your Reincarnation spell by 20 min and increases the amount of health and mana you reincarnate with by an additional 20%.",})]
-		public int ImprovedReincarnation { get { return _data[54]; } set { _data[54] = value; } }
+		public int ImprovedReincarnation { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(55, "Ancestral Healing", 3, 2, 2, 2, -1, new string[] {
+		[TalentData(56, "Ancestral Healing", 3, 2, 2, 2, -1, new string[] {
 @"Increases your target's armor value by 8% for 15 sec after getting a critical effect from one of your healing spells.",
 @"Increases your target's armor value by 16% for 15 sec after getting a critical effect from one of your healing spells.",
 @"Increases your target's armor value by 25% for 15 sec after getting a critical effect from one of your healing spells.",})]
-		public int AncestralHealing { get { return _data[55]; } set { _data[55] = value; } }
+		public int AncestralHealing { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(56, "Tidal Focus", 5, 2, 3, 2, -1, new string[] {
+		[TalentData(57, "Tidal Focus", 5, 2, 3, 2, -1, new string[] {
 @"Reduces the Mana cost of your healing spells by 1%.",
 @"Reduces the Mana cost of your healing spells by 2%.",
 @"Reduces the Mana cost of your healing spells by 3%.",
 @"Reduces the Mana cost of your healing spells by 4%.",
 @"Reduces the Mana cost of your healing spells by 5%.",})]
-		public int TidalFocus { get { return _data[56]; } set { _data[56] = value; } }
+		public int TidalFocus { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(57, "Improved Water Shield", 3, 2, 1, 3, -1, new string[] {
+		[TalentData(58, "Improved Water Shield", 3, 2, 1, 3, -1, new string[] {
 @"You have a 33% chance to instantly consume a Water Shield Orb when you gain a critical effect from your Healing Wave or Riptide spells, and a 20% chance when you gain a critical effect from your Lesser Healing Wave Spell.",
 @"You have a 66% chance to instantly consume a Water Shield Orb when you gain a critical effect from your Healing Wave or Riptide spells, and a 20% chance when you gain a critical effect from your Lesser Healing Wave Spell.",
 @"You have a 100% chance to instantly consume a Water Shield Orb when you gain a critical effect from your Healing Wave or Riptide spells, and a 20% chance when you gain a critical effect from your Lesser Healing Wave Spell.",})]
-		public int ImprovedWaterShield { get { return _data[57]; } set { _data[57] = value; } }
+		public int ImprovedWaterShield { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(58, "Healing Focus", 3, 2, 2, 3, -1, new string[] {
+		[TalentData(59, "Healing Focus", 3, 2, 2, 3, -1, new string[] {
 @"Gives you a 23% chance to avoid interruption caused by damage while casting any Shaman healing spell.",
 @"Gives you a 46% chance to avoid interruption caused by damage while casting any Shaman healing spell.",
 @"Gives you a 70% chance to avoid interruption caused by damage while casting any Shaman healing spell.",})]
-		public int HealingFocus { get { return _data[58]; } set { _data[58] = value; } }
+		public int HealingFocus { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(59, "Tidal Force", 1, 2, 3, 3, -1, new string[] {
+		[TalentData(60, "Tidal Force", 1, 2, 3, 3, -1, new string[] {
 @"Instant,3 min cooldown,
 Increases the critical effect chance of your Healing Wave, Lesser Healing Wave and Chain heal by 60%. Each critical heal reduces the chance by 20%.",})]
-		public int TidalForce { get { return _data[59]; } set { _data[59] = value; } }
+		public int TidalForce { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(60, "Healing Grace", 3, 2, 4, 3, -1, new string[] {
+		[TalentData(61, "Healing Grace", 3, 2, 4, 3, -1, new string[] {
 @"Reduces the threat generated by your healing spells by 5% and reduces the chance your spells will be dispelled by 10%.",
 @"Reduces the threat generated by your healing spells by 10% and reduces the chance your spells will be dispelled by 20%.",
 @"Reduces the threat generated by your healing spells by 15% and reduces the chance your spells will be dispelled by 30%.",})]
-		public int HealingGrace { get { return _data[60]; } set { _data[60] = value; } }
+		public int HealingGrace { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(61, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
+		[TalentData(62, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 5%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 10%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 15%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 20%.",
 @"Increases the effect of your Mana Spring and Healing Stream Totems by 25%.",})]
-		public int RestorativeTotems { get { return _data[61]; } set { _data[61] = value; } }
+		public int RestorativeTotems { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(62, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
+		[TalentData(63, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
 @"Increases the critical effect chance of your healing and lightning spells by 1%.",
 @"Increases the critical effect chance of your healing and lightning spells by 2%.",
 @"Increases the critical effect chance of your healing and lightning spells by 3%.",
 @"Increases the critical effect chance of your healing and lightning spells by 4%.",
 @"Increases the critical effect chance of your healing and lightning spells by 5%.",})]
-		public int TidalMastery { get { return _data[62]; } set { _data[62] = value; } }
+		public int TidalMastery { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(63, "Healing Way", 3, 2, 1, 5, -1, new string[] {
+		[TalentData(64, "Healing Way", 3, 2, 1, 5, -1, new string[] {
 @"Your Healing Wave spells have a 33% chance to increase the effect of subsequent Healing Wave spells on that target by 18% for 15 sec. This effect will stack up to 3 times.",
 @"Your Healing Wave spells have a 66% chance to increase the effect of subsequent Healing Wave spells on that target by 18% for 15 sec. This effect will stack up to 3 times.",
 @"Your Healing Wave spells have a 100% chance to increase the effect of subsequent Healing Wave spells on that target by 18% for 15 sec. This effect will stack up to 3 times.",})]
-		public int HealingWay { get { return _data[63]; } set { _data[63] = value; } }
+		public int HealingWay { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(64, "Nature's Swiftness", 1, 2, 3, 5, -1, new string[] {
+		[TalentData(65, "Nature's Swiftness", 1, 2, 3, 5, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, your next Nature spell with a casting time less than 10 sec becomes an instant cast spell.",})]
-		public int NaturesSwiftness { get { return _data[64]; } set { _data[64] = value; } }
+		public int NaturesSwiftness { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(65, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
+		[TalentData(66, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 10%. This effect does not stack with other similar effects.",
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 20%. This effect does not stack with other similar effects.",
 @"Reduces the duration of any Silence or Interrupt effects used against the Shaman by 30%. This effect does not stack with other similar effects.",})]
-		public int FocusedMind { get { return _data[65]; } set { _data[65] = value; } }
+		public int FocusedMind { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(66, "Purification", 5, 2, 3, 6, -1, new string[] {
+		[TalentData(67, "Purification", 5, 2, 3, 6, -1, new string[] {
 @"Increases the effectiveness of your healing spells by 2%.",
 @"Increases the effectiveness of your healing spells by 4%.",
 @"Increases the effectiveness of your healing spells by 6%.",
 @"Increases the effectiveness of your healing spells by 8%.",
 @"Increases the effectiveness of your healing spells by 10%.",})]
-		public int Purification { get { return _data[66]; } set { _data[66] = value; } }
+		public int Purification { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(67, "Nature's Guardian", 5, 2, 1, 7, -1, new string[] {
+		[TalentData(68, "Nature's Guardian", 5, 2, 1, 7, -1, new string[] {
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 10% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 20% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 30% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 40% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",
 @"Whenever a damaging attack is taken that reduces you below 30% health, you have a 50% chance to heal 10% of your total health and reduce your threat level on that target. 8 second cooldown.",})]
-		public int NaturesGuardian { get { return _data[67]; } set { _data[67] = value; } }
+		public int NaturesGuardian { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(68, "Mana Tide Totem", 1, 2, 2, 7, 61, new string[] {
+		[TalentData(69, "Mana Tide Totem", 1, 2, 2, 7, 62, new string[] {
 @"88 Mana
 Instant cast,5 min cooldown,
 Tools: Water Totem
 Summons a Mana Tide Totem with 5 health at the feet of the caster for 12 sec that restores 6% of total mana every 3 seconds to group members within 20 yards.",})]
-		public int ManaTideTotem { get { return _data[68]; } set { _data[68] = value; } }
+		public int ManaTideTotem { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(69, "Cleanse Spirit", 1, 2, 3, 7, 66, new string[] {
+		[TalentData(70, "Cleanse Spirit", 1, 2, 3, 7, 67, new string[] {
 @"307 Mana,40 yd range,
 Instant Cast
 Cleanse the spirit of a friendly target, removing 1 poison effect, 1 disease effect, and 1 curse effect.",})]
-		public int CleanseSpirit { get { return _data[69]; } set { _data[69] = value; } }
+		public int CleanseSpirit { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(70, "Blessing of the Eternals", 2, 2, 1, 8, -1, new string[] {
+		[TalentData(71, "Blessing of the Eternals", 2, 2, 1, 8, -1, new string[] {
 @"Increases the critical effect chance of your spells by 2%, and increases the chance to apply the Earthliving heal over time effect ont he target by 40% when they are at or under 35% total health.",
 @"Increases the critical effect chance of your spells by 4%, and increases the chance to apply the Earthliving heal over time effect ont he target by 40% when they are at or under 35% total health.",})]
-		public int BlessingOfTheEternals { get { return _data[70]; } set { _data[70] = value; } }
+		public int BlessingOfTheEternals { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(71, "Improved Chain Heal", 2, 2, 2, 8, -1, new string[] {
+		[TalentData(72, "Improved Chain Heal", 2, 2, 2, 8, -1, new string[] {
 @"Increases the amount healed by your Chain Heal spell by 10%.",
 @"Increases the amount healed by your Chain Heal spell by 20%.",})]
-		public int ImprovedChainHeal { get { return _data[71]; } set { _data[71] = value; } }
+		public int ImprovedChainHeal { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(72, "Nature's Blessing", 3, 2, 3, 8, -1, new string[] {
+		[TalentData(73, "Nature's Blessing", 3, 2, 3, 8, -1, new string[] {
 @"Increases your healing by an amount equal to 5% of your Intellect.",
 @"Increases your healing by an amount equal to 10% of your Intellect.",
 @"Increases your healing by an amount equal to 15% of your Intellect.",})]
-		public int NaturesBlessing { get { return _data[72]; } set { _data[72] = value; } }
+		public int NaturesBlessing { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(73, "Ancestral Awakening", 3, 2, 1, 9, -1, new string[] {
+		[TalentData(74, "Ancestral Awakening", 3, 2, 1, 9, -1, new string[] {
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 20% of the amount healed.",
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 40% of the amount healed.",
 @"When you critically heal with your Healing Wave or Lesser Healing Wave, you summon an Ancestral spirit to aid you, instantly healing the lowest health friendly party or raid target within 40 yards for 60% of the amount healed.",})]
-		public int AncestralAwakening { get { return _data[73]; } set { _data[73] = value; } }
+		public int AncestralAwakening { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(74, "Earth Shield", 1, 2, 2, 9, -1, new string[] {
+		[TalentData(75, "Earth Shield", 1, 2, 2, 9, -1, new string[] {
 @"600 Mana,40 yd range,
 Instant Cast
 Protects the target with an earthen shield, giving a 30% chance of ignoring spell interruption when damaged and causing melee attacks to heal the shielded target for 150. This effect can only occur once every few seconds. 6 charges. Lasts 10 min. Earth Shield can only be placed on one target at a time and only one Elemental Shield can be active on a target at a time.
@@ -4048,26 +4051,26 @@ Protects the target with an earthen shield, giving a 30% chance of ignoring spel
 		 Trainable Ranks Listed Below:
 		 Rank 2: 745 Mana, Heals for 205
 		 Rank 3: 900 Mana, Heals for 270",})]
-		public int EarthShield { get { return _data[74]; } set { _data[74] = value; } }
+		public int EarthShield { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(75, "Improved Earth Shield", 2, 2, 3, 9, 74, new string[] {
+		[TalentData(76, "Improved Earth Shield", 2, 2, 3, 9, 75, new string[] {
 @"Increases the amount of charges for your Earth Shield by 1, and increases the healing done by your Earth Shield by 5%.",
 @"Increases the amount of charges for your Earth Shield by 2, and increases the healing done by your Earth Shield by 10%.",})]
-		public int ImprovedEarthShield { get { return _data[75]; } set { _data[75] = value; } }
+		public int ImprovedEarthShield { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(76, "Tidal Waves", 5, 2, 2, 10, -1, new string[] {
+		[TalentData(77, "Tidal Waves", 5, 2, 2, 10, -1, new string[] {
 @"You have a 20% chance after you cast Chain Heal or Riptide to lower the cast time of your next 2 Lesser Healing Wave or Healing Wave spells by 30%. In addition, your Healing Wave gains an additional 4% of your bonus healing effects and your Lesser Healing Wave gains an additional 2% of your bonus healing effects.",
 @"You have a 40% chance after you cast Chain Heal or Riptide to lower the cast time of your next 2 Lesser Healing Wave or Healing Wave spells by 30%. In addition, your Healing Wave gains an additional 8% of your bonus healing effects and your Lesser Healing Wave gains an additional 4% of your bonus healing effects.",
 @"You have a 60% chance after you cast Chain Heal or Riptide to lower the cast time of your next 2 Lesser Healing Wave or Healing Wave spells by 30%. In addition, your Healing Wave gains an additional 12% of your bonus healing effects and your Lesser Healing Wave gains an additional 6% of your bonus healing effects.",
 @"You have a 80% chance after you cast Chain Heal or Riptide to lower the cast time of your next 2 Lesser Healing Wave or Healing Wave spells by 30%. In addition, your Healing Wave gains an additional 16% of your bonus healing effects and your Lesser Healing Wave gains an additional 8% of your bonus healing effects.",
 @"You have a 100% chance after you cast Chain Heal or Riptide to lower the cast time of your next 2 Lesser Healing Wave or Healing Wave spells by 30%. In addition, your Healing Wave gains an additional 20% of your bonus healing effects and your Lesser Healing Wave gains an additional 10% of your bonus healing effects.",})]
-		public int TidalWaves { get { return _data[76]; } set { _data[76] = value; } }
+		public int TidalWaves { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(77, "Riptide", 1, 2, 2, 11, -1, new string[] {
+		[TalentData(78, "Riptide", 1, 2, 2, 11, -1, new string[] {
 @"876 Mana,40 yd range,
 Instant cast,6 sec cooldown,
 Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume the healing over time effect and increase the amount of Chain Heal by 25%.",})]
-		public int Riptide { get { return _data[77]; } set { _data[77] = value; } }
+		public int Riptide { get { return _data[78]; } set { _data[78] = value; } }
 	}
 
 	public class PaladinTalents : TalentsBase, ICloneable
