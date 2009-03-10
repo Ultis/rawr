@@ -153,20 +153,12 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot);
         }
 
-        public override bool SupportsMultithreading
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         public static float hitRatingConversionFactor = 100 * (8.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float critRatingConversionFactor = 100 * (14.0f * (82 / 52.0f) * (131 / 63.0f));
         public static float hasteRatingConversionFactor = 100 * (10 * (82 / 52.0f) * (131 / 63.0f));
         public static float intPerCritPercent = 166.0f + (2 / 3.0f);
         public static float BaseMana = 3496.0f;
-        public static float ManaRegenConstant = 0.005575f;
+        public static float ManaRegenConstant = 0.005575f * 0.6f;
         private Dictionary<string, System.Drawing.Color> subColors = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
@@ -357,7 +349,7 @@ namespace Rawr.Moonkin
             calcs.ManaRegen5SR = spiritRegen * stats.SpellCombatManaRegeneration + stats.Mp5 / 5f;
 
             // Run the solver to do final calculations
-            MoonkinSolver.Solve(character, ref calcs);
+            new MoonkinSolver().Solve(character, ref calcs);
 
             return calcs;
         }
@@ -440,7 +432,8 @@ namespace Rawr.Moonkin
 			}
 
             // Regen mechanic: mp5 +((0.1 * Intensity) * Spiritmp5())
-			statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
+			//statsTotal.SpellCombatManaRegeneration += 0.1f * character.DruidTalents.Intensity;
+            statsTotal.SpellCombatManaRegeneration += (float)Math.Round(character.DruidTalents.Intensity / 6.0f, 2);
             // Regen mechanic: mp5 +(0.04/0.07/0.10) * Int)
             statsTotal.Mp5 += (int)(statsTotal.Intellect * Math.Ceiling(character.DruidTalents.Dreamstate * 10 / 3.0f) / 100.0f);
 
