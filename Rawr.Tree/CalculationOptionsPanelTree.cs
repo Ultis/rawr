@@ -292,7 +292,7 @@ namespace Rawr.Tree
 
         public string ShattrathFaction = "Aldor";
 
-        public float SurvTargetLife = 14000f;
+        public float SurvTargetLife = 17000f;
         public float SurvScaleBelowTarget = 100f;
 
         //Add Average Spellpower to Calculation = 0.0f (% used)
@@ -300,7 +300,7 @@ namespace Rawr.Tree
 
         public int BSRatio = 75; // goes from 0 to 100
 
-        public int FightDuration = 180; // 3 Minutes
+        public int FightDuration = 240; // 4 Minutes
         public int Rotation = 6; // default: group regrowth and heal 1 tank
         public int ManaPot = 4; // best pot
         public int FSRRatio = 100;
@@ -309,7 +309,7 @@ namespace Rawr.Tree
         public int MainSpellFraction = 60;
         public int Innervates = 1;
 
-        public int OOMPenalty = 20;
+        public int OOMPenalty = 1;
 
         public bool PenalizeEverything = false;
 
@@ -317,9 +317,9 @@ namespace Rawr.Tree
         public bool glyphOfRegrowth = false;
         public bool glyphOfRejuvenation = false;
 
-        public bool glyphOfLifebloom = false;
-        public bool glyphOfInnervate = false;
-        public bool glyphOfSwiftmend = false;
+        public bool glyphOfLifebloom = true;
+        public bool glyphOfInnervate = true;
+        public bool glyphOfSwiftmend = true;
 
         public bool newManaRegen = true;
 

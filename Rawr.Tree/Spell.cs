@@ -188,7 +188,10 @@ namespace Rawr.Tree
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             critModifier += 0.1f * druidTalents.LivingSeed;
-            
+
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+
             minHeal *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
@@ -291,6 +294,9 @@ namespace Rawr.Tree
             //Living Seed
             critModifier += 0.1f * druidTalents.LivingSeed;
 
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+
             minHeal *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
@@ -366,6 +372,9 @@ namespace Rawr.Tree
             gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= 1 - 0.2f * druidTalents.TreeOfLife;
+
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
 
             periodicTick *=
                 (1 + 0.01f * druidTalents.Genesis + 
@@ -452,6 +461,9 @@ namespace Rawr.Tree
             gcdBeforeHaste -= 1.5f * 0.04f * druidTalents.GiftOfTheEarthmother;
 
             manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
+
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
 
             periodicTick *=
                 (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
@@ -549,6 +561,9 @@ namespace Rawr.Tree
 
             manaCost *= (1 - 0.2f * druidTalents.TreeOfLife);
 
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+
             coefHoT *=
                 (1 + 0.01f * druidTalents.Genesis + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.06f * druidTalents.TreeOfLife) *
@@ -624,8 +639,11 @@ namespace Rawr.Tree
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             //if (calcOpts.useLivingSeedAsCritMultiplicator)
-                critModifier += 0.1f * druidTalents.LivingSeed;
+            critModifier += 0.1f * druidTalents.LivingSeed;
 
+            // 6% chance to get Omen of Clarity...
+            manaCost *= 1 - 0.06f * druidTalents.OmenOfClarity;
+                
             minHeal *=
                 (1 + 0.02f * druidTalents.GiftOfNature) *
                 (1 + 0.02f * druidTalents.MasterShapeshifter * druidTalents.TreeOfLife) *
