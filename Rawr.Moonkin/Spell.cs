@@ -1205,12 +1205,7 @@ namespace Rawr.Moonkin
                     },
                     UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)
                     {
-                        return c.SpellCrit;
-                        /*
-                        float castsToProc = r.CastCount * c.SpellCrit * (r.Solver.NaturesGrace / 3.0f);
-                        float timeBetweenProcs = r.Duration / castsToProc;
-                        return Math.Max(1.0f, 3.0f / timeBetweenProcs);
-                         */
+                        return (1.0f - (float)Math.Pow(1.0f - c.SpellCrit, 3.0f / (r.Duration / r.CastCount))) * (r.Solver.NaturesGrace / 3.0f);
                     }
                 });
             }
