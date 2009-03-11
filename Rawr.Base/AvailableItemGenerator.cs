@@ -12,6 +12,7 @@ namespace Rawr.Optimizer
         private List<string> availableItems;
         private bool overrideRegem;
         private bool overrideReenchant;
+        private bool slotFiltering;
         private Character character;
         private CalculationsBase model;
 
@@ -45,11 +46,12 @@ namespace Rawr.Optimizer
             }
         }
 
-        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, Character character, CalculationsBase model)
+        public AvailableItemGenerator(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool slotFiltering, Character character, CalculationsBase model)
         {
             this.availableItems = availableItems;
             this.overrideRegem = overrideRegem;
             this.overrideReenchant = overrideReenchant;
+            this.slotFiltering = slotFiltering;
             this.character = character;
             this.model = model;
 
@@ -197,12 +199,15 @@ namespace Rawr.Optimizer
                 }
             }
 
-            for (int i = 0; i < slotCount; i++)
+            if (slotFiltering)
             {
-                Character.CharacterSlot slot = (Character.CharacterSlot)i;
-                if (slot != Character.CharacterSlot.Finger1 && slot != Character.CharacterSlot.Finger2 && slot != Character.CharacterSlot.Trinket1 && slot != Character.CharacterSlot.Trinket2)
+                for (int i = 0; i < slotCount; i++)
                 {
-                    slotItems[i] = FilterList(slotItems[i], true);
+                    Character.CharacterSlot slot = (Character.CharacterSlot)i;
+                    if (slot != Character.CharacterSlot.Finger1 && slot != Character.CharacterSlot.Finger2 && slot != Character.CharacterSlot.Trinket1 && slot != Character.CharacterSlot.Trinket2)
+                    {
+                        slotItems[i] = FilterList(slotItems[i], true);
+                    }
                 }
             }
         }

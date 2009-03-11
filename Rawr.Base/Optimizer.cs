@@ -3223,7 +3223,7 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, _character, model);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, true, _character, model);
             slotItems = itemGenerator.SlotItems;
 
             // populate the list for random sampling
@@ -4423,7 +4423,7 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, _character, model);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, true, _character, model);
             foreach (Item item in ItemCache.Items.Values)
             {
                 item.OptimizerItemInformation = null;

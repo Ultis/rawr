@@ -688,7 +688,7 @@ namespace Rawr.Optimizer
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, batchList[0], modelList[0]);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, false, batchList[0], modelList[0]);
             foreach (Item item in ItemCache.Items.Values)
             {
                 item.OptimizerItemInformation = null;
