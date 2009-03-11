@@ -52,7 +52,6 @@ namespace Rawr.Optimizer
 
     public class BatchValuation
     {
-        public List<Character> OptimizedBatchCharacter;
         public List<float> OptimizedBatchValue;
         public float OptimizedValue;
     }
@@ -60,140 +59,82 @@ namespace Rawr.Optimizer
     public class BatchIndividual
     {
         public object[] Items;
-        public List<ItemInstance> AvailableItems;
+        public List<ItemInstance> AvailableItem;
+        public List<Character> Character;
 
-        public BatchIndividual(object[] items, List<Item> itemList, Item upgradeItem)
+        private const int characterSlots = 19;
+
+        public BatchIndividual(object[] items, int itemCount, Dictionary<int, int> indexFromId, Item upgradeItem, List<Character> batchList)
         {
-            Items = items;
-            AvailableItems = new List<ItemInstance>();
-            int count = items.Length / 4;
-            Item[] gems = new Item[3];
-            for (int i = 0; i < count; i++)
+            Items = (object[])items.Clone();
+            AvailableItem = new List<ItemInstance>();
+            for (int i = 0; i <= itemCount; i++)
             {
-                Item item;
-                if (i == itemList.Count)
-                {
-                    item = upgradeItem;
-                }
-                else
-                {
-                    item = itemList[i];
-                }
-                if (item != null)
-                {
-                    Array.Clear(gems, 0, 3);
-                    for (int j = 0; j < item.OptimizerItemInformation.GemCount; j++)
-                    {
-                        gems[j] = items[i * 4 + j] as Item;
-                    }
-                    AvailableItems.Add(new ItemInstance(item, gems[0], gems[1], gems[2], items[i * 4 + 3] as Enchant));
-                }
+                ItemInstance itemInstance = items[i] as ItemInstance;
+                AvailableItem.Add(itemInstance);
             }
-        }
-
-        public BatchIndividual(List<ItemInstance> availableItems)
-        {
-            AvailableItems = availableItems;
-            Items = new object[4 * availableItems.Count];
-            for (int i = 0; i < availableItems.Count; i++)
+            int charCount = (items.Length - itemCount - 1) / characterSlots;
+            Character = new List<Character>();
+            for (int c = 0; c < charCount; c++)
             {
-                ItemInstance itemInstance = availableItems[i];
-                if (itemInstance != null)
+                ItemInstance[] slotItems = new ItemInstance[characterSlots];
+                for (int i = 0; i < characterSlots; i++)
                 {
-                    Items[4 * i] = itemInstance.Gem1;
-                    Items[4 * i + 1] = itemInstance.Gem2;
-                    Items[4 * i + 2] = itemInstance.Gem3;
-                    Items[4 * i + 3] = itemInstance.Enchant;
+                    Item item = items[itemCount + 1 + c * characterSlots + i] as Item;
+                    if (item != null)
+                    {
+                        if (item == upgradeItem)
+                        {
+                            slotItems[i] = AvailableItem[itemCount];
+                        }
+                        else
+                        {
+                            slotItems[i] = AvailableItem[indexFromId[item.Id]];
+                        }
+                    }
                 }
+                Character _character = batchList[c];
+                Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, slotItems,
+                _character.ActiveBuffs, _character.CurrentModel);
+                character.CalculationOptions = _character.CalculationOptions;
+                character.Class = _character.Class;
+                character.AssignAllTalentsFromCharacter(_character);
+                character.EnforceGemRequirements = _character.EnforceGemRequirements;
+                Character.Add(character);
             }
         }
     }
 
     public class BatchOptimizer : OptimizerBase<object, BatchIndividual, BatchValuation>
     {
-        //private Character _character;
-        //private CalculationsBase model;
-
-        private class BatchCharacter
-        {
-            public Character Character;
-            public CalculationsBase Model;
-            public float Weight;
-        }
-
-        private List<BatchCharacter> batchList;
-
-        private ItemInstanceOptimizer optimizer;
-        private AutoResetEvent optimizerComplete;
-        private Character optimizedCharacter;
-        private float optimizedValue;
-
-        private int optimizerThoroughness;
-
-        private class ItemAvailableValidator : OptimizerRangeValidatorBase<object>
-        {
-            private BatchOptimizer optimizer;
-
-            public override bool IsValid(object[] items)
-            {
-                Item item;
-                int index = StartSlot / 4;
-                if (index == optimizer.itemList.Count)
-                {
-                    if (optimizer.upgradeItems == null) return true;
-                    Item gem1 = items[StartSlot] as Item;
-                    Item gem2 = items[StartSlot + 1] as Item;
-                    Item gem3 = items[StartSlot + 2] as Item;
-                    Enchant enchant = items[StartSlot + 3] as Enchant;
-                    int gemCount = optimizer.upgradeGemCount;
-                    string key = string.Format("{0}.{1}.{2}.{3}",
-                        gem1 != null && gemCount >= 1 ? gem1.Id : 0,
-                        gem2 != null && gemCount >= 2 ? gem2.Id : 0,
-                        gem3 != null && gemCount >= 3 ? gem3.Id : 0,
-                        enchant != null ? enchant.Id : 0);
-                    return optimizer.upgradeAvailable.ContainsKey(key);
-                }
-                else
-                {
-                    item = optimizer.itemList[index];
-                    Item gem1 = items[StartSlot] as Item;
-                    Item gem2 = items[StartSlot + 1] as Item;
-                    Item gem3 = items[StartSlot + 2] as Item;
-                    Enchant enchant = items[StartSlot + 3] as Enchant;
-                    int gemCount = item.OptimizerItemInformation.GemCount;
-                    string key = string.Format("{0}.{1}.{2}.{3}.{4}",
-                        item != null ? item.Id : 0,
-                        gem1 != null && gemCount >= 1 ? gem1.Id : 0,
-                        gem2 != null && gemCount >= 2 ? gem2.Id : 0,
-                        gem3 != null && gemCount >= 3 ? gem3.Id : 0,
-                        enchant != null ? enchant.Id : 0);
-                    return item.OptimizerItemInformation.ItemAvailable.ContainsKey(key);
-                }
-            }
-
-            public ItemAvailableValidator(BatchOptimizer optimizer, int slot)
-            {
-                this.optimizer = optimizer;
-                this.StartSlot = slot;
-                EndSlot = slot + 3;
-            }
-        }
+        private List<Character> batchList;
+        private List<CalculationsBase> modelList;
+        private List<float> weightList;
 
         private const int characterSlots = 19;
 
-        public BatchOptimizer(List<KeyValuePair<Character, float>> batchList)
+        BatchIndividual startIndividual;
+
+        private class UniqueItemValidator : OptimizerRangeValidatorBase<object>
+        {
+            public override bool IsValid(object[] items)
+            {
+                return !(items[StartSlot] != null && items[EndSlot] != null && ((Item)items[StartSlot]).Id == ((Item)items[EndSlot]).Id && ((Item)items[StartSlot]).Unique);
+            }
+        }
+
+        public BatchOptimizer(List<KeyValuePair<Character, float>> batchList, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
         {
             if (batchList == null || batchList.Count == 0) throw new ArgumentException("Batch list must have at least one element.");
-            this.batchList = new List<BatchCharacter>();
+            this.batchList = new List<Character>();
+            this.modelList = new List<CalculationsBase>();
+            this.weightList = new List<float>();
             foreach (KeyValuePair<Character, float> kvp in batchList)
             {
-                this.batchList.Add(new BatchCharacter() { Character = kvp.Key.Clone(), Model = Calculations.GetModel(kvp.Key.CurrentModel), Weight = kvp.Value });
+                this.batchList.Add(kvp.Key.Clone());
+                this.modelList.Add(Calculations.GetModel(kvp.Key.CurrentModel));
+                this.weightList.Add(kvp.Value);
             }
-
-            optimizer = new ItemInstanceOptimizer();
-            optimizer.OptimizeCharacterCompleted += new OptimizeCharacterCompletedEventHandler(optimizer_OptimizeCharacterCompleted);
-            optimizer.OptimizeCharacterProgressChanged += new OptimizeCharacterProgressChangedEventHandler(optimizer_OptimizeCharacterProgressChanged);
-            optimizerComplete = new AutoResetEvent(false);
 
             optimizeCharacterProgressChangedDelegate = new SendOrPostCallback(PrivateOptimizeBatchProgressChanged);
             optimizeBatchCompletedDelegate = new SendOrPostCallback(PrivateOptimizeBatchCompleted);
@@ -205,38 +146,30 @@ namespace Rawr.Optimizer
             evaluateUpgradeCompletedDelegate = new SendOrPostCallback(PrivateEvaluateUpgradeCompleted);
             evaluateUpgradeThreadStartDelegate = new EvaluateUpgradeThreadStartDelegate(EvaluateUpgradeThreadStart);
 
-            OptimizationMethod = OptimizationMethod.SimulatedAnnealing;
+            InitializeItemCache(batchList[0].Key.AvailableItems, overrideRegem, overrideReenchant, templateGemsEnabled);
+
+            if (Properties.GeneralSettings.Default.UseMultithreading)
+            {
+                ThreadPoolValuation = true;
+                for (int i = 0; i < modelList.Count; i++)
+                {
+                    if (!modelList[i].SupportsMultithreading)
+                    {
+                        ThreadPoolValuation = false;
+                        break;
+                    }
+                }
+            }
         }
 
-        void optimizer_OptimizeCharacterProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
+        private void InitializeItemCache(List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled)
         {
-            
-        }
-
-        void optimizer_OptimizeCharacterCompleted(object sender, OptimizeCharacterCompletedEventArgs e)
-        {
-            optimizedValue = e.OptimizedCharacterValue;
-            optimizedCharacter = e.OptimizedCharacter;
-            optimizerComplete.Set();
-        }
-
-        public override void CancelAsync()
-        {
-            base.CancelAsync();
-            optimizer.CancelAsync();
-        }
-
-        public void InitializeItemCache(Character character, List<string> availableItems, bool overrideRegem, bool overrideReenchant, bool templateGemsEnabled, CalculationsBase model)
-        {
-            //_character = character;
-            //this.model = model;
-
             if (templateGemsEnabled)
             {
                 availableItems = new List<string>(availableItems);
                 List<string> templateGems = new List<string>();
                 // this could actually be empty, but in practice they will populate it at least once before
-                foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[model.Name])
+                foreach (GemmingTemplate template in GemmingTemplate.AllTemplates[modelList[0].Name])
                 {
                     if (template.Enabled)
                     {
@@ -360,9 +293,9 @@ namespace Rawr.Optimizer
         }
 
         private AsyncOperation asyncOperation;
-        private delegate void OptimizeBatchThreadStartDelegate(int batchThoroughness, int thoroughness);
-        private delegate void ComputeUpgradesThreadStartDelegate(int batchThoroughness, int thoroughness, Item singleItemUpgrades);
-        private delegate void EvaluateUpgradeThreadStartDelegate(int batchThoroughness, int thoroughness, ItemInstance upgrade);
+        private delegate void OptimizeBatchThreadStartDelegate(int thoroughness);
+        private delegate void ComputeUpgradesThreadStartDelegate(int thoroughness, Item singleItemUpgrades);
+        private delegate void EvaluateUpgradeThreadStartDelegate(int thoroughness, ItemInstance upgrade);
 
         public event OptimizeBatchCompletedEventHandler OptimizeBatchCompleted;
         public event OptimizeCharacterProgressChangedEventHandler OptimizeBatchProgressChanged;
@@ -381,16 +314,16 @@ namespace Rawr.Optimizer
         private SendOrPostCallback evaluateUpgradeCompletedDelegate;
         private EvaluateUpgradeThreadStartDelegate evaluateUpgradeThreadStartDelegate;
 
-        public void OptimizeCharacterAsync(int batchThoroughness, int thoroughness)
+        public void OptimizeCharacterAsync(int thoroughness)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            optimizeCharacterThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, null, null);
+            optimizeCharacterThreadStartDelegate.BeginInvoke(thoroughness, null, null);
         }
 
-        private void OptimizeBatchThreadStart(int batchThoroughness, int thoroughness)
+        private void OptimizeBatchThreadStart(int thoroughness)
         {
             Exception error = null;
             BatchIndividual optimizedBatch = null;
@@ -398,7 +331,7 @@ namespace Rawr.Optimizer
             float optimizedBatchValue = 0.0f;
             try
             {
-                optimizedBatch = PrivateOptimizeBatch(batchThoroughness, thoroughness, out optimizedValuation, out error);
+                optimizedBatch = PrivateOptimizeBatch(thoroughness, out optimizedValuation, out error);
                 if (optimizedBatch != null)
                 {
                     optimizedBatchValue = GetOptimizationValue(optimizedBatch);
@@ -415,27 +348,27 @@ namespace Rawr.Optimizer
             asyncOperation.PostOperationCompleted(optimizeBatchCompletedDelegate, new OptimizeBatchCompletedEventArgs(optimizedBatch, optimizedValuation, optimizedBatchValue, error, cancellationPending));
         }
 
-        public void ComputeUpgradesAsync(int batchThoroughness, int thoroughness)
+        public void ComputeUpgradesAsync(int thoroughness)
         {
-            ComputeUpgradesAsync(batchThoroughness, thoroughness, null);
+            ComputeUpgradesAsync(thoroughness, null);
         }
 
-        public void ComputeUpgradesAsync(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
+        public void ComputeUpgradesAsync(int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            computeUpgradesThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, singleItemUpgrades, null, null);
+            computeUpgradesThreadStartDelegate.BeginInvoke(thoroughness, singleItemUpgrades, null, null);
         }
 
-        private void ComputeUpgradesThreadStart(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
+        private void ComputeUpgradesThreadStart(int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
             try
             {
-                upgrades = PrivateComputeUpgrades(batchThoroughness, thoroughness, singleItemUpgrades, out error);
+                upgrades = PrivateComputeUpgrades(thoroughness, singleItemUpgrades, out error);
             }
             catch (Exception ex)
             {
@@ -444,22 +377,22 @@ namespace Rawr.Optimizer
             asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
         }
 
-        public void EvaluateUpgradeAsync(int batchThoroughness, int thoroughness, ItemInstance upgrade)
+        public void EvaluateUpgradeAsync(int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = AsyncOperationManager.CreateOperation(null);
-            evaluateUpgradeThreadStartDelegate.BeginInvoke(batchThoroughness, thoroughness, upgrade, null, null);
+            evaluateUpgradeThreadStartDelegate.BeginInvoke(thoroughness, upgrade, null, null);
         }
 
-        private void EvaluateUpgradeThreadStart(int batchThoroughness, int thoroughness, ItemInstance upgrade)
+        private void EvaluateUpgradeThreadStart(int thoroughness, ItemInstance upgrade)
         {
             Exception error = null;
             float upgradeValue = 0f;
             try
             {
-                upgradeValue = PrivateEvaluateUpgrade(batchThoroughness, thoroughness, upgrade, out error);
+                upgradeValue = PrivateEvaluateUpgrade(thoroughness, upgrade, out error);
             }
             catch (Exception ex)
             {
@@ -488,32 +421,32 @@ namespace Rawr.Optimizer
             }
         }
 
-        public BatchIndividual OptimizeCharacter(int batchThoroughness, int thoroughness, out BatchValuation bestValuation)
+        public BatchIndividual OptimizeCharacter(int thoroughness, out BatchValuation bestValuation)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            BatchIndividual optimizedBatch = PrivateOptimizeBatch(batchThoroughness, thoroughness, out bestValuation, out error);
+            BatchIndividual optimizedBatch = PrivateOptimizeBatch(thoroughness, out bestValuation, out error);
             if (error != null) throw error;
             isBusy = false;
             return optimizedBatch;
         }
 
-        private BatchIndividual PrivateOptimizeBatch(int batchThoroughness, int thoroughness, out BatchValuation bestValuation, out Exception error)
+        private BatchIndividual PrivateOptimizeBatch(int thoroughness, out BatchValuation bestValuation, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             //_character = character;
             //model = Calculations.GetModel(_character.CurrentModel);
-            _thoroughness = batchThoroughness;
-            optimizerThoroughness = thoroughness;
+            _thoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.OptimizeCharacter;
             BatchIndividual optimizedCharacter = null;
             float bestValue = 0.0f;
             bestValuation = null;
+            slotItems[itemList.Count].Clear();
             upgradeItems = null;
 
             try
@@ -527,7 +460,6 @@ namespace Rawr.Optimizer
                 }
 
                 bool injected;
-                slotCount = itemList.Count * 4;
                 optimizedCharacter = Optimize(null, 0.0f, out bestValue, out bestValuation, out injected);
             }
             catch (Exception ex)
@@ -539,14 +471,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(int batchThoroughness, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(batchThoroughness, thoroughness, singleItemUpgrades, out error);
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -555,14 +487,13 @@ namespace Rawr.Optimizer
         private int itemProgressPercentage = 0;
         private string currentItem = "";
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(int batchThoroughness, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             //_character = character;
             //model = Calculations.GetModel(_character.CurrentModel);
-            _thoroughness = batchThoroughness;
-            optimizerThoroughness = thoroughness;
+            _thoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
@@ -573,16 +504,15 @@ namespace Rawr.Optimizer
 
                 upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
 
-                Item[] items = ItemCache.GetRelevantItems(batchList[0].Model);
+                Item[] items = ItemCache.GetRelevantItems(modelList[0]);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationBase>();
 
-                slotCount = (itemList.Count + 1) * 4; // one extra slot for upgrade evaluations
+                slotItems[itemList.Count].Clear();
                 upgradeItems = null;
 
-                float baseValue;
-                BatchIndividual baseBatch = Optimize(out baseValue);
+                float baseValue = GetOptimizationValue(startIndividual);
 
                 Dictionary<int, Item> itemById = new Dictionary<int, Item>();
                 foreach (Item item in items)
@@ -608,43 +538,46 @@ namespace Rawr.Optimizer
                     {
                         return null;
                     }
-                    ReportProgress(0, 0);
-                    foreach (Character.CharacterSlot slot in slots)
+                    if (Array.IndexOf(slots, Character.GetCharacterSlotByItemSlot(item.Slot)) >= 0)
                     {
-                        if (item.FitsInSlot(slot, batchList[0].Character))
+                        ReportProgress(0, 0);
+                        upgradeItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString());
+                        PopulateUpgradeItems(item);
+                        float best = -10000000f;
+                        BatchValuation bestCalculations;
+                        BatchIndividual bestCharacter;
+                        bool injected;
+                        object[] genes = (object[])startIndividual.Items.Clone();
+                        genes[itemList.Count] = upgradeItems[0];
+                        BatchIndividual batch = GenerateIndividual(genes);
+                        bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
+                        if (best > baseValue)
                         {
-                            List<ComparisonCalculationBase> comparisons = upgrades[slot];
-                            PopulateUpgradeItems(item);
-                            List<ItemInstance> availableItems = new List<ItemInstance>(baseBatch.AvailableItems);
-                            availableItems.Add(upgradeItems[0]);
-                            BatchIndividual batch = new BatchIndividual(availableItems);
-                            // instead of just putting in the first gemming on the list select the best one
-                            float best = -10000000f;
-                            BatchValuation bestCalculations;
-                            BatchIndividual bestCharacter;
-                            bool injected;
-                            bestCharacter = Optimize(baseBatch, baseValue, out best, out bestCalculations, out injected);
-                            if (best > baseValue)
-                            {
-                                ItemInstance bestItem = bestCharacter.AvailableItems[itemList.Count];
-                                ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
-                                itemCalc.ItemInstance = bestItem;
-                                itemCalc.Item = bestItem.Item;
-                                //itemCalc.Character = bestCharacter;
-                                itemCalc.Name = item.Name;
-                                itemCalc.Equipped = false;
-                                //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
-                                //float[] subPoints = new float[bestCalculations.SubPoints.Length];
-                                //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
-                                //{
-                                //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
-                                //}
-                                //itemCalc.SubPoints = subPoints;
-                                itemCalc.OverallPoints = best - baseValue;
+                            ItemInstance bestItem = bestCharacter.AvailableItem[itemList.Count];
+                            ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
+                            itemCalc.ItemInstance = bestItem;
+                            itemCalc.Item = bestItem.Item;
+                            //itemCalc.Character = bestCharacter;
+                            itemCalc.Name = item.Name;
+                            itemCalc.Equipped = false;
+                            //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
+                            //float[] subPoints = new float[bestCalculations.SubPoints.Length];
+                            //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
+                            //{
+                            //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
+                            //}
+                            //itemCalc.SubPoints = subPoints;
+                            itemCalc.OverallPoints = best - baseValue;
 
-                                comparisons.Add(itemCalc);
+                            foreach (Character.CharacterSlot slot in slots)
+                            {
+                                if (item.FitsInSlot(slot, batchList[0]))
+                                {
+                                    upgrades[slot].Add(itemCalc);
+                                }
                             }
                         }
+                        RemoveUpgradeItems(item);
                     }
                 }
             }
@@ -657,29 +590,26 @@ namespace Rawr.Optimizer
             return upgrades;
         }
 
-        public float EvaluateUpgrade(int batchThoroughness, int thoroughness, ItemInstance upgrade)
+        public float EvaluateUpgrade(int thoroughness, ItemInstance upgrade)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            float upgradeValue = PrivateEvaluateUpgrade(batchThoroughness, thoroughness, upgrade, out error);
+            float upgradeValue = PrivateEvaluateUpgrade(thoroughness, upgrade, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgradeValue;
         }
 
-        private float PrivateEvaluateUpgrade(int batchThoroughness, int thoroughness, ItemInstance upgrade, out Exception error)
+        private float PrivateEvaluateUpgrade(int thoroughness, ItemInstance upgrade, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
             //_character = character;
             //model = Calculations.GetModel(_character.CurrentModel);
-            _thoroughness = batchThoroughness;
-            optimizerThoroughness = thoroughness;
-
-            slotCount = (itemList.Count + 1) * 4; // one extra slot for upgrade evaluations
+            _thoroughness = thoroughness;
 
             currentOperation = OptimizationOperation.EvaluateUpgrade;
             //Character saveCharacter = _character;
@@ -690,22 +620,20 @@ namespace Rawr.Optimizer
                 // this is currently only called after calculate upgrades already marks items as valid, but we might have to do this here also if things change
                 // MarkEquippedItemsAsValid(_character);
 
-                float baseValue;
-                BatchIndividual baseBatch = Optimize(out baseValue);
+                float baseValue = GetOptimizationValue(startIndividual);
 
                 ItemInstance item = upgrade;
                 upgradeItems = new List<ItemInstance>() { item };
-                upgradeAvailable = new Dictionary<string, bool>();
-                upgradeAvailable[string.Format("{0}.{1}.{2}.{3}", item.Gem1Id, item.Gem2Id, item.Gem3Id, item.EnchantId)] = true;
-                List<ItemInstance> availableItems = new List<ItemInstance>(baseBatch.AvailableItems);
-                availableItems[itemList.Count] = upgradeItems[0];
-                BatchIndividual batch = new BatchIndividual(availableItems);
-                // instead of just putting in the first gemming on the list select the best one
+                PopulateUpgradeItems(item.Item);
                 float best = -10000000f;
                 BatchValuation bestCalculations;
                 BatchIndividual bestCharacter;
                 bool injected;
-                bestCharacter = Optimize(baseBatch, baseValue, out best, out bestCalculations, out injected);
+                object[] genes = (object[])startIndividual.Items.Clone();
+                genes[itemList.Count] = upgradeItems[0];
+                BatchIndividual batch = GenerateIndividual(genes);
+                bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
+                RemoveUpgradeItems(item.Item);
                 upgradeValue = best - baseValue;
             }
             catch (Exception ex)
@@ -720,38 +648,61 @@ namespace Rawr.Optimizer
         private bool itemCacheInitialized;
 
         List<ItemInstance> upgradeItems;
-        int upgradeGemCount;
-        Dictionary<string, bool> upgradeAvailable;
-        List<Item> itemList = new List<Item>();
-        Dictionary<int, int> indexFromId = new Dictionary<int, int>();
+        List<Item> itemList;
+        List<object>[] slotItemList;
+        Dictionary<int, int> indexFromId;
 
         AvailableItemGenerator itemGenerator;
 
         private void PopulateUpgradeItems(Item item)
         {
-            upgradeItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString());
-            upgradeAvailable = new Dictionary<string, bool>();
-            foreach (ItemInstance itemInstance in upgradeItems)
+            slotItems[itemList.Count] = upgradeItems.ConvertAll(itemInstance => (object)itemInstance);
+            for (int i = 0; i < characterSlots; i++)
             {
-                upgradeAvailable[string.Format("{0}.{1}.{2}.{3}", itemInstance.Gem1Id, itemInstance.Gem2Id, itemInstance.Gem3Id, itemInstance.EnchantId)] = true;
+                if (item.FitsInSlot((Character.CharacterSlot)i, batchList[0]))
+                {
+                    for (int c = 0; c < batchList.Count; c++)
+                    {
+                        slotItems[itemList.Count + 1 + c * characterSlots + i].Add(item);
+                    }
+                }
             }
-            upgradeGemCount = GetItemGemCount(item);
+        }
+
+        private void RemoveUpgradeItems(Item item)
+        {
+            upgradeItems = null;
+            slotItems[itemList.Count].Clear();
+            for (int i = 0; i < characterSlots; i++)
+            {
+                if (item.FitsInSlot((Character.CharacterSlot)i, batchList[0]))
+                {
+                    for (int c = 0; c < batchList.Count; c++)
+                    {
+                        List<object> list = slotItems[itemList.Count + 1 + c * characterSlots + i];
+                        list.RemoveAt(list.Count - 1);
+                    }
+                }
+            }
         }
 
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
-            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, batchList[0].Character, batchList[0].Model);
+            itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, batchList[0], modelList[0]);
             foreach (Item item in ItemCache.Items.Values)
             {
                 item.OptimizerItemInformation = null;
             }
             List<ItemInstance>[] slotList = itemGenerator.SlotItems;
+            slotItemList = new List<object>[characterSlots];
 
             Dictionary<int, bool> itemUnique = new Dictionary<int, bool>();
             itemList = new List<Item>();
             indexFromId = new Dictionary<int, int>();
             for (int i = 0; i < slotList.Length; i++)
             {
+                Dictionary<int, bool> slotUnique = new Dictionary<int, bool>();
+                slotItemList[i] = new List<object>();
                 foreach (ItemInstance itemInstance in slotList[i])
                 {
                     if (itemInstance != null && itemInstance.Item != null)
@@ -766,6 +717,11 @@ namespace Rawr.Optimizer
                             item.OptimizerItemInformation.ItemList.Add(itemInstance);
                             item.OptimizerItemInformation.ItemAvailable[itemInstance.GemmedId] = true;
                         }
+                        if (!slotUnique.ContainsKey(itemInstance.Id))
+                        {
+                            slotItemList[i].Add(item);
+                            slotUnique[itemInstance.Id] = true;
+                        }
                         if (!itemUnique.ContainsKey(itemInstance.Id))
                         {
                             indexFromId[item.Id] = itemList.Count;
@@ -776,11 +732,51 @@ namespace Rawr.Optimizer
                 }
             }
 
-            validators = new List<OptimizerRangeValidatorBase<object>>();
-            for (int i = 0; i < itemList.Count + 1; i++)
+            slotCount = itemList.Count + 1 + batchList.Count * characterSlots;
+
+            slotItems = new List<object>[slotCount];
+
+            for (int i = 0; i < itemList.Count; i++)
             {
-                validators.Add(new ItemAvailableValidator(this, 4 * i));
+                slotItems[i] = itemList[i].OptimizerItemInformation.ItemList.ConvertAll(item => (object)item);
             }
+            slotItems[itemList.Count] = new List<object>();
+            for (int c = 0; c < batchList.Count; c++)
+            {
+                for (int i = 0; i < characterSlots; i++)
+                {
+                    slotItems[itemList.Count + 1 + c * characterSlots + i] = slotItemList[i];
+                }
+            }
+
+            validators = new List<OptimizerRangeValidatorBase<object>>();
+
+            for (int c = 0; c < batchList.Count; c++)
+            {
+                int offset = itemList.Count + 1 + c * characterSlots;
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.Finger1, EndSlot = offset + (int)Character.CharacterSlot.Finger2 });
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.Trinket1, EndSlot = offset + (int)Character.CharacterSlot.Trinket2 });
+                validators.Add(new UniqueItemValidator() { StartSlot = offset + (int)Character.CharacterSlot.MainHand, EndSlot = offset + (int)Character.CharacterSlot.OffHand });
+            }
+
+            object[] items = new object[slotCount];
+            for (int i = 0; i < itemList.Count; i++)
+            {
+                items[i] = itemList[i].OptimizerItemInformation.ItemList[0];
+            }
+            for (int c = 0; c < batchList.Count; c++)
+            {
+                for (int i = 0; i < characterSlots; i++)
+                {
+                    ItemInstance itemInstance = batchList[c]._item[i];
+                    if (itemInstance != null && itemInstance.Id != 0)
+                    {
+                        items[indexFromId[itemInstance.Id]] = itemInstance;
+                    }
+                    items[itemList.Count + 1 + c * characterSlots + i] = (itemInstance == null) ? null : itemInstance.Item;
+                }
+            }
+            startIndividual = new BatchIndividual(items, itemList.Count, indexFromId, null, batchList);
 
             itemCacheInitialized = true;
         }
@@ -794,7 +790,7 @@ namespace Rawr.Optimizer
         private int GetItemGemCount(Item item)
         {
             int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && batchList[0].Character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && batchList[0].Character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && batchList[0].Character.WristBlacksmithingSocketEnabled);
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && batchList[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && batchList[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && batchList[0].WristBlacksmithingSocketEnabled);
             switch (item.SocketColor1)
             {
                 case Item.ItemSlot.Meta:
@@ -863,36 +859,50 @@ namespace Rawr.Optimizer
             return valuation.OptimizedValue;
         }
 
+        private static float GetCalculationsValue(Character character, CharacterCalculationsBase calcs, string calculation, List<OptimizationRequirement> requirements)
+        {
+            float gemValue = 0f;
+            if (!character.MeetsGemRequirements) gemValue = -100000;
+            float ret = 0;
+            foreach (OptimizationRequirement requirement in requirements)
+            {
+                float calcValue = GetCalculationValue(calcs, requirement.Calculation);
+                if (requirement.LessThan)
+                {
+                    if (!(calcValue <= requirement.Value))
+                        ret += requirement.Value - calcValue;
+                }
+                else
+                {
+                    if (!(calcValue >= requirement.Value))
+                        ret += calcValue - requirement.Value;
+                }
+            }
+
+            if (ret < 0) return ret + gemValue;
+            else return GetCalculationValue(calcs, calculation) + gemValue;
+        }
+
+        private static float GetCalculationValue(CharacterCalculationsBase calcs, string calculation)
+        {
+            if (calculation == null || calculation == "[Overall]")
+                return calcs.OverallPoints;
+            else if (calculation.StartsWith("[SubPoint "))
+                return calcs.SubPoints[int.Parse(calculation.Substring(10).TrimEnd(']'))];
+            else
+                return calcs.GetOptimizableCalculationValue(calculation);
+        }
+
         protected override BatchValuation GetValuation(BatchIndividual individual)
         {
             BatchValuation valuation = new BatchValuation();
-            valuation.OptimizedBatchCharacter = new List<Character>();
             valuation.OptimizedBatchValue = new List<float>();
             float value = 0f;
-            optimizer.InitializeItemCache(individual.AvailableItems);
             for (int i = 0; i < batchList.Count; i++)
             {
-                optimizer.Model = batchList[i].Model;
-                // set up the character with currently available item instances
-                for (int slot = 0; slot < characterSlots; slot++)
-                {
-                    int index;
-                    ItemInstance current = batchList[i].Character[(Character.CharacterSlot)slot];
-                    if (current != null && indexFromId.TryGetValue(current.Id, out index))
-                    {
-                        batchList[i].Character[(Character.CharacterSlot)slot] = individual.AvailableItems[index];
-                    }
-                    else
-                    {
-                        batchList[i].Character[(Character.CharacterSlot)slot] = null;
-                    }
-                }
-                optimizer.OptimizeCharacterAsync(batchList[i].Character, batchList[i].Character.CalculationToOptimize, batchList[i].Character.OptimizationRequirements.ToArray(), optimizerThoroughness, true);
-                optimizerComplete.WaitOne();
-                if (cancellationPending) break;
-                valuation.OptimizedBatchCharacter.Add(optimizedCharacter);
-                valuation.OptimizedBatchValue.Add(optimizedValue);
-                value += batchList[i].Weight * optimizedValue;
+                float characterValue = GetCalculationsValue(individual.Character[i], modelList[i].GetCharacterCalculations(individual.Character[i]), batchList[i].CalculationToOptimize, batchList[i].OptimizationRequirements);
+                valuation.OptimizedBatchValue.Add(characterValue);
+                value += weightList[i] * characterValue;
             }
             valuation.OptimizedValue = value;
             return valuation;
@@ -910,89 +920,7 @@ namespace Rawr.Optimizer
 
         protected override BatchIndividual GenerateIndividual(object[] items)
         {
-            return new BatchIndividual(items, itemList, upgradeItems != null ? upgradeItems[0].Item : null);
-        }
-
-        protected override object GetRandomItem(int slot, object[] items)
-        {
-            int index = slot / 4;
-            if (index == itemList.Count)
-            {
-                if (upgradeItems != null)
-                {
-                    ItemInstance itemInstance = upgradeItems[rand.Next(upgradeItems.Count)];
-                    switch (slot % 4)
-                    {
-                        case 0:
-                            return itemInstance != null ? itemInstance.Gem1 : null;
-                        case 1:
-                            return itemInstance != null ? itemInstance.Gem2 : null;
-                        case 2:
-                            return itemInstance != null ? itemInstance.Gem3 : null;
-                        case 3:
-                            return itemInstance != null ? itemInstance.Enchant : null;
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                Item item = itemList[index];
-                switch (slot % 4)
-                {
-                    case 0:
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem1;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 1:
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem2;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 2:
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
-                            return list[rand.Next(list.Count)].Gem3;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    case 3:
-                        if (item != null)
-                        {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
-                            return list[rand.Next(list.Count)].Enchant;
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                }
-                return null;
-            }
-            return null;
-        }
-
-        protected override KeyValuePair<float, BatchIndividual> LookForDirectItemUpgrades(List<object> items, int slot, float best, BatchIndividual bestIndividual, out BatchValuation bestValuation)
-        {
-            bestValuation = null;
-            return new KeyValuePair<float, BatchIndividual>(float.NegativeInfinity, null);
+            return new BatchIndividual(items, itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
         }
     }
 }

@@ -547,7 +547,10 @@ namespace Rawr.Optimizer
         // items can be used as a context to limit the choices if not all in the list are valid
         protected virtual TItem GetRandomItem(int slot, TItem[] items)
         {
-            return slotItems[slot][rand.Next(slotItems[slot].Count)];
+            List<TItem> list = slotItems[slot];
+            int count = list.Count;
+            if (count == 0) return default(TItem);
+            return list[rand.Next(count)];
         }
 
         protected virtual bool IsIndividualValid(TItem[] items)
