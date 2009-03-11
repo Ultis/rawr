@@ -69,20 +69,23 @@ namespace Rawr
 					_calculationCount = 0;
 					_autoResetEvent = new AutoResetEvent(!useMultithreading);
 					DateTime before = DateTime.Now;
-					foreach (ItemInstance item in relevantItemInstances)
+                    if (relevantItemInstances.Count > 0)
                     {
-                        if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
-						//Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
-						//Queue each item into the ThreadPool
-						if (useMultithreading)
-							ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
-						else
-							GetItemInstanceCalculations(item);
-					}
-					//Wait for all items to be processed
-					_autoResetEvent.WaitOne();
-					//Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
-					//Trace.WriteLine("Finished all Calculations");
+                        foreach (ItemInstance item in relevantItemInstances)
+                        {
+                            if (!seenEquippedItem && Character[slot].Equals(item)) seenEquippedItem = true;
+                            //Trace.WriteLine("Queuing WorkItem for item: " + item.ToString());
+                            //Queue each item into the ThreadPool
+                            if (useMultithreading)
+                                ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
+                            else
+                                GetItemInstanceCalculations(item);
+                        }
+                        //Wait for all items to be processed
+                        _autoResetEvent.WaitOne();
+                        //Trace.WriteLine(DateTime.Now.Subtract(before).Ticks);
+                        //Trace.WriteLine("Finished all Calculations");
+                    }
 
                     // add item
 					List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
