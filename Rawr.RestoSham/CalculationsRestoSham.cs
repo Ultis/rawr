@@ -278,8 +278,8 @@ namespace Rawr.RestoSham
                 onUse += (options.ManaPotAmount * (1 + stats.BonusManaPotion)) / (options.FightLength * 60 / 5);
             // The ManaRestoreOnCast_10_45 uses a 55s median number.  This is based off a 2 second cast time and is the best average for this trinket effect
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0) + (stats.ManaRestoreOnCast_10_45 / 55 * 5);
-            calcStats.TotalManaPool = ((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
-                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
+            calcStats.TotalManaPool = (((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
+                ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) * (options.ManaTideEveryCD ? 1 : 0)) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
                 (options.BurstPercentage * .01f)) + (((float)Math.Truncate(options.FightLength / 5.025f) + 1) * stats.ManaRestore5min);
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit +
@@ -536,7 +536,7 @@ namespace Rawr.RestoSham
             #endregion
         }
         #endregion
-        #region Create the statistics for a given character:
+        
         //
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
@@ -545,6 +545,7 @@ namespace Rawr.RestoSham
 
         public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
+            #region Create the statistics for a given character:
             Stats statsRace;
             switch (character.Race)
             {
@@ -569,7 +570,8 @@ namespace Rawr.RestoSham
                     statsRace = new Stats();
                     break;
             }
-
+            #endregion
+            #region Other Final Stats
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -584,17 +586,17 @@ namespace Rawr.RestoSham
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower) + (float)Math.Floor(statsTotal.Intellect * .05f * character.ShamanTalents.NaturesBlessing);
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1 + statsTotal.BonusHealthMultiplier);
-            statsTotal.SpellPower += (float)Math.Floor((statsTotal.Intellect) * (.05f * character.ShamanTalents.NaturesBlessing));
 
             // Fight options:
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
             float OrbRegen = (options.WaterShield3 ? 130 : 100);
-            statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0) * (1 + statsBaseGear.WaterShieldIncrease)) + (options.TotemWS1 ? 2 : 0);
+            statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0)) + (options.TotemWS1 ? 2 : 0) + (options.WaterShield ? statsTotal.WaterShieldIncrease : 0);
 
             return statsTotal;
+            #endregion
         }
-        #endregion
+       
         #region Chart data area
         //
         // Class used by stat relative weights custom chart.

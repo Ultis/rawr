@@ -2143,7 +2143,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Regalia",
-                Stats = { WaterShieldIncrease = .1f },
+                Stats = { WaterShieldIncrease = 10f },
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
