@@ -20,9 +20,7 @@ namespace Rawr.Mage
 
     public sealed partial class Solver
     {
-        private const int cooldownCount = 14;
-        //private const double segmentDuration = 30;
-        //private int segments;
+        private const int cooldownCount = 15;
         private List<Segment> segmentList;
         private List<SolutionVariable> solutionVariable;
 
@@ -68,6 +66,7 @@ namespace Rawr.Mage
         private bool flameCapAvailable;
         private bool waterElementalAvailable;
         private bool manaGemEffectAvailable;
+        private bool powerInfusionAvailable;
 
         private Cooldown availableCooldownMask = 0;
 
@@ -128,6 +127,7 @@ namespace Rawr.Mage
         private int rowBlastWave = -1;
         private int rowDragonsBreath = -1;
         private int rowCombustion = -1;
+        private int rowPowerInfusion = -1;
         private int rowMoltenFuryCombustion = -1;
         private int rowHeroismCombustion = -1;
         private int rowHeroismIcyVeins = -1;
@@ -148,6 +148,7 @@ namespace Rawr.Mage
         //private int rowSegmentMoltenFury = -1;
         //private int rowSegmentHeroism = -1;
         private List<SegmentConstraint> rowSegmentArcanePower = new List<SegmentConstraint>();
+        private List<SegmentConstraint> rowSegmentPowerInfusion = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentIcyVeins = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentWaterElemental = new List<SegmentConstraint>();
         private List<SegmentConstraint> rowSegmentSummonWaterElemental = new List<SegmentConstraint>();
@@ -307,7 +308,8 @@ namespace Rawr.Mage
             calculationResult.CalculationOptions = calculationOptions;
 
             restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
-            heroismAvailable = calculationOptions.HeroismAvailable;
+            powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;
+            heroismAvailable = !calculationOptions.DisableCooldowns && calculationOptions.HeroismAvailable;
             arcanePowerAvailable = !calculationOptions.DisableCooldowns && (talents.ArcanePower == 1);
             icyVeinsAvailable = !calculationOptions.DisableCooldowns && (talents.IcyVeins == 1);
             combustionAvailable = !calculationOptions.DisableCooldowns && (talents.Combustion == 1);
@@ -329,6 +331,8 @@ namespace Rawr.Mage
             calculationResult.IcyVeinsCooldown = 180.0 * (1 - 0.07 * talents.IceFloes + (talents.IceFloes == 3 ? 0.01 : 0.00));
             calculationResult.WaterElementalCooldown = (180.0 - (calculationOptions.GlyphOfWaterElemental ? 30.0 : 0.0)) * (1 - 0.1 * talents.ColdAsIce);
             calculationResult.WaterElementalDuration = 45.0 + 5.0 * talents.ImprovedWaterElemental;
+            calculationResult.PowerInfusionDuration = 15.0;
+            calculationResult.PowerInfusionCooldown = 120.0;
             if (calculationOptions.PlayerLevel < 77)
             {
                 calculationResult.ManaGemValue = 2400.0;
@@ -1315,7 +1319,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false, false));
+                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false));
                     }
                     if (flameCapAvailable)
                     {
@@ -1331,7 +1335,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false, false));
+                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false));
                         }
                     }
                     if (moltenFuryAvailable)
@@ -1348,7 +1352,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false, false));
+                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false));
                         }
                         if (flameCapAvailable)
                         {
@@ -1364,7 +1368,7 @@ namespace Rawr.Mage
                             }
                             if (!found)
                             {
-                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false, false));
+                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false));
                             }
                         }
                     }
@@ -1443,7 +1447,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false, false));
+                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
@@ -1522,6 +1526,7 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowEvocation, column, calculationResult.EvocationDuration / calculationResult.EvocationCooldown);
                     //lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                     lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
+                    lp.SetElementUnsafe(rowPowerInfusion, column, calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown);
                     lp.SetElementUnsafe(rowArcanePower, column, calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown);
                     lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0));
                     lp.SetElementUnsafe(rowMoltenFury, column, calculationOptions.MoltenFuryPercentage);
@@ -1733,44 +1738,8 @@ namespace Rawr.Mage
             }
 
             double aplength = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown);
+            double pilength = MaximizeEffectDuration(calculationOptions.FightDuration, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown);
             double mflength = calculationOptions.MoltenFuryPercentage * calculationOptions.FightDuration;
-
-            // TODO try to get rid of this
-            // mana burn estimate
-            //float manaBurn = 80;
-            //if (calculationOptions.AoeDuration > 0)
-            //{
-            //    Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
-            //    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            //}
-            //else if (talents.EmpoweredFire > 0)
-            //{
-            //    Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
-            //    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            //}
-            //else if (talents.EmpoweredFrostbolt > 0)
-            //{
-            //    Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
-            //    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            //}
-            //else if (talents.SpellPower > 0)
-            //{
-            //    Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
-            //    manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
-            //}
-            //if (icyVeinsAvailable)
-            //{
-            //    manaBurn *= 1.1f;
-            //}
-            //if (arcanePowerAvailable)
-            //{
-            //    manaBurn *= 1.1f;
-            //}
-
-            //if (calculationOptions.FightDuration - 7800 / manaBurn < 0) // fix for maximum pot+gem constraint
-            //{
-            //    manaBurn = 7800 / calculationOptions.FightDuration;
-            //}
 
             lp.SetRHSUnsafe(rowManaRegen, calculationResult.StartingMana);
             lp.SetRHSUnsafe(rowFightDuration, calculationOptions.FightDuration);
@@ -1785,6 +1754,7 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
             if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
+            if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
             if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);
             if (icyVeinsAvailable) lp.SetRHSUnsafe(rowIcyVeins, calculationOptions.AverageCooldowns ? (20.0 / calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / calculationResult.ColdsnapCooldown : 0.0)) * calculationOptions.FightDuration : ivlength);
@@ -1855,6 +1825,14 @@ namespace Rawr.Mage
                     foreach (SegmentConstraint constraint in rowSegmentArcanePower)
                     {
                         lp.SetRHSUnsafe(constraint.Row, calculationResult.ArcanePowerDuration);
+                    }
+                }
+                // pi
+                if (powerInfusionAvailable)
+                {
+                    foreach (SegmentConstraint constraint in rowSegmentPowerInfusion)
+                    {
+                        lp.SetRHSUnsafe(constraint.Row, calculationResult.PowerInfusionDuration);
                     }
                 }
                 // iv
@@ -2010,6 +1988,7 @@ namespace Rawr.Mage
             }
             if (heroismAvailable) rowHeroism = rowCount++;
             if (arcanePowerAvailable) rowArcanePower = rowCount++;
+            if (powerInfusionAvailable) rowPowerInfusion = rowCount++;
             if (heroismAvailable && arcanePowerAvailable) rowHeroismArcanePower = rowCount++;
             if (icyVeinsAvailable) rowIcyVeins = rowCount++;
             if (moltenFuryAvailable) rowMoltenFury = rowCount++;
@@ -2069,6 +2048,21 @@ namespace Rawr.Mage
                 {
                     List<SegmentConstraint> list = rowSegmentArcanePower;
                     double cool = calculationResult.ArcanePowerCooldown;
+                    for (int seg = 0; seg < segmentList.Count; seg++)
+                    {
+                        int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
+                        if (maxs == -2) maxs = segmentList.Count - 1;
+                        if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                        {
+                            list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                        }
+                    }
+                }
+                // pi
+                if (powerInfusionAvailable)
+                {
+                    List<SegmentConstraint> list = rowSegmentPowerInfusion;
+                    double cool = calculationResult.PowerInfusionCooldown;
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         int maxs = segmentList.FindIndex(s => s.TimeEnd > segmentList[seg].TimeStart + cool + 0.00001) - 1;
@@ -2291,6 +2285,7 @@ namespace Rawr.Mage
             if (state.WaterElemental) lp.SetElementUnsafe(rowWaterElemental, column, 1.0);
             if (state.Heroism) lp.SetElementUnsafe(rowHeroism, column, 1.0);
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
+            if (state.PowerInfusion) lp.SetElementUnsafe(rowPowerInfusion, column, 1.0);
             if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
             if (state.IcyVeins) lp.SetElementUnsafe(rowIcyVeins, column, 1.0);
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
@@ -2374,6 +2369,14 @@ namespace Rawr.Mage
                 {
                     bound = Math.Min(bound, calculationResult.ArcanePowerDuration);
                     foreach (SegmentConstraint constraint in rowSegmentArcanePower)
+                    {
+                        if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                    }
+                }
+                if (state.PowerInfusion)
+                {
+                    bound = Math.Min(bound, calculationResult.PowerInfusionDuration);
+                    foreach (SegmentConstraint constraint in rowSegmentPowerInfusion)
                     {
                         if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                     }
@@ -2771,6 +2774,7 @@ namespace Rawr.Mage
             if (trinket1Available) availableCooldownMask |= Cooldown.Trinket1;
             if (trinket2Available) availableCooldownMask |= Cooldown.Trinket2;
             if (manaGemEffectAvailable) availableCooldownMask |= Cooldown.ManaGemEffect;
+            if (powerInfusionAvailable) availableCooldownMask |= Cooldown.PowerInfusion;
             if (calculationOptions.IncrementalOptimizations)
             {
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
@@ -2787,6 +2791,7 @@ namespace Rawr.Mage
                     bool drums = (incrementalSetIndex & Cooldown.DrumsOfBattle) != 0;
                     bool flameCap = (incrementalSetIndex & Cooldown.FlameCap) != 0;
                     bool powm = (incrementalSetIndex & Cooldown.PotionOfWildMagic) != 0;
+                    bool pi = (incrementalSetIndex & Cooldown.PowerInfusion) != 0;
                     for (Cooldown index = 0; index <= Cooldown.ItemBasedMask; index++)
                     {
                         bool trinket1 = (index & Cooldown.Trinket1) != 0;
@@ -2796,13 +2801,14 @@ namespace Rawr.Mage
                         {
                             if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                             {
+                                if (!ap || !pi) // can't have ap and pi at the same time
                                 if (!mg || !flameCap) // do not allow mana gem together with flame cap
                                 {
                                     if (!pos || !powm) // do not allow different potions at the same time
                                     {
                                         if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
-                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
+                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
                                             if (incrementalSetIndex == 0 && index == 0)
                                             {
                                                 calculationResult.BaseState = list[list.Count - 1];
@@ -2814,7 +2820,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
             }
             else
             {
@@ -2833,17 +2839,19 @@ namespace Rawr.Mage
                     bool trinket1 = (incrementalSetIndex & Cooldown.Trinket1) != 0;
                     bool trinket2 = (incrementalSetIndex & Cooldown.Trinket2) != 0;
                     bool mg = (incrementalSetIndex & Cooldown.ManaGemEffect) != 0;
+                    bool pi = (incrementalSetIndex & Cooldown.PowerInfusion) != 0;
                     if (((incrementalSetIndex) & availableCooldownMask) == (incrementalSetIndex)) // make sure all are available
                     {
                         if (!trinket1 || !trinket2 || canDoubleTrinket) // only leave through trinkets that can stack
                         {
+                            if (!ap || !pi) // can't have ap and pi at the same time
                             if (!mg || !flameCap) // do not allow mana gem together with flame cap
                             {
                                 if (!pos || !powm) // do not allow different potions at the same time
                                 {
                                     if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                     {
-                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, false));
+                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
                                         if (incrementalSetIndex == 0)
                                         {
                                             calculationResult.BaseState = list[list.Count - 1];

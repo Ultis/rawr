@@ -427,6 +427,7 @@ namespace Rawr.Mage
             CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ElementalPrecision);
             if (castingState.MageTalents.FrostChanneling > 0) CostAmplifier *= (1.0f - 0.01f - 0.03f * castingState.MageTalents.FrostChanneling);
             if (MagicSchool == MagicSchool.Arcane) CostAmplifier *= (1.0f - 0.01f * castingState.MageTalents.ArcaneFocus);
+            if (castingState.PowerInfusion) CostModifier -= 0.2f; // don't have any information on this, going by best guess
             if (castingState.ArcanePower) CostModifier += 0.2f;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
             if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) InterruptProtection += 0.35f * castingState.MageTalents.BurningSoul;

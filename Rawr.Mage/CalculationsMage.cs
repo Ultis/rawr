@@ -1182,9 +1182,9 @@ namespace Rawr.Mage
                         #region Legend
                         legendY = 2;
 
-                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect };
-						string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Item.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Item.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect" };
-						Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.LemonChiffon, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen };
+                        Cooldown[] cooldowns = new Cooldown[] { Cooldown.ArcanePower, Cooldown.IcyVeins, Cooldown.MoltenFury, Cooldown.Heroism, Cooldown.PotionOfWildMagic, Cooldown.PotionOfSpeed, Cooldown.FlameCap, Cooldown.Trinket1, Cooldown.Trinket2, Cooldown.Combustion, Cooldown.WaterElemental, Cooldown.ManaGemEffect, Cooldown.PowerInfusion };
+						string[] cooldownNames = new string[] { "Arcane Power", "Icy Veins", "Molten Fury", "Heroism", "Potion of Wild Magic", "Potion of Speed", "Flame Cap", (character.Trinket1 != null) ? character.Trinket1.Item.Name : "Trinket 1", (character.Trinket2 != null) ? character.Trinket2.Item.Name : "Trinket 2", "Combustion", "Water Elemental", "Mana Gem Effect", "Power Infusion" };
+						Color[] cooldownColors = new Color[] { Color.Azure, Color.DarkBlue, Color.Crimson, Color.Olive, Color.Purple, Color.LemonChiffon, Color.Orange, Color.Aqua, Color.Blue, Color.OrangeRed, Color.DarkCyan, Color.DarkGreen, Color.Yellow };
                         brushSubPoints = new Brush[cooldownColors.Length];
                         colorSubPointsA = new Color[cooldownColors.Length];
                         colorSubPointsB = new Color[cooldownColors.Length];
@@ -1240,7 +1240,7 @@ namespace Rawr.Mage
                         graphStart = 20f;
                         graphWidth = width - 40f;
                         graphTop = legendY;
-                        graphBottom = height - 48;
+                        graphBottom = height - 4 - 4 * cooldowns.Length;
                         graphHeight = graphBottom - graphTop - 40;
                         maxScale = calculationOptions.FightDuration;
                         graphEnd = graphStart + graphWidth;

@@ -7,7 +7,8 @@ namespace Rawr.Mage
     [Flags]
     public enum Cooldown
     {
-        Evocation = 0x2000, // should always be the highest value
+        Evocation = 0x4000, // should always be the highest value
+        PowerInfusion = 0x2000,
         PotionOfSpeed = 0x1000,
         ArcanePower = 0x800,
         Combustion = 0x400,
@@ -22,7 +23,7 @@ namespace Rawr.Mage
         Trinket1 = 0x2,
         Trinket2 = 0x1,
         None = 0x0,
-        NonItemBasedMask = 0x1FF8,
+        NonItemBasedMask = 0x3FF8,
         ItemBasedMask = 0x7,
         Mask = ItemBasedMask | NonItemBasedMask,
         FullMask = Mask | Evocation,
@@ -131,6 +132,7 @@ namespace Rawr.Mage
         public bool DrumsOfBattle { get; set; }
         public bool Combustion { get; set; }
         public bool WaterElemental { get; set; }
+        public bool PowerInfusion { get; set; }
         public bool Frozen { get; set; }
         public string MageArmor { get; set; }
 
@@ -163,6 +165,7 @@ namespace Rawr.Mage
                     if (PotionOfSpeed) buffList.Add("Potion of Speed");
                     if (WaterElemental) buffList.Add("Water Elemental");
                     if (ManaGemEffect) buffList.Add("Mana Gem Effect");
+                    if (PowerInfusion) buffList.Add("Power Infusion");
 
                     buffLabel = string.Join("+", buffList.ToArray());
                 }
@@ -228,14 +231,14 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = new CastingState(calculations, BaseStats, CalculationOptions, MageArmor, calculations.Character, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, true);
+                        frozenState = new CastingState(calculations, BaseStats, CalculationOptions, MageArmor, calculations.Character, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, PowerInfusion, true);
                     }
                 }
                 return frozenState;
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool frozen)
+        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool powerInfusion, bool frozen)
         {
             MageTalents = calculations.Character.MageTalents;
             BaseStats = calculations.BaseStats; // == characterStats
@@ -415,6 +418,7 @@ namespace Rawr.Mage
             DrumsOfBattle = drums;
             WaterElemental = waterElemental;
             ManaGemEffect = manaGemEffect;
+            PowerInfusion = powerInfusion;
             Frozen = frozen;
             MageArmor = armor;
 
@@ -432,6 +436,7 @@ namespace Rawr.Mage
             if (drums) c |= Cooldown.DrumsOfBattle;
             if (waterElemental) c |= Cooldown.WaterElemental;
             if (manaGemEffect) c |= Cooldown.ManaGemEffect;
+            if (powerInfusion) c |= Cooldown.PowerInfusion;
             Cooldown = c;
 
             if (icyVeins)
@@ -441,6 +446,10 @@ namespace Rawr.Mage
             if (heroism)
             {
                 CastingSpeed *= 1.3f;
+            }
+            else if (powerInfusion)
+            {
+                CastingSpeed *= 1.2f;
             }
             CastingSpeed *= (1f + characterStats.SpellHaste);
             CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);

@@ -705,6 +705,8 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
                 // iv
                 if (icyVeinsAvailable && !ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
+                // pi
+                if (powerInfusionAvailable && !ValidateCooldown(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
                 if (waterElementalAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonWaterElemental, calculationResult.BaseState.GlobalCooldown)) return false;
                 if (waterElementalAvailable && !ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
@@ -751,6 +753,8 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldown(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, true, calculationResult.ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
                 // iv
                 if (icyVeinsAvailable && !ValidateCooldown(Cooldown.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), calculationResult.IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
+                // ap
+                if (powerInfusionAvailable && !ValidateCooldown(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, true, calculationResult.PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
                 // water elemental
                 if (waterElementalAvailable && !ValidateCooldown(Cooldown.WaterElemental, calculationResult.WaterElementalDuration + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), calculationResult.WaterElementalCooldown + (coldsnapAvailable ? calculationResult.WaterElementalDuration : 0.0), true, calculationResult.WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // coldsnap
@@ -811,6 +815,7 @@ namespace Rawr.Mage
                 // advanced cooldown validation
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldownAdvanced(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
                 if (trinket1Available && !ValidateCooldownAdvanced(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
                 if (trinket2Available && !ValidateCooldownAdvanced(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
@@ -831,6 +836,7 @@ namespace Rawr.Mage
                 // advanced cooldown validation 2
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced2(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
+                if (powerInfusionAvailable && !ValidateCooldownAdvanced2(Cooldown.PowerInfusion, calculationResult.PowerInfusionDuration, calculationResult.PowerInfusionCooldown, VariableType.None)) return false;
                 if (trinket1Available && !ValidateCooldownAdvanced2(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
                 if (trinket2Available && !ValidateCooldownAdvanced2(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced2(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
@@ -938,6 +944,9 @@ namespace Rawr.Mage
                 case Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism:
                     ind = 17;
                     break;
+                case Cooldown.PowerInfusion:
+                    ind = 22;
+                    break;
                 default:
                     switch (cooldownType)
                     {
@@ -984,7 +993,7 @@ namespace Rawr.Mage
         private void AnalyzeSolution()
         {
             manaList = new double[segmentList.Count];
-            segmentCooldownCount = new double[22][];
+            segmentCooldownCount = new double[23][];
             hexList = new List<int>[segmentList.Count];
             segmentFilled = new double[segmentList.Count];
             hexMask = new int[segmentList.Count];

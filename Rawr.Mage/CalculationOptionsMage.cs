@@ -37,6 +37,7 @@ namespace Rawr.Mage
         public float FightDuration { get; set; }
         public float TpsLimit { get; set; }
         public bool HeroismAvailable { get; set; }
+        public bool PowerInfusionAvailable { get; set; }
         public bool PotionOfWildMagic { get; set; }
         public bool PotionOfSpeed { get; set; }
         public bool FlameCap { get; set; }

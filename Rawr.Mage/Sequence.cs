@@ -13,7 +13,7 @@ namespace Rawr.Mage.SequenceReconstruction
             sequence.Add(item);
         }
 
-        public bool IsCooldownBreakpoint(int index)
+        /*public bool IsCooldownBreakpoint(int index)
         {
             if (index == 0) return true;
             if (sequence[index].IsManaPotionOrGem || sequence[index].VariableType == VariableType.DrumsOfBattle) return false;
@@ -25,12 +25,12 @@ namespace Rawr.Mage.SequenceReconstruction
                 lastindex--;
             }
             if (lastindex >= 0) lastState = sequence[lastindex].CastingState;
-            if (lastState == null || !((lastState.ArcanePower && state.ArcanePower) || (lastState.IcyVeins && state.IcyVeins) || (lastState.Heroism && state.Heroism) || (lastState.MoltenFury && state.MoltenFury) || (lastState.PotionOfWildMagic && state.PotionOfWildMagic) || (lastState.PotionOfSpeed && state.PotionOfSpeed) || (lastState.FlameCap && state.FlameCap) || (lastState.DrumsOfBattle && state.DrumsOfBattle)))
+            if (lastState == null || !((lastState.ArcanePower && state.ArcanePower) || (lastState.IcyVeins && state.IcyVeins) || (lastState.Heroism && state.Heroism) || (lastState.MoltenFury && state.MoltenFury) || (lastState.PotionOfWildMagic && state.PotionOfWildMagic) || (lastState.PotionOfSpeed && state.PotionOfSpeed) || (lastState.FlameCap && state.FlameCap) || (lastState.DrumsOfBattle && state.DrumsOfBattle) || (lastState.Evocation && state.Evocation) || (lastState.PowerInfusion && state.PowerInfusion) || (lastState.ManaGemEffect && state.ManaGemEffect)))
             {
                 return true;
             }
             return false;
-        }
+        }*/
 
         List<SequenceGroup> superGroup = new List<SequenceGroup>();
 
@@ -998,6 +998,16 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (item.CastingState.ArcanePower) list.Add(item);
             }
             GroupCooldown(list, SequenceItem.Calculations.ArcanePowerDuration, SequenceItem.Calculations.ArcanePowerCooldown, Cooldown.ArcanePower);
+        }
+
+        public void GroupPowerInfusion()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.PowerInfusion) list.Add(item);
+            }
+            GroupCooldown(list, SequenceItem.Calculations.PowerInfusionDuration, SequenceItem.Calculations.PowerInfusionCooldown, Cooldown.PowerInfusion);
         }
 
         public void GroupEvocation()
@@ -2695,6 +2705,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double evocationCooldown = 0;
             double drumsCooldown = 0;
             double apCooldown = 0;
+            double piCooldown = 0;
             double ivCooldown = 0;
             double weCooldown = 0;
             double combustionCooldown = 0;
@@ -2709,6 +2720,7 @@ namespace Rawr.Mage.SequenceReconstruction
             double moltenFuryTime = double.NegativeInfinity;
             double heroismTime = double.NegativeInfinity;
             double apTime = double.NegativeInfinity;
+            double piTime = double.NegativeInfinity;
             double ivTime = double.NegativeInfinity;
             double weTime = double.NegativeInfinity;
             double manaGemEffectTime = double.NegativeInfinity;
@@ -2723,6 +2735,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool moltenFuryActive = false;
             bool heroismActive = false;
             bool apActive = false;
+            bool piActive = false;
             bool manaGemEffectActive = false;
             bool ivActive = false;
             bool weActive = false;
@@ -2735,6 +2748,7 @@ namespace Rawr.Mage.SequenceReconstruction
             bool trinket1warning = false;
             bool trinket2warning = false;
             bool apWarning = false;
+            bool piWarning = false;
             bool ivWarning = false;
             bool weWarning = false;
             bool combustionWarning = false;
@@ -2760,7 +2774,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
                 double manabefore = mana;
                 bool cooldownContinuation = false;
-                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive)
+                if (drumsActive || flameCapActive || potionOfWildMagicActive || potionOfSpeedActive || trinket1Active || trinket2Active || heroismActive || moltenFuryActive || combustionActive || apActive || ivActive || manaGemEffectActive || piActive)
                 {
                     cooldownContinuation = true;
                 }
@@ -3394,6 +3408,43 @@ namespace Rawr.Mage.SequenceReconstruction
                         }
                     }
                 }
+                // Power Infusion
+                if (piActive)
+                {
+                    if (state != null && state.PowerInfusion)
+                    {
+                        if (time + duration > piTime + SequenceItem.Calculations.PowerInfusionDuration + eps)
+                        {
+                            unexplained += time + duration - piTime - SequenceItem.Calculations.PowerInfusionDuration;
+                            if (timing != null) timing.AppendLine("WARNING: Power Infusion duration too long!");
+                        }
+                    }
+                    else if (duration > 0 && SequenceItem.Calculations.PowerInfusionDuration - (time - piTime) > eps)
+                    {
+                        //unexplained += Math.Min(duration, SequenceItem.Calculations.ArcanePowerDuration - (time - apTime));
+                        if (timing != null) timing.AppendLine("INFO: Power Infusion is still up!");
+                    }
+                }
+                else
+                {
+                    if (state != null && state.PowerInfusion)
+                    {
+                        if (piCooldown > eps)
+                        {
+                            unexplained += duration;
+                            if (timing != null && !piWarning) timing.AppendLine("WARNING: Power Infusion cooldown not ready!");
+                            apWarning = true;
+                        }
+                        else
+                        {
+                            if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Power Infusion (" + Math.Round(manabefore).ToString() + " mana)");
+                            piCooldown = SequenceItem.Calculations.PowerInfusionCooldown;
+                            piTime = time;
+                            piWarning = false;
+                            piActive = true;
+                        }
+                    }
+                }
                 // Icy Veins
                 if (!ivActive && state != null && state.IcyVeins)
                 {
@@ -3616,6 +3667,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 time += duration;
                 apCooldown -= duration;
+                piCooldown -= duration;
                 ivCooldown -= duration;
                 weCooldown -= duration;
                 potionCooldown -= duration;
@@ -3626,6 +3678,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 drumsCooldown -= duration;
                 evocationCooldown -= duration;
                 if (apActive && SequenceItem.Calculations.ArcanePowerDuration - (time - apTime) <= eps) apActive = false;
+                if (piActive && SequenceItem.Calculations.PowerInfusionDuration - (time - piTime) <= eps) piActive = false;
                 if (ivActive && 20 - (time - ivTime) <= eps) ivActive = false;
                 if (weActive && SequenceItem.Calculations.WaterElementalDuration - (time - weTime) <= eps) weActive = false;
                 if (heroismActive && 40 - (time - heroismTime) <= eps) heroismActive = false;
