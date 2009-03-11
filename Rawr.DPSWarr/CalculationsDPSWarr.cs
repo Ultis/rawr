@@ -497,6 +497,7 @@ namespace Rawr.DPSWarr
                                                              {
                                                                  Item.ItemType.None,
                                                                  Item.ItemType.Leather,
+                                                                 Item.ItemType.Mail,
                                                                  Item.ItemType.Plate,
                                                                  Item.ItemType.Bow,
                                                                  Item.ItemType.Crossbow,
@@ -551,9 +552,11 @@ namespace Rawr.DPSWarr
                     };
                     if ((character.MainHand != null) &&
                         ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace)))
+                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace) ||
+                         (character.MainHand.Item.Type == Item.ItemType.TwoHandSword) ||
+                         (character.MainHand.Item.Type == Item.ItemType.TwoHandMace)))
                     {
-                        statsRace.Expertise += 5f;
+                        statsRace.Expertise += 3f;
                     }
                     break;
                 case Character.CharacterRace.Orc:
@@ -572,7 +575,8 @@ namespace Rawr.DPSWarr
                     };
 
                     if ((character.MainHand != null) &&
-                        (character.MainHand.Type == Item.ItemType.OneHandAxe))
+                        ((character.MainHand.Type == Item.ItemType.OneHandAxe) ||
+                         (character.MainHand.Type == Item.ItemType.TwoHandAxe)))
                     {
                         statsRace.Expertise += 5f;
                     }
@@ -591,6 +595,13 @@ namespace Rawr.DPSWarr
                         Miss = 0.05f,
                         PhysicalCrit = 0.03186f,
                     };
+
+                    if ((character.MainHand != null) &&
+                        ((character.MainHand.Type == Item.ItemType.OneHandMace) ||
+                         (character.MainHand.Type == Item.ItemType.TwoHandMace)))
+                    {
+                        statsRace.Expertise += 5f;
+                    }
                     break;
                 case Character.CharacterRace.NightElf:
                     statsRace = new Stats()
