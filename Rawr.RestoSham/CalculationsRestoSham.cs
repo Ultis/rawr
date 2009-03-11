@@ -319,12 +319,20 @@ namespace Rawr.RestoSham
             #region Earth Shield Calculations
             float ESTimer = 24 + (character.ShamanTalents.ImprovedEarthShield * 4);
             if (options.ESInterval < ESTimer)
-                options.ESInterval = ESTimer;
-            float ESUptime = (ESTimer)/(options.ESInterval);
+                if (options.ESInterval > 0)
+                    options.ESInterval = ESTimer;
+            float ESUptime = 0;
+            float ESCasts = (Time / options.ESInterval);
+            if (options.ESInterval > 0)
+                ESUptime = (ESTimer) / (options.ESInterval);
             float ESHPS = (float)Math.Round((((((((2022f + (Healing * 3f)) * (1f + (.05f * (character.ShamanTalents.ImprovedShields
                 + character.ShamanTalents.ImprovedEarthShield)))) / 6f * (6f + character.ShamanTalents.ImprovedEarthShield))) 
                  * (1f + ((character.ShamanTalents.Purification) * .02f))) * ESUptime) / Time),2);
-            float ESMPS = (float)Math.Round(((660f * (1f - ((character.ShamanTalents.TidalFocus) * .01f))) / ESTimer * ESUptime),2);
+            float ESMPS = 0;
+            if (options.ESInterval > 0)
+                ESMPS = (ESCasts * ((float)Math.Round(660f * (1f - ((character.ShamanTalents.TidalFocus) * .01f))))) / Time;
+            float MTime = Time - (((float)Math.Max(((1.5f * (1 - (calcStats.SpellHaste)))), 1.1f)) * ESCasts);
+            float RCP = MTime / Time;
 
             #endregion
             #region Chain Heal Calculations
@@ -499,29 +507,29 @@ namespace Rawr.RestoSham
             calcStats.FightHPS = 0;
             calcStats.FightMPS = 0;
             if (options.HealingStyle.Equals("CH Spam"))
-                calcStats.FightHPS = calcStats.CHSpamHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.CHSpamHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("CH Spam"))
-                calcStats.FightMPS = calcStats.CHSpamMPS;
+                calcStats.FightMPS = (calcStats.CHSpamMPS * RCP) + ESMPS;
             if (options.HealingStyle.Equals("HW Spam"))
-                calcStats.FightHPS = calcStats.HWSpamHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.HWSpamHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("HW Spam"))
-                calcStats.FightMPS = calcStats.HWSpamMPS;
+                calcStats.FightMPS = (calcStats.HWSpamMPS * RCP) + ESMPS;
             if (options.HealingStyle.Equals("LHW Spam"))
-                calcStats.FightHPS = calcStats.LHWSpamHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.LHWSpamHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("LHW Spam"))
-                calcStats.FightMPS = calcStats.LHWSpamMPS;
+                calcStats.FightMPS = (calcStats.LHWSpamMPS * RCP) + ESMPS;
             if (options.HealingStyle.Equals("RT+HW"))
-                calcStats.FightHPS = calcStats.RTHWHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.RTHWHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("RT+HW"))
-                calcStats.FightMPS = calcStats.RTHWMPS;
+                calcStats.FightMPS = (calcStats.RTHWMPS * RCP) + ESMPS;
             if (options.HealingStyle.Equals("RT+LHW"))
-                calcStats.FightHPS = calcStats.RTLHWHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.RTLHWHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("RT+LHW"))
-                calcStats.FightMPS = calcStats.RTLHWMPS;
+                calcStats.FightMPS = (calcStats.RTLHWMPS * RCP) + ESMPS;
             if (options.HealingStyle.Equals("RT+CH"))
-                calcStats.FightHPS = calcStats.RTCHHPS * TrueHealing;
+                calcStats.FightHPS = (calcStats.RTCHHPS * TrueHealing) + (TrueHealing * ESHPS) + ELWHPS;
             if (options.HealingStyle.Equals("RT+CH"))
-                calcStats.FightMPS = calcStats.RTCHMPS;
+                calcStats.FightMPS = (calcStats.RTCHMPS * RCP) + ESMPS;
             #endregion
             #region Final Stats
             calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
