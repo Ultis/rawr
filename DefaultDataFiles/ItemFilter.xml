@@ -191,7 +191,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Raids</Name>
-      <Pattern>(?&lt;! Heroic )Naxxramas|(?&lt;! Heroic )Eye of Eternity|(?&lt;! Heroic )Obsidian Sanctum|(?&lt;! Heroic )Archavon</Pattern>
+      <Pattern>(?&lt;! Heroic )Naxxramas|(?&lt;! Heroic.*)Eye of Eternity|(?&lt;! Heroic )Obsidian Sanctum|(?&lt;! Heroic )Archavon</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
@@ -203,7 +203,7 @@
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Heroic Raids</Name>
-      <Pattern>Heroic Naxxramas|Heroic Eye of Eternity|Heroic Obsidian Sanctum|Heroic Archavon</Pattern>
+      <Pattern>Heroic Naxxramas|Heroic.*Eye of Eternity|Heroic Obsidian Sanctum|Heroic Archavon</Pattern>
       <MinItemLevel>0</MinItemLevel>
       <MaxItemLevel>1000</MaxItemLevel>
       <MinItemQuality>Temp</MinItemQuality>
