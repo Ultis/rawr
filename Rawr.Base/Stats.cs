@@ -175,7 +175,6 @@ namespace Rawr
         WindfuryAPBonus,
         WrathDmg,
         DruidAshtongueTrinket,
-        AverageHeal,
         BonusPetCritChance,
         BonusWarlockSchoolDamageOnCast,
         BonusWarlockDotExtension,
@@ -189,7 +188,6 @@ namespace Rawr
         RejuvenationHealBonus,
         LifebloomTickHealBonus,
         HealingTouchFinalHealBonus,
-        HealingDoneFor15SecOnUse2Min,
         ManaregenFor8SecOnUse5Min,
         SpiritFor20SecOnUse2Min,
         ManaregenOver12SecOnUse3Min,
@@ -2241,15 +2239,6 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Average Healing")]
-        [Category("Equipment Procs")]
-        public float AverageHeal
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.AverageHeal]; }
-            set { _rawAdditiveData[(int)AdditiveStat.AverageHeal] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Bonus Spirit after Life Tap")]
         [Category("Equipment Procs")]
         public float LifeTapBonusSpirit
@@ -2303,15 +2292,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc]; }
             set { _rawAdditiveData[(int)AdditiveStat.AshtongueTrinketProc] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Healing for 15sec (2 min cd)")]
-        [Category("Equipment Procs")]
-        public float HealingDoneFor15SecOnUse2Min
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HealingDoneFor15SecOnUse2Min] = value; }
         }
 
         /* Regen trinkets */

@@ -205,19 +205,6 @@ namespace Rawr
 			}
 			else if (line.StartsWith("When you heal or deal damage you have a chance to gain Greatness"))
 			{ //Darkmoon Card: Greatness
-                // Trolando: fixed GreatnessProc, set to 300
-                // TODO for all module authors, it has 35% chance and 45 icd, 15s duration
-                // Meaning it wil proc after 3 spells on average, so 50-60 icd
-                // 15/50 ~ 30% on average, 15/60 ~ 25%
-				/* 
-                 * OLD CODE - originally all were just doubled
-                 * modified by Ermad for healadin
-                 * replaced by Trolando
-                stats.Strength *= 2f;
-				stats.Agility *= 2f;
-                if (stats.Intellect > 0) { stats.GreatnessProc = 300; }
-				stats.Spirit *= 2f;
-                 */
                 stats.GreatnessProc = 300;
 			}
 			else if (line.StartsWith("Each time you deal melee or ranged damage to an opponent, you gain 6 attack power for the next 10 sec., stacking up to 20 times.  Each time you land a harmful spell on an opponent, you gain 8 spell power for the next 10 sec., stacking up to 10 times."))
@@ -723,10 +710,6 @@ namespace Rawr
 				//        break;
 				//}
 			}
-			else if (line.StartsWith("Your healing and damage spells have a chance to increase your healing by up to 175 and damage by up to 59 for 10 secs."))
-			{
-				stats.AverageHeal = 29;
-			}
 			else if (line.StartsWith("Increases your pet's critical strike chance by "))
 			{
 				string critChance = line.Substring("Increases your pet's critical strike chance by ".Length).Trim();
@@ -1095,10 +1078,12 @@ namespace Rawr
             }
             else if (line == "Restores 2340 mana over 12 sec. (5 Min Cooldown)")
             {
+                // Figurine - Sapphire Owl
                 stats.ManaRestore5min = 2340;
             }
             else if (line == "Instantly heal your current friendly target for 2710. (1 Min Cooldown)")
             {
+                // Living Ice Crystals
                 stats.Heal1Min = 2710;
             }
         }

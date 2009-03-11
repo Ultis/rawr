@@ -48,10 +48,6 @@ namespace Rawr.Tree
             else
                 calcOpts = (CalculationOptionsTree)Character.CalculationOptions;
 
-            cbSchattrathFaction.SelectedIndex = calcOpts.ShattrathFaction == "Aldor" ? 1 : calcOpts.ShattrathFaction == "None" ? 0 : 2;
-            tbSurvScale.Text = calcOpts.SurvScaleBelowTarget.ToString();
-            tbSurvTargetH.Text = calcOpts.SurvTargetLife.ToString();
-            tbAverageProcUsage.Text = calcOpts.averageSpellpowerUsage.ToString();
             tbBSRatio.Value = calcOpts.BSRatio;
             int burst = 100 - tbBSRatio.Value;
             int sust = tbBSRatio.Value;
@@ -90,33 +86,6 @@ namespace Rawr.Tree
 
             //Enable/Disable Glyph Checkboxes
             chbSomeGlyph_CheckedChanged(null, null);
-        }
-
-        private void cbSchattrathFaction_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).ShattrathFaction = cbSchattrathFaction.Items[cbSchattrathFaction.SelectedIndex].ToString();
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbSurvTargetH_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).SurvTargetLife = parseFloat(tbSurvTargetH.Text);
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void tbSurvScale_TextChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                ((CalculationOptionsTree)Character.CalculationOptions).SurvScaleBelowTarget = parseFloat(tbSurvScale.Text);
-                Character.OnCalculationsInvalidated();
-            }
         }
 
         private void chbSomeGlyph_CheckedChanged(object sender, EventArgs e)
@@ -221,14 +190,6 @@ namespace Rawr.Tree
             Character.OnCalculationsInvalidated();
         }
 
-        private void tbAverageProcUsage_TextChanged(object sender, EventArgs e)
-        {
-            if (loading) return;
-            CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
-            calcOpts.averageSpellpowerUsage = parseFloat(tbAverageProcUsage.Text);
-            Character.OnCalculationsInvalidated();
-        }
-
         private void tbBSRatio_Scroll(object sender, EventArgs e)
         {
             if (loading) return;
@@ -289,14 +250,6 @@ namespace Rawr.Tree
         //I want the calculated Stats in the SpellrotationsEditor .. so I trade them over the Options
         [System.Xml.Serialization.XmlIgnore]
         public CharacterCalculationsTree calculatedStats = null;
-
-        public string ShattrathFaction = "Aldor";
-
-        public float SurvTargetLife = 17000f;
-        public float SurvScaleBelowTarget = 100f;
-
-        //Add Average Spellpower to Calculation = 0.0f (% used)
-        public float averageSpellpowerUsage = 100f;
 
         public int BSRatio = 75; // goes from 0 to 100
 

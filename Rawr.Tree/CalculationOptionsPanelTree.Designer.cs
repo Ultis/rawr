@@ -28,24 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label2 = new System.Windows.Forms.Label();
-            this.cbSchattrathFaction = new System.Windows.Forms.ComboBox();
-            this.tbSurvScale = new System.Windows.Forms.TextBox();
-            this.tbSurvTargetH = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tbAverageProcUsage = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lblBSRatio = new System.Windows.Forms.Label();
             this.tbBSRatio = new System.Windows.Forms.TrackBar();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.extendedToolTipLabel2 = new Rawr.CustomControls.ExtendedToolTipLabel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.cbApplyMore = new System.Windows.Forms.CheckBox();
@@ -91,9 +78,6 @@
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).BeginInit();
-            this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbOOMPenalty)).BeginInit();
@@ -108,70 +92,6 @@
             this.groupBox10.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Exalted with";
-            // 
-            // cbSchattrathFaction
-            // 
-            this.cbSchattrathFaction.FormattingEnabled = true;
-            this.cbSchattrathFaction.Items.AddRange(new object[] {
-            "None",
-            "Aldor",
-            "Scryers"});
-            this.cbSchattrathFaction.Location = new System.Drawing.Point(188, 13);
-            this.cbSchattrathFaction.Name = "cbSchattrathFaction";
-            this.cbSchattrathFaction.Size = new System.Drawing.Size(83, 21);
-            this.cbSchattrathFaction.TabIndex = 3;
-            this.cbSchattrathFaction.SelectedIndexChanged += new System.EventHandler(this.cbSchattrathFaction_SelectedIndexChanged);
-            // 
-            // tbSurvScale
-            // 
-            this.tbSurvScale.Location = new System.Drawing.Point(220, 45);
-            this.tbSurvScale.Name = "tbSurvScale";
-            this.tbSurvScale.Size = new System.Drawing.Size(35, 20);
-            this.tbSurvScale.TabIndex = 9;
-            this.tbSurvScale.TextChanged += new System.EventHandler(this.tbSurvScale_TextChanged);
-            // 
-            // tbSurvTargetH
-            // 
-            this.tbSurvTargetH.Location = new System.Drawing.Point(209, 19);
-            this.tbSurvTargetH.Name = "tbSurvTargetH";
-            this.tbSurvTargetH.Size = new System.Drawing.Size(62, 20);
-            this.tbSurvTargetH.TabIndex = 10;
-            this.tbSurvTargetH.TextChanged += new System.EventHandler(this.tbSurvTargetH_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 16);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(178, 13);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "Average Usage of Spellpower Procs";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(256, 16);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(15, 13);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "%";
-            // 
-            // tbAverageProcUsage
-            // 
-            this.tbAverageProcUsage.Location = new System.Drawing.Point(220, 13);
-            this.tbAverageProcUsage.Name = "tbAverageProcUsage";
-            this.tbAverageProcUsage.Size = new System.Drawing.Size(35, 20);
-            this.tbAverageProcUsage.TabIndex = 18;
-            this.tbAverageProcUsage.TextChanged += new System.EventHandler(this.tbAverageProcUsage_TextChanged);
             // 
             // tabControl1
             // 
@@ -189,9 +109,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Controls.Add(this.groupBox6);
-            this.tabPage1.Controls.Add(this.groupBox5);
-            this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -204,7 +121,7 @@
             // 
             this.groupBox2.Controls.Add(this.lblBSRatio);
             this.groupBox2.Controls.Add(this.tbBSRatio);
-            this.groupBox2.Location = new System.Drawing.Point(6, 174);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(276, 87);
             this.groupBox2.TabIndex = 41;
@@ -222,6 +139,7 @@
             // 
             // tbBSRatio
             // 
+            this.tbBSRatio.BackColor = System.Drawing.SystemColors.Window;
             this.tbBSRatio.Location = new System.Drawing.Point(9, 36);
             this.tbBSRatio.Maximum = 100;
             this.tbBSRatio.Name = "tbBSRatio";
@@ -230,71 +148,6 @@
             this.tbBSRatio.TickFrequency = 5;
             this.tbBSRatio.Value = 50;
             this.tbBSRatio.Scroll += new System.EventHandler(this.tbBSRatio_Scroll);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.label8);
-            this.groupBox6.Controls.Add(this.tbAverageProcUsage);
-            this.groupBox6.Controls.Add(this.label9);
-            this.groupBox6.Location = new System.Drawing.Point(6, 83);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(277, 39);
-            this.groupBox6.TabIndex = 26;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Trinkets and Procs";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.cbSchattrathFaction);
-            this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Location = new System.Drawing.Point(6, 128);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(277, 40);
-            this.groupBox5.TabIndex = 25;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Shattrath Faction";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.extendedToolTipLabel2);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.tbSurvScale);
-            this.groupBox1.Controls.Add(this.tbSurvTargetH);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(277, 71);
-            this.groupBox1.TabIndex = 23;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Survival Points";
-            // 
-            // extendedToolTipLabel2
-            // 
-            this.extendedToolTipLabel2.AutoSize = true;
-            this.extendedToolTipLabel2.Location = new System.Drawing.Point(6, 48);
-            this.extendedToolTipLabel2.Name = "extendedToolTipLabel2";
-            this.extendedToolTipLabel2.Size = new System.Drawing.Size(117, 13);
-            this.extendedToolTipLabel2.TabIndex = 25;
-            this.extendedToolTipLabel2.Text = "Scale Survival Points  *";
-            this.extendedToolTipLabel2.ToolTipText = "When you have less than your targeted Life, scale Surv-Points by X%";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(256, 48);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(15, 13);
-            this.label6.TabIndex = 24;
-            this.label6.Text = "%";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 22);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(119, 13);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Your preferred HP Pool:";
             // 
             // tabPage2
             // 
@@ -334,9 +187,9 @@
             this.cbApplyMore.AutoSize = true;
             this.cbApplyMore.Location = new System.Drawing.Point(9, 403);
             this.cbApplyMore.Name = "cbApplyMore";
-            this.cbApplyMore.Size = new System.Drawing.Size(190, 17);
+            this.cbApplyMore.Size = new System.Drawing.Size(180, 17);
             this.cbApplyMore.TabIndex = 56;
-            this.cbApplyMore.Text = "Also apply penalty to burst/survival";
+            this.cbApplyMore.Text = "Also apply penalty to burst points";
             this.cbApplyMore.UseVisualStyleBackColor = true;
             this.cbApplyMore.CheckedChanged += new System.EventHandler(this.cbApplyMore_CheckedChanged);
             // 
@@ -353,7 +206,7 @@
             // 
             // tbOOMPenalty
             // 
-            this.tbOOMPenalty.BackColor = System.Drawing.SystemColors.Control;
+            this.tbOOMPenalty.BackColor = System.Drawing.SystemColors.Window;
             this.tbOOMPenalty.Location = new System.Drawing.Point(6, 296);
             this.tbOOMPenalty.Maximum = 100;
             this.tbOOMPenalty.Name = "tbOOMPenalty";
@@ -383,7 +236,7 @@
             // 
             // tbPrimaryHealFrac
             // 
-            this.tbPrimaryHealFrac.BackColor = System.Drawing.SystemColors.Control;
+            this.tbPrimaryHealFrac.BackColor = System.Drawing.SystemColors.Window;
             this.tbPrimaryHealFrac.Location = new System.Drawing.Point(9, 138);
             this.tbPrimaryHealFrac.Maximum = 100;
             this.tbPrimaryHealFrac.Name = "tbPrimaryHealFrac";
@@ -403,7 +256,7 @@
             // 
             // tbWildGrowth
             // 
-            this.tbWildGrowth.BackColor = System.Drawing.SystemColors.Control;
+            this.tbWildGrowth.BackColor = System.Drawing.SystemColors.Window;
             this.tbWildGrowth.Location = new System.Drawing.Point(6, 202);
             this.tbWildGrowth.Maximum = 20;
             this.tbWildGrowth.Name = "tbWildGrowth";
@@ -458,6 +311,7 @@
             // 
             // trkFightLength
             // 
+            this.trkFightLength.BackColor = System.Drawing.SystemColors.Window;
             this.trkFightLength.Location = new System.Drawing.Point(9, 74);
             this.trkFightLength.Maximum = 60;
             this.trkFightLength.Minimum = 1;
@@ -555,7 +409,7 @@
             // 
             // trkTimeInFSR
             // 
-            this.trkTimeInFSR.BackColor = System.Drawing.SystemColors.Control;
+            this.trkTimeInFSR.BackColor = System.Drawing.SystemColors.Window;
             this.trkTimeInFSR.Location = new System.Drawing.Point(6, 123);
             this.trkTimeInFSR.Maximum = 100;
             this.trkTimeInFSR.Name = "trkTimeInFSR";
@@ -575,7 +429,7 @@
             // 
             // tkReplenishment
             // 
-            this.tkReplenishment.BackColor = System.Drawing.SystemColors.Control;
+            this.tkReplenishment.BackColor = System.Drawing.SystemColors.Window;
             this.tkReplenishment.Location = new System.Drawing.Point(6, 59);
             this.tkReplenishment.Maximum = 100;
             this.tkReplenishment.Name = "tkReplenishment";
@@ -787,12 +641,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbBSRatio)).EndInit();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
@@ -816,22 +664,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cbSchattrathFaction;
-        private System.Windows.Forms.TextBox tbSurvScale;
-        private System.Windows.Forms.TextBox tbSurvTargetH;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbAverageProcUsage;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Label label6;
-        private Rawr.CustomControls.ExtendedToolTipLabel extendedToolTipLabel2;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.GroupBox groupBox10;
