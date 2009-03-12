@@ -42,11 +42,15 @@
         	this.groupBox1 = new System.Windows.Forms.GroupBox();
         	this.radioButtonSoR = new System.Windows.Forms.RadioButton();
         	this.radioButtonSoV = new System.Windows.Forms.RadioButton();
+        	this.groupBox2 = new System.Windows.Forms.GroupBox();
+        	this.checkBoxGlyphOfSealOfVengeance = new System.Windows.Forms.CheckBox();
+        	this.checkBoxGlyphOfJudgement = new System.Windows.Forms.CheckBox();
         	((System.ComponentModel.ISupportInitialize)(this.nudTargetLevel)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.trackBarMitigationScale)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
         	this.groupBox1.SuspendLayout();
+        	this.groupBox2.SuspendLayout();
         	this.SuspendLayout();
         	// 
         	// label1
@@ -72,7 +76,7 @@
         	        	        	0,
         	        	        	0});
         	this.nudTargetLevel.Name = "nudTargetLevel";
-        	this.nudTargetLevel.Size = new System.Drawing.Size(120, 20);
+        	this.nudTargetLevel.Size = new System.Drawing.Size(49, 20);
         	this.nudTargetLevel.TabIndex = 3;
         	this.nudTargetLevel.Value = new decimal(new int[] {
         	        	        	73,
@@ -86,13 +90,13 @@
         	this.trackBarMitigationScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
         	        	        	| System.Windows.Forms.AnchorStyles.Right)));
         	this.trackBarMitigationScale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-        	this.trackBarMitigationScale.LargeChange = 10;
+        	this.trackBarMitigationScale.LargeChange = 25;
         	this.trackBarMitigationScale.Location = new System.Drawing.Point(72, 131);
-        	this.trackBarMitigationScale.Maximum = 300;
+        	this.trackBarMitigationScale.Maximum = 500;
         	this.trackBarMitigationScale.Name = "trackBarMitigationScale";
         	this.trackBarMitigationScale.Size = new System.Drawing.Size(222, 45);
         	this.trackBarMitigationScale.TabIndex = 11;
-        	this.trackBarMitigationScale.TickFrequency = 10;
+        	this.trackBarMitigationScale.TickFrequency = 25;
         	this.trackBarMitigationScale.Value = 100;
         	this.trackBarMitigationScale.Scroll += new System.EventHandler(this.trackBarMitigationScale_Scroll);
         	// 
@@ -226,10 +230,42 @@
         	this.radioButtonSoV.Text = "Seal of Vengeance";
         	this.radioButtonSoV.UseVisualStyleBackColor = true;
         	// 
+        	// groupBox2
+        	// 
+        	this.groupBox2.Controls.Add(this.checkBoxGlyphOfSealOfVengeance);
+        	this.groupBox2.Controls.Add(this.checkBoxGlyphOfJudgement);
+        	this.groupBox2.Location = new System.Drawing.Point(5, 276);
+        	this.groupBox2.Name = "groupBox2";
+        	this.groupBox2.Size = new System.Drawing.Size(289, 81);
+        	this.groupBox2.TabIndex = 14;
+        	this.groupBox2.TabStop = false;
+        	this.groupBox2.Text = "Glyph Choice";
+        	// 
+        	// checkBoxGlyphOfSealOfVengeance
+        	// 
+        	this.checkBoxGlyphOfSealOfVengeance.Location = new System.Drawing.Point(67, 42);
+        	this.checkBoxGlyphOfSealOfVengeance.Name = "checkBoxGlyphOfSealOfVengeance";
+        	this.checkBoxGlyphOfSealOfVengeance.Size = new System.Drawing.Size(216, 24);
+        	this.checkBoxGlyphOfSealOfVengeance.TabIndex = 1;
+        	this.checkBoxGlyphOfSealOfVengeance.Text = "Glyph of Seal of Vengeance";
+        	this.checkBoxGlyphOfSealOfVengeance.UseVisualStyleBackColor = true;
+        	this.checkBoxGlyphOfSealOfVengeance.CheckedChanged += new System.EventHandler(this.CheckBoxGlyphOfSealOfVengeanceCheckedChanged);
+        	// 
+        	// checkBoxGlyphOfJudgement
+        	// 
+        	this.checkBoxGlyphOfJudgement.Location = new System.Drawing.Point(67, 20);
+        	this.checkBoxGlyphOfJudgement.Name = "checkBoxGlyphOfJudgement";
+        	this.checkBoxGlyphOfJudgement.Size = new System.Drawing.Size(216, 24);
+        	this.checkBoxGlyphOfJudgement.TabIndex = 0;
+        	this.checkBoxGlyphOfJudgement.Text = "Glyph of Judgement";
+        	this.checkBoxGlyphOfJudgement.UseVisualStyleBackColor = true;
+        	this.checkBoxGlyphOfJudgement.CheckedChanged += new System.EventHandler(this.CheckBoxGlyphOfJudgementCheckedChanged);
+        	// 
         	// CalculationOptionsPanelTankadin
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
         	this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        	this.Controls.Add(this.groupBox2);
         	this.Controls.Add(this.groupBox1);
         	this.Controls.Add(this.lblBossAttackValue);
         	this.Controls.Add(this.lblThreatScaleValue);
@@ -249,9 +285,13 @@
         	((System.ComponentModel.ISupportInitialize)(this.trackBarThreatScale)).EndInit();
         	((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
         	this.groupBox1.ResumeLayout(false);
+        	this.groupBox2.ResumeLayout(false);
         	this.ResumeLayout(false);
         	this.PerformLayout();
         }
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfJudgement;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfSealOfVengeance;
+        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton radioButtonSoV;
         private System.Windows.Forms.RadioButton radioButtonSoR;
         private System.Windows.Forms.GroupBox groupBox1;

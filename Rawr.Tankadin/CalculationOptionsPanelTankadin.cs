@@ -33,9 +33,14 @@ namespace Rawr.Tankadin
             trackBarThreatScale.Value = calcOpts.ThreatScale;
             lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
+            
+            // Seal Choice
             radioButtonSoR.Checked = (calcOpts.ThreatRotationChoice == 1);
             radioButtonSoV.Checked = (calcOpts.ThreatRotationChoice == 2);
 
+            // Glyphs
+            checkBoxGlyphOfJudgement.Checked = calcOpts.GlyphJudgement;
+            checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
         }
 
         private void nudTargetLevel_ValueChanged(object sender, EventArgs e)
@@ -99,6 +104,26 @@ namespace Rawr.Tankadin
                 Character.OnCalculationsInvalidated();
             }
         }
+        
+        void CheckBoxGlyphOfJudgementCheckedChanged(object sender, EventArgs e)
+        {
+        	if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                calcOpts.GlyphJudgement = checkBoxGlyphOfJudgement.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+        
+        void CheckBoxGlyphOfSealOfVengeanceCheckedChanged(object sender, EventArgs e)
+        {
+        	if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+                calcOpts.GlyphSealVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
+                Character.OnCalculationsInvalidated();
+            }        	
+        }
     }
 
     [Serializable]
@@ -122,6 +147,8 @@ namespace Rawr.Tankadin
         public int ThreatScale = 10;
         public int MitigationScalePercent = 100;
         public int ThreatRotationChoice = 1;
+        public bool GlyphSealVengeance = false;
+        public bool GlyphJudgement = false;
     }
 
 }

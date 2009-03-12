@@ -140,10 +140,10 @@ namespace Rawr.Tankadin
                     Math.Round((.05f - CritAvoidance) * 100f, 2), 
                     Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.918498039f),
                     Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));
-/*			dict.Add("Overall Points", OverallPoints.ToString());
+			dict.Add("Overall Points", OverallPoints.ToString());
 			dict.Add("Mitigation Points", MitigationPoints.ToString());
 			dict.Add("Survival Points", SurvivalPoints.ToString());
-			dict.Add("Threat Points", ThreatPoints.ToString());*/
+			dict.Add("Threat Points", ThreatPoints.ToString());
             dict.Add("Chance to Hit", string.Format("{0}%*{1}% miss\n{2}% dodge\n{3}% parry", Math.Round(ToLand * 100f, 2), Math.Round(ToMiss * 100f, 2),
                 Math.Round(ToDodge * 100, 2), Math.Round(ToParry * 100f, 2)));
             dict.Add("Chance to Miss", string.Format("{0}%", Math.Round(ToMiss * 100f, 2)));

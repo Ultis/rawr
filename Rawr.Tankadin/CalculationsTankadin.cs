@@ -125,7 +125,7 @@ namespace Rawr.Tankadin
                         "Threat Stats:JoR",
                         // "Threat Stats:Chance to Hit",
                         // "Threat Stats:Chance to Crit"
-/*						@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+						@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation and 
 Survival Points individually may be important.",
@@ -144,7 +144,7 @@ but rather get 'enough' of it, and then focus on Mitigation.
 keeping it roughly even with Mitigation Points is a good 
 way to maintain 'enough' as you progress. If you find that 
 you are being killed by burst damage, focus on Survival Points.",
-						@"Complex Stats:Threat Points*How much threat per secound you do."*/
+						@"Complex Stats:Threat Points*How much threat per secound you do."
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -361,7 +361,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.SoRThreat = cs.SoRDamage / ws * cs.ToLand * holyThreatMod;
 
             //Judgement of Righteousness (Per Swing)
-            cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
+            cs.JoRDamage = (1 + .25f * stats.AttackPower + .4f * stats.SpellPower) * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure) * (1 + 0.1f * (calcOpts.GlyphJudgement ? 1 : 0));
             cs.JoRThreat = cs.JoRDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
             //Seal of Vengeance (Damage = Per Tick, Threat = Per Second)
@@ -370,7 +370,7 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.SoVTPS = cs.SoVDamage * holyThreatMod / 3f;
 
             //Judgement of Vengeance (Per Cast)
-            cs.JoVDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure);
+            cs.JoVDamage = (1f + 0.28f * stats.SpellPower + 0.175f * stats.AttackPower) * 1.5f * damageMulti * holyMulti * (1 + .03f * talents.SealsOfThePure) * (1 + 0.1f * (calcOpts.GlyphJudgement ? 1 : 0));
             cs.JoVThreat = cs.JoVDamage * holyThreatMod * (cs.ToResist + cs.ToSpellCrit);
 
             //Holy Shield
@@ -464,6 +464,10 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 
             stats.Expertise += talents.CombatExpertise * 2f + (float)Math.Floor(stats.ExpertiseRating / 32.78998947f * 4f);
+            if (calcOpts.GlyphSealVengeance && calcOpts.ThreatRotationChoice == 1)
+            {
+            	stats.Expertise += 10f;
+            }
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
