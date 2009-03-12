@@ -30,6 +30,7 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.chbPatch3_1 = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.comboBoxOffhandImbue = new System.Windows.Forms.ComboBox();
@@ -53,6 +54,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.gbGlyphs = new System.Windows.Forms.GroupBox();
+            this.chbGlyphFS = new System.Windows.Forms.CheckBox();
             this.chbGlyphLL = new System.Windows.Forms.CheckBox();
             this.chbGlyphSS = new System.Windows.Forms.CheckBox();
             this.chbGlyphWF = new System.Windows.Forms.CheckBox();
@@ -63,7 +65,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
-            this.chbPatch3_1 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
@@ -117,6 +118,19 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // chbPatch3_1
+            // 
+            this.chbPatch3_1.AutoSize = true;
+            this.chbPatch3_1.Checked = true;
+            this.chbPatch3_1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbPatch3_1.Location = new System.Drawing.Point(10, 387);
+            this.chbPatch3_1.Name = "chbPatch3_1";
+            this.chbPatch3_1.Size = new System.Drawing.Size(153, 17);
+            this.chbPatch3_1.TabIndex = 36;
+            this.chbPatch3_1.Text = "Use Patch 3.1 calculations";
+            this.chbPatch3_1.UseVisualStyleBackColor = true;
+            this.chbPatch3_1.CheckedChanged += new System.EventHandler(this.chbPatch3_1_CheckedChanged);
             // 
             // chbBaseStatOption
             // 
@@ -388,6 +402,7 @@
             // 
             // gbGlyphs
             // 
+            this.gbGlyphs.Controls.Add(this.chbGlyphFS);
             this.gbGlyphs.Controls.Add(this.chbGlyphLL);
             this.gbGlyphs.Controls.Add(this.chbGlyphSS);
             this.gbGlyphs.Controls.Add(this.chbGlyphWF);
@@ -397,15 +412,26 @@
             this.gbGlyphs.Controls.Add(this.chbGlyphFT);
             this.gbGlyphs.Location = new System.Drawing.Point(3, 6);
             this.gbGlyphs.Name = "gbGlyphs";
-            this.gbGlyphs.Size = new System.Drawing.Size(258, 187);
+            this.gbGlyphs.Size = new System.Drawing.Size(258, 211);
             this.gbGlyphs.TabIndex = 57;
             this.gbGlyphs.TabStop = false;
             this.gbGlyphs.Text = "Glyphs";
             // 
+            // chbGlyphFS
+            // 
+            this.chbGlyphFS.AutoSize = true;
+            this.chbGlyphFS.Location = new System.Drawing.Point(8, 19);
+            this.chbGlyphFS.Name = "chbGlyphFS";
+            this.chbGlyphFS.Size = new System.Drawing.Size(122, 17);
+            this.chbGlyphFS.TabIndex = 78;
+            this.chbGlyphFS.Text = "Glyph of Feral Spirits";
+            this.chbGlyphFS.UseVisualStyleBackColor = true;
+            this.chbGlyphFS.CheckedChanged += new System.EventHandler(this.chbGlyphFS_CheckedChanged);
+            // 
             // chbGlyphLL
             // 
             this.chbGlyphLL.AutoSize = true;
-            this.chbGlyphLL.Location = new System.Drawing.Point(5, 42);
+            this.chbGlyphLL.Location = new System.Drawing.Point(7, 65);
             this.chbGlyphLL.Name = "chbGlyphLL";
             this.chbGlyphLL.Size = new System.Drawing.Size(118, 17);
             this.chbGlyphLL.TabIndex = 77;
@@ -416,7 +442,7 @@
             // chbGlyphSS
             // 
             this.chbGlyphSS.AutoSize = true;
-            this.chbGlyphSS.Location = new System.Drawing.Point(5, 134);
+            this.chbGlyphSS.Location = new System.Drawing.Point(7, 157);
             this.chbGlyphSS.Name = "chbGlyphSS";
             this.chbGlyphSS.Size = new System.Drawing.Size(120, 17);
             this.chbGlyphSS.TabIndex = 76;
@@ -427,7 +453,7 @@
             // chbGlyphWF
             // 
             this.chbGlyphWF.AutoSize = true;
-            this.chbGlyphWF.Location = new System.Drawing.Point(5, 157);
+            this.chbGlyphWF.Location = new System.Drawing.Point(7, 180);
             this.chbGlyphWF.Name = "chbGlyphWF";
             this.chbGlyphWF.Size = new System.Drawing.Size(154, 17);
             this.chbGlyphWF.TabIndex = 74;
@@ -439,7 +465,7 @@
             // 
             this.chbGlyphShocking.AutoSize = true;
             this.chbGlyphShocking.Enabled = false;
-            this.chbGlyphShocking.Location = new System.Drawing.Point(5, 111);
+            this.chbGlyphShocking.Location = new System.Drawing.Point(7, 134);
             this.chbGlyphShocking.Name = "chbGlyphShocking";
             this.chbGlyphShocking.Size = new System.Drawing.Size(113, 17);
             this.chbGlyphShocking.TabIndex = 71;
@@ -450,7 +476,7 @@
             // chbGlyphLS
             // 
             this.chbGlyphLS.AutoSize = true;
-            this.chbGlyphLS.Location = new System.Drawing.Point(5, 88);
+            this.chbGlyphLS.Location = new System.Drawing.Point(7, 111);
             this.chbGlyphLS.Name = "chbGlyphLS";
             this.chbGlyphLS.Size = new System.Drawing.Size(143, 17);
             this.chbGlyphLS.TabIndex = 68;
@@ -461,7 +487,7 @@
             // chbGlyphLB
             // 
             this.chbGlyphLB.AutoSize = true;
-            this.chbGlyphLB.Location = new System.Drawing.Point(5, 65);
+            this.chbGlyphLB.Location = new System.Drawing.Point(7, 88);
             this.chbGlyphLB.Name = "chbGlyphLB";
             this.chbGlyphLB.Size = new System.Drawing.Size(132, 17);
             this.chbGlyphLB.TabIndex = 67;
@@ -472,7 +498,7 @@
             // chbGlyphFT
             // 
             this.chbGlyphFT.AutoSize = true;
-            this.chbGlyphFT.Location = new System.Drawing.Point(6, 19);
+            this.chbGlyphFT.Location = new System.Drawing.Point(8, 42);
             this.chbGlyphFT.Name = "chbGlyphFT";
             this.chbGlyphFT.Size = new System.Drawing.Size(173, 17);
             this.chbGlyphFT.TabIndex = 66;
@@ -512,17 +538,6 @@
             this.btnEnhSim.Text = "Export Stats to EnhSim config file";
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
-            // 
-            // chbPatch3_1
-            // 
-            this.chbPatch3_1.AutoSize = true;
-            this.chbPatch3_1.Location = new System.Drawing.Point(10, 387);
-            this.chbPatch3_1.Name = "chbPatch3_1";
-            this.chbPatch3_1.Size = new System.Drawing.Size(153, 17);
-            this.chbPatch3_1.TabIndex = 36;
-            this.chbPatch3_1.Text = "Use Patch 3.1 calculations";
-            this.chbPatch3_1.UseVisualStyleBackColor = true;
-            this.chbPatch3_1.CheckedChanged += new System.EventHandler(this.chbPatch3_1_CheckedChanged);
             // 
             // CalculationOptionsPanelEnhance
             // 
@@ -586,6 +601,7 @@
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
         private System.Windows.Forms.CheckBox chbPatch3_1;
+        private System.Windows.Forms.CheckBox chbGlyphFS;
 
     }
 }

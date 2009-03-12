@@ -231,11 +231,21 @@ namespace Rawr
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chbGlyphFS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.GlyphFS = checkMaxGlyphs(chbGlyphFS);
+            }
+        }
     }
 
 	[Serializable]
 	public class CalculationOptionsEnhance : ICalculationOptionBase
 	{
+        public bool GlyphFS { get; set; }
         public bool GlyphFT { get; set; }
         public bool GlyphLL { get; set; }
         public bool GlyphLB { get; set; }
@@ -244,7 +254,6 @@ namespace Rawr
         public bool GlyphSS { get; set; }
         public bool GlyphWF { get; set; }
         public bool BaseStatOption { get; set; }
-        public bool Patch3_1 { get; set; }
        
         public string GetXml()
 		{
@@ -264,6 +273,8 @@ namespace Rawr
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
-
+        public bool Patch3_1 = true;
+       
+        
     }
 }

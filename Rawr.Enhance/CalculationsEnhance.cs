@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace Rawr
 {
@@ -147,7 +149,7 @@ namespace Rawr
                     "Basic Stats:Melee Crit",
                     "Basic Stats:Spell Crit",
                     "Basic Stats:Spellpower",
-					"Basic Stats:Expertise Rating",
+					"Basic Stats:Total Expertise",
 					"Basic Stats:Haste Rating",
 					"Basic Stats:Armour Pen Rating",
 					"Complex Stats:Avoided Attacks",
@@ -303,7 +305,9 @@ namespace Rawr
             float critMultiplierMelee = 2;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
             float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon;
-            int stormstrikeSpeed = 10 - (1 * character.ShamanTalents.ImprovedStormstrike);
+            int stormstrikeSpeed = 10;
+            if (!calcOpts.Patch3_1)
+                stormstrikeSpeed -= (1 * character.ShamanTalents.ImprovedStormstrike);
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
                 case 1:
@@ -338,7 +342,7 @@ namespace Rawr
             
             //totem procs
             stats.HasteRating += stats.LightningBoltHasteProc_15_45 * 10f / 55f; // exact copy of Elemental usage for totem (relic)
-            stats.HasteRating += stats.TotemSSHaste * 6f / (10f - character.ShamanTalents.ImprovedStormstrike);
+            stats.HasteRating += stats.TotemSSHaste * 6f / stormstrikeSpeed;
             stats.SpellPower += stats.TotemShockSpellPower;
             stats.AttackPower += stats.TotemLLAttackPower + stats.TotemShockAttackPower;
 
@@ -372,16 +376,14 @@ namespace Rawr
             ////////////////////////////
 
 			#region Damage Model
+            if (calcOpts.Patch3_1)
+                stats.ArmorPenetrationRating *= 1.25f;
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
 				stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
-            float expertiseBonus = stats.Expertise * 0.0025f;
-            if (calcOpts.Patch3_1)
-                expertiseBonus += 1.25f * stats.ExpertiseRating / 3278.998947f;
-            else
-                expertiseBonus += stats.ExpertiseRating / 3278.998947f;
+            float expertiseBonus = stats.Expertise * 0.0025f + stats.ExpertiseRating / 3278.998947f;
             float glancingRate = 0.24f;
 
             float meleeCritModifier = stats.PhysicalCrit;
@@ -405,6 +407,8 @@ namespace Rawr
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
             float hasteBonus = stats.HasteRating / 3278.998947f;
+            if (calcOpts.Patch3_1)
+                hasteBonus *= 1.3f;
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
@@ -601,7 +605,10 @@ namespace Rawr
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
-            float dpsDogs = ((375f + .3f * APDPS) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
+            float dpsDogs = 0f;
+            float bonusFSattackpower = calcOpts.GlyphFS ? attackPower * .3f : 0f;
+            if (character.ShamanTalents.FeralSpirit == 1)
+                dpsDogs = ((375f + .3f * APDPS + bonusFSattackpower / 14f) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
             #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
@@ -624,6 +631,7 @@ namespace Rawr
             calculatedStats.URUptime = urUptime  * 100f;
             calculatedStats.FlurryUptime = flurryUptime * 100f;
             calculatedStats.SecondsTo5Stack = secondsToFiveStack;
+            calculatedStats.TotalExpertise = (float) Math.Floor(expertiseBonus * 400f + 0.0001);
             
             calculatedStats.SwingDamage = dpsMelee;
             calculatedStats.Stormstrike = dpsSS;
@@ -643,19 +651,23 @@ namespace Rawr
         {
             float yellowAttacksPerSecond = 0f;
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            switch (character.ShamanTalents.ImprovedStormstrike)
+            if (calcOpts.Patch3_1)
+                yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
+            else 
             {
-                case 0:
-                    // 3+5 etc is number of SS and number of LL per time interval
-                    yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
-                    break;
-                case 1:
-                    yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
-                    break;
-                case 2:
-                    yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
-                    break;
-
+                switch (character.ShamanTalents.ImprovedStormstrike)
+                {
+                    case 0:
+                        // 3+5 etc is number of SS and number of LL per time interval
+                        yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
+                        break;
+                    case 1:
+                        yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
+                        break;
+                    case 2:
+                        yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
+                        break;
+                }
             }
             float WFProcChance = 1f / 6f;
             if (calcOpts.GlyphWF)
@@ -784,9 +796,7 @@ namespace Rawr
             int MQ = character.ShamanTalents.MentalQuickness;
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
             if (calcOpts.Patch3_1)
-            {
                 statsTotal.Expertise = 3 * character.ShamanTalents.UnleashedRage;
-            }
             return statsTotal;
 		}
         #endregion
@@ -1002,7 +1012,14 @@ namespace Rawr
 			set { _targetLevel = value; }
 		}
 
-		private float _avoidedAttacks;
+        private float _totalExpertise;
+        public float TotalExpertise
+        {
+            get { return _totalExpertise; }
+            set { _totalExpertise = value; }
+        }
+        
+        private float _avoidedAttacks;
 		public float AvoidedAttacks
 		{
 			get { return _avoidedAttacks; }
@@ -1222,10 +1239,17 @@ namespace Rawr
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
 
-            dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
+
+            dictValues.Add("Total Expertise",
+                String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise, {2} Expertise Rating, {3}% Dodged" : 
+                                                     "{0}*{1} Expertise, {2} Expertise Rating, {3}% Dodged"),
+                TotalExpertise.ToString("F0", CultureInfo.InvariantCulture),
+                BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
+                BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
+                DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed",
+            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Dodged, {2}% Missed",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
                         DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
                         MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
