@@ -296,9 +296,9 @@ namespace Rawr.Mage
                         }
                     }
                 }
-            } while (round < sizeLimit && leafNodes.Count > 0);
+            } while (round < sizeLimit && leafNodes.Count > 0 && !cancellationPending);
 
-            if (round < sizeLimit) System.Diagnostics.Trace.WriteLine("Full search complete at round " + round);
+            if (round < sizeLimit && !cancellationPending) System.Diagnostics.Trace.WriteLine("Full search complete at round " + round);
 
             if (leafNodes.Count == 0 && incumbent != null)
             {
@@ -488,7 +488,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-            } while (round < sizeLimit);
+            } while (round < sizeLimit && !cancellationPending);
 
             lp = incumbent;
             if (lp == null)
@@ -605,7 +605,7 @@ namespace Rawr.Mage
                         currentNode = currentNode.Children[0];
                     }
                 }
-            } while (round < sizeLimit && probeRound < 100);
+            } while (round < sizeLimit && probeRound < 100 && !cancellationPending);
             // don't spend too much time on a single probe, hope another branch will give something
             currentNode = store;
         }
@@ -664,7 +664,7 @@ namespace Rawr.Mage
                     break;
                 }
                 valid = IsLpValid();
-            } while (heap.Count > 0 && !valid);
+            } while (heap.Count > 0 && !valid && !cancellationPending);
             if (valid)
             {
                 System.Diagnostics.Trace.WriteLine("Full search complete at round = " + heap.Count);

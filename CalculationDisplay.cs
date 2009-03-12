@@ -102,9 +102,9 @@ namespace Rawr
 			this.ResumeLayout();
 		}
 
-		public void SetCalculations(CharacterCalculationsBase characterCalculations)
+		public void SetCalculations(Dictionary<string, string> displayCalculationValues)
 		{
-			foreach (KeyValuePair<string, string> kvp in characterCalculations.GetCharacterDisplayCalculationValues())
+            foreach (KeyValuePair<string, string> kvp in displayCalculationValues)
 			{
 				string[] valueSplit = kvp.Value.Split('*');
 				string value = valueSplit[0];

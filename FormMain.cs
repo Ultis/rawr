@@ -10,6 +10,7 @@ using System.Xml;
 using Rawr.Forms;
 using Rawr.Forms.Utilities;
 using System.IO;
+using System.Threading;
 
 namespace Rawr
 {
@@ -92,6 +93,9 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
 			Version version = System.Reflection.Assembly.GetCallingAssembly().GetName().Version;
 			_formatWindowTitle = string.Format(_formatWindowTitle, version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString());
+
+            asyncCalculationStart = new AsynchronousDisplayCalculationDelegate(AsyncCalculationStart);
+            asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 
 			LoadModel(ConfigModel);
 			InitializeComponent();
@@ -291,6 +295,53 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 		//    _loadingCharacter = false;
 		//}
 
+        private delegate void AsynchronousDisplayCalculationDelegate(CharacterCalculationsBase calculations, AsyncOperation asyncCalculation);
+
+        private class AsyncCalculationResult
+        {
+            public CharacterCalculationsBase Calculations;
+            public Dictionary<string, string> DisplayCalculationValues;
+        }
+
+        AsynchronousDisplayCalculationDelegate asyncCalculationStart;
+        SendOrPostCallback asyncCalculationCompleted;
+        AsyncOperation asyncCalculation;
+
+        private void AsyncCalculationStart(CharacterCalculationsBase calculations, AsyncOperation asyncCalculation)
+        {
+            Dictionary<string, string> result = calculations.GetAsynchronousCharacterDisplayCalculationValues();
+            asyncCalculation.PostOperationCompleted(asyncCalculationCompleted, new AsyncCalculationResult() { Calculations = calculations, DisplayCalculationValues = result });
+        }
+
+        private void AsyncCalculationCompleted(object arg)
+        {
+            AsyncCalculationResult result = (AsyncCalculationResult)arg;
+            if (result.DisplayCalculationValues != null && result.Calculations == _calculatedStats)
+            {
+                calculationDisplay1.SetCalculations(result.DisplayCalculationValues);
+                // refresh chart if it's custom chart
+                foreach (ToolStripItem item in toolStripDropDownButtonSlot.DropDownItems)
+                {
+                    if (item is ToolStripMenuItem && (item as ToolStripMenuItem).Checked && item.Tag != null)
+                    {
+                        itemComparison1.DisplayMode = ComparisonGraph.GraphDisplayMode.Subpoints;
+                        string[] tag = item.Tag.ToString().Split('.');
+                        switch (tag[0])
+                        {
+                            case "Custom":
+                                itemComparison1.LoadCustomChart(tag[1]);
+                                break;
+                            case "CustomRendered":
+                                itemComparison1.LoadCustomRenderedChart(tag[1]);
+                                break;
+                        }
+                        break;
+                    }
+                }
+                asyncCalculation = null;
+            }
+        }
+
 		void _character_ItemsChanged(object sender, EventArgs e)
 		{
             if (this.InvokeRequired)
@@ -299,7 +350,14 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
                 return;
             }
 			this.Cursor = Cursors.WaitCursor;
-			_unsavedChanges = true;
+            if (asyncCalculation != null)
+            {
+                CharacterCalculationsBase oldCalcs = _calculatedStats;
+                _calculatedStats = null;
+                oldCalcs.CancelAsynchronousCharacterDisplayCalculation();
+                asyncCalculation = null;
+            }			
+            _unsavedChanges = true;
 
 			//itemButtonOffHand.Enabled = _character.MainHand == null || _character.MainHand.Slot != Item.ItemSlot.TwoHand;
 			if (!_loadingCharacter)
@@ -321,7 +379,12 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
 			LoadComparisonData();
 			FormItemSelection.CurrentCalculations = calcs;
-			calculationDisplay1.SetCalculations(calcs);
+            calculationDisplay1.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
+            if (calcs.RequiresAsynchronousDisplayCalculation)
+            {
+                asyncCalculation = AsyncOperationManager.CreateOperation(null);
+                asyncCalculationStart.BeginInvoke(calcs, asyncCalculation, null, null);
+            }
 
 			this.Cursor = Cursors.Default;
 			//and the ground below grew colder / as they put you down inside

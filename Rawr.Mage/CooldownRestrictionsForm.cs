@@ -21,7 +21,10 @@ namespace Rawr.Mage
             {
                 character = value;
                 CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-                textBoxCooldownRestrictions.Text = Regex.Replace(calculationOptions.CooldownRestrictions, "(\r|\n)+", Environment.NewLine);
+                if (calculationOptions.CooldownRestrictions != null)
+                {
+                    textBoxCooldownRestrictions.Text = Regex.Replace(calculationOptions.CooldownRestrictions, "(\r|\n)+", Environment.NewLine);
+                }
             }
         }
 

@@ -1181,6 +1181,37 @@ namespace Rawr
 		public abstract Dictionary<string, string> GetCharacterDisplayCalculationValues();
 
         /// <summary>
+        /// When true the application will first call GetCharacterDisplayCalculationValues to populate
+        /// the display with temporary values and start asynchronous call to GetAsynchronousCharacterDisplayCalculationValues.
+        /// When the call is complete it will refresh the display with updated values. If character is invalidated
+        /// before calculations are complete the old call will be aborted.
+        /// </summary>
+        public virtual bool RequiresAsynchronousDisplayCalculation
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Same as GetCharacterDisplayCalculationValues, but used for long calculations.
+        /// </summary>
+        public virtual Dictionary<string, string> GetAsynchronousCharacterDisplayCalculationValues()
+        {
+            return GetCharacterDisplayCalculationValues();
+        }
+
+        /// <summary>
+        /// Called if character is invalidated before calculations are complete. Calling this should
+        /// terminate call to GetAsynchronousCharacterDisplayCalculationValues as soon as possible.
+        /// It is ok if GetAsynchronousCharacterDisplayCalculationValues returns null in this case.
+        /// </summary>
+        public virtual void CancelAsynchronousCharacterDisplayCalculation()
+        {
+        }
+
+        /// <summary>
         /// List of buffs that were automatically activated by the model during GetCharacterCalculations().
         /// </summary>
         private List<Buff> _autoActivatedBuffs = new List<Buff>();

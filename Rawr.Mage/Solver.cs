@@ -168,7 +168,16 @@ namespace Rawr.Mage
         private int rowSegmentThreat = -1;
         #endregion
 
-        private Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, bool advancedConstraints, string armor)
+        private bool useIncrementalOptimizations;
+        private bool useGlobalOptimizations;
+        private bool cancellationPending;
+
+        public void CancelAsync()
+        {
+            cancellationPending = true;
+        }
+
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, bool advancedConstraints, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
         {
             this.character = character;
             this.talents = character.MageTalents;
@@ -177,6 +186,8 @@ namespace Rawr.Mage
             this.advancedConstraints = advancedConstraints;
             this.integralMana = integralMana;
             this.armor = armor;
+            this.useIncrementalOptimizations = useIncrementalOptimizations;
+            this.useGlobalOptimizations = useGlobalOptimizations;
             requiresMIP = segmentCooldowns || integralMana;
         }
 
@@ -287,13 +298,13 @@ namespace Rawr.Mage
             return total;
         }
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, bool advancedConstraints)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, bool advancedConstraints, bool useIncrementalOptimizations, bool useGlobalOptimizations)
         {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraints, armor);
-            return solver.PrivateGetCharacterCalculations(additionalItem, calculations);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraints, armor, useIncrementalOptimizations, useGlobalOptimizations);
+            return solver.GetCharacterCalculations(additionalItem, calculations);
         }
 
-        private CharacterCalculationsMage PrivateGetCharacterCalculations(Item additionalItem, CalculationsMage calculations)
+        public CharacterCalculationsMage GetCharacterCalculations(Item additionalItem, CalculationsMage calculations)
         {
             List<Buff> autoActivatedBuffs = new List<Buff>();
             Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
@@ -1616,7 +1627,7 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Spells
-                if (calculationOptions.IncrementalOptimizations)
+                if (useIncrementalOptimizations)
                 {
                     int lastSegment = -1;
                     for (int index = 0; index < calculationOptions.IncrementalSetStateIndexes.Length; index++)
@@ -1768,7 +1779,7 @@ namespace Rawr.Mage
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : Math.Max(((int)((calculationOptions.FightDuration - 60.0) / 60.0)) * 0.5 + 1.5, calculationResult.MaxManaGem));
             }
-            else if (flameCapAvailable && !(!calculationOptions.SmartOptimization && talents.SpellPower > 0))
+            else if (flameCapAvailable && !(!useGlobalOptimizations && talents.SpellPower > 0))
             {
                 lp.SetRHSUnsafe(rowManaGemFlameCap, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : ((int)(calculationOptions.FightDuration / 180.0 + 2.0 / 3.0)) * 3.0 / 2.0);
             }
@@ -2497,7 +2508,7 @@ namespace Rawr.Mage
                 }
                 if (calculationOptions.MaintainScorch && talents.ImprovedScorch > 0)
                 {
-                    if (calculationOptions.SmartOptimization)
+                    if (useGlobalOptimizations)
                     {
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
@@ -2569,7 +2580,7 @@ namespace Rawr.Mage
                 }
                 else if (calculationOptions.MaintainSnare && talents.Slow > 0)
                 {
-                    if (calculationOptions.SmartOptimization)
+                    if (useGlobalOptimizations)
                     {
                         if (talents.ArcaneBarrage > 0)
                         {
@@ -2602,7 +2613,7 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    if (calculationOptions.SmartOptimization)
+                    if (useGlobalOptimizations)
                     {
                         if (talents.EmpoweredFire > 0)
                         {
@@ -2775,7 +2786,7 @@ namespace Rawr.Mage
             if (trinket2Available) availableCooldownMask |= Cooldown.Trinket2;
             if (manaGemEffectAvailable) availableCooldownMask |= Cooldown.ManaGemEffect;
             if (powerInfusionAvailable) availableCooldownMask |= Cooldown.PowerInfusion;
-            if (calculationOptions.IncrementalOptimizations)
+            if (useIncrementalOptimizations)
             {
                 for (int incrementalSortedIndex = 0; incrementalSortedIndex < calculationOptions.IncrementalSetSortedStates.Length; incrementalSortedIndex++)
                 {

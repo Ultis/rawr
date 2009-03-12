@@ -39,6 +39,8 @@ namespace Rawr.Mage
             }
 
             loading = false;
+
+            SolverLogForm.Instance.ToString(); // force create it on main thread
         }
 
         private void checkBoxSMP_CheckedChanged(object sender, EventArgs e)
@@ -225,6 +227,13 @@ namespace Rawr.Mage
                 //cooldownRestrictions.bindingSourceCalculationOptions.DataSource = calculationOptions;
             }
             cooldownRestrictions.Show();
+            cooldownRestrictions.BringToFront();
+        }
+
+        private void buttonAdvancedSolverLog_Click(object sender, EventArgs e)
+        {
+            SolverLogForm.Instance.Show();
+            SolverLogForm.Instance.BringToFront();
         }
 	}
 }

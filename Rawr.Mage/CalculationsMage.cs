@@ -241,11 +241,6 @@ namespace Rawr.Mage
 				character.Name, character.Region, character.Realm, character.Race);
 
             CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
-            //CharacterCalculationsMage calculations;
-            //bool savedIncrementalOptimizations = CalculationOptions.IncrementalOptimizations;
-            //CalculationOptions.IncrementalOptimizations = false;
-            //calculations = Solver.GetCharacterCalculations(character, null, CalculationOptions, this, CalculationOptions.IncrementalSetArmor, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana);
-            //CalculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
 
             if (CalculationOptions.Calculations == null || CalculationOptions.Calculations.DisplayCalculationValues == null)
             {
@@ -358,28 +353,34 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem)
         {
-            return GetCharacterCalculations(character, additionalItem, false);
+            return GetCharacterCalculations(character, additionalItem, false, false);
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet, bool ignoreIncrementalSet)
+        {
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            return GetCharacterCalculations(character, additionalItem, computeIncrementalSet, ignoreIncrementalSet, calculationOptions.SmartOptimization);
+        }
+
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool computeIncrementalSet, bool ignoreIncrementalSet, bool useGlobalOptimizations)
         {
             CharacterCalculationsBase ret;
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
-            if (calculationOptions.IncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
-            if (computeIncrementalSet) calculationOptions.IncrementalOptimizations = false;
-            if (calculationOptions.IncrementalOptimizations && !character.DisableBuffAutoActivation)
+            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && !ignoreIncrementalSet;
+            if (useIncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
+            if (computeIncrementalSet) useIncrementalOptimizations = false;
+            if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor);
+                ret = GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations);
             }
             else if (calculationOptions.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
-                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor");
-                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor");
+                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations);
+                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations);
                 CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
                 if (calculationOptions.MeleeDps + calculationOptions.MeleeDot + calculationOptions.PhysicalDps + calculationOptions.PhysicalDot + calculationOptions.FrostDps + calculationOptions.FrostDot > 0)
                 {
-                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor");
+                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
                 calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
@@ -388,12 +389,11 @@ namespace Rawr.Mage
             }
             else
             {
-                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null);
+                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations);
                 if (!character.DisableBuffAutoActivation) calculationOptions.IncrementalSetArmor = ((CharacterCalculationsMage)calc).MageArmor;
                 if (computeIncrementalSet) StoreIncrementalSet(character, (CharacterCalculationsMage)calc);
                 ret = calc;
             }
-            calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
             return ret;
         }
 
@@ -422,9 +422,9 @@ namespace Rawr.Mage
             calculationOptions.IncrementalSetSortedStates = filteredCooldowns.ToArray();
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
         {
-            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraints);
+            return Solver.GetCharacterCalculations(character, additionalItem, calculationOptions, this, armor, calculationOptions.ComparisonSegmentCooldowns, calculationOptions.ComparisonIntegralMana, calculationOptions.ComparisonAdvancedConstraints, useIncrementalOptimizations, useGlobalOptimizations);
         }
 
         public Stats GetRawStats(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, List<Buff> autoActivatedBuffs, string armor)
@@ -819,11 +819,6 @@ namespace Rawr.Mage
                     MageTalents talents = character.MageTalents;
 
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-                    bool savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
-                    bool savedSmartOptimizations = calculationOptions.SmartOptimization;
-
-                    calculationOptions.IncrementalOptimizations = false;
-                    calculationOptions.SmartOptimization = false;
 
                     Type t = typeof(MageTalents);
                     foreach (System.Reflection.PropertyInfo info in t.GetProperties())
@@ -840,7 +835,7 @@ namespace Rawr.Mage
                             if (currentPoints > 0)
                             {
                                 info.SetValue(talents, 0, null);
-                                calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                                calc = GetCharacterCalculations(character, null, false, true, false) as CharacterCalculationsMage;
 
                                 comparison = CreateNewComparisonCalculation();
                                 comparison.Name = string.Format("{0} ({1})", talent, currentPoints);
@@ -859,7 +854,7 @@ namespace Rawr.Mage
                             if (currentPoints < maxPoints)
                             {
                                 info.SetValue(talents, maxPoints, null);
-                                calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                                calc = GetCharacterCalculations(character, null, false, true, false) as CharacterCalculationsMage;
 
                                 comparison = CreateNewComparisonCalculation();
                                 comparison.Name = string.Format("{0} ({1})", talent, maxPoints);
@@ -879,19 +874,11 @@ namespace Rawr.Mage
                         }
                     }
 
-                    calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
-                    calculationOptions.SmartOptimization = savedSmartOptimizations;
-
                     return comparisonList.ToArray();
                 case "Glyphs":
                     calculationOptions = character.CalculationOptions as CalculationOptionsMage;
 
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
-                    savedIncrementalOptimizations = calculationOptions.IncrementalOptimizations;
-                    savedSmartOptimizations = calculationOptions.SmartOptimization;
-
-                    calculationOptions.IncrementalOptimizations = false;
-                    calculationOptions.SmartOptimization = true;
 
                     for (int index = 0; index < GlyphList.Length; index++)
                     {
@@ -901,7 +888,7 @@ namespace Rawr.Mage
                         if (glyphEnabled)
                         {
                             calculationOptions.SetGlyphByName(glyph, false);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                            calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
                             comparison.Name = GlyphListFriendly[index];
@@ -919,7 +906,7 @@ namespace Rawr.Mage
                         else
                         {
                             calculationOptions.SetGlyphByName(glyph, true);
-                            calc = GetCharacterCalculations(character) as CharacterCalculationsMage;
+                            calc = GetCharacterCalculations(character, null, false, true, true) as CharacterCalculationsMage;
 
                             comparison = CreateNewComparisonCalculation();
                             comparison.Name = GlyphListFriendly[index];
@@ -938,9 +925,6 @@ namespace Rawr.Mage
                         calculationOptions.SetGlyphByName(glyph, glyphEnabled);
                     }
 
-                    calculationOptions.IncrementalOptimizations = savedIncrementalOptimizations;
-                    calculationOptions.SmartOptimization = savedSmartOptimizations;
-
                     return comparisonList.ToArray();
                 case "Talent Specs":
                     /*currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
@@ -958,11 +942,6 @@ namespace Rawr.Mage
                     comparisonList.Add(comparison);*/
 
                     Character charClone = character.Clone();
-                    calculationOptions = charClone.CalculationOptions as CalculationOptionsMage;
-                    calculationOptions = calculationOptions.Clone();
-                    charClone.CalculationOptions = calculationOptions;
-                    calculationOptions.IncrementalOptimizations = false;
-                    calculationOptions.SmartOptimization = false;
 
                     System.Windows.Forms.Control talentPicker = (((System.Windows.Forms.TabControl)(_calculationOptionsPanel.Parent.Parent)).TabPages[1].Controls[0]);
                     //        public List<SavedTalentSpec> SpecsFor(Character.CharacterClass charClass)
@@ -971,7 +950,7 @@ namespace Rawr.Mage
                     {
                         charClone.MageTalents = (MageTalents)(savedTalentSpec.GetType().GetMethod("TalentSpec").Invoke(savedTalentSpec, new object[] { }));
 
-                        calc = GetCharacterCalculations(charClone) as CharacterCalculationsMage;
+                        calc = GetCharacterCalculations(charClone, null, false, true, false) as CharacterCalculationsMage;
 
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = savedTalentSpec.ToString();
@@ -1024,7 +1003,7 @@ namespace Rawr.Mage
                     };
 
             // offset might be very far from current position, so make sure to force incremental set recalc
-            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation) as CharacterCalculationsMage;
+            baseCalc = GetCharacterCalculations(character, new Item() { Stats = offset }, forceIncrementalBaseRecalculation, false) as CharacterCalculationsMage;
             baseStats = baseCalc.BaseStats;
 
             for (int index = 0; index < statList.Length; index++)
@@ -1551,7 +1530,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true);
+                        GetCharacterCalculations(character, null, true, false);
                     }
 
                     break;
@@ -1666,7 +1645,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true);
+                        GetCharacterCalculations(character, null, true, false);
                     }
 
                     break;
@@ -1782,7 +1761,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true);
+                        GetCharacterCalculations(character, null, true, false);
                     }
 
                     break;
@@ -1897,7 +1876,7 @@ namespace Rawr.Mage
                     // restore incremental base
                     if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
                     {
-                        GetCharacterCalculations(character, null, true);
+                        GetCharacterCalculations(character, null, true, false);
                     }
 
                     break;
@@ -2013,7 +1992,7 @@ namespace Rawr.Mage
 					// restore incremental base
 					if (((CalculationOptionsMage)character.CalculationOptions).IncrementalOptimizations)
 					{
-						GetCharacterCalculations(character, null, true);
+						GetCharacterCalculations(character, null, true, false);
 					}
 
 					break;

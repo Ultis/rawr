@@ -553,7 +553,7 @@ namespace Rawr.Mage
 
         private Spell[] Spells = new Spell[SpellIdCount];
 
-        //private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>(); // profiling doesn't show any noticeable benefit using plain array, so use dictionary to save on size
+        //private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
 
         public void SetSpell(SpellId spellId, Spell spell)
         {

@@ -42,6 +42,8 @@
             this.textBoxEvocationWeapon = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label103 = new System.Windows.Forms.Label();
+            this.checkBoxPowerInfusion = new System.Windows.Forms.CheckBox();
             this.label91 = new System.Windows.Forms.Label();
             this.checkBoxPotionOfSpeed = new System.Windows.Forms.CheckBox();
             this.textBoxFocusMagicRate = new System.Windows.Forms.TextBox();
@@ -265,8 +267,7 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
-            this.label103 = new System.Windows.Forms.Label();
-            this.checkBoxPowerInfusion = new System.Windows.Forms.CheckBox();
+            this.buttonAdvancedSolverLog = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
@@ -465,6 +466,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Spells & Buffs";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label103
+            // 
+            this.label103.AutoSize = true;
+            this.label103.Location = new System.Drawing.Point(0, 69);
+            this.label103.Name = "label103";
+            this.label103.Size = new System.Drawing.Size(87, 13);
+            this.label103.TabIndex = 198;
+            this.label103.Text = "Power Infusion: *";
+            this.toolTipMage.SetToolTip(this.label103, "Enable use of Power Infusion (one priest only).");
+            // 
+            // checkBoxPowerInfusion
+            // 
+            this.checkBoxPowerInfusion.AutoSize = true;
+            this.checkBoxPowerInfusion.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "PowerInfusionAvailable", true));
+            this.checkBoxPowerInfusion.Location = new System.Drawing.Point(142, 69);
+            this.checkBoxPowerInfusion.Name = "checkBoxPowerInfusion";
+            this.checkBoxPowerInfusion.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPowerInfusion.TabIndex = 197;
+            this.checkBoxPowerInfusion.UseVisualStyleBackColor = true;
             // 
             // label91
             // 
@@ -2381,6 +2402,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.buttonAdvancedSolverLog);
             this.tabPage4.Controls.Add(this.label102);
             this.tabPage4.Controls.Add(this.checkBoxEnableHastedEvocation);
             this.tabPage4.Controls.Add(this.buttonCooldownRestrictionsEditor);
@@ -2779,25 +2801,15 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
-            // label103
+            // buttonAdvancedSolverLog
             // 
-            this.label103.AutoSize = true;
-            this.label103.Location = new System.Drawing.Point(0, 69);
-            this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(87, 13);
-            this.label103.TabIndex = 198;
-            this.label103.Text = "Power Infusion: *";
-            this.toolTipMage.SetToolTip(this.label103, "Enable use of Power Infusion (one priest only).");
-            // 
-            // checkBoxPowerInfusion
-            // 
-            this.checkBoxPowerInfusion.AutoSize = true;
-            this.checkBoxPowerInfusion.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "PowerInfusionAvailable", true));
-            this.checkBoxPowerInfusion.Location = new System.Drawing.Point(142, 69);
-            this.checkBoxPowerInfusion.Name = "checkBoxPowerInfusion";
-            this.checkBoxPowerInfusion.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPowerInfusion.TabIndex = 197;
-            this.checkBoxPowerInfusion.UseVisualStyleBackColor = true;
+            this.buttonAdvancedSolverLog.Location = new System.Drawing.Point(6, 432);
+            this.buttonAdvancedSolverLog.Name = "buttonAdvancedSolverLog";
+            this.buttonAdvancedSolverLog.Size = new System.Drawing.Size(197, 23);
+            this.buttonAdvancedSolverLog.TabIndex = 193;
+            this.buttonAdvancedSolverLog.Text = "Advanced Solver Log";
+            this.buttonAdvancedSolverLog.UseVisualStyleBackColor = true;
+            this.buttonAdvancedSolverLog.Click += new System.EventHandler(this.buttonAdvancedSolverLog_Click);
             // 
             // CalculationOptionsPanelMage
             // 
@@ -3066,6 +3078,7 @@
         private System.Windows.Forms.CheckBox checkBoxEnableHastedEvocation;
         private System.Windows.Forms.Label label103;
         private System.Windows.Forms.CheckBox checkBoxPowerInfusion;
+        private System.Windows.Forms.Button buttonAdvancedSolverLog;
 
     }
 }
