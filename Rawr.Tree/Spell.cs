@@ -110,7 +110,7 @@ namespace Rawr.Tree
             applyHaste();
         }
 
-        public virtual void calculateNaturesGrace(float critChance)
+        public virtual void calculateOldNaturesGrace(float critChance)
         {
             if (castTimeBeforeHaste > 0)
             {
@@ -119,6 +119,26 @@ namespace Rawr.Tree
             }
         }
 
+        public virtual void calculateNewNaturesGrace(float critChance)
+        {
+            if (castTimeBeforeHaste > 0)
+            {
+                applyHaste(); // calculate cast time
+                /**
+                 * Actually, if you have low primary heal usage, this will be a lot less!
+                 * But! Often, primary heal usage is bursty in nature.
+                 * spellsAffected = (int)(3f / castTime)
+                 */
+                float pNoBuff = 1f;
+                for (int k = 0; k < 3f / castTime; k++)
+                {
+                    pNoBuff *= 1 - NGmod * critChance;
+                }
+                speed *= (1 - pNoBuff) * 1.2f;
+                applyHaste();
+            }
+        }
+        
         protected virtual void applyHaste()
         {
             gcd = gcdBeforeHaste / speed;

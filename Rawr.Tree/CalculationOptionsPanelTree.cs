@@ -15,22 +15,23 @@ namespace Rawr.Tree
             // Set about text
             tbModuleNotes.Text =
                 "Notes on trinkets:\r\n"+
-                "Trinkets are hard to model; some trinkets can be much better if you use them in a smart way; we expect On-Use trinkets are used whenever on cooldown, there is a setting (average use of spellpower procs) that you can use to influence the value of these type of trinkets.\r\n"+
+                "Some trinkets are hard to model. They can be much better if you use them in a smart way. They are modelled by taking the expected uptime or number of procs and converting it to an average value.\r\n"+
                 "\r\n" +
-                "Implemented trinkets:\r\n" +
-                "Forethought Talisman (expected to proc every minute)\r\n" +
+                "Trinket notes:\r\n" +
                 "Majestic Dragon Figurine (expected 80% uptime after going out of mana)\r\n" +
-                "Forge Ember (expected uptime 17%, it has 10% chance to proc)\r\n" +
-                "Dying Curse (expected uptime 18%, it has 15% chance to proc)\r\n" +
-                "Illustration of the Dragon Soul\r\n" +
-                "Talisman of Troll Divinity (expected to add 58 spell damage on average, keep in mind that it also helps other healers so it is probably worth more)\r\n" +
-                "Alchemist Stones (they add 40% to the potion effect, mana potions are modelled as extra mana at the start of the fight)\r\n" +
-                "Haste procs like Embrace of the Spider are modelled with 17% uptime)\r\n" +
+                "Talisman of Troll Divinity (keep in mind that it also helps other healers so it is probably worth more)\r\n" +
+                "Alchemist Stones (mana potions are modelled as extra mana at the start of the fight)\r\n" +
+                "\r\n"+
+                "Implemented: Flow of Knowledge, Forethought Talisman, Forge Ember, Dying Curse, Illustration of the Dragon Soul, "+
+                "Soul of the Dead, Je'tze's Bell, Spark of Life, Various Figurines, The Egg of Mortal Essence, "+
+                "Embrace of the Spider, Darkmoon Card: Blue Dragon, Darkmoon Card: Greatness, " +
+                "Spirit-World Glass, Living Ice Crystals, "+
+                "Various On Use Spell Power trinkets\r\n"+
                 "\r\n"+
                 "Currently unmodelled trinkets:\r\n" +
-                "Darkmoon Card: Blue Dragon, various Figurines, Soul Preserver\r\n"+
+                "Darkmoon Card: Illusion, Soul Preserver\r\n"+
                 "\r\n"+
-                "HealBurst is the HPS you can expect with your current rotation until you go out of mana, but with 100% casting Primary healing spell outside keeping HoTs on the tank(s).\r\n"+
+                "HealBurst is the maximum HPS of your current rotation until you go out of mana (with 100% casting Primary healing spells outside keeping HoTs on the tanks).\r\n"+
                 "HealSustained is the HPS from your current rotation for the entire fight.";
         }
 
@@ -79,7 +80,7 @@ namespace Rawr.Tree
             lblPrimaryHeal.Text = "Primary Heal Usage: " + tbPrimaryHealFrac.Value + "%";
 
             tbOOMPenalty.Value = calcOpts.OOMPenalty;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .2f;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .05f;
             cbApplyMore.Checked = calcOpts.PenalizeEverything;
 
             loading = false;
@@ -231,7 +232,7 @@ namespace Rawr.Tree
             if (loading) return;
             CalculationOptionsTree calcOpts = Character.CalculationOptions as CalculationOptionsTree;
             calcOpts.OOMPenalty = tbOOMPenalty.Value;
-            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .2f;
+            lblOOMPenalty.Text = "Penalty for going OOM: " + tbOOMPenalty.Value * .05f;
             Character.OnCalculationsInvalidated();
         }
 
@@ -262,7 +263,7 @@ namespace Rawr.Tree
         public int MainSpellFraction = 60;
         public int Innervates = 1;
 
-        public int OOMPenalty = 1;
+        public int OOMPenalty = 6;
 
         public bool PenalizeEverything = false;
 

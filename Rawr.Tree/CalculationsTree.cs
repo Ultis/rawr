@@ -369,7 +369,14 @@ namespace Rawr.Tree
             #endregion
 
             #region Primary Heal
-            primaryHeal.calculateNaturesGrace(primaryHeal.CritPercent / 100f);
+            if (calcOpts.newManaRegen)
+            {
+                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
+            }
+            else
+            {
+                primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);
+            }            
             float tpsHealing = 1f - (hotsCastTime + wgCastTime);
             float tpsHeal100 = tpsHealing;
             tpsHealing *= primaryFrac;
@@ -687,7 +694,7 @@ namespace Rawr.Tree
             if (rot.TimeToOOM < rot.TotalTime)
             {
                 float frac = rot.TimeToOOM / rot.TotalTime;
-                float mod = (float)Math.Pow(frac, 1 + 0.2f * calcOpts.OOMPenalty) / frac;
+                float mod = (float)Math.Pow(frac, 1 + 0.05f * calcOpts.OOMPenalty) / frac;
                 calculatedStats.SustainedPoints *= mod;
                 if (calcOpts.PenalizeEverything)
                 {
@@ -721,26 +728,30 @@ namespace Rawr.Tree
             statsTalents.BonusStrengthMultiplier = 0.01f * character.DruidTalents.SurvivalOfTheFittest * 2;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
-            //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
             Stats statsTotal = statsBaseGear + statsBuffs + statsRace + statsTalents;
 
             statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility = (float)Math.Floor((statsTotal.Agility) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
             statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Intellect = (float)Math.Round((statsTotal.Intellect) * (1 + character.DruidTalents.HeartOfTheWild * 0.04f));
+            statsTotal.Intellect = (float)Math.Floor((statsTotal.Intellect) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
             statsTotal.Spirit += statsTotal.SpiritFor20SecOnUse2Min / 6f;
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
-            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
+            statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild));
+            statsTotal.ExtraSpiritWhileCasting = (float)Math.Floor((statsTotal.ExtraSpiritWhileCasting) * (1 + statsTotal.BonusSpiritMultiplier) * (1 + 0.01f * character.DruidTalents.ImprovedMarkOfTheWild) * (1 + character.DruidTalents.LivingSpirit * 0.05f));
             if (statsTotal.GreatnessProc>0) {
-                // Highest stat
-                if (statsTotal.Spirit>statsTotal.Intellect) {
+                // Highest stat in combat
+                if (statsTotal.Spirit + statsTotal.ExtraSpiritWhileCasting > statsTotal.Intellect)
+                {
                     // spirit proc (Greatness)
                     float extraSpi = statsTotal.GreatnessProc * 15f / 50f;
                     extraSpi *= 1 + statsTotal.BonusSpiritMultiplier;
                     extraSpi *= 1 + character.DruidTalents.LivingSpirit * 0.05f;
+                    extraSpi *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
                     statsTotal.Spirit += (float)Math.Floor(extraSpi);
                 }
                 else {
@@ -748,6 +759,7 @@ namespace Rawr.Tree
                     float extraInt = statsTotal.GreatnessProc * 15f / 50f;
                     extraInt *= 1 + statsTotal.BonusIntellectMultiplier;
                     extraInt *= 1 + character.DruidTalents.HeartOfTheWild * 0.04f;
+                    extraInt *= 1 + character.DruidTalents.ImprovedMarkOfTheWild * 0.01f;
                     statsTotal.Intellect += (float)Math.Floor(extraInt);
                 }
             }
@@ -773,7 +785,7 @@ namespace Rawr.Tree
         private static Stats GetRacialBaseStats(Character.CharacterRace race)
         {
             Stats statsRace = new Stats();
-            statsRace.Mana = TreeConstants.BaseMana; //pulled in an extra class, because i've to know them for spells etc
+            statsRace.Mana = TreeConstants.BaseMana; 
 
             if (race == Character.CharacterRace.NightElf)
             {

@@ -177,7 +177,7 @@
             this.groupBox7.Controls.Add(this.lblFightLength);
             this.groupBox7.Location = new System.Drawing.Point(6, 6);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(277, 433);
+            this.groupBox7.Size = new System.Drawing.Size(277, 412);
             this.groupBox7.TabIndex = 33;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Fight Details";
@@ -185,7 +185,7 @@
             // cbApplyMore
             // 
             this.cbApplyMore.AutoSize = true;
-            this.cbApplyMore.Location = new System.Drawing.Point(9, 403);
+            this.cbApplyMore.Location = new System.Drawing.Point(9, 390);
             this.cbApplyMore.Name = "cbApplyMore";
             this.cbApplyMore.Size = new System.Drawing.Size(180, 17);
             this.cbApplyMore.TabIndex = 56;
@@ -198,11 +198,10 @@
             this.label1.AutoEllipsis = true;
             this.label1.Location = new System.Drawing.Point(6, 344);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(262, 56);
+            this.label1.Size = new System.Drawing.Size(262, 43);
             this.label1.TabIndex = 55;
             this.label1.Text = "The Penalty value will punish going out of mana by scaling down the sustained hea" +
-                "ling points. If you go out of mana earlier or select a higher penalty, the susta" +
-                "ined points will be decreased more.";
+                "ling points. Use this to make mana regeneration suddenly very important.";
             // 
             // tbOOMPenalty
             // 
@@ -392,9 +391,9 @@
             this.cbNewManaRegen.AutoSize = true;
             this.cbNewManaRegen.Location = new System.Drawing.Point(6, 174);
             this.cbNewManaRegen.Name = "cbNewManaRegen";
-            this.cbNewManaRegen.Size = new System.Drawing.Size(187, 17);
+            this.cbNewManaRegen.Size = new System.Drawing.Size(122, 17);
             this.cbNewManaRegen.TabIndex = 51;
-            this.cbNewManaRegen.Text = "Use 3.1 Mana Regen calculations";
+            this.cbNewManaRegen.Text = "Use 3.1 calculations";
             this.cbNewManaRegen.UseVisualStyleBackColor = true;
             this.cbNewManaRegen.CheckedChanged += new System.EventHandler(this.cbNewManaRegen_CheckedChanged);
             // 
