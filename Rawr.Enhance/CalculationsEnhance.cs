@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Globalization;
-using System.Windows.Forms;
-using System.Drawing;
 
 namespace Rawr
 {
@@ -275,6 +273,7 @@ namespace Rawr
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             calculatedStats.BasicStats = stats;
+            calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             
@@ -1005,7 +1004,14 @@ namespace Rawr
 			set { _basicStats = value; }
 		}
 
-		private int _targetLevel;
+        private Stats _buffStats;
+        public Stats BuffStats
+        {
+            get { return _buffStats; }
+            set { _buffStats = value; }
+        }
+
+        private int _targetLevel;
 		public int TargetLevel
 		{
 			get { return _targetLevel; }
