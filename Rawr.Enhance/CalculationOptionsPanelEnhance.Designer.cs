@@ -63,6 +63,7 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbModuleNotes = new System.Windows.Forms.TextBox();
             this.btnEnhSim = new System.Windows.Forms.Button();
+            this.chbPatch3_1 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarNumberOfFerociousInspirations)).BeginInit();
@@ -87,6 +88,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.chbPatch3_1);
             this.tabPage1.Controls.Add(this.chbBaseStatOption);
             this.tabPage1.Controls.Add(this.labelTargetArmorDescription);
             this.tabPage1.Controls.Add(this.comboBoxOffhandImbue);
@@ -511,6 +513,17 @@
             this.btnEnhSim.UseVisualStyleBackColor = true;
             this.btnEnhSim.Click += new System.EventHandler(this.btnEnhSim_Click);
             // 
+            // chbPatch3_1
+            // 
+            this.chbPatch3_1.AutoSize = true;
+            this.chbPatch3_1.Location = new System.Drawing.Point(10, 387);
+            this.chbPatch3_1.Name = "chbPatch3_1";
+            this.chbPatch3_1.Size = new System.Drawing.Size(153, 17);
+            this.chbPatch3_1.TabIndex = 36;
+            this.chbPatch3_1.Text = "Use Patch 3.1 calculations";
+            this.chbPatch3_1.UseVisualStyleBackColor = true;
+            this.chbPatch3_1.CheckedChanged += new System.EventHandler(this.chbPatch3_1_CheckedChanged);
+            // 
             // CalculationOptionsPanelEnhance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -572,6 +585,7 @@
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
+        private System.Windows.Forms.CheckBox chbPatch3_1;
 
     }
 }

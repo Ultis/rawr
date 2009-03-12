@@ -221,6 +221,16 @@ namespace Rawr
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chbPatch3_1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+                calcOpts.Patch3_1 = chbPatch3_1.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
 	[Serializable]
@@ -234,6 +244,7 @@ namespace Rawr
         public bool GlyphSS { get; set; }
         public bool GlyphWF { get; set; }
         public bool BaseStatOption { get; set; }
+        public bool Patch3_1 { get; set; }
        
         public string GetXml()
 		{

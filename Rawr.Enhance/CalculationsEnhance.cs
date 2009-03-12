@@ -377,8 +377,12 @@ namespace Rawr
 
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
-            float expertiseBonus = stats.ExpertiseRating / 3278.998947f; 
-            float glancingRate = 0.25f;
+            float expertiseBonus = stats.Expertise * 0.0025f;
+            if (calcOpts.Patch3_1)
+                expertiseBonus += 1.25f * stats.ExpertiseRating / 3278.998947f;
+            else
+                expertiseBonus += stats.ExpertiseRating / 3278.998947f;
+            float glancingRate = 0.24f;
 
             float meleeCritModifier = stats.PhysicalCrit;
             float baseMeleeCrit = (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS;
@@ -779,6 +783,10 @@ namespace Rawr
 						
             int MQ = character.ShamanTalents.MentalQuickness;
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
+            if (calcOpts.Patch3_1)
+            {
+                statsTotal.Expertise = 3 * character.ShamanTalents.UnleashedRage;
+            }
             return statsTotal;
 		}
         #endregion
@@ -878,6 +886,7 @@ namespace Rawr
 					HitRating = stats.HitRating,
 					Stamina = stats.Stamina,
 					HasteRating = stats.HasteRating,
+                    Expertise = stats.Expertise,
 					ExpertiseRating = stats.ExpertiseRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     ArmorPenetrationRating = stats.ArmorPenetrationRating,
@@ -929,7 +938,7 @@ namespace Rawr
 
 		public override bool HasRelevantStats(Stats stats)
 		{
-			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect +
+			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.Intellect + stats.Expertise +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
                 stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
                 stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength + 
