@@ -555,7 +555,7 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
-        public Stats GetItemStats(Character character, Item additionalItem)
+        public override Stats GetItemStats(Character character, Item additionalItem)
         {
             Stats statsItems = base.GetItemStats(character, additionalItem);
 
