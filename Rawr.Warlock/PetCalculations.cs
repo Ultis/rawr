@@ -120,7 +120,7 @@ namespace Rawr.Warlock
                 if (character.WarlockTalents.EmpoweredImp > 0)
                     specialHit *= 1 + character.WarlockTalents.EmpoweredImp * 0.05f;
                 if (CalculationOptions.GlyphImp)
-                    specialHit *= 1.1f;
+                    specialHit *= 1.2f;
             }
             else if (Pet == "Felhunter")
             {

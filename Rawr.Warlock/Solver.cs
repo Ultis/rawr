@@ -272,6 +272,8 @@ namespace Rawr.Warlock
                             spell.SpellStatistics.CooldownReset = time + GetCastTime(spell) + spell.DebuffDuration;
                             if (spell.Name == "Curse of Agony" && CalculationOptions.GlyphCoA)
                                 spell.SpellStatistics.CooldownReset += 4;
+                            if (spell.Name == "Chaos Bolt" && CalculationOptions.GlyphChaosBolt)
+                                spell.SpellStatistics.CooldownReset -= 2;
                         }
 
                         switch (spell.Name)
@@ -588,7 +590,9 @@ namespace Rawr.Warlock
                 fillerSpell.SpellStatistics.HitCount -= GetCastTime(lifeTap) / GetCastTime(fillerSpell);
                 fillerSpell.SpellStatistics.ManaUsed -= fillerSpell.SpellStatistics.ManaUsed / fillerSpell.SpellStatistics.HitCount * (GetCastTime(lifeTap)) / GetCastTime(fillerSpell);
                 if (simStats.LifeTapBonusSpirit > 0)
-                    simStats.SpellPower += (float)(300 * 0.3 * 10 / time);
+                    simStats.SpellPower += (float)(300 * 0.3f * 10 / time);
+                if (CalculationOptions.GlyphLifeTap)
+                    simStats.SpellPower += (float)(simStats.Spirit * 0.2f * 20 / time);
             }
             if (character.WarlockTalents.ManaFeed > 0)
                     petManaGain += manaGain;
@@ -682,8 +686,8 @@ namespace Rawr.Warlock
                     spell.SpellStatistics.HitCount -= corDrops * GetCastTime(corruption) / GetCastTime(spell);
                 float directDamage = spell.AvgDirectDamage * spell.SpellStatistics.HitCount;
                 float dotDamage = spell.AvgDotDamage * spell.SpellStatistics.TickCount;
-                if (haunt != null)
-                    dotDamage *= 1.2f;
+                if (haunt != null && spell.MagicSchool == MagicSchool.Shadow)
+                    dotDamage *= 1.2f + (CalculationOptions.GlyphHaunt ? 1 : 0) * 0.03f;
                 if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Imp" && spell.MagicSchool == MagicSchool.Fire)
                     spell.CritChance *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                 if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Succubus" && spell.MagicSchool == MagicSchool.Shadow)
@@ -720,6 +724,7 @@ namespace Rawr.Warlock
                             if (simStats.CorruptionTriggersCrit > 0)
                                 directDamage = spell.AvgHit * (1f - (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f)) * spell.SpellStatistics.HitCount + spell.AvgCrit * (spell.CritChance + Procs2T7 / spell.SpellStatistics.HitCount * 0.1f) * spell.SpellStatistics.HitCount;
                             directDamage += CounterBuffedIncinerate * (spell.AvgBuffedDamage - spell.AvgDirectDamage);
+                            directDamage *= 1 + (CalculationOptions.GlyphIncinerate ? 1 : 0) * 0.05f;
                             break;
                         }
                     case "Immolate":
@@ -729,7 +734,6 @@ namespace Rawr.Warlock
                                 directDamage *= 0.9f;
                                 dotDamage *= 1.2f;
                             }
-                            dotDamage -= (float)(dotDamage * hauntMisses * 4 / maxTime);
                             break;
                         }
                     case "Drain Life":
@@ -823,8 +827,10 @@ namespace Rawr.Warlock
                 }
                 if (CounterShadowEmbrace > 0 && spell.MagicSchool == MagicSchool.Shadow)
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
-                directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f;
-                dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f;
+                directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f
+                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
+                dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f
+                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
                 if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Felguard")
                 {
                     directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
@@ -869,6 +875,9 @@ namespace Rawr.Warlock
                 Spell Extract = new ExtractProc(simStats, character);
                 DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }
+            if (character.WarlockTalents.Metamorphosis > 0)
+                DPS += (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/)
+                     * GetCastTime(15) / 30 * (451 + simStats.SpellPower * 1.85f) / (float)time;
             #endregion
 
             calculatedStats.DpsPoints = DPS;

@@ -71,6 +71,11 @@
             this.tabPet = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
+            this.chbGlyphIncinerate = new System.Windows.Forms.CheckBox();
+            this.chbGlyphHaunt = new System.Windows.Forms.CheckBox();
+            this.chbGlyphLifeTap = new System.Windows.Forms.CheckBox();
+            this.chbGlyphChaosBolt = new System.Windows.Forms.CheckBox();
+            this.chbGlyphMetamorphosis = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -184,7 +189,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(300, 605);
+            this.tabControl.Size = new System.Drawing.Size(300, 764);
             this.tabControl.TabIndex = 57;
             // 
             // tabFight
@@ -326,13 +331,18 @@
             this.tabChar.Location = new System.Drawing.Point(4, 22);
             this.tabChar.Name = "tabChar";
             this.tabChar.Padding = new System.Windows.Forms.Padding(3);
-            this.tabChar.Size = new System.Drawing.Size(292, 579);
+            this.tabChar.Size = new System.Drawing.Size(292, 738);
             this.tabChar.TabIndex = 2;
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
             // 
             // gbGlyphs
             // 
+            this.gbGlyphs.Controls.Add(this.chbGlyphMetamorphosis);
+            this.gbGlyphs.Controls.Add(this.chbGlyphChaosBolt);
+            this.gbGlyphs.Controls.Add(this.chbGlyphLifeTap);
+            this.gbGlyphs.Controls.Add(this.chbGlyphHaunt);
+            this.gbGlyphs.Controls.Add(this.chbGlyphIncinerate);
             this.gbGlyphs.Controls.Add(this.chbGlyphCorruption);
             this.gbGlyphs.Controls.Add(this.chbGlyphSearingPain);
             this.gbGlyphs.Controls.Add(this.chbGlyphShadowburn);
@@ -346,7 +356,7 @@
             this.gbGlyphs.Controls.Add(this.chbGlyphConflag);
             this.gbGlyphs.Location = new System.Drawing.Point(6, 278);
             this.gbGlyphs.Name = "gbGlyphs";
-            this.gbGlyphs.Size = new System.Drawing.Size(270, 278);
+            this.gbGlyphs.Size = new System.Drawing.Size(270, 454);
             this.gbGlyphs.TabIndex = 56;
             this.gbGlyphs.TabStop = false;
             this.gbGlyphs.Text = "Glyphs";
@@ -550,6 +560,57 @@
             this.cbPet.TabIndex = 61;
             this.cbPet.SelectedIndexChanged += new System.EventHandler(this.cbPet_SelectedIndexChanged);
             // 
+            // chbGlyphIncinerate
+            // 
+            this.chbGlyphIncinerate.AutoSize = true;
+            this.chbGlyphIncinerate.Location = new System.Drawing.Point(161, 111);
+            this.chbGlyphIncinerate.Name = "chbGlyphIncinerate";
+            this.chbGlyphIncinerate.Size = new System.Drawing.Size(115, 17);
+            this.chbGlyphIncinerate.TabIndex = 78;
+            this.chbGlyphIncinerate.Text = "Glyph of Incinerate";
+            this.chbGlyphIncinerate.UseVisualStyleBackColor = true;
+            this.chbGlyphIncinerate.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // chbGlyphHaunt
+            // 
+            this.chbGlyphHaunt.AutoSize = true;
+            this.chbGlyphHaunt.Location = new System.Drawing.Point(142, 157);
+            this.chbGlyphHaunt.Name = "chbGlyphHaunt";
+            this.chbGlyphHaunt.Size = new System.Drawing.Size(97, 17);
+            this.chbGlyphHaunt.TabIndex = 79;
+            this.chbGlyphHaunt.Text = "Glyph of Haunt";
+            this.chbGlyphHaunt.UseVisualStyleBackColor = true;
+            // 
+            // chbGlyphLifeTap
+            // 
+            this.chbGlyphLifeTap.AutoSize = true;
+            this.chbGlyphLifeTap.Location = new System.Drawing.Point(142, 272);
+            this.chbGlyphLifeTap.Name = "chbGlyphLifeTap";
+            this.chbGlyphLifeTap.Size = new System.Drawing.Size(107, 17);
+            this.chbGlyphLifeTap.TabIndex = 80;
+            this.chbGlyphLifeTap.Text = "Glyph of Life Tap";
+            this.chbGlyphLifeTap.UseVisualStyleBackColor = true;
+            // 
+            // chbGlyphChaosBolt
+            // 
+            this.chbGlyphChaosBolt.AutoSize = true;
+            this.chbGlyphChaosBolt.Location = new System.Drawing.Point(142, 235);
+            this.chbGlyphChaosBolt.Name = "chbGlyphChaosBolt";
+            this.chbGlyphChaosBolt.Size = new System.Drawing.Size(119, 17);
+            this.chbGlyphChaosBolt.TabIndex = 81;
+            this.chbGlyphChaosBolt.Text = "Glyph of Chaos Bolt";
+            this.chbGlyphChaosBolt.UseVisualStyleBackColor = true;
+            // 
+            // chbGlyphMetamorphosis
+            // 
+            this.chbGlyphMetamorphosis.AutoSize = true;
+            this.chbGlyphMetamorphosis.Location = new System.Drawing.Point(148, 203);
+            this.chbGlyphMetamorphosis.Name = "chbGlyphMetamorphosis";
+            this.chbGlyphMetamorphosis.Size = new System.Drawing.Size(139, 17);
+            this.chbGlyphMetamorphosis.TabIndex = 82;
+            this.chbGlyphMetamorphosis.Text = "Glyph of Metamorphosis";
+            this.chbGlyphMetamorphosis.UseVisualStyleBackColor = true;
+            // 
             // CalculationOptionsPanelWarlock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -557,7 +618,7 @@
             this.AutoScroll = true;
             this.Controls.Add(this.tabControl);
             this.Name = "CalculationOptionsPanelWarlock";
-            this.Size = new System.Drawing.Size(300, 605);
+            this.Size = new System.Drawing.Size(284, 589);
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
@@ -621,5 +682,10 @@
         private System.Windows.Forms.CheckBox chbGlyphCoA;
         private System.Windows.Forms.CheckBox chbGlyphConflag;
         private System.Windows.Forms.CheckBox chbGlyphCorruption;
+        private System.Windows.Forms.CheckBox chbGlyphMetamorphosis;
+        private System.Windows.Forms.CheckBox chbGlyphChaosBolt;
+        private System.Windows.Forms.CheckBox chbGlyphLifeTap;
+        private System.Windows.Forms.CheckBox chbGlyphHaunt;
+        private System.Windows.Forms.CheckBox chbGlyphIncinerate;
     }
 }
