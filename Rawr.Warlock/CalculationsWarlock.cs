@@ -451,11 +451,11 @@ namespace Rawr.Warlock
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
             statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating + statsTotal.WarlockGrandFirestone * 49) / 100f
-                + 0.01701f;
-            statsTotal.HasteRating += statsTotal.WarlockGrandSpellstone * 60;
+                                 + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49) * (1 + character.WarlockTalents.MasterConjuror * 1.5f)) / 100f
+                                 + 0.01701f;
+            statsTotal.HasteRating += (statsTotal.WarlockGrandSpellstone * 60) * (1 + character.WarlockTalents.MasterConjuror * 1.5f);
             statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
-            statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
+            statsTotal.SpellHit += (character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + character.WarlockTalents.Suppression) / 100f;
             if (statsTotal.WarlockFelArmor > 0)
             {
                 statsTotal.SpellDamageFromSpiritPercentage += 0.3f;
@@ -600,6 +600,18 @@ namespace Rawr.Warlock
             System.IO.StringReader reader = new System.IO.StringReader(xml);
             CalculationOptionsWarlock calcOpts = serializer.Deserialize(reader) as CalculationOptionsWarlock;
             return calcOpts;
+        }
+
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if (slot == Item.ItemSlot.OffHand || slot == Item.ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        {
+            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot);
         }
     }
 }

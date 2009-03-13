@@ -109,35 +109,43 @@ namespace Rawr.Warlock
                 if (!character.ActiveBuffsContains("Heroic Presence"))
                     BonusHit += 1;
             }
-            float DebuffHit = 0;
-            if (character.ActiveBuffsContains("Spell Hit Chance Taken"))
-            {
-                DebuffHit = 3f;
-                BonusHit += DebuffHit;
-            }
             float RHitRating = 1f / character.StatConversion.GetSpellHitFromRating(1);
-            float AfflictionHit = character.WarlockTalents.Suppression * 1f;
-            float DestructionHit = character.WarlockTalents.Cataclysm * 1f;
-            float HitAffliction = Hit + BonusHit + AfflictionHit;
-            float HitDestruction = Hit + BonusHit + DestructionHit;
-            dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from Misery or Improved Faerie Fire\r\n{5}% from {6} points in Suppression\r\n{7}% from {8} points in Cataclysm\r\n{9}{10}% Hit with Shadow spells, {11}\r\n{12}% Hit with Fire spells, {13}",
+            float TalentHit = character.WarlockTalents.Suppression * 1f;
+            float TotalHit = Hit + BonusHit;
+            dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}{5}% from {6} points in Suppression\r\n{7}",
                 BonusHit.ToString("0.00"),
-                character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"), 
+                character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"),
                 BasicStats.HitRating,
-                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit - DebuffHit).ToString("0.00"),
-                DebuffHit, 
-                AfflictionHit, 
-                character.WarlockTalents.Suppression,
-                DestructionHit, 
-                character.WarlockTalents.Cataclysm,
+                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating) - RacialHit - TalentHit).ToString("0.00"),
                 RacialText,
-                HitAffliction.ToString("0.00"), 
-                (HitAffliction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitAffliction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitAffliction) * RHitRating)),
-                HitDestruction.ToString("0.00"),  
-                (HitDestruction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitDestruction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitDestruction) * RHitRating))));
+                TalentHit,
+                character.WarlockTalents.Suppression,
+                (TotalHit > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((TotalHit - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - TotalHit) * RHitRating))));
+            //float AfflictionHit = character.WarlockTalents.Suppression * 1f;
+            //float DestructionHit = character.WarlockTalents.Cataclysm * 1f;
+            //float HitAffliction = Hit + BonusHit + AfflictionHit;
+            //float HitDestruction = Hit + BonusHit + DestructionHit;
+            //dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from {5} points in Suppression\r\n{6}% from {7} points in Cataclysm\r\n{8}{9}% Hit with Affliction spells, {10}\r\n{11}% Hit with Destruction spells, {12}",
+            //    BonusHit.ToString("0.00"),
+            //    character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00") + BonusHit,
+            //    BasicStats.HitRating,
+            //    (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit).ToString("0.00"),
+            //    AfflictionHit,
+            //    character.WarlockTalents.Suppression,
+            //    DestructionHit,
+            //    character.WarlockTalents.Cataclysm,
+            //    RacialText,
+            //    HitAffliction.ToString("0.00"),
+            //    (HitAffliction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitAffliction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitAffliction) * RHitRating)),
+            //    HitDestruction.ToString("0.00"),
+            //    (HitDestruction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitDestruction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitDestruction) * RHitRating))));
 
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
-                (BasicStats.SpellHaste * 100f).ToString("0.00"), character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"), BasicStats.HasteRating.ToString(), (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
+                (BasicStats.SpellHaste * 100f).ToString("0.00"),
+                character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"),
+                BasicStats.HasteRating.ToString(),
+                (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"),
+                Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
             Solver solver = GetSolver(character, BasicStats);
             solver.Calculate(this);

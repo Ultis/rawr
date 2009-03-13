@@ -48,14 +48,14 @@ namespace Rawr.Warlock
             //Stamina
             if (Pet == "Imp") petStats.Stamina = 118;
             else petStats.Stamina = 328;
-            petStats.Stamina += charStats.Stamina * (0.299f + (character.WarlockTalents.FelSynergy > 0 ? character.WarlockTalents.FelSynergy * 0.05f : 0));
+            //petStats.Stamina += charStats.Stamina * (0.299f + (character.WarlockTalents.FelSynergy > 0 ? character.WarlockTalents.FelSynergy * 0.05f : 0));
             petStats.Stamina *= 1 + charStats.BonusStaminaMultiplier;
             if (character.WarlockTalents.FelVitality > 0 && (Pet == "Imp" || Pet == "Voidwalker" || Pet == "Succubus" || Pet == "Felhunter" || Pet == "Felguard"))
                 petStats.Stamina *= 1 + character.WarlockTalents.FelVitality * 0.05f;
             //Intellect
             if (Pet == "Imp") petStats.Intellect = 369;
             else petStats.Intellect = 150;
-            petStats.Intellect += charStats.Intellect + (0.299f + (character.WarlockTalents.FelSynergy > 0 ? character.WarlockTalents.FelSynergy * 0.05f : 0));
+            //petStats.Intellect += charStats.Intellect + (0.299f + (character.WarlockTalents.FelSynergy > 0 ? character.WarlockTalents.FelSynergy * 0.05f : 0));
             petStats.Intellect *= 1 + charStats.BonusIntellectMultiplier;
             if (character.WarlockTalents.FelVitality > 0 && (Pet == "Imp" || Pet == "Voidwalker" || Pet == "Succubus" || Pet == "Felhunter" || Pet == "Felguard"))
                 petStats.Intellect *= 1 + character.WarlockTalents.FelVitality * 0.05f;
@@ -69,6 +69,7 @@ namespace Rawr.Warlock
             petStats.AttackPower += (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.57f;
             petStats.AttackPower *= 1 + charStats.BonusAttackPowerMultiplier;
             if (Pet == "Felguard") petStats.AttackPower *= 1 + ((0.05f + (character.WarlockTalents.DemonicBrutality > 0 ? character.WarlockTalents.DemonicBrutality * 0.01f : 0)) * 10);
+            if (Pet == "Felguard") petStats.AttackPower *= 1.2f;
             //SpellPower
             petStats.SpellPower = (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.1495f;
             petStats.SpellPower *= 1 + charStats.BonusSpellPowerMultiplier;
@@ -91,7 +92,7 @@ namespace Rawr.Warlock
             if (Pet == "Imp" && character.WarlockTalents.MasterDemonologist > 0)
                 petStats.SpellCrit += character.WarlockTalents.MasterDemonologist * 0.01f;
             if (Pet == "Imp" && character.WarlockTalents.DemonicEmpowerment > 0)
-                petStats.SpellCrit += character.WarlockTalents.DemonicEmpowerment * 0.1f;
+                petStats.SpellCrit += character.WarlockTalents.DemonicEmpowerment * 0.2f * 30f / (60f/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
 
             critCoefSpecial = 1.5f;
             if (Pet == "Felguard") critCoefSpecial = 2;
@@ -118,6 +119,8 @@ namespace Rawr.Warlock
                     specialHit *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                 if (character.WarlockTalents.EmpoweredImp > 0)
                     specialHit *= 1 + character.WarlockTalents.EmpoweredImp * 0.05f;
+                if (CalculationOptions.GlyphImp)
+                    specialHit *= 1.1f;
             }
             else if (Pet == "Felhunter")
             {
@@ -148,12 +151,12 @@ namespace Rawr.Warlock
                 specialHit = specialCastTime / 3.5f /*??*/* petStats.AttackPower + 124;
             }
             specialAttackDmg = (float)((specialHit * (1 - petStats.SpellCrit) + specialHit * critCoefSpecial * petStats.SpellCrit));
-            if (character.WarlockTalents.DemonicEmpathy > 0)
+/*            if (character.WarlockTalents.DemonicEmpathy > 0 && !PatchOn)
             {
                 float empathyUptime = (float)(solver.critCount * 15 / solver.time);
                 if (empathyUptime > 1) empathyUptime = 1;
                 specialAttackDmg += specialAttackDmg * empathyUptime * character.WarlockTalents.DemonicEmpathy * 0.01f;
-            }
+            }*/
         }
 
         public void calcBaseDPS()
@@ -165,7 +168,7 @@ namespace Rawr.Warlock
             else if (Pet == "Felguard") baseAttackDmg = petStats.AttackPower * 0.18 + 520;
             else if (Pet == "Infernal") baseAttackDmg = 1040 + petStats.AttackPower * 0.13;//??
             baseAttackSpeed = 2;
-            if (Pet == "Felguard" && character.WarlockTalents.DemonicEmpowerment > 0) baseAttackSpeed *= 1 - character.WarlockTalents.DemonicEmpowerment * 0.05f;
+            if (Pet == "Felguard" && character.WarlockTalents.DemonicEmpowerment > 0) baseAttackSpeed *= 1 - character.WarlockTalents.DemonicEmpowerment * 15f / (60f/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
 
             baseAttackDmg = baseAttackDmg * (1 - petStats.PhysicalCrit) + baseAttackDmg * critCoefMelee * petStats.PhysicalCrit;
             baseAttackDmg *= petHit;

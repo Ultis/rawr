@@ -422,7 +422,6 @@
             // chbGlyphImp
             // 
             this.chbGlyphImp.AutoSize = true;
-            this.chbGlyphImp.Enabled = false;
             this.chbGlyphImp.Location = new System.Drawing.Point(4, 134);
             this.chbGlyphImp.Name = "chbGlyphImp";
             this.chbGlyphImp.Size = new System.Drawing.Size(85, 17);
@@ -445,7 +444,6 @@
             // chbGlyphFelguard
             // 
             this.chbGlyphFelguard.AutoSize = true;
-            this.chbGlyphFelguard.Enabled = false;
             this.chbGlyphFelguard.Location = new System.Drawing.Point(5, 88);
             this.chbGlyphFelguard.Name = "chbGlyphFelguard";
             this.chbGlyphFelguard.Size = new System.Drawing.Size(109, 17);

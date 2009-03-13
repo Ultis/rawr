@@ -25,6 +25,8 @@ namespace Rawr.Warlock
     {
         public static Spell CreateSpell(string name, Stats stats, Character character)
         {
+            CalculationOptionsWarlock CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
+
             switch (name)
             {
                 case "Shadow Bolt":
@@ -120,6 +122,8 @@ namespace Rawr.Warlock
 
     public class Spell
     {
+        public CalculationOptionsWarlock CalculationOptions;
+
         public class SpellData
         {
             public int Rank { get; protected set; }
@@ -138,7 +142,8 @@ namespace Rawr.Warlock
             }
         }
 
-        public static readonly List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Siphon Life", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
+        //public static List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Siphon Life", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
+        public static List<string> SpellList = new List<string>() { "Shadow Bolt", "Curse of Agony", "Curse of Doom", "Corruption", "Unstable Affliction", "Death Coil", "Drain Life", "Drain Soul", "Haunt", "Seed of Corruption", "Shadowflame", "Shadowburn", "Shadowfury", "Incinerate", "Immolate", "Rain of Fire", "Hellfire", "Searing Pain", "Soul Fire", "Conflagrate", "Chaos Bolt" };
 
         public string Name { get; protected set; }
 
@@ -177,7 +182,6 @@ namespace Rawr.Warlock
         public int BaseMana;
 
         #region Properties
-
         public float AvgHit
         {
             get
@@ -383,14 +387,16 @@ namespace Rawr.Warlock
         {
             MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.ShadowMastery * 0.02f)
-                      * (1 + character.WarlockTalents.Malediction * 0.01f);
+                      * (1 + character.WarlockTalents.Malediction * 0.01f)
+                      * (1 + character.WarlockTalents.ImprovedShadowBolt * 0.01f);
 
             MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.ShadowAndFlame * 0.04f ))
                       * (1 + character.WarlockTalents.ShadowMastery * 0.02f)
-                      * (1 + character.WarlockTalents.Malediction * 0.01f);
+                      * (1 + character.WarlockTalents.Malediction * 0.01f)
+                      * (1 + character.WarlockTalents.ImprovedShadowBolt * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
 
@@ -434,7 +440,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -468,7 +474,7 @@ namespace Rawr.Warlock
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
-            
+
             TimeBetweenTicks = 2f;
         }
     }
@@ -489,7 +495,6 @@ namespace Rawr.Warlock
         public override void Calculate(Stats stats, Character character)
         {
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
-                //does not benefit from ShadowMastery atm
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
@@ -518,10 +523,14 @@ namespace Rawr.Warlock
         {
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.EmpoweredCorruption * 0.12f + character.WarlockTalents.EverlastingAffliction * 0.01f * 6))
                       * (1 + (character.WarlockTalents.ImprovedCorruption * 0.02f + character.WarlockTalents.ShadowMastery * 0.03f + character.WarlockTalents.Contagion * 0.01f))
-                      * (1 + character.WarlockTalents.Malediction * 0.01f);
+                      * (1 + character.WarlockTalents.Malediction * 0.01f)
+                      * (1 + character.WarlockTalents.SiphonLife * 0.05f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
+
+            CritChance = stats.SpellCrit + character.WarlockTalents.Malediction * 0.03f + character.WarlockTalents.Backlash * 0.01f;
+            CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
 
@@ -574,10 +583,14 @@ namespace Rawr.Warlock
         {
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * (DamageCoef + character.WarlockTalents.EverlastingAffliction * 0.01f * 5))
                        * (1 + character.WarlockTalents.ShadowMastery * 0.02f)
-                       * (1 + character.WarlockTalents.Malediction * 0.01f);
+                       * (1 + character.WarlockTalents.Malediction * 0.01f)
+                       * (1 + character.WarlockTalents.SiphonLife * 0.05f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
+
+            CritChance = stats.SpellCrit + character.WarlockTalents.Malediction * 0.03f + character.WarlockTalents.Backlash * 0.01f;
+            CritCoef = (character.WarlockTalents.Pandemic > 0 ? 2 : 1);
 
             Range = (int)Math.Round(BaseRange * (1 + character.WarlockTalents.GrimReach * 0.1));
 
@@ -719,7 +732,8 @@ namespace Rawr.Warlock
         {
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellShadowDamageRating) * DamageCoef)
                        * (1 + character.WarlockTalents.ShadowMastery * 0.02f + character.WarlockTalents.Contagion * 0.01f)
-                       * (1 + character.WarlockTalents.Malediction * 0.01f);
+                       * (1 + character.WarlockTalents.Malediction * 0.01f)
+                       * (1 + character.WarlockTalents.SiphonLife * 0.05f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
                      * (1 - character.WarlockTalents.Suppression * 0.02f));
@@ -766,7 +780,7 @@ namespace Rawr.Warlock
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.HolyReach * 0.1f*/));
 
@@ -798,7 +812,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -830,7 +844,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -857,24 +871,28 @@ namespace Rawr.Warlock
             //float DotDamageCoef = DebuffDuration / 15 * DotDamage / (BaseMinDamage + DotDamage);
             float DirDamageCoef = 0.2f;
             float DotDamageCoef = 1f;
-            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DirDamageCoef + character.WarlockTalents.ImprovedImmolate * 0.1f ))
+            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DirDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
+                      * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
 
-            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * (DirDamageCoef + character.WarlockTalents.ImprovedImmolate * 0.1f ))
+            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DirDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
+                      * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
 
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
-                      * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f);
+                      * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f)
+                      * (1 + character.WarlockTalents.Aftermath * 0.02f)
+                      * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CastTime = (float)Math.Max(1.0f, (BaseCastTime - character.WarlockTalents.Bane * 0.1f));
 
@@ -904,7 +922,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -935,7 +953,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             Range = (int)Math.Round(BaseRange * (1/* + character.PriestTalents.ShadowReach * 0.1f*/));
 
@@ -967,7 +985,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             if (character.WarlockTalents.ImprovedSearingPain == 1) CritChance += 0.04f;
@@ -1003,7 +1021,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -1029,16 +1047,20 @@ namespace Rawr.Warlock
 
         public override void Calculate(Stats stats, Character character)
         {
-            MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DamageCoef)
-                      * (1 + character.WarlockTalents.Emberstorm * 0.02f)
-                      * (1 + character.WarlockTalents.Malediction * 0.01f);
+                Spell tmpImmo = new Immolate (stats, character);
+                MinDamage = MaxDamage = tmpImmo.DotDamage / tmpImmo.TimeBetweenTicks * 15;
 
-            MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DamageCoef)
-                      * (1 + character.WarlockTalents.Emberstorm * 0.02f)
-                      * (1 + character.WarlockTalents.Malediction * 0.01f);
+            /*MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DamageCoef)
+                          * (1 + character.WarlockTalents.Emberstorm * 0.02f)
+                          * (1 + character.WarlockTalents.Malediction * 0.01f);
+
+                MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DamageCoef)
+                          * (1 + character.WarlockTalents.Emberstorm * 0.02f)
+                          * (1 + character.WarlockTalents.Malediction * 0.01f);
+            */
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
@@ -1071,7 +1093,7 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Malediction * 0.01f);
 
             ManaCost = (int)Math.Floor(BaseManaCost / 100f * BaseMana
-                     * (1 - character.WarlockTalents.Cataclysm * 0.01f));
+                     * (1 - character.WarlockTalents.Cataclysm * 0.04f));
 
             CritChance = stats.SpellCrit + character.WarlockTalents.Devastation * 0.05f + character.WarlockTalents.Backlash * 0.01f;
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
