@@ -488,13 +488,12 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Tauren:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 8338f,
                         Strength = (float)BaseWarriorRaceStats[5, 0],
                         Agility = (float)BaseWarriorRaceStats[5, 1],
                         Stamina = (float)BaseWarriorRaceStats[5, 2],
 
                         AttackPower = 220f,
-                        BonusHealthMultiplier = 0.05f,
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
