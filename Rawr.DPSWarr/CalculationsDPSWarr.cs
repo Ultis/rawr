@@ -136,7 +136,7 @@ namespace Rawr.DPSWarr
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
         {
-            if (character != null && (character.WarriorTalents != null && (enchant != null && (slot != null))))
+            if (character != null && (character.WarriorTalents != null && enchant != null))
             {
                 return enchant.FitsInSlot(slot) || (character.WarriorTalents.TitansGrip == 1 && enchant.Slot == Item.ItemSlot.TwoHand && slot == Item.ItemSlot.OffHand);
             }
@@ -550,14 +550,6 @@ namespace Rawr.DPSWarr
                         Parry = 5f,
                         PhysicalCrit = 0.03186f,
                     };
-                    if ((character.MainHand != null) &&
-                        ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace) ||
-                         (character.MainHand.Item.Type == Item.ItemType.TwoHandSword) ||
-                         (character.MainHand.Item.Type == Item.ItemType.TwoHandMace)))
-                    {
-                        statsRace.Expertise += 3f;
-                    }
                     break;
                 case Character.CharacterRace.Orc:
                     statsRace = new Stats()
@@ -573,13 +565,6 @@ namespace Rawr.DPSWarr
                         Miss = 0.05f,
                         PhysicalCrit = 0.03186f,
                     };
-
-                    if ((character.MainHand != null) &&
-                        ((character.MainHand.Type == Item.ItemType.OneHandAxe) ||
-                         (character.MainHand.Type == Item.ItemType.TwoHandAxe)))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
                     break;
                 case Character.CharacterRace.Dwarf:
                     statsRace = new Stats()
@@ -595,13 +580,6 @@ namespace Rawr.DPSWarr
                         Miss = 0.05f,
                         PhysicalCrit = 0.03186f,
                     };
-
-                    if ((character.MainHand != null) &&
-                        ((character.MainHand.Type == Item.ItemType.OneHandMace) ||
-                         (character.MainHand.Type == Item.ItemType.TwoHandMace)))
-                    {
-                        statsRace.Expertise += 5f;
-                    }
                     break;
                 case Character.CharacterRace.NightElf:
                     statsRace = new Stats()
@@ -636,13 +614,12 @@ namespace Rawr.DPSWarr
                 case Character.CharacterRace.Tauren:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 8338f,
                         Strength = (float)BaseWarriorRaceStats[5, 0],
                         Agility = (float)BaseWarriorRaceStats[5, 1],
                         Stamina = (float)BaseWarriorRaceStats[5, 2],
 
                         AttackPower = 220f,
-                        BonusHealthMultiplier = 0.05f,
                         Dodge = 3.4636f,
                         Parry = 5f,
                         Miss = 0.05f,
