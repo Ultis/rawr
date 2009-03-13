@@ -290,6 +290,56 @@ namespace Rawr.Warlock
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chbGlyphChaosBolt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphChaosBolt = chbGlyphChaosBolt.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphLifeTap_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphLifeTap = chbGlyphLifeTap.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphMetamorphosis_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphMetamorphosis = chbGlyphMetamorphosis.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphHaunt_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphHaunt = chbGlyphHaunt.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphIncinerate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphIncinerate = chbGlyphIncinerate.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
@@ -305,12 +355,17 @@ namespace Rawr.Warlock
         public float Survivability { get; set; }
         public String Pet { get; set; }
         public bool UseDoomguard { get; set; }
+        public bool GlyphChaosBolt { get; set; }
         public bool GlyphConflag { get; set; }
         public bool GlyphCorruption { get; set; }
         public bool GlyphCoA { get; set; }
         public bool GlyphFelguard { get; set; }
+        public bool GlyphHaunt { get; set; }
         public bool GlyphImmolate { get; set; }
         public bool GlyphImp { get; set; }
+        public bool GlyphIncinerate { get; set; }
+        public bool GlyphLifeTap { get; set; }
+        public bool GlyphMetamorphosis { get; set; }
         public bool GlyphSearingPain { get; set; }
         public bool GlyphSB { get; set; }
         public bool GlyphShadowburn { get; set; }
