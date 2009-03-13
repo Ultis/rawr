@@ -3561,6 +3561,17 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 					data.Add(int.Parse(digit.ToString()));
 				data.CopyTo(_data);
 			}
+            // work around for patch 3.1 model whilst armory is patch 3.0
+            if (talents.Length == 78)
+            {
+                int unleashedRage = Math.Min(3, int.Parse(talents.Substring(39,1)));
+                string newTalents = talents.Substring(0, 39) + unleashedRage.ToString() +
+                                    talents.Substring(40,1) + "0" + talents.Substring(41);
+                List<int> data = new List<int>();
+                foreach (Char digit in newTalents)
+                    data.Add(int.Parse(digit.ToString()));
+                data.CopyTo(_data);
+            }
 		}
 		object ICloneable.Clone()
 		{
@@ -3849,9 +3860,9 @@ You call down a bolt of lightning, energizing you and damaging nearby enemies wi
 
 		[TalentData(44, "Stormstrike", 1, 1, 3, 7, -1, new string[] {
 @"351 Mana,Melee Range,
-Instant cast,10 sec cooldown,
+Instant cast,8 sec cooldown,
 Requires Melee Weapon,
-Instantly attack with both weapons. In addition, the next 2 sources of Nature damage dealt to the target are increased by 20%. Lasts 12 sec.",})]
+Instantly attack with both weapons.  In addition, the next 4 sources of Nature damage dealt to the target from the Shaman are increased by 20%. Lasts 12 sec.",})]
 		public int Stormstrike { get { return _data[44]; } set { _data[44] = value; } }
 
 		[TalentData(45, "Static Shock", 3, 1, 1, 8, -1, new string[] {
@@ -3867,8 +3878,8 @@ You charge your off-hand weapon with lava, instantly dealing 100% off-hand Weapo
 		public int LavaLash { get { return _data[46]; } set { _data[46] = value; } }
 
 		[TalentData(47, "Improved Stormstrike", 2, 1, 3, 8, 44, new string[] {
-@"Increases the amount of Stormstrike charges by 1, and reduces the cooldown by 1 sec.",
-@"Increases the amount of Stormstrike charges by 2, and reduces the cooldown by 2 sec.",})]
+@"When you Stormstrike, you have a 50% chance to immediately grant you 20% of your base mana.",
+@"When you Stormstrike, you have a 100% chance to immediately grant you 20% of your base mana.",})]
 		public int ImprovedStormstrike { get { return _data[47]; } set { _data[47] = value; } }
 
 		[TalentData(48, "Mental Quickness", 3, 1, 1, 9, -1, new string[] {
