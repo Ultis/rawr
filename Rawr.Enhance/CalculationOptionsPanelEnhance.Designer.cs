@@ -30,7 +30,6 @@
 		{
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.chbPatch3_1 = new System.Windows.Forms.CheckBox();
             this.chbBaseStatOption = new System.Windows.Forms.CheckBox();
             this.labelTargetArmorDescription = new System.Windows.Forms.Label();
             this.comboBoxOffhandImbue = new System.Windows.Forms.ComboBox();
@@ -89,7 +88,6 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.chbPatch3_1);
             this.tabPage1.Controls.Add(this.chbBaseStatOption);
             this.tabPage1.Controls.Add(this.labelTargetArmorDescription);
             this.tabPage1.Controls.Add(this.comboBoxOffhandImbue);
@@ -118,19 +116,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basics";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // chbPatch3_1
-            // 
-            this.chbPatch3_1.AutoSize = true;
-            this.chbPatch3_1.Checked = true;
-            this.chbPatch3_1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbPatch3_1.Location = new System.Drawing.Point(10, 387);
-            this.chbPatch3_1.Name = "chbPatch3_1";
-            this.chbPatch3_1.Size = new System.Drawing.Size(153, 17);
-            this.chbPatch3_1.TabIndex = 36;
-            this.chbPatch3_1.Text = "Use Patch 3.1 calculations";
-            this.chbPatch3_1.UseVisualStyleBackColor = true;
-            this.chbPatch3_1.CheckedChanged += new System.EventHandler(this.chbPatch3_1_CheckedChanged);
             // 
             // chbBaseStatOption
             // 
@@ -600,7 +585,6 @@
         private System.Windows.Forms.Button btnEnhSim;
         private System.Windows.Forms.TextBox tbModuleNotes;
         private System.Windows.Forms.CheckBox chbBaseStatOption;
-        private System.Windows.Forms.CheckBox chbPatch3_1;
         private System.Windows.Forms.CheckBox chbGlyphFS;
 
     }

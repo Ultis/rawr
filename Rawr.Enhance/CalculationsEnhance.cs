@@ -150,14 +150,14 @@ namespace Rawr
 					"Basic Stats:Total Expertise",
 					"Basic Stats:Haste Rating",
 					"Basic Stats:Armour Pen Rating",
-					"Complex Stats:Avoided Attacks",
+					"Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
 					"Complex Stats:Avg MH Speed",
                     "Complex Stats:Avg OH Speed",
 					"Complex Stats:Armor Mitigation",
-                    "Complex Stats:UR Uptime",
+                    "Complex Stats:UR Uptime*Unleashed Rage Uptime percentage.",
                     "Complex Stats:Flurry Uptime",
-                    "Complex Stats:ED Uptime",
-                    "Complex Stats:Avg Time to 5 Stack",
+                    "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
+                    "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
                     "Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
 					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Enhancement shamans only care about DPS, so Overall Points will always be identical to DPS Points.",
                     "Attacks:White Damage",
@@ -304,9 +304,7 @@ namespace Rawr
             float critMultiplierMelee = 2;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
             float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon;
-            int stormstrikeSpeed = 10;
-            if (!calcOpts.Patch3_1)
-                stormstrikeSpeed -= (1 * character.ShamanTalents.ImprovedStormstrike);
+            int stormstrikeSpeed = 8;
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
                 case 1:
@@ -375,11 +373,7 @@ namespace Rawr
             ////////////////////////////
 
 			#region Damage Model
-            if (calcOpts.Patch3_1)
-                stats.ArmorPenetrationRating *= 1.25f;
-            float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-				stats.ArmorPenetration, stats.ArmorPenetrationRating);
-
+            float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
             float expertiseBonus = stats.Expertise * 0.0025f + stats.ExpertiseRating / 3278.998947f;
@@ -405,9 +399,7 @@ namespace Rawr
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = stats.HasteRating / 3278.998947f;
-            if (calcOpts.Patch3_1)
-                hasteBonus *= 1.3f;
+            float hasteBonus = 1.3f * stats.HasteRating / 3278.998947f;
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
@@ -650,24 +642,20 @@ namespace Rawr
         {
             float yellowAttacksPerSecond = 0f;
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            if (calcOpts.Patch3_1)
-                yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
-            else 
-            {
-                switch (character.ShamanTalents.ImprovedStormstrike)
-                {
-                    case 0:
-                        // 3+5 etc is number of SS and number of LL per time interval
-                        yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
-                        break;
-                    case 1:
-                        yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
-                        break;
-                    case 2:
-                        yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
-                        break;
-                }
-            }
+            yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
+//                switch (character.ShamanTalents.ImprovedStormstrike)
+//                {
+//                    case 0:
+//                        // 3+5 etc is number of SS and number of LL per time interval
+//                        yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
+//                        break;
+//                    case 1:
+//                        yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
+//                        break;
+//                    case 2:
+//                        yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
+//                        break;
+//                }
             float WFProcChance = 1f / 6f;
             if (calcOpts.GlyphWF)
             {
@@ -794,8 +782,7 @@ namespace Rawr
 						
             int MQ = character.ShamanTalents.MentalQuickness;
             statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
-            if (calcOpts.Patch3_1)
-                statsTotal.Expertise = 3 * character.ShamanTalents.UnleashedRage;
+            statsTotal.Expertise = 3 * character.ShamanTalents.UnleashedRage;
             return statsTotal;
 		}
         #endregion

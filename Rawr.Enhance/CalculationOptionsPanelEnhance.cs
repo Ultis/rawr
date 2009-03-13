@@ -222,16 +222,6 @@ namespace Rawr
             }
         }
 
-        private void chbPatch3_1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_loadingCalculationOptions)
-            {
-                CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
-                calcOpts.Patch3_1 = chbPatch3_1.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chbGlyphFS_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
@@ -273,8 +263,6 @@ namespace Rawr
 		public string ShattrathFaction = "Aldor";
         public string MainhandImbue = "Windfury";
         public string OffhandImbue = "Flametongue";
-        public bool Patch3_1 = true;
-       
         
     }
 }
