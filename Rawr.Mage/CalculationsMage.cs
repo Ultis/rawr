@@ -677,16 +677,82 @@ namespace Rawr.Mage
                     };
                     break;
                 case 80:
-                    statsRace = new Stats()
+                    switch (character.Race)
                     {
-                        Health = 6783f,
-                        Mana = 2988f,
-                        Strength = 31f,
-                        Agility = 46f,
-                        Stamina = 58f,
-                        Intellect = 184f,
-                        Spirit = 174f,
-                    };
+                        case Character.CharacterRace.BloodElf:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 33f,
+                                Agility = 45f,
+                                Stamina = 57f,
+                                Intellect = 185f,
+                                Spirit = 173f,
+                            };
+                            break;
+                        case Character.CharacterRace.Draenei:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 37f,
+                                Agility = 40f,
+                                Stamina = 58f,
+                                Intellect = 182f,
+                                Spirit = 176f,
+                            };
+                            break;
+                        case Character.CharacterRace.Human:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 36f,
+                                Agility = 43f,
+                                Stamina = 59f,
+                                Intellect = 181f,
+                                Spirit = 174f,
+                            };
+                            break;
+                        case Character.CharacterRace.Troll:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 37f,
+                                Agility = 45f,
+                                Stamina = 60f,
+                                Intellect = 177f,
+                                Spirit = 175f,
+                            };
+                            break;
+                        case Character.CharacterRace.Undead:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 35f,
+                                Agility = 41f,
+                                Stamina = 60f,
+                                Intellect = 179f,
+                                Spirit = 179f,
+                            };
+                            break;
+                        case Character.CharacterRace.Gnome:
+                        default:
+                            statsRace = new Stats()
+                            {
+                                Health = 6783f,
+                                Mana = 2988f,
+                                Strength = 31f,
+                                Agility = 46f,
+                                Stamina = 58f,
+                                Intellect = 184f,
+                                Spirit = 174f,
+                            };
+                            break;
+                    }
                     break;
                 default:
                     statsRace = new Stats();
