@@ -579,6 +579,12 @@ namespace Rawr
                 Group = "Replenishment",
                 Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
             });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Improved Soul Leech",
+                Group = "Replenishment",
+                Stats = { ManaRestoreFromMaxManaPerSecond = 0.0025f }
+            });
             #endregion
 
             #region Mana Regeneration
@@ -1045,13 +1051,19 @@ namespace Rawr
             {
                 Name = "Winter's Chill",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCrit = 0.1f }
+                Stats = { SpellCrit = 0.05f }
             });
             defaultBuffs.Add(new Buff
             {
                 Name = "Improved Scorch",
                 Group = "Spell Critical Strike Taken",
-                Stats = { SpellCrit = 0.1f }
+                Stats = { SpellCrit = 0.05f }
+            });
+            defaultBuffs.Add(new Buff
+            {
+                Name = "Improved Shadow Bolt",
+                Group = "Spell Critical Strike Taken",
+                Stats = { SpellCrit = 0.05f }
             });
             #endregion
 
@@ -1062,17 +1074,13 @@ namespace Rawr
                 Group = "Spell Damage Taken",
                 Stats =
                 {
-                    BonusFireDamageMultiplier = 0.1f,
-                    BonusFrostDamageMultiplier = 0.1f,
-                    BonusArcaneDamageMultiplier = 0.1f,
-                    BonusShadowDamageMultiplier = 0.1f,
-                    BonusHolyDamageMultiplier = 0.1f,
-                    BonusNatureDamageMultiplier = 0.1f
-                },
-                Improvements = { new Buff { Name = "Malediction", Stats = { BonusFireDamageMultiplier = 1.13f / 1.1f - 1, 
-					BonusFrostDamageMultiplier = 1.13f / 1.1f - 1, BonusArcaneDamageMultiplier = 1.13f / 1.1f - 1, 
-					BonusShadowDamageMultiplier = 1.13f / 1.1f - 1, BonusHolyDamageMultiplier = 1.13f / 1.1f - 1,
-                    BonusNatureDamageMultiplier = 1.13f / 1.1f - 1 } } }
+                    BonusFireDamageMultiplier = 0.13f,
+                    BonusFrostDamageMultiplier = 0.13f,
+                    BonusArcaneDamageMultiplier = 0.13f,
+                    BonusShadowDamageMultiplier = 0.13f,
+                    BonusHolyDamageMultiplier = 0.13f,
+                    BonusNatureDamageMultiplier = 0.13f
+                }
             });
             defaultBuffs.Add(new Buff
             {
