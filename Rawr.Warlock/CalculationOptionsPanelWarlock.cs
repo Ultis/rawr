@@ -167,16 +167,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void chbPetSacrificed_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.PetSacrificed = chbPetSacrificed.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void tbAffEffects_Changed(object sender, EventArgs e)
         {
             if (!loading)
@@ -314,7 +304,6 @@ namespace Rawr.Warlock
         public float LTUsePercent { get; set; }
         public float Survivability { get; set; }
         public String Pet { get; set; }
-        public bool PetSacrificed { get; set; }
         public bool UseDoomguard { get; set; }
         public bool GlyphConflag { get; set; }
         public bool GlyphCorruption { get; set; }

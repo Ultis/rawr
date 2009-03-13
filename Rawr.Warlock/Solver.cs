@@ -554,18 +554,6 @@ namespace Rawr.Warlock
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("OutFSR", manaGain));
             }
-            if (CalculationOptions.PetSacrificed == true && CalculationOptions.Pet == "Felhunter")
-            {
-                manaGain = simStats.Mana * 0.03f / 4f * time;
-                currentMana += manaGain;
-                ManaSources.Add(new ManaSource("Sacrificed Felhunter", manaGain));
-            }
-            if (CalculationOptions.PetSacrificed == true && CalculationOptions.Pet == "Felguard")
-            {
-                manaGain = simStats.Mana * 0.02f / 4f * time;
-                currentMana += manaGain;
-                ManaSources.Add(new ManaSource("Sacrificed Felguard", manaGain));
-            }
             if (CalculationOptions.Replenishment > 0)
             {
                 manaGain = simStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * time;
@@ -696,9 +684,9 @@ namespace Rawr.Warlock
                 float dotDamage = spell.AvgDotDamage * spell.SpellStatistics.TickCount;
                 if (haunt != null)
                     dotDamage *= 1.2f;
-                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Imp" && !CalculationOptions.PetSacrificed && spell.MagicSchool == MagicSchool.Fire)
+                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Imp" && spell.MagicSchool == MagicSchool.Fire)
                     spell.CritChance *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
-                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Succubus" && !CalculationOptions.PetSacrificed && spell.MagicSchool == MagicSchool.Shadow)
+                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Succubus" && spell.MagicSchool == MagicSchool.Shadow)
                     spell.CritChance *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
 
                 switch (spell.Name)
@@ -799,7 +787,7 @@ namespace Rawr.Warlock
                                 directDamage *= 1 + MoltenCoreUptime * 0.1f;
                                 dotDamage *= 1 + MoltenCoreUptime * 0.1f;
                             }
-                            if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Imp" && !CalculationOptions.PetSacrificed)
+                            if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Imp")
                             {
                                 directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                                 dotDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
@@ -811,7 +799,7 @@ namespace Rawr.Warlock
                         {
                             directDamage *= 1 + PlayerStats.BonusShadowDamageMultiplier;
                             dotDamage *= 1 + PlayerStats.BonusShadowDamageMultiplier;
-                            if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Succubus" && !CalculationOptions.PetSacrificed)
+                            if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Succubus")
                             {
                                 directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                                 dotDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
@@ -837,7 +825,7 @@ namespace Rawr.Warlock
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
                 directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f;
                 dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f;
-                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Felguard" && !CalculationOptions.PetSacrificed)
+                if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Felguard")
                 {
                     directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
                     dotDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;

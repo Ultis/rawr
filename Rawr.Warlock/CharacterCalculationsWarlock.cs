@@ -121,24 +121,6 @@ namespace Rawr.Warlock
                 TalentHit,
                 character.WarlockTalents.Suppression,
                 (TotalHit > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((TotalHit - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - TotalHit) * RHitRating))));
-            //float AfflictionHit = character.WarlockTalents.Suppression * 1f;
-            //float DestructionHit = character.WarlockTalents.Cataclysm * 1f;
-            //float HitAffliction = Hit + BonusHit + AfflictionHit;
-            //float HitDestruction = Hit + BonusHit + DestructionHit;
-            //dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}% from {5} points in Suppression\r\n{6}% from {7} points in Cataclysm\r\n{8}{9}% Hit with Affliction spells, {10}\r\n{11}% Hit with Destruction spells, {12}",
-            //    BonusHit.ToString("0.00"),
-            //    character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00") + BonusHit,
-            //    BasicStats.HitRating,
-            //    (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating)- RacialHit).ToString("0.00"),
-            //    AfflictionHit,
-            //    character.WarlockTalents.Suppression,
-            //    DestructionHit,
-            //    character.WarlockTalents.Cataclysm,
-            //    RacialText,
-            //    HitAffliction.ToString("0.00"),
-            //    (HitAffliction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitAffliction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitAffliction) * RHitRating)),
-            //    HitDestruction.ToString("0.00"),
-            //    (HitDestruction > 100f) ? string.Format("{0} hit rating above cap", Math.Floor((HitDestruction - 100f) * RHitRating)) : string.Format("{0} hit rating below cap", Math.Ceiling((100f - HitDestruction) * RHitRating))));
 
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"),

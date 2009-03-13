@@ -186,7 +186,7 @@ namespace Rawr.Warlock
         {
             this.solver = solver;
 
-            if (Pet == null || CalculationOptions.PetSacrificed || (Pet == "Felguard" && !(character.WarlockTalents.SummonFelguard > 0))) return 0;
+            if (Pet == null || (Pet == "Felguard" && !(character.WarlockTalents.SummonFelguard > 0))) return 0;
 
             #region Hit
             petHit = solver.HitChance;

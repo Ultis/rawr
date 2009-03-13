@@ -69,7 +69,6 @@
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriopity = new System.Windows.Forms.ListBox();
             this.tabPet = new System.Windows.Forms.TabPage();
-            this.chbPetSacrificed = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
@@ -157,7 +156,7 @@
             // chbUseDoomguard
             // 
             this.chbUseDoomguard.AutoSize = true;
-            this.chbUseDoomguard.Location = new System.Drawing.Point(33, 73);
+            this.chbUseDoomguard.Location = new System.Drawing.Point(33, 42);
             this.chbUseDoomguard.Name = "chbUseDoomguard";
             this.chbUseDoomguard.Size = new System.Drawing.Size(103, 17);
             this.chbUseDoomguard.TabIndex = 66;
@@ -515,7 +514,6 @@
             // tabPet
             // 
             this.tabPet.Controls.Add(this.chbUseDoomguard);
-            this.tabPet.Controls.Add(this.chbPetSacrificed);
             this.tabPet.Controls.Add(this.label1);
             this.tabPet.Controls.Add(this.cbPet);
             this.tabPet.Location = new System.Drawing.Point(4, 22);
@@ -525,17 +523,6 @@
             this.tabPet.TabIndex = 3;
             this.tabPet.Text = "Pet";
             this.tabPet.UseVisualStyleBackColor = true;
-            // 
-            // chbPetSacrificed
-            // 
-            this.chbPetSacrificed.AutoSize = true;
-            this.chbPetSacrificed.Location = new System.Drawing.Point(33, 50);
-            this.chbPetSacrificed.Name = "chbPetSacrificed";
-            this.chbPetSacrificed.Size = new System.Drawing.Size(90, 17);
-            this.chbPetSacrificed.TabIndex = 65;
-            this.chbPetSacrificed.Text = "Pet sacrificed";
-            this.chbPetSacrificed.UseVisualStyleBackColor = true;
-            this.chbPetSacrificed.CheckedChanged += new System.EventHandler(this.chbPetSacrificed_CheckedChanged);
             // 
             // label1
             // 
@@ -620,7 +607,6 @@
         private System.Windows.Forms.ComboBox cbPet;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chbUseDoomguard;
-        private System.Windows.Forms.CheckBox chbPetSacrificed;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbAffEffects;
         private System.Windows.Forms.GroupBox gbGlyphs;
