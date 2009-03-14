@@ -20,7 +20,7 @@ namespace Rawr.Tree
         { 
             get 
             {
-                if (castTimeBeforeHaste > gcd)
+                if (castTime > gcd)
                     return castTime;        // Not castTimeBeforeHaste
                 else if (gcd > 1)
                     return gcd;
