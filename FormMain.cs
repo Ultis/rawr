@@ -30,7 +30,6 @@ v2.2.0b3
  - Models: Tons of model updates; see ReadMe.txt for details on the changes and status of each model.
 
 If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which aren't fully complete, please contact me at cnervig@hotmail.com. Thanks!";
-	
 
         private string _storedCharacterPath;
         private bool _storedUnsavedChanged;
@@ -186,7 +185,12 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 					_character.CalculationsInvalidated -= new EventHandler(_character_ItemsChanged);
 					_character.AvailableItemsChanged -= new EventHandler(_character_AvailableItemsChanged);
                 }
-				_character = value; 
+				_character = value;
+                if (_batchCharacter != null && _batchCharacter.Character != _character)
+                {
+                    // we're loading a character that is not a batch character
+                    _batchCharacter = null;
+                }
 				if (_character != null)
 				{
 					this.Cursor = Cursors.WaitCursor;
@@ -227,9 +231,10 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
 					_loadingCharacter = false;
                     _character.IsLoading = false;
-					_character.OnCalculationsInvalidated();
+					//_character.OnCalculationsInvalidated(); nothing actually changed on the character, we just need calculations
+                    _character_ItemsChanged(_character, EventArgs.Empty); // this way it won't cause extra invalidations for other listeners of the event
 				}
-			}
+            }
 		}
 
 		void _character_ClassChanged(object sender, EventArgs e)
@@ -676,6 +681,15 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			comboBoxModel.SelectedItem = characterModel;
         }
 
+        public void BatchCharacterSaved(BatchCharacter character)
+        {
+            if (_batchCharacter == character)
+            {
+                _unsavedChanges = false;
+                SetTitle();
+            }
+        }
+
         public void LoadBatchCharacter(BatchCharacter character)
         {
             if (character.Character != null)
@@ -685,10 +699,6 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
                     _storedCharacter = _character;
                     _storedCharacterPath = _characterPath;
                     _storedUnsavedChanged = _unsavedChanges;
-                }
-                else
-                {
-                    _batchCharacter.UnsavedChanges = _unsavedChanges;
                 }
                 _batchCharacter = character;
                 _characterPath = character.AbsulutePath;
@@ -700,7 +710,6 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
         {
             if (_batchCharacter != null)
             {
-                _batchCharacter.UnsavedChanges = _unsavedChanges;
                 _batchCharacter = null;
                 _characterPath = _storedCharacterPath;
                 LoadCharacterIntoForm(_storedCharacter, _storedUnsavedChanged);
@@ -838,6 +847,10 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			{
 				this.Cursor = Cursors.WaitCursor;
 				Character.Save(_characterPath);
+                if (_batchCharacter != null)
+                {
+                    _batchCharacter.UnsavedChanges = false;
+                }
 				_unsavedChanges = false;
 				AddRecentCharacter(_characterPath);
                 SetTitle();

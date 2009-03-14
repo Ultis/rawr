@@ -461,7 +461,7 @@ namespace Rawr //O O . .
 
         public void InvalidateItemInstances()
         {
-            _relevantItemInstances = new Dictionary<Character.CharacterSlot, List<ItemInstance>>();
+            _relevantItemInstances.Clear();
         }
 
         public void InvalidateItemInstances(Character.CharacterSlot slot)

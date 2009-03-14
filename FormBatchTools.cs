@@ -147,6 +147,7 @@ namespace Rawr
                         Character _character = CurrentBatchCharacter.Character;
                         Character bestCharacter = e.OptimizedCharacter;
 
+                        _character.IsLoading = true;
                         _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
                         _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
                         _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
@@ -166,24 +167,12 @@ namespace Rawr
                         _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
                         _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
                         _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
-                        _character.BackEnchant = bestCharacter.BackEnchant;
-                        _character.ChestEnchant = bestCharacter.ChestEnchant;
-                        _character.FeetEnchant = bestCharacter.FeetEnchant;
-                        _character.Finger1Enchant = bestCharacter.Finger1Enchant;
-                        _character.Finger2Enchant = bestCharacter.Finger2Enchant;
-                        _character.HandsEnchant = bestCharacter.HandsEnchant;
-                        _character.HeadEnchant = bestCharacter.HeadEnchant;
-                        _character.LegsEnchant = bestCharacter.LegsEnchant;
-                        _character.MainHandEnchant = bestCharacter.MainHandEnchant;
-                        _character.OffHandEnchant = bestCharacter.OffHandEnchant;
-                        _character.RangedEnchant = bestCharacter.RangedEnchant;
-                        _character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-                        _character.WristEnchant = bestCharacter.WristEnchant;
+                        _character.IsLoading = false;
                         _character.OnCalculationsInvalidated();
 
-                        CurrentBatchCharacter.UnsavedChanges = true;
+                        //CurrentBatchCharacter.UnsavedChanges = true;
                         //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
-                        CurrentBatchCharacter.NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
+                        //CurrentBatchCharacter.NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
 
                         optimizerRound = 0;
                     }
@@ -772,6 +761,7 @@ namespace Rawr
                 {
                     character.Character.Save(character.AbsulutePath);
                     character.UnsavedChanges = false;
+                    FormMain.Instance.BatchCharacterSaved(character);
                 }
             }
         }
@@ -901,6 +891,7 @@ namespace Rawr
                 Character _character = BatchCharacterList[i].Character;
                 Character bestCharacter = e.OptimizedBatch.Character[i];
 
+                _character.IsLoading = true;
                 _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
                 _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
                 _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
@@ -920,24 +911,12 @@ namespace Rawr
                 _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
                 _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
                 _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
-                _character.BackEnchant = bestCharacter.BackEnchant;
-                _character.ChestEnchant = bestCharacter.ChestEnchant;
-                _character.FeetEnchant = bestCharacter.FeetEnchant;
-                _character.Finger1Enchant = bestCharacter.Finger1Enchant;
-                _character.Finger2Enchant = bestCharacter.Finger2Enchant;
-                _character.HandsEnchant = bestCharacter.HandsEnchant;
-                _character.HeadEnchant = bestCharacter.HeadEnchant;
-                _character.LegsEnchant = bestCharacter.LegsEnchant;
-                _character.MainHandEnchant = bestCharacter.MainHandEnchant;
-                _character.OffHandEnchant = bestCharacter.OffHandEnchant;
-                _character.RangedEnchant = bestCharacter.RangedEnchant;
-                _character.ShouldersEnchant = bestCharacter.ShouldersEnchant;
-                _character.WristEnchant = bestCharacter.WristEnchant;
+                _character.IsLoading = false;
                 _character.OnCalculationsInvalidated();
 
-                BatchCharacterList[i].UnsavedChanges = true;
+                //BatchCharacterList[i].UnsavedChanges = true;
                 //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
-                BatchCharacterList[i].NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
+                //BatchCharacterList[i].NewScore = ItemInstanceOptimizer.GetOptimizationValue(_character, CurrentBatchCharacter.Model); // on item change always evaluate with equipped gear first (needed by mage module to store incremental data)
             }
             currentOperation = AsyncOperation.None;
             buttonCancel.Enabled = false;
@@ -1045,9 +1024,19 @@ namespace Rawr
                 if (character == null && absolutePath != null)
                 {
                     character = Character.Load(absolutePath);
+                    character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
                 }
                 return character;
             }
+        }
+
+        void character_CalculationsInvalidated(object sender, EventArgs e)
+        {
+            unsavedChanges = true;
+            newScore = ItemInstanceOptimizer.GetOptimizationValue(Character, Model);
+
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Name"));
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("NewScore"));            
         }
 
         private CalculationsBase model;
@@ -1125,14 +1114,6 @@ namespace Rawr
             get
             {
                 return newScore;
-            }
-            set
-            {
-                if (newScore != value)
-                {
-                    newScore = value;
-                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("NewScore"));
-                }
             }
         }
 
