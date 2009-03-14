@@ -152,7 +152,7 @@ namespace Rawr.Enhance
             if (calcOpts.GlyphFT)
             {
                 glyphNumber += 1;
-                sb.AppendLine("glyph_major" + glyphNumber + "                    flametongue");
+                sb.AppendLine("glyph_major" + glyphNumber + "                    flametongue_weapon");
             }
             if (calcOpts.GlyphLB)
             {
