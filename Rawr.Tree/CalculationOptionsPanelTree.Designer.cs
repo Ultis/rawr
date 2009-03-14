@@ -191,6 +191,7 @@
             this.cbApplyMore.TabIndex = 56;
             this.cbApplyMore.Text = "Also apply penalty to burst points";
             this.cbApplyMore.UseVisualStyleBackColor = true;
+            this.cbApplyMore.Visible = false;
             this.cbApplyMore.CheckedChanged += new System.EventHandler(this.cbApplyMore_CheckedChanged);
             // 
             // label1
@@ -202,6 +203,7 @@
             this.label1.TabIndex = 55;
             this.label1.Text = "The Penalty value will punish going out of mana by scaling down the sustained hea" +
                 "ling points. Use this to make mana regeneration suddenly very important.";
+            this.label1.Visible = false;
             // 
             // tbOOMPenalty
             // 
@@ -212,6 +214,7 @@
             this.tbOOMPenalty.Size = new System.Drawing.Size(262, 45);
             this.tbOOMPenalty.TabIndex = 54;
             this.tbOOMPenalty.TickFrequency = 5;
+            this.tbOOMPenalty.Visible = false;
             this.tbOOMPenalty.Scroll += new System.EventHandler(this.tbOOMPenalty_Scroll);
             // 
             // lblOOMPenalty
@@ -222,6 +225,7 @@
             this.lblOOMPenalty.Size = new System.Drawing.Size(148, 13);
             this.lblOOMPenalty.TabIndex = 53;
             this.lblOOMPenalty.Text = "Penalty for going out of mana:";
+            this.lblOOMPenalty.Visible = false;
             // 
             // label7
             // 
@@ -242,6 +246,7 @@
             this.tbPrimaryHealFrac.Size = new System.Drawing.Size(262, 45);
             this.tbPrimaryHealFrac.TabIndex = 51;
             this.tbPrimaryHealFrac.TickFrequency = 5;
+            this.tbPrimaryHealFrac.Visible = false;
             this.tbPrimaryHealFrac.Scroll += new System.EventHandler(this.tbPrimaryHealFrac_Scroll);
             // 
             // lblPrimaryHeal
@@ -252,6 +257,7 @@
             this.lblPrimaryHeal.Size = new System.Drawing.Size(103, 13);
             this.lblPrimaryHeal.TabIndex = 52;
             this.lblPrimaryHeal.Text = "Primary Heal Usage:";
+            this.lblPrimaryHeal.Visible = false;
             // 
             // tbWildGrowth
             // 

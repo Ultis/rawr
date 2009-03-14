@@ -36,6 +36,10 @@ namespace Rawr.Tree
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
 
+            dictValues.Add("HealBurst", BurstPoints.ToString());
+            dictValues.Add("HealSustained", SustainedPoints.ToString());
+            dictValues.Add("Overall", OverallPoints.ToString());
+
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
@@ -56,7 +60,7 @@ namespace Rawr.Tree
             dictValues.Add("Spell Haste", Math.Round(sp, 2) + "%");
             dictValues.Add("Global CD", Math.Round(1.5f / (haste * sp), 2) + "sec*" + Math.Round(haste_until_hard_cap, 0).ToString() + " Haste Rating until hard gcd cap\n" + Math.Round(haste_until_soft_cap, 0).ToString() + " Haste Rating until soft (GotEM) gcd cap");
 
-            dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString());
+            dictValues.Add("Time until OOM", Simulation.TimeToOOM.ToString() + "* " + Math.Round(Simulation.UnusedMana, 0).ToString() + " mana remaining at end of fight");
             dictValues.Add("Total healing done", Simulation.TotalHealing.ToString());
             dictValues.Add("HPS for primary heal", Math.Round(Simulation.HPSFromPrimary,2).ToString());
             dictValues.Add("HPS for tank HoTs", Math.Round(Simulation.HPSFromHots,2).ToString());
@@ -65,12 +69,9 @@ namespace Rawr.Tree
             dictValues.Add("MPS for Wild Growth", Math.Round(Simulation.MPSFromWildGrowth, 2).ToString());
             dictValues.Add("Mana regen per second", Math.Round(Simulation.ManaPer5InRotation/5, 2).ToString());
             dictValues.Add("HoT refresh fraction", Math.Round(Simulation.HotsFraction, 2).ToString());
+            dictValues.Add("Unused cast time fraction", Math.Round(Simulation.UnusedCastTimeFrac, 2).ToString());
             dictValues.Add("Casts per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
-            dictValues.Add("Crits per minute until OOM", Math.Round(Simulation.CastsPerMinute, 2).ToString());
-
-            dictValues.Add("HealBurst", BurstPoints.ToString());
-            dictValues.Add("HealSustained", SustainedPoints.ToString());
-            dictValues.Add("Overall", OverallPoints.ToString());
+            dictValues.Add("Crits per minute until OOM", Math.Round(Simulation.CritsPerMinute, 2).ToString());
 
             Spell spell = new Regrowth(this, BasicStats, true);
             dictValues.Add("RG Heal", Math.Round(spell.AverageHealing, 2) + "*" + 

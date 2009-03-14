@@ -31,6 +31,8 @@ namespace Rawr.Tree
         public float TotalCastsPerMinute;
         public float TotalCritsPerMinute;
         public float TotalHealsPerMinute;
+        public float UnusedMana;
+        public float UnusedCastTimeFrac;
     }
 
     public enum HealTargetTypes { TankHealing = 0, RaidHealing = 1 };
@@ -148,6 +150,10 @@ namespace Rawr.Tree
                 if (_characterDisplayCalculationLabels == null)
                 {
                     _characterDisplayCalculationLabels = new string[] {
+                        "Points:HealBurst",
+                        "Points:HealSustained",
+                        "Points:Overall",
+
                         "Basic Stats:Health",
                         "Basic Stats:Mana",
                         "Basic Stats:Stamina",
@@ -159,18 +165,15 @@ namespace Rawr.Tree
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Global CD",
 
-                        "Points:HealBurst",
-                        "Points:HealSustained",
-                        "Points:Overall",
-
                         "Simulation:Time until OOM",
                         "Simulation:Total healing done",
-                        "Simulation:HPS for primary heal",
                         "Simulation:HPS for tank HoTs",
-                        "Simulation:MPS for primary heal",
                         "Simulation:MPS for tank HoTs",
                         "Simulation:MPS for Wild Growth",
                         "Simulation:HoT refresh fraction",
+                        "Simulation:HPS for primary heal",
+                        "Simulation:MPS for primary heal",
+                        "Simulation:Unused cast time fraction",
                         "Simulation:Mana regen per second",
                         "Simulation:Casts per minute until OOM",
                         "Simulation:Crits per minute until OOM",
@@ -297,6 +300,7 @@ namespace Rawr.Tree
         
         protected Rotation SimulateHealing(CharacterCalculationsTree calculatedStats, Stats stats, CalculationOptionsTree calcOpts, int wgPerMin, bool rejuvOnTank, bool rgOnTank, bool lbOnTank, int nTanks, Spell primaryHeal, float primaryFrac, HealTargetTypes primaryHealTarget)
         {
+            //Value passed in primaryFrac, not used anymore, this value is calculated to let mana last for the fight duration
             #region Spells
             int hots = 0;
             if (rejuvOnTank) hots++;
@@ -368,43 +372,6 @@ namespace Rawr.Tree
             healsPerMinute += hotsHealsPerMinute;
             #endregion
 
-            #region Primary Heal
-            if (calcOpts.newManaRegen)
-            {
-                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
-            }
-            else
-            {
-                primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);
-            }            
-            float tpsHealing = 1f - (hotsCastTime + wgCastTime);
-            float tpsHeal100 = tpsHealing;
-            tpsHealing *= primaryFrac;
-            float hpsHealing = 0;
-            float hpsHeal100 = 0;
-            // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
-            if (primaryHealTarget == HealTargetTypes.RaidHealing)
-            {
-                hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
-                                                                //   by total healing by primaryHeal/cast time
-                                                                // This assumes full HoT duration is effective on raid
-                                                                //   members. 
-                hpsHeal100 = tpsHeal100 * primaryHeal.HPCT;
-            } 
-            else  
-            {
-                hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
-                hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
-            }
-            float mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
-            castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
-            critsPerMinute += 60f * tpsHealing / primaryHeal.CastTime * primaryHeal.CritPercent / 100f;
-            float primaryCPM = 60f * tpsHealing / primaryHeal.CastTime;
-            healsPerMinute += primaryCPM; // direct component
-            if (primaryHeal is Regrowth || primaryHeal is Rejuvenation)
-                healsPerMinute += primaryCPM * primaryHeal.PeriodicTicks; // hot component
-            #endregion
-
             #region Mana regeneration
             float spiritRegen = CalculateManaRegen(stats.Intellect, stats.Spirit);
             float spiritRegenPlusMDF = CalculateManaRegen(stats.Intellect, stats.ExtraSpiritWhileCasting + stats.Spirit);
@@ -450,6 +417,83 @@ namespace Rawr.Tree
             manaFromInnervate = Math.Min(manaFromInnervate, .95f * stats.Mana);
 
             extraMana += manaFromInnervate;
+            #endregion
+
+
+            #region Determine if Mana or GCD limited
+            if (calcOpts.newManaRegen)
+            {
+                primaryHeal.calculateNewNaturesGrace(primaryHeal.CritPercent / 100f);
+            }
+            else
+            {
+                primaryHeal.calculateOldNaturesGrace(primaryHeal.CritPercent / 100f);
+            }
+
+            float tpsHealing = 1f - (hotsCastTime + wgCastTime);
+
+            // Determine if Mana or GCD limited
+            float effectiveManaBurnTankHots = hotsMPS + wgMPS - manaRegen / 5f;
+            float manaAvailForPrimaryHeal = (extraMana + stats.Mana) - effectiveManaBurnTankHots * calcOpts.FightDuration;
+            float primaryHealMpsAvail = manaAvailForPrimaryHeal / calcOpts.FightDuration;
+            float mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
+
+            float unusedMana = 0f;
+            float unusedCastTimeFrac = 0f;
+
+            if (primaryHealMpsAvail < 0)
+            {
+                // Not enough mana to keep hots up
+                // Mana limited
+                primaryFrac = 0f;
+
+                unusedCastTimeFrac = tpsHealing;
+
+            }
+            else if (primaryHealMpsAvail > mpsHealing)
+            {
+                // GCD limited
+                unusedMana = (primaryHealMpsAvail - mpsHealing) * calcOpts.FightDuration;
+                primaryFrac = 1.0f;
+            }
+            else
+            {
+                // Mana limited
+                primaryFrac = primaryHealMpsAvail / mpsHealing;
+
+                unusedCastTimeFrac = tpsHealing * (1.0f - primaryFrac);
+            }
+
+            #endregion
+
+
+            #region Primary Heal
+
+            float tpsHeal100 = tpsHealing;
+            tpsHealing *= primaryFrac;
+            float hpsHealing = 0;
+            float hpsHeal100 = 0;
+            // Wildebees: 20090221 : Changed check to be based on raidHealing, instead of just handling lifebloom and rejuv differently
+            if (primaryHealTarget == HealTargetTypes.RaidHealing)
+            {
+                hpsHealing = tpsHealing * primaryHeal.HPCT;     // fraction of time casting primaryHeal multiplied
+                //   by total healing by primaryHeal/cast time
+                // This assumes full HoT duration is effective on raid
+                //   members. 
+                hpsHeal100 = tpsHeal100 * primaryHeal.HPCT;
+            }
+            else
+            {
+                hpsHealing = tpsHealing * primaryHeal.HPS;      // For single target healing, don't receive the full HoT effect
+                hpsHeal100 = tpsHeal100 * primaryHeal.HPS;
+            }
+            mpsHealing = tpsHealing * primaryHeal.manaCost / primaryHeal.CastTime;
+            castsPerMinute += 60f * tpsHealing / primaryHeal.CastTime;
+            critsPerMinute += 60f * tpsHealing / primaryHeal.CastTime * primaryHeal.CritPercent / 100f;
+            float primaryCPM = 60f * tpsHealing / primaryHeal.CastTime;
+            healsPerMinute += primaryCPM; // direct component
+            if (primaryHeal is Regrowth || primaryHeal is Rejuvenation)
+                healsPerMinute += primaryCPM * primaryHeal.PeriodicTicks; // hot component
             #endregion
 
             #region Calculate total healing in the fight
@@ -499,6 +543,8 @@ namespace Rawr.Tree
                 TotalCritsPerMinute = critsPerMinute * TotalMod,
                 TotalHealsPerMinute = healsPerMinute * TotalMod,
                 ReplenishRegen = replenishment,
+                UnusedMana = unusedMana,
+                UnusedCastTimeFrac = unusedCastTimeFrac,
             };
         }
 
