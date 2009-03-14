@@ -39,9 +39,9 @@
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.chbUseDoomguard = new System.Windows.Forms.CheckBox();
             this.tbAffEffects = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
             this.lblDelay = new System.Windows.Forms.Label();
             this.lblFSR = new System.Windows.Forms.Label();
             this.lblJoW = new System.Windows.Forms.Label();
@@ -181,6 +181,16 @@
             this.tbAffEffects.TextChanged += new System.EventHandler(this.tbAffEffects_Changed);
             this.tbAffEffects.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbAffEffects_KeyPress);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(130, 13);
+            this.label2.TabIndex = 73;
+            this.label2.Text = "Affliction effects on target:";
+            this.toolTip1.SetToolTip(this.label2, "Excluding your own Affliction effects");
+            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabFight);
@@ -218,16 +228,6 @@
             this.tabFight.TabIndex = 1;
             this.tabFight.Text = "Fight";
             this.tabFight.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 69);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(130, 13);
-            this.label2.TabIndex = 73;
-            this.label2.Text = "Affliction effects on target:";
-            this.toolTip1.SetToolTip(this.label2, "Excluding your own Affliction effects");
             // 
             // lblDelay
             // 
@@ -450,6 +450,7 @@
             this.chbGlyphMetamorphosis.TabIndex = 98;
             this.chbGlyphMetamorphosis.Text = "Glyph of Metamorphosis";
             this.chbGlyphMetamorphosis.UseVisualStyleBackColor = true;
+            this.chbGlyphMetamorphosis.CheckedChanged += new System.EventHandler(this.chbGlyphMetamorphosis_CheckedChanged);
             // 
             // chbGlyphChaosBolt
             // 
@@ -460,6 +461,7 @@
             this.chbGlyphChaosBolt.TabIndex = 97;
             this.chbGlyphChaosBolt.Text = "Glyph of Chaos Bolt";
             this.chbGlyphChaosBolt.UseVisualStyleBackColor = true;
+            this.chbGlyphChaosBolt.CheckedChanged += new System.EventHandler(this.chbGlyphChaosBolt_CheckedChanged);
             // 
             // chbGlyphLifeTap
             // 
@@ -470,6 +472,7 @@
             this.chbGlyphLifeTap.TabIndex = 96;
             this.chbGlyphLifeTap.Text = "Glyph of Life Tap";
             this.chbGlyphLifeTap.UseVisualStyleBackColor = true;
+            this.chbGlyphLifeTap.CheckedChanged += new System.EventHandler(this.chbGlyphLifeTap_CheckedChanged);
             // 
             // chbGlyphHaunt
             // 
@@ -480,6 +483,7 @@
             this.chbGlyphHaunt.TabIndex = 95;
             this.chbGlyphHaunt.Text = "Glyph of Haunt";
             this.chbGlyphHaunt.UseVisualStyleBackColor = true;
+            this.chbGlyphHaunt.CheckedChanged += new System.EventHandler(this.chbGlyphHaunt_CheckedChanged);
             // 
             // chbGlyphIncinerate
             // 
@@ -490,6 +494,7 @@
             this.chbGlyphIncinerate.TabIndex = 94;
             this.chbGlyphIncinerate.Text = "Glyph of Incinerate";
             this.chbGlyphIncinerate.UseVisualStyleBackColor = true;
+            this.chbGlyphIncinerate.CheckedChanged += new System.EventHandler(this.chbGlyphIncinerate_CheckedChanged);
             // 
             // chbGlyphCorruption
             // 
@@ -500,6 +505,7 @@
             this.chbGlyphCorruption.TabIndex = 93;
             this.chbGlyphCorruption.Text = "Glyph of Corruption";
             this.chbGlyphCorruption.UseVisualStyleBackColor = true;
+            this.chbGlyphCorruption.CheckedChanged += new System.EventHandler(this.chbGlyphCorruption_CheckedChanged);
             // 
             // chbGlyphSearingPain
             // 
@@ -510,6 +516,7 @@
             this.chbGlyphSearingPain.TabIndex = 92;
             this.chbGlyphSearingPain.Text = "Glyph of Searing Pain";
             this.chbGlyphSearingPain.UseVisualStyleBackColor = true;
+            this.chbGlyphSearingPain.CheckedChanged += new System.EventHandler(this.chbGlyphSearingPain_CheckedChanged);
             // 
             // chbGlyphShadowburn
             // 
@@ -521,6 +528,7 @@
             this.chbGlyphShadowburn.TabIndex = 91;
             this.chbGlyphShadowburn.Text = "Glyph of Shadowburn";
             this.chbGlyphShadowburn.UseVisualStyleBackColor = true;
+            this.chbGlyphShadowburn.CheckedChanged += new System.EventHandler(this.chbGlyphShadowburn_CheckedChanged);
             // 
             // chbGlyphSB
             // 
@@ -531,6 +539,7 @@
             this.chbGlyphSB.TabIndex = 90;
             this.chbGlyphSB.Text = "Glyph of Shadow Bolt";
             this.chbGlyphSB.UseVisualStyleBackColor = true;
+            this.chbGlyphSB.CheckedChanged += new System.EventHandler(this.chbGlyphSB_CheckedChanged);
             // 
             // chbGlyphSiphonLife
             // 
@@ -541,6 +550,7 @@
             this.chbGlyphSiphonLife.TabIndex = 89;
             this.chbGlyphSiphonLife.Text = "Glyph of Siphon Life";
             this.chbGlyphSiphonLife.UseVisualStyleBackColor = true;
+            this.chbGlyphSiphonLife.CheckedChanged += new System.EventHandler(this.chbGlyphSiphonLife_CheckedChanged);
             // 
             // chbGlyphUA
             // 
@@ -551,6 +561,7 @@
             this.chbGlyphUA.TabIndex = 88;
             this.chbGlyphUA.Text = "Glyph of Unstable Affliction";
             this.chbGlyphUA.UseVisualStyleBackColor = true;
+            this.chbGlyphUA.CheckedChanged += new System.EventHandler(this.chbGlyphUA_CheckedChanged);
             // 
             // chbGlyphImp
             // 
@@ -561,6 +572,7 @@
             this.chbGlyphImp.TabIndex = 87;
             this.chbGlyphImp.Text = "Glyph of Imp";
             this.chbGlyphImp.UseVisualStyleBackColor = true;
+            this.chbGlyphImp.CheckedChanged += new System.EventHandler(this.chbGlyphImp_CheckedChanged);
             // 
             // chbGlyphImmolate
             // 
@@ -571,6 +583,7 @@
             this.chbGlyphImmolate.TabIndex = 86;
             this.chbGlyphImmolate.Text = "Glyph of Immolate";
             this.chbGlyphImmolate.UseVisualStyleBackColor = true;
+            this.chbGlyphImmolate.CheckedChanged += new System.EventHandler(this.chbGlyphImmolate_CheckedChanged);
             // 
             // chbGlyphFelguard
             // 
@@ -581,6 +594,7 @@
             this.chbGlyphFelguard.TabIndex = 85;
             this.chbGlyphFelguard.Text = "Glyph of Felguard";
             this.chbGlyphFelguard.UseVisualStyleBackColor = true;
+            this.chbGlyphFelguard.CheckedChanged += new System.EventHandler(this.chbGlyphFelguard_CheckedChanged);
             // 
             // chbGlyphCoA
             // 
@@ -591,6 +605,7 @@
             this.chbGlyphCoA.TabIndex = 84;
             this.chbGlyphCoA.Text = "Glyph of Curse of Agony";
             this.chbGlyphCoA.UseVisualStyleBackColor = true;
+            this.chbGlyphCoA.CheckedChanged += new System.EventHandler(this.chbGlyphCoA_CheckedChanged);
             // 
             // chbGlyphConflag
             // 
@@ -601,6 +616,7 @@
             this.chbGlyphConflag.TabIndex = 83;
             this.chbGlyphConflag.Text = "Glyph of Conflagrate";
             this.chbGlyphConflag.UseVisualStyleBackColor = true;
+            this.chbGlyphConflag.CheckedChanged += new System.EventHandler(this.chbGlyphConflag_CheckedChanged);
             // 
             // CalculationOptionsPanelWarlock
             // 

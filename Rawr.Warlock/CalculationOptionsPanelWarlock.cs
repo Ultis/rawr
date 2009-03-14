@@ -261,16 +261,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void chbGlyphShadowburn_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphShadowburn = chbGlyphShadowburn.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chbGlyphSiphonLife_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -337,6 +327,16 @@ namespace Rawr.Warlock
             {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
                 calcOpts.GlyphIncinerate = chbGlyphIncinerate.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chbGlyphShadowburn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.GlyphShadowburn = chbGlyphShadowburn.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
