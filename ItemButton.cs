@@ -70,7 +70,7 @@ namespace Rawr
 			}
 			else if (e.Button == MouseButtons.Right && SelectedItemInstance != null)
 			{
-				ItemContextualMenu.Instance.Show(SelectedItemInstance, Character.CharacterSlot.None, false);
+                ItemContextualMenu.Instance.Show(SelectedItemInstance, CharacterSlot, false);
 			}
 		}
 

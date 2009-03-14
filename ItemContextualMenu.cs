@@ -43,6 +43,7 @@ namespace Rawr
 		private ToolStripMenuItem _menuItemCreateCatGemmings;
         private ToolStripMenuItem _menuItemEvaluateUpgrade;
         private ToolStripMenuItem _menuItemCustomizeItem;
+        private ToolStripMenuItem _menuItemEquipCustomizedItem;
         public ItemContextualMenu()
 		{
 			_menuItemName = new ToolStripMenuItem();
@@ -78,6 +79,9 @@ namespace Rawr
             _menuItemCustomizeItem = new ToolStripMenuItem("Add Custom Gemming...");
             _menuItemCustomizeItem.Click += new EventHandler(_menuItemCustomizeItem_Click);
 
+            _menuItemEquipCustomizedItem = new ToolStripMenuItem("Equip Custom Gemming...");
+            _menuItemEquipCustomizedItem.Click += new EventHandler(_menuItemEquipCustomizedItem_Click);
+
 			this.Items.Add(_menuItemName);
 			this.Items.Add(new ToolStripSeparator());
 			this.Items.Add(_menuItemEdit);
@@ -87,10 +91,22 @@ namespace Rawr
 			this.Items.Add(_menuItemEquip);
             this.Items.Add(_menuItemEquipAll);
             this.Items.Add(_menuItemCustomizeItem);
+            this.Items.Add(_menuItemEquipCustomizedItem);
             this.Items.Add(_menuItemDelete);
 			//this.Items.Add(_menuItemDeleteDuplicates);
             this.Items.Add(_menuItemEvaluateUpgrade);
 		}
+
+        void _menuItemEquipCustomizedItem_Click(object sender, EventArgs e)
+        {
+            FormItemInstance form = new FormItemInstance();
+            form.CharacterSlot = _equipSlot;
+            form.ItemInstance = _item.Clone();
+            if (form.ShowDialog(FormMain.Instance) == DialogResult.OK)
+            {
+                Character[_equipSlot] = form.ItemInstance == null ? null : form.ItemInstance.Clone();
+            }
+        }
 
         void _menuItemCustomizeItem_Click(object sender, EventArgs e)
         {
@@ -132,8 +148,8 @@ namespace Rawr
             _characterItems = characterItems;
             _menuItemEquipAll.Visible = (_characterItems != null);
 			_equipSlot = equipSlot;
-			_menuItemEquip.Enabled = (this.Character[equipSlot] != item);
-            _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = equipSlot != Character.CharacterSlot.None;
+			_menuItemEquip.Enabled = (Character[equipSlot] != item);
+            _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = _menuItemEquipCustomizedItem.Visible = equipSlot != Character.CharacterSlot.None;
 			_menuItemDelete.Enabled = allowDelete && _menuItemEquip.Enabled && Character.CustomItemInstances.Contains(item);
 			_menuItemDeleteDuplicates.Enabled = allowDelete;
 			_menuItemName.Text = item.Item.Name;
@@ -268,25 +284,10 @@ namespace Rawr
         void _menuItemEquipAll_Click(object sender, EventArgs e)
         {
             _character.IsLoading = true;
-            _character.Back = _characterItems[(int)Character.CharacterSlot.Back] == null ? null : _characterItems[(int)Character.CharacterSlot.Back].Clone();
-            _character.Chest = _characterItems[(int)Character.CharacterSlot.Chest] == null ? null : _characterItems[(int)Character.CharacterSlot.Chest].Clone();
-            _character.Feet = _characterItems[(int)Character.CharacterSlot.Feet] == null ? null : _characterItems[(int)Character.CharacterSlot.Feet].Clone();
-            _character.Finger1 = _characterItems[(int)Character.CharacterSlot.Finger1] == null ? null : _characterItems[(int)Character.CharacterSlot.Finger1].Clone();
-            _character.Finger2 = _characterItems[(int)Character.CharacterSlot.Finger2] == null ? null : _characterItems[(int)Character.CharacterSlot.Finger2].Clone();
-            _character.Hands = _characterItems[(int)Character.CharacterSlot.Hands] == null ? null : _characterItems[(int)Character.CharacterSlot.Hands].Clone();
-            _character.Head = _characterItems[(int)Character.CharacterSlot.Head] == null ? null : _characterItems[(int)Character.CharacterSlot.Head].Clone();
-            _character.Legs = _characterItems[(int)Character.CharacterSlot.Legs] == null ? null : _characterItems[(int)Character.CharacterSlot.Legs].Clone();
-            _character.MainHand = _characterItems[(int)Character.CharacterSlot.MainHand] == null ? null : _characterItems[(int)Character.CharacterSlot.MainHand].Clone();
-            _character.Neck = _characterItems[(int)Character.CharacterSlot.Neck] == null ? null : _characterItems[(int)Character.CharacterSlot.Neck].Clone();
-            _character.OffHand = _characterItems[(int)Character.CharacterSlot.OffHand] == null ? null : _characterItems[(int)Character.CharacterSlot.OffHand].Clone();
-            _character.Projectile = _characterItems[(int)Character.CharacterSlot.Projectile] == null ? null : _characterItems[(int)Character.CharacterSlot.Projectile].Clone();
-            _character.ProjectileBag = _characterItems[(int)Character.CharacterSlot.ProjectileBag] == null ? null : _characterItems[(int)Character.CharacterSlot.ProjectileBag].Clone();
-            _character.Ranged = _characterItems[(int)Character.CharacterSlot.Ranged] == null ? null : _characterItems[(int)Character.CharacterSlot.Ranged].Clone();
-            _character.Shoulders = _characterItems[(int)Character.CharacterSlot.Shoulders] == null ? null : _characterItems[(int)Character.CharacterSlot.Shoulders].Clone();
-            _character.Trinket1 = _characterItems[(int)Character.CharacterSlot.Trinket1] == null ? null : _characterItems[(int)Character.CharacterSlot.Trinket1].Clone();
-            _character.Trinket2 = _characterItems[(int)Character.CharacterSlot.Trinket2] == null ? null : _characterItems[(int)Character.CharacterSlot.Trinket2].Clone();
-            _character.Waist = _characterItems[(int)Character.CharacterSlot.Waist] == null ? null : _characterItems[(int)Character.CharacterSlot.Waist].Clone();
-            _character.Wrist = _characterItems[(int)Character.CharacterSlot.Wrist] == null ? null : _characterItems[(int)Character.CharacterSlot.Wrist].Clone();
+            for (int slot = 0; slot < 19; slot++)
+            {
+                _character[(Character.CharacterSlot)slot] = _characterItems[slot] == null ? null : _characterItems[slot].Clone();
+            }
             _character.IsLoading = false;
             _character.OnCalculationsInvalidated();
         }
