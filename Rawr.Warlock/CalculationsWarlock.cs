@@ -123,6 +123,10 @@ namespace Rawr.Warlock
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
+                    "Simulation:Rotation",
+                    "Simulation:DPS",
+                    "Simulation:Pet DPS",
+                    "Simulation:Total DPS",
                     "Basic Stats:Health",
                     "Basic Stats:Resilience",
                     "Basic Stats:Mana",
@@ -134,10 +138,6 @@ namespace Rawr.Warlock
                     "Basic Stats:Crit",
                     "Basic Stats:Hit",
                     "Basic Stats:Haste",
-                    "Simulation:Rotation",
-                    "Simulation:DPS",
-                    "Simulation:Pet DPS",
-                    "Simulation:Total DPS",
                     "Shadow:Shadow Bolt",
                     "Shadow:Curse of Agony",
                     "Shadow:Curse of Doom",
