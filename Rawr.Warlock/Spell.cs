@@ -1048,7 +1048,7 @@ namespace Rawr.Warlock
         public override void Calculate(Stats stats, Character character)
         {
                 Spell tmpImmo = new Immolate (stats, character);
-                MinDamage = MaxDamage = tmpImmo.DotDamage / tmpImmo.TimeBetweenTicks * 15;
+                MinDamage = MaxDamage = tmpImmo.DotDamage / (tmpImmo.DebuffDuration / tmpImmo.TimeBetweenTicks) * 15;
 
             /*MinDamage = (BaseMinDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DamageCoef)
                           * (1 + character.WarlockTalents.Emberstorm * 0.02f)
