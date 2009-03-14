@@ -280,6 +280,7 @@ namespace Rawr.Cat
 			float chanceGlance = 0.24f;
 			float chanceCrit = (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
+			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
 			float chanceHitNonGlance = 1f - chanceCrit - chanceAvoided - chanceGlance;
 			float chanceNonAvoided = 1f - chanceAvoided;
@@ -308,9 +309,9 @@ namespace Rawr.Cat
 										chanceHitNonGlance * meleeDamageRaw;
 			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
-			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + 
-										((1f - chanceCrit) * rakeDamageDot + chanceCrit * rakeDamageDot * critMultiplierBleed);
-			float ripDamageAverage = ((1f - chanceCrit) * ripDamageRaw + chanceCrit * ripDamageRaw * critMultiplierBleed);
+			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) +
+										((1f - chanceCritBleed) * rakeDamageDot + chanceCritBleed * rakeDamageDot * critMultiplierBleed);
+			float ripDamageAverage = ((1f - chanceCritBleed) * ripDamageRaw + chanceCritBleed * ripDamageRaw * critMultiplierBleed);
 			float biteDamageAverage = (1f - chanceCritBite) * biteDamageRaw + chanceCritBite * biteDamageRaw * critMultiplier;
 			#endregion
 

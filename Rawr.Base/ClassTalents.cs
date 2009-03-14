@@ -1826,7 +1826,7 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 
 	public class DruidTalents : TalentsBase, ICloneable
 	{
-		private int[] _data = new int[83];
+		private int[] _data = new int[84];
 		public override int[] Data { get { return _data; } }public DruidTalents() { }
 		public DruidTalents(string talents)
 		{
@@ -2199,63 +2199,67 @@ When activated, this ability temporarily grants you 30% of your maximum health f
 @"Increases damage done by your Maul and Shred attacks on bleeding targets by 20%, and increases the critical strike chance of your Ferocious Bite ability on bleeding targets by 50%.",})]
 		public int RendAndTear { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(56, "Berserk", 1, 1, 2, 11, -1, new string[] {
+		[TalentData(56, "Primal Gore", 1, 1, 3, 10, 55, new string[] {
+@"Grants the periodic damage from your Rake, Lacerate and Rip abilities the ability to critically hit.",})]
+		public int PrimalGore { get { return _data[56]; } set { _data[56] = value; } }
+
+		[TalentData(57, "Berserk", 1, 1, 2, 11, -1, new string[] {
 @"Instant,3 min cooldown,
 When activated, this ability causes your Mangle (Bear) ability to hit up to 3 targets and have no cooldown, and reduces the energy cost of all your Cat Form abilities by 50%. Lasts 15 sec. You cannot use Tiger's Fury while Berserk is active.
 
 Clears the effect of Fear and makes you immune to Fear for the duration.",})]
-		public int Berserk { get { return _data[56]; } set { _data[56] = value; } }
+		public int Berserk { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(57, "Improved Mark of the Wild", 2, 2, 1, 1, -1, new string[] {
-@"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 20%.",
-@"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 40%.",})]
-		public int ImprovedMarkOfTheWild { get { return _data[57]; } set { _data[57] = value; } }
+		[TalentData(58, "Improved Mark of the Wild", 2, 2, 1, 1, -1, new string[] {
+@"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 20%, and increases all of your total attributes by 1%.",
+@"Increases the effects of your Mark of the Wild and Gift of the Wild spells by 40%, and increases all of your total attributes by 2%.",})]
+		public int ImprovedMarkOfTheWild { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(58, "Nature's Focus", 3, 2, 2, 1, -1, new string[] {
+		[TalentData(59, "Nature's Focus", 3, 2, 2, 1, -1, new string[] {
 @"Reduces the pushback suffered from damaging attacks while casting Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility by 23%.",
 @"Reduces the pushback suffered from damaging attacks while casting Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility by 46%.",
-@"Reduces the pushback suffered from damaging attacks while casting Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility by 70%.",})]
-		public int NaturesFocus { get { return _data[58]; } set { _data[58] = value; } }
+@"Reduces the pushback suffered from damaging attacks while casting Healing Touch, Wrath, Entangling Roots, Cyclone, Nourish, Regrowth and Tranquility by 71%.",})]
+		public int NaturesFocus { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(59, "Furor", 5, 2, 3, 1, -1, new string[] {
+		[TalentData(60, "Furor", 5, 2, 3, 1, -1, new string[] {
 @"Gives you 20% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 20 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 2%.",
 @"Gives you 40% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 40 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 4%.",
-@"Gives you 60% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 60 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 6%.",
-@"Gives you 80% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 80 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 8%.",
+@"Gives you 61% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 61 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 6%.",
+@"Gives you 81% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 81 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 8%.",
 @"Gives you 100% chance to gain 10 Rage when you shapeshift into Bear and Dire Bear Form, and you keep up to 100 Energy when you shapeshift into Cat Form, and increases your total Intellect while in Moonkin form by 10%.",})]
-		public int Furor { get { return _data[59]; } set { _data[59] = value; } }
+		public int Furor { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(60, "Naturalist", 5, 2, 1, 2, -1, new string[] {
+		[TalentData(61, "Naturalist", 5, 2, 1, 2, -1, new string[] {
 @"Reduces the cast time of your Healing Touch spell by 0.1 sec and increases the damage you deal with physical attacks in all forms by 2%.",
 @"Reduces the cast time of your Healing Touch spell by 0.2 sec and increases the damage you deal with physical attacks in all forms by 4%.",
 @"Reduces the cast time of your Healing Touch spell by 0.3 sec and increases the damage you deal with physical attacks in all forms by 6%.",
 @"Reduces the cast time of your Healing Touch spell by 0.4 sec and increases the damage you deal with physical attacks in all forms by 8%.",
 @"Reduces the cast time of your Healing Touch spell by 0.5 sec and increases the damage you deal with physical attacks in all forms by 10%.",})]
-		public int Naturalist { get { return _data[60]; } set { _data[60] = value; } }
+		public int Naturalist { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(61, "Subtlety", 3, 2, 2, 2, -1, new string[] {
+		[TalentData(62, "Subtlety", 3, 2, 2, 2, -1, new string[] {
 @"Reduces the threat generated by your restoration spells by 10% and reduces the chance your healing over time spells will be dispelled by 10%.",
 @"Reduces the threat generated by your restoration spells by 20% and reduces the chance your healing over time spells will be dispelled by 20%.",
 @"Reduces the threat generated by your restoration spells by 30% and reduces the chance your healing over time spells will be dispelled by 30%.",})]
-		public int Subtlety { get { return _data[61]; } set { _data[61] = value; } }
+		public int Subtlety { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(62, "Natural Shapeshifter", 3, 2, 3, 2, -1, new string[] {
+		[TalentData(63, "Natural Shapeshifter", 3, 2, 3, 2, -1, new string[] {
 @"Reduces the mana cost of all shapeshifting by 10%.",
 @"Reduces the mana cost of all shapeshifting by 20%.",
 @"Reduces the mana cost of all shapeshifting by 30%.",})]
-		public int NaturalShapeshifter { get { return _data[62]; } set { _data[62] = value; } }
+		public int NaturalShapeshifter { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(63, "Intensity", 3, 2, 1, 3, -1, new string[] {
+		[TalentData(64, "Intensity", 3, 2, 1, 3, -1, new string[] {
 @"Allows 10% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 4 rage.",
 @"Allows 20% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 7 rage.",
 @"Allows 30% of your Mana regeneration to continue while casting and causes your Enrage ability to instantly generate 10 rage.",})]
-		public int Intensity { get { return _data[63]; } set { _data[63] = value; } }
+		public int Intensity { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(64, "Omen of Clarity", 1, 2, 2, 3, -1, new string[] {
+		[TalentData(65, "Omen of Clarity", 1, 2, 2, 3, -1, new string[] {
 @"Each of the Druid's damage, healing spells and auto attacks have a chance of causing the caster to enter a Clearcasting state. The Clearcasting state reduces the Mana, Rage or Energy cost of your next damage, healing spell or offensive ability by 100%.",})]
-		public int OmenOfClarity { get { return _data[64]; } set { _data[64] = value; } }
+		public int OmenOfClarity { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(65, "Master Shapeshifter", 2, 2, 3, 3, 62, new string[] {
+		[TalentData(66, "Master Shapeshifter", 2, 2, 3, 3, 63, new string[] {
 @"Grants an effect which lasts while the Druid is within the respective shapeshift form.
 
 Bear form - Increases physical damage by 2%
@@ -2274,118 +2278,118 @@ Cat form - Increases critical strike chance by 4%
 Moonkin form - Increases spell damage by 4%
 
 Tree of Life form - Increases healing by 4%.",})]
-		public int MasterShapeshifter { get { return _data[65]; } set { _data[65] = value; } }
+		public int MasterShapeshifter { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(66, "Tranquil Spirit", 5, 2, 2, 4, -1, new string[] {
+		[TalentData(67, "Tranquil Spirit", 5, 2, 2, 4, -1, new string[] {
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 2%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 4%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 6%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 8%.",
 @"Reduces the mana cost of your Healing Touch, Nourish and Tranquility spells by 10%.",})]
-		public int TranquilSpirit { get { return _data[66]; } set { _data[66] = value; } }
+		public int TranquilSpirit { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(67, "Improved Rejuvenation", 3, 2, 3, 4, -1, new string[] {
+		[TalentData(68, "Improved Rejuvenation", 3, 2, 3, 4, -1, new string[] {
 @"Increases the effect of your Rejuvenation spell by 5%.",
 @"Increases the effect of your Rejuvenation spell by 10%.",
 @"Increases the effect of your Rejuvenation spell by 15%.",})]
-		public int ImprovedRejuvenation { get { return _data[67]; } set { _data[67] = value; } }
+		public int ImprovedRejuvenation { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(68, "Nature's Swiftness", 1, 2, 1, 5, 63, new string[] {
+		[TalentData(69, "Nature's Swiftness", 1, 2, 1, 5, 64, new string[] {
 @"Instant,3 min cooldown,
 When activated, your next Nature spell with a casting time less than 10 sec. becomes an instant cast spell.",})]
-		public int NaturesSwiftness { get { return _data[68]; } set { _data[68] = value; } }
+		public int NaturesSwiftness { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(69, "Gift of Nature", 5, 2, 2, 5, -1, new string[] {
+		[TalentData(70, "Gift of Nature", 5, 2, 2, 5, -1, new string[] {
 @"Increases the effect of all healing spells by 2%.",
 @"Increases the effect of all healing spells by 4%.",
 @"Increases the effect of all healing spells by 6%.",
 @"Increases the effect of all healing spells by 8%.",
 @"Increases the effect of all healing spells by 10%.",})]
-		public int GiftOfNature { get { return _data[69]; } set { _data[69] = value; } }
+		public int GiftOfNature { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(70, "Improved Tranquility", 2, 2, 4, 5, -1, new string[] {
+		[TalentData(71, "Improved Tranquility", 2, 2, 4, 5, -1, new string[] {
 @"Reduces threat caused by Tranquility by 50%, and reduces the cooldown by 30%.",
 @"Reduces threat caused by Tranquility by 100%, and reduces the cooldown by 60%.",})]
-		public int ImprovedTranquility { get { return _data[70]; } set { _data[70] = value; } }
+		public int ImprovedTranquility { get { return _data[71]; } set { _data[71] = value; } }
 
-		[TalentData(71, "Empowered Touch", 2, 2, 1, 6, -1, new string[] {
+		[TalentData(72, "Empowered Touch", 2, 2, 1, 6, -1, new string[] {
 @"Your Healing Touch spell gains an additional 20% of your bonus healing effects.",
 @"Your Healing Touch spell gains an additional 40% of your bonus healing effects.",})]
-		public int EmpoweredTouch { get { return _data[71]; } set { _data[71] = value; } }
+		public int EmpoweredTouch { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(72, "Improved Regrowth", 5, 2, 3, 6, 67, new string[] {
+		[TalentData(73, "Improved Regrowth", 5, 2, 3, 6, 68, new string[] {
 @"Increases the critical effect chance of your Regrowth spell by 10%.",
 @"Increases the critical effect chance of your Regrowth spell by 20%.",
 @"Increases the critical effect chance of your Regrowth spell by 30%.",
 @"Increases the critical effect chance of your Regrowth spell by 40%.",
 @"Increases the critical effect chance of your Regrowth spell by 50%.",})]
-		public int ImprovedRegrowth { get { return _data[72]; } set { _data[72] = value; } }
+		public int ImprovedRegrowth { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(73, "Living Spirit", 3, 2, 1, 7, -1, new string[] {
+		[TalentData(74, "Living Spirit", 3, 2, 1, 7, -1, new string[] {
 @"Increases your total Spirit by 5%.",
 @"Increases your total Spirit by 10%.",
 @"Increases your total Spirit by 15%.",})]
-		public int LivingSpirit { get { return _data[73]; } set { _data[73] = value; } }
+		public int LivingSpirit { get { return _data[74]; } set { _data[74] = value; } }
 
-		[TalentData(74, "Swiftmend", 1, 2, 2, 7, 69, new string[] {
-@"379 Mana,40 yd range,
+		[TalentData(75, "Swiftmend", 1, 2, 2, 7, 70, new string[] {
+@"380 Mana,40 yd range,
 Instant cast,15 sec cooldown,
 Consumes a Rejuvenation or Regrowth effect on a friendly target to instantly heal them an amount equal to 12 sec. of Rejuvenation or 18 sec. of Regrowth.",})]
-		public int Swiftmend { get { return _data[74]; } set { _data[74] = value; } }
+		public int Swiftmend { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(75, "Natural Perfection", 3, 2, 3, 7, -1, new string[] {
+		[TalentData(76, "Natural Perfection", 3, 2, 3, 7, -1, new string[] {
 @"Your critical strike chance with all spells is increased by 1% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 2%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"Your critical strike chance with all spells is increased by 2% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 3%.  Stacks up to 3 times.  Lasts 8 sec.",
 @"Your critical strike chance with all spells is increased by 3% and critical strikes against you give you the Natural Perfection effect reducing all damage taken by 4%.  Stacks up to 3 times.  Lasts 8 sec.",})]
-		public int NaturalPerfection { get { return _data[75]; } set { _data[75] = value; } }
+		public int NaturalPerfection { get { return _data[76]; } set { _data[76] = value; } }
 
-		[TalentData(76, "Empowered Rejuvenation", 5, 2, 2, 8, -1, new string[] {
+		[TalentData(77, "Empowered Rejuvenation", 5, 2, 2, 8, -1, new string[] {
 @"The bonus healing effects of your healing over time spells is increased by 4%.",
 @"The bonus healing effects of your healing over time spells is increased by 8%.",
 @"The bonus healing effects of your healing over time spells is increased by 12%.",
 @"The bonus healing effects of your healing over time spells is increased by 16%.",
 @"The bonus healing effects of your healing over time spells is increased by 20%.",})]
-		public int EmpoweredRejuvenation { get { return _data[76]; } set { _data[76] = value; } }
+		public int EmpoweredRejuvenation { get { return _data[77]; } set { _data[77] = value; } }
 
-		[TalentData(77, "Living Seed", 3, 2, 3, 8, -1, new string[] {
+		[TalentData(78, "Living Seed", 3, 2, 3, 8, -1, new string[] {
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 33% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 66% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",
 @"When you gain a critical effect from your Swiftmend, Regrowth, Nourish or Healing Touch spell you have a 100% chance to plant a Living Seed on the target for 30% of the amount healed. The Living Seed will bloom when the target is next attacked. Lasts 15 sec.",})]
-		public int LivingSeed { get { return _data[77]; } set { _data[77] = value; } }
+		public int LivingSeed { get { return _data[78]; } set { _data[78] = value; } }
 
-		[TalentData(78, "Replenish", 3, 2, 1, 9, -1, new string[] {
+		[TalentData(79, "Replenish", 3, 2, 1, 9, -1, new string[] {
 @"Your Rejuvenation spell has a 5% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
 @"Your Rejuvenation spell has a 10% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",
 @"Your Rejuvenation spell has a 15% chance to restore 8 Energy, 4 Rage, 1% Mana or 16 Runic Power per tick.",})]
-		public int Replenish { get { return _data[78]; } set { _data[78] = value; } }
+		public int Replenish { get { return _data[79]; } set { _data[79] = value; } }
 
-		[TalentData(79, "Tree of Life", 1, 2, 2, 9, 76, new string[] {
-@"978 Mana,
+		[TalentData(80, "Tree of Life", 1, 2, 2, 9, 77, new string[] {
+@"979 Mana,
 Instant cast,
 Shapeshift into the Tree of Life. While in this form you increase healing received by 6% for all party and raid members within 45 yards, and you can only cast Restoration, Innervate and Barkskin spells, but the mana cost of your healing over time spells is reduced by 20%.
 
 The act of shapeshifting frees the caster of Polymorph and Movement Impairing effects.",})]
-		public int TreeOfLife { get { return _data[79]; } set { _data[79] = value; } }
+		public int TreeOfLife { get { return _data[80]; } set { _data[80] = value; } }
 
-		[TalentData(80, "Improved Tree of Life", 3, 2, 3, 9, 79, new string[] {
+		[TalentData(81, "Improved Tree of Life", 3, 2, 3, 9, 80, new string[] {
 @"Increases your armor contribution from items while in Tree of Life Form by 33%, and increases your healing spell power by 5% of your spirit while in Tree of Life Form.",
 @"Increases your armor contribution from items while in Tree of Life Form by 66%, and increases your healing spell power by 10% of your spirit while in Tree of Life Form.",
 @"Increases your armor contribution from items while in Tree of Life Form by 100%, and increases your healing spell power by 15% of your spirit while in Tree of Life Form.",})]
-		public int ImprovedTreeOfLife { get { return _data[80]; } set { _data[80] = value; } }
+		public int ImprovedTreeOfLife { get { return _data[81]; } set { _data[81] = value; } }
 
-		[TalentData(81, "Gift of the Earthmother", 5, 2, 3, 10, -1, new string[] {
+		[TalentData(82, "Gift of the Earthmother", 5, 2, 3, 10, -1, new string[] {
 @"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 4%.",
 @"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 8%.",
 @"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 12%.",
 @"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 16%.",
 @"Reduces the base global cooldown of your Rejuvenation, Lifebloom and Wild Growth spells by 20%.",})]
-		public int GiftOfTheEarthmother { get { return _data[81]; } set { _data[81] = value; } }
+		public int GiftOfTheEarthmother { get { return _data[82]; } set { _data[82] = value; } }
 
-		[TalentData(82, "Wild Growth", 1, 2, 2, 11, 79, new string[] {
+		[TalentData(83, "Wild Growth", 1, 2, 2, 11, 80, new string[] {
 @"908 Mana,40 yd range,
 Instant cast,6 min cooldown,
 Heals up to 5 friendly party or raid members within 15 yards of the target for 686 over 7 sec. The amount healed is applied quickly at first, and slows down as the Wild Growth reaches its full duration.",})]
-		public int WildGrowth { get { return _data[82]; } set { _data[82] = value; } }
+		public int WildGrowth { get { return _data[83]; } set { _data[83] = value; } }
 	}
 
 	public class RogueTalents : TalentsBase, ICloneable
