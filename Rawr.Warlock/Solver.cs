@@ -828,9 +828,9 @@ namespace Rawr.Warlock
                 if (CounterShadowEmbrace > 0 && spell.MagicSchool == MagicSchool.Shadow)
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
                 directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f
-                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
+                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f));
                 dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f
-                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
+                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f));
                 if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Felguard")
                 {
                     directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
@@ -876,7 +876,7 @@ namespace Rawr.Warlock
                 DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }
             if (character.WarlockTalents.Metamorphosis > 0)
-                DPS += (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/)
+                DPS += (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f))
                      * GetCastTime(15) / 30 * (451 + simStats.SpellPower * 1.85f) / (float)time;
             #endregion
 

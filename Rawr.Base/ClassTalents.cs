@@ -1272,9 +1272,9 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 		public int ImprovedCurseOfAgony { get { return _data[0]; } set { _data[0] = value; } }
 
 		[TalentData(1, "Suppression", 3, 0, 2, 1, -1, new string[] {
-@"Increases your chance to hit with Affliction spells by 1%, and reduces the mana cost of your Affliction spells by 2%.",
-@"Increases your chance to hit with Affliction spells by 2%, and reduces the mana cost of your Affliction spells by 4%.",
-@"Increases your chance to hit with Affliction spells by 3%, and reduces the mana cost of your Affliction spells by 6%.",})]
+@"Increases your chance to hit with spells by 1%, and reduces the mana cost of your Affliction spells by 2%.",
+@"Increases your chance to hit with spells by 2%, and reduces the mana cost of your Affliction spells by 4%.",
+@"Increases your chance to hit with spells by 3%, and reduces the mana cost of your Affliction spells by 6%.",})]
 		public int Suppression { get { return _data[1]; } set { _data[1] = value; } }
 
 		[TalentData(2, "Improved Corruption", 5, 0, 3, 1, -1, new string[] {
@@ -1285,10 +1285,10 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 @"Increases the damage done by your Corruption by 10% and increases the critical strike chance of your Seed of Corruption by 5%.",})]
 		public int ImprovedCorruption { get { return _data[2]; } set { _data[2] = value; } }
 
-		[TalentData(3, "Frailty", 2, 0, 1, 2, -1, new string[] {
-@"Increases the amount of attack power reduced by your Curse of Weakness by 10%, and reduces the amount of attack power granted by your Curse of Recklessness by 50%.",
-@"Increases the amount of attack power reduced by your Curse of Weakness by 20%, and reduces the amount of attack power granted by your Curse of Recklessness by 100%.",})]
-		public int Frailty { get { return _data[3]; } set { _data[3] = value; } }
+		[TalentData(3, "Improved Curse of Weakness", 2, 0, 1, 2, -1, new string[] {
+@"Increases the amount of attack power reduced by your Curse of Weakness by 10%.",
+@"Increases the amount of attack power reduced by your Curse of Weakness by 20%.",})]
+		public int ImporvedCurseOfWeakness { get { return _data[3]; } set { _data[3] = value; } }
 
 		[TalentData(4, "Improved Drain Soul", 2, 0, 2, 2, -1, new string[] {
 @"Returns 7% of your maximum mana if the target is killed by you while you drain its soul. In addition, your Affliction spells generate 5% less threat.",
@@ -1301,8 +1301,8 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 		public int ImprovedLifeTap { get { return _data[5]; } set { _data[5] = value; } }
 
 		[TalentData(6, "Soul Siphon", 2, 0, 4, 2, -1, new string[] {
-@"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 2% for each Affliction effect on the target, up to a maximum of 24% additional effect.",
-@"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 4% for each Affliction effect on the target, up to a maximum of 60% additional effect.",})]
+@"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 3% for each Affliction effect on the target, up to a maximum of 9% additional effect.",
+@"Increases the amount drained by your Drain Life and Drain Soul spells by an additional 6% for each Affliction effect on the target, up to a maximum of 18% additional effect.",})]
 		public int SoulSiphon { get { return _data[6]; } set { _data[6] = value; } }
 
 		[TalentData(7, "Improved Fear", 2, 0, 1, 3, -1, new string[] {
@@ -1311,9 +1311,9 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 		public int ImprovedFear { get { return _data[7]; } set { _data[7] = value; } }
 
 		[TalentData(8, "Fel Concentration", 3, 0, 2, 3, -1, new string[] {
-@"Reduces the pushback suffered from damaging attacks, while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 23%.",
-@"Reduces the pushback suffered from damaging attacks, while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 46%.",
-@"Reduces the pushback suffered from damaging attacks, while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 70%.",})]
+@"Reduces the pushback suffered from damaging attacks while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 23%.",
+@"Reduces the pushback suffered from damaging attacks while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 46%.",
+@"Reduces the pushback suffered from damaging attacks while casting Drain Life, Drain Mana, Drain Soul, Unstable Affliction and Haunt by 70%.",})]
 		public int FelConcentration { get { return _data[8]; } set { _data[8] = value; } }
 
 		[TalentData(9, "Amplify Curse", 1, 0, 3, 3, -1, new string[] {
@@ -1337,37 +1337,26 @@ Stuns the target for 5 sec. Only usable on Frozen targets.",})]
 		public int EmpoweredCorruption { get { return _data[12]; } set { _data[12] = value; } }
 
 		[TalentData(13, "Shadow Embrace", 5, 0, 1, 5, -1, new string[] {
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 3%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all periodic damage dealt to the target by you by 2%, and reduces all periodic healing done to the target by 6%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all periodic damage dealt to the target by you by 3%, and reduces all periodic healing done to the target by 9%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all periodic damage dealt to the target by you by 4%, and reduces all periodic healing done to the target by 12%. Lasts for 12 sec. Stacks up to 2 times.",
-@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all periodic damage dealt to the target by you by 5%, and reduces all periodic healing done to the target by 15%. Lasts for 12 sec. Stacks up to 2 times.",})]
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 1%, and reduces all periodic healing done to the target by 3%. Lasts for 12 sec. Stacks up to 2 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 2%, and reduces all periodic healing done to the target by 6%. Lasts for 12 sec. Stacks up to 2 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 3%, and reduces all periodic healing done to the target by 9%. Lasts for 12 sec. Stacks up to 2 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 4%, and reduces all periodic healing done to the target by 12%. Lasts for 12 sec. Stacks up to 2 times.",
+@"Your Shadow Bolt and Haunt spells apply the Shadow Embrace effect, increasing all shadow periodic damage dealt to the target by you by 5%, and reduces all periodic healing done to the target by 15%. Lasts for 12 sec. Stacks up to 2 times.",})]
 		public int ShadowEmbrace { get { return _data[13]; } set { _data[13] = value; } }
 
 		[TalentData(14, "Siphon Life", 1, 0, 2, 5, -1, new string[] {
-@"140 Mana,30 yd range,
-Instant cast
-Transfers 15 health from the target to the caster every 3 sec. Lasts 30 sec.
-
-		 Trainable Ranks Listed Below:
-		 Rank 2: 190 Mana, 22 Health
-		 Rank 3: 250 Mana, 33 Health
-		 Rank 4: 310 Mana, 45 Health
-		 Rank 5: 350 Mana, 52 Health
-		 Rank 6: 410 Mana, 63 Health
-		 Rank 7: 605 Mana, 70 Health
-		 Rank 8: 710 Mana, 81 Health",})]
+@"When you deal damage with your Corruption spell, you are instantly healed for 40% of the damage done. In addition, the damage done by your Corruption, Seed of Corruption and Unstable Affliction damage over time effects is increased by 5%.",})]
 		public int SiphonLife { get { return _data[14]; } set { _data[14] = value; } }
 
 		[TalentData(15, "Curse of Exhaustion", 1, 0, 3, 5, 9, new string[] {
 @"231 Mana,30 yd range,
 Instant cast
-Reduces the target's movement speed by 50% for 12 sec. Only one Curse per Warlock can be active on any one target.",})]
+Reduces the target's movement speed by 30% for 12 sec. Only one Curse per Warlock can be active on any one target.",})]
 		public int CurseOfExhaustion { get { return _data[15]; } set { _data[15] = value; } }
 
 		[TalentData(16, "Improved Felhunter", 2, 0, 1, 6, -1, new string[] {
-@"Your Felhunter regains 4% of its maximum mana each time it hits with its Shadow Bit ability, and increases the effect of your Felhunter's Fel Intelligence by 5%.",
-@"Your Felhunter regains 8% of its maximum mana each time it hits with its Shadow Bit ability, and increases the effect of your Felhunter's Fel Intelligence by 10%.",})]
+@"Your Felhunter regains 4% of its maximum mana each time it hits with its Shadow Bite ability, and increases the effect of your Felhunter's Fel Intelligence by 5%.",
+@"Your Felhunter regains 8% of its maximum mana each time it hits with its Shadow Bite ability, and increases the effect of your Felhunter's Fel Intelligence by 10%.",})]
 		public int ImprovedFelhunter { get { return _data[16]; } set { _data[16] = value; } }
 
 		[TalentData(17, "Shadow Mastery", 5, 0, 2, 6, 14, new string[] {
@@ -1379,17 +1368,17 @@ Reduces the target's movement speed by 50% for 12 sec. Only one Curse per Warloc
 		public int ShadowMastery { get { return _data[17]; } set { _data[17] = value; } }
 
 		[TalentData(18, "Eradication", 3, 0, 1, 7, -1, new string[] {
-@"Your Corruption ticks have a 4% chance to increase your spell casting speed by 20% for 12 sec. This effect cannot occur more often than once every 30 sec.",
-@"Your Corruption ticks have a 7% chance to increase your spell casting speed by 20% for 12 sec. This effect cannot occur more often than once every 30 sec.",
-@"Your Corruption ticks have a 10% chance to increase your spell casting speed by 20% for 12 sec. This effect cannot occur more often than once every 30 sec.",})]
+@"When you deal damage with Corruption, you have a 6% chance to increase your spell casting speed by 6% for 10 sec.",
+@"When you deal damage with Corruption, you have a 6% chance to increase your spell casting speed by 12% for 10 sec.",
+@"When you deal damage with Corruption, you have a 6% chance to increase your spell casting speed by 20% for 10 sec.",})]
 		public int Eradication { get { return _data[18]; } set { _data[18] = value; } }
 
 		[TalentData(19, "Contagion", 5, 0, 2, 7, -1, new string[] {
-@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 1% and reduces the chance your Affliction spells will be dispelled by an additional 6%.",
-@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 2% and reduces the chance your Affliction spells will be dispelled by an additional 12%.",
-@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 3% and reduces the chance your Affliction spells will be dispelled by an additional 18%.",
-@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 4% and reduces the chance your Affliction spells will be dispelled by an additional 24%.",
-@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 5% and reduces the chance your Affliction spells will be dispelled by an additional 30%.",})]
+@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 1% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 6%.",
+@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 2% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 12%.",
+@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 3% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 18%.",
+@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 4% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 24%.",
+@"Increases the damage of Curse of Agony, Corruption and Seed of Corruption by 5% and reduces the chance your helpful Affliction spells and damage over time effects will be dispelled by an additional 30%.",})]
 		public int Contagion { get { return _data[19]; } set { _data[19] = value; } }
 
 		[TalentData(20, "Dark Pact", 1, 0, 3, 7, -1, new string[] {
@@ -1400,7 +1389,8 @@ Drains 305 of your summoned demon's Mana, returning 100% to you.
 		 Trainable Ranks Listed Below:
 		 Rank 2: 440 Mana
 		 Rank 3: 545 Mana
-		 Rank 4: 700 Mana",})]
+		 Rank 4: 700 Mana
+         Rank 5: 1200 Mana",})]
 		public int DarkPact { get { return _data[20]; } set { _data[20] = value; } }
 
 		[TalentData(21, "Improved Howl of Terror", 2, 0, 1, 8, -1, new string[] {
@@ -1409,31 +1399,31 @@ Drains 305 of your summoned demon's Mana, returning 100% to you.
 		public int ImprovedHowlOfTerror { get { return _data[21]; } set { _data[21] = value; } }
 
 		[TalentData(22, "Malediction", 3, 0, 3, 8, -1, new string[] {
-@"Increases the damage bonus effect of your Curse of the Elements spell by an additional 1%, and increases your spell damage by 1%.",
-@"Increases the damage bonus effect of your Curse of the Elements spell by an additional 2%, and increases your spell damage by 2%.",
-@"Increases the damage bonus effect of your Curse of the Elements spell by an additional 3%, and increases your spell damage by 3%.",})]
+@"Increases your spell damage by 1%, and increases the periodic critical strike chance of your Corruption and Unstable Affliction spells by 3%.",
+@"Increases your spell damage by 2%, and increases the periodic critical strike chance of your Corruption and Unstable Affliction spells by 6%.",
+@"Increases your spell damage by 3%, and increases the periodic critical strike chance of your Corruption and Unstable Affliction spells by 9%.",})]
 		public int Malediction { get { return _data[22]; } set { _data[22] = value; } }
 
 		[TalentData(23, "Death's Embrace", 3, 0, 1, 9, -1, new string[] {
-@"Increases the amount drained by your Drain Life by 10% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 5% when your target is at or below 35% health.",
-@"Increases the amount drained by your Drain Life by 20% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 10% when your target is at or below 35% health.",
-@"Increases the amount drained by your Drain Life by 30% while your health is at or below 20% health, and increases the critical strike chance of your Shadow spells by 15% when your target is at or below 35% health.",})]
+@"Increases the amount drained by your Drain Life by 10% while your health is at or below 20% health, and increases the damage done by your Shadow spells by 4% when your target is at or below 35% health.",
+@"Increases the amount drained by your Drain Life by 20% while your health is at or below 20% health, and increases the damage done by your Shadow spells by 8% when your target is at or below 35% health.",
+@"Increases the amount drained by your Drain Life by 30% while your health is at or below 20% health, and increases the damage done by your Shadow spells by 12% when your target is at or below 35% health.",})]
 		public int DeathsEmbrace { get { return _data[23]; } set { _data[23] = value; } }
 
 		[TalentData(24, "Unstable Affliction", 1, 0, 2, 9, 19, new string[] {
-@"270 Mana,30 yd range,
+@"20% Base Mana, 30 yd range,
 1.5 sec cast
-Shadow energy slowly destroys the target, causing 660 damage over 18 sec. In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 3 sec.
+Shadow energy slowly destroys the target, causing 550 damage over 18 sec. In addition, if the Unstable Affliction is dispelled it will cause 990 damage to the dispeller and silence them for 5 sec.
 
 		 Trainable Ranks Listed Below:
-		 Rank 2: 330 Mana, 840 DoT, 1260 damage to dispeller
-		 Rank 3: 400 Mana, 1050 DoT, 1575 damage to dispeller",})]
-		public int UnstableAffliction { get { return _data[24]; } set { _data[24] = value; } }
+		 Rank 2: 20% Base Mana, 700 DoT, 1260 damage to dispeller
+		 Rank 3: 15% Base Mana, 875 DoT, 1575 damage to dispeller
+		 Rank 4: 15% Base Mana, 985 DoT, 1773 damage to dispeller
+		 Rank 5: 15% Base Mana, 1150 DoT, 2070 damage to dispeller",})]
+        public int UnstableAffliction { get { return _data[24]; } set { _data[24] = value; } }
 
-		[TalentData(25, "Pandemic", 3, 0, 3, 9, 24, new string[] {
-@"Each time you deal damage with Corruption or Unstable Affliction, you have a chance equal to your spell critical strike chance to deal 33% additional damage.",
-@"Each time you deal damage with Corruption or Unstable Affliction, you have a chance equal to your spell critical strike chance to deal 66% additional damage.",
-@"Each time you deal damage with Corruption or Unstable Affliction, you have a chance equal to your spell critical strike chance to deal 100% additional damage.",})]
+		[TalentData(25, "Pandemic", 1, 0, 3, 9, 24, new string[] {
+@"Grants the peridodic damage from your Corruption and Unstable Affliction spells the ability to critically hit for 100% increased damage.",})]
 		public int Pandemic { get { return _data[25]; } set { _data[25] = value; } }
 
 		[TalentData(26, "Everlasting Affliction", 5, 0, 2, 10, -1, new string[] {
@@ -1445,9 +1435,14 @@ Shadow energy slowly destroys the target, causing 660 damage over 18 sec. In add
 		public int EverlastingAffliction { get { return _data[26]; } set { _data[26] = value; } }
 
 		[TalentData(27, "Haunt", 1, 0, 2, 11, -1, new string[] {
-@"462 Mana,30 yd range,
-1.5 sec cast,8 sec cooldown,
- You send a ghostly soul into the target, dealing 445 to 521 Shadow damage and increasing all damage done by your damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of all damage done to the target.",})]
+@"12% Base Mana, 30 yd range,
+1.5 sec cast, 8 sec cooldown,
+You send a ghostly soul into the target, dealing 405 to 473 Shadow damage and increasing all damage done by your damage-over-time effects on the target by 20% for 12 sec. When the Haunt spell ends or is dispelled, the soul returns to you, healing you for 100% of the damage it did to the target.
+
+		 Trainable Ranks Listed Below:
+		 Rank 2: 12% Base Mana, 487 - 569 damage
+		 Rank 3: 12% Base Mana, 550 - 642 damage
+		 Rank 4: 12% Base Mana, 645 - 753 damage",})]
 		public int Haunt { get { return _data[27]; } set { _data[27] = value; } }
 
 		[TalentData(28, "Improved Healthstone", 2, 1, 1, 1, -1, new string[] {
@@ -1461,179 +1456,139 @@ Shadow energy slowly destroys the target, causing 660 damage over 18 sec. In add
 @"Increases the effect of your Imp's Firebolt, Fire Shield, and Blood Pact spells by 30%.",})]
 		public int ImprovedImp { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(30, "Demonic Embrace", 5, 1, 3, 1, -1, new string[] {
-@"Increases your total Stamina by 2%.",
+		[TalentData(30, "Demonic Embrace", 3, 1, 3, 1, -1, new string[] {
 @"Increases your total Stamina by 4%.",
-@"Increases your total Stamina by 6%.",
-@"Increases your total Stamina by 8%.",
+@"Increases your total Stamina by 7%.",
 @"Increases your total Stamina by 10%.",})]
 		public int DemonicEmbrace { get { return _data[30]; } set { _data[30] = value; } }
 
-		[TalentData(31, "Improved Health Funnel", 2, 1, 1, 2, -1, new string[] {
+        [TalentData(31, "Fel Synergy", 2, 1, 4, 1, -1, new string[] {
+@"You have a 50% chance to heal your pet for 50% of the amount of damage done by you.",
+@"You have a 100% chance to heal your pet for 30% of the amount of damage done by you.",})]
+        public int FelSynergy { get { return _data[31]; } set { _data[31] = value; } }
+
+        [TalentData(32, "Improved Health Funnel", 2, 1, 1, 2, -1, new string[] {
 @"Increases the amount of Health transfered by your Health Funnel spell by 10% and reduces the initial health cost by 10%. In addition, your summoned Demon takes 15% less damage while under the effect of your Health Funnel.",
 @"Increases the amount of Health transfered by your Health Funnel spell by 20% and reduces the initial health cost by 20%. In addition, your summoned Demon takes 30% less damage while under the effect of your Health Funnel.",})]
-		public int ImprovedHealthFunnel { get { return _data[31]; } set { _data[31] = value; } }
+		public int ImprovedHealthFunnel { get { return _data[32]; } set { _data[32] = value; } }
 
-		[TalentData(32, "Demonic Brutality", 3, 1, 2, 2, -1, new string[] {
+		[TalentData(33, "Demonic Brutality", 3, 1, 2, 2, -1, new string[] {
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 10%, and increases the attack power bonus on your Felguard's Demonic Frenzy effect by 1%.",
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 20%, and increases the attack power bonus on your Felguard's Demonic Frenzy effect by 2%.",
 @"Increases the effectiveness of your Voidwalker's Torment, Consume Shadows, Sacrifice and Suffering spells by 30%, and increases the attack power bonus on your Felguard's Demonic Frenzy effect by 3%.",})]
-		public int DemonicBrutality { get { return _data[32]; } set { _data[32] = value; } }
+		public int DemonicBrutality { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(33, "Fel Vitality", 3, 1, 3, 2, -1, new string[] {
+		[TalentData(34, "Fel Vitality", 3, 1, 3, 2, -1, new string[] {
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 5% and increases your maximum health and mana by 1%.",
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 10% and increases your maximum health and mana by 2%.",
 @"Increases the Stamina and Intellect of your Imp, Voidwalker, Succubus, Felhunter and Felguard by 15% and increases your maximum health and mana by 3%.",})]
-		public int FelVitality { get { return _data[33]; } set { _data[33] = value; } }
+		public int FelVitality { get { return _data[34]; } set { _data[34] = value; } }
 
-		[TalentData(34, "Improved Succubus", 3, 1, 1, 3, -1, new string[] {
+		[TalentData(35, "Improved Succubus", 3, 1, 1, 3, -1, new string[] {
 @"Reduces the cast time of your Succubus' Seduction by 33%, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 10%.",
 @"Reduces the cast time of your Succubus' Seduction by 66%, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 20%.",
 @"Reduces the cast time of your Succubus' Seduction by 100%, and increases the duration of your Succubus' Seduction and Lesser Invisibility spells by 30%.",})]
-		public int ImprovedSuccubus { get { return _data[34]; } set { _data[34] = value; } }
+		public int ImprovedSuccubus { get { return _data[35]; } set { _data[35] = value; } }
 
-		[TalentData(35, "Soul Link", 1, 1, 2, 3, -1, new string[] {
-@"616 Mana,100 yd range,
+		[TalentData(36, "Soul Link", 1, 1, 2, 3, -1, new string[] {
+@"16% Base Mana, 100 yd range,
 Instant cast
 When active, 20% of all damage taken by the caster is taken by your Imp, Voidwalker, Succubus, Felhunter, Felguard, or enslaved demon instead.  That damage cannot be prevented. Lasts as long as the demon is active and controlled.",})]
-		public int SoulLink { get { return _data[35]; } set { _data[35] = value; } }
+		public int SoulLink { get { return _data[36]; } set { _data[36] = value; } }
 
-		[TalentData(36, "Fel Domination", 1, 1, 3, 3, -1, new string[] {
+		[TalentData(37, "Fel Domination", 1, 1, 3, 3, -1, new string[] {
 @"Instant,15 min cooldown,
 Your next Imp, Voidwalker, Succubus, Felhunter or Felguard Summon spell has its casting time reduced by 5.5 sec and its Mana cost reduced by 50%.",})]
-		public int FelDomination { get { return _data[36]; } set { _data[36] = value; } }
+		public int FelDomination { get { return _data[37]; } set { _data[37] = value; } }
 
-		[TalentData(37, "Demonic Aegis", 3, 1, 4, 3, -1, new string[] {
+		[TalentData(38, "Demonic Aegis", 3, 1, 4, 3, -1, new string[] {
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 10%.",
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 20%.",
 @"Increases the effectiveness of your Demon Armor and Fel Armor spells by 30%.",})]
-		public int DemonicAegis { get { return _data[37]; } set { _data[37] = value; } }
+		public int DemonicAegis { get { return _data[38]; } set { _data[38] = value; } }
 
-		[TalentData(38, "Unholy Power", 5, 1, 2, 4, 35, new string[] {
+		[TalentData(39, "Unholy Power", 5, 1, 2, 4, 36, new string[] {
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 4%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 8%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 12%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 16%.",
 @"Increases the damage done by your Voidwalker, Succubus, Felhunter and Felguard's melee attacks and your Imp's Firebolt by 20%.",})]
-		public int UnholyPower { get { return _data[38]; } set { _data[38] = value; } }
+		public int UnholyPower { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(39, "Master Summoner", 2, 1, 3, 4, 36, new string[] {
+		[TalentData(40, "Master Summoner", 2, 1, 3, 4, 37, new string[] {
 @"Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Felguard Summoning spells by 2 sec and the Mana cost by 20%.",
 @"Reduces the casting time of your Imp, Voidwalker, Succubus, Felhunter and Felguard Summoning spells by 4 sec and the Mana cost by 40%.",})]
-		public int MasterSummoner { get { return _data[39]; } set { _data[39] = value; } }
+		public int MasterSummoner { get { return _data[40]; } set { _data[40] = value; } }
 
-		[TalentData(40, "Demonic Sacrifice", 1, 1, 1, 5, 38, new string[] {
-@"100 yd range
-Instant
-When activated, sacrifices your summoned demon to grant you an effect that lasts 30 min. The effect is canceled if any Demon is summoned.
-
-Imp: Increases your Fire damage by 10%.
-
-Voidwalker: Restores 2% of total health every 4 sec.
-
-Succubus: Increases your Shadow damage by 10%.
-
-Felhunter: Restores 3% of total mana every 4 sec.
-
-Felguard: Increases your Shadow and Fire damage by 10% and restores 2% of total mana every 4 sec.",})]
-		public int DemonicSacrifice { get { return _data[40]; } set { _data[40] = value; } }
-
-		[TalentData(41, "Master Conjuror", 2, 1, 3, 5, -1, new string[] {
-@"Increases the effects granted by your conjured Firestone and Spellstone by 15%.",
-@"Increases the effects granted by your conjured Firestone and Spellstone by 30%.",})]
-		public int MasterConjuror { get { return _data[41]; } set { _data[41] = value; } }
-
-		[TalentData(42, "Mana Feed", 3, 1, 1, 6, -1, new string[] {
-@"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 33% of the mana you gain.",
-@"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 66% of the mana you gain.",
+        [TalentData(41, "Mana Feed", 1, 1, 1, 5, 39, new string[] {
 @"When you gain mana from Drain Mana or Life Tap spells, your summoned demon gains 100% of the mana you gain.",})]
-		public int ManaFeed { get { return _data[42]; } set { _data[42] = value; } }
+        public int ManaFeed { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(43, "Master Demonologist", 5, 1, 2, 6, 38, new string[] {
+        [TalentData(42, "Master Conjuror", 2, 1, 3, 5, -1, new string[] {
+@"Increases the combat ratings gained from your conjured Firestone and Spellstone by 150%.",
+@"Increases the combat ratings gained from your conjured Firestone and Spellstone by 300%.",})]
+		public int MasterConjuror { get { return _data[42]; } set { _data[42] = value; } }
+
+		[TalentData(43, "Master Demonologist", 5, 1, 2, 6, 39, new string[] {
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
-Imp - Increases your fire damage by 1%, and increases the critical effect chance of your fire spells by 1%.
-
-Voidwalker - Reduces physical damage taken by 2%.
-
-Succubus - Increases your shadow damage by 1%, and increases the critical effect chance of your shadow spells by 1%.
-
+Imp - Increases your Fire damage by 1%, and increases the critical effect chance of your Fire spells by 1%.
+Voidwalker - Reduces Physical damage taken by 2%.
+Succubus - Increases your Shadow damage by 1%, and increases the critical effect chance of your Shadow spells by 1%.
 Felhunter - Reduces all spell damage taken by 2%.
-
 Felguard - Increases all damage done by 1%, and reduces all damage taken by 1%.",
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
-Imp - Increases your fire damage by 2%, and increases the critical effect chance of your fire spells by 2%.
-
-Voidwalker - Reduces physical damage taken by 4%.
-
-Succubus - Increases your shadow damage by 2%, and increases the critical effect chance of your shadow spells by 2%.
-
+Imp - Increases your Fire damage by 2%, and increases the critical effect chance of your Fire spells by 2%.
+Voidwalker - Reduces Physical damage taken by 4%.
+Succubus - Increases your Shadow damage by 2%, and increases the critical effect chance of your Shadow spells by 2%.
 Felhunter - Reduces all spell damage taken by 4%.
-
 Felguard - Increases all damage done by 2%, and reduces all damage taken by 2%.",
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
-Imp - Increases your fire damage by 3%, and increases the critical effect chance of your fire spells by 3%.
-
-Voidwalker - Reduces physical damage taken by 6%.
-
-Succubus - Increases your shadow damage by 3%, and increases the critical effect chance of your shadow spells by 3%.
-
+Imp - Increases your Fire damage by 3%, and increases the critical effect chance of your Fire spells by 3%.
+Voidwalker - Reduces Physical damage taken by 6%.
+Succubus - Increases your Shadow damage by 3%, and increases the critical effect chance of your Shadow spells by 3%.
 Felhunter - Reduces all spell damage taken by 6%.
-
 Felguard - Increases all damage done by 3%, and reduces all damage taken by 3%.",
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
-Imp - Increases your fire damage by 4%, and increases the critical effect chance of your fire spells by 4%.
-
-Voidwalker - Reduces physical damage taken by 8%.
-
-Succubus - Increases your shadow damage by 4%, and increases the critical effect chance of your shadow spells by 4%.
-
+Imp - Increases your Fire damage by 4%, and increases the critical effect chance of your Fire spells by 4%.
+Voidwalker - Reduces Physical damage taken by 8%.
+Succubus - Increases your Shadow damage by 4%, and increases the critical effect chance of your Shadow spells by 4%.
 Felhunter - Reduces all spell damage taken by 8%.
-
 Felguard - Increases all damage done by 4%, and reduces all damage taken by 4%.",
 @"Grants both the Warlock and the summoned demon an effect as long as that demon is active.
 
-Imp - Increases your fire damage by 5%, and increases the critical effect chance of your fire spells by 5%.
-
-Voidwalker - Reduces physical damage taken by 10%.
-
-Succubus - Increases your shadow damage by 5%, and increases the critical effect chance of your shadow spells by 5%.
-
+Imp - Increases your Fire damage by 5%, and increases the critical effect chance of your Fire spells by 5%.
+Voidwalker - Reduces Physical damage taken by 10%.
+Succubus - Increases your Shadow damage by 5%, and increases the critical effect chance of your Shadow spells by 5%.
 Felhunter - Reduces all spell damage taken by 10%.
-
 Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%.",})]
 		public int MasterDemonologist { get { return _data[43]; } set { _data[43] = value; } }
 
-		[TalentData(44, "Improved Enslave Demon", 2, 1, 3, 6, -1, new string[] {
-@"Reduces the Attack Speed and Casting Speed penalty of your Enslave Demon spell by 5% and reduces the resist chance by 5%.",
-@"Reduces the Attack Speed and Casting Speed penalty of your Enslave Demon spell by 10% and reduces the resist chance by 10%.",})]
-		public int ImprovedEnslaveDemon { get { return _data[44]; } set { _data[44] = value; } }
+        [TalentData(44, "Molten Core", 3, 2, 3, 6, -1, new string[] {
+@"Your Shadow spells and damage over time effects have a 5% chance to increase the damage of your Fire spells by 10% for 12 sec.",
+@"Your Shadow spells and damage over time effects have a 10% chance to increase the damage of your Fire spells by 10% for 12 sec.",
+@"Your Shadow spells and damage over time effects have a 15% chance to increase the damage of your Fire spells by 10% for 12 sec.",})]
+        public int MoltenCore { get { return _data[44]; } set { _data[44] = value; } }
 
-		[TalentData(45, "Demonic Resilience", 3, 1, 1, 7, -1, new string[] {
+        [TalentData(45, "Demonic Resilience", 3, 1, 1, 7, -1, new string[] {
 @"Reduces the chance you'll be critically hit by melee and spells by 1% and reduces all damage your summoned demon takes by 5%.",
 @"Reduces the chance you'll be critically hit by melee and spells by 2% and reduces all damage your summoned demon takes by 10%.",
 @"Reduces the chance you'll be critically hit by melee and spells by 3% and reduces all damage your summoned demon takes by 15%.",})]
 		public int DemonicResilience { get { return _data[45]; } set { _data[45] = value; } }
 
 		[TalentData(46, "Demonic Empowerment", 1, 1, 2, 7, 43, new string[] {
-@"231 Mana,
+@"6% Base Mana,
 Instant Cast,1 min cooldown,
 Grants the Warlock's summoned demon Empowerment.
 
  Succubus - Instantly vanishes, causing the Succubus to go into an improved Invisibility state. The vanish effect removes all stuns, snares and movement imparing effects from the Succubus.
-
  Voidwalker - Increases the Voidwalker's health by 20%, and it's threat generated from spells and attacks by 20% for 20 sec.
-
  Imp - Increases the Imp's spell critical strike chance by 20% for 30 sec. 
-
  Felhunter - Dispels all magical effects from the Felhunter.
-
- Fel Guard - Increases the Fel Guard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Fel Guard immune to them. Lasts 15 sec.
-
-",})]
+ Fel Guard - Increases the Fel Guard's attack speed by 20% and breaks all stun, snare and movement impairing effects and makes your Fel Guard immune to them. Lasts 15 sec.",})]
 		public int DemonicEmpowerment { get { return _data[46]; } set { _data[46] = value; } }
 
 		[TalentData(47, "Demonic Knowledge", 3, 1, 3, 7, -1, new string[] {
@@ -1650,160 +1605,155 @@ Grants the Warlock's summoned demon Empowerment.
 @"Increases melee and spell critical strike chance for you and your summoned demon by 10%.",})]
 		public int DemonicTactics { get { return _data[48]; } set { _data[48] = value; } }
 
-		[TalentData(49, "Fel Synergy", 2, 1, 3, 8, -1, new string[] {
-@"Your Summoned Demons share an additional 5% of your Armor, Intellect and Stamina, and you have a 50% chance to heal your pet for 15% of the amount of damage done by you.",
-@"Your Summoned Demons share an additional 10% of your Armor, Intellect and Stamina, and you have a 100% chance to heal your pet for 15% of the amount of damage done by you.",})]
-		public int FelSynergy { get { return _data[49]; } set { _data[49] = value; } }
+        [TalentData(49, "Decimation", 2, 1, 3, 8, -1, new string[] {
+@"When you Shadowbolt or Incinerate a target that is at or below 35% health, the cast time of your next Soulfire is reduced by 30%. Soulfires cast under the effect of Decimation cost no shard. Lasts 10 sec.",
+@"When you Shadowbolt or Incinerate a target that is at or below 35% health, the cast time of your next Soulfire is reduced by 60%. Soulfires cast under the effect of Decimation cost no shard. Lasts 10 sec.",})]
+        public int Decimation { get { return _data[49]; } set { _data[49] = value; } }
 
-		[TalentData(50, "Improved Demonic Tactics", 3, 1, 1, 9, 48, new string[] {
+        [TalentData(50, "Improved Demonic Tactics", 3, 1, 1, 9, 48, new string[] {
 @"Increases your summoned demons critical strike chance equal to 10% of your critical strike chance.",
 @"Increases your summoned demons critical strike chance equal to 20% of your critical strike chance.",
 @"Increases your summoned demons critical strike chance equal to 30% of your critical strike chance.",})]
 		public int ImprovedDemonicTactics { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
-@"2092 Mana,
-10 sec cast,
+		[TalentData(50, "Summon Felguard", 1, 1, 2, 9, -1, new string[] {
+@"80% Base Mana, 10 sec cast,
 Reagents: Soul Shard
 Summons a Felguard under the command of the Warlock.",})]
-		public int SummonFelguard { get { return _data[51]; } set { _data[51] = value; } }
+		public int SummonFelguard { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(52, "Demonic Empathy", 3, 1, 3, 9, -1, new string[] {
-@"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 2%. Lasts 15 sec.",
-@"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 4%. Lasts 15 sec.",
-@"When you or your pet critically hits with a spell or ability, the other's damage done by their next 3 spells or abilities is increased by 6%. Lasts 15 sec.",})]
-		public int DemonicEmpathy { get { return _data[52]; } set { _data[52] = value; } }
+		[TalentData(51, "Nemesis", 3, 1, 3, 9, -1, new string[] {
+@"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 10%.",
+@"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 20%.",
+@"Reduces the cooldown of your Demonic Empowerment, Metamorphosis, and Fel Domination spells by 30%.",})]
+		public int Nemesis { get { return _data[51]; } set { _data[51] = value; } }
 
-		[TalentData(53, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
-@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 12 sec.",
-@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 12 sec.",
-@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 12 sec.",
-@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 12 sec.",
-@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 12 sec.",})]
-		public int DemonicPact { get { return _data[53]; } set { _data[53] = value; } }
+		[TalentData(52, "Demonic Pact", 5, 1, 2, 10, -1, new string[] {
+@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 2% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
+@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 4% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
+@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 6% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
+@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 8% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",
+@"Your pet's criticals apply the Demonic Pact effect to your party or raid members. Demonic Pact increases spell power by 10% of your Spell Damage for 12 sec. Does not work on Enslaved demons.",})]
+		public int DemonicPact { get { return _data[52]; } set { _data[52] = value; } }
 
-		[TalentData(54, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
-@"Instant,You transform into a Demon for 30 sec. This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%. You gain some unique demon abilities in addition to your normal abilities.",})]
-		public int Metamorphosis { get { return _data[54]; } set { _data[54] = value; } }
+		[TalentData(53, "Metamorphosis", 1, 1, 2, 11, -1, new string[] {
+@"Instant. You transform into a Demon for 30 sec. This form increases your armor by 600%, damage by 20%, reduces the chance you'll be critically hit by melee attacks by 6% and reduces the duration of stun and snare effects by 50%. You gain some unique demon abilities in addition to your normal abilities.",})]
+		public int Metamorphosis { get { return _data[53]; } set { _data[53] = value; } }
 
-		[TalentData(55, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
-@"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 3% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
-@"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 6% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
-@"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 9% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
-@"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 12% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",
-@"Your Shadow Bolt critical strikes increase Shadow damage dealt to the target by 15% until 4 non-periodic damage sources are applied. Effect lasts a maximum of 12 sec.",})]
-		public int ImprovedShadowBolt { get { return _data[55]; } set { _data[55] = value; } }
+		[TalentData(54, "Improved Shadow Bolt", 5, 2, 2, 1, -1, new string[] {
+@"Increases the damage done by your Shadow Bolt spell by 1%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 1%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 2%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 2%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 3%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 3%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 4%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 4%. Effect lasts 30 sec.",
+@"Increases the damage done by your Shadow Bolt spell by 5%, and your Shadow Bolt causes the target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 5%. Effect lasts 30 sec.",})]
+		public int ImprovedShadowBolt { get { return _data[54]; } set { _data[54] = value; } }
 
-		[TalentData(56, "Bane", 5, 2, 3, 1, -1, new string[] {
+		[TalentData(55, "Bane", 5, 2, 3, 1, -1, new string[] {
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.1 sec and your Soul Fire spell by 0.4 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.2 sec and your Soul Fire spell by 0.8 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.3 sec and your Soul Fire spell by 1.2 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.4 sec and your Soul Fire spell by 1.6 sec.",
 @"Reduces the casting time of your Shadow Bolt, Chaos Bolt and Immolate spells by 0.5 sec and your Soul Fire spell by 2.0 sec.",})]
-		public int Bane { get { return _data[56]; } set { _data[56] = value; } }
+		public int Bane { get { return _data[55]; } set { _data[55] = value; } }
 
-		[TalentData(57, "Aftermath", 2, 2, 1, 2, -1, new string[] {
-@"Gives your Destruction spells a 5% chance to daze the target for 5 sec.",
-@"Gives your Destruction spells a 10% chance to daze the target for 5 sec.",})]
-		public int Aftermath { get { return _data[57]; } set { _data[57] = value; } }
+		[TalentData(56, "Aftermath", 2, 2, 1, 2, -1, new string[] {
+@"Increases the periodic damage done by your Immolate by 3%, and your Conflagrate has a 50% chance to daze the target for 5 sec.",
+@"Increases the periodic damage done by your Immolate by 6%, and your Conflagrate has a 100% chance to daze the target for 5 sec.",})]
+		public int Aftermath { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(58, "Molten Core", 3, 2, 2, 2, -1, new string[] {
-@"Your Shadow spells and damage over time effects have a 5% chance to increase the damage of your Fire spells by 10% for 12 sec.",
-@"Your Shadow spells and damage over time effects have a 10% chance to increase the damage of your Fire spells by 10% for 12 sec.",
-@"Your Shadow spells and damage over time effects have a 15% chance to increase the damage of your Fire spells by 10% for 12 sec.",})]
-		public int MoltenCore { get { return _data[58]; } set { _data[58] = value; } }
+        [TalentData(57, "Molten Skin", 3, 2, 2, 2, -1, new string[] {
+@"Reduces all damage taken by 2%.",
+@"Reduces all damage taken by 4%.",
+@"Reduces all damage taken by 6%.",})]
+        public int MoltenSkin { get { return _data[57]; } set { _data[57] = value; } }
 
-		[TalentData(59, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
-@"Reduces the Mana cost of your Destruction spells by 2%, and increases the chance to hit with your Destruction spells by 1%.",
-@"Reduces the Mana cost of your Destruction spells by 4%, and increases the chance to hit with your Destruction spells by 2%.",
-@"Reduces the Mana cost of your Destruction spells by 6%, and increases the chance to hit with your Destruction spells by 3%.",})]
-		public int Cataclysm { get { return _data[59]; } set { _data[59] = value; } }
+        [TalentData(58, "Cataclysm", 3, 2, 3, 2, -1, new string[] {
+@"Reduces the Mana cost of your Destruction spells by 4%.",
+@"Reduces the Mana cost of your Destruction spells by 7%.",
+@"Reduces the Mana cost of your Destruction spells by 10%.",})]
+		public int Cataclysm { get { return _data[58]; } set { _data[58] = value; } }
 
-		[TalentData(60, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
+		[TalentData(59, "Demonic Power", 2, 2, 1, 3, -1, new string[] {
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 3 sec, and reduces the casting time of your Imp's Firebolt spell by 0.25 sec",
 @"Reduces the cooldown of your Succubus' Lash of Pain spell by 6 sec, and reduces the casting time of your Imp's Firebolt spell by 0.50 sec",})]
-		public int DemonicPower { get { return _data[60]; } set { _data[60] = value; } }
+		public int DemonicPower { get { return _data[59]; } set { _data[59] = value; } }
 
-		[TalentData(61, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
-@"105 Mana,20 yd range,
+		[TalentData(60, "Shadowburn", 1, 2, 2, 3, -1, new string[] {
+@"27% Base Mana,20 yd range,
 Instant cast,15 sec cooldown,
 Reagents: Soul Shard
-Instantly blasts the target for 91 to 104 Shadow damage. If the target dies within 5 secs of Shadowburn, and yields experience or honor, the caster gains a Soul Shard.
+Instantly blasts the target for 87 to 99 Shadow damage. If the target dies within 5 secs of Shadowburn, and yields experience or honor, the caster gains a Soul Shard.
 
 		 Trainable Ranks Listed Below:
-		 Rank 2: 130 Mana, 123-140 Damage
-		 Rank 3: 190 Mana, 196-221 Damage
-		 Rank 4: 245 Mana, 274-307 Damage
-		 Rank 5: 305 Mana, 365-408 Damage
-		 Rank 6: 365 Mana, 468-520 Damage
-		 Rank 7: 435 Mana, 538-599 Damage
-		 Rank 8: 515 Mana, 597-665 Damage",})]
-		public int Shadowburn { get { return _data[61]; } set { _data[61] = value; } }
+		 Rank 2: 27% Base Mana, 115 - 131 Damage
+		 Rank 3: 27% Base Mana, 186 - 210 Damage
+		 Rank 4: 27% Base Mana, 261 - 293 Damage
+		 Rank 5: 27% Base Mana, 350 - 392 Damage
+		 Rank 6: 27% Base Mana, 450 - 502 Damage
+		 Rank 7: 27% Base Mana, 518 - 578 Damage
+		 Rank 8: 20% Base Mana, 597 - 665 Damage
+   		 Rank 9: 20% Base  Mana, 662 - 738 Damage
+		 Rank 10: 20% Base  Mana, 775 - 865 Damage",})]
+public int Shadowburn { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(62, "Ruin", 5, 2, 3, 3, -1, new string[] {
+		[TalentData(61, "Ruin", 5, 2, 3, 3, -1, new string[] {
 @"Increases the critical strike damage bonus of your Destruction spells by 20%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 40%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 60%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 80%.",
 @"Increases the critical strike damage bonus of your Destruction spells by 100%.",})]
-		public int Ruin { get { return _data[62]; } set { _data[62] = value; } }
+		public int Ruin { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(63, "Intensity", 2, 2, 1, 4, -1, new string[] {
+		[TalentData(62, "Intensity", 2, 2, 1, 4, -1, new string[] {
 @"Reduces the pushback suffered from damaging attacks while casting or channeling any Destruction spell by 35%.",
 @"Reduces the pushback suffered from damaging attacks while casting or channeling any Destruction spell by 70%.",})]
-		public int Intensity { get { return _data[63]; } set { _data[63] = value; } }
+		public int Intensity { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(64, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
+		[TalentData(63, "Destructive Reach", 2, 2, 2, 4, -1, new string[] {
 @"Increases the range of your Destruction spells by 10% and reduces threat caused by Destruction spells by 5%.",
 @"Increases the range of your Destruction spells by 20% and reduces threat caused by Destruction spells by 10%.",})]
-		public int DestructiveReach { get { return _data[64]; } set { _data[64] = value; } }
+		public int DestructiveReach { get { return _data[63]; } set { _data[63] = value; } }
 
-		[TalentData(65, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
+		[TalentData(64, "Improved Searing Pain", 3, 2, 4, 4, -1, new string[] {
 @"Increases the critical strike chance of your Searing Pain spell by 4%.",
 @"Increases the critical strike chance of your Searing Pain spell by 7%.",
 @"Increases the critical strike chance of your Searing Pain spell by 10%.",})]
-		public int ImprovedSearingPain { get { return _data[65]; } set { _data[65] = value; } }
+		public int ImprovedSearingPain { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(66, "Pyroclasm", 2, 2, 1, 5, 63, new string[] {
-@"Gives your Rain of Fire, Hellfire, Conflagrate and Soul Fire spells a 13% chance to stun the target for 3 sec.",
-@"Gives your Rain of Fire, Hellfire, Conflagrate and Soul Fire spells a 26% chance to stun the target for 3 sec.",})]
-		public int Pyroclasm { get { return _data[66]; } set { _data[66] = value; } }
+        [TalentData(65, "Backlash", 3, 2, 4, 7, 62, new string[] {
+@"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
+@"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
+@"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
+        public int Backlash { get { return _data[65]; } set { _data[65] = value; } }
 
-		[TalentData(67, "Improved Immolate", 3, 2, 2, 5, -1, new string[] {
-@"Increases the initial damage of your Immolate spell by 10%.",
-@"Increases the initial damage of your Immolate spell by 20%.",
-@"Increases the initial damage of your Immolate spell by 30%.",})]
-		public int ImprovedImmolate { get { return _data[67]; } set { _data[67] = value; } }
+		[TalentData(66, "Improved Immolate", 3, 2, 2, 5, -1, new string[] {
+@"Increases the damage of your Immolate spell by 10%.",
+@"Increases the damage of your Immolate spell by 20%.",
+@"Increases the damage of your Immolate spell by 30%.",})]
+		public int ImprovedImmolate { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(68, "Devastation", 1, 2, 3, 5, 62, new string[] {
+		[TalentData(67, "Devastation", 1, 2, 3, 5, 61, new string[] {
 @"Increases the critical strike chance of your Destruction spells by 5%.",})]
-		public int Devastation { get { return _data[68]; } set { _data[68] = value; } }
+		public int Devastation { get { return _data[67]; } set { _data[67] = value; } }
 
-		[TalentData(69, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
+		[TalentData(68, "Nether Protection", 3, 2, 1, 6, -1, new string[] {
 @"After being hit with a spell, you have a 10% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 20% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",
 @"After being hit with a spell, you have a 30% chance to gain Nether Protection, reducing all damage by that spell school by 60% for 8 sec.",})]
-		public int NetherProtection { get { return _data[69]; } set { _data[69] = value; } }
+		public int NetherProtection { get { return _data[68]; } set { _data[68] = value; } }
 
-		[TalentData(70, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
+		[TalentData(69, "Emberstorm", 5, 2, 3, 6, -1, new string[] {
 @"Increases the damage done by your Fire spells by 3% and reduces the cast time of your Incinerate spell by 0.05 sec.",
 @"Increases the damage done by your Fire spells by 6% and reduces the cast time of your Incinerate spell by 0.10 sec.",
 @"Increases the damage done by your Fire spells by 9% and reduces the cast time of your Incinerate spell by 0.15 sec.",
 @"Increases the damage done by your Fire spells by 12% and reduces the cast time of your Incinerate spell by 0.20 sec.",
 @"Increases the damage done by your Fire spells by 15% and reduces the cast time of your Incinerate spell by 0.25 sec.",})]
-		public int Emberstorm { get { return _data[70]; } set { _data[70] = value; } }
+		public int Emberstorm { get { return _data[69]; } set { _data[69] = value; } }
 
-		[TalentData(71, "Conflagrate", 1, 2, 2, 7, 67, new string[] {
-@"165 Mana,30 yd range,
+		[TalentData(71, "Conflagrate", 1, 2, 2, 7, 66, new string[] {
+@"16% Base Mana,30 yd range,
 Instant Cast,10 sec cooldown,
-Ignites a target that is already afflicted by your Immolate, dealing 249 to 316 Fire damage and consuming the Immolate spell.
-
-		 Trainable Ranks Listed Below:
-		 Rank 2: 200 Mana, 326-407 Damage
-		 Rank 3: 230 Mana, 395-491 Damage
-		 Rank 4: 255 Mana, 455-566 Damage
-		 Rank 5: 280 Mana, 521-648 Damage
-		 Rank 6: 305 Mana, 579-721 Damage",})]
+Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal damage equal to 15 sec of your Immolate or 8 sec of your Shadowflame."})]
 		public int Conflagrate { get { return _data[71]; } set { _data[71] = value; } }
 
 		[TalentData(72, "Soul Leech", 3, 2, 3, 7, -1, new string[] {
@@ -1812,40 +1762,40 @@ Ignites a target that is already afflicted by your Immolate, dealing 249 to 316 
 @"Gives your Shadow Bolt, Shadowburn, Chaos Bolt, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 30% chance to return health equal to 20% of the damage caused.",})]
 		public int SoulLeech { get { return _data[72]; } set { _data[72] = value; } }
 
-		[TalentData(73, "Backlash", 3, 2, 4, 7, -1, new string[] {
-@"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
-@"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
-@"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
-		public int Backlash { get { return _data[73]; } set { _data[73] = value; } }
+        [TalentData(73, "Pyroclasm", 2, 2, 1, 5, -1, new string[] {
+@"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 2% for 10 sec.",
+@"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 4% for 10 sec.",})]
+        public int Pyroclasm { get { return _data[73]; } set { _data[73] = value; } }
 
-		[TalentData(74, "Shadow and Flame", 5, 2, 2, 8, -1, new string[] {
-@"Your Shadow Bolt and Incinerate spells gain an additional 4% of your bonus spell damage effects.",
-@"Your Shadow Bolt and Incinerate spells gain an additional 8% of your bonus spell damage effects.",
-@"Your Shadow Bolt and Incinerate spells gain an additional 12% of your bonus spell damage effects.",
-@"Your Shadow Bolt and Incinerate spells gain an additional 16% of your bonus spell damage effects.",
-@"Your Shadow Bolt and Incinerate spells gain an additional 20% of your bonus spell damage effects.",})]
+        [TalentData(74, "Shadow and Flame", 5, 2, 2, 8, -1, new string[] {
+@"Your Shadow Bolt, Chaos Bolt and Incinerate spells gain an additional 4% of your bonus spell damage effects.",
+@"Your Shadow Bolt, Chaos Bolt and Incinerate spells gain an additional 8% of your bonus spell damage effects.",
+@"Your Shadow Bolt, Chaos Bolt and Incinerate spells gain an additional 12% of your bonus spell damage effects.",
+@"Your Shadow Bolt, Chaos Bolt and Incinerate spells gain an additional 16% of your bonus spell damage effects.",
+@"Your Shadow Bolt, Chaos Bolt and Incinerate spells gain an additional 20% of your bonus spell damage effects.",})]
 		public int ShadowAndFlame { get { return _data[74]; } set { _data[74] = value; } }
 
 		[TalentData(75, "Improved Soul Leech", 2, 2, 3, 8, 72, new string[] {
-@"Your Soul Leech effect also restores mana to you and your summoned demon equal to 1% of maximum mana.",
-@"Your Soul Leech effect also restores mana to you and your summoned demon equal to 2% of maximum mana.",})]
+@"Your Soul Leech effect also restores mana to you and your summoned demon equal to 1% of maximum mana, and has a 50% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of maximum mana per second. Lasts for 15 sec.",
+@"Your Soul Leech effect also restores mana to you and your summoned demon equal to 2% of maximum mana, and has a 100% chance to grant up to 10 party or raid members mana regeneration equal to 0.25% of maximum mana per second. Lasts for 15 sec.",})]
 		public int ImprovedSoulLeech { get { return _data[75]; } set { _data[75] = value; } }
 
 		[TalentData(76, "Backdraft", 3, 2, 1, 9, 71, new string[] {
-@"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 10%. Lasts 15 sec.",
-@"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 20%. Lasts 15 sec.",
-@"When you cast Conflagrate, the cast time and mana cost of your next three Destruction spells is reduced by 30%. Lasts 15 sec.",})]
+@"When you cast Conflagrate, the cast time and global cooldown of your next three Destruction spells is reduced by 10%. Lasts 15 sec.",
+@"When you cast Conflagrate, the cast time and global cooldown of your next three Destruction spells is reduced by 20%. Lasts 15 sec.",
+@"When you cast Conflagrate, the cast time and global cooldown of your next three Destruction spells is reduced by 30%. Lasts 15 sec.",})]
 		public int Backdraft { get { return _data[76]; } set { _data[76] = value; } }
 
 		[TalentData(77, "Shadowfury", 1, 2, 2, 9, -1, new string[] {
-@"1383 Mana,36 yd range,
-Instant cast,20 sec cooldown,
-Shadowfury is unleashed, causing 357 to 422 Shadow damage and stunning all enemies within 8 yds for 3 sec.
+@"37% Base Mana, 30 yd range,
+Instant cast, 20 sec cooldown,
+Shadowfury is unleashed, causing 343 to 407 Shadow damage and stunning all enemies within 8 yds for 3 sec.
 
 		 Trainable Ranks Listed Below:
-		 Rank 2: 545 Mana, 476-565 Damage
-		 Rank 3: 710 Mana, 612-728 Damage
-",})]
+		 Rank 2: 37% Base Mana, 459 - 547 Damage
+		 Rank 3: 27% Base Mana, 612 - 728 Damage
+		 Rank 4: 27% Base Mana, 822 - 978 Damage
+		 Rank 5: 27% Base Mana, 968 - 1152 Damage",})]
 		public int Shadowfury { get { return _data[77]; } set { _data[77] = value; } }
 
 		[TalentData(78, "Empowered Imp", 3, 2, 3, 9, -1, new string[] {
@@ -1863,10 +1813,15 @@ Shadowfury is unleashed, causing 357 to 422 Shadow damage and stunning all enemi
 		public int FireAndBrimstone { get { return _data[79]; } set { _data[79] = value; } }
 
 		[TalentData(80, "Chaos Bolt", 1, 2, 2, 11, -1, new string[] {
-@"336 Mana,36 yd range,
-1.5 sec cast,12 sec cooldown,
- Sends a bolt of chaotic fire at the enemy, dealing 685 to 861 Chaos damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.",})]
-		public int ChaosBolt { get { return _data[80]; } set { _data[80] = value; } }
+@"9% Base Mana, 30 yd range,
+2.5 sec cast, 12 sec cooldown,
+Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects.
+
+		 Trainable Ranks Listed Below:
+		 Rank 2: 7% Base Mana, 937 - 1189 Damage
+		 Rank 3: 7% Base Mana, 1059 - 1343 Damage
+		 Rank 4: 7% Base Mana, 1243 - 1577 Damage",})]
+        public int ChaosBolt { get { return _data[80]; } set { _data[80] = value; } }
 	}
 
 	public class DruidTalents : TalentsBase, ICloneable

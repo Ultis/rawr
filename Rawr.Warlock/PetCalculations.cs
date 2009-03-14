@@ -92,7 +92,7 @@ namespace Rawr.Warlock
             if (Pet == "Imp" && character.WarlockTalents.MasterDemonologist > 0)
                 petStats.SpellCrit += character.WarlockTalents.MasterDemonologist * 0.01f;
             if (Pet == "Imp" && character.WarlockTalents.DemonicEmpowerment > 0)
-                petStats.SpellCrit += character.WarlockTalents.DemonicEmpowerment * 0.2f * 30f / (60f/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
+                petStats.SpellCrit += character.WarlockTalents.DemonicEmpowerment * 0.2f * 30f / (60f * (1 - character.WarlockTalents.Nemesis * 0.1f));
 
             critCoefSpecial = 1.5f;
             if (Pet == "Felguard") critCoefSpecial = 2;
@@ -151,12 +151,6 @@ namespace Rawr.Warlock
                 specialHit = specialCastTime / 3.5f /*??*/* petStats.AttackPower + 124;
             }
             specialAttackDmg = (float)((specialHit * (1 - petStats.SpellCrit) + specialHit * critCoefSpecial * petStats.SpellCrit));
-/*            if (character.WarlockTalents.DemonicEmpathy > 0 && !PatchOn)
-            {
-                float empathyUptime = (float)(solver.critCount * 15 / solver.time);
-                if (empathyUptime > 1) empathyUptime = 1;
-                specialAttackDmg += specialAttackDmg * empathyUptime * character.WarlockTalents.DemonicEmpathy * 0.01f;
-            }*/
         }
 
         public void calcBaseDPS()
@@ -168,7 +162,7 @@ namespace Rawr.Warlock
             else if (Pet == "Felguard") baseAttackDmg = petStats.AttackPower * 0.18 + 520;
             else if (Pet == "Infernal") baseAttackDmg = 1040 + petStats.AttackPower * 0.13;//??
             baseAttackSpeed = 2;
-            if (Pet == "Felguard" && character.WarlockTalents.DemonicEmpowerment > 0) baseAttackSpeed *= 1 - character.WarlockTalents.DemonicEmpowerment * 15f / (60f/* * (1 - character.WarlockTalents.Nemesis * 0.1f)*/);
+            if (Pet == "Felguard" && character.WarlockTalents.DemonicEmpowerment > 0) baseAttackSpeed *= 1 - character.WarlockTalents.DemonicEmpowerment * 15f / (60f * (1 - character.WarlockTalents.Nemesis * 0.1f));
 
             baseAttackDmg = baseAttackDmg * (1 - petStats.PhysicalCrit) + baseAttackDmg * critCoefMelee * petStats.PhysicalCrit;
             baseAttackDmg *= petHit;
