@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -1261,6 +1262,7 @@ namespace Rawr
         /// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
         /// Item, a new blank item may be created for this field, containing just a Name and Stats.
         /// </summary>
+        [XmlIgnore]
         public abstract Item Item { get; set; }
 
 		/// <summary>
@@ -1273,7 +1275,7 @@ namespace Rawr
         /// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints
         /// are based. Used by optimizer upgrade calculations.
         /// </summary>
-        public Character Character { get; set; }
+        public ItemInstance[] CharacterItems { get; set; }
  
         /// <summary>
         /// Name of the Stat to set to 1.00 for relative stats calcs

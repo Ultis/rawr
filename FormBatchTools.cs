@@ -245,7 +245,7 @@ namespace Rawr
                     }
                     if (upgradeListPhase == 0)
                     {
-                        foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationBase>> kvp in e.Upgrades)
+                        foreach (KeyValuePair<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in e.Upgrades)
                         {
                             Dictionary<string, UpgradeEntry> map;
                             if (!upgradeList.TryGetValue(kvp.Key, out map))
@@ -347,7 +347,7 @@ namespace Rawr
                                 }
                             }
 
-                            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = new Dictionary<Character.CharacterSlot,List<ComparisonCalculationBase>>();
+                            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                             foreach (var kvp in upgradeList)
                             {
@@ -362,13 +362,12 @@ namespace Rawr
                                     }
                                 }
 
-                                upgrades[kvp.Key] = new List<ComparisonCalculationBase>();
+                                upgrades[kvp.Key] = new List<ComparisonCalculationUpgrades>();
                                 foreach (UpgradeEntry entry in filtered.Values)
                                 {
-                                    ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
+                                    ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                                     itemCalc.ItemInstance = entry.Item;
-                                    itemCalc.Item = entry.Item.Item;
-                                    itemCalc.Character = null;
+                                    itemCalc.CharacterItems = null;
                                     itemCalc.Name = entry.Item.Item.Name;
                                     itemCalc.Equipped = false;
                                     itemCalc.OverallPoints = entry.Value / totalValue;
@@ -382,8 +381,9 @@ namespace Rawr
                             {
                                 customSubpoints.Add(batchCharacter.Name);
                             }
-                            FormUpgradeComparison.Instance.LoadData(formMain.Character, upgrades, customSubpoints.ToArray());
+                            FormUpgradeComparison.Instance.LoadData(upgrades, customSubpoints.ToArray());
                             FormUpgradeComparison.Instance.Show();
+                            FormUpgradeComparison.Instance.BringToFront();
                         }
                     }
                     break;
@@ -972,8 +972,9 @@ namespace Rawr
         {
             batchOptimizer.ComputeUpgradesProgressChanged -= new ComputeUpgradesProgressChangedEventHandler(batchOptimizer_ComputeUpgradesProgressChanged);
             batchOptimizer.ComputeUpgradesCompleted -= new ComputeUpgradesCompletedEventHandler(batchOptimizer_ComputeUpgradesCompleted);
-            FormUpgradeComparison.Instance.LoadData(formMain.Character, e.Upgrades, null);
+            FormUpgradeComparison.Instance.LoadData(e.Upgrades, null);
             FormUpgradeComparison.Instance.Show();
+            FormUpgradeComparison.Instance.BringToFront();
         }
 
         void batchOptimizer_ComputeUpgradesProgressChanged(object sender, ComputeUpgradesProgressChangedEventArgs e)

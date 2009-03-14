@@ -818,7 +818,7 @@ namespace Rawr.Tree
             calcOpts.Rotation = old;
             return new ComparisonCalculationTree()
             {
-                Character = character,
+                CharacterItems = character.GetItems(),
                 Name = rotationName,
                 OverallPoints = calcs.OverallPoints,
                 BurstPoints = calcs.BurstPoints,

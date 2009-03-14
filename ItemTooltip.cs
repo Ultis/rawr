@@ -139,7 +139,7 @@ namespace Rawr
             }
         }
 
-        private Character CurrentItemCharacter { get; set; }
+        private ItemInstance[] CurrentCharacterItems { get; set; }
 
         private Font _fontName = null;
         private Font _fontStats = null;
@@ -279,15 +279,15 @@ namespace Rawr
 
                             int numTinyItems = 0;
                             int tinyItemSize = 18;
-							if (CurrentItemCharacter != null)
+							if (CurrentCharacterItems != null)
                             {
-                                foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+                                for (int slot = 0; slot < Character.SlotCount; slot++)
                                 {
-									if (CurrentItemCharacter[slot] != null)
-									{
-										if (_currentItemInstance == null || CurrentItemCharacter[slot].GemmedId != _currentItemInstance.GemmedId)
-											numTinyItems++;
-									}
+                                    if (CurrentCharacterItems[slot] != null)
+                                    {
+                                        if (_currentItemInstance == null || CurrentCharacterItems[slot].GemmedId != _currentItemInstance.GemmedId)
+                                            numTinyItems++;
+                                    }
                                 }
                             }
 
@@ -531,11 +531,11 @@ namespace Rawr
                                 yPos += enchantSize;
                             }
 
-                            if (CurrentItemCharacter != null)
+                            if (CurrentCharacterItems != null)
                             {
-								foreach (Character.CharacterSlot slot in Character.CharacterSlots)
+								for (int slot = 0; slot < Character.SlotCount; slot++)
                                 {
-                                    ItemInstance tinyItem = CurrentItemCharacter[slot];
+                                    ItemInstance tinyItem = CurrentCharacterItems[slot];
                                     if (tinyItem != null && (_currentItemInstance == null || tinyItem.GemmedId != _currentItemInstance.GemmedId))
                                     {
                                         Image icon = ItemIcons.GetItemIcon(tinyItem.Item, true);
@@ -587,7 +587,7 @@ namespace Rawr
                                                     break;
                                             }
                                             string label = tinyItem.Item.Name;
-                                            Enchant tinyEnchant = CurrentItemCharacter.GetEnchantBySlot(slot);
+                                            Enchant tinyEnchant = CurrentCharacterItems[slot].Enchant;
                                             if (tinyEnchant != null && tinyEnchant.Id != 0) label = label + " (" + tinyEnchant.ToString() + ")";
                                             g.DrawString(label, _fontTinyName, nameBrush, xPos + 76, yPos + 1);
                                             yPos += tinyItemSize;
@@ -615,10 +615,10 @@ namespace Rawr
             Show(item, null, Character.CharacterSlot.None, window, point);
         }
 
-		public void Show(Item item, Character itemCharacter, Character.CharacterSlot slot, IWin32Window window, Point point)
+		public void Show(Item item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
 		{
 			CurrentItem = item;
-            CurrentItemCharacter = itemCharacter;
+            CurrentCharacterItems = characterItems;
 			CurrentSlot = slot;
             if (CachedToolTipImage != null && CurrentItem != null)
             {
@@ -631,10 +631,10 @@ namespace Rawr
             Show(item, null, Character.CharacterSlot.None, window, point);
         }
 
-        public void Show(ItemInstance item, Character itemCharacter, Character.CharacterSlot slot, IWin32Window window, Point point)
+        public void Show(ItemInstance item, ItemInstance[] characterItems, Character.CharacterSlot slot, IWin32Window window, Point point)
         {
             CurrentItemInstance = item;
-            CurrentItemCharacter = itemCharacter;
+            CurrentCharacterItems = characterItems;
 			CurrentSlot = slot;
             if (CachedToolTipImage != null && CurrentItemInstance != null)
             {

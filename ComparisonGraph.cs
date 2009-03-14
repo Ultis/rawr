@@ -662,7 +662,7 @@ namespace Rawr
                             }
                         }
 
-						ItemContextualMenu.Instance.Show(itemInstance, slot, ItemCalculations[itemIndex].Character, true);
+						ItemContextualMenu.Instance.Show(itemInstance, slot, ItemCalculations[itemIndex].CharacterItems, true);
 
 					}
                 }
@@ -689,7 +689,7 @@ namespace Rawr
                     {
                         Item item = ItemCalculations[itemIndex].Item;
                         ItemInstance itemInstance = ItemCalculations[itemIndex].ItemInstance;
-                        Character itemCharacter = ItemCalculations[itemIndex].Character;
+                        ItemInstance[] characterItems = ItemCalculations[itemIndex].CharacterItems;
                         Enchant itemEnchant = null;
                         if (ItemCalculations[itemIndex].ItemInstance != null) itemEnchant = ItemCalculations[itemIndex].ItemInstance.Enchant;
                         if (e.X < 10 && item != null && item.Id != 0)
@@ -702,7 +702,7 @@ namespace Rawr
                                 tipX = -249;
                             if (itemInstance != null)
                             {
-                                ShowTooltip(itemInstance, itemCharacter, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
+                                ShowTooltip(itemInstance, characterItems, new Point(tipX, 26 + (itemIndex * 36) - _scrollBar.Value));
                             }
                             else
                             {
@@ -725,13 +725,13 @@ namespace Rawr
             }
         }
 
-        private void ShowTooltip(ItemInstance item, Character itemCharacter, Point location)
+        private void ShowTooltip(ItemInstance item, ItemInstance[] characterItems, Point location)
         {
             if (_tooltipItemInstance != item || _tooltipLocation != location)
             {
                 _tooltipItem = null;
                 _tooltipItemInstance = item;
-                _tooltipItemCharacter = itemCharacter;
+                _tooltipCharacterItems = characterItems;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
@@ -743,7 +743,7 @@ namespace Rawr
             {
                 _tooltipItem = item;
                 _tooltipItemInstance = null;
-                _tooltipItemCharacter = null;
+                _tooltipCharacterItems = null;
                 _tooltipLocation = location;
                 ShowHideTooltip();
             }
@@ -755,24 +755,24 @@ namespace Rawr
             {
                 _tooltipItem = null;
                 _tooltipItemInstance = null;
-                _tooltipItemCharacter = null;
+                _tooltipCharacterItems = null;
                 ShowHideTooltip();
             }
         }
 
         private ItemInstance _tooltipItemInstance = null;
         private Item _tooltipItem = null;
-        private Character _tooltipItemCharacter = null;
+        private ItemInstance[] _tooltipCharacterItems = null;
         private Point _tooltipLocation = Point.Empty;
         private void ShowHideTooltip()
         {
             if (_tooltipItem != null && _tooltipLocation != Point.Empty)
 			{
-				ItemToolTip.Instance.Show(_tooltipItem, _tooltipItemCharacter, EquipSlot, this, _tooltipLocation);
+				ItemToolTip.Instance.Show(_tooltipItem, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
             }
             else if (_tooltipItemInstance != null && _tooltipLocation != Point.Empty)
             {
-                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipItemCharacter, EquipSlot, this, _tooltipLocation);
+                ItemToolTip.Instance.Show(_tooltipItemInstance, _tooltipCharacterItems, EquipSlot, this, _tooltipLocation);
             }
             else
             {

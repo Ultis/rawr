@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -146,15 +147,15 @@ namespace Rawr.Optimizer
 
     public class ComputeUpgradesCompletedEventArgs : AsyncCompletedEventArgs
     {
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades;
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades;
 
-        public ComputeUpgradesCompletedEventArgs(Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades, Exception error, bool cancelled)
+        public ComputeUpgradesCompletedEventArgs(Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, Exception error, bool cancelled)
             : base(error, cancelled, null)
         {
             this.upgrades = upgrades;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> Upgrades
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> Upgrades
         {
             get
             {
@@ -2466,6 +2467,30 @@ namespace Rawr.Optimizer
 		}
     }*/
 
+    [Serializable]
+    public class ComparisonCalculationUpgrades : ComparisonCalculationBase
+    {
+        public override string Name { get; set; }
+        public override float OverallPoints { get; set; }
+        public override float[] SubPoints { get; set; }
+        public override ItemInstance ItemInstance { get; set; }
+        public override bool Equipped { get; set; }
+
+        [XmlIgnore]
+        public override Item Item
+        {
+            get
+            {
+                if (ItemInstance != null) return ItemInstance.Item;
+                return null;
+            }
+            set
+            {
+                throw new NotSupportedException();
+            }
+        }
+    }
+
     public class ItemInstanceOptimizer : OptimizerBase<ItemInstance, Character, CharacterCalculationsBase>
     {
         private Character _character;
@@ -2818,7 +2843,7 @@ namespace Rawr.Optimizer
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -2932,14 +2957,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -2976,7 +3001,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -2988,18 +3013,18 @@ namespace Rawr.Optimizer
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Character saveCharacter = _character;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
                 MarkEquippedItemsAsValid(_character);
 
-                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
+                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                 Item[] items = ItemCache.GetRelevantItems(model);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
-                    upgrades[slot] = new List<ComparisonCalculationBase>();
+                    upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
@@ -3032,7 +3057,7 @@ namespace Rawr.Optimizer
                     {
                         if (item.FitsInSlot(slot, _character))
                         {
-                            List<ComparisonCalculationBase> comparisons = upgrades[slot];
+                            List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
                             List<ItemInstance> savedItems = slotItems[(int)lockedSlot];
@@ -3076,19 +3101,11 @@ namespace Rawr.Optimizer
                             if (best > baseValue)
                             {
                                 ItemInstance bestItem = bestCharacter[lockedSlot];
-                                ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
+                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                                 itemCalc.ItemInstance = bestItem;
-                                itemCalc.Item = bestItem.Item;
-                                itemCalc.Character = bestCharacter;
+                                itemCalc.CharacterItems = bestCharacter.GetItems();
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
-                                //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
-                                //float[] subPoints = new float[bestCalculations.SubPoints.Length];
-                                //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
-                                //{
-                                //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
-                                //}
-                                //itemCalc.SubPoints = subPoints;
                                 itemCalc.OverallPoints = best - baseValue;
 
                                 comparisons.Add(itemCalc);
@@ -4026,7 +4043,7 @@ namespace Rawr.Optimizer
         private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             Exception error = null;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
@@ -4140,14 +4157,14 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
+        public Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
             cancellationPending = false;
             asyncOperation = null;
             Exception error;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
             if (error != null) throw error;
             isBusy = false;
             return upgrades;
@@ -4184,7 +4201,7 @@ namespace Rawr.Optimizer
             }
         }
 
-        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, OptimizationRequirement[] requirements, int thoroughness, Item singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -4196,18 +4213,18 @@ namespace Rawr.Optimizer
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Character saveCharacter = _character;
-            Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>> upgrades = null;
+            Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
             try
             {
                 // make equipped gear/enchant valid
                 MarkEquippedItemsAsValid(_character);
 
-                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationBase>>();
+                upgrades = new Dictionary<Character.CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
                 Item[] items = ItemCache.GetRelevantItems(model);
                 Character.CharacterSlot[] slots = new Character.CharacterSlot[] { Character.CharacterSlot.Back, Character.CharacterSlot.Chest, Character.CharacterSlot.Feet, Character.CharacterSlot.Finger1, Character.CharacterSlot.Hands, Character.CharacterSlot.Head, Character.CharacterSlot.Legs, Character.CharacterSlot.MainHand, Character.CharacterSlot.Neck, Character.CharacterSlot.OffHand, Character.CharacterSlot.Projectile, Character.CharacterSlot.ProjectileBag, Character.CharacterSlot.Ranged, Character.CharacterSlot.Shoulders, Character.CharacterSlot.Trinket1, Character.CharacterSlot.Waist, Character.CharacterSlot.Wrist };
                 foreach (Character.CharacterSlot slot in slots)
-                    upgrades[slot] = new List<ComparisonCalculationBase>();
+                    upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
                 float baseValue = GetOptimizationValue(_character, baseCalculations);
@@ -4240,7 +4257,7 @@ namespace Rawr.Optimizer
                     {
                         if (item.FitsInSlot(slot, _character))
                         {
-                            List<ComparisonCalculationBase> comparisons = upgrades[slot];
+                            List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
                             PopulateLockedItems(item);
                             lockedSlot = slot;
                             if (lockedSlot == Character.CharacterSlot.Finger1 && item.Unique && (object)_character.Finger2 != null && _character.Finger2.Id == item.Id)
@@ -4282,19 +4299,11 @@ namespace Rawr.Optimizer
                             if (best > baseValue)
                             {
                                 ItemInstance bestItem = bestCharacter[lockedSlot];
-                                ComparisonCalculationBase itemCalc = Calculations.CreateNewComparisonCalculation();
+                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                                 itemCalc.ItemInstance = bestItem;
-                                itemCalc.Item = bestItem.Item;
-                                itemCalc.Character = bestCharacter;
+                                itemCalc.CharacterItems = bestCharacter.GetItems();
                                 itemCalc.Name = item.Name;
                                 itemCalc.Equipped = false;
-                                //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
-                                //float[] subPoints = new float[bestCalculations.SubPoints.Length];
-                                //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
-                                //{
-                                //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
-                                //}
-                                //itemCalc.SubPoints = subPoints;
                                 itemCalc.OverallPoints = best - baseValue;
 
                                 comparisons.Add(itemCalc);

@@ -26,9 +26,15 @@ namespace Rawr //O O . .
         public List<Buff> _activeBuffs = new List<Buff>();
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
-        private const int slotCount = 21;
+        public const int SlotCount = 21;
         [XmlIgnore]
-        internal ItemInstance[] _item = new ItemInstance[slotCount];
+        internal ItemInstance[] _item = new ItemInstance[SlotCount];
+
+        public ItemInstance[] GetItems()
+        {
+            return (ItemInstance[])_item.Clone();
+        }
+
         private string GetGemmedId(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
@@ -1007,7 +1013,7 @@ namespace Rawr //O O . .
         public void SetEnchantBySlot(Character.CharacterSlot slot, Enchant enchant)
         {
             int i = (int)slot;
-            if (i < 0 || i >= slotCount) return;
+            if (i < 0 || i >= SlotCount) return;
             ItemInstance item = this[slot];
             if ((object)item != null) item.Enchant = enchant;
 			OnCalculationsInvalidated();
@@ -1278,13 +1284,13 @@ namespace Rawr //O O . .
             get
             {
                 int i = (int)slot;
-                if (i < 0 || i >= slotCount) return null;
+                if (i < 0 || i >= SlotCount) return null;
                 return _item[i];
             }
             set
             {
                 int i = (int)slot;
-                if (i < 0 || i >= slotCount) return;
+                if (i < 0 || i >= SlotCount) return;
                 // should we track id changes? for now assume assume we don't have to
                 _item[i] = value;
                 OnCalculationsInvalidated();
@@ -1639,7 +1645,7 @@ namespace Rawr //O O . .
 
 		public Character Clone()
 		{
-            ItemInstance[] clonedItemInstances = new ItemInstance[slotCount];
+            ItemInstance[] clonedItemInstances = new ItemInstance[SlotCount];
             for (int i = 0; i < clonedItemInstances.Length; i++)
             {
                 ItemInstance itemInstance = _item[i];

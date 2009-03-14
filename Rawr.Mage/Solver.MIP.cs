@@ -3503,8 +3503,6 @@ namespace Rawr.Mage
             //int maxdist = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor((cooldownDuration - effectDuration) / segmentDuration));
             //int maxdist2 = (cooldownDuration < 0) ? 3 * segments : ((int)Math.Floor(cooldownDuration / segmentDuration));
 
-            bool valid = true;
-
             for (int i = 0; i < segmentColumn[0]; i++) // fix if variable ordering changes
             {
                 if (solutionVariable[i].IsMatch(activationCooldown, activation) && solution[i] > eps)
@@ -4360,8 +4358,8 @@ namespace Rawr.Mage
         private bool ValidateFlamecap()
         {
             Cooldown cooldown = Cooldown.FlameCap;
-            double effectDuration = 60.0;
-            double cooldownDuration = 180.0;
+            //double effectDuration = 60.0;
+            //double cooldownDuration = 180.0;
             const double eps = 0.00001;
             double[] segCount = GetSegmentCooldownCount(cooldown, VariableType.None);
 

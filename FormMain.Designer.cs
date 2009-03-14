@@ -179,6 +179,7 @@ namespace Rawr
             this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemFilteringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
+            this.upgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -1516,6 +1517,7 @@ namespace Rawr
             this.toolStripMenuItem6,
             this.optimizeToolStripMenuItem,
             this.batchToolsToolStripMenuItem6,
+            this.upgradeListToolStripMenuItem,
             this.copyCharacterStatsToClipboardToolStripMenuItem,
             this.toolStripSeparator11,
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
@@ -1713,6 +1715,13 @@ namespace Rawr
             this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
             this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
             // 
+            // upgradeListToolStripMenuItem
+            // 
+            this.upgradeListToolStripMenuItem.Name = "upgradeListToolStripMenuItem";
+            this.upgradeListToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
+            this.upgradeListToolStripMenuItem.Text = "Upgrade List...";
+            this.upgradeListToolStripMenuItem.Click += new System.EventHandler(this.upgradeListToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1900,6 +1909,7 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem batchToolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem itemFilteringToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTipMain;
+        private System.Windows.Forms.ToolStripMenuItem upgradeListToolStripMenuItem;
         
     }
 }

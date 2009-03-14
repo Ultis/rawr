@@ -1219,7 +1219,7 @@ the Threat Scale defined on the Options tab.",
 
 										comparisonsDPS.Add(new ComparisonCalculationBear()
 										{
-											Character = character,
+                                            CharacterItems = character.GetItems(),
 											Name = rotationCalculation.Name.Replace("+", " + "),
 											OverallPoints = rotationCalculation.DPS,
 											ThreatPoints = rotationCalculation.DPS
@@ -1252,7 +1252,7 @@ the Threat Scale defined on the Options tab.",
 
 										comparisonsTPS.Add(new ComparisonCalculationBear()
 										{
-											Character = character,
+                                            CharacterItems = character.GetItems(),
 											Name = rotationCalculation.Name.Replace("+", " + "),
 											OverallPoints = rotationCalculation.TPS,
 											ThreatPoints = rotationCalculation.TPS

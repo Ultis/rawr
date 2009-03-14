@@ -28,7 +28,7 @@ namespace Rawr
 		}
 
 		private ItemInstance _item;
-        private Character _itemCharacter;
+        private ItemInstance[] _characterItems;
 		private Character.CharacterSlot _equipSlot;
 		private ToolStripMenuItem _menuItemName;
 		private ToolStripMenuItem _menuItemEdit;
@@ -126,11 +126,11 @@ namespace Rawr
             return;
         }
 
-		public void Show(ItemInstance item, Character.CharacterSlot equipSlot, Character itemCharacter, bool allowDelete)
+		public void Show(ItemInstance item, Character.CharacterSlot equipSlot, ItemInstance[] characterItems, bool allowDelete)
 		{
 			_item = item;
-            _itemCharacter = itemCharacter;
-            _menuItemEquipAll.Visible = (_itemCharacter != null);
+            _characterItems = characterItems;
+            _menuItemEquipAll.Visible = (_characterItems != null);
 			_equipSlot = equipSlot;
 			_menuItemEquip.Enabled = (this.Character[equipSlot] != item);
             _menuItemEquip.Visible = _menuItemEvaluateUpgrade.Visible = equipSlot != Character.CharacterSlot.None;
@@ -268,38 +268,25 @@ namespace Rawr
         void _menuItemEquipAll_Click(object sender, EventArgs e)
         {
             _character.IsLoading = true;
-            _character.Back = _itemCharacter.Back == null ? null : _itemCharacter.Back.Clone();
-            _character.Chest = _itemCharacter.Chest == null ? null : _itemCharacter.Chest.Clone();
-            _character.Feet = _itemCharacter.Feet == null ? null : _itemCharacter.Feet.Clone();
-            _character.Finger1 = _itemCharacter.Finger1 == null ? null : _itemCharacter.Finger1.Clone();
-            _character.Finger2 = _itemCharacter.Finger2 == null ? null : _itemCharacter.Finger2.Clone();
-            _character.Hands = _itemCharacter.Hands == null ? null : _itemCharacter.Hands.Clone();
-            _character.Head = _itemCharacter.Head == null ? null : _itemCharacter.Head.Clone();
-            _character.Legs = _itemCharacter.Legs == null ? null : _itemCharacter.Legs.Clone();
-            _character.MainHand = _itemCharacter.MainHand == null ? null : _itemCharacter.MainHand.Clone();
-            _character.Neck = _itemCharacter.Neck == null ? null : _itemCharacter.Neck.Clone();
-            _character.OffHand = _itemCharacter.OffHand == null ? null : _itemCharacter.OffHand.Clone();
-            _character.Projectile = _itemCharacter.Projectile == null ? null : _itemCharacter.Projectile.Clone();
-            _character.ProjectileBag = _itemCharacter.ProjectileBag == null ? null : _itemCharacter.ProjectileBag.Clone();
-            _character.Ranged = _itemCharacter.Ranged == null ? null : _itemCharacter.Ranged.Clone();
-            _character.Shoulders = _itemCharacter.Shoulders == null ? null : _itemCharacter.Shoulders.Clone();
-            _character.Trinket1 = _itemCharacter.Trinket1 == null ? null : _itemCharacter.Trinket1.Clone();
-            _character.Trinket2 = _itemCharacter.Trinket2 == null ? null : _itemCharacter.Trinket2.Clone();
-            _character.Waist = _itemCharacter.Waist == null ? null : _itemCharacter.Waist.Clone();
-            _character.Wrist = _itemCharacter.Wrist == null ? null : _itemCharacter.Wrist.Clone();
-            //_character.BackEnchant = _itemCharacter.BackEnchant;
-            //_character.ChestEnchant = _itemCharacter.ChestEnchant;
-            //_character.FeetEnchant = _itemCharacter.FeetEnchant;
-            //_character.Finger1Enchant = _itemCharacter.Finger1Enchant;
-            //_character.Finger2Enchant = _itemCharacter.Finger2Enchant;
-            //_character.HandsEnchant = _itemCharacter.HandsEnchant;
-            //_character.HeadEnchant = _itemCharacter.HeadEnchant;
-            //_character.LegsEnchant = _itemCharacter.LegsEnchant;
-            //_character.MainHandEnchant = _itemCharacter.MainHandEnchant;
-            //_character.OffHandEnchant = _itemCharacter.OffHandEnchant;
-            //_character.RangedEnchant = _itemCharacter.RangedEnchant;
-            //_character.ShouldersEnchant = _itemCharacter.ShouldersEnchant;
-            //_character.WristEnchant = _itemCharacter.WristEnchant;
+            _character.Back = _characterItems[(int)Character.CharacterSlot.Back] == null ? null : _characterItems[(int)Character.CharacterSlot.Back].Clone();
+            _character.Chest = _characterItems[(int)Character.CharacterSlot.Chest] == null ? null : _characterItems[(int)Character.CharacterSlot.Chest].Clone();
+            _character.Feet = _characterItems[(int)Character.CharacterSlot.Feet] == null ? null : _characterItems[(int)Character.CharacterSlot.Feet].Clone();
+            _character.Finger1 = _characterItems[(int)Character.CharacterSlot.Finger1] == null ? null : _characterItems[(int)Character.CharacterSlot.Finger1].Clone();
+            _character.Finger2 = _characterItems[(int)Character.CharacterSlot.Finger2] == null ? null : _characterItems[(int)Character.CharacterSlot.Finger2].Clone();
+            _character.Hands = _characterItems[(int)Character.CharacterSlot.Hands] == null ? null : _characterItems[(int)Character.CharacterSlot.Hands].Clone();
+            _character.Head = _characterItems[(int)Character.CharacterSlot.Head] == null ? null : _characterItems[(int)Character.CharacterSlot.Head].Clone();
+            _character.Legs = _characterItems[(int)Character.CharacterSlot.Legs] == null ? null : _characterItems[(int)Character.CharacterSlot.Legs].Clone();
+            _character.MainHand = _characterItems[(int)Character.CharacterSlot.MainHand] == null ? null : _characterItems[(int)Character.CharacterSlot.MainHand].Clone();
+            _character.Neck = _characterItems[(int)Character.CharacterSlot.Neck] == null ? null : _characterItems[(int)Character.CharacterSlot.Neck].Clone();
+            _character.OffHand = _characterItems[(int)Character.CharacterSlot.OffHand] == null ? null : _characterItems[(int)Character.CharacterSlot.OffHand].Clone();
+            _character.Projectile = _characterItems[(int)Character.CharacterSlot.Projectile] == null ? null : _characterItems[(int)Character.CharacterSlot.Projectile].Clone();
+            _character.ProjectileBag = _characterItems[(int)Character.CharacterSlot.ProjectileBag] == null ? null : _characterItems[(int)Character.CharacterSlot.ProjectileBag].Clone();
+            _character.Ranged = _characterItems[(int)Character.CharacterSlot.Ranged] == null ? null : _characterItems[(int)Character.CharacterSlot.Ranged].Clone();
+            _character.Shoulders = _characterItems[(int)Character.CharacterSlot.Shoulders] == null ? null : _characterItems[(int)Character.CharacterSlot.Shoulders].Clone();
+            _character.Trinket1 = _characterItems[(int)Character.CharacterSlot.Trinket1] == null ? null : _characterItems[(int)Character.CharacterSlot.Trinket1].Clone();
+            _character.Trinket2 = _characterItems[(int)Character.CharacterSlot.Trinket2] == null ? null : _characterItems[(int)Character.CharacterSlot.Trinket2].Clone();
+            _character.Waist = _characterItems[(int)Character.CharacterSlot.Waist] == null ? null : _characterItems[(int)Character.CharacterSlot.Waist].Clone();
+            _character.Wrist = _characterItems[(int)Character.CharacterSlot.Wrist] == null ? null : _characterItems[(int)Character.CharacterSlot.Wrist].Clone();
             _character.IsLoading = false;
             _character.OnCalculationsInvalidated();
         }

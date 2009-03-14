@@ -311,6 +311,8 @@ namespace Rawr
             Text = string.Format("{0}% Complete - Rawr Optimizer", progressBarMain.Value);
         }
 
+        public bool ShowUpgradeComparison { get; set; }
+
         void _optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)
         {
             buttonCancel.DialogResult = DialogResult.Cancel;
@@ -325,10 +327,9 @@ namespace Rawr
             else
             {
                 progressBarAlt.Value = progressBarMain.Value = 100;
-                FormUpgradeComparison.Instance.LoadData(_character, e.Upgrades, null);
-                FormUpgradeComparison.Instance.Show();
+                FormUpgradeComparison.Instance.LoadData(e.Upgrades, null);
+                ShowUpgradeComparison = true;
                 Close();
-                //FormUpgradeComparison.Instance.BringToFront();
             }
         }
 

@@ -55,8 +55,14 @@
             this.overallToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alphabeticalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vScrollBarGraph = new System.Windows.Forms.VScrollBar();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.comparisonGraph1 = new Rawr.ComparisonGraph();
+            this.copyDataToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripItemComparison.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripItemComparison
@@ -66,7 +72,7 @@
             this.toolStripDropDownButtonSlot,
             this.toolStripLabel2,
             this.toolStripDropDownButtonSort});
-            this.toolStripItemComparison.Location = new System.Drawing.Point(0, 0);
+            this.toolStripItemComparison.Location = new System.Drawing.Point(0, 24);
             this.toolStripItemComparison.Name = "toolStripItemComparison";
             this.toolStripItemComparison.Size = new System.Drawing.Size(458, 25);
             this.toolStripItemComparison.TabIndex = 5;
@@ -289,29 +295,73 @@
             // 
             this.vScrollBarGraph.Dock = System.Windows.Forms.DockStyle.Right;
             this.vScrollBarGraph.LargeChange = 41;
-            this.vScrollBarGraph.Location = new System.Drawing.Point(441, 25);
+            this.vScrollBarGraph.Location = new System.Drawing.Point(441, 49);
             this.vScrollBarGraph.Maximum = 40;
             this.vScrollBarGraph.Name = "vScrollBarGraph";
-            this.vScrollBarGraph.Size = new System.Drawing.Size(17, 593);
+            this.vScrollBarGraph.Size = new System.Drawing.Size(17, 569);
             this.vScrollBarGraph.SmallChange = 32;
             this.vScrollBarGraph.TabIndex = 7;
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(458, 24);
+            this.menuStrip.TabIndex = 8;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.copyDataToClipboardToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "&Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Text = "&Save As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // comparisonGraph1
             // 
             this.comparisonGraph1.BackColor = System.Drawing.Color.White;
             this.comparisonGraph1.Character = null;
+            this.comparisonGraph1.CustomRendered = false;
+            this.comparisonGraph1.CustomRenderedChartName = null;
             this.comparisonGraph1.DisplayMode = Rawr.ComparisonGraph.GraphDisplayMode.Overall;
             this.comparisonGraph1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comparisonGraph1.Font = new System.Drawing.Font("Verdana", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comparisonGraph1.ItemCalculations = new Rawr.ComparisonCalculationBase[0];
-            this.comparisonGraph1.Location = new System.Drawing.Point(0, 25);
+            this.comparisonGraph1.Location = new System.Drawing.Point(0, 49);
             this.comparisonGraph1.Margin = new System.Windows.Forms.Padding(4);
             this.comparisonGraph1.Name = "comparisonGraph1";
             this.comparisonGraph1.RoundValues = true;
             this.comparisonGraph1.ScrollBar = this.vScrollBarGraph;
-            this.comparisonGraph1.Size = new System.Drawing.Size(458, 593);
+            this.comparisonGraph1.Size = new System.Drawing.Size(458, 569);
+            this.comparisonGraph1.SlotMap = null;
             this.comparisonGraph1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.comparisonGraph1.TabIndex = 6;
+            // 
+            // copyDataToClipboardToolStripMenuItem
+            // 
+            this.copyDataToClipboardToolStripMenuItem.Name = "copyDataToClipboardToolStripMenuItem";
+            this.copyDataToClipboardToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.copyDataToClipboardToolStripMenuItem.Text = "Copy Data to Clipboard";
+            this.copyDataToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyDataToClipboardToolStripMenuItem_Click);
             // 
             // FormUpgradeComparison
             // 
@@ -321,12 +371,16 @@
             this.Controls.Add(this.vScrollBarGraph);
             this.Controls.Add(this.comparisonGraph1);
             this.Controls.Add(this.toolStripItemComparison);
+            this.Controls.Add(this.menuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MainMenuStrip = this.menuStrip;
             this.Name = "FormUpgradeComparison";
             this.Text = "Upgrade Comparison";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormUpgradeComparison_FormClosing);
             this.toolStripItemComparison.ResumeLayout(false);
             this.toolStripItemComparison.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -361,5 +415,10 @@
         private System.Windows.Forms.ToolStripMenuItem alphabeticalToolStripMenuItem;
         private System.Windows.Forms.VScrollBar vScrollBarGraph;
         private ComparisonGraph comparisonGraph1;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyDataToClipboardToolStripMenuItem;
     }
 }

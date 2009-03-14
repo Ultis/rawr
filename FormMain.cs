@@ -1190,6 +1190,11 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 		{
 			FormOptimize optimize = new FormOptimize(Character);
 			optimize.ShowDialog(this);
+            if (optimize.ShowUpgradeComparison)
+            {
+                FormUpgradeComparison.Instance.Show();
+                FormUpgradeComparison.Instance.BringToFront();
+            }
             optimize.Dispose();
 		}
 
@@ -1753,6 +1758,12 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=BatchTools"); }
 
 		private void itemFilteringToolStripMenuItem_Click(object sender, EventArgs e)
-		{ Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
+        { Help.ShowHelp(null, "http://www.codeplex.com/Rawr/Wiki/View.aspx?title=ItemFiltering"); }
+
+        private void upgradeListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormUpgradeComparison.Instance.Show();
+            FormUpgradeComparison.Instance.BringToFront();
+        }
 	}
 }
