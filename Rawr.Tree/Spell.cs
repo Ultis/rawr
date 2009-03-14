@@ -21,7 +21,7 @@ namespace Rawr.Tree
             get 
             {
                 if (castTimeBeforeHaste > gcd)
-                    return castTimeBeforeHaste;
+                    return castTime;        // Not castTimeBeforeHaste
                 else if (gcd > 1)
                     return gcd;
                 else
@@ -106,7 +106,7 @@ namespace Rawr.Tree
             speed = (1 + (calculatedStats.HasteRating) / TreeConstants.HasteRatingToHaste);
             speed *= (1 + calculatedStats.SpellHaste);
             critModifier *= 1f + calculatedStats.BonusCritHealMultiplier;
-            NGmod = calcs.LocalCharacter.DruidTalents.NaturesGrace / 3;
+            NGmod = calcs.LocalCharacter.DruidTalents.NaturesGrace / 3f;
             applyHaste();
         }
 
@@ -134,7 +134,7 @@ namespace Rawr.Tree
                 {
                     pNoBuff *= 1 - NGmod * critChance;
                 }
-                speed *= (1 - pNoBuff) * 1.2f;
+                speed *= ( (1 - pNoBuff) * 0.2f) + 1f;
                 applyHaste();
             }
         }
