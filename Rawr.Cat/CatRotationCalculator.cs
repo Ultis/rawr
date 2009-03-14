@@ -10,14 +10,18 @@ namespace Rawr.Cat
 		public float Duration { get; set; }
 		public float CPPerCPG { get; set; }
 		public bool MaintainMangle { get; set; }
-		public float MangleDuration { get; set; }
-		public float BerserkDuration { get; set; }
 		public bool GlyphOfShred { get; set; }
-		public float RipDuration { get; set; }
 		public float AttackSpeed { get; set; }
 		public bool OmenOfClarity { get; set; }
 		public float AvoidedAttacks { get; set; }
 		public float CPGEnergyCostMultiplier { get; set; }
+		public float ClearcastOnBleedChance { get; set; }
+
+		public float MangleDuration { get; set; }
+		public float RipDuration { get; set; }
+		public float RakeDuration { get; set; }
+		public float SavageRoarBonusDuration { get; set; }
+		public float BerserkDuration { get; set; }
 
 		public float MeleeDamage { get; set; }
 		public float MangleDamage { get; set; }
@@ -34,7 +38,8 @@ namespace Rawr.Cat
 		public float RoarEnergy { get; set; }
 
 		public CatRotationCalculator(Stats stats, float duration, float cpPerCPG, bool maintainMangle, float mangleDuration,
-			float ripDuration, float berserkDuration, float attackSpeed, bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float cpgEnergyCostMultiplier, 
+			float ripDuration, float rakeDuration, float savageRoarBonusDuration, float berserkDuration, float attackSpeed, 
+			bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, float cpgEnergyCostMultiplier, float clearcastOnBleedChance,
 			float meleeDamage, float mangleDamage, float shredDamage, float rakeDamage, float ripDamage, float biteDamage, 
 			float mangleEnergy, float shredEnergy, float rakeEnergy, float ripEnergy, float biteEnergy, float roarEnergy)
 		{
@@ -42,15 +47,19 @@ namespace Rawr.Cat
 			Duration = duration;
 			CPPerCPG = cpPerCPG;
 			MaintainMangle = maintainMangle;
-			MangleDuration = mangleDuration;
-			RipDuration = ripDuration;
-			BerserkDuration = berserkDuration;
 			AttackSpeed = attackSpeed;
 			OmenOfClarity = omenOfClarity;
 			GlyphOfShred = glyphOfShred;
 			AvoidedAttacks = avoidedAttacks;
 			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
+			ClearcastOnBleedChance = clearcastOnBleedChance;
 
+			MangleDuration = mangleDuration;
+			RipDuration = ripDuration;
+			RakeDuration = rakeDuration;
+			SavageRoarBonusDuration = savageRoarBonusDuration;
+			BerserkDuration = berserkDuration;
+			
 			MeleeDamage = meleeDamage;
 			MangleDamage = mangleDamage;
 			ShredDamage = shredDamage;
@@ -74,6 +83,11 @@ namespace Rawr.Cat
 			if (OmenOfClarity)
 			{
 				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least
+				if (ClearcastOnBleedChance > 0)
+				{
+					float dotTicks = (1f / 3f + 1f / 2f) * Duration;
+					oocProcs += dotTicks * ClearcastOnBleedChance;
+				}
 				float cpgEnergyRaw = (useShred ? ShredEnergy : MangleEnergy) / CPGEnergyCostMultiplier;
 				totalEnergyAvailable += oocProcs * (cpgEnergyRaw * (1f - AvoidedAttacks) + cpgEnergyRaw * AvoidedAttacks * 0.2f);
 			}
@@ -85,7 +99,7 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Rake
-			float rakeCount = Duration / 9f;
+			float rakeCount = Duration / RakeDuration;
 			float rakeTotalEnergy = rakeCount * RakeEnergy;
 			float rakeCP = rakeCount * CPPerCPG;
 			totalCPAvailable += rakeCP;
@@ -113,7 +127,7 @@ namespace Rawr.Cat
 			#endregion
 
 			#region Savage Roar
-			float roarDuration = 9f + 5f * roarCP;
+			float roarDuration = 9f + 5f * roarCP + SavageRoarBonusDuration;
 			float roarCount = Duration / roarDuration;
 			float roarTotalEnergy = roarCount * RoarEnergy;
 			float roarCPRequired = roarCount * roarCP;

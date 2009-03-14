@@ -363,6 +363,7 @@ namespace Rawr
                 Name = "Strength of Earth Totem",
                 Group = "Agility and Strength",
                 Stats = { Strength = 155, Agility = 155 },
+				ConflictingBuffs = { "Agility", "Strength" },
                 Improvements = { 
 					new Buff { Name = "Enhancing Totems", Stats = { Strength = (float)Math.Floor(155f * 0.15f), Agility = (float)Math.Floor(155f * 0.15f) } }
 				}
@@ -734,6 +735,7 @@ namespace Rawr
                     NatureResistanceBuff = 54,
                     ShadowResistanceBuff = 54
                 },
+				ConflictingBuffs = { "StatArmor" },
                 Improvements = { 
 					new Buff { Name = "Improved Mark of the Wild", Stats = {
 					BonusArmor = (float)Math.Floor(750f * 0.4f),
@@ -759,18 +761,12 @@ namespace Rawr
                 Group = "Stat Multiplier",
                 Stats =
                 {
-                    BonusAgilityMultiplier = 0.02f,
-                    BonusStrengthMultiplier = 0.02f,
-                    BonusIntellectMultiplier = 0.02f,
-                    BonusStaminaMultiplier = 0.02f,
-                    BonusSpiritMultiplier = 0.02f
-                },
-                Improvements = { 
-					new Buff { Name = "Improved Blessing of Kings", Stats = { 
-						BonusAgilityMultiplier = (1.1f / 1.02f) - 1, BonusStrengthMultiplier = (1.1f / 1.02f) - 1,
-						BonusIntellectMultiplier = (1.1f / 1.02f) - 1, BonusStaminaMultiplier = (1.1f / 1.02f) - 1,
-						BonusSpiritMultiplier = (1.1f / 1.02f) - 1} } 
-				}
+                    BonusAgilityMultiplier = 0.1f,
+                    BonusStrengthMultiplier = 0.1f,
+                    BonusIntellectMultiplier = 0.1f,
+                    BonusStaminaMultiplier = 0.1f,
+                    BonusSpiritMultiplier = 0.1f
+                }
             });
             #endregion
 
@@ -1422,7 +1418,7 @@ namespace Rawr
             });
             #endregion
 
-            //#region Potion
+            #region Potion
             //defaultBuffs.Add(new Buff()
             //{
             //    Name = "Haste Potion",
@@ -1441,7 +1437,7 @@ namespace Rawr
             //    Group = "Potion",
             //    Stats = { BonusArmor = 2500 }
             //});
-            //#endregion
+            #endregion
 
             #region Food
             defaultBuffs.Add(new Buff()
@@ -1529,14 +1525,14 @@ namespace Rawr
             {
                 Name = "Scroll of Agility VIII",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Agility" }),
+                ConflictingBuffs = new List<string>(new string[] { "Scroll of Agility", "Agility" }),
                 Stats = { Agility = 30 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Strength VIII",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Strength" }),
+                ConflictingBuffs = new List<string>(new string[] { "Scroll of Strength", "Strength" }),
                 Stats = { Strength = 30 }
             });
             defaultBuffs.Add(new Buff()
@@ -1564,18 +1560,18 @@ namespace Rawr
             {
                 Name = "Scroll of Protection VII",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Protection" }),
+                ConflictingBuffs = new List<string>(new string[] { "Scroll of Protection", "StatArmor" }),
                 Stats = { BonusArmor = 340 }
             });
             #endregion
 
-            //#region Temporary Weapon Enchantment
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Adamantite Weightstone",
-                Group = "Temporary Weapon Enchantment",
-                Stats = { WeaponDamage = 12, CritRating = 14 }
-            });
+            #region Temporary Weapon Enchantment
+			//defaultBuffs.Add(new Buff()
+			//{
+			//    Name = "Adamantite Weightstone",
+			//    Group = "Temporary Weapon Enchantment",
+			//    Stats = { WeaponDamage = 12, CritRating = 14 }
+			//});
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthliving Weapon",
@@ -1618,7 +1614,7 @@ namespace Rawr
             //    Group = "Temporary Weapon Enchantment",
             //    Stats = { Mp5 = 12, SpellPower = 13 }
             //});
-            //#endregion
+            #endregion
 
             #endregion
 
@@ -1971,7 +1967,26 @@ namespace Rawr
                 Stats = { TigersFuryCooldownReduction = 3f, WeaponDamage = 1.778f /*Increased Barkskin Duration*/ },
                 SetName = "Dreamwalker Battlegear",
                 SetThreshold = 4
-            });
+			});
+			// Feral Tier 8 set bonuses 
+			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+			{
+			    Name = "Druid T8 Battlegear 2 Piece Bonus",
+			    Group = "Set Bonuses",
+			    ConflictingBuffs = new List<string>(new string[] { }),
+			    Stats = { ClearcastOnBleedChance = 0.0583333333f },
+			    SetName = "Druid T8 Battlegear",
+			    SetThreshold = 2
+			});
+			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
+			{
+			    Name = "Druid T8 Battlegear 4 Piece Bonus",
+			    Group = "Set Bonuses",
+			    ConflictingBuffs = new List<string>(new string[] { }),
+			    Stats = { BonusSavageRoarDuration = 8f },
+				SetName = "Druid T8 Battlegear",
+			    SetThreshold = 4
+			});
             // Moonkin Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {

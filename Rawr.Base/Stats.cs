@@ -37,12 +37,14 @@ namespace Rawr
         BonusMangleCatDamage,
         BonusRipDamagePerCPPerTick,
         BonusRipDuration,
+		BonusSavageRoarDuration,
         BonusShredDamage,
         BonusSnDDuration,
         BonusSnDHaste,
         BonusStreadyShotCrit,
         ExtraSpiritWhileCasting,
         CatFormStrength,
+		ClearcastOnBleedChance,
         CPOnFinisher,
         PhysicalCrit,
         CritRating,
@@ -1121,6 +1123,7 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
         [DisplayName("% Miss")]
         public float Miss
         {
@@ -1247,7 +1250,24 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRipDuration]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRipDuration] = value; }
-        }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[DisplayName("Bonus Savage Roar Duration")]
+		public float BonusSavageRoarDuration
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.BonusSavageRoarDuration]; }
+			set { _rawAdditiveData[(int)AdditiveStat.BonusSavageRoarDuration] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[DisplayName("Clearcast On Bleed Chance")]
+		public float ClearcastOnBleedChance
+		{
+			get { return _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance]; }
+			set { _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance] = value; }
+		}
         
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Divine Protection Duration Bonus")]

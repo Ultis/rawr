@@ -56,8 +56,11 @@ namespace Rawr
 			{
                 if (_itemCalculation.Item.Id == 0)
                 {
-                    (FindForm() as FormItemSelection).Select((ItemInstance)null);
-                }
+					if (_itemCalculation.Item.Name == "Empty")
+	                    (FindForm() as FormItemSelection).Select((ItemInstance)null);
+					else
+						(FindForm() as FormItemSelection).Select((Item)null);
+				}
                 else if (_itemCalculation.ItemInstance != null)
                 {
                     (FindForm() as FormItemSelection).Select(_itemCalculation.ItemInstance);

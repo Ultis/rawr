@@ -286,6 +286,8 @@ namespace Rawr.Cat
 			float chanceCritBite = Math.Min(1f - chanceAvoided, chanceCrit + stats.BonusFerociousBiteCrit);
 			float chanceHitBite = 1f - chanceCritBite - chanceAvoided;
 
+			float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
+
 			float cpPerCPG = (chanceHit + chanceCrit * (1 + stats.BonusCPOnCrit)) / chanceNonAvoided;
 			calculatedStats.DodgedAttacks = chanceDodge * 100;
 			calculatedStats.MissedAttacks = chanceMiss * 100;
@@ -333,10 +335,11 @@ namespace Rawr.Cat
 
 			#region Rotations
 			CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-				maintainMangle, calcOpts.GlyphOfMangle ? 18f : 12f, 12f + stats.BonusRipDuration,
+				maintainMangle, (calcOpts.GlyphOfMangle ? 18f : 12f) + timeToReapplyDebuffs, 
+				12f + stats.BonusRipDuration + timeToReapplyDebuffs, 9f + timeToReapplyDebuffs, stats.BonusSavageRoarDuration,
 				character.DruidTalents.Berserk > 0 ? (calcOpts.GlyphOfBerserk ? 20f : 15f) : 0f, attackSpeed, 
 				character.DruidTalents.OmenOfClarity > 0, calcOpts.GlyphOfShred, chanceAvoided, 
-				cpgEnergyCostMultiplier, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
+				cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeDamageAverage, mangleDamageAverage, shredDamageAverage, 
 				rakeDamageAverage, ripDamageAverage, biteDamageAverage, mangleEnergyAverage, shredEnergyAverage, 
 				rakeEnergyAverage, ripEnergyAverage, biteEnergyAverage, roarEnergyAverage);
 			CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
@@ -1015,6 +1018,8 @@ namespace Rawr.Cat
 					BerserkingProc = stats.BerserkingProc,
 					BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
 					PhysicalCrit = stats.PhysicalCrit,
+					BonusSavageRoarDuration = stats.BonusSavageRoarDuration,
+					ClearcastOnBleedChance = stats.ClearcastOnBleedChance,
 
 					AllResist = stats.AllResist,
 					ArcaneResistance = stats.ArcaneResistance,
@@ -1036,6 +1041,7 @@ namespace Rawr.Cat
 		{
 			return (stats.Agility + stats.ArmorPenetration + stats.AttackPower + stats.BloodlustProc + stats.PhysicalCrit +
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
+				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration +
 				stats.BonusMangleCatDamage + stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
 				stats.HasteRating + /*stats.Health +*/ stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
