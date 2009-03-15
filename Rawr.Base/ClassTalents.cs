@@ -3523,8 +3523,10 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
             // work around for patch 3.1 model whilst armory is patch 3.0
             if (talents.Length == 78)
             {
+                int lightningOverload = Math.Min(3, int.Parse(talents.Substring(19, 1)));
                 int unleashedRage = Math.Min(3, int.Parse(talents.Substring(39,1)));
-                string newTalents = talents.Substring(0, 17) + "0" + talents.Substring(17,22) + unleashedRage.ToString() +
+                string newTalents = talents.Substring(0, 17) + "0" + talents.Substring(17,1) +
+                                    lightningOverload.ToString() + talents.Substring(19,20) + unleashedRage.ToString() +
                                     talents.Substring(40,1) + "0" + talents.Substring(41);
                 List<int> data = new List<int>();
                 foreach (Char digit in newTalents)
@@ -3616,8 +3618,8 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 		public int EyeOfTheStorm { get { return _data[9]; } set { _data[9] = value; } }
 
 		[TalentData(10, "Elemental Reach", 2, 0, 1, 5, -1, new string[] {
-@"Increases the range of your Lightning Bolt and Chain Lightning spells by 3 yards, and increases the radius of your Thunderstorm spell by 10%.",
-@"Increases the range of your Lightning Bolt and Chain Lightning spells by 6 yards, and increases the radius of your Thunderstorm spell by 20%.",})]
+@"Increases the range of your Lightning Bolt, Chain Lightning and Lava Burst spells by 3 yards, increases the radius of your Thunderstorm spell by 10%, and increases the range of your Flame Shock by 7 yards.",
+@"Increases the range of your Lightning Bolt, Chain Lightning and Lava Burst spells by 6 yards, increases the radius of your Thunderstorm spell by 20%, and increases the range of your Flame Shock by 15 yards.",})]
 		public int ElementalReach { get { return _data[10]; } set { _data[10] = value; } }
 
 		[TalentData(11, "Call of Thunder", 1, 0, 2, 5, 6, new string[] {
@@ -3646,13 +3648,13 @@ You fire an explosive charge into the target, dealing 115-133 Fire damage. The c
 
 		[TalentData(15, "Elemental Mastery", 1, 0, 2, 7, 11, new string[] {
 @"Instant,3 min cooldown,
-When activated, this spell gives your Fire, Frost, or Nature damage spell a 20% increased critical strike chance and reduces their mana cost by 20%. Lasts 30 sec.",})]
+When activated, your next Lightning Bolt, Chain Lightning or Lava Burst spell becomes an instant cast spell. In addition, your Fire, Frost, and Nature damage spells a 20% increased critical strike chance for 15 sec. Elemental Mastery shares a cooldown with Nature's Swiftness.",})]
 		public int ElementalMastery { get { return _data[15]; } set { _data[15] = value; } }
 
 		[TalentData(16, "Storm, Earth and Fire", 3, 0, 3, 7, -1, new string[] {
-@"Reduces the cooldown of your Chain Lightning spell by .75 sec, your Earth Shock and Wind Shock range is increased by 1 yards and the periodic damage done by your Flame Shock is increased by 20%.",
-@"Reduces the cooldown of your Chain Lightning spell by 1.5 sec, your Earth Shock and Wind Shock range is increased by 1 yards and the periodic damage done by your Flame Shock is increased by 40%.",
-@"Reduces the cooldown of your Chain Lightning spell by 2.5 sec, your Earth Shock and Wind Shock range is increased by 1 yards and the periodic damage done by your Flame Shock is increased by 60%.",})]
+@"Reduces the cooldown of your Chain Lightning spell by .75 sec, your Earthbind Totem also has a 33% chance to root targets for 5 sec when cast and the periodic damage done by your Flame Shock is increased by 20%.",
+@"Reduces the cooldown of your Chain Lightning spell by .75 sec, your Earthbind Totem also has a 66% chance to root targets for 5 sec when cast and the periodic damage done by your Flame Shock is increased by 40%.",
+@"Reduces the cooldown of your Chain Lightning spell by .75 sec, your Earthbind Totem also has a 100% chance to root targets for 5 sec when cast and the periodic damage done by your Flame Shock is increased by 60%.",})]
 		public int StormEarthAndFire { get { return _data[16]; } set { _data[16] = value; } }
 
         [TalentData(17, "Booming Echoes", 2, 0, 1, 8, -1, new string[] {
@@ -3665,11 +3667,9 @@ When activated, this spell gives your Fire, Frost, or Nature damage spell a 20% 
 @"Your spell critical strikes grant your party or raid members within 100 yards Elemental Oath, increasing spell critical strike chance by 5%. In addition, while Clearcasting from Elemental Focus is active, you deal 10% more spell damage. Lasts 15 seconds.",})]
 		public int ElementalOath { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Lightning Overload", 5, 0, 3, 8, -1, new string[] {
-@"Gives your Lightning Bolt and Chain Lightning spells a 4% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
-@"Gives your Lightning Bolt and Chain Lightning spells a 8% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
-@"Gives your Lightning Bolt and Chain Lightning spells a 12% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
-@"Gives your Lightning Bolt and Chain Lightning spells a 16% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
+		[TalentData(19, "Lightning Overload", 3, 0, 3, 8, -1, new string[] {
+@"Gives your Lightning Bolt and Chain Lightning spells a 7% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
+@"Gives your Lightning Bolt and Chain Lightning spells a 14% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
 @"Gives your Lightning Bolt and Chain Lightning spells a 20% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",})]
 		public int LightningOverload { get { return _data[19]; } set { _data[19] = value; } }
 
@@ -3687,9 +3687,9 @@ Summons a Totem of Wrath with 5 health at the feet of the caster. The totem incr
 		public int TotemOfWrath { get { return _data[21]; } set { _data[21] = value; } }
 
 		[TalentData(22, "Lava Flows", 3, 0, 3, 9, -1, new string[] {
-@"Increases the range of your Flame Shock by 5 yards, and increases the critical strike damage bonus of your Lava Burst spell by an additional 6%.",
-@"Increases the range of your Flame Shock by 5 yards, and increases the critical strike damage bonus of your Lava Burst spell by an additional 12%.",
-@"Increases the range of your Flame Shock by 5 yards, and increases the critical strike damage bonus of your Lava Burst spell by an additional 24%.",})]
+@"Increases the critical strike damage bonus of your Lava Burst spell by an additional 6%, and when your Flame Shock is dispelled your spell casting speed is increased by 10% for 6 sec.",
+@"Increases the critical strike damage bonus of your Lava Burst spell by an additional 12%, and when your Flame Shock is dispelled your spell casting speed is increased by 20% for 6 sec.",
+@"Increases the critical strike damage bonus of your Lava Burst spell by an additional 24%, and when your Flame Shock is dispelled your spell casting speed is increased by 30% for 6 sec.",})]
 		public int LavaFlows { get { return _data[22]; } set { _data[22] = value; } }
 
 		[TalentData(23, "Shamanism", 5, 0, 2, 10, -1, new string[] {
@@ -3897,11 +3897,11 @@ Summons two Spirit Wolves under the command of the Shaman, lasting 45 sec.",})]
 @"Reduces the cooldown of your Reincarnation spell by 20 min and increases the amount of health and mana you reincarnate with by an additional 20%.",})]
 		public int ImprovedReincarnation { get { return _data[56]; } set { _data[56] = value; } }
 
-		[TalentData(57, "Ancestral Healing", 3, 2, 2, 2, -1, new string[] {
-@"Increases your target's armor value by 8% for 15 sec after getting a critical effect from one of your healing spells.",
-@"Increases your target's armor value by 16% for 15 sec after getting a critical effect from one of your healing spells.",
-@"Increases your target's armor value by 25% for 15 sec after getting a critical effect from one of your healing spells.",})]
-		public int AncestralHealing { get { return _data[57]; } set { _data[57] = value; } }
+        [TalentData(57, "Healing Grace", 3, 2, 2, 2, -1, new string[] {
+@"Reduces the threat generated by your healing spells by 5% and reduces the chance your spells will be dispelled by 10%.",
+@"Reduces the threat generated by your healing spells by 10% and reduces the chance your spells will be dispelled by 20%.",
+@"Reduces the threat generated by your healing spells by 15% and reduces the chance your spells will be dispelled by 30%.",})]
+        public int HealingGrace { get { return _data[57]; } set { _data[57] = value; } }
 
 		[TalentData(58, "Tidal Focus", 5, 2, 3, 2, -1, new string[] {
 @"Reduces the Mana cost of your healing spells by 1%.",
@@ -3928,18 +3928,18 @@ Summons two Spirit Wolves under the command of the Shaman, lasting 45 sec.",})]
 Increases the critical effect chance of your Healing Wave, Lesser Healing Wave and Chain heal by 60%. Each critical heal reduces the chance by 20%.",})]
 		public int TidalForce { get { return _data[61]; } set { _data[61] = value; } }
 
-		[TalentData(62, "Healing Grace", 3, 2, 4, 3, -1, new string[] {
-@"Reduces the threat generated by your healing spells by 5% and reduces the chance your spells will be dispelled by 10%.",
-@"Reduces the threat generated by your healing spells by 10% and reduces the chance your spells will be dispelled by 20%.",
-@"Reduces the threat generated by your healing spells by 15% and reduces the chance your spells will be dispelled by 30%.",})]
-		public int HealingGrace { get { return _data[62]; } set { _data[62] = value; } }
+        [TalentData(62, "Ancestral Healing", 3, 2, 4, 3, -1, new string[] {
+@"Increases your target's armor value by 8% for 15 sec after getting a critical effect from one of your healing spells.",
+@"Increases your target's armor value by 16% for 15 sec after getting a critical effect from one of your healing spells.",
+@"Increases your target's armor value by 25% for 15 sec after getting a critical effect from one of your healing spells.",})]
+        public int AncestralHealing { get { return _data[62]; } set { _data[62] = value; } }
 
-		[TalentData(63, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 5%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 10%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 15%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 20%.",
-@"Increases the effect of your Mana Spring and Healing Stream Totems by 25%.",})]
+        [TalentData(63, "Restorative Totems", 5, 2, 2, 4, -1, new string[] {
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 4%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 8%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 12%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 16%.",
+@"Increases the effect of your Mana Spring and Healing Stream Totems by 20%.",})]
 		public int RestorativeTotems { get { return _data[63]; } set { _data[63] = value; } }
 
 		[TalentData(64, "Tidal Mastery", 5, 2, 3, 4, -1, new string[] {
@@ -3958,7 +3958,7 @@ Increases the critical effect chance of your Healing Wave, Lesser Healing Wave a
 
 		[TalentData(66, "Nature's Swiftness", 1, 2, 3, 5, -1, new string[] {
 @"Instant,3 min cooldown,
-When activated, your next Nature spell with a casting time less than 10 sec becomes an instant cast spell.",})]
+When activated, your next Nature spell with a base casting time less than 10 sec. becomes an instant cast spell. Nature's Swiftness shares a cooldown with Elemental Mastery.",})]
 		public int NaturesSwiftness { get { return _data[66]; } set { _data[66] = value; } }
 
 		[TalentData(67, "Focused Mind", 3, 2, 4, 5, -1, new string[] {
