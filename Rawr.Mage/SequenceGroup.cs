@@ -193,5 +193,8 @@ namespace Rawr.Mage.SequenceReconstruction
             if (compare != 0) return compare;
             return Sequence.CompareMps(x.Mps, y.Mps, minMps, maxMps);
         }
+
+        // helper variables
+        public int OrderIndex;
     }
 }

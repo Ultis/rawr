@@ -27,12 +27,38 @@ namespace Rawr //O O . .
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml = new List<string>();
         public const int SlotCount = 21;
+        public const int OptimizableSlotCount = 19;
         [XmlIgnore]
         internal ItemInstance[] _item = new ItemInstance[SlotCount];
 
         public ItemInstance[] GetItems()
         {
             return (ItemInstance[])_item.Clone();
+        }
+
+        public void SetItems(ItemInstance[] items)
+        {
+            int max = Math.Min(OptimizableSlotCount, items.Length);
+            for (int slot = 0; slot < max; slot++)
+            {
+                _item[slot] = items[slot] == null ? null : items[slot].Clone();
+            }
+            OnCalculationsInvalidated();
+        }
+
+        public void SetItems(Character character)
+        {
+            SetItems(character, false);
+        }
+
+        public void SetItems(Character character, bool allSlots)
+        {
+            int max = allSlots ? SlotCount : OptimizableSlotCount;
+            for (int slot = 0; slot < max; slot++)
+            {
+                _item[slot] = character._item[slot] == null ? null : character._item[slot].Clone();
+            }
+            OnCalculationsInvalidated();
         }
 
         private string GetGemmedId(CharacterSlot slot)
@@ -43,8 +69,8 @@ namespace Rawr //O O . .
         }
         private void SetGemmedId(CharacterSlot slot, string gemmedId)
         {
-            if (string.IsNullOrEmpty(gemmedId)) this[slot] = null;
-            else this[slot] = new ItemInstance(gemmedId);
+            if (string.IsNullOrEmpty(gemmedId)) _item[(int)slot] = null;
+            else _item[(int)slot] = new ItemInstance(gemmedId); // don't call invalidations all the time while loading character
         }
         [XmlElement("Head")]
         public string _head { get { return GetGemmedId(CharacterSlot.Head); } set { SetGemmedId(CharacterSlot.Head, value); } }
@@ -1157,41 +1183,10 @@ namespace Rawr //O O . .
 		public int GetGemIdCount(int id)
 		{
 			int count = 0;
-			/*foreach (CharacterSlot slot in CharacterSlots)
-			{
-				Item item = this[slot];
-				if (item == null) continue;
-
-				if (Item.GemMatchesSlot(item.Gem1, slotColor)) count++;
-				if (Item.GemMatchesSlot(item.Gem2, slotColor)) count++;
-				if (Item.GemMatchesSlot(item.Gem3, slotColor)) count++;
-			}*/
-			count += GetItemGemIdCount(Head, id);
-			count += GetItemGemIdCount(Neck, id);
-			count += GetItemGemIdCount(Shoulders, id);
-			count += GetItemGemIdCount(Back, id);
-			count += GetItemGemIdCount(Chest, id);
-			count += GetItemGemIdCount(Shirt, id);
-			count += GetItemGemIdCount(Tabard, id);
-			count += GetItemGemIdCount(Wrist, id);
-			count += GetItemGemIdCount(Hands, id);
-			count += GetItemGemIdCount(Waist, id);
-			count += GetItemGemIdCount(Legs, id);
-			count += GetItemGemIdCount(Feet, id);
-			count += GetItemGemIdCount(Finger1, id);
-			count += GetItemGemIdCount(Finger2, id);
-			count += GetItemGemIdCount(Trinket1, id);
-			count += GetItemGemIdCount(Trinket2, id);
-			count += GetItemGemIdCount(MainHand, id);
-			count += GetItemGemIdCount(OffHand, id);
-			count += GetItemGemIdCount(Ranged, id);
-			count += GetItemGemIdCount(Projectile, id);
-			count += GetItemGemIdCount(ProjectileBag, id);
-
-			//if (ExtraWristSocket != null && Rawr.Item.GemMatchesSlot(ExtraWristSocket, slotColor)) count++;
-			//if (ExtraHandsSocket != null && Rawr.Item.GemMatchesSlot(ExtraHandsSocket, slotColor)) count++;
-			//if (ExtraWaistSocket != null && Rawr.Item.GemMatchesSlot(ExtraWaistSocket, slotColor)) count++;
-
+            for (int slot = 0; slot < SlotCount; slot++)
+            {
+                count += GetItemGemIdCount(_item[slot], id);
+            }
 			return count;
 		}
 		
@@ -1718,6 +1713,7 @@ namespace Rawr //O O . .
 					character = (Character)serializer.Deserialize(reader);
                     character._activeBuffs = character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff));
                     character._activeBuffs.RemoveAll(buff => buff == null);
+                    character.RecalculateSetBonuses(); // now you can call it
 					reader.Close();
 				}
 				catch (Exception)

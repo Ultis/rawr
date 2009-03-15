@@ -253,7 +253,6 @@
     <Compile Include="Forms\Status.Designer.cs">
       <DependentUpon>Status.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Utilities\InvokeHelper.cs" />
     <Compile Include="FormUpgradeComparison.cs">
       <SubType>Form</SubType>
     </Compile>

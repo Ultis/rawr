@@ -168,7 +168,48 @@ namespace Rawr.Mage
             if (!CalculationOptions.ReconstructSequence) return "*Disabled";
             if (CalculationOptions.FightDuration > 900) return "*Unavailable";
 
+            StringBuilder timing = new StringBuilder();
+            double bestUnexplained = double.PositiveInfinity;
+            string bestTiming = "*";
+
             SequenceItem.Calculations = this;
+            double unexplained;
+            Sequence sequence = GenerateRawSequence(false);
+            if (!sequence.SortGroups())
+            {
+                sequence = GenerateRawSequence(true);
+                sequence.SortGroups();
+            }
+
+            // mana gem/pot/evo positioning
+            sequence.RepositionManaConsumption();
+
+            sequence.RemoveIndex(ColumnTimeExtension);
+            sequence.Compact(true);
+            if (displaySolver == null || SolverLogForm.Instance.IsSolverEnabled(displaySolver))
+            {
+                CalculationOptions.SequenceReconstruction = sequence;
+            }
+
+            // evaluate sequence
+            unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
+            if (unexplained < bestUnexplained)
+            {
+                bestUnexplained = unexplained;
+                bestTiming = timing.ToString();
+            }
+
+            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraints))
+            {
+                CalculationOptions.AdviseAdvancedSolver = true;
+                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns, integral mana consumables and advanced constraints options!\r\n\r\n" + bestTiming.TrimStart('*');
+            }
+
+            return bestTiming;
+        }
+
+        private Sequence GenerateRawSequence(bool ignoreSegments)
+        {
             Sequence sequence = new Sequence();
 
             double totalTime = 0.0;
@@ -178,6 +219,7 @@ namespace Rawr.Mage
                 if (Solution[i] > 0.01 && SolutionVariable[i].Type != VariableType.ManaOverflow)
                 {
                     SequenceItem item = new SequenceItem(i, Solution[i]);
+                    if (ignoreSegments) item.Segment = 0;
                     sequence.Add(item);
                     if (!item.IsManaPotionOrGem) totalTime += item.Duration;
                     if (item.VariableType == VariableType.ManaGem) totalGem += Solution[i];
@@ -188,12 +230,8 @@ namespace Rawr.Mage
                 sequence.Add(new SequenceItem(ColumnIdleRegen, CalculationOptions.FightDuration - totalTime));
             }
 
-            StringBuilder timing = new StringBuilder();
-            double bestUnexplained = double.PositiveInfinity;
-            string bestTiming = "*";
-
             // evaluate sequence
-            double unexplained;
+
             /*unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
             if (unexplained < bestUnexplained)
             {
@@ -258,33 +296,7 @@ namespace Rawr.Mage
                 }
             }
             sequence.GroupEvocation();
-            sequence.SortGroups();
-
-            // mana gem/pot/evo positioning
-            sequence.RepositionManaConsumption();
-
-            sequence.RemoveIndex(ColumnTimeExtension);
-            sequence.Compact(true);
-            if (displaySolver == null || SolverLogForm.Instance.IsSolverEnabled(displaySolver))
-            {
-                CalculationOptions.SequenceReconstruction = sequence;
-            }
-
-            // evaluate sequence
-            unexplained = sequence.Evaluate(timing, Sequence.EvaluationMode.Unexplained);
-            if (unexplained < bestUnexplained)
-            {
-                bestUnexplained = unexplained;
-                bestTiming = timing.ToString();
-            }
-
-            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraints))
-            {
-                CalculationOptions.AdviseAdvancedSolver = true;
-                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns, integral mana consumables and advanced constraints options!\r\n\r\n" + bestTiming.TrimStart('*');
-            }
-
-            return bestTiming;
+            return sequence;
         }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()

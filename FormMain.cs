@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using System.Xml;
 
 using Rawr.Forms;
-using Rawr.Forms.Utilities;
 using System.IO;
 using System.Threading;
 
@@ -122,15 +121,21 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			ItemCache.Instance.ItemsChanged += new EventHandler(ItemCache_ItemsChanged);
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
 			Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-			Calculations_ModelChanged(null, null); // this will trigger items changed event which triggers loading of item cache
+            // at this point there is no character
+            _character = new Character();
+            _character.CurrentModel = ConfigModel;
+            _character.Class = Calculations.ModelClasses[_character.CurrentModel];
+            _characterPath = string.Empty;
+            _unsavedChanges = false;
+            // we didn't actually set up the character yet
+            // model change will force it to reload and set up all needed events and everything
+			Calculations_ModelChanged(null, null);
 
 			//_loadingCharacter = true;
 			sortToolStripMenuItem_Click(overallToolStripMenuItem, EventArgs.Empty);
 			slotToolStripMenuItem_Click(headToolStripMenuItem, EventArgs.Empty);
 			//_loadingCharacter = false;
 
-            // items are already loaded on model change, see above
-            //ItemCache.Load(); // make sure item filters are loaded before creating drop down
             UpdateItemFilterDropDown();
 		}
 
@@ -351,7 +356,8 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 		{
             if (this.InvokeRequired)
             {
-                InvokeHelper.Invoke(this, "_character_ItemsChanged", new object[] { sender, e });
+                Invoke((EventHandler)_character_ItemsChanged, sender, e);
+                //InvokeHelper.Invoke(this, "_character_ItemsChanged", new object[] { sender, e });
                 return;
             }
 			this.Cursor = Cursors.WaitCursor;
@@ -439,6 +445,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			set { Properties.Recent.Default.RecentFiles = string.Join(";", value); }
 		}
 
+        private delegate void AddRecentCharacterDelegate(string character);
 		public void AddRecentCharacter(string character)
 		{
 			List<string> recentCharacters = new List<string>(ConfigRecentCharacters);
@@ -550,11 +557,12 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			tabPageOptions.Controls.Add(Calculations.CalculationOptionsPanel);
             
 			itemButtonProjectile.Visible = itemButtonProjectileBag.Visible = Calculations.CanUseAmmo;
+            _loadingCharacter = true; // no need to load the comparison charts for this, it's done when reloading the character
+            ItemRefinement.resetLists();
+            ItemCache.OnItemsChanged();
+            _loadingCharacter = false;
             Character = Character; //Reload the character
 
-            ItemRefinement.resetLists();
-			ItemCache.OnItemsChanged();
-			//Character.OnItemsChanged(); already called when setting Character
 			_unsavedChanges = unsavedChanges;
 		}
 
@@ -582,14 +590,18 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-            if (this.InvokeRequired)
+            if (!_loadingCharacter)
             {
-                InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
-            }
-            else
-            {
-                Character.InvalidateItemInstances();
-                LoadComparisonData();
+                if (this.InvokeRequired)
+                {
+                    Invoke((EventHandler)ItemCache_ItemsChanged, sender, e);
+                    //InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
+                }
+                else
+                {
+                    Character.InvalidateItemInstances();
+                    LoadComparisonData();
+                }
             }
 		}
 
@@ -732,13 +744,18 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
             StatusMessaging.UpdateStatus("Loading Character", "Loading Saved Character");
             StatusMessaging.UpdateStatus("Update Item Cache", "Queued");
             StatusMessaging.UpdateStatus("Cache Item Icons", "Queued");
+            _loadingCharacter = true; // suppress item changed event
             Character character = Character.Load(e.Argument as string);
+            _loadingCharacter = false;
             StatusMessaging.UpdateStatusFinished("Loading Character");
             if (character != null)
             {
+                _loadingCharacter = true; // suppress item changed event
                 this.EnsureItemsLoaded(character.GetAllEquippedAndAvailableGearIds());
+                _loadingCharacter = false;
                 _characterPath = e.Argument as string;
-                InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
+                Invoke((AddRecentCharacterDelegate)AddRecentCharacter, e.Argument);
+                //InvokeHelper.Invoke(this, "AddRecentCharacter", new object[] { e.Argument});
                 e.Result = character;
             }
         }
@@ -1280,14 +1297,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
         public void ReloadCharacterFromArmoryUpdate(Character character, Character reload)
         {
             //load values for gear from armory into original character
-            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-            {
-                character[slot] = reload[slot];
-            }
-            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-            {
-                character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
-            }
+            character.SetItems(reload, true);
             character.AssignAllTalentsFromCharacter(reload);
         }
 
@@ -1678,14 +1688,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
         {
             //load values for gear from armory into original character
 			character.IsLoading = true;
-            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-            {
-                character[slot] = reload[slot];
-            }
-            foreach (Character.CharacterSlot slot in Character.CharacterSlots)
-            {
-                character.SetEnchantBySlot(slot, reload.GetEnchantBySlot(slot));
-            }
+            character.SetItems(reload, true);
 			foreach (string existingAvailableItem in character.AvailableItems)
 			{
 				string itemId = existingAvailableItem.Split('.')[0];

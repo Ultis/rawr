@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
-using Rawr.Forms.Utilities;
 
 namespace Rawr.Forms
 {
@@ -53,7 +52,8 @@ namespace Rawr.Forms
             if (!this.IsDisposed)
             {
                 _StatusErrors.Add(args);
-                InvokeHelper.BeginInvoke(this, "RefreshErrorList", new object[] { args });
+                Invoke((RefreshErrorListDelegate)RefreshErrorList, args);
+                //InvokeHelper.BeginInvoke(this, "RefreshErrorList", new object[] { args });
             }
         }
 
@@ -79,11 +79,13 @@ namespace Rawr.Forms
 						_StatusUpdates.Add(args);
 					}
 				}
-			
-				InvokeHelper.BeginInvoke(this, "RefreshTaskList", null);
+
+                Invoke((MethodInvoker)RefreshTaskList);
+				//InvokeHelper.BeginInvoke(this, "RefreshTaskList", null);
 			}
 		}
 
+        private delegate void RefreshErrorListDelegate(StatusErrorEventArgs args);
         private void RefreshErrorList(StatusErrorEventArgs args)
         {
             ListViewItem newError = new ListViewItem(new string[] { args.Key, args.FriendlyMessage });

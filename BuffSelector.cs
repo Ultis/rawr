@@ -6,7 +6,6 @@ using System.Data;
 using System.Text;
 using System.Windows.Forms;
 using Rawr.CustomControls;
-using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
@@ -214,7 +213,8 @@ namespace Rawr
 		{
 			if (this.InvokeRequired)
 			{
-				InvokeHelper.Invoke(this, "Character_ItemsChanged", new object[] { null, null });
+                Invoke((EventHandler)Character_ItemsChanged, sender, e); 
+				//InvokeHelper.Invoke(this, "Character_ItemsChanged", new object[] { null, null });
 				return;
 			}
 			LoadBuffsFromCharacter();

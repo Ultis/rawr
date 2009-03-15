@@ -25,8 +25,6 @@ namespace Rawr.Mage
             }
         }
 
-        public delegate void InvokeDelegate();
-
         private class TextBoxWriter : TextWriter
         {
             public TextBox TextBox { get; set; }
@@ -41,7 +39,7 @@ namespace Rawr.Mage
             {
                 if (TextBox.Visible)
                 {
-                    TextBox.Invoke((InvokeDelegate)delegate                    
+                    TextBox.Invoke((MethodInvoker)delegate                    
                     {
                         TextBox.Text = sb.ToString();
                         TextBox.Select(TextBox.Text.Length, 0);
@@ -134,7 +132,7 @@ namespace Rawr.Mage
         {
             if (Visible)
             {
-                Invoke((InvokeDelegate)delegate
+                Invoke((MethodInvoker)delegate
                 {
                     lock (solverLock)
                     {

@@ -3497,28 +3497,7 @@ namespace Rawr.Optimizer
         private Character BuildReplaceGemMutantCharacter(Character parent, out bool successful)
         {
             ItemInstance[] items = new ItemInstance[slotCount];
-            items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
-            items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
-            items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
-            items[(int)Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
-            items[(int)Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
-            items[(int)Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
-            items[(int)Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
-            items[(int)Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
-            items[(int)Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
-            items[(int)Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
-            items[(int)Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
-            items[(int)Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
-            items[(int)Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
-            items[(int)Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
-            items[(int)Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
-            items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
-            items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
-            items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
-            //items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
-            //items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
-            //items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+            Array.Copy(parent._item, items, slotCount);
             successful = false;
 
             // do the work
@@ -3586,28 +3565,7 @@ namespace Rawr.Optimizer
         private Character BuildSwapGemMutantCharacter(Character parent, out bool successful)
         {
             ItemInstance[] items = new ItemInstance[slotCount];
-            items[(int)Character.CharacterSlot.Head] = parent[Character.CharacterSlot.Head];
-            items[(int)Character.CharacterSlot.Neck] = parent[Character.CharacterSlot.Neck];
-            items[(int)Character.CharacterSlot.Shoulders] = parent[Character.CharacterSlot.Shoulders];
-            items[(int)Character.CharacterSlot.Back] = parent[Character.CharacterSlot.Back];
-            items[(int)Character.CharacterSlot.Chest] = parent[Character.CharacterSlot.Chest];
-            items[(int)Character.CharacterSlot.Wrist] = parent[Character.CharacterSlot.Wrist];
-            items[(int)Character.CharacterSlot.Hands] = parent[Character.CharacterSlot.Hands];
-            items[(int)Character.CharacterSlot.Waist] = parent[Character.CharacterSlot.Waist];
-            items[(int)Character.CharacterSlot.Legs] = parent[Character.CharacterSlot.Legs];
-            items[(int)Character.CharacterSlot.Feet] = parent[Character.CharacterSlot.Feet];
-            items[(int)Character.CharacterSlot.Finger1] = parent[Character.CharacterSlot.Finger1];
-            items[(int)Character.CharacterSlot.Finger2] = parent[Character.CharacterSlot.Finger2];
-            items[(int)Character.CharacterSlot.Trinket1] = parent[Character.CharacterSlot.Trinket1];
-            items[(int)Character.CharacterSlot.Trinket2] = parent[Character.CharacterSlot.Trinket2];
-            items[(int)Character.CharacterSlot.MainHand] = parent[Character.CharacterSlot.MainHand];
-            items[(int)Character.CharacterSlot.OffHand] = parent[Character.CharacterSlot.OffHand];
-            items[(int)Character.CharacterSlot.Ranged] = parent[Character.CharacterSlot.Ranged];
-            items[(int)Character.CharacterSlot.Projectile] = parent[Character.CharacterSlot.Projectile];
-            items[(int)Character.CharacterSlot.ProjectileBag] = parent[Character.CharacterSlot.ProjectileBag];
-            //items[(int)Character.CharacterSlot.ExtraHandsSocket] = parent[Character.CharacterSlot.ExtraHandsSocket];
-            //items[(int)Character.CharacterSlot.ExtraWaistSocket] = parent[Character.CharacterSlot.ExtraWaistSocket];
-            //items[(int)Character.CharacterSlot.ExtraWristSocket] = parent[Character.CharacterSlot.ExtraWristSocket];
+            Array.Copy(parent._item, items, slotCount);
             successful = false;
 
             // do the work

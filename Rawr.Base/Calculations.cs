@@ -771,21 +771,20 @@ namespace Rawr
 
         public unsafe virtual void AccumulateItemStats(Stats stats, Character character, Item additionalItem)
 		{
-			List<ItemInstance> items = new List<ItemInstance>(new ItemInstance[] {character.Back, character.Chest, character.Feet, character.Finger1,
-				character.Finger2, character.Hands, character.Head, character.Legs, character.Neck,
-				character.Shirt, character.Shoulders, character.Tabard, character.Trinket1, character.Trinket2,
-				character.Waist, character.MainHand, character.Ranged, character.Projectile, 
-				character.ProjectileBag, character.Wrist/*, character.ExtraHandsSocket, character.ExtraWaistSocket,
-				character.ExtraWristSocket*/});
-			if (IncludeOffHandInCalculations(character))
-				items.Add(character.OffHand);
-
             fixed (float* pRawAdditiveData = stats._rawAdditiveData, pRawMultiplicativeData = stats._rawMultiplicativeData, pRawNoStackData = stats._rawNoStackData)
             {
                 stats.BeginUnsafe(pRawAdditiveData, pRawMultiplicativeData, pRawNoStackData);
-                foreach (ItemInstance item in items)
-                    if ((object)item != null)
-                        stats.AccumulateUnsafe(item.GetTotalStats(character));
+                for (int slot = 0; slot < Character.OptimizableSlotCount; slot++)
+                {
+                    if (slot != (int)Character.CharacterSlot.OffHand || IncludeOffHandInCalculations(character))
+                    {
+                        ItemInstance item = character._item[slot];
+                        if ((object)item != null)
+                        {
+                            stats.AccumulateUnsafe(item.GetTotalStats(character));
+                        }
+                    }
+                }
                 if (additionalItem != null)
                     stats.AccumulateUnsafe(additionalItem.Stats);
                 stats.EndUnsafe();

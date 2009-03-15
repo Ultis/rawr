@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Rawr.Forms.Utilities;
 
 namespace Rawr
 {
@@ -305,7 +304,8 @@ namespace Rawr
 		{
             if (this.InvokeRequired)
             {
-                InvokeHelper.Invoke(this, "RebuildItemList", null);
+                Invoke((MethodInvoker)RebuildItemList);
+                //InvokeHelper.Invoke(this, "RebuildItemList", null);
                 return;
             }
 			panelItems.SuspendLayout();

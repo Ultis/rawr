@@ -1451,7 +1451,7 @@ namespace Rawr.Mage.SequenceReconstruction
         int compactGroupSplits;
         //double compactLastDestro;
 
-        public void SortGroups()
+        public bool SortGroups()
         {
             const double eps = 0.000001;
             List<SequenceItem> groupedItems = new List<SequenceItem>();
@@ -1470,12 +1470,7 @@ namespace Rawr.Mage.SequenceReconstruction
             SortGroups_Compute(groupedItems);
             if (compactItems == null)
             {
-                // if SMP fails to produce a feasible solution then remove all segment information
-                foreach (SequenceItem item in sequence)
-                {
-                    item.Segment = 0;
-                }
-                SortGroups_Compute(groupedItems);
+                return false;
             }
             if (compactItems != null)
             {
@@ -1530,6 +1525,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 if (compare != 0) return compare;
                 return x.MaxTime.CompareTo(y.MaxTime);
             });
+            return true;
         }
 
         private int SortGroups_Compare(SequenceItem x, SequenceItem y, List<SequenceGroup> tail)
@@ -1616,7 +1612,28 @@ namespace Rawr.Mage.SequenceReconstruction
             for (int j = 0; j < N; j++)
             {
                 superLeft[itemList[j].SuperIndex]++;
+                foreach (SequenceGroup group in itemList[j].Group)
+                {
+                    group.OrderIndex = -1;
+                }
             }
+            int maxSegment = 0;
+            for (int j = 0; j < N; j++)
+            {
+                if (itemList[j].Segment > maxSegment)
+                {
+                    maxSegment = itemList[j].Segment;
+                }
+            }
+            int[] earlierCount = new int[maxSegment + 1];
+            for (int j = 0; j < N; j++)
+            {
+                for (int k = itemList[j].Segment + 1; k <= maxSegment; k++)
+                {
+                    earlierCount[k]++;
+                }
+            }
+
             int i = 0;
             index[0] = 0;
             constructionTimeHistory[0] = constructionTime;
@@ -1669,6 +1686,13 @@ namespace Rawr.Mage.SequenceReconstruction
                         constructionTime = constructionTimeHistory[i];
                         used[index[i]] = false;
                         superLeft[itemList[index[i]].SuperIndex]++;
+                        foreach (SequenceGroup group in itemList[index[i]].Group)
+                        {
+                            if (group.OrderIndex == i)
+                            {
+                                group.OrderIndex = -1;
+                            }
+                        }
                     }
                 }
                 else
@@ -1690,6 +1714,13 @@ namespace Rawr.Mage.SequenceReconstruction
                             constructionTime = constructionTimeHistory[i];
                             used[index[i]] = false;
                             superLeft[itemList[index[i]].SuperIndex]++;
+                            foreach (SequenceGroup group in itemList[index[i]].Group)
+                            {
+                                if (group.OrderIndex == i)
+                                {
+                                    group.OrderIndex = -1;
+                                }
+                            }
                         }
                     }
                     else
@@ -1697,7 +1728,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         // check if valid
                         SequenceItem item = itemList[index[i]];
                         // if we have segmentation data take a more directed search, respect segmentation ordering (jumps should be eliminated, but check back in case something looks strange)
-                        if (i == 0 || ((item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0) && item.Segment >= itemList[index[i - 1]].Segment))
+                        if (i == 0 || ((item.SuperIndex == itemList[index[i - 1]].SuperIndex || superLeft[itemList[index[i - 1]].SuperIndex] == 0) && item.Segment >= itemList[index[i - 1]].Segment && i >= earlierCount[item.Segment]))
                         {
                             int tail = item.CooldownHex;
                             int activeTail = 0;
@@ -1713,84 +1744,111 @@ namespace Rawr.Mage.SequenceReconstruction
                                 used[index[i]] = true;
                                 itemList[index[i]].OrderIndex = i;
                                 superLeft[itemList[index[i]].SuperIndex]--;
+                                foreach (SequenceGroup group in itemList[index[i]].Group)
+                                {
+                                    if (group.OrderIndex == -1)
+                                    {
+                                        // first item in this group
+                                        group.OrderIndex = i;
+                                    }
+                                }
                                 // skip tests for coldsnap == 0
                                 //if (coldsnap[i] == 1) // just compute it, if you want to optimize take a bit more time to think about it
+                                if (superLeft[itemList[index[i]].SuperIndex] > 0)
                                 {
-                                    for (int j = 0; j < N; j++)
+                                    for (int j = 0; j < used.Length; j++)
                                     {
-                                        if (!used[j] && itemList[j].Segment < item.Segment)
+                                        if (!used[j])
                                         {
-                                            tail = 0;
-                                            break;
-                                        }
-                                        if (!used[j] && itemList[j].SuperIndex == item.SuperIndex)
-                                        {
-                                            // make sure activations are placed before use
-                                            if (item.CastingState.DrumsOfBattle && item.VariableType != VariableType.DrumsOfBattle && itemList[j].VariableType == VariableType.DrumsOfBattle)
+                                            if (itemList[j].SuperIndex == item.SuperIndex)
                                             {
-                                                tail = 0;
-                                                break;
-                                            }
-                                            if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
-                                            {
-                                                tail = 0;
-                                                break;
-                                            }
-                                            if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
-                                            {
-                                                if (itemList[index[i - 1]].CastingState.DrumsOfBattle && !item.CastingState.DrumsOfBattle && itemList[j].CastingState.DrumsOfBattle)
+                                                // make sure activations are placed before use
+                                                if (item.CastingState.DrumsOfBattle && item.VariableType != VariableType.DrumsOfBattle && itemList[j].VariableType == VariableType.DrumsOfBattle)
                                                 {
                                                     tail = 0;
                                                     break;
                                                 }
-                                                int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
-                                                if (intersectHexJ > intersectHex)
+                                                if (item.CastingState.WaterElemental && item.VariableType != VariableType.SummonWaterElemental && itemList[j].VariableType == VariableType.SummonWaterElemental)
                                                 {
-                                                    if (j > index[i] && (i == 0 || itemList[j].Segment >= itemList[index[i - 1]].Segment))
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                if (i > 0 && item.SuperIndex == itemList[index[i - 1]].SuperIndex)
+                                                {
+                                                    if (itemList[index[i - 1]].CastingState.DrumsOfBattle && !item.CastingState.DrumsOfBattle && itemList[j].CastingState.DrumsOfBattle)
                                                     {
-                                                        // anything up to j is not valid, so skip ahead
-                                                        used[index[i]] = false;
-                                                        superLeft[itemList[index[i]].SuperIndex]++;
-                                                        index[i] = j;
-                                                        used[j] = true;
-                                                        itemList[j].OrderIndex = i;
-                                                        superLeft[itemList[index[i]].SuperIndex]--;
-                                                        intersectHex = intersectHexJ;
-                                                        maxIntersect[i] = intersectHex;
-                                                        item = itemList[j];
-                                                        tail = item.CooldownHex;
-                                                        j = -1;
-                                                        continue;
-                                                    }
-                                                    else
-                                                    {
-                                                        // invalidate
                                                         tail = 0;
                                                         break;
                                                     }
+                                                    int intersectHexJ = HexCount(itemList[j].CooldownHex & activeTail);
+                                                    if (intersectHexJ > intersectHex)
+                                                    {
+                                                        if (j > index[i] && (i == 0 || itemList[j].Segment >= itemList[index[i - 1]].Segment))
+                                                        {
+                                                            // anything up to j is not valid, so skip ahead
+                                                            used[index[i]] = false;
+                                                            foreach (SequenceGroup group in itemList[index[i]].Group)
+                                                            {
+                                                                if (group.OrderIndex == i)
+                                                                {
+                                                                    group.OrderIndex = -1;
+                                                                }
+                                                            }
+                                                            superLeft[itemList[index[i]].SuperIndex]++;
+                                                            index[i] = j;
+                                                            used[j] = true;
+                                                            itemList[j].OrderIndex = i;
+                                                            superLeft[itemList[index[i]].SuperIndex]--;
+                                                            foreach (SequenceGroup group in itemList[j].Group)
+                                                            {
+                                                                if (group.OrderIndex == -1)
+                                                                {
+                                                                    // first item in this group
+                                                                    group.OrderIndex = i;
+                                                                }
+                                                            }
+                                                            intersectHex = intersectHexJ;
+                                                            maxIntersect[i] = intersectHex;
+                                                            item = itemList[j];
+                                                            tail = item.CooldownHex;
+                                                            j = -1;
+                                                            continue;
+                                                        }
+                                                        else
+                                                        {
+                                                            // invalidate
+                                                            tail = 0;
+                                                            break;
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                            if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
-                                            {
-                                                // we'll have to place something from active tail that is being removed
-                                                // from active tail
-                                                tail = 0;
-                                                break;
-                                            }
-                                            int intersect = item.CooldownHex & itemList[j].CooldownHex;
-                                            if (intersect > 0)
-                                            {
-                                                tail = intersect & tail;
-                                                if (tail == 0) break;
+                                                if ((itemList[j].CooldownHex & activeTail & ~item.CooldownHex) != 0) // strong requirement, if converting for reconstruction on nonsegmented data might have to remove this
+                                                {
+                                                    // we'll have to place something from active tail that is being removed
+                                                    // from active tail
+                                                    tail = 0;
+                                                    break;
+                                                }
+                                                int intersect = item.CooldownHex & itemList[j].CooldownHex;
+                                                if (intersect > 0)
+                                                {
+                                                    tail = intersect & tail;
+                                                    if (tail == 0) break;
+                                                }
                                             }
                                         }
                                     }
                                 }
-                                if (tail > 0)
+                                double time = 0;
+                                if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
+                                time = Math.Max(time, item.MinTime);
+                                double minTotalTime = time + item.Duration;
+                                //for (int j = 0; j < N; j++) // too expensive
+                                //{
+                                //    if (!used[j]) minTotalTime += itemList[j].Duration;
+                                //}
+                                if (tail > 0 && minTotalTime < compactTotalTime)
                                 {
-                                    double time = 0;
-                                    if (constructionTime.Count > 0) time = constructionTime[constructionTime.Count - 1] + itemList[index[i - 1]].Duration;
-                                    time = Math.Max(time, item.MinTime);
                                     // check constraints
                                     List<int> icyVeinsStarts = new List<int>();
                                     List<int> waterElementalStarts = new List<int>();
@@ -1802,13 +1860,18 @@ namespace Rawr.Mage.SequenceReconstruction
                                         {
                                             if (!constraint.ColdSnap)
                                             {
-                                                for (int j = 0; j < i; j++)
+                                                //for (int j = 0; j < i; j++)
+                                                //{
+                                                //    if (itemList[index[j]].Group.Contains(constraint.Group))
+                                                //    {
+                                                //        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
+                                                //        break;
+                                                //    }
+                                                //}
+                                                int j = constraint.Group.OrderIndex;
+                                                if (j >= 0)
                                                 {
-                                                    if (itemList[index[j]].Group.Contains(constraint.Group))
-                                                    {
-                                                        time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
-                                                        break;
-                                                    }
+                                                    time = Math.Max(time, constructionTime[j] + constraint.Cooldown);
                                                 }
                                             }
                                             else
@@ -1939,12 +2002,26 @@ namespace Rawr.Mage.SequenceReconstruction
                                     {
                                         used[index[i]] = false;
                                         superLeft[itemList[index[i]].SuperIndex]++;
+                                        foreach (SequenceGroup group in itemList[index[i]].Group)
+                                        {
+                                            if (group.OrderIndex == i)
+                                            {
+                                                group.OrderIndex = -1;
+                                            }
+                                        }
                                     }
                                 }
                                 else
                                 {
                                     used[index[i]] = false;
                                     superLeft[itemList[index[i]].SuperIndex]++;
+                                    foreach (SequenceGroup group in itemList[index[i]].Group)
+                                    {
+                                        if (group.OrderIndex == i)
+                                        {
+                                            group.OrderIndex = -1;
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -125,6 +125,11 @@ namespace Rawr
             FormOptimize optimize = new FormOptimize(Character);
             optimize.EvaluateUpgrades(_item.Item);
             optimize.ShowDialog(this);
+            if (optimize.ShowUpgradeComparison)
+            {
+                FormUpgradeComparison.Instance.Show();
+                FormUpgradeComparison.Instance.BringToFront();
+            }
             optimize.Dispose();
         }
 
@@ -283,13 +288,7 @@ namespace Rawr
 
         void _menuItemEquipAll_Click(object sender, EventArgs e)
         {
-            _character.IsLoading = true;
-            for (int slot = 0; slot < 19; slot++)
-            {
-                _character[(Character.CharacterSlot)slot] = _characterItems[slot] == null ? null : _characterItems[slot].Clone();
-            }
-            _character.IsLoading = false;
-            _character.OnCalculationsInvalidated();
+            _character.SetItems(_characterItems);
         }
 
 		void _menuItemRefresh_Click(object sender, EventArgs e)

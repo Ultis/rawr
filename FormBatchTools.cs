@@ -116,6 +116,11 @@ namespace Rawr
             trackBarThoroughness.Value = Properties.Optimizer.Default.Thoroughness;
         }
 
+        private void UpdateStatusLabel()
+        {
+            statusLabel.Text = string.Format("{0} / {1}", BatchCharacterList.Score, BatchCharacterList.NewScore);
+        }
+
         void _optimizer_OptimizeCharacterProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
         {
             switch (currentOperation)
@@ -138,7 +143,7 @@ namespace Rawr
                     {
                         currentOperation = AsyncOperation.None;
                         buttonCancel.Enabled = false;
-                        statusLabel.Text = "";
+                        UpdateStatusLabel();
                         statusProgressBar.Value = 0;
                         break;
                     }
@@ -146,29 +151,7 @@ namespace Rawr
                     {
                         Character _character = CurrentBatchCharacter.Character;
                         Character bestCharacter = e.OptimizedCharacter;
-
-                        _character.IsLoading = true;
-                        _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
-                        _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
-                        _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
-                        _character.Finger1 = bestCharacter.Finger1 == null ? null : bestCharacter.Finger1.Clone();
-                        _character.Finger2 = bestCharacter.Finger2 == null ? null : bestCharacter.Finger2.Clone();
-                        _character.Hands = bestCharacter.Hands == null ? null : bestCharacter.Hands.Clone();
-                        _character.Head = bestCharacter.Head == null ? null : bestCharacter.Head.Clone();
-                        _character.Legs = bestCharacter.Legs == null ? null : bestCharacter.Legs.Clone();
-                        _character.MainHand = bestCharacter.MainHand == null ? null : bestCharacter.MainHand.Clone();
-                        _character.Neck = bestCharacter.Neck == null ? null : bestCharacter.Neck.Clone();
-                        _character.OffHand = bestCharacter.OffHand == null ? null : bestCharacter.OffHand.Clone();
-                        _character.Projectile = bestCharacter.Projectile == null ? null : bestCharacter.Projectile.Clone();
-                        _character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : bestCharacter.ProjectileBag.Clone();
-                        _character.Ranged = bestCharacter.Ranged == null ? null : bestCharacter.Ranged.Clone();
-                        _character.Shoulders = bestCharacter.Shoulders == null ? null : bestCharacter.Shoulders.Clone();
-                        _character.Trinket1 = bestCharacter.Trinket1 == null ? null : bestCharacter.Trinket1.Clone();
-                        _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
-                        _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
-                        _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
-                        _character.IsLoading = false;
-                        _character.OnCalculationsInvalidated();
+                        _character.SetItems(bestCharacter);
 
                         //CurrentBatchCharacter.UnsavedChanges = true;
                         //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
@@ -201,7 +184,7 @@ namespace Rawr
                     {
                         currentOperation = AsyncOperation.None;
                         buttonCancel.Enabled = false;
-                        statusLabel.Text = "";
+                        UpdateStatusLabel();
                         statusProgressBar.Value = 0;
                     }
                     break;
@@ -228,7 +211,7 @@ namespace Rawr
                     {
                         currentOperation = AsyncOperation.None;
                         buttonCancel.Enabled = false;
-                        statusLabel.Text = "";
+                        UpdateStatusLabel();
                         statusProgressBar.Value = 0;
                         break;
                     }
@@ -276,7 +259,7 @@ namespace Rawr
                                 // upgrade list is empty, abort
                                 currentOperation = AsyncOperation.None;
                                 buttonCancel.Enabled = false;
-                                statusLabel.Text = "";
+                                UpdateStatusLabel();
                                 statusProgressBar.Value = 0;
                                 break;
                             }
@@ -324,7 +307,7 @@ namespace Rawr
                         {
                             currentOperation = AsyncOperation.None;
                             buttonCancel.Enabled = false;
-                            statusLabel.Text = "";
+                            UpdateStatusLabel();
                             statusProgressBar.Value = 0;
 
                             float totalValue = 0f;
@@ -822,6 +805,7 @@ namespace Rawr
         private void batchCharacterListBindingSource_ListChanged(object sender, ListChangedEventArgs e)
         {
             //if (e.ListChangedType == ListChangedType.ItemAdded || e.ListChangedType == ListChangedType.ItemDeleted) _unsavedChanges = true;
+            UpdateStatusLabel();
         }
 
         private void buildUpgradeListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -882,7 +866,7 @@ namespace Rawr
             {
                 currentOperation = AsyncOperation.None;
                 buttonCancel.Enabled = false;
-                statusLabel.Text = "";
+                UpdateStatusLabel();
                 statusProgressBar.Value = 0;
                 return;
             }
@@ -891,28 +875,7 @@ namespace Rawr
                 Character _character = BatchCharacterList[i].Character;
                 Character bestCharacter = e.OptimizedBatch.Character[i];
 
-                _character.IsLoading = true;
-                _character.Back = bestCharacter.Back == null ? null : bestCharacter.Back.Clone();
-                _character.Chest = bestCharacter.Chest == null ? null : bestCharacter.Chest.Clone();
-                _character.Feet = bestCharacter.Feet == null ? null : bestCharacter.Feet.Clone();
-                _character.Finger1 = bestCharacter.Finger1 == null ? null : bestCharacter.Finger1.Clone();
-                _character.Finger2 = bestCharacter.Finger2 == null ? null : bestCharacter.Finger2.Clone();
-                _character.Hands = bestCharacter.Hands == null ? null : bestCharacter.Hands.Clone();
-                _character.Head = bestCharacter.Head == null ? null : bestCharacter.Head.Clone();
-                _character.Legs = bestCharacter.Legs == null ? null : bestCharacter.Legs.Clone();
-                _character.MainHand = bestCharacter.MainHand == null ? null : bestCharacter.MainHand.Clone();
-                _character.Neck = bestCharacter.Neck == null ? null : bestCharacter.Neck.Clone();
-                _character.OffHand = bestCharacter.OffHand == null ? null : bestCharacter.OffHand.Clone();
-                _character.Projectile = bestCharacter.Projectile == null ? null : bestCharacter.Projectile.Clone();
-                _character.ProjectileBag = bestCharacter.ProjectileBag == null ? null : bestCharacter.ProjectileBag.Clone();
-                _character.Ranged = bestCharacter.Ranged == null ? null : bestCharacter.Ranged.Clone();
-                _character.Shoulders = bestCharacter.Shoulders == null ? null : bestCharacter.Shoulders.Clone();
-                _character.Trinket1 = bestCharacter.Trinket1 == null ? null : bestCharacter.Trinket1.Clone();
-                _character.Trinket2 = bestCharacter.Trinket2 == null ? null : bestCharacter.Trinket2.Clone();
-                _character.Waist = bestCharacter.Waist == null ? null : bestCharacter.Waist.Clone();
-                _character.Wrist = bestCharacter.Wrist == null ? null : bestCharacter.Wrist.Clone();
-                _character.IsLoading = false;
-                _character.OnCalculationsInvalidated();
+                _character.SetItems(bestCharacter);
 
                 //BatchCharacterList[i].UnsavedChanges = true;
                 //CurrentBatchCharacter.NewScore = e.OptimizedCharacterValue;
@@ -920,13 +883,13 @@ namespace Rawr
             }
             currentOperation = AsyncOperation.None;
             buttonCancel.Enabled = false;
-            statusLabel.Text = "";
+            UpdateStatusLabel();
             statusProgressBar.Value = 0;
         }
 
         void batchOptimizer_OptimizeBatchProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
         {
-            statusLabel.Text = string.Format("{0}", e.BestValue);
+            statusLabel.Text = string.Format("{0} / {1}", BatchCharacterList.Score, e.BestValue);
             statusProgressBar.Value = e.ProgressPercentage;
         }
 
@@ -1148,6 +1111,32 @@ namespace Rawr
                 list.Add(new KeyValuePair<Character, float>(batchCharacter.Character, batchCharacter.Weight));
             }
             return list;
+        }
+
+        public float NewScore
+        {
+            get
+            {
+                float score = 0.0f;
+                foreach (BatchCharacter character in this)
+                {
+                    score += character.Weight * (character.NewScore ?? character.Score);
+                }
+                return score;
+            }
+        }
+
+        public float Score
+        {
+            get
+            {
+                float score = 0.0f;
+                foreach (BatchCharacter character in this)
+                {
+                    score += character.Weight * character.Score;
+                }
+                return score;
+            }
         }
     }
 }
