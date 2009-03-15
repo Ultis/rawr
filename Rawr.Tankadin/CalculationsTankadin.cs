@@ -415,48 +415,53 @@ you are being killed by burst damage, focus on Survival Points.",
             switch (character.Race)
             {
                 case Character.CharacterRace.BloodElf:
-                    statsRace = new Stats() { Strength = 19f, Agility = 22f, Stamina = 20f, Intellect = 24f, Spirit = 20f };
+                    statsRace = new Stats() { Strength = 17f, Agility = 22f, Stamina = 18f, Intellect = 24f, Spirit = 19f };
                     break;
                 case Character.CharacterRace.Draenei:
-                    statsRace = new Stats() { Strength = 23f, Agility = 17f, Stamina = 21f, Intellect = 21f, Spirit = 20f, PhysicalHit = .01f, SpellHit = .01f };
+                    statsRace = new Stats() { Strength = 21f, Agility = 17f, Stamina = 19f, Intellect = 21f, Spirit = 22f, PhysicalHit = .01f, SpellHit = .01f };
                     break;
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 22f, Agility = 20f, Stamina = 22f, Intellect = 20f, Spirit = 22f, BonusSpiritMultiplier = 0.1f, };
+                    statsRace = new Stats() { Strength = 20f, Agility = 20f, Stamina = 20f, Intellect = 20f, Spirit = 20f, BonusSpiritMultiplier = 0.1f, };
                     //Expertise for Humans
                     if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace || character.MainHand.Type == Item.ItemType.OneHandSword))
                         statsRace.Expertise = 3f;
                     break;
                 default: //defaults to Dwarf stats
-                    statsRace = new Stats() { Strength = 24f, Agility = 16f, Stamina = 25f, Intellect = 19f, Spirit = 20f, };
+                    statsRace = new Stats() { Strength = 22f, Agility = 16f, Stamina = 23f, Intellect = 19f, Spirit = 19f, };
                     if (character.MainHand != null && character.MainHand.Type == Item.ItemType.OneHandMace)
                         statsRace.Expertise = 5f;
                     break;
             }
-            statsRace.Strength += 151f;
+            statsRace.Strength += 2f + 129f; // +2 for being a paladin, +129 is the STR gained from lvlup
             statsRace.Agility += 70f;
-            statsRace.Stamina += 122f;
+            statsRace.Stamina += 2f + 121f;  // +2 for being a paladin, +121 is the STA gained from lvlup
             statsRace.Intellect += 78f;
-            statsRace.Spirit += 82f;
+            statsRace.Spirit += 1f + 84f; // +1 for being a paladin, +85 is the SPI gained from lvlup
             statsRace.Dodge = .032685f;
             statsRace.PhysicalCrit = .032685f;
-            statsRace.Parry = .05f;
-            statsRace.AttackPower = 190f;
-            statsRace.Health = 6754f;
+            statsRace.Parry = .05f;            
+            statsRace.Health = 6934f; // new value, this is the BaseHealth for any level 80 character of any class (tauren get 5% bonus on this value)
             statsRace.Mana = 4114;
-            // statsRace.Miss = 0.05f;
+            //statsRace.Miss = 0.05f;
 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             //Stats statsEnchants = GetEnchantsStats(character);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
+            if (character.ActiveBuffsContains("Toughness"))
+            {
+            	statsRace.Stamina += 50f; //toughness is treated like base race stamina (white) by the game, not as buff (green).
+            	statsBuffs.Stamina -= 50f;//Gonna leave it like this for now.
+            }
             Stats stats = statsBaseGear + statsBuffs + statsRace;
             Stats statsOther = statsBaseGear + statsBuffs;
-            stats.Strength = (float)Math.Floor(statsOther.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f) + (float)Math.Floor(statsRace.Strength * (1 + stats.BonusStrengthMultiplier)) * (1f + talents.DivineStrength * .03f);
-            stats.AttackPower = (float)Math.Round((stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier));
+            
+            stats.Strength = (float)Math.Floor((1 + stats.BonusStrengthMultiplier) * ((float)Math.Floor(statsOther.Strength * (1f + talents.DivineStrength * .03f))
+            	+ (float)Math.Floor(statsRace.Strength * (1f + talents.DivineStrength * .03f))));            
+            stats.AttackPower = (float)Math.Floor((stats.AttackPower + (stats.Strength * 2) + 220f ) * (1 + stats.BonusAttackPowerMultiplier));
             stats.Agility = (float)Math.Floor(statsOther.Agility * (1 + stats.BonusAgilityMultiplier)) + (float)Math.Floor(statsRace.Agility * (1 + stats.BonusAgilityMultiplier));
-            stats.Stamina = (float)Math.Floor(statsOther.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
-                + (float)Math.Floor(statsRace.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f));
-            stats.Health = (float)Math.Round(stats.Health + stats.Stamina * 10);
+            stats.Stamina = (float)Math.Floor((1 + stats.BonusStaminaMultiplier) * ((float)Math.Floor(statsOther.Stamina * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))
+            	+ (float)Math.Floor(statsRace.Stamina * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f))));
+            stats.Health += (stats.Stamina-18f) * 10f;
             stats.Health *= (1f + stats.BonusHealthMultiplier);
             // stats.Armor = (float)Math.Round((stats.Armor * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 			stats.Armor = (float)Math.Round((stats.Armor  * (1f + talents.Toughness * .02f) * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier));
@@ -478,9 +483,9 @@ you are being killed by burst damage, focus on Survival Points.",
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
             stats.Defense += character.StatConversion.GetDefenseFromRating(stats.DefenseRating);
-            //stats.BlockValue = (float)Math.Round((stats.BlockValue + (5f / 9f * stats.JudgementBlockValue) + stats.Strength / 2f) * (1 + stats.BonusBlockValueMultiplier) * (1f + talents.Redoubt * .1f));
-            stats.BlockValue = (float)Math.Round((stats.BlockValue + stats.Strength / 2f) * (1f + talents.Redoubt * .1f)) * (1 + stats.BonusBlockValueMultiplier);
-            stats.JudgementBlockValue = (float)Math.Round((stats.JudgementBlockValue) * (1f + talents.Redoubt * .1f));
+            stats.JudgementBlockValue = (float)Math.Floor((stats.JudgementBlockValue) * (1f + talents.Redoubt * .1f));
+            //stats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue + (stats.Strength - 20) / 2f) * (1f + talents.Redoubt * .1f)) * (1 + stats.BonusBlockValueMultiplier));
+            stats.BlockValue = (float)Math.Floor((stats.BlockValue + (float)Math.Floor((stats.Strength - 20) / 2f)) * (1f + stats.BonusBlockValueMultiplier + talents.Redoubt * .1f));
             stats.Block += .05f + (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
 
             float fullDodge = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
@@ -491,11 +496,10 @@ you are being killed by burst damage, focus on Survival Points.",
             float fullParry = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetParryFromRating(stats.ParryRating) * .01f;
             stats.Parry = .05f + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
             
-            //stats.Miss = .05f + DRMiss(stats.DefenseRating / 12300f);
             float fullMiss = (float)Math.Floor(stats.Defense) * .0004f;
             stats.Miss = .05f + DRMiss(fullMiss);
 
-            stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight;
+            stats.SpellPower += (float)Math.Floor(stats.Stamina * .1f * talents.TouchedByTheLight);
             return stats;
         }
 

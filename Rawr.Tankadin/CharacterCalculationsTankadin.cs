@@ -106,8 +106,9 @@ namespace Rawr.Tankadin
 
 			dict.Add("Health", BasicStats.Health.ToString());
             dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
-			dict.Add("Stamina", BasicStats.Stamina.ToString());
-			dict.Add("Strength", Math.Round(BasicStats.Strength).ToString());
+			//dict.Add("Stamina", BasicStats.Stamina.ToString());
+			dict.Add("Stamina", string.Format("{0}*({1}+{2})\nIncreases Health by {3}", BasicStats.Stamina, "<nyi>", "<nyi>", "<nyi>"));
+			dict.Add("Strength", BasicStats.Strength.ToString());
 			dict.Add("Agility", BasicStats.Agility.ToString());
             dict.Add("Defense", string.Format("{0}*{1} Defense Rating", Math.Floor(Defense + 400f), BasicStats.DefenseRating));
             dict.Add("Resilience", Math.Round(Resilience).ToString());
