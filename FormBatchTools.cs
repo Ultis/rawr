@@ -86,12 +86,15 @@ namespace Rawr
             }
         }
 
+        private bool batchListReady = false;
+
         public FormBatchTools(FormMain formMain)
         {
             InitializeComponent();
 
             this.formMain = formMain;
             batchCharacterListBindingSource.DataSource = new BatchCharacterList();
+            batchListReady = true;
 
             TableLayoutSettings layout = (TableLayoutSettings)statusStrip1.LayoutSettings;
             layout.RowCount = 1;
@@ -118,7 +121,10 @@ namespace Rawr
 
         private void UpdateStatusLabel()
         {
-            statusLabel.Text = string.Format("{0} / {1}", BatchCharacterList.Score, BatchCharacterList.NewScore);
+            if (batchListReady)
+            {
+                statusLabel.Text = string.Format("{0} / {1}", BatchCharacterList.Score, BatchCharacterList.NewScore);
+            }
         }
 
         void _optimizer_OptimizeCharacterProgressChanged(object sender, OptimizeCharacterProgressChangedEventArgs e)
