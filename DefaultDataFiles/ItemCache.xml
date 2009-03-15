@@ -22019,8 +22019,8 @@
     <IconPath>INV_Relics_LibramofTruth</IconPath>
     <Slot>Ranged</Slot>
     <Stats>
-  		<JudgementBlockValue>352</JudgementBlockValue>
-  	</Stats>
+      <JudgementBlockValue>352</JudgementBlockValue>
+    </Stats>
     <Quality>Epic</Quality>
     <Type>Libram</Type>
     <RequiredClasses>Paladin</RequiredClasses>
@@ -29668,28 +29668,6 @@
     </SocketBonus>
   </Item>
   <Item>
-    <Name>LK Honor 3 Rogue Boots</Name>
-    <Id>41836</Id>
-    <ItemLevel>226</ItemLevel>
-    <IconPath>INV_Boots_Cloth_05</IconPath>
-    <Slot>Feet</Slot>
-    <Stats>
-      <Armor>406</Armor>
-      <Agility>77</Agility>
-      <Stamina>96</Stamina>
-      <AttackPower>84</AttackPower>
-      <CritRating>48</CritRating>
-      <Resilience>56</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Leather</Type>
-    <RequiredClasses>Rogue|Druid</RequiredClasses>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <Resilience>4</Resilience>
-    </SocketBonus>
-  </Item>
-  <Item>
     <Name>Deadly Gladiator's Armwraps of Triumph</Name>
     <Id>41839</Id>
     <ItemLevel>213</ItemLevel>
@@ -30233,28 +30211,6 @@
     </SocketBonus>
   </Item>
   <Item>
-    <Name>LK Honor 5 Caster DPS Belt</Name>
-    <Id>41900</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Belt_13</IconPath>
-    <Slot>Waist</Slot>
-    <Stats>
-      <Armor>191</Armor>
-      <Stamina>106</Stamina>
-      <Intellect>72</Intellect>
-      <SpellPower>117</SpellPower>
-      <CritRating>64</CritRating>
-      <Resilience>72</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Cloth</Type>
-    <RequiredClasses>Priest|Mage|Warlock</RequiredClasses>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus>
-      <SpellPower>5</SpellPower>
-    </SocketBonus>
-  </Item>
-  <Item>
     <Name>Hateful Gladiator's Slippers of Dominance</Name>
     <Id>41901</Id>
     <ItemLevel>200</ItemLevel>
@@ -30330,25 +30286,6 @@
       <SpellPower>66</SpellPower>
       <CritRating>38</CritRating>
       <Resilience>37</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>Cloth</Type>
-    <RequiredClasses>Priest|Mage|Warlock</RequiredClasses>
-    <SocketBonus />
-  </Item>
-  <Item>
-    <Name>LK Honor 5 Caster DPS Bracers</Name>
-    <Id>41911</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Bracer_02</IconPath>
-    <Slot>Wrist</Slot>
-    <Stats>
-      <Armor>149</Armor>
-      <Stamina>79</Stamina>
-      <Intellect>54</Intellect>
-      <SpellPower>95</SpellPower>
-      <CritRating>54</CritRating>
-      <Resilience>53</Resilience>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Cloth</Type>
@@ -31191,30 +31128,6 @@
     </SocketBonus>
   </Item>
   <Item>
-    <Name>LK Arena 6 Warlock Helm</Name>
-    <Id>41995</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Helmet_132</IconPath>
-    <Slot>Head</Slot>
-    <Stats>
-      <Armor>276</Armor>
-      <Stamina>144</Stamina>
-      <Intellect>96</Intellect>
-      <SpellPower>151</SpellPower>
-      <CritRating>80</CritRating>
-      <Resilience>80</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Felshroud</SetName>
-    <Type>Cloth</Type>
-    <RequiredClasses>Warlock</RequiredClasses>
-    <SocketColor1>Meta</SocketColor1>
-    <SocketColor2>Red</SocketColor2>
-    <SocketBonus>
-      <Resilience>8</Resilience>
-    </SocketBonus>
-  </Item>
-  <Item>
     <Name>Savage Gladiator's Felweave Raiment</Name>
     <Id>41996</Id>
     <ItemLevel>200</ItemLevel>
@@ -31251,30 +31164,6 @@
       <SpellPower>98</SpellPower>
       <CritRating>51</CritRating>
       <Resilience>66</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Felshroud</SetName>
-    <Type>Cloth</Type>
-    <RequiredClasses>Warlock</RequiredClasses>
-    <SocketColor1>Red</SocketColor1>
-    <SocketColor2>Yellow</SocketColor2>
-    <SocketBonus>
-      <Stamina>9</Stamina>
-    </SocketBonus>
-  </Item>
-  <Item>
-    <Name>LK Arena 6 Warlock Chest</Name>
-    <Id>42000</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Chest_Cloth_60</IconPath>
-    <Slot>Chest</Slot>
-    <Stats>
-      <Armor>339</Armor>
-      <Stamina>144</Stamina>
-      <Intellect>96</Intellect>
-      <SpellPower>151</SpellPower>
-      <CritRating>80</CritRating>
-      <Resilience>96</Resilience>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Felshroud</SetName>
@@ -31383,30 +31272,6 @@
     </SocketBonus>
   </Item>
   <Item>
-    <Name>LK Arena 6 Warlock Legs</Name>
-    <Id>42007</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Pants_Cloth_28</IconPath>
-    <Slot>Legs</Slot>
-    <Stats>
-      <Armor>297</Armor>
-      <Stamina>144</Stamina>
-      <Intellect>96</Intellect>
-      <SpellPower>151</SpellPower>
-      <CritRating>80</CritRating>
-      <Resilience>96</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Felshroud</SetName>
-    <Type>Cloth</Type>
-    <RequiredClasses>Warlock</RequiredClasses>
-    <SocketColor1>Red</SocketColor1>
-    <SocketColor2>Blue</SocketColor2>
-    <SocketBonus>
-      <SpellPower>7</SpellPower>
-    </SocketBonus>
-  </Item>
-  <Item>
     <Name>Savage Gladiator's Felweave Amice</Name>
     <Id>42008</Id>
     <ItemLevel>200</ItemLevel>
@@ -31476,29 +31341,6 @@
     </SocketBonus>
   </Item>
   <Item>
-    <Name>LK Arena 6 Warlock Shoulders</Name>
-    <Id>42013</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Shoulder_96</IconPath>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <Armor>255</Armor>
-      <Stamina>106</Stamina>
-      <Intellect>72</Intellect>
-      <SpellPower>117</SpellPower>
-      <CritRating>64</CritRating>
-      <Resilience>72</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Felshroud</SetName>
-    <Type>Cloth</Type>
-    <RequiredClasses>Warlock</RequiredClasses>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <Stamina>6</Stamina>
-    </SocketBonus>
-  </Item>
-  <Item>
     <Name>Savage Gladiator's Felweave Handguards</Name>
     <Id>42014</Id>
     <ItemLevel>200</ItemLevel>
@@ -31557,29 +31399,6 @@
       <SpellPower>78</SpellPower>
       <CritRating>32</CritRating>
       <Resilience>39</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <SetName>Gladiator's Felshroud</SetName>
-    <Type>Cloth</Type>
-    <RequiredClasses>Warlock</RequiredClasses>
-    <SocketColor1>Blue</SocketColor1>
-    <SocketBonus>
-      <SpellPower>5</SpellPower>
-    </SocketBonus>
-  </Item>
-  <Item>
-    <Name>LK Arena 6 Warlock Gloves</Name>
-    <Id>42019</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Gauntlets_64</IconPath>
-    <Slot>Hands</Slot>
-    <Stats>
-      <Armor>212</Armor>
-      <Stamina>106</Stamina>
-      <Intellect>72</Intellect>
-      <SpellPower>117</SpellPower>
-      <CritRating>49</CritRating>
-      <Resilience>57</Resilience>
     </Stats>
     <Quality>Epic</Quality>
     <SetName>Gladiator's Felshroud</SetName>
@@ -32094,25 +31913,6 @@
       <AttackPower>112</AttackPower>
       <HitRating>38</HitRating>
       <Resilience>37</Resilience>
-    </Stats>
-    <Quality>Epic</Quality>
-    <Type>None</Type>
-    <Unique>true</Unique>
-    <SocketBonus />
-  </Item>
-  <Item>
-    <Name>LK Honor 5 Caster DPS Crit Cloak</Name>
-    <Id>42083</Id>
-    <ItemLevel>252</ItemLevel>
-    <IconPath>INV_Misc_Cape_19</IconPath>
-    <Slot>Back</Slot>
-    <Stats>
-      <Armor>170</Armor>
-      <Stamina>79</Stamina>
-      <Intellect>54</Intellect>
-      <SpellPower>95</SpellPower>
-      <CritRating>54</CritRating>
-      <Resilience>53</Resilience>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>

@@ -15,17 +15,16 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 19;
+		private const int INTRO_VERSION = 20;
 		private const string INTRO_TEXT =
 @"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
    
 Recent Changes:
-v2.2.0b3
- - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b2. Thanks!
- - Gemming Revamp! Rawr will now automatically handle gems, just as you'd expect. See Help > Gemmings for details. NOTE: Rawr 2.2 is not backawards compatible most of your existing data files. Please do not copy data files from previous versions of Rawr. Your existing character files should load into Rawr 2.2 just fine, except you'll have to reselect enchants on your gear.
- - Armor Penetration has been adjusted, for all Rawr models, to match new 3.1 Armor Penetration mechanics. Note that Rawr assumes the bugs with ArPen calculations on the current PTR are fixed, and ArPenRating is multiplicative with ArPen debuffs.
- - Fix a crash in Optimizer.
- - b3 is just a fix for b2 being a bad build. Sorry about that.
+v2.2.0b4
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b4. Thanks!
+ - Multithreading! Rawr will now better utilize your processor, resulting in a 40% to 100% speed boost for rendering most charts, and optimizing. There is potential for hangs from this, so please test as much as you can, and report if you can make it hang, along with very explicitly telling us what you were doing when it hung, and including the character file. NOTE: If you encounter frequent hangs in b4, you can turn off Multithreading in the Tools > Options dialog. If you can't get to that dialog before it hangs, you can edit the config file at /Data/Rawr.Base.dll.config. PLEASE report any hangs you experience!
+ - Addition to the new dynamic gemming feature: You can now choose to display the Top X gemmings for an item. Check it out on the Tools > Edit Gemming Templates dialog.
+ - Fixes for a few crashes and minor bugs. Batch tools now include a batch optimizer. You can now save, load, and export Upgrade Lists.
  - Models: Tons of model updates; see ReadMe.txt for details on the changes and status of each model.
 
 If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which aren't fully complete, please contact me at cnervig@hotmail.com. Thanks!";
