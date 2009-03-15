@@ -121,6 +121,7 @@ namespace Rawr
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(230, 126);
+			this.ControlBox = false;
 			this.Controls.Add(this.comboBoxRegion);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.textBoxRealm);
@@ -129,6 +130,7 @@ namespace Rawr
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOK);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "FormEnterNameRealm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Load from Armory";

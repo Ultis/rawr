@@ -98,6 +98,13 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			LoadModel(ConfigModel);
 			InitializeComponent();
 			Application.DoEvents();
+
+			Rectangle bounds = ConfigBounds;
+			if (bounds.Width != 0)
+			{
+				this.StartPosition = FormStartPosition.Manual;
+				this.Bounds = bounds;
+			}
 			
 			Image icon = ItemIcons.GetItemIcon(Calculations.ModelIcons[ConfigModel], true);
 			if (icon != null)
@@ -426,6 +433,20 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 				return Calculations.ValidModel(Properties.Recent.Default.RecentModel);
 			}
 			set { Properties.Recent.Default.RecentModel = value; }
+		}
+
+		public Rectangle ConfigBounds
+		{
+			get
+			{
+				return new Rectangle(Properties.Recent.Default.WindowLocation,
+					Properties.Recent.Default.WindowSize);
+			}
+			set 
+			{ 
+				Properties.Recent.Default.WindowLocation = value.Location; 
+				Properties.Recent.Default.WindowSize = value.Size; 
+			}
 		}
 
 		public string[] ConfigRecentCharacters
@@ -905,6 +926,7 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 		private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			e.Cancel = !PromptToSaveBeforeClosing();
+			ConfigBounds = this.Bounds;
 			Properties.Recent.Default.Save();
 			ItemCache.Save();
 		}

@@ -53,7 +53,7 @@ namespace Rawr
 						{
 							g.DrawImage(icon, x, y);
 						}
-						g.DrawImage(Rawr.Properties.Resources.Rawr_Splash_ModelBackground, x + 30, y - 4);
+						g.DrawImage(Rawr.Properties.Resources.Rawr_Splash_ModelBackground, x + 30, y - 8);
 						g.DrawString(name, fontName, brushName, x + 34, y);
 						g.DrawString(version, fontVersion, brushVersion, x + 34, y + 16);
 

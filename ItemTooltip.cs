@@ -250,7 +250,7 @@ namespace Rawr
                                 }
                             }
                             #endregion
-                            int statHeight = ypos_nextline - yGrid.step;
+                            int statHeight = Math.Max(0, ypos_nextline - yGrid.step);
                             int extraLocation = 0;
 
                             string location = "Unknown source";
@@ -374,7 +374,7 @@ namespace Rawr
                             }
 
                             // this is the next clean/empty line after we wrote the stats
-                            yPos = ypos_nextline;
+                            yPos = Math.Max(yPos, ypos_nextline);
 
                             if (hasSockets)
                             {
