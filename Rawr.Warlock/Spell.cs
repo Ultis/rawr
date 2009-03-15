@@ -210,7 +210,7 @@ namespace Rawr.Warlock
         {
             get
             {
-                return DotDamage / (DebuffDuration / TimeBetweenTicks);
+                return DotDamage / (DebuffDuration / TimeBetweenTicks) * (1 - CritChance) + DotDamage / (DebuffDuration / TimeBetweenTicks) * CritChance * CritCoef;
             }
         }
 
