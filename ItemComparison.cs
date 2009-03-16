@@ -281,17 +281,26 @@ namespace Rawr
                                     }
 
                                     ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);
-                                    bool include = false;
-                                    for (int i = 0; i < itemCalc.SubPoints.Length; i++)
-                                    {
-                                        itemCalc.SubPoints[i] -= slotCalc.SubPoints[i];
-                                        include |= itemCalc.SubPoints[i] > 0;
-                                    }
-                                    itemCalc.OverallPoints -= slotCalc.OverallPoints;
-                                    if ( itemCalc.OverallPoints > 0)
-                                    {
-                                        itemCalculations.Add(itemCalc);
-                                    }
+									//bool include = false;
+									//for (int i = 0; i < itemCalc.SubPoints.Length; i++)
+									//{
+									//    itemCalc.SubPoints[i] -= slotCalc.SubPoints[i];
+									//    include |= itemCalc.SubPoints[i] > 0;
+									//}
+									//itemCalc.OverallPoints -= slotCalc.OverallPoints;
+									//if ( itemCalc.OverallPoints > 0)
+									//{
+									//    itemCalculations.Add(itemCalc);
+									//}
+
+									float difference = itemCalc.OverallPoints - slotCalc.OverallPoints;
+                                    if (difference > 0)
+									{
+										itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
+										itemCalc.OverallPoints = difference;
+										itemCalculations.Add(itemCalc);
+									}
+
                                     items[item.GemmedId] = item;
                                 }
                             }
