@@ -22,7 +22,7 @@ namespace Rawr.Tree
             {
                 procs = (float)Math.Floor(FightDuration / totalCD) + 1;
                 float activity = (procs - 1) * duration +
-                    Math.Min(Math.Max(0, (FightDuration % totalCD) - averageTimeToProc), duration);
+                    Math.Min(Math.Max(0, FightDuration % totalCD), duration);
                 activity /= FightDuration;
                 return activity; // return uptime per second
             }

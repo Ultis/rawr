@@ -12,17 +12,17 @@ namespace Rawr.Elemental
             float averageTimeToProc = pps == 0 ? 0 : 1 / pps;
             float totalCD = icd + averageTimeToProc;
             if (averageTimeToProc > FightDuration) return 0f;
-            FightDuration -= averageTimeToProc;
+            float TimeAfterFirstProc = FightDuration - averageTimeToProc;
             if (duration == 0) // instant proc
             {
-                procs = (float)Math.Floor(FightDuration / totalCD) + 1;
+                procs = (float)Math.Floor(TimeAfterFirstProc / totalCD) + 1;
                 return procs / FightDuration; // return value per second
             }
             else
             {
-                procs = (float)Math.Floor(FightDuration / totalCD) + 1;
+                procs = (float)Math.Floor(TimeAfterFirstProc / totalCD) + 1;
                 float activity = (procs - 1) * duration +
-                    Math.Min(Math.Max(0, (FightDuration % totalCD) - averageTimeToProc), duration);
+                    Math.Min(Math.Max(0, TimeAfterFirstProc % totalCD), duration);
                 activity /= FightDuration;
                 return activity; // return uptime per second
             }
