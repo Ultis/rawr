@@ -1242,9 +1242,11 @@ namespace Rawr
                 DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Dodged, {2}% Missed",
+            float spellMiss = 100 - SpellHit;
+            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged, {2}% Spell Misses, {3}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
-                        DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
+                        DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
+                        spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
                         MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Avg MH Speed", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Avg OH Speed", AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture));
