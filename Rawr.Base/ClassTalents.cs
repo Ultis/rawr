@@ -1830,6 +1830,10 @@ Sends a bolt of chaotic fire at the enemy, dealing 728 to 924 Chaos damage. Chao
 		public override int[] Data { get { return _data; } }public DruidTalents() { }
 		public DruidTalents(string talents)
 		{
+			if (talents.Length == _data.Length - 1)
+			{
+				talents = talents.Insert(56, "0");
+			}
 			if (talents.Length == _data.Length)
 			{
 				List<int> data = new List<int>();

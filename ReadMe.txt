@@ -16,7 +16,7 @@ v2.2.0b4
  - Rawr.Tankadin: Improved base stat accuracy, and support for several more librams, set bonuses, and trinkets. Minor fixes to the effects of several stats.
  - Rawr.Enhance: Minor fixes to the effects of several stats. Improved Flametongue calculations. Support for more buffs, trinkets, and totems, and set bonuses. Several bug fixes. Support for 3.1 changes.
  - Rawr.RestoSham: Support for selecting a healing style. Support for more totems. Added more optimizable stats.
- - Rawr.Elemental: Updated to use calculations from Binkenstine's latest spreadsheet. Added support for custom rotations.
+ - Rawr.Elemental: Updated to use calculations from Binkenstein's latest spreadsheet. Added support for custom rotations.
  - Rawr.Retribution: Fix for rounding on a few stats. Support for WoW 3.1 changes.
  - Rawr.Tree: Support for WoW 3.1 changes.
  - Rawr.Mage: Improvements to the advanced rotation solver. Now supports hasted Evocations and Power Infusion. Updates to a few racial base stats.

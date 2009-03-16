@@ -360,22 +360,21 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
 
-			float chanceCrit = 0f, attackSpeed = 0f;
+			float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 			
+			float hitBonus = stats.HitRating / 32.78998947f / 100f;
+			float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
+			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
+			float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
+			if ((targetLevel - 80f) < 3) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
+			
+			float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+
 			if (stats.MongooseProc + stats.TerrorProc > 0)
 			{
 				//Add stats for Mongoose/Terror
-				float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
-				attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
-
-				float hitBonus = stats.HitRating / 32.78998947f / 100f;
-				float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
-				float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
-				float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
-				float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
-				if ((targetLevel - 80f) < 3) chanceMiss = Math.Max(0f, 0.05f + 0.005f * (targetLevel - 80f) - hitBonus);
-				
-				float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
 
 				if (stats.TerrorProc > 0)
 				{
@@ -395,12 +394,12 @@ the Threat Scale defined on the Options tab.",
 					stats.Armor += mongooseAgi * 2;
 					stats.PhysicalHaste *= 1f + (0.02f * mongooseUptime);
 				}
-
-				float rawChanceCrit = Math.Min(0.75f, (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
-					stats.PhysicalCrit) - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
-				chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			}
-
+			float rawChanceCrit = Math.Min(0.75f, (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
+							stats.PhysicalCrit) - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
+			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
+			attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
+			
 			float baseAgi = character.Race == Character.CharacterRace.NightElf ? 87 : 77; //TODO: Find correct base agi values at 80
 			
 			//Calculate avoidance, considering diminishing returns
