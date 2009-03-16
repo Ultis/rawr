@@ -209,7 +209,7 @@ namespace Rawr.Healadin
 
             float divine_pleas = (float)Math.Ceiling((fight_length - 60f) / (60f * calcOpts.DivinePlea));
             float glyph_sow = (calcOpts.Glyph_SoW ? .95f : 1f);
-            float heal_multi = (calcOpts.Glyph_SoL ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier) * (1f - .5f * divine_pleas * 15f / fight_length);
+            float heal_multi = (calcOpts.Glyph_SoL ? 1.05f : 1f) * (1f + stats.HealingReceivedMultiplier) * (1f + talents.Divinity * .01f) * (1f - .5f * divine_pleas * 15f / fight_length);
 
 
             calc.ManaBase = stats.Mana;
@@ -429,7 +429,7 @@ namespace Rawr.Healadin
                 + (float)Math.Floor(statsRace.Intellect * (1 + statsTotal.BonusIntellectMultiplier) * (1 + talents.DivineIntellect * .03f));
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower + (0.2f * statsTotal.Intellect));
             statsTotal.SpellCrit = .03336f + statsTotal.SpellCrit + statsTotal.Intellect / 16666.66709f
-                + statsTotal.CritRating / 4590.598679f + talents.SanctifiedSeals * .01f + talents.Conviction * .01f;
+                + statsTotal.CritRating / 4590.598679f + talents.SanctityOfBattle * .01f + talents.Conviction * .01f;
             statsTotal.SpellHaste += statsTotal.HasteRating / 3278.998947f;
             statsTotal.Mana = (statsTotal.Mana + (statsTotal.Intellect * 15)) * (1f + statsBaseGear.BonusManaMultiplier);
             statsTotal.Health = statsTotal.Health + (statsTotal.Stamina * 10f);

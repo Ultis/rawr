@@ -234,6 +234,7 @@ namespace Rawr.Retribution
             float spellCritBonus = 1.5f * (1f + stats.BonusSpellCritMultiplier);
             float aow = 1f + .05f * talents.TheArtOfWar;
             float rightVen = (calcOpts.Mode31 ? .3f : (.08f * talents.RighteousVengeance));
+            float sanctBattle = 1f + 0.05f * talents.SanctityOfBattle;
 
             float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - talents.SanctifiedWrath * 30f));
             float aw = 1f + ((awTimes * 20f) / fightLength) * 1.2f;
@@ -276,7 +277,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Crusader Strike
-            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw
+            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle
                 * (calcOpts.Mode31 ? 1.15f : 1f);
             float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
             calc.CrusaderStrikeDPS = csAvgHit / 6f;
@@ -305,8 +306,8 @@ namespace Rawr.Retribution
 
             #region Exorcism
             float exoCrit = (calcOpts.Mode31 && calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-            float exoDamage = (calcOpts.MobType < 2 || calcOpts.Mode31) ? ((1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * 
-                (calcOpts.Mode31 ? 1.15f : 1f)) : 0; 
+            float exoDamage = (calcOpts.MobType < 2 || calcOpts.Mode31) ? ((1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle
+                * (calcOpts.Mode31 ? 1.15f : 1f)) : 0; 
             float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - calc.ToResist);
             calc.ExorcismDPS = exoAvgHit / 15f;
             #endregion
@@ -408,7 +409,7 @@ namespace Rawr.Retribution
 
             float libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / fightLength
                 + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / fightLength;
-            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
+            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating + libramCrit) * .01f +
                 character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating + libramCrit) * .01f

@@ -84,6 +84,26 @@ namespace Rawr.Tankadin
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
+                        @"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
+Overall is typically, but not always, the best way to rate gear. 
+For specific encounters, closer attention to Mitigation and 
+Survival Points individually may be important.",
+						@"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
+on average, through armor mitigation and avoidance. It is directly 
+relational to your Damage Taken. Ideally, you want to maximize 
+Mitigation Points, while maintaining 'enough' Survival Points 
+(see Survival Points). If you find yourself dying due to healers 
+running OOM, or being too busy healing you and letting other 
+raid members die, then focus on Mitigation Points.",
+						@"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
+(pre-mitigation) you can take before dying. Unlike 
+Mitigation Points, you should not attempt to maximize this, 
+but rather get 'enough' of it, and then focus on Mitigation. 
+'Enough' can vary greatly by fight and by your healers, but 
+keeping it roughly even with Mitigation Points is a good 
+way to maintain 'enough' as you progress. If you find that 
+you are being killed by burst damage, focus on Survival Points.",
+						@"Complex Stats:Threat Points*How much threat per secound you do.",
 						"Basic Stats:Health",
 						"Basic Stats:Armor",
 						"Basic Stats:Stamina",
@@ -125,26 +145,7 @@ namespace Rawr.Tankadin
                         "Threat Stats:JoR",
                         // "Threat Stats:Chance to Hit",
                         // "Threat Stats:Chance to Crit"
-						@"Complex Stats:Overall Points*Overall Points are a sum of Mitigation and Survival Points. 
-Overall is typically, but not always, the best way to rate gear. 
-For specific encounters, closer attention to Mitigation and 
-Survival Points individually may be important.",
-						@"Complex Stats:Mitigation Points*Mitigation Points represent the amount of damage you mitigate, 
-on average, through armor mitigation and avoidance. It is directly 
-relational to your Damage Taken. Ideally, you want to maximize 
-Mitigation Points, while maintaining 'enough' Survival Points 
-(see Survival Points). If you find yourself dying due to healers 
-running OOM, or being too busy healing you and letting other 
-raid members die, then focus on Mitigation Points.",
-						@"Complex Stats:Survival Points*Survival Points represents the total raw physical damage 
-(pre-mitigation) you can take before dying. Unlike 
-Mitigation Points, you should not attempt to maximize this, 
-but rather get 'enough' of it, and then focus on Mitigation. 
-'Enough' can vary greatly by fight and by your healers, but 
-keeping it roughly even with Mitigation Points is a good 
-way to maintain 'enough' as you progress. If you find that 
-you are being killed by burst damage, focus on Survival Points.",
-						@"Complex Stats:Threat Points*How much threat per secound you do."
+
 				};
                 return _characterDisplayCalculationLabels;
             }
@@ -177,6 +178,9 @@ you are being killed by burst damage, focus on Survival Points.",
                     _subPointNameColors.Add("Mitigation", System.Drawing.Color.Red);
                     _subPointNameColors.Add("Survival", System.Drawing.Color.Blue);
                     _subPointNameColors.Add("Threat", System.Drawing.Color.Yellow);
+                    //Multi-Target Threat to be implemented at a later time
+                    //_subPointNameColors.Add("ThreatTwo", System.Drawing.Color.Green);
+                    //_subPointNameColors.Add("ThreatAOE", System.Drawing.Color.Gray);
                 }
                 return _subPointNameColors;
             }
@@ -296,16 +300,17 @@ you are being killed by burst damage, focus on Survival Points.",
 
             float beHit = cs.Block + cs.Crit + cs.Hit;
             cs.DamageWhenHit = cs.Block / beHit * cs.DamagePerBlock + cs.Hit / beHit * cs.DamagePerHit + cs.Crit / beHit * cs.DamagePerHit * 2;
-            cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * calcOpts.AverageHit * (1f + .02571f * talents.ArdentDefender);
+            //TODO: Find out what exactly the Ardent Defender multiplier here means
+            cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * calcOpts.AverageHit * (1f + .04285f * talents.ArdentDefender);
 			
             //Threat Calculations
             float normalThreatMod = 1 / .7f * (1f + stats.ThreatIncreaseMultiplier);
             float holyThreatMod = normalThreatMod * 1.9f;
-            float SotT = 1f + talents.ShieldOfTheTemplar * .1f;
+            //float SotT = 1f + talents.ShieldOfTheTemplar * .1f;
             float holyMulti = 1f + stats.BonusHolyDamageMultiplier;
-            float damageMulti = 1f + talents.OneHandedWeaponSpecialization * .02f;
+            float damageMulti = 1f + (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0);
             float expertise = .0025f * stats.Expertise;
-
+                        
             cs.ToMiss = Math.Max(0,(levelDif < 3 ? .05f + levelDif*.005f : .07f + (levelDif-2)*.02f) - stats.PhysicalHit);
             cs.ToParry = Math.Max(0, ((levelDif < 3 ? 1f : 2f) * (.05f + levelDif * .005f)) - expertise);
             cs.ToDodge = Math.Max(0, (.05f + levelDif * .005f) - expertise);
@@ -341,13 +346,13 @@ you are being killed by burst damage, focus on Survival Points.",
             }
 
             //Shield of Righteousness (Per Hit)
-            cs.ShoRDamage = (stats.BlockValue + 400f) * damageMulti * SotT * holyMulti;
+            cs.ShoRDamage = (stats.BlockValue * 1.3f + 520f) * damageMulti * holyMulti;
             cs.ShoRThreat = cs.ShoRDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
-            cs.ShoRJBVDamage = (stats.BlockValue + stats.JudgementBlockValue + 400f) * damageMulti * SotT * holyMulti;
+            cs.ShoRJBVDamage = ((stats.BlockValue + stats.JudgementBlockValue) * 1.3f + 520f) * damageMulti * holyMulti;
             cs.ShoRJBVThreat = cs.ShoRJBVDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Avenger's Shield (Per Hit)
-            cs.ASDamage = (940f + .07f * stats.AttackPower + .07f * stats.SpellPower) * damageMulti * SotT * holyMulti;
+            cs.ASDamage = (940f + .07f * stats.AttackPower + .07f * stats.SpellPower) * 1.3f * damageMulti * holyMulti;
             cs.ASThreat = cs.ASDamage * holyThreatMod * (1f - cs.ToMiss + cs.ToCrit);
 
             //Consecration (Per Cast 8sec)
@@ -377,7 +382,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //TODO Implement correct number of blocks, currently just uses 4
             if (talents.HolyShield > 0)
             {
-                cs.HSDamage = (211f + .056f * stats.AttackPower + .09f * stats.SpellPower) * damageMulti * SotT * holyMulti;
+                cs.HSDamage = (211f + .056f * stats.AttackPower + .09f * stats.SpellPower) * 1.3f * damageMulti * holyMulti;
                 cs.HSProcs = 4;
                 cs.HSThreat = cs.HSDamage * cs.HSProcs * (cs.ToResist + cs.ToSpellCrit) * holyThreatMod;
             }
@@ -389,20 +394,27 @@ you are being killed by burst damage, focus on Survival Points.",
 			float rotTime = 18f;
 			// Rotation #1: Seal of Vengeance
 			cs.Rot1TPS = ((3 * cs.HotRThreat) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoVThreat) + (2 * cs.ConsTPS) + ((cs.SoVTPS + cs.WhiteThreat * (1f + reckoning)) * rotTime)) / rotTime;
-			// Rotation #2 Seal of Righteousness 
+            cs.Rot1TPSTWO = ((3 * cs.HotRThreat) + (2 * cs.HSThreat) + (2 * cs.ConsTPS) + (cs.SoVTPS * rotTime)) / rotTime;
+            cs.TPSAOE = ((2 * cs.HSThreat) + (2 * cs.ConsTPS)) / rotTime;
+            // Rotation #2 Seal of Righteousness 
 			cs.Rot2TPS = ((3 * (cs.HotRThreat + cs.SoRThreat)) + (2 * cs.ShoRThreat) + cs.ShoRJBVThreat + (2 * cs.HSThreat) + (2 * cs.JoRThreat) + (2 * cs.ConsTPS) + ((cs.SoRThreat + cs.WhiteThreat) * (1f + reckoning) * rotTime)) / rotTime;
+            cs.Rot2TPSTWO = ((3 * (cs.HotRThreat + cs.SoRThreat)) + (2 * cs.HSThreat) + (2 * cs.ConsTPS)) / rotTime;
 			
 			switch (calcOpts.ThreatRotationChoice)
 			{
 				case 2:
 					cs.ThreatPoints = cs.Rot2TPS * calcOpts.ThreatScale;
+                    cs.SecondaryThreatPoints = cs.Rot2TPSTWO * calcOpts.ThreatScale;
 					break;
 				default:
-					cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
+                    cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
+                    cs.SecondaryThreatPoints = cs.Rot1TPSTWO * calcOpts.ThreatScale;
 					break;
 			}
+
+            cs.AoEThreatPoints = cs.TPSAOE * calcOpts.ThreatScale;
            
-            cs.OverallPoints = cs.ThreatPoints + cs.MitigationPoints + cs.SurvivalPoints;
+            cs.OverallPoints = cs.ThreatPoints + cs.SecondaryThreatPoints + cs.AoEThreatPoints + cs.MitigationPoints + cs.SurvivalPoints;
             return cs;
         }
 
@@ -476,7 +488,7 @@ you are being killed by burst damage, focus on Survival Points.",
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
-            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctifiedSeals * .01f;
+            float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit = statsRace.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +
                 character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating) * .01f

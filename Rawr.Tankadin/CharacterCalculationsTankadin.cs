@@ -9,7 +9,7 @@ namespace Rawr.Tankadin
 
         public override float OverallPoints { get; set; }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -32,6 +32,18 @@ namespace Rawr.Tankadin
         {
             get { return _subPoints[2]; }
             set { _subPoints[2] = value; }
+        }
+
+        public float SecondaryThreatPoints
+        {
+            get { return _subPoints[3]; }
+            set { _subPoints[3] = value; }
+        }
+
+        public float AoEThreatPoints
+        {
+            get { return _subPoints[4]; }
+            set { _subPoints[4] = value; }
         }
 
         public Stats BasicStats { get; set; }
@@ -98,12 +110,19 @@ namespace Rawr.Tankadin
         public float WhiteThreat { get; set; }
 
         public float Rot1TPS { get; set; }
+        public float Rot1TPSTWO { get; set; }
+        public float TPSAOE { get; set; }
 		public float Rot2TPS { get; set; }
+        public float Rot2TPSTWO { get; set; }
         
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
+            dict.Add("Overall Points", OverallPoints.ToString());
+            dict.Add("Mitigation Points", MitigationPoints.ToString());
+            dict.Add("Survival Points", SurvivalPoints.ToString());
+            dict.Add("Threat Points", ThreatPoints.ToString());
 			dict.Add("Health", BasicStats.Health.ToString());
             dict.Add("Armor", string.Format("{0}*{1}% Damage Reduction", BasicStats.Armor, Math.Round(ArmorReduction * 100f, 2)));
 			//dict.Add("Stamina", BasicStats.Stamina.ToString());
@@ -141,10 +160,6 @@ namespace Rawr.Tankadin
                     Math.Round((.05f - CritAvoidance) * 100f, 2), 
                     Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 25f * 4.918498039f),
                     Math.Ceiling(Math.Abs(.05f - CritAvoidance) * 100f * 81.97497559f)));
-			dict.Add("Overall Points", OverallPoints.ToString());
-			dict.Add("Mitigation Points", MitigationPoints.ToString());
-			dict.Add("Survival Points", SurvivalPoints.ToString());
-			dict.Add("Threat Points", ThreatPoints.ToString());
             dict.Add("Chance to Hit", string.Format("{0}%*{1}% miss\n{2}% dodge\n{3}% parry", Math.Round(ToLand * 100f, 2), Math.Round(ToMiss * 100f, 2),
                 Math.Round(ToDodge * 100, 2), Math.Round(ToParry * 100f, 2)));
             dict.Add("Chance to Miss", string.Format("{0}%", Math.Round(ToMiss * 100f, 2)));

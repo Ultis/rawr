@@ -30,6 +30,7 @@ namespace Rawr.Tankadin
             lblBossAttackValue.Text = calcOpts.AverageHit.ToString();
             trackBarMitigationScale.Value = calcOpts.MitigationScalePercent;
             lblMitigationScaleValue.Text = calcOpts.MitigationScalePercent.ToString() + "%";
+            //lblNumberAttackersValue.Text = calcOpts.NumberAttackers.ToString();
             trackBarThreatScale.Value = calcOpts.ThreatScale;
             lblThreatScaleValue.Text = calcOpts.ThreatScale.ToString();
             _loadingCalculationOptions = false;
@@ -124,6 +125,24 @@ namespace Rawr.Tankadin
                 Character.OnCalculationsInvalidated();
             }        	
         }
+
+        //private void trackBarNumberofAttackers_Scroll(object sender, EventArgs e)
+        //{
+        //    if (!_loadingCalculationOptions)
+        //    {
+        //        CalculationOptionsTankadin calcOpts = Character.CalculationOptions as CalculationOptionsTankadin;
+        //        calcOpts.NumberAttackers = trackBarNumberofAttackers.Value;
+        //        if (calcOpts.NumberAttackers >= 4)
+        //        {
+        //            lblNumberAttackersValue.Text = trackBarNumberofAttackers.Value.ToString() + " or more";
+        //        }
+        //        else
+        //        {
+        //            lblNumberAttackersValue.Text = trackBarNumberofAttackers.Value.ToString();
+        //        }                
+        //        Character.OnCalculationsInvalidated();
+        //    }
+        //}
     }
 
     [Serializable]

@@ -4078,9 +4078,9 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 @"Holy",
 @"Protection",
 @"Retribution",};
-
-
-		[TalentData(0, "Spiritual Focus", 5, 0, 2, 1, -1, new string[] {
+        // Comments within this section are for the benefit of module updates; will be removed after updates are made
+        #region Holy Talents
+        [TalentData(0, "Spiritual Focus", 5, 0, 2, 1, -1, new string[] {
 @"Reduces the pushback suffered from damaging attacks while casting Flash of Light and Holy Light by 14%.",
 @"Reduces the pushback suffered from damaging attacks while casting Flash of Light and Holy Light by 28%.",
 @"Reduces the pushback suffered from damaging attacks while casting Flash of Light and Holy Light by 42%.",
@@ -4115,8 +4115,9 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 @"Reduces the duration of all Fear and Disorient effects by 30%.",})]
 		public int UnyieldingFaith { get { return _data[4]; } set { _data[4] = value; } }
 
+        //Changed in 3.1
 		[TalentData(5, "Aura Mastery", 1, 0, 1, 3, -1, new string[] {
-@"Increases the radius of your Auras to 40 yards.",})]
+@"Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%.",})]
 		public int AuraMastery { get { return _data[5]; } set { _data[5] = value; } }
 
 		[TalentData(6, "Illumination", 5, 0, 2, 3, -1, new string[] {
@@ -4143,9 +4144,10 @@ Heals a friendly target for 639 to 691 and another 500 over 15 sec will consume 
 @"Increases the effect of your Blessing of Wisdom spell by 20%.",})]
 		public int ImprovedBlessingOfWisdom { get { return _data[9]; } set { _data[9] = value; } }
 
-		[TalentData(10, "Pure of Heart", 2, 0, 1, 5, -1, new string[] {
-@"Reduces the duration of Curse and Disease effects by 25%.",
-@"Reduces the duration of Curse and Disease effects by 50%.",})]
+		//Changed in 3.1
+        [TalentData(10, "Pure of Heart", 2, 0, 1, 5, -1, new string[] {
+@"Reduces the duration of Curse, Disease and Poison effects by 15%.",
+@"Reduces the duration of Curse, Disease and Poison effects by 30%.",})]
 		public int PureOfHeart { get { return _data[10]; } set { _data[10] = value; } }
 
 		[TalentData(11, "Divine Favor", 1, 0, 2, 5, 6, new string[] {
@@ -4160,14 +4162,15 @@ When activated, gives your next Flash of Light, Holy Light, or Holy Shock spell 
 @"Increases the critical effect chance of your Holy Light and Holy Shock spells by 6%.",})]
 		public int SanctifiedLight { get { return _data[12]; } set { _data[12] = value; } }
 
-		[TalentData(13, "Blessed Hands", 2, 0, 4, 5, -1, new string[] {
-@"Reduces the mana cost and increases the resistance to Dispel effects of all Hand spells by 15%.",
-@"Reduces the mana cost and increases the resistance to Dispel effects of all Hand spells by 30%.",})]
+		//Changed in 3.1
+        [TalentData(13, "Blessed Hands", 2, 0, 4, 4, -1, new string[] {
+@"Reduces the mana cost of Hand of Freedom, Hand of Sacrifice and Hand of Salvation by 15%, increases the effectiveness of Hand of Salvation by 50% and the effectiveness of Hand of Sacrifice by an additional 5%.",
+@"Reduces the mana cost of Hand of Freedom, Hand of Sacrifice and Hand of Salvation by 30%, increases the effectiveness of Hand of Salvation by 100% and the effectiveness of Hand of Sacrifice by an additional 10%.",})]
 		public int BlessedHands { get { return _data[13]; } set { _data[13] = value; } }
 
 		[TalentData(14, "Purifying Power", 2, 0, 1, 6, -1, new string[] {
-@"Reduces the mana cost of your Cleanse, Purify, and Consecration spells by 5% and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10%.",
-@"Reduces the mana cost of your Cleanse, Purify, and Consecration spells by 10% and increases the critical strike chance of your Exorcism and Holy Wrath spells by 20%.",})]
+@"Reduces the mana cost of your Cleanse, Purify and Consecration spells by 5% and reduces the cooldown of your Exorcism and Holy Wrath spells by 17%.",
+@"Reduces the mana cost of your Cleanse, Purify and Consecration spells by 10% and reduces the cooldown of your Exorcism and Holy Wrath spells by 33%.",})]
 		public int PurifyingPower { get { return _data[14]; } set { _data[14] = value; } }
 
 		[TalentData(15, "Holy Power", 5, 0, 3, 6, -1, new string[] {
@@ -4205,7 +4208,8 @@ Blasts the target with Holy energy, causing 314 to 340 Holy damage to an enemy, 
 @"All attacks against you have a 10% chance to cause half damage.",})]
 		public int BlessedLife { get { return _data[18]; } set { _data[18] = value; } }
 
-		[TalentData(19, "Infusion of Light", 2, 0, 2, 8, 17, new string[] {
+		//Moved Location in 3.1
+        [TalentData(19, "Infusion of Light", 2, 0, 2, 10, 17, new string[] {
 @"Your Holy Shock critical hits reduce the cast time of your next Holy Light spell by 0.50 secs.",
 @"Your Holy Shock critical hits reduce the cast time of your next Holy Light spell by 1 secs.",})]
 		public int InfusionOfLight { get { return _data[19]; } set { _data[19] = value; } }
@@ -4218,23 +4222,27 @@ Blasts the target with Holy energy, causing 314 to 340 Holy damage to an enemy, 
 @"Increases your spell power by 20% of your total Intellect.",})]
 		public int HolyGuidance { get { return _data[20]; } set { _data[20] = value; } }
 
-		[TalentData(21, "Sacred Cleansing", 3, 0, 1, 9, -1, new string[] {
+        //Moved Location in 3.1
+		[TalentData(21, "Sacred Cleansing", 3, 0, 1, 8, -1, new string[] {
 @"Your Cleanse spell has a 10% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",
 @"Your Cleanse spell has a 20% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",
 @"Your Cleanse spell has a 30% chance to increase the target's resistance to Disease, Magic and Poison by 30% for 10 sec.",})]
 		public int SacredCleansing { get { return _data[21]; } set { _data[21] = value; } }
 
-		[TalentData(22, "Divine Illumination", 1, 0, 2, 9, -1, new string[] {
+        //Moved Location in 3.1
+		[TalentData(22, "Divine Illumination", 1, 0, 1, 9, -1, new string[] {
 @"Instant,3 min cooldown,
 Reduces the mana cost of all spells by 50% for 15 sec.",})]
 		public int DivineIllumination { get { return _data[22]; } set { _data[22] = value; } }
 
-		[TalentData(23, "Enlightened Judgements", 2, 0, 3, 9, -1, new string[] {
+        //Moved Location in 3.1
+		[TalentData(23, "Enlightened Judgements", 2, 0, 3, 10, -1, new string[] {
 @"Increases the range of your Judgement spells by 15 yards and increases your chance to hit by 2%.",
 @"Increases the range of your Judgement spells by 30 yards and increases your chance to hit by 4%.",})]
 		public int EnlightenedJudgements { get { return _data[23]; } set { _data[23] = value; } }
 
-		[TalentData(24, "Judgements of the Pure", 5, 0, 2, 10, -1, new string[] {
+        //Moved Location in 3.1
+		[TalentData(24, "Judgements of the Pure", 5, 0, 3, 9, -1, new string[] {
 @"Increases the damage done by your Seal and Judgement spells by 5%, and your Judgement spells increase your casting and melee haste by 3% for 1 min.",
 @"Increases the damage done by your Seal and Judgement spells by 10%, and your Judgement spells increase your casting and melee haste by 6% for 1 min.",
 @"Increases the damage done by your Seal and Judgement spells by 15%, and your Judgement spells increase your casting and melee haste by 9% for 1 min.",
@@ -4248,45 +4256,55 @@ Instant Cast,
 The target becomes a Beacon of Light to all targets within a 40 yard radius. Any heals you cast on those targets will also heal the Beacon for 100% of the amount healed. Only one target can be Beacon of Light at a time. Lasts 1 min.",})]
 		public int BeaconOfLight { get { return _data[25]; } set { _data[25] = value; } }
 
-		[TalentData(26, "Blessing of Kings", 1, 1, 1, 1, -1, new string[] {
-@"263 Mana,30 yd range,
-Instant cast
-Places a Blessing on the friendly target, increasing total stats by 2% for 10 min. Players may only have one Blessing on them per Paladin at any one time.",})]
-		public int BlessingOfKings { get { return _data[26]; } set { _data[26] = value; } }
+        #endregion
 
-		[TalentData(27, "Improved Blessing of Kings", 4, 1, 2, 1, 26, new string[] {
-@"Increases the effectiveness of Blessing of Kings by an additional 2%.",
-@"Increases the effectiveness of Blessing of Kings by an additional 4%.",
-@"Increases the effectiveness of Blessing of Kings by an additional 6%.",
-@"Increases the effectiveness of Blessing of Kings by an additional 8%.",})]
-		public int ImprovedBlessingOfKings { get { return _data[27]; } set { _data[27] = value; } }
+        #region Protection Talents
 
-		[TalentData(28, "Divine Strength", 5, 1, 3, 1, -1, new string[] {
+        //Blessing of Kings Talent Removed in 3.1
+
+        //Talent added in 3.1
+        //Affects: Holy Healing and Burst Healing, Spiritual Attunement
+        [TalentData(26, "Divinity", 5, 1, 2, 1, -1, new string[] {
+@"Increases all healing done by you and all healing effects on you by 1%.",
+@"Increases all healing done by you and all healing effects on you by 2%.",
+@"Increases all healing done by you and all healing effects on you by 3%.",
+@"Increases all healing done by you and all healing effects on you by 4%.",
+@"Increases all healing done by you and all healing effects on you by 5%.",})]
+        public int Divinity { get { return _data[26]; } set { _data[26] = value; } }
+
+		[TalentData(27, "Divine Strength", 5, 1, 3, 1, -1, new string[] {
 @"Increases your total Strength by 3%.",
 @"Increases your total Strength by 6%.",
 @"Increases your total Strength by 9%.",
 @"Increases your total Strength by 12%.",
 @"Increases your total Strength by 15%.",})]
-		public int DivineStrength { get { return _data[28]; } set { _data[28] = value; } }
+		public int DivineStrength { get { return _data[27]; } set { _data[27] = value; } }
 
-		[TalentData(29, "Stoicism", 3, 1, 1, 2, -1, new string[] {
+		[TalentData(28, "Stoicism", 3, 1, 1, 2, -1, new string[] {
 @"Reduces the duration of all Stun effects by an additional 10% and reduces the chance your spells will be dispelled by an additional 10%.",
 @"Reduces the duration of all Stun effects by an additional 20% and reduces the chance your spells will be dispelled by an additional 20%.",
 @"Reduces the duration of all Stun effects by an additional 30% and reduces the chance your spells will be dispelled by an additional 30%.",})]
-		public int Stoicism { get { return _data[29]; } set { _data[29] = value; } }
+		public int Stoicism { get { return _data[28]; } set { _data[28] = value; } }
 
-		[TalentData(30, "Guardian's Favor", 2, 1, 2, 2, -1, new string[] {
+		[TalentData(29, "Guardian's Favor", 2, 1, 2, 2, -1, new string[] {
 @"Reduces the cooldown of your Hand of Protection by 60 sec and increases the duration of your Hand of Freedom by 2 sec.",
 @"Reduces the cooldown of your Hand of Protection by 120 sec and increases the duration of your Hand of Freedom by 4 sec.",})]
-		public int GuardiansFavor { get { return _data[30]; } set { _data[30] = value; } }
+		public int GuardiansFavor { get { return _data[29]; } set { _data[29] = value; } }
 
-		[TalentData(31, "Anticipation", 5, 1, 3, 2, -1, new string[] {
+		[TalentData(30, "Anticipation", 5, 1, 3, 2, -1, new string[] {
 @"Increases your chance to dodge by 1%.",
 @"Increases your chance to dodge by 2%.",
 @"Increases your chance to dodge by 3%.",
 @"Increases your chance to dodge by 4%.",
 @"Increases your chance to dodge by 5%.",})]
-		public int Anticipation { get { return _data[31]; } set { _data[31] = value; } }
+		public int Anticipation { get { return _data[30]; } set { _data[30] = value; } }
+        
+        //Divine Sacrifice Added in 3.1
+        [TalentData(31, "Divine Sacrifice", 1, 1, 1, 3, -1, new string[] {
+@"30% of all damage taken by party or raid members within 30 yards is redirected to the Paladin (up to a maximum of 150% of the Paladin's health).",})]
+        public int DivineSacrifice { get { return _data[31]; } set { _data[31] = value; } }
+
+        //Divine Guardian Removed in 3.1
 
 		[TalentData(32, "Improved Righteous Fury", 3, 1, 2, 3, -1, new string[] {
 @"While Righteous Fury is active, all damage taken is reduced by 2%.",
@@ -4302,15 +4320,10 @@ Places a Blessing on the friendly target, increasing total stats by 2% for 10 mi
 @"Increases your armor value from items by 10% and reduces the duration of all movement slowing effects by 30%.",})]
 		public int Toughness { get { return _data[33]; } set { _data[33] = value; } }
 
-		[TalentData(34, "Divine Guardian", 2, 1, 1, 4, -1, new string[] {
-@"While Divine Shield is active 15% of all damage taken by party or raid members within 30 yards is redirected to the Paladin.",
-@"While Divine Shield is active 30% of all damage taken by party or raid members within 30 yards is redirected to the Paladin.",})]
-		public int DivineGuardian { get { return _data[34]; } set { _data[34] = value; } }
-
-		[TalentData(35, "Improved Hammer of Justice", 3, 1, 2, 4, -1, new string[] {
+        //Changed in 3.1
+		[TalentData(35, "Improved Hammer of Justice", 2, 1, 2, 4, -1, new string[] {
 @"Decreases the cooldown of your Hammer of Justice spell by 10 sec.",
-@"Decreases the cooldown of your Hammer of Justice spell by 20 sec.",
-@"Decreases the cooldown of your Hammer of Justice spell by 30 sec.",})]
+@"Decreases the cooldown of your Hammer of Justice spell by 20 sec.",})]
 		public int ImprovedHammerOfJustice { get { return _data[35]; } set { _data[35] = value; } }
 
 		[TalentData(36, "Improved Devotion Aura", 3, 1, 3, 4, -1, new string[] {
@@ -4322,7 +4335,7 @@ Places a Blessing on the friendly target, increasing total stats by 2% for 10 mi
 		[TalentData(37, "Blessing of Sanctuary", 1, 1, 2, 5, -1, new string[] {
 @"307 Mana,30 yd range,
 Instant cast
-Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min.  In addition, when the target blocks, parries, or dodges a melee attack the target will gain 10 rage, 20 runic power, or 2% of the maximum mana. Players may only have one Blessing on them per Paladin at any one time.",})]
+Places a Blessing on the friendly target, reducing damage taken from all sources by 3% for 10 min.  In addition, when the target blocks, parries, or dodges a melee attack the target will gain 2% of maximum displayed mana.  Players may only have one Blessing on them per Paladin at any one time.",})]
 		public int BlessingOfSanctuary { get { return _data[37]; } set { _data[37] = value; } }
 
 		[TalentData(38, "Reckoning", 5, 1, 3, 5, -1, new string[] {
@@ -4338,11 +4351,11 @@ Places a Blessing on the friendly target, reducing damage taken from all sources
 @"Increases your total Stamina by 8%, reduces the cooldown of your Divine Shield and Divine Protection spells by 60 sec.",})]
 		public int SacredDuty { get { return _data[39]; } set { _data[39] = value; } }
 
-		[TalentData(40, "One-Handed Weapon Specialization", 5, 1, 3, 6, -1, new string[] {
-@"Increases all damage you deal when a one-handed melee weapon is equipped by 2%.",
+        //Changed in 3.1, 5 point -> 3 point
+        //Affects Protection Threat
+		[TalentData(40, "One-Handed Weapon Specialization", 3, 1, 3, 6, -1, new string[] {
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 4%.",
-@"Increases all damage you deal when a one-handed melee weapon is equipped by 6%.",
-@"Increases all damage you deal when a one-handed melee weapon is equipped by 8%.",
+@"Increases all damage you deal when a one-handed melee weapon is equipped by 7%.",
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 10%.",})]
 		public int OneHandedWeaponSpecialization { get { return _data[40]; } set { _data[40] = value; } }
 
@@ -4360,11 +4373,11 @@ Increases chance to block by 30% for 10 sec and deals 61 Holy damage for each at
 		 Rank 6: 439 Mana, 211 Holy Damage",})]
 		public int HolyShield { get { return _data[41]; } set { _data[41] = value; } }
 
-		[TalentData(42, "Ardent Defender", 5, 1, 3, 7, -1, new string[] {
-@"When you have less than 35% health, all damage taken is reduced by 6%.",
-@"When you have less than 35% health, all damage taken is reduced by 12%.",
-@"When you have less than 35% health, all damage taken is reduced by 18%.",
-@"When you have less than 35% health, all damage taken is reduced by 24%.",
+        //Changed in 3.1, 5 point -> 3 point
+        //Affects Proteciton Survival
+		[TalentData(42, "Ardent Defender", 3, 1, 3, 7, -1, new string[] {
+@"When you have less than 35% health, all damage taken is reduced by 10%.",
+@"When you have less than 35% health, all damage taken is reduced by 20%.",
 @"When you have less than 35% health, all damage taken is reduced by 30%.",})]
 		public int ArdentDefender { get { return _data[42]; } set { _data[42] = value; } }
 
@@ -4386,32 +4399,38 @@ Increases chance to block by 30% for 10 sec and deals 61 Holy damage for each at
 @"Increases your spell power by an amount equal to 30% of your Stamina and increases the amount healed by your critical heals by 30%.",})]
 		public int TouchedByTheLight { get { return _data[45]; } set { _data[45] = value; } }
 
+        //Changed in 3.1, Damage increased
+        //Affects Protection; remove Shield of the Templar Bonus from Avenger's Shield
 		[TalentData(46, "Avenger's Shield", 1, 1, 2, 9, 41, new string[] {
 @"1318 Mana,30 yd range,
 Instant Cast,30 sec cooldown,
-Hurls a holy shield at the enemy, dealing 376 to 450 Holy damage, Dazing them and then jumping to additional nearby enemies. Affects 3 total targets. Lasts 10 sec.
+Hurls a holy shield at the enemy, dealing 440.14 to 536.14 Holy damage, Dazing them and then jumping to additional nearby enemies.  Affects 3 total targets.  Lasts 10 sec.
 
 		 Trainable Ranks Listed Below:
-		 Rank 2: 1318 Mana, 498-600 Holy Damage
-		 Rank 3: 1142 Mana, 648-784 Holy Damage
-		 Rank 4: 1142 Mana, 738-894 Holy Damage
-		 Rank 4: 1142 Mana, 882-1070 Holy Damage",})]
+		 Rank 2: 1318 Mana, 601.14-733.14 Holy Damage
+		 Rank 3: 1142 Mana, 796.14-972.14 Holy Damage
+		 Rank 4: 1142 Mana, 913.14-1115.14 Holy Damage
+		 Rank 4: 1142 Mana, 1100.14-1344.14 Holy Damage",})]
 		public int AvengersShield { get { return _data[46]; } set { _data[46] = value; } }
 
+        //Changed in 3.1
 		[TalentData(47, "Guarded by the Light", 2, 1, 3, 9, -1, new string[] {
-@"Reduces spell damage taken by 3% and reduces the mana cost of your Holy Shield, Avenger's Shield and Shield of Righteousness spells by 15%.",
-@"Reduces spell damage taken by 6% and reduces the mana cost of your Holy Shield, Avenger's Shield and Shield of Righteousness spells by 30%.",})]
+@"Reduces spell damage taken by 3% and gives a 50% chance to refresh the duration of your Divine Plea when you hit an enemy.  In addition, your Divine Plea spell is 50% less likely to be dispelled.",
+@"Reduces spell damage taken by 6% and gives a 100% chance to refresh the duration of your Divine Plea when you hit an enemy.  In addition, your Divine Plea spell is 100% less likely to be dispelled.",})]
 		public int GuardedByTheLight { get { return _data[47]; } set { _data[47] = value; } }
 
+        //Changed in 3.1
+        //Affects Protection; remove Shield of the Templar bonus from Shield of Righteousness, Holy Shield, Avenger's Shield
 		[TalentData(48, "Shield of the Templar", 3, 1, 2, 10, 46, new string[] {
-@"Increases the damage of your Holy Shield, Avenger's Shield and Shield of the Righteousness spells by 10%.",
-@"Increases the damage of your Holy Shield, Avenger's Shield and Shield of the Righteousness spells by 20%.",
-@"Increases the damage of your Holy Shield, Avenger's Shield and Shield of the Righteousness spells by 30%.",})]
+@"Reduces all damage taken by 1% and grants your Avenger's Shield a 33% chance to silence your targets for 3 sec.",
+@"Reduces all damage taken by 1% and grants your Avenger's Shield a 66% chance to silence your targets for 3 sec.",
+@"Reduces all damage taken by 1% and grants your Avenger's Shield a 100% chance to silence your targets for 3 sec.",})]
 		public int ShieldOfTheTemplar { get { return _data[48]; } set { _data[48] = value; } }
 
+        //Changed in 3.1
 		[TalentData(49, "Judgements of the Just", 2, 1, 3, 10, -1, new string[] {
-@"Your Judgement spells also reduce the melee attack speed of the target by 10%.",
-@"Your Judgement spells also reduce the melee attack speed of the target by 20%.",})]
+@"Reduces the cooldown of your Hammer of Justice by 10 sec, increases the duration of your Seal of Justice effect by 0.5 sec and your Judgement spells also reduce the melee attack speed of the target by 10%.",
+@"Reduces the cooldown of your Hammer of Justice by 20 sec, increases the duration of your Seal of Justice effect by 1 sec and your Judgement spells also reduce the melee attack speed of the target by 20%.",})]
 		public int JudgementsOfTheJust { get { return _data[49]; } set { _data[49] = value; } }
 
 		[TalentData(50, "Hammer of the Righteous", 1, 1, 2, 11, -1, new string[] {
@@ -4421,7 +4440,11 @@ Requires One-Handed Melee Weapon,
 Hammer the current target and up to 2 additional nearby targets, causing 3 times your main hand damage per second as Holy damage.",})]
 		public int HammerOfTheRighteous { get { return _data[50]; } set { _data[50] = value; } }
 
-		[TalentData(51, "Deflection", 5, 2, 2, 1, -1, new string[] {
+        #endregion
+
+        #region Retribution Talents
+
+        [TalentData(51, "Deflection", 5, 2, 2, 1, -1, new string[] {
 @"Increases your Parry chance by 1%.",
 @"Increases your Parry chance by 2%.",
 @"Increases your Parry chance by 3%.",
@@ -4486,11 +4509,14 @@ Gives the Paladin a chance to deal 62 to 64 additional Holy damage. Only one Sea
 @"All criticals against you cause 20% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health.",})]
 		public int EyeForAnEye { get { return _data[60]; } set { _data[60] = value; } }
 
-		[TalentData(61, "Sanctified Seals", 3, 2, 3, 4, -1, new string[] {
-@"Increases your chance to critically hit with all spells and attacks by 1% and reduces the chance your Seals will be dispelled by 33%.",
-@"Increases your chance to critically hit with all spells and attacks by 2% and reduces the chance your Seals will be dispelled by 66%.",
-@"Increases your chance to critically hit with all spells and attacks by 3% and reduces the chance your Seals will be dispelled by 100%.",})]
-		public int SanctifiedSeals { get { return _data[61]; } set { _data[61] = value; } }
+        //Renamed in 3.1
+        //Changed in 3.1
+        //Affects Retribution DPS
+		[TalentData(61, "Sanctity of Battle", 3, 2, 3, 4, -1, new string[] {
+@"Increases your chance to critically hit with all spells and attacks by 1% and increases the damage caused by Exorcism and Crusader Strike by 5%.",
+@"Increases your chance to critically hit with all spells and attacks by 2% and increases the damage caused by Exorcism and Crusader Strike by 10%.",
+@"Increases your chance to critically hit with all spells and attacks by 3% and increases the damage caused by Exorcism and Crusader Strike by 15%.",})]
+		public int SanctityOfBattle { get { return _data[61]; } set { _data[61] = value; } }
 
 		[TalentData(62, "Crusade", 3, 2, 4, 4, -1, new string[] {
 @"Increases all damage caused by 1% and all damage caused against Humanoids, Demons, Undead and Elementals by an additional 1%.",
@@ -4503,12 +4529,13 @@ Gives the Paladin a chance to deal 62 to 64 additional Holy damage. Only one Sea
 @"Increases the damage you deal with two-handed melee weapons by 4%.",
 @"Increases the damage you deal with two-handed melee weapons by 6%.",})]
 		public int TwoHandedWeaponSpecialization { get { return _data[63]; } set { _data[63] = value; } }
-
+        
 		[TalentData(64, "Sanctified Retribution", 1, 2, 3, 5, -1, new string[] {
 @"Damage caused by targets affected by Retribution Aura is increased by 3%.",})]
 		public int SanctifiedRetribution { get { return _data[64]; } set { _data[64] = value; } }
 
-		[TalentData(65, "Divine Purpose", 2, 2, 4, 5, -1, new string[] {
+        //Moved location in 3.1
+		[TalentData(65, "Divine Purpose", 2, 2, 3, 6, -1, new string[] {
 @"Reduces your chance to be hit by spells and ranged attacks by 2% and gives your Hand of Freedom spell a 50% chance to remove any Stun effects on the target.",
 @"Reduces your chance to be hit by spells and ranged attacks by 4% and gives your Hand of Freedom spell a 100% chance to remove any Stun effects on the target.",})]
 		public int DivinePurpose { get { return _data[65]; } set { _data[65] = value; } }
@@ -4519,10 +4546,11 @@ Gives the Paladin a chance to deal 62 to 64 additional Holy damage. Only one Sea
 @"Gives you a 3% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell or ability. This effect stacks up to 3 times.",})]
 		public int Vengeance { get { return _data[66]; } set { _data[66] = value; } }
 
-		[TalentData(67, "Improved Retribution Aura", 2, 2, 3, 6, -1, new string[] {
-@"Increases the damage done by your Retribution Aura by 25%.",
-@"Increases the damage done by your Retribution Aura by 50%.",})]
-		public int ImprovedRetributionAura { get { return _data[67]; } set { _data[67] = value; } }
+//        Removed in 3.1
+//        [TalentData(67, "Improved Retribution Aura", 2, 2, 3, 6, -1, new string[] {
+//@"Increases the damage done by your Retribution Aura by 25%.",
+//@"Increases the damage done by your Retribution Aura by 50%.",})]
+//        public int ImprovedRetributionAura { get { return _data[67]; } set { _data[67] = value; } }
 
 		[TalentData(68, "The Art of War", 2, 2, 1, 7, -1, new string[] {
 @"Increases the damage of your Judgement, Crusader Strike and Divine Storm abilities by 5% and when these abilities critically hit the cast time of your next Flash of Light is reduced by 0.75 sec.",
@@ -4587,7 +4615,9 @@ Instant cast,10 sec cooldown,
 Requires Melee Weapon
 An instant weapon attack that causes Holy damage to up to 4 enemies within 8 yards. The Divine Storm heals up to 3 party or raid members totalling 20% of the damage caused.",})]
 		public int DivineStorm { get { return _data[77]; } set { _data[77] = value; } }
-	}
+
+        #endregion
+    }
 
 	public class WarriorTalents : TalentsBase, ICloneable
 	{
