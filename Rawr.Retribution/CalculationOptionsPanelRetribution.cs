@@ -33,7 +33,6 @@ namespace Rawr.Retribution
             trkTime20.Value = (int)(calcOpts.TimeUnder20 * 100);
             lblTime20.Text = trkTime20.Value + "%";
 
-            chkMode31.Checked = calcOpts.Mode31;
             chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
@@ -49,16 +48,6 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.MobType = cmbMobType.SelectedIndex;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chk31Mode_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-                calcOpts.Mode31 = chkMode31.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -199,7 +188,6 @@ namespace Rawr.Retribution
         public int MobType = 0;
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
-        public bool Mode31 = false;
 
         public Rotation.Ability[] Priorities = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
                                                    Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };

@@ -32,7 +32,6 @@
             this.chkGlyphSenseUndead = new System.Windows.Forms.CheckBox();
             this.chkGlyphConsecration = new System.Windows.Forms.CheckBox();
             this.chkGlyphJudgement = new System.Windows.Forms.CheckBox();
-            this.chkMode31 = new System.Windows.Forms.CheckBox();
             this.cmbMobType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -111,17 +110,6 @@
             this.chkGlyphJudgement.Text = "Glyph of Judgement";
             this.chkGlyphJudgement.UseVisualStyleBackColor = true;
             this.chkGlyphJudgement.CheckedChanged += new System.EventHandler(this.chkGlyphJudgement_CheckedChanged);
-            // 
-            // chkMode31
-            // 
-            this.chkMode31.AutoSize = true;
-            this.chkMode31.Location = new System.Drawing.Point(156, 86);
-            this.chkMode31.Name = "chkMode31";
-            this.chkMode31.Size = new System.Drawing.Size(108, 17);
-            this.chkMode31.TabIndex = 1;
-            this.chkMode31.Text = "Use 3.1 Changes";
-            this.chkMode31.UseVisualStyleBackColor = true;
-            this.chkMode31.CheckedChanged += new System.EventHandler(this.chk31Mode_CheckedChanged);
             // 
             // cmbMobType
             // 
@@ -451,7 +439,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbMobType);
-            this.Controls.Add(this.chkMode31);
             this.Name = "CalculationOptionsPanelRetribution";
             this.Size = new System.Drawing.Size(300, 594);
             this.groupBox1.ResumeLayout(false);
@@ -468,7 +455,6 @@
 
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox chkGlyphJudgement;
-        private System.Windows.Forms.CheckBox chkMode31;
         private System.Windows.Forms.ComboBox cmbMobType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

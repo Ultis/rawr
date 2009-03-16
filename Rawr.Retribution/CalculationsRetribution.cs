@@ -233,7 +233,7 @@ namespace Rawr.Retribution
             float critBonus = 2f * (1f + stats.BonusCritMultiplier);
             float spellCritBonus = 1.5f * (1f + stats.BonusSpellCritMultiplier);
             float aow = 1f + .05f * talents.TheArtOfWar;
-            float rightVen = (calcOpts.Mode31 ? .3f : (.08f * talents.RighteousVengeance));
+            float rightVen = .1f * talents.RighteousVengeance;
             float sanctBattle = 1f + 0.05f * talents.SanctityOfBattle;
 
             float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - talents.SanctifiedWrath * 30f));
@@ -250,7 +250,7 @@ namespace Rawr.Retribution
             #region Mitigation
 			int targetArmor = 13083;
 			float armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, stats.ArmorPenetrationRating * (calcOpts.Mode31 ? 1.25f : 1f));
+                stats.ArmorPenetration, stats.ArmorPenetrationRating * 1.25f);
 
 			//float targetArmor = (13083 - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
 			////TODO: Check this out, make sure its right
@@ -277,8 +277,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Crusader Strike
-            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle
-                * (calcOpts.Mode31 ? 1.15f : 1f);
+            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
             float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
             calc.CrusaderStrikeDPS = csAvgHit / 6f;
             #endregion
@@ -286,16 +285,16 @@ namespace Rawr.Retribution
             #region Divine Storm
             float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
             float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
-            float dsRightVen = dsDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : (spellPowerMulti * talentMulti * partialResist * stats.PhysicalCrit));
+            float dsRightVen = dsDamage * critBonus * rightVen;
             calc.DivineStormDPS = (dsAvgHit + dsRightVen) / 10f;
             #endregion
 
             #region Judgement
-            float judgeCrit = stats.PhysicalCrit + (calcOpts.Mode31 ? .18f : (.05f * talents.Fanaticism));
+            float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
             float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
-            float judgeRightVen = judgeDamage * critBonus * rightVen * (calcOpts.Mode31 ? 1f : (spellPowerMulti * talentMulti * partialResist * judgeCrit));
+            float judgeRightVen = judgeDamage * critBonus * rightVen;
             calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / (8f - stats.JudgementCDReduction);
             #endregion
 
@@ -305,9 +304,8 @@ namespace Rawr.Retribution
             #endregion
 
             #region Exorcism
-            float exoCrit = (calcOpts.Mode31 && calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-            float exoDamage = (calcOpts.MobType < 2 || calcOpts.Mode31) ? ((1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle
-                * (calcOpts.Mode31 ? 1.15f : 1f)) : 0; 
+            float exoCrit = (calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
+            float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle; 
             float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - calc.ToResist);
             calc.ExorcismDPS = exoAvgHit / 15f;
             #endregion
@@ -403,7 +401,7 @@ namespace Rawr.Retribution
 
             stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
             stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f;
-            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating * (calcOpts.Mode31 ? 1.25f : 1f)) * 4f;
+            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating * 1.25f) * 4f;
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
@@ -415,7 +413,7 @@ namespace Rawr.Retribution
             stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating + libramCrit) * .01f
                 + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating * (calcOpts.Mode31 ? 1.3f : 1f)) * .01f) - 1f;
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating * 1.3f) * .01f) - 1f;
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
 
@@ -424,60 +422,7 @@ namespace Rawr.Retribution
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
-            //List<ComparisonCalculationBase> comparisonList = new List<ComparisonCalculationBase>();
-            //CharacterCalculationsRetribution baseCalc, calc;
-            //ComparisonCalculationBase comparison;
-            //float[] subPoints;
-
-            //switch (chartName)
-            //{
-            //    case "Item Budget":
-            //        Item[] itemList = new Item[] {
-            //            new Item() { Stats = new Stats() { Strength = 10 } },
-            //            new Item() { Stats = new Stats() { Agility = 10 } },
-            //            new Item() { Stats = new Stats() { AttackPower = 20 } },
-            //            new Item() { Stats = new Stats() { CritRating = 10 } },
-            //            new Item() { Stats = new Stats() { HitRating = 10 } },
-            //            new Item() { Stats = new Stats() { ExpertiseRating = 10 } },
-            //            new Item() { Stats = new Stats() { HasteRating = 10 } },
-            //            new Item() { Stats = new Stats() { ArmorPenetration = 66.67f } },
-            //            new Item() { Stats = new Stats() { SpellPower = 11.7f } },
-            //        };
-            //        string[] statList = new string[] {
-            //            "Strength",
-            //            "Agility",
-            //            "Attack Power",
-            //            "Crit Rating",
-            //            "Hit Rating",
-            //            "Expertise Rating",
-            //            "Haste Rating",
-            //            "Armor Penetration",
-            //            "Spell Damage",
-            //        };
-
-            //        baseCalc = GetCharacterCalculations(character) as CharacterCalculationsRetribution;
-
-            //        for (int index = 0; index < itemList.Length; index++)
-            //        {
-            //            calc = GetCharacterCalculations(character, itemList[index]) as CharacterCalculationsRetribution;
-
-            //            comparison = CreateNewComparisonCalculation();
-            //            comparison.Name = statList[index];
-            //            comparison.Equipped = false;
-            //            comparison.OverallPoints = calc.OverallPoints - baseCalc.OverallPoints;
-            //            subPoints = new float[calc.SubPoints.Length];
-            //            for (int i = 0; i < calc.SubPoints.Length; i++)
-            //            {
-            //                subPoints[i] = calc.SubPoints[i] - baseCalc.SubPoints[i];
-            //            }
-            //            comparison.SubPoints = subPoints;
-
-            //            comparisonList.Add(comparison);
-            //        }
-            //        return comparisonList.ToArray();
-            //    default:
-                    return new ComparisonCalculationBase[0];
- //           }
+            return new ComparisonCalculationBase[0];
         }
 
         public override bool IsItemRelevant(Item item)

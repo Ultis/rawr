@@ -4573,12 +4573,10 @@ Puts the enemy target in a state of meditation, incapacitating them for up to 1 
 @"Your Judgement spells have a 100% chance to grant the Replenishment effect to up to 10 party or raid members mana regeneration equal to 0.25% of their maximum mana per second, and to immediately grant you 15% of your base mana.",})]
 		public int JudgementsOfTheWise { get { return _data[70]; } set { _data[70] = value; } }
 
-		[TalentData(71, "Fanaticism", 5, 2, 2, 8, 69, new string[] {
-@"Increases the critical strike chance of all Judgements capable of a critical hit by 5% and reduces threat caused by all actions by 6% except when under the effects of Righteous Fury.",
-@"Increases the critical strike chance of all Judgements capable of a critical hit by 10% and reduces threat caused by all actions by 12% except when under the effects of Righteous Fury.",
-@"Increases the critical strike chance of all Judgements capable of a critical hit by 15% and reduces threat caused by all actions by 18% except when under the effects of Righteous Fury.",
-@"Increases the critical strike chance of all Judgements capable of a critical hit by 20% and reduces threat caused by all actions by 24% except when under the effects of Righteous Fury.",
-@"Increases the critical strike chance of all Judgements capable of a critical hit by 25% and reduces threat caused by all actions by 30% except when under the effects of Righteous Fury.",})]
+		[TalentData(71, "Fanaticism", 3, 2, 2, 8, 69, new string[] {
+@"Increases the critical strike chance of all Judgements capable of a critical hit by 6% and reduces threat caused by all actions by 10% except when under the effects of Righteous Fury.",
+@"Increases the critical strike chance of all Judgements capable of a critical hit by 12% and reduces threat caused by all actions by 20% except when under the effects of Righteous Fury.",
+@"Increases the critical strike chance of all Judgements capable of a critical hit by 18% and reduces threat caused by all actions by 30% except when under the effects of Righteous Fury.",})]
 		public int Fanaticism { get { return _data[71]; } set { _data[71] = value; } }
 
 		[TalentData(72, "Sanctified Wrath", 2, 2, 3, 8, -1, new string[] {
@@ -4605,12 +4603,10 @@ An instant strike that causes 110% weapon damage.",})]
 @"Increases your spell power by an amount equal to 30% of your attack power and your critical healing spells heal the target for 60% of the healed amount over 12 seconds.",})]
 		public int SheathOfLight { get { return _data[75]; } set { _data[75] = value; } }
 
-		[TalentData(76, "Righteous Vengeance", 5, 2, 2, 10, -1, new string[] {
-@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 8% additional damage over 8 sec.",
-@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 16% additional damage over 8 sec.",
-@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 24% additional damage over 8 sec.",
-@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 32% additional damage over 8 sec.",
-@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 40% additional damage over 8 sec.",})]
+		[TalentData(76, "Righteous Vengeance", 3, 2, 2, 10, -1, new string[] {
+@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 10% additional damage over 8 sec.",
+@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 20% additional damage over 8 sec.",
+@"When your Judgement and Divine Storm spells deal a critical strike, your target will take 30% additional damage over 8 sec.",})]
 		public int RighteousVengeance { get { return _data[76]; } set { _data[76] = value; } }
 
 		[TalentData(77, "Divine Storm", 1, 2, 2, 11, -1, new string[] {

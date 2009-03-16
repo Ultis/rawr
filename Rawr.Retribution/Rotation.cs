@@ -63,5 +63,26 @@ namespace Rawr.Retribution
                 && (TimeUnder20 == other.TimeUnder20);
         }
 
+        public string ShortAbilityString(Ability ability)
+        {
+            if (ability == Ability.Consecration) return "Con";
+            if (ability == Ability.CrusaderStrike) return "CS";
+            if (ability == Ability.Judgement) return "Jud";
+            if (ability == Ability.DivineStorm) return "DS";
+            if (ability == Ability.Exorcism) return "Exo";
+            if (ability == Ability.HammerOfWrath) return "HoW";
+            return "?";
+        }
+
+        public override string ToString()
+        {
+            string ret = "";
+            foreach (Ability a in Priorities)
+            {
+                ret += ShortAbilityString(a) + ", ";
+            }
+            return ret;
+        }
+
     }
 }
