@@ -250,7 +250,7 @@ namespace Rawr.Retribution
             #region Mitigation
 			int targetArmor = 13083;
 			float armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
-                stats.ArmorPenetration, stats.ArmorPenetrationRating * 1.25f);
+                stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
 			//float targetArmor = (13083 - stats.ArmorPenetration) * (1f - stats.ArmorPenetrationRating / 1539.529991f);
 			////TODO: Check this out, make sure its right
@@ -399,21 +399,19 @@ namespace Rawr.Retribution
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
             stats.Health = stats.Health + stats.Stamina * 10;
 
-            stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
-            stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f;
-            stats.Expertise += talents.CombatExpertise * 2 + character.StatConversion.GetExpertiseFromRating(stats.ExpertiseRating * 1.25f) * 4f;
+            stats.PhysicalHit += stats.HitRating / 3278.998947f;
+            stats.SpellHit += stats.HitRating / 2623.199272f;
+            stats.Expertise += talents.CombatExpertise * 2 + stats.ExpertiseRating * 4f / 32.78998947f * 1.25f;
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
             float libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / fightLength
                 + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / fightLength;
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
-            stats.PhysicalCrit = stats.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating + libramCrit) * .01f +
-                character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
-            stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating + libramCrit) * .01f
-                + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
+            stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
+            stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + character.StatConversion.GetHasteFromRating(stats.HasteRating * 1.3f) * .01f) - 1f;
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + stats.HasteRating * 1.3f / 3278.998947f) - 1f;
 
             stats.SpellPower += stats.Stamina * .1f * talents.TouchedByTheLight + stats.AttackPower * talents.SheathOfLight * .1f;
 
