@@ -248,7 +248,7 @@ namespace Rawr.Retribution
             calc.ToResist = (float)Math.Max(0.17f - stats.SpellHit, 0f);
 
             #region Mitigation
-			int targetArmor = 13083;
+            int targetArmor = 10645;
 			float armorReduction = 1f - ArmorCalculations.GetDamageReduction(character.Level, targetArmor,
                 stats.ArmorPenetration, stats.ArmorPenetrationRating);
 
