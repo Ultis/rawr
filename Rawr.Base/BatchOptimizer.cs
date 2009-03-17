@@ -688,10 +688,6 @@ namespace Rawr.Optimizer
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
             itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, false, batchList[0], modelList[0]);
-            foreach (Item item in ItemCache.Items.Values)
-            {
-                item.OptimizerItemInformation = null;
-            }
             List<ItemInstance>[] slotList = itemGenerator.SlotItems;
             slotItemList = new List<object>[characterSlots];
 
@@ -707,15 +703,6 @@ namespace Rawr.Optimizer
                     if (itemInstance != null && itemInstance.Item != null)
                     {
                         Item item = itemInstance.Item;
-                        if (item.OptimizerItemInformation == null)
-                        {
-                            GenerateOptimizerItemInformation(item);
-                        }
-                        if (!item.OptimizerItemInformation.ItemAvailable.ContainsKey(itemInstance.GemmedId))
-                        {
-                            item.OptimizerItemInformation.ItemList.Add(itemInstance);
-                            item.OptimizerItemInformation.ItemAvailable[itemInstance.GemmedId] = true;
-                        }
                         if (!slotUnique.ContainsKey(itemInstance.Id))
                         {
                             slotItemList[i].Add(item);
@@ -737,7 +724,7 @@ namespace Rawr.Optimizer
 
             for (int i = 0; i < itemList.Count; i++)
             {
-                slotItems[i] = itemList[i].OptimizerItemInformation.ItemList.ConvertAll(item => (object)item);
+                slotItems[i] = itemList[i].AvailabilityInformation.ItemList.ConvertAll(item => (object)item);
             }
             slotItems[itemList.Count] = new List<object>();
             for (int c = 0; c < batchList.Count; c++)
@@ -761,7 +748,7 @@ namespace Rawr.Optimizer
             object[] items = new object[slotCount];
             for (int i = 0; i < itemList.Count; i++)
             {
-                items[i] = itemList[i].OptimizerItemInformation.ItemList[0];
+                items[i] = itemList[i].AvailabilityInformation.ItemList[0];
             }
             for (int c = 0; c < batchList.Count; c++)
             {
@@ -778,79 +765,6 @@ namespace Rawr.Optimizer
             startIndividual = new BatchIndividual(items, itemList.Count, indexFromId, null, batchList);
 
             itemCacheInitialized = true;
-        }
-
-        private void GenerateOptimizerItemInformation(Item item)
-        {
-            item.OptimizerItemInformation = new OptimizerItemInformation();
-            item.OptimizerItemInformation.GemCount = GetItemGemCount(item);
-        }
-
-        private int GetItemGemCount(Item item)
-        {
-            int gemCount = 0;
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && batchList[0].WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && batchList[0].HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && batchList[0].WristBlacksmithingSocketEnabled);
-            switch (item.SocketColor1)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    gemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        gemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
-            switch (item.SocketColor2)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    gemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        gemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
-            switch (item.SocketColor3)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    gemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        gemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
-            return gemCount;
         }
 
         protected override float GetOptimizationValue(BatchIndividual individual, BatchValuation valuation)

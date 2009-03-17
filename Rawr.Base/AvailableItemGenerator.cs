@@ -4,11 +4,19 @@ using System.Text;
 
 namespace Rawr.Optimizer
 {
+    public class ItemAvailabilityInformation
+    {
+        public int GemCount;
+        public Dictionary<string, bool> ItemAvailable = new Dictionary<string, bool>();
+        public List<ItemInstance> ItemList = new List<ItemInstance>();
+    }
+
     /// <summary>
     /// Provides means to generate available items based on available item strings from character.
     /// </summary>
     public class AvailableItemGenerator
     {
+        private Dictionary<string, bool> itemAvailable = new Dictionary<string, bool>();
         private List<string> availableItems;
         private bool overrideRegem;
         private bool overrideReenchant;
@@ -21,6 +29,14 @@ namespace Rawr.Optimizer
         private Item[] metaGemItems;
         private Item[] gemItems;
         private Enchant[][] slotAvailableEnchants = new Enchant[slotCount][];
+
+        public Dictionary<string, bool> ItemAvailable
+        {
+            get
+            {
+                return itemAvailable;
+            }
+        }
 
         public List<ItemInstance>[] SlotItems
         {
@@ -67,8 +83,86 @@ namespace Rawr.Optimizer
             }
         }
 
+        public int GetItemGemCount(Item item)
+        {
+            int gemCount = 0;
+            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && character.WristBlacksmithingSocketEnabled);
+            switch (item.SocketColor1)
+            {
+                case Item.ItemSlot.Meta:
+                case Item.ItemSlot.Red:
+                case Item.ItemSlot.Orange:
+                case Item.ItemSlot.Yellow:
+                case Item.ItemSlot.Green:
+                case Item.ItemSlot.Blue:
+                case Item.ItemSlot.Purple:
+                case Item.ItemSlot.Prismatic:
+                    gemCount++;
+                    break;
+                default:
+                    if (blacksmithingSocket)
+                    {
+                        gemCount++;
+                        blacksmithingSocket = false;
+                    }
+                    break;
+            }
+            switch (item.SocketColor2)
+            {
+                case Item.ItemSlot.Meta:
+                case Item.ItemSlot.Red:
+                case Item.ItemSlot.Orange:
+                case Item.ItemSlot.Yellow:
+                case Item.ItemSlot.Green:
+                case Item.ItemSlot.Blue:
+                case Item.ItemSlot.Purple:
+                case Item.ItemSlot.Prismatic:
+                    gemCount++;
+                    break;
+                default:
+                    if (blacksmithingSocket)
+                    {
+                        gemCount++;
+                        blacksmithingSocket = false;
+                    }
+                    break;
+            }
+            switch (item.SocketColor3)
+            {
+                case Item.ItemSlot.Meta:
+                case Item.ItemSlot.Red:
+                case Item.ItemSlot.Orange:
+                case Item.ItemSlot.Yellow:
+                case Item.ItemSlot.Green:
+                case Item.ItemSlot.Blue:
+                case Item.ItemSlot.Purple:
+                case Item.ItemSlot.Prismatic:
+                    gemCount++;
+                    break;
+                default:
+                    if (blacksmithingSocket)
+                    {
+                        gemCount++;
+                        blacksmithingSocket = false;
+                    }
+                    break;
+            }
+            return gemCount;
+        }
+
+        public void GenerateItemAvailabilityInformation(Item item)
+        {
+            item.AvailabilityInformation = new ItemAvailabilityInformation();
+            item.AvailabilityInformation.GemCount = GetItemGemCount(item);
+        }
+
         private void PopulateAvailableIds()
         {
+            foreach (Item citem in ItemCache.Items.Values)
+            {
+                citem.AvailabilityInformation = null;
+            }
+
             List<string> itemIds = new List<string>(availableItems);
             List<string> removeIds = new List<string>();
             List<Item> metaGemItemList = new List<Item>();
@@ -165,12 +259,17 @@ namespace Rawr.Optimizer
                     int slot = (int)Character.GetCharacterSlotByItemSlot(item.Slot);
                     if (slot < 0 || slot >= slotCount) continue;
 
+                    if (item.AvailabilityInformation == null)
+                    {
+                        GenerateItemAvailabilityInformation(item);
+                    }
+
                     gemmedIds = new List<string>(keyMap.Value.Keys);
                     Dictionary<string, bool> uniqueStore = new Dictionary<string, bool>();
                     possibleGemmedItems = new List<ItemInstance>();
                     foreach (string gid in gemmedIds)
                     {
-                        foreach (ItemInstance gemmedItem in GetPossibleGemmedItemsForItem(item, gid))
+                        foreach (ItemInstance gemmedItem in GetPossibleGemmedItemsForItem(item, gid, item.AvailabilityInformation))
                         {
                             if (!uniqueStore.ContainsKey(gemmedItem.GemmedId))
                             {
@@ -179,7 +278,12 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
+                    foreach (KeyValuePair<string, bool> kvp in item.AvailabilityInformation.ItemAvailable)
+                    {
+                        itemAvailable[kvp.Key] = kvp.Value;
+                    }
                     possibleGemmedItems = FilterList(possibleGemmedItems, false);
+                    item.AvailabilityInformation.ItemList = possibleGemmedItems;
                     for (int i = 0; i < slotCount; i++)
                     {
                         if (item.FitsInSlot((Character.CharacterSlot)i, character))
@@ -213,6 +317,11 @@ namespace Rawr.Optimizer
         }
 
         public List<ItemInstance> GetPossibleGemmedItemsForItem(Item item, string gemmedId)
+        {
+            return GetPossibleGemmedItemsForItem(item, gemmedId, null);
+        }
+
+        public List<ItemInstance> GetPossibleGemmedItemsForItem(Item item, string gemmedId, ItemAvailabilityInformation availability)
         {
             List<ItemInstance> possibleGemmedItems = new List<ItemInstance>();
             string[] ids = gemmedId.Split('.');
@@ -339,6 +448,12 @@ namespace Rawr.Optimizer
                     foreach (Item gem3 in possibleGem3s)
                         foreach (Enchant enchant in possibleEnchants)
                         {
+                            if (availability != null)
+                            {
+                                // any combination is actually available
+                                gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}", item.Id, gem1 != null ? gem1.Id : 0, gem2 != null ? gem2.Id : 0, gem3 != null ? gem3.Id : 0, enchant != null ? enchant.Id : 0);
+                                availability.ItemAvailable[gemmedId] = true;
+                            }
                             // if gems do not match socket colors then it does not matter in what order they are placed (except for meta)
                             // make it easy on filtering and only add one canon version of the item in which normal gem ids are nondecreasing
                             // if that happens to be an ordering that matches colors it doesn't matter since socket bonuses only add value

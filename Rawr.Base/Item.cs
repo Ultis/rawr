@@ -896,7 +896,7 @@ namespace Rawr
 		/// Used by optimizer to cache dictionary search result
 		/// </summary>
         [XmlIgnore]
-        internal Optimizer.OptimizerItemInformation OptimizerItemInformation;
+        internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
 
 		#region IComparable<Item> Members
 

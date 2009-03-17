@@ -2612,6 +2612,8 @@ namespace Rawr.Optimizer
                 }
             }
 
+            itemAvailable = new Dictionary<string, bool>();
+
             // populate the list for random sampling
             for (int slot = 0; slot < slotCount; slot++)
             {
@@ -3243,6 +3245,8 @@ namespace Rawr.Optimizer
             itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, true, _character, model);
             slotItems = itemGenerator.SlotItems;
 
+            itemAvailable = itemGenerator.ItemAvailable;
+
             // populate the list for random sampling
             for (int slot = 0; slot < slotCount; slot++)
             {
@@ -3252,7 +3256,6 @@ namespace Rawr.Optimizer
                     string gemmedId = ((object)itemInstance == null) ? "0.0.0.0.0" : itemInstance.GemmedId;
                     string key1 = ((object)itemInstance == null) ? "0" : itemInstance.Id.ToString();
                     string key2 = ((object)itemInstance == null) ? "0" : itemInstance.EnchantId.ToString();
-                    itemAvailable[gemmedId] = true;
                     KeyedList<KeyedList<ItemInstance>> list1 = slotItemsRandom[slot].Find(list => list.Key == key1);
                     if (list1 == null)
                     {
@@ -3679,13 +3682,6 @@ namespace Rawr.Optimizer
         }
     }
 
-    public class OptimizerItemInformation
-    {
-        public int GemCount;
-        public Dictionary<string, bool> ItemAvailable = new Dictionary<string, bool>();
-        public List<ItemInstance> ItemList = new List<ItemInstance>();
-    }
-
     public class ItemOptimizer : OptimizerBase<object, Character, CharacterCalculationsBase>
     {
         private Character _character;
@@ -3727,14 +3723,14 @@ namespace Rawr.Optimizer
                 Item gem2 = items[StartSlot + 2] as Item;
                 Item gem3 = items[StartSlot + 3] as Item;
                 Enchant enchant = items[StartSlot + 4] as Enchant;
-                int gemCount = item.OptimizerItemInformation.GemCount;
+                int gemCount = item.AvailabilityInformation.GemCount;
                 string key = string.Format("{0}.{1}.{2}.{3}.{4}", 
                     item != null ? item.Id : 0,
                     gem1 != null && gemCount >= 1 ? gem1.Id : 0,
                     gem2 != null && gemCount >= 2 ? gem2.Id : 0,
                     gem3 != null && gemCount >= 3 ? gem3.Id : 0,
                     enchantable && enchant != null ? enchant.Id : 0);
-                return item.OptimizerItemInformation.ItemAvailable.ContainsKey(key);
+                return item.AvailabilityInformation.ItemAvailable.ContainsKey(key);
             }
 
             public ItemAvailableValidator(bool enchantable, int slot)
@@ -4145,14 +4141,14 @@ namespace Rawr.Optimizer
                     Item it = item.Item;
                     if (it != null)
                     {
-                        if (it.OptimizerItemInformation == null)
+                        if (it.AvailabilityInformation == null)
                         {
-                            GenerateOptimizerItemInformation(it);
+                            itemGenerator.GenerateItemAvailabilityInformation(it);
                         }
-                        if (!it.OptimizerItemInformation.ItemAvailable.ContainsKey(item.GemmedId))
+                        if (!it.AvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId))
                         {
-                            it.OptimizerItemInformation.ItemList.Add(item);
-                            it.OptimizerItemInformation.ItemAvailable[item.GemmedId] = true;
+                            it.AvailabilityInformation.ItemList.Add(item);
+                            it.AvailabilityInformation.ItemAvailable[item.GemmedId] = true;
                         }
                     }
                 }
@@ -4391,10 +4387,6 @@ namespace Rawr.Optimizer
         private void PopulateAvailableIds(List<string> availableItems, bool overrideRegem, bool overrideReenchant)
         {
             itemGenerator = new AvailableItemGenerator(availableItems, overrideRegem, overrideReenchant, true, _character, model);
-            foreach (Item item in ItemCache.Items.Values)
-            {
-                item.OptimizerItemInformation = null;
-            }
             slotList = itemGenerator.SlotItems;
 
             for (int i = 0; i < characterSlots; i++)
@@ -4407,16 +4399,6 @@ namespace Rawr.Optimizer
                     if (itemInstance != null)
                     {
                         itemId = itemInstance.Id;
-                        Item item = itemInstance.Item;
-                        if (item.OptimizerItemInformation == null)
-                        {
-                            GenerateOptimizerItemInformation(item);
-                        }
-                        if (!item.OptimizerItemInformation.ItemAvailable.ContainsKey(itemInstance.GemmedId))
-                        {
-                            item.OptimizerItemInformation.ItemList.Add(itemInstance);
-                            item.OptimizerItemInformation.ItemAvailable[itemInstance.GemmedId] = true;
-                        }
                     }
                     if (!itemUnique.ContainsKey(itemId))
                     {
@@ -4448,73 +4430,6 @@ namespace Rawr.Optimizer
             pairSlotMap[(int)Character.CharacterSlot.Wrist] = -1;
 
             itemCacheInitialized = true;
-        }
-
-        private void GenerateOptimizerItemInformation(Item item)
-        {
-            item.OptimizerItemInformation = new OptimizerItemInformation();
-            // determine max gems for item
-            bool blacksmithingSocket = (item.Slot == Item.ItemSlot.Waist && _character.WaistBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Hands && _character.HandsBlacksmithingSocketEnabled) || (item.Slot == Item.ItemSlot.Wrist && _character.WristBlacksmithingSocketEnabled);
-            switch (item.SocketColor1)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    item.OptimizerItemInformation.GemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        item.OptimizerItemInformation.GemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
-            switch (item.SocketColor2)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    item.OptimizerItemInformation.GemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        item.OptimizerItemInformation.GemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
-            switch (item.SocketColor3)
-            {
-                case Item.ItemSlot.Meta:
-                case Item.ItemSlot.Red:
-                case Item.ItemSlot.Orange:
-                case Item.ItemSlot.Yellow:
-                case Item.ItemSlot.Green:
-                case Item.ItemSlot.Blue:
-                case Item.ItemSlot.Purple:
-                case Item.ItemSlot.Prismatic:
-                    item.OptimizerItemInformation.GemCount++;
-                    break;
-                default:
-                    if (blacksmithingSocket)
-                    {
-                        item.OptimizerItemInformation.GemCount++;
-                        blacksmithingSocket = false;
-                    }
-                    break;
-            }
         }
 
         public string GetWarningPromptIfNeeded()
@@ -4669,7 +4584,7 @@ namespace Rawr.Optimizer
                 if (item != null)
                 {
                     Array.Clear(gems, 0, 3);
-                    for (int j = 0; j < item.OptimizerItemInformation.GemCount; j++)
+                    for (int j = 0; j < item.AvailabilityInformation.GemCount; j++)
                     {
                         gems[j] = items[i * 5 + 1 + j] as Item;
                     }
@@ -4751,7 +4666,7 @@ namespace Rawr.Optimizer
                         item = items[5 * characterSlot] as Item;
                         if (item != null)
                         {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
+                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
                             return list[rand.Next(list.Count)].Gem1;
                         }
                         else
@@ -4762,7 +4677,7 @@ namespace Rawr.Optimizer
                         item = items[5 * characterSlot] as Item;
                         if (item != null)
                         {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
+                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
                             return list[rand.Next(list.Count)].Gem2;
                         }
                         else
@@ -4773,7 +4688,7 @@ namespace Rawr.Optimizer
                         item = items[5 * characterSlot] as Item;
                         if (item != null)
                         {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
+                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
                             return list[rand.Next(list.Count)].Gem3;
                         }
                         else
@@ -4784,7 +4699,7 @@ namespace Rawr.Optimizer
                         item = items[5 * characterSlot] as Item;
                         if (item != null)
                         {
-                            List<ItemInstance> list = item.OptimizerItemInformation.ItemList;
+                            List<ItemInstance> list = item.AvailabilityInformation.ItemList;
                             return list[rand.Next(list.Count)].Enchant;
                         }
                         else
