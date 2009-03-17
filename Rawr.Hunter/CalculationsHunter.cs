@@ -496,6 +496,7 @@ namespace Rawr.Hunter
             effectiveRAPAgainstMob += calculatedStats.BasicStats.Agility * 0.25 * ewUptime;
             effectiveRAPAgainstMob *= calculatedStats.BasicStats.BonusAttackPowerMultiplier;
 
+            calculatedStats.RAP = (float)effectiveRAPAgainstMob;
             #endregion
 
             #region Critical Hit Damage

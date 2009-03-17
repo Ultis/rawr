@@ -180,7 +180,7 @@ namespace Rawr.Hunter
 			dictValues.Add("Pet Base DPS", PetBaseDPS.ToString("F2"));
 			dictValues.Add("Pet Special DPS", PetSpecialDPS.ToString("F2"));
 			dictValues.Add("Pet KC DPS", PetKillCommandDPS.ToString("F2"));
-			dictValues.Add("Ranged AP", BasicStats.RangedAttackPower.ToString("F0"));
+			dictValues.Add("Ranged AP", RAP.ToString("F0") + "*includes expected Expose Weakness uptime (if applicable)\n"+BasicStats.RangedAttackPower.ToString("F0") + " before talents");
 			dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             dictValues.Add("Steady Speed", SteadySpeed.ToString("F2"));
 			dictValues.Add("Hunter Total DPS", HunterDpsPoints.ToString("F2"));
