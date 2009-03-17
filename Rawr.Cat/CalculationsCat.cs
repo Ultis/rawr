@@ -239,7 +239,7 @@ namespace Rawr.Cat
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
 			float hitBonus = stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
-			float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
@@ -1120,14 +1120,36 @@ namespace Rawr.Cat
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("DPS Points", DPSPoints.ToString());
 			dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
+
+			float baseMiss = (new float[] { 0.05f, 0.055f, 0.06f, 0.08f })[TargetLevel - 80] - BasicStats.PhysicalHit;
+			float baseDodge = (new float[] { 0.05f, 0.055f, 0.06f, 0.065f })[TargetLevel - 80] - BasicStats.Expertise * 0.0025f;
+			float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
+			float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+
+			string tipMiss = string.Empty;
+			if (BasicStats.HitRating > capMiss)
+				tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+			else if (BasicStats.HitRating < capMiss)
+				tipMiss = string.Format("*Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+			else
+				tipMiss = "*Exactly at the cap";
+
+			string tipDodge = string.Empty;
+			if (BasicStats.ExpertiseRating > capDodge)
+				tipDodge = string.Format("*Over the cap by {0} Expertise Rating", BasicStats.ExpertiseRating - capDodge);
+			else if (BasicStats.ExpertiseRating < capDodge)
+				tipDodge = string.Format("*Under the cap by {0} Expertise Rating", capDodge - BasicStats.ExpertiseRating);
+			else
+				tipDodge = "*Exactly at the cap";
+
 			
 			dictValues.Add("Health", BasicStats.Health.ToString());
 			dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
 			dictValues.Add("Agility", BasicStats.Agility.ToString());
 			dictValues.Add("Strength", BasicStats.Strength.ToString());
 			dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
-			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
-			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString());
+			dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
+			dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
 			dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
 			dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
 			dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());

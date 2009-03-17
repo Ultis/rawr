@@ -364,7 +364,7 @@ the Threat Scale defined on the Options tab.",
 			float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
 			
 			float hitBonus = stats.HitRating / 32.78998947f / 100f;
-			float expertiseBonus = stats.ExpertiseRating * 1.25f / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 			float chanceParry = Math.Max(0f, 0.1375f - expertiseBonus); // Parry for lower levels?
 			float chanceMiss = Math.Max(0f, 0.09f - hitBonus);
@@ -1467,6 +1467,40 @@ the Threat Scale defined on the Options tab.",
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
+
+			float baseMiss = (new float[] { 0.05f, 0.055f, 0.06f, 0.08f })[TargetLevel - 80] - BasicStats.PhysicalHit;
+			float baseDodge = (new float[] { 0.05f, 0.055f, 0.06f, 0.065f })[TargetLevel - 80] - BasicStats.Expertise * 0.0025f;
+			float baseParry = (new float[] { 0.05f, 0.055f, 0.06f, 0.1375f })[TargetLevel - 80] - BasicStats.Expertise * 0.0025f;
+			float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
+			float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+			float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f);
+
+			string tipMiss = string.Empty;
+			if (BasicStats.HitRating > capMiss)
+				tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+			else if (BasicStats.HitRating < capMiss)
+				tipMiss = string.Format("*Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+			else
+				tipMiss = "*Exactly at the cap";
+
+			string tipDodgeParry = string.Empty;
+			if (BasicStats.ExpertiseRating > capDodge)
+				tipDodgeParry = string.Format("*Over the dodge cap by {0} Expertise Rating\r\n", BasicStats.ExpertiseRating - capDodge);
+			else if (BasicStats.ExpertiseRating < capDodge)
+				tipDodgeParry = string.Format("*Under the dodge cap by {0} Expertise Rating\r\n", capDodge - BasicStats.ExpertiseRating);
+			else
+				tipDodgeParry = "*Exactly at the dodge cap";
+
+			if (BasicStats.ExpertiseRating > capParry)
+				tipDodgeParry += string.Format("Over the parry cap by {0} Expertise Rating", BasicStats.ExpertiseRating - capParry);
+			else if (BasicStats.ExpertiseRating < capParry)
+				tipDodgeParry += string.Format("Under the parry cap by {0} Expertise Rating", capParry - BasicStats.ExpertiseRating);
+			else
+				tipDodgeParry += "Exactly at the parry cap";
+
+
+
+
 			int armorCap = (int)Math.Ceiling((1402.5f * TargetLevel) - 66502.5f);
 			float levelDifference = 0.2f * (TargetLevel - 80);
 			float targetCritReduction = 5f + levelDifference;
@@ -1540,8 +1574,8 @@ the Threat Scale defined on the Options tab.",
 			dictValues["Strength"] = BasicStats.Strength.ToString();
 			dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
 			dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
-			dictValues["Hit Rating"] = BasicStats.HitRating.ToString();
-			dictValues["Expertise Rating"] = BasicStats.ExpertiseRating.ToString();
+			dictValues["Hit Rating"] = BasicStats.HitRating.ToString() + tipMiss;
+			dictValues["Expertise Rating"] = BasicStats.ExpertiseRating.ToString() + tipDodgeParry;
 			dictValues["Haste Rating"] = string.Format("{0}*{1} Attack Speed", BasicStats.HasteRating, Math.Round(AttackSpeed * 1000f)/1000f);
 			dictValues["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString();
 
