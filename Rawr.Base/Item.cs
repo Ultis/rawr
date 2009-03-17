@@ -978,6 +978,9 @@ namespace Rawr
             }
 		}
 
+        [DefaultValueAttribute(false)]
+        public bool ForceDisplay { get; set; }
+
         public event EventHandler IdsChanged;
         private void OnIdsChanged()
         {

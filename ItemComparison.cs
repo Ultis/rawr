@@ -101,8 +101,7 @@ namespace Rawr
 						int itemId = itemCalculation.ItemInstance.Id;
 						if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
 						if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
-							itemCalculation.Equipped || 
-							Character.CustomItemInstances.Contains(itemCalculation.ItemInstance))
+							itemCalculation.Equipped || itemCalculation.ItemInstance.ForceDisplay)
 						{
 							filteredItemCalculations.Add(itemCalculation);
 						}

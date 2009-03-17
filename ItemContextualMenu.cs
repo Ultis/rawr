@@ -115,7 +115,9 @@ namespace Rawr
             form.ItemInstance = _item.Clone();
             if (form.ShowDialog(FormMain.Instance) == DialogResult.OK)
             {
-                Character.CustomItemInstances.Add(form.ItemInstance);
+                ItemInstance itemInstance = form.ItemInstance.Clone();
+                itemInstance.ForceDisplay = true;
+                Character.CustomItemInstances.Add(itemInstance);
                 Character.OnCalculationsInvalidated();
             }
         }

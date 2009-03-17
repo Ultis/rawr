@@ -595,6 +595,7 @@ namespace Rawr //O O . .
                         if (item.FitsInSlot(slot, this))
                         {
                             ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? GetEnchantBySlot(slot).Id : int.Parse(ids[4]));
+                            instance.ForceDisplay = true;
                             if (!items.Contains(instance)) items.Add(instance);
                         }
                     }
@@ -1714,6 +1715,10 @@ namespace Rawr //O O . .
                     character._activeBuffs = character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff));
                     character._activeBuffs.RemoveAll(buff => buff == null);
                     character.RecalculateSetBonuses(); // now you can call it
+                    foreach (ItemInstance item in character.CustomItemInstances)
+                    {
+                        item.ForceDisplay = true;
+                    }
 					reader.Close();
 				}
 				catch (Exception)
