@@ -610,16 +610,16 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 
 		void ItemCache_ItemsChanged(object sender, EventArgs e)
 		{
-            if (!_loadingCharacter)
+            if (this.InvokeRequired)
             {
-                if (this.InvokeRequired)
+                Invoke((EventHandler)ItemCache_ItemsChanged, sender, e);
+                //InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
+            }
+            else
+            {
+                Character.InvalidateItemInstances();
+                if (!_loadingCharacter)
                 {
-                    Invoke((EventHandler)ItemCache_ItemsChanged, sender, e);
-                    //InvokeHelper.Invoke(this, "ItemCache_ItemsChanged", new object[2] { null, null });
-                }
-                else
-                {
-                    Character.InvalidateItemInstances();
                     LoadComparisonData();
                 }
             }
