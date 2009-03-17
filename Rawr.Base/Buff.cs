@@ -2006,6 +2006,25 @@ namespace Rawr
                 SetName = "Dreamwalker Garb",
                 SetThreshold = 4
             });
+            // Moonkin Tier 8 set bonuses
+            defaultBuffs.Add(new Buff() // TODO: Name this set!
+            {
+                Name = "Druid T8 Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { EclipseBonus = 0.06f },
+                SetName = "Druid T8 Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff() // TODO: Name this set!
+            {
+                Name = "Druid T8 Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { StarfireProc = 1f },
+                SetName = "Druid T8 Garb",
+                SetThreshold = 4
+            });
             // Tree Tier 7 set bonuses
             defaultBuffs.Add(new Buff()
             {

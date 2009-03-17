@@ -283,6 +283,10 @@ namespace Rawr
         #region Warlock set bonuses
         LifeTapBonusSpirit,
         #endregion
+        #region Added by Rawr.Moonkin
+        StarfireProc,
+        EclipseBonus,
+        #endregion
     }
 
     enum MultiplicativeStat : int
@@ -1674,83 +1678,6 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
         }
 
-        // Moonfire idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonfire damage bonus")]
-        [Category("Equipment Procs")]
-        public float MoonfireDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonfireDmg] = value; }
-        }
-
-        // Wrath idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Wrath damage bonus")]
-        [Category("Equipment Procs")]
-        public float WrathDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WrathDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WrathDmg] = value; }
-        }
-
-        // Moonkin Aura idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonkin Aura bonus")]
-        [Category("Equipment Procs")]
-        public float IdolCritRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.IdolCritRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.IdolCritRating] = value; }
-        }
-
-        // Moonkin 4-piece T4 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float InnervateCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction] = value; }
-        }
-
-        // Moonkin 4-piece T5 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float StarfireBonusWithDot
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot] = value; }
-        }
-
-        // Moonkin 2-piece T6 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float MoonfireExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonfireExtension] = value; }
-        }
-        // Moonkin 4-piece T6 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float StarfireCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireCritChance] = value; }
-        }
-
-        // Moonkin 2-piece T7 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BonusInsectSwarmDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage] = value; }
-        }
-
-        // Moonkin 4-piece T7 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        public float BonusNukeCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance] = value; }
-        }
-
         // Tree 2-piece T5
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float RegrowthExtraTicks
@@ -2580,6 +2507,116 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
+        }
+        #endregion
+        #region Added by Rawr.Moonkin
+
+        // Moonfire idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Moonfire damage bonus")]
+        [Category("Equipment Procs")]
+        public float MoonfireDmg
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDmg]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MoonfireDmg] = value; }
+        }
+
+        // Wrath idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Wrath damage bonus")]
+        [Category("Equipment Procs")]
+        public float WrathDmg
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.WrathDmg]; }
+            set { _rawAdditiveData[(int)AdditiveStat.WrathDmg] = value; }
+        }
+
+        // Moonkin Aura idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Moonkin Aura bonus")]
+        [Category("Equipment Procs")]
+        public float IdolCritRating
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.IdolCritRating]; }
+            set { _rawAdditiveData[(int)AdditiveStat.IdolCritRating] = value; }
+        }
+
+        // Moonkin 4-piece T4 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Innervate CD Reduction")]
+        [Category("Equipment Procs")]
+        public float InnervateCooldownReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction] = value; }
+        }
+
+        // Moonkin 4-piece T5 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Starfire Crit Bonus")]
+        [Category("Equipment Procs")]
+        public float StarfireBonusWithDot
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot]; }
+            set { _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot] = value; }
+        }
+
+        // Moonkin 2-piece T6 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Moonfire Extension")]
+        [Category("Equipment Procs")]
+        public float MoonfireExtension
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireExtension]; }
+            set { _rawAdditiveData[(int)AdditiveStat.MoonfireExtension] = value; }
+        }
+        // Moonkin 4-piece T6 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Starfire Crit")]
+        [Category("Equipment Procs")]
+        public float StarfireCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.StarfireCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.StarfireCritChance] = value; }
+        }
+
+        // Moonkin 2-piece T7 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Insect Swarm Damage")]
+        [Category("Equipment Procs")]
+        public float BonusInsectSwarmDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage] = value; }
+        }
+
+        // Moonkin 4-piece T7 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("SF/W Crit")]
+        [Category("Equipment Procs")]
+        public float BonusNukeCritChance
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance] = value; }
+        }
+
+        // Moonkin 2-piece T8 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Eclipse Bonus")]
+        [Category("Equipment Procs")]
+        public float EclipseBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.EclipseBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.EclipseBonus] = value; }
+        }
+        // Moonkin 4-piece T8 bonus
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Starfire Proc")]
+        [Category("Equipment Procs")]
+        public float StarfireProc
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.StarfireProc]; }
+            set { _rawAdditiveData[(int)AdditiveStat.StarfireProc] = value; }
         }
         #endregion
         #endregion
