@@ -59,7 +59,8 @@ namespace Rawr.Optimizer
     public class BatchIndividual
     {
         public object[] Items;
-        public List<ItemInstance> AvailableItem;
+        public ItemInstance[] AvailableItem;
+        public int[] UsedCount;
         public List<Character> Character;
 
         private const int characterSlots = 19;
@@ -67,11 +68,12 @@ namespace Rawr.Optimizer
         public BatchIndividual(object[] items, int itemCount, Dictionary<int, int> indexFromId, Item upgradeItem, List<Character> batchList)
         {
             Items = (object[])items.Clone();
-            AvailableItem = new List<ItemInstance>();
+            AvailableItem = new ItemInstance[itemCount + 1];
+            UsedCount = new int[itemCount + 1];
             for (int i = 0; i <= itemCount; i++)
             {
                 ItemInstance itemInstance = items[i] as ItemInstance;
-                AvailableItem.Add(itemInstance);
+                AvailableItem[i] = itemInstance;
             }
             int charCount = (items.Length - itemCount - 1) / characterSlots;
             Character = new List<Character>();
@@ -86,16 +88,18 @@ namespace Rawr.Optimizer
                         if (item == upgradeItem)
                         {
                             slotItems[i] = AvailableItem[itemCount];
+                            UsedCount[itemCount]++;
                         }
                         else
                         {
-                            slotItems[i] = AvailableItem[indexFromId[item.Id]];
+                            int index = indexFromId[item.Id];
+                            slotItems[i] = AvailableItem[index];
+                            UsedCount[index]++;
                         }
                     }
                 }
                 Character _character = batchList[c];
-                Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, slotItems,
-                _character.ActiveBuffs, _character.CurrentModel);
+                Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, slotItems, _character.ActiveBuffs, _character.CurrentModel);
                 character.CalculationOptions = _character.CalculationOptions;
                 character.Class = _character.Class;
                 character.AssignAllTalentsFromCharacter(_character);
@@ -834,6 +838,23 @@ namespace Rawr.Optimizer
         protected override BatchIndividual GenerateIndividual(object[] items)
         {
             return new BatchIndividual(items, itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
+        }
+
+        protected override BatchIndividual BuildChildIndividual(BatchIndividual father, BatchIndividual mother)
+        {
+            return GeneratorBuildIndividual(
+                delegate(int slot, object[] items)
+                {
+                    if (slot <= itemList.Count && (father.UsedCount[slot] > 0 || mother.UsedCount[slot] > 0))
+                    {
+                        double chance = father.UsedCount[slot] / (father.UsedCount[slot] + mother.UsedCount[slot]);
+                        return rand.NextDouble() < chance ? GetItem(father, slot) : GetItem(mother, slot);
+                    }
+                    else
+                    {
+                        return rand.NextDouble() < 0.5d ? GetItem(father, slot) : GetItem(mother, slot);
+                    }
+                });
         }
     }
 }
