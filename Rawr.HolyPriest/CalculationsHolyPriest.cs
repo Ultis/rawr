@@ -214,8 +214,8 @@ namespace Rawr.HolyPriest
 					"Basic Stats:Healing Crit",
 					"Basic Stats:Spell Haste",
                     "Simulation:Role",
-                    "Simulation:Burst*This is the HPS you are expected to have if you are not limited by Mana.",
-                    "Simulation:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.",
+                    "Simulation:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
+                    "Simulation:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
                     "Spells:Greater Heal",
                     "Spells:Flash Heal",
 				    "Spells:Binding Heal",
@@ -325,7 +325,11 @@ namespace Rawr.HolyPriest
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
 
-            Solver solver = new Solver(stats, character, statsRace.Mana);
+            BaseSolver solver;
+            if (calculationOptions.Rotation == 10)
+                solver = new AdvancedSolver(stats, character, statsRace.Mana);
+            else
+                solver = new Solver(stats, character, statsRace.Mana);
             solver.Calculate(calculatedStats);
 
             return calculatedStats;
@@ -515,7 +519,11 @@ namespace Rawr.HolyPriest
                 case "MP5 Sources":
                     _currentChartName = chartName;
                     CharacterCalculationsHolyPriest mscalcs = GetCharacterCalculations(character) as CharacterCalculationsHolyPriest;
-                    Solver mssolver = new Solver(mscalcs.BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                    BaseSolver mssolver;
+                    if ((character.CalculationOptions as CalculationOptionsPriest).Rotation == 10)
+                        mssolver = new AdvancedSolver(mscalcs.BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
+                    else
+                        mssolver = new Solver(mscalcs.BasicStats, character, CalculationsHolyPriest.GetRaceStats(character).Mana);
                     mssolver.Calculate(mscalcs);
                     foreach (Solver.ManaSource Source in mssolver.ManaSources)
                     {

@@ -35,7 +35,6 @@
             this.cbRotation = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblFightLength = new System.Windows.Forms.Label();
-            this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.trkSerendipity = new System.Windows.Forms.TrackBar();
             this.trkReplenishment = new System.Windows.Forms.TrackBar();
@@ -43,6 +42,11 @@
             this.trkSurvivability = new System.Windows.Forms.TrackBar();
             this.trkTestOfFaith = new System.Windows.Forms.TrackBar();
             this.cbModelProcs = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.lblSerendipity = new System.Windows.Forms.Label();
             this.lblReplenishment = new System.Windows.Forms.Label();
             this.lblShadowfiend = new System.Windows.Forms.Label();
@@ -55,14 +59,27 @@
             this.cbNewMana = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.numFightLength = new System.Windows.Forms.NumericUpDown();
             this.panelCustom = new System.Windows.Forms.Panel();
-            this.label14 = new System.Windows.Forms.Label();
-            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            this.label19 = new System.Windows.Forms.Label();
+            this.numBindingHealCast = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.numHolyNovaCast = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.numMDCast = new System.Windows.Forms.NumericUpDown();
+            this.numDispelCast = new System.Windows.Forms.NumericUpDown();
+            this.numCoHCast = new System.Windows.Forms.NumericUpDown();
+            this.numPWSCast = new System.Windows.Forms.NumericUpDown();
+            this.numPoHCast = new System.Windows.Forms.NumericUpDown();
+            this.numProMTicks = new System.Windows.Forms.NumericUpDown();
+            this.numProMCast = new System.Windows.Forms.NumericUpDown();
+            this.numRenewTicks = new System.Windows.Forms.NumericUpDown();
+            this.numRenewCast = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numPenanceCast = new System.Windows.Forms.NumericUpDown();
+            this.numGreaterHealCast = new System.Windows.Forms.NumericUpDown();
+            this.numFlashHealCast = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -71,7 +88,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).BeginInit();
@@ -80,12 +96,22 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkRapture)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFightLength)).BeginInit();
             this.panelCustom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBindingHealCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHolyNovaCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMDCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDispelCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCoHCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPWSCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPoHCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numProMTicks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numProMCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRenewTicks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRenewCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPenanceCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numGreaterHealCast)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFlashHealCast)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -126,7 +152,7 @@
             "Disc-Tank (Penance/PW:S/ProM/FH)",
             "Disc-Raid (PW:S/Penance/Flash)",
             "Custom Role (You pick!)"});
-            this.cbRotation.Location = new System.Drawing.Point(6, 166);
+            this.cbRotation.Location = new System.Drawing.Point(6, 138);
             this.cbRotation.MaxDropDownItems = 11;
             this.cbRotation.Name = "cbRotation";
             this.cbRotation.Size = new System.Drawing.Size(262, 21);
@@ -137,34 +163,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 148);
+            this.label1.Location = new System.Drawing.Point(3, 120);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.Size = new System.Drawing.Size(241, 13);
             this.label1.TabIndex = 27;
-            this.label1.Text = "Pick your Role";
+            this.label1.Text = "Pick your Role (Pick a Premade or select Custom)";
             // 
             // lblFightLength
             // 
             this.lblFightLength.AutoSize = true;
-            this.lblFightLength.Location = new System.Drawing.Point(3, 3);
+            this.lblFightLength.Location = new System.Drawing.Point(3, 10);
             this.lblFightLength.Name = "lblFightLength";
             this.lblFightLength.Size = new System.Drawing.Size(66, 13);
             this.lblFightLength.TabIndex = 28;
             this.lblFightLength.Text = "Fight Length";
-            // 
-            // trkFightLength
-            // 
-            this.trkFightLength.Location = new System.Drawing.Point(6, 19);
-            this.trkFightLength.Maximum = 20;
-            this.trkFightLength.Minimum = 1;
-            this.trkFightLength.Name = "trkFightLength";
-            this.trkFightLength.Size = new System.Drawing.Size(262, 42);
-            this.trkFightLength.TabIndex = 29;
-            this.toolTip1.SetToolTip(this.trkFightLength, "Changing this bar tells Rawr how long the fight is estimated to last. This has im" +
-                    "pact on things like how good intellect and spirit and mp5 are compared to eachot" +
-                    "her.");
-            this.trkFightLength.Value = 1;
-            this.trkFightLength.Scroll += new System.EventHandler(this.trkFightLength_Scroll);
             // 
             // trkSerendipity
             // 
@@ -203,7 +215,7 @@
             // 
             // trkSurvivability
             // 
-            this.trkSurvivability.Location = new System.Drawing.Point(6, 80);
+            this.trkSurvivability.Location = new System.Drawing.Point(6, 50);
             this.trkSurvivability.Maximum = 100;
             this.trkSurvivability.Name = "trkSurvivability";
             this.trkSurvivability.Size = new System.Drawing.Size(262, 42);
@@ -228,7 +240,7 @@
             // cbModelProcs
             // 
             this.cbModelProcs.AutoSize = true;
-            this.cbModelProcs.Location = new System.Drawing.Point(6, 128);
+            this.cbModelProcs.Location = new System.Drawing.Point(6, 98);
             this.cbModelProcs.Name = "cbModelProcs";
             this.cbModelProcs.Size = new System.Drawing.Size(177, 17);
             this.cbModelProcs.TabIndex = 41;
@@ -236,6 +248,57 @@
             this.toolTip1.SetToolTip(this.cbModelProcs, "Checking this will make Rawr model Trinkets and other items with Use and Procs");
             this.cbModelProcs.UseVisualStyleBackColor = true;
             this.cbModelProcs.CheckedChanged += new System.EventHandler(this.cbUseTrinkets_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 164);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(39, 13);
+            this.label2.TabIndex = 33;
+            this.label2.Text = "ProM *";
+            this.toolTip1.SetToolTip(this.label2, "Prayer of Mending");
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 191);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(35, 13);
+            this.label10.TabIndex = 36;
+            this.label10.Text = "PoH *";
+            this.toolTip1.SetToolTip(this.label10, "Prayer of Healing");
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 218);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(42, 13);
+            this.label11.TabIndex = 39;
+            this.label11.Text = "PW:S *";
+            this.toolTip1.SetToolTip(this.label11, "Power Word: Shield");
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(3, 245);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(35, 13);
+            this.label12.TabIndex = 41;
+            this.label12.Text = "CoH *";
+            this.toolTip1.SetToolTip(this.label12, "Circle of Healing");
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(165, 10);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(57, 13);
+            this.label17.TabIndex = 44;
+            this.label17.Text = "seconds. *";
+            this.toolTip1.SetToolTip(this.label17, "To convert from a Minute:Seconds format, please multiply the minute part by 60, a" +
+                    "nd add on the Seconds part.");
             // 
             // lblSerendipity
             // 
@@ -267,7 +330,7 @@
             // lblSurvivability
             // 
             this.lblSurvivability.AutoSize = true;
-            this.lblSurvivability.Location = new System.Drawing.Point(3, 64);
+            this.lblSurvivability.Location = new System.Drawing.Point(3, 34);
             this.lblSurvivability.Name = "lblSurvivability";
             this.lblSurvivability.Size = new System.Drawing.Size(63, 13);
             this.lblSurvivability.TabIndex = 37;
@@ -345,15 +408,16 @@
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(279, 518);
+            this.tabControl1.Size = new System.Drawing.Size(279, 548);
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.tabControl1.TabIndex = 48;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label17);
+            this.tabPage1.Controls.Add(this.numFightLength);
             this.tabPage1.Controls.Add(this.panelCustom);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.trkFightLength);
             this.tabPage1.Controls.Add(this.cbModelProcs);
             this.tabPage1.Controls.Add(this.lblFightLength);
             this.tabPage1.Controls.Add(this.cbRotation);
@@ -362,103 +426,296 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(271, 492);
+            this.tabPage1.Size = new System.Drawing.Size(271, 522);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Role";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // numFightLength
+            // 
+            this.numFightLength.Location = new System.Drawing.Point(81, 8);
+            this.numFightLength.Maximum = new decimal(new int[] {
+            1200,
+            0,
+            0,
+            0});
+            this.numFightLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numFightLength.Name = "numFightLength";
+            this.numFightLength.Size = new System.Drawing.Size(78, 20);
+            this.numFightLength.TabIndex = 43;
+            this.numFightLength.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numFightLength.ValueChanged += new System.EventHandler(this.numFightLength_ValueChanged);
+            // 
             // panelCustom
             // 
-            this.panelCustom.Controls.Add(this.label14);
-            this.panelCustom.Controls.Add(this.numericUpDown7);
-            this.panelCustom.Controls.Add(this.numericUpDown6);
+            this.panelCustom.Controls.Add(this.label19);
+            this.panelCustom.Controls.Add(this.numBindingHealCast);
+            this.panelCustom.Controls.Add(this.label18);
+            this.panelCustom.Controls.Add(this.numHolyNovaCast);
+            this.panelCustom.Controls.Add(this.label16);
+            this.panelCustom.Controls.Add(this.label15);
+            this.panelCustom.Controls.Add(this.numMDCast);
+            this.panelCustom.Controls.Add(this.numDispelCast);
+            this.panelCustom.Controls.Add(this.label12);
+            this.panelCustom.Controls.Add(this.numCoHCast);
+            this.panelCustom.Controls.Add(this.label11);
+            this.panelCustom.Controls.Add(this.numPWSCast);
+            this.panelCustom.Controls.Add(this.numPoHCast);
+            this.panelCustom.Controls.Add(this.label10);
+            this.panelCustom.Controls.Add(this.numProMTicks);
+            this.panelCustom.Controls.Add(this.numProMCast);
+            this.panelCustom.Controls.Add(this.label2);
+            this.panelCustom.Controls.Add(this.numRenewTicks);
+            this.panelCustom.Controls.Add(this.numRenewCast);
             this.panelCustom.Controls.Add(this.label13);
-            this.panelCustom.Controls.Add(this.numericUpDown3);
-            this.panelCustom.Controls.Add(this.numericUpDown2);
-            this.panelCustom.Controls.Add(this.numericUpDown1);
+            this.panelCustom.Controls.Add(this.numPenanceCast);
+            this.panelCustom.Controls.Add(this.numGreaterHealCast);
+            this.panelCustom.Controls.Add(this.numFlashHealCast);
             this.panelCustom.Controls.Add(this.label9);
             this.panelCustom.Controls.Add(this.label8);
             this.panelCustom.Controls.Add(this.label7);
             this.panelCustom.Controls.Add(this.label6);
             this.panelCustom.Controls.Add(this.label5);
             this.panelCustom.Controls.Add(this.label3);
-            this.panelCustom.Location = new System.Drawing.Point(0, 193);
+            this.panelCustom.Location = new System.Drawing.Point(0, 165);
             this.panelCustom.Name = "panelCustom";
-            this.panelCustom.Size = new System.Drawing.Size(271, 299);
+            this.panelCustom.Size = new System.Drawing.Size(271, 357);
             this.panelCustom.TabIndex = 42;
             // 
-            // label14
+            // label19
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(62, 187);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(121, 13);
-            this.label14.TabIndex = 21;
-            this.label14.Text = "WORK IN PROGRESS!";
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(3, 59);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(67, 13);
+            this.label19.TabIndex = 49;
+            this.label19.Text = "Binding Heal";
             // 
-            // numericUpDown7
+            // numBindingHealCast
             // 
-            this.numericUpDown7.Location = new System.Drawing.Point(168, 109);
-            this.numericUpDown7.Name = "numericUpDown7";
-            this.numericUpDown7.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown7.TabIndex = 32;
+            this.numBindingHealCast.Location = new System.Drawing.Point(81, 57);
+            this.numBindingHealCast.Name = "numBindingHealCast";
+            this.numBindingHealCast.Size = new System.Drawing.Size(78, 20);
+            this.numBindingHealCast.TabIndex = 48;
+            this.numBindingHealCast.ValueChanged += new System.EventHandler(this.numBindingHeal_ValueChanged);
             // 
-            // numericUpDown6
+            // label18
             // 
-            this.numericUpDown6.Location = new System.Drawing.Point(81, 109);
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown6.TabIndex = 31;
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(3, 272);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(57, 13);
+            this.label18.TabIndex = 47;
+            this.label18.Text = "Holy Nova";
+            // 
+            // numHolyNovaCast
+            // 
+            this.numHolyNovaCast.Location = new System.Drawing.Point(81, 270);
+            this.numHolyNovaCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numHolyNovaCast.Name = "numHolyNovaCast";
+            this.numHolyNovaCast.Size = new System.Drawing.Size(78, 20);
+            this.numHolyNovaCast.TabIndex = 46;
+            this.numHolyNovaCast.ValueChanged += new System.EventHandler(this.numHolyNovaCast_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(3, 324);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(64, 13);
+            this.label16.TabIndex = 45;
+            this.label16.Text = "Mass Dispel";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 298);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(36, 13);
+            this.label15.TabIndex = 44;
+            this.label15.Text = "Dispel";
+            // 
+            // numMDCast
+            // 
+            this.numMDCast.Location = new System.Drawing.Point(81, 322);
+            this.numMDCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numMDCast.Name = "numMDCast";
+            this.numMDCast.Size = new System.Drawing.Size(78, 20);
+            this.numMDCast.TabIndex = 43;
+            this.numMDCast.ValueChanged += new System.EventHandler(this.numMDCast_ValueChanged);
+            // 
+            // numDispelCast
+            // 
+            this.numDispelCast.Location = new System.Drawing.Point(81, 296);
+            this.numDispelCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numDispelCast.Name = "numDispelCast";
+            this.numDispelCast.Size = new System.Drawing.Size(78, 20);
+            this.numDispelCast.TabIndex = 42;
+            this.numDispelCast.ValueChanged += new System.EventHandler(this.numDispelCast_ValueChanged);
+            // 
+            // numCoHCast
+            // 
+            this.numCoHCast.Location = new System.Drawing.Point(81, 243);
+            this.numCoHCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numCoHCast.Name = "numCoHCast";
+            this.numCoHCast.Size = new System.Drawing.Size(78, 20);
+            this.numCoHCast.TabIndex = 40;
+            this.numCoHCast.ValueChanged += new System.EventHandler(this.numCoHCast_ValueChanged);
+            // 
+            // numPWSCast
+            // 
+            this.numPWSCast.Location = new System.Drawing.Point(81, 216);
+            this.numPWSCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numPWSCast.Name = "numPWSCast";
+            this.numPWSCast.Size = new System.Drawing.Size(78, 20);
+            this.numPWSCast.TabIndex = 38;
+            this.numPWSCast.ValueChanged += new System.EventHandler(this.numPWSCast_ValueChanged);
+            // 
+            // numPoHCast
+            // 
+            this.numPoHCast.Location = new System.Drawing.Point(81, 189);
+            this.numPoHCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numPoHCast.Name = "numPoHCast";
+            this.numPoHCast.Size = new System.Drawing.Size(78, 20);
+            this.numPoHCast.TabIndex = 37;
+            this.numPoHCast.ValueChanged += new System.EventHandler(this.numPoHCast_ValueChanged);
+            // 
+            // numProMTicks
+            // 
+            this.numProMTicks.Location = new System.Drawing.Point(168, 162);
+            this.numProMTicks.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numProMTicks.Name = "numProMTicks";
+            this.numProMTicks.Size = new System.Drawing.Size(78, 20);
+            this.numProMTicks.TabIndex = 35;
+            this.numProMTicks.ValueChanged += new System.EventHandler(this.numProMTicks_ValueChanged);
+            // 
+            // numProMCast
+            // 
+            this.numProMCast.Location = new System.Drawing.Point(81, 162);
+            this.numProMCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numProMCast.Name = "numProMCast";
+            this.numProMCast.Size = new System.Drawing.Size(78, 20);
+            this.numProMCast.TabIndex = 34;
+            this.numProMCast.ValueChanged += new System.EventHandler(this.numProMCast_ValueChanged);
+            // 
+            // numRenewTicks
+            // 
+            this.numRenewTicks.Location = new System.Drawing.Point(168, 136);
+            this.numRenewTicks.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numRenewTicks.Name = "numRenewTicks";
+            this.numRenewTicks.Size = new System.Drawing.Size(78, 20);
+            this.numRenewTicks.TabIndex = 32;
+            this.numRenewTicks.ValueChanged += new System.EventHandler(this.numRenewTicks_ValueChanged);
+            // 
+            // numRenewCast
+            // 
+            this.numRenewCast.Location = new System.Drawing.Point(81, 136);
+            this.numRenewCast.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numRenewCast.Name = "numRenewCast";
+            this.numRenewCast.Size = new System.Drawing.Size(78, 20);
+            this.numRenewCast.TabIndex = 31;
+            this.numRenewCast.ValueChanged += new System.EventHandler(this.numRenewCast_ValueChanged);
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 111);
+            this.label13.Location = new System.Drawing.Point(3, 138);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(41, 13);
             this.label13.TabIndex = 30;
             this.label13.Text = "Renew";
             // 
-            // numericUpDown3
+            // numPenanceCast
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(81, 82);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
+            this.numPenanceCast.Location = new System.Drawing.Point(81, 109);
+            this.numPenanceCast.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown3.TabIndex = 29;
+            this.numPenanceCast.Name = "numPenanceCast";
+            this.numPenanceCast.Size = new System.Drawing.Size(78, 20);
+            this.numPenanceCast.TabIndex = 29;
+            this.numPenanceCast.ValueChanged += new System.EventHandler(this.numPenanceCast_ValueChanged);
             // 
-            // numericUpDown2
+            // numGreaterHealCast
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(81, 56);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.numGreaterHealCast.Location = new System.Drawing.Point(81, 83);
+            this.numGreaterHealCast.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown2.TabIndex = 28;
+            this.numGreaterHealCast.Name = "numGreaterHealCast";
+            this.numGreaterHealCast.Size = new System.Drawing.Size(78, 20);
+            this.numGreaterHealCast.TabIndex = 28;
+            this.numGreaterHealCast.ValueChanged += new System.EventHandler(this.numGreaterHealCast_ValueChanged);
             // 
-            // numericUpDown1
+            // numFlashHealCast
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(81, 30);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.numFlashHealCast.Location = new System.Drawing.Point(81, 30);
+            this.numFlashHealCast.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(78, 20);
-            this.numericUpDown1.TabIndex = 27;
+            this.numFlashHealCast.Name = "numFlashHealCast";
+            this.numFlashHealCast.Size = new System.Drawing.Size(78, 20);
+            this.numFlashHealCast.TabIndex = 27;
+            this.numFlashHealCast.ValueChanged += new System.EventHandler(this.numFlashHealCast_ValueChanged);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 84);
+            this.label9.Location = new System.Drawing.Point(3, 111);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(50, 13);
             this.label9.TabIndex = 26;
@@ -467,7 +724,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 58);
+            this.label8.Location = new System.Drawing.Point(3, 85);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(67, 13);
             this.label8.TabIndex = 25;
@@ -529,7 +786,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(271, 492);
+            this.tabPage2.Size = new System.Drawing.Size(271, 522);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Mana";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -543,7 +800,6 @@
             this.Name = "CalculationOptionsPanelHolyPriest";
             this.Size = new System.Drawing.Size(285, 652);
             ((System.ComponentModel.ISupportInitialize)(this.trkActivity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkSerendipity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkShadowfiend)).EndInit();
@@ -553,13 +809,23 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFightLength)).EndInit();
             this.panelCustom.ResumeLayout(false);
             this.panelCustom.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBindingHealCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHolyNovaCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMDCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDispelCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numCoHCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPWSCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPoHCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numProMTicks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numProMCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRenewTicks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRenewCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numPenanceCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numGreaterHealCast)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFlashHealCast)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
@@ -573,7 +839,6 @@
         private System.Windows.Forms.ComboBox cbRotation;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblFightLength;
-        private System.Windows.Forms.TrackBar trkFightLength;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.TrackBar trkSerendipity;
         private System.Windows.Forms.Label lblSerendipity;
@@ -594,19 +859,37 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Panel panelCustom;
-        private System.Windows.Forms.NumericUpDown numericUpDown7;
-        private System.Windows.Forms.NumericUpDown numericUpDown6;
+        private System.Windows.Forms.NumericUpDown numRenewTicks;
+        private System.Windows.Forms.NumericUpDown numRenewCast;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numPenanceCast;
+        private System.Windows.Forms.NumericUpDown numGreaterHealCast;
+        private System.Windows.Forms.NumericUpDown numFlashHealCast;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numPoHCast;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numProMTicks;
+        private System.Windows.Forms.NumericUpDown numProMCast;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numCoHCast;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.NumericUpDown numPWSCast;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown numFightLength;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown numMDCast;
+        private System.Windows.Forms.NumericUpDown numDispelCast;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown numHolyNovaCast;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.NumericUpDown numBindingHealCast;
     }
 }

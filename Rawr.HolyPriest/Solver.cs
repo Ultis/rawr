@@ -4,14 +4,13 @@ using System.Text;
 
 namespace Rawr.HolyPriest
 {
-    public class Solver
-    {
-        private Character character;
-        private Stats stats;
-        private float baseMana;
-        private CalculationOptionsPriest calculationOptions;
 
-        private int Rotation;
+    public class BaseSolver
+    {
+        public Character character;
+        public Stats stats;
+        public float baseMana;
+        public CalculationOptionsPriest calculationOptions;
 
         public string Role { get; protected set; }
         public string ActionList { get; protected set; }
@@ -28,17 +27,39 @@ namespace Rawr.HolyPriest
             }
         }
 
-        
-        public Solver(Stats _stats, Character _char, float _baseMana)
+        public float ProcInterval(float ProcChance, float ProcDelay, float ProcCooldown)
+        {
+            float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
+            float EffCooldown = ProcCooldown + ProcDelay * 0.5f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / ProcDelay / ProcActual;
+            return EffCooldown;
+        }
+
+        public BaseSolver(Stats _stats, Character _char, float _baseMana)
         {
             stats = _stats;
             character = _char;
             baseMana = _baseMana;
             calculationOptions = character.CalculationOptions as CalculationOptionsPriest;
 
-            Rotation = calculationOptions.Rotation;
             Role = string.Empty;
             ActionList = "Cast List:";
+        }
+
+        public virtual void Calculate(CharacterCalculationsHolyPriest calculatedStats)
+        {
+            ActionList += "- Virtual.";
+            calculatedStats.HPSBurstPoints = calculatedStats.HPSSustainPoints = calculatedStats.SurvivabilityPoints = 0;
+        }
+    }
+
+    public class Solver : BaseSolver
+    {
+        private int Rotation;
+      
+        public Solver(Stats _stats, Character _char, float _baseMana)
+            : base(_stats, _char, _baseMana)
+        {
+            Rotation = calculationOptions.Rotation;
 
             if (Rotation == 0) // OOOH MAGIC TANK ROTATION!!!
             {
@@ -66,7 +87,7 @@ namespace Rawr.HolyPriest
             }
         }
 
-        public void Calculate(CharacterCalculationsHolyPriest calculatedStats)
+        public override void Calculate(CharacterCalculationsHolyPriest calculatedStats)
         {
             Stats simstats = calculatedStats.BasicStats.Clone();
 
@@ -122,7 +143,7 @@ namespace Rawr.HolyPriest
             FlashHeal fh = new FlashHeal(simstats, character);
             CircleOfHealing coh = new CircleOfHealing(simstats, character);
             Penance penance = new Penance(simstats, character);
-            PowerWordShield pws = new PowerWordShield(simstats, character) as PowerWordShield;
+            PowerWordShield pws = new PowerWordShield(simstats, character);
             PrayerOfMending prom_1 = new PrayerOfMending(simstats, character, 1);
             PrayerOfMending prom_max = new PrayerOfMending(simstats, character);
             Renew renew = new Renew(simstats, character);
@@ -338,7 +359,7 @@ namespace Rawr.HolyPriest
             tmpregen = simstats.Mp5 / 5;
             ManaSources.Add(new ManaSource("MP5", tmpregen));
             regen += tmpregen;
-            tmpregen = simstats.Mana / (calculationOptions.FightLength * 60f);
+            tmpregen = simstats.Mana / (calculationOptions.FightLengthSeconds);
             ManaSources.Add(new ManaSource("Intellect", tmpregen));
             regen += tmpregen;
             if (calculationOptions.ModelProcs)
@@ -365,10 +386,7 @@ namespace Rawr.HolyPriest
                 }
                 if (simstats.ManaRestoreOnCrit_25_45 > 0)
                 {   // X mana back every 25%*critchance spell every 45seconds.
-                    float ProcChance = 0.25f * avgcritcast;
-                    float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance);
-                    float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / avgcritcast / ProcActual;
-                    tmpregen = simstats.ManaRestoreOnCrit_25_45 / EffCooldown;
+                    tmpregen = simstats.ManaRestoreOnCrit_25_45 / ProcInterval(0.25f * avgcritcast, avgcritcast, 45f);
                     if (tmpregen > 0f)
                     {
                         ManaSources.Add(new ManaSource("Soul of the Dead" , tmpregen));
@@ -377,10 +395,7 @@ namespace Rawr.HolyPriest
                 }
                 if (simstats.ManaRestoreOnCast_10_45 > 0)
                 {
-                    float ProcChance = 0.1f;
-                    float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
-                    float EffCooldown = 45f + (float)Math.Log(ProcChance) / (float)Math.Log(ProcActual) / avgcastlen / ProcActual; 
-                    tmpregen = simstats.ManaRestoreOnCast_10_45 / EffCooldown;
+                    tmpregen = simstats.ManaRestoreOnCast_10_45 / ProcInterval(0.1f, avgcastlen, 45f);
                     if (tmpregen > 0f)
                     {
                         ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
@@ -460,7 +475,7 @@ namespace Rawr.HolyPriest
             if (mp1use > regen && calculationOptions.ManaAmt > 0f)
             {
                 float ManaPot = calculationOptions.ManaAmt * (1f + simstats.BonusManaPotion);
-                tmpregen = ManaPot / (calculationOptions.FightLength * 60f);
+                tmpregen = ManaPot / (calculationOptions.FightLengthSeconds);
                 ManaSources.Add(new ManaSource("Mana Potion", tmpregen));
                 ActionList += string.Format("\r\n- Used Mana Potion ({0})", ManaPot.ToString("0"));
                 regen += tmpregen;
@@ -494,5 +509,398 @@ namespace Rawr.HolyPriest
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
         }   
 
+    }
+
+    public class AdvancedSolver : BaseSolver
+    {
+        public AdvancedSolver(Stats _stats, Character _char, float _baseMana)
+            : base(_stats, _char, _baseMana)
+        {
+            Role = "Custom";
+        }
+
+        public override void Calculate(CharacterCalculationsHolyPriest calculatedStats)
+        {
+            Stats simstats = calculatedStats.BasicStats.Clone();
+
+            Stats UseProcs = new Stats();
+
+            // Pre calc Procs (Power boosting Procs)
+            if (calculationOptions.ModelProcs)
+            {
+                if (simstats.SpiritFor20SecOnUse2Min > 0)
+                    // Trinkets with Use: Increases Spirit with. (Like Earring of Soulful Meditation / Bangle of Endless blessings)
+                    UseProcs.Spirit += simstats.SpiritFor20SecOnUse2Min * 20f / 120f;
+                //                if (simstats.BangleProc > 0)
+                // Bangle of Endless Blessings. Use: 130 spirit over 20 seconds. 120 sec cd.
+                //UseProcs.Spirit += 130f * 20f / 120f;              
+                if (simstats.SpellPowerFor15SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse2Min * 15f / 120f;
+                if (simstats.SpellPowerFor15SecOnUse90Sec > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor15SecOnUse90Sec * 15f / 90f;
+                if (simstats.SpellPowerFor20SecOnUse2Min > 0)
+                    UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
+                if (simstats.HasteRatingFor20SecOnUse5Min > 0)
+                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f / 100f;
+                if (simstats.HasteRatingFor20SecOnUse2Min > 0)
+                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f / 100f;
+            }
+
+            UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
+            UseProcs.SpellPower += (float)Math.Round(UseProcs.Spirit * simstats.SpellDamageFromSpiritPercentage);
+
+            simstats += UseProcs;
+
+            // Insightful Earthstorm Diamond.
+            float metaSpellCostReduction = simstats.ManaRestoreOnCast_5_15 * 0.05f;
+            float hcchance = (character.PriestTalents.HolyConcentration * 0.1f + character.PriestTalents.ImprovedHolyConcentration * .05f)
+                * (simstats.SpellCrit + character.PriestTalents.HolySpecialization * 0.01f);
+            float ihcastshasted = 2f * hcchance - (float)Math.Pow(hcchance, 2f);
+            float ihchaste = character.PriestTalents.ImprovedHolyConcentration * 0.1f;
+            float serendipityconst = calculationOptions.Serendipity / 100f * character.PriestTalents.Serendipity * 0.25f / 3f;
+            float raptureconst = CalculationsHolyPriest.GetRaptureConst(character) * simstats.Mana / baseMana * character.PriestTalents.Rapture / 5f * calculationOptions.Rapture / 100f;
+            float healmultiplier = (1 + character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f) * (1 + character.PriestTalents.Grace * 0.03f) * (1 + simstats.HealingReceivedMultiplier);
+            float divineaegis = character.PriestTalents.DivineAegis * 0.1f;
+
+            // Test of Faith gives 2-6% extra crit on targets below 50%.
+            simstats.SpellCrit += character.PriestTalents.TestOfFaith * 0.02f * calculationOptions.TestOfFaith / 100f;
+
+            float solchance = (character.PriestTalents.HolySpecialization * 0.01f + simstats.SpellCrit) * character.PriestTalents.SurgeOfLight * 0.25f;
+            float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);
+            float solcohchance = 1f - (float)Math.Pow(1f - solchance, (stats.GLYPH_CircleOfHealing > 0) ? 6 : 5);
+            float solpohhnchance = 1f - (float)Math.Pow(1f - solchance, 5);
+            float solpromchance = 1f - (float)Math.Pow(1f - solchance, calculationOptions.ProMTicks / calculationOptions.ProMCast);
+
+            // Add on Renewed Hope crit for Disc Maintank Rotation, adjusted by uptime of Weakened Soul
+            float WeakenedSoulUptime = (float)Math.Min(1f, calculationOptions.PWSCast * 15f / calculationOptions.FightLengthSeconds);
+            simstats.SpellCrit += character.PriestTalents.RenewedHope * 0.02f * WeakenedSoulUptime;
+
+            int TotalCasts = 0;
+            float ManaUsed = 0f;
+            float TimeUsed = 0f;
+            float BaseTimeUsed = 0f;
+            float DirectHeal = 0f;
+            float OtherHeal = 0f;
+            float AbsorbHeal = 0f;
+            float SerendipityBase = 0f;
+            float CritCounter = 0f;
+
+            FlashHeal fh = new FlashHeal(simstats, character);
+            BindingHeal bh = new BindingHeal(simstats, character);
+            Heal gh = new Heal(simstats, character);
+            Penance pen = new Penance(simstats, character);
+            Renew renew = new Renew(simstats, character);
+            PrayerOfMending prom = new PrayerOfMending(simstats, character, 1);
+            PrayerOfMending prom_max = new PrayerOfMending(simstats, character);
+            PrayerOfHealing proh = new PrayerOfHealing(simstats, character);
+            PowerWordShield pws = new PowerWordShield(simstats, character);
+            CircleOfHealing coh = new CircleOfHealing(simstats, character, 1);
+            CircleOfHealing coh_max = new CircleOfHealing(simstats, character);
+            HolyNova hn = new HolyNova(simstats, character, 1);
+            Dispel dispel = new Dispel(simstats, character);
+            MassDispel md = new MassDispel(simstats, character);
+
+            // Calculate how many of the flash heals are actually paid for.
+            float FreeFlashes = calculationOptions.FlashHealCast * solchance
+                + calculationOptions.BindingHealCast * solbhchance
+                + calculationOptions.GreaterHealCast * solchance
+                + calculationOptions.CoHCast * solcohchance
+                + calculationOptions.ProMCast * solpromchance
+                + calculationOptions.PoHCast * solpohhnchance
+                + calculationOptions.HolyNovaCast * solpohhnchance;
+            FreeFlashes = (float)Math.Min(calculationOptions.FlashHealCast, FreeFlashes);
+
+            // Flash Heal
+            if (calculationOptions.FlashHealCast > 0)
+            {
+                TotalCasts += calculationOptions.FlashHealCast;
+                ActionList += String.Format("\r\n- {0} Flash Heal{1}",
+                    calculationOptions.FlashHealCast,
+                    (FreeFlashes > 0f) ? String.Format(", {0} Surge of Lights", FreeFlashes.ToString("0")) : String.Empty);
+                float Cost = fh.ManaCost * (calculationOptions.FlashHealCast - FreeFlashes);
+                SerendipityBase += Cost;
+                ManaUsed += Cost;
+                TimeUsed += fh.CastTime * calculationOptions.FlashHealCast;
+                BaseTimeUsed += fh.BaseCastTime * calculationOptions.FlashHealCast;
+                DirectHeal += fh.AvgTotHeal * healmultiplier * calculationOptions.FlashHealCast;
+                AbsorbHeal += fh.AvgCrit * fh.CritChance * healmultiplier * calculationOptions.FlashHealCast * divineaegis;
+                CritCounter += fh.CritChance * calculationOptions.FlashHealCast;
+            }
+
+            // Binding Heal
+            if (calculationOptions.BindingHealCast > 0)
+            {
+                TotalCasts += calculationOptions.BindingHealCast;
+                ActionList += String.Format("\r\n- {0} Binding Heal", calculationOptions.BindingHealCast);
+                ManaUsed += bh.ManaCost * calculationOptions.BindingHealCast;
+                TimeUsed += bh.CastTime * calculationOptions.BindingHealCast;
+                BaseTimeUsed += bh.BaseCastTime * calculationOptions.BindingHealCast;
+                OtherHeal += bh.AvgTotHeal * healmultiplier * calculationOptions.BindingHealCast;
+                AbsorbHeal += bh.AvgCrit * 2 * bh.CritChance * healmultiplier * calculationOptions.BindingHealCast * divineaegis;
+                CritCounter += bh.CritChance * 2 * calculationOptions.BindingHealCast;
+            }
+
+            // Greater Heal
+            if (calculationOptions.GreaterHealCast > 0)
+            {
+                TotalCasts += calculationOptions.GreaterHealCast;
+                ActionList += String.Format("\r\n- {0} Greater Heal", calculationOptions.GreaterHealCast);
+                float Cost = gh.ManaCost * calculationOptions.GreaterHealCast;
+                SerendipityBase += Cost;
+                ManaUsed += Cost;
+                TimeUsed += gh.CastTime * calculationOptions.GreaterHealCast;
+                BaseTimeUsed += gh.BaseCastTime * calculationOptions.GreaterHealCast;
+                DirectHeal += gh.AvgTotHeal * healmultiplier * calculationOptions.GreaterHealCast;
+                AbsorbHeal += gh.AvgCrit * gh.CritChance * healmultiplier * calculationOptions.GreaterHealCast * divineaegis;
+                CritCounter += gh.CritChance * calculationOptions.GreaterHealCast;
+            }
+
+            // Penance
+            if (calculationOptions.PenanceCast > 0 && character.PriestTalents.Penance > 0)
+            {
+                TotalCasts += calculationOptions.PenanceCast;
+                ActionList += String.Format("\r\n- {0} Penance", calculationOptions.PenanceCast);
+                ManaUsed += pen.ManaCost * calculationOptions.PenanceCast;
+                TimeUsed += pen.CastTime * calculationOptions.PenanceCast;
+                BaseTimeUsed += pen.BaseCastTime * calculationOptions.PenanceCast;
+                DirectHeal += pen.AvgTotHeal * healmultiplier * calculationOptions.PenanceCast;
+                AbsorbHeal += pen.AvgCrit * pen.CritChance * healmultiplier * calculationOptions.PenanceCast * divineaegis;
+                CritCounter += pen.CritChance * 3f * calculationOptions.PenanceCast;
+            }
+
+            // Renew
+            if (calculationOptions.RenewCast > 0)
+            {
+                TotalCasts += calculationOptions.RenewCast;
+                ActionList += String.Format("\r\n- {0} Renew, {1} Ticks", calculationOptions.RenewCast, calculationOptions.RenewTicks);
+                ManaUsed += renew.ManaCost * calculationOptions.RenewCast;
+                TimeUsed += renew.GlobalCooldown * calculationOptions.RenewCast;
+                BaseTimeUsed += 1.5f * calculationOptions.RenewCast;
+                OtherHeal += renew.AvgHeal / (renew.HotDuration * 3) * healmultiplier * calculationOptions.RenewTicks;
+            }
+
+            // Prayer of Mending
+            if (calculationOptions.ProMCast > 0)
+            {
+                TotalCasts += calculationOptions.ProMCast;
+                ActionList += String.Format("\r\n- {0} Prayer of Mending, {1} Procs", calculationOptions.ProMCast, calculationOptions.ProMTicks);
+                ManaUsed += prom.ManaCost * calculationOptions.ProMCast;
+                TimeUsed += prom.GlobalCooldown * calculationOptions.ProMCast;
+                BaseTimeUsed += 1.5f * calculationOptions.ProMCast;
+                DirectHeal += prom.AvgTotHeal * healmultiplier * calculationOptions.ProMTicks;
+                AbsorbHeal += prom.AvgCrit * prom.CritChance * healmultiplier * calculationOptions.ProMTicks * divineaegis;
+                CritCounter += prom.CritChance * calculationOptions.ProMTicks;
+            }
+
+            // Prayer of Healing
+            if (calculationOptions.PoHCast > 0)
+            {
+                TotalCasts += calculationOptions.PoHCast;
+                ActionList += String.Format("\r\n- {0} Prayer of Healing", calculationOptions.PoHCast);
+                ManaUsed += proh.ManaCost * calculationOptions.PoHCast;
+                TimeUsed += proh.CastTime * calculationOptions.PoHCast;
+                BaseTimeUsed += proh.BaseCastTime * calculationOptions.PoHCast;
+                DirectHeal += proh.AvgTotHeal * healmultiplier * calculationOptions.PoHCast;
+                AbsorbHeal += proh.AvgCrit * proh.CritChance * healmultiplier * calculationOptions.PoHCast * divineaegis;
+                CritCounter += proh.CritChance * 5 * calculationOptions.PoHCast;
+            }
+
+            // PW:Shield
+            if (calculationOptions.PWSCast > 0)
+            {
+                TotalCasts += calculationOptions.PWSCast;
+                ActionList += String.Format("\r\n- {0} Power Word: Shield", calculationOptions.PWSCast);
+                ManaUsed += pws.ManaCost * calculationOptions.PWSCast;
+                TimeUsed += pws.GlobalCooldown * calculationOptions.PWSCast;
+                BaseTimeUsed += 1.5f * calculationOptions.PWSCast;
+                AbsorbHeal += pws.AvgTotHeal * calculationOptions.PWSCast;
+                float pwsglyphheal = pws.AvgTotHeal * 0.2f * healmultiplier * ((stats.GLYPH_PowerWordShield > 0) ? 0.2f : 0.0f);
+                OtherHeal += pwsglyphheal * (1f - simstats.SpellCrit) + pwsglyphheal * 1.5f * simstats.SpellCrit;
+            }
+
+            // Circle of Healing
+            if (calculationOptions.CoHCast > 0)
+            {
+                TotalCasts += calculationOptions.CoHCast;
+                ActionList += String.Format("\r\n- {0} Circle of Healing", calculationOptions.CoHCast);
+                ManaUsed += coh_max.ManaCost * calculationOptions.CoHCast;
+                TimeUsed += coh_max.GlobalCooldown * calculationOptions.CoHCast;
+                BaseTimeUsed += 1.5f * calculationOptions.CoHCast;
+                OtherHeal += coh_max.AvgTotHeal * calculationOptions.CoHCast;
+                CritCounter += coh_max.CritChance * coh_max.Targets * calculationOptions.CoHCast;
+            }
+
+            // Holy Nova
+            if (calculationOptions.HolyNovaCast > 0)
+            {
+                TotalCasts += calculationOptions.HolyNovaCast;
+                ActionList += String.Format("\r\n- {0} Holy Nova", calculationOptions.HolyNovaCast);
+                ManaUsed += hn.ManaCost * calculationOptions.HolyNovaCast;
+                TimeUsed += hn.GlobalCooldown * calculationOptions.HolyNovaCast;
+                BaseTimeUsed += 1.5f * calculationOptions.HolyNovaCast;
+                DirectHeal += hn.AvgTotHeal * healmultiplier * calculationOptions.HolyNovaCast;
+                AbsorbHeal += hn.AvgCrit * hn.CritChance * healmultiplier * calculationOptions.HolyNovaCast * divineaegis;
+                CritCounter += hn.CritChance * 5 * calculationOptions.HolyNovaCast;
+            }
+
+            // Dispel
+            if (calculationOptions.DispelCast > 0)
+            {
+                TotalCasts += calculationOptions.DispelCast;
+                ActionList += String.Format("\r\n- {0} Dispel", calculationOptions.DispelCast);
+                ManaUsed += dispel.ManaCost * calculationOptions.DispelCast;
+                TimeUsed += dispel.GlobalCooldown * calculationOptions.DispelCast;
+                BaseTimeUsed += 1.5f * calculationOptions.DispelCast;
+            }
+
+            // Mass Dispel
+            if (calculationOptions.MDCast > 0)
+            {
+                TotalCasts += calculationOptions.MDCast;
+                ActionList += String.Format("\r\n- {0} Mass Dispel", calculationOptions.MDCast);
+                ManaUsed += md.ManaCost * calculationOptions.MDCast;
+                TimeUsed += md.CastTime * calculationOptions.MDCast;
+                BaseTimeUsed += md.BaseCastTime * calculationOptions.MDCast;
+            }
+
+            if (TimeUsed > calculationOptions.FightLengthSeconds)
+            {
+                ActionList += "\r\n\r\nWARNING:\r\nFight Length is less than time needed to perform the actions listed!";
+                calculatedStats.HPSBurstPoints = -1;
+                calculatedStats.HPSSustainPoints = -1;
+            }
+            else
+            {
+                float mp1use = ManaUsed / calculationOptions.FightLengthSeconds;
+
+                float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
+                if (calculationOptions.NewManaRegen)
+                    periodicRegenOutFSR *= 0.6f;
+
+                // Add up all mana gains.
+                float regen = 0, tmpregen = 0;
+
+                // Spirit/Intellect based Regeneration and MP5
+                tmpregen = periodicRegenOutFSR * (1f - calculationOptions.FSRRatio / 100f);
+                if (tmpregen > 0f)
+                {
+                    ManaSources.Add(new ManaSource("OutFSR", tmpregen));
+                    regen += tmpregen;
+                }
+                tmpregen = periodicRegenOutFSR * simstats.SpellCombatManaRegeneration * calculationOptions.FSRRatio / 100f;
+                if (tmpregen > 0f)
+                {
+                    ManaSources.Add(new ManaSource("Meditation", tmpregen));
+                    regen += tmpregen;
+                }
+                tmpregen = simstats.Mp5 / 5;
+                ManaSources.Add(new ManaSource("MP5", tmpregen));
+                regen += tmpregen;
+                tmpregen = simstats.Mana / (calculationOptions.FightLengthSeconds);
+                ManaSources.Add(new ManaSource("Intellect", tmpregen));
+                regen += tmpregen;
+
+                // TODO: Trinkets here.
+                if (simstats.ManaRestoreOnCrit_25_45 > 0)
+                {   // X mana back every 25%*critchance spell every 45seconds.
+                    float avgcritcast = CritCounter / TotalCasts;
+                    tmpregen = simstats.ManaRestoreOnCrit_25_45 / ProcInterval(0.25f * avgcritcast, avgcritcast, 45f);
+                    if (tmpregen > 0f)
+                    {
+                        ManaSources.Add(new ManaSource("Soul of the Dead", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+                if (simstats.ManaRestoreOnCast_10_45 > 0)
+                {
+                    tmpregen = simstats.ManaRestoreOnCast_10_45 / ProcInterval(0.1f, TimeUsed / TotalCasts, 45f);
+                    if (tmpregen > 0f)
+                    {
+                        if (simstats.ManaRestoreOnCast_10_45 == 300)
+                            ManaSources.Add(new ManaSource("Je'Tze's Bell", tmpregen));
+                        else if (simstats.ManaRestoreOnCast_10_45 == 528)
+                            ManaSources.Add(new ManaSource("Spark of Life", tmpregen));
+                        else
+                            ManaSources.Add(new ManaSource("MP5 Proc Trinket", tmpregen));
+                        regen += tmpregen;
+                    }
+                }
+
+                // External and Other mana sources.
+                tmpregen = simstats.Mana * 0.0025f * calculationOptions.Replenishment / 100f;
+                if (tmpregen > 0f)
+                {
+                    ManaSources.Add(new ManaSource("Replenishment", tmpregen));
+                    regen += tmpregen;
+                }
+
+                if (raptureconst > 0f)
+                {
+                    tmpregen = (AbsorbHeal + DirectHeal) * raptureconst / calculationOptions.FightLengthSeconds;
+                    ManaSources.Add(new ManaSource("Rapture", tmpregen));
+                    regen += tmpregen;
+                }
+                if (serendipityconst > 0f)
+                {
+                    tmpregen = SerendipityBase * serendipityconst / calculationOptions.FightLengthSeconds;
+                    ManaSources.Add(new ManaSource("Serendipity", tmpregen));
+                    regen += tmpregen;
+                }
+                if (metaSpellCostReduction > 0f)
+                {
+                    tmpregen = (metaSpellCostReduction * TotalCasts) / calculationOptions.FightLengthSeconds;
+                    ManaSources.Add(new ManaSource("Metagem", tmpregen));
+                    regen += tmpregen;
+                }
+
+                ActionList += "\r\n\r\nMana Options:";
+
+                if (mp1use > regen && character.Race == Character.CharacterRace.BloodElf)
+                {   // Arcane Torrent is 6% max mana every 2 minutes.
+                    tmpregen = simstats.Mana * 0.06f / 120f;
+                    ManaSources.Add(new ManaSource("Arcane Torrent", tmpregen));
+                    regen += tmpregen;
+                    ActionList += string.Format("\r\n- Used Arcane Torrent");
+                }
+
+                if (mp1use > regen && calculationOptions.ManaAmt > 0f)
+                {
+                    float ManaPot = calculationOptions.ManaAmt * (1f + simstats.BonusManaPotion);
+                    tmpregen = ManaPot / (calculationOptions.FightLengthSeconds);
+                    ManaSources.Add(new ManaSource("Mana Potion", tmpregen));
+                    ActionList += string.Format("\r\n- Used Mana Potion ({0})", ManaPot.ToString("0"));
+                    regen += tmpregen;
+                }
+                if (mp1use > regen)
+                {
+                    tmpregen = (simstats.Mana * 0.4f * calculationOptions.Shadowfiend / 100f)
+                        / ((5f - character.PriestTalents.VeiledShadows * 1f) * 60f);
+                    ManaSources.Add(new ManaSource("Shadowfiend", tmpregen));
+                    ActionList += string.Format("\r\n- Used Shadowfiend");
+                    regen += tmpregen;
+                }
+                if (mp1use > regen)
+                {
+                    tmpregen = (simstats.Mana * 0.08f)
+                        / (5f * 60f);
+                    ManaSources.Add(new ManaSource("Hymn of Hope", tmpregen));
+                    ActionList += string.Format("\r\n- Used Hymn of Hope");
+                    regen += tmpregen;
+                }
+
+                calculatedStats.HPSBurstPoints = (DirectHeal + AbsorbHeal + OtherHeal) / TimeUsed;
+                calculatedStats.HPSSustainPoints = (DirectHeal + AbsorbHeal + OtherHeal) / calculationOptions.FightLengthSeconds;
+                if (regen < mp1use)
+                    calculatedStats.HPSSustainPoints *= regen / mp1use;
+                /*if (regen > mp1use)
+                    calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints;
+                else
+                    calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * regen / mp1use;*/
+            }
+
+            // Lets just say that 15% of resilience scales all health by 150%.
+            float Resilience = (float)Math.Min(15f, character.StatConversion.GetResilienceFromRating(simstats.Resilience)) / 15f;
+            calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
+        }
     }
 }

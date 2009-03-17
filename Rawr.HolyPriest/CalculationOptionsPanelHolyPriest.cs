@@ -36,8 +36,7 @@ namespace Rawr.HolyPriest
             trkActivity.Value = (int)calcOpts.FSRRatio;
             lblActivity.Text = trkActivity.Value + "% of fight spent in FSR.";
 
-            trkFightLength.Value = (int)calcOpts.FightLength;
-            lblFightLength.Text = trkFightLength.Value + " minute Fight.";
+            numFightLength.Value = (int)calcOpts.FightLengthSeconds;
 
             trkSerendipity.Value = (int)calcOpts.Serendipity;
             lblSerendipity.Text = trkSerendipity.Value + "% Heals give Serendipity.";
@@ -58,6 +57,21 @@ namespace Rawr.HolyPriest
             lblSurvivability.Text = trkSurvivability.Value + "% weight on Survivability.";
 
             cbModelProcs.Checked = calcOpts.ModelProcs;
+
+            numFlashHealCast.Value = calcOpts.FlashHealCast;
+            numBindingHealCast.Value = calcOpts.BindingHealCast;
+            numGreaterHealCast.Value = calcOpts.GreaterHealCast;
+            numPenanceCast.Value = calcOpts.PenanceCast;
+            numRenewCast.Value = calcOpts.RenewCast;
+            numRenewTicks.Value = calcOpts.RenewTicks;
+            numProMCast.Value = calcOpts.ProMCast;
+            numProMTicks.Value = calcOpts.ProMTicks;
+            numPoHCast.Value = calcOpts.PoHCast;
+            numPWSCast.Value = calcOpts.PWSCast;
+            numCoHCast.Value = calcOpts.CoHCast;
+            numHolyNovaCast.Value = calcOpts.HolyNovaCast;
+            numDispelCast.Value = calcOpts.DispelCast;
+            numMDCast.Value = calcOpts.MDCast;
 
             loading = false;
         }
@@ -95,16 +109,14 @@ namespace Rawr.HolyPriest
             }
         }
 
-        private void trkFightLength_Scroll(object sender, EventArgs e)
+        private void numFightLength_ValueChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
-                lblFightLength.Text = trkFightLength.Value + " minute Fight.";
-                calcOpts.FightLength = trkFightLength.Value;
+                calcOpts.FightLengthSeconds = (int)numFightLength.Value;
                 Character.OnCalculationsInvalidated();
             }
-
         }
 
         private void trkSerendipity_Scroll(object sender, EventArgs e)
@@ -194,6 +206,145 @@ namespace Rawr.HolyPriest
             }
         }
 
+        private void numFlashHealCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.FlashHealCast = (int)numFlashHealCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numGreaterHealCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.GreaterHealCast = (int)numGreaterHealCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numPenanceCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.PenanceCast = (int)numPenanceCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numRenewCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.RenewCast = (int)numRenewCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numRenewTicks_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.RenewTicks = (int)numRenewTicks.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numProMCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.ProMCast = (int)numProMCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numProMTicks_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.ProMTicks = (int)numProMTicks.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numPoHCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.PoHCast = (int)numPoHCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numPWSCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.PWSCast = (int)numPWSCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numCoHCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.CoHCast = (int)numCoHCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numHolyNovaCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.HolyNovaCast = (int)numHolyNovaCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numDispelCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.DispelCast = (int)numDispelCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numMDCast_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.MDCast = (int)numMDCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void numBindingHeal_ValueChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsPriest calcOpts = Character.CalculationOptions as CalculationOptionsPriest;
+                calcOpts.BindingHealCast = (int)numBindingHealCast.Value;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
 
     [Serializable]
@@ -215,7 +366,7 @@ namespace Rawr.HolyPriest
         public int Rotation = 0;
         public bool NewManaRegen = false;
         public float FSRRatio = 93f;
-        public float FightLength = 6f;
+        public float FightLengthSeconds = 300f;
         public float Serendipity = 75f;
         public float Replenishment = 50f;
         public float Shadowfiend = 100f;
@@ -223,5 +374,20 @@ namespace Rawr.HolyPriest
         public float Rapture = 75f;
         public float TestOfFaith = 25f;
         public bool ModelProcs = true;
+
+        public int FlashHealCast = 0;
+        public int BindingHealCast = 0;
+        public int GreaterHealCast = 0;
+        public int PenanceCast = 0;
+        public int RenewCast = 0;
+        public int RenewTicks = 0;
+        public int ProMCast = 0;
+        public int ProMTicks = 0;
+        public int PoHCast = 0;
+        public int PWSCast = 0;
+        public int CoHCast = 0;
+        public int HolyNovaCast = 0;
+        public int DispelCast = 0;
+        public int MDCast = 0;
 	}
 }

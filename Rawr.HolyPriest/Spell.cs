@@ -1019,4 +1019,52 @@ namespace Rawr.HolyPriest
         }
     }
 
+    public class Dispel : Spell
+    {
+        public Dispel(Stats stats, Character character)
+            : base("Dispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 0) }, 12, 0f, Color.Gray)
+        {
+            Calculate(stats, character);
+        }
+
+        protected void Calculate(Stats stats, Character character)
+        {
+            MinHeal = MaxHeal = 0;
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
+            CritChance = 0.0f;
+            CritCoef = 1.0f;
+
+            CastTime = 0.0f;
+
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}",
+                Name);
+        }
+    }
+
+    public class MassDispel : Spell
+    {
+        public MassDispel(Stats stats, Character character)
+            : base("MassDispel", stats, character, new List<SpellData>() { new SpellData(1, 30, 0, 0, 1.5f) }, 36, 0f, Color.Gray)
+        {
+            Calculate(stats, character);
+        }
+
+        protected void Calculate(Stats stats, Character character)
+        {
+            MinHeal = MaxHeal = 0;
+            ManaCost = (int)Math.Floor(ManaCost / 100f * BaseMana);
+            CritChance = 0.0f;
+            CritCoef = 1.0f;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}",
+                Name);
+        }
+    }
 }
