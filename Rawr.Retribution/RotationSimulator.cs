@@ -14,6 +14,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
+            sol.FightLength = 1000;
 
             int judgeCD = rot.T7_4pc ? 7 : 8;
             int csCD = 6;
@@ -27,10 +28,10 @@ namespace Rawr.Retribution
             float dsNext = 0;
             float consNext = 0;
             float exoNext = 0;
-            float howNext = rot.FightLength * (1f - rot.TimeUnder20);
+            float howNext = sol.FightLength * (1f - rot.TimeUnder20);
             bool gcdUsed = false;
 
-            while (currentTime < rot.FightLength)
+            while (currentTime < sol.FightLength)
             {
                 foreach (Rotation.Ability ability in rot.Priorities)
                 {
@@ -99,12 +100,12 @@ namespace Rawr.Retribution
                 gcdUsed = false;
             }
 
-            sol.JudgementCD = rot.FightLength / sol.Judgement;
-            sol.CrusaderStrikeCD = rot.FightLength / sol.CrusaderStrike;
-            sol.DivineStormCD = rot.FightLength / sol.DivineStorm;
-            sol.ConsecrationCD = rot.FightLength / sol.Consecration;
-            sol.ExorcismCD = rot.FightLength / sol.Exorcism;
-            sol.HammerOfWrathCD = rot.FightLength / sol.HammerOfWrath;
+            sol.JudgementCD = sol.FightLength / sol.Judgement;
+            sol.CrusaderStrikeCD = sol.FightLength / sol.CrusaderStrike;
+            sol.DivineStormCD = sol.FightLength / sol.DivineStorm;
+            sol.ConsecrationCD = sol.FightLength / sol.Consecration;
+            sol.ExorcismCD = sol.FightLength / sol.Exorcism;
+            sol.HammerOfWrathCD = sol.FightLength / sol.HammerOfWrath;
 
             savedSolutions[rot] = sol;
 

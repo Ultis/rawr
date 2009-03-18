@@ -37,29 +37,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.butPriority6Down = new System.Windows.Forms.Button();
-            this.butPriority6Up = new System.Windows.Forms.Button();
-            this.butPriority5Down = new System.Windows.Forms.Button();
-            this.butPriority5Up = new System.Windows.Forms.Button();
-            this.butPriority4Down = new System.Windows.Forms.Button();
-            this.butPriority4Up = new System.Windows.Forms.Button();
-            this.lblPriority6 = new System.Windows.Forms.Label();
-            this.butPriority3Down = new System.Windows.Forms.Button();
-            this.lblPriority5 = new System.Windows.Forms.Label();
-            this.butPriority3Up = new System.Windows.Forms.Button();
-            this.lblPriority4 = new System.Windows.Forms.Label();
-            this.butPriority2Down = new System.Windows.Forms.Button();
-            this.lblPriority3 = new System.Windows.Forms.Label();
-            this.butPriority2Up = new System.Windows.Forms.Button();
-            this.lblPriority2 = new System.Windows.Forms.Label();
-            this.butPriority1Down = new System.Windows.Forms.Button();
-            this.butPriority1Up = new System.Windows.Forms.Button();
-            this.lblPriority1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.listLimitedPriority = new System.Windows.Forms.CheckedListBox();
+            this.butLimitedDown = new System.Windows.Forms.Button();
+            this.butLimitedUp = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.listUnlimitedPriority = new System.Windows.Forms.CheckedListBox();
+            this.butUnlimitedDown = new System.Windows.Forms.Button();
+            this.butUnlimitedUp = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.trkTime20 = new System.Windows.Forms.TrackBar();
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
+            this.chkSimulateMana = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
@@ -71,7 +62,7 @@
             this.groupBox1.Controls.Add(this.chkGlyphSenseUndead);
             this.groupBox1.Controls.Add(this.chkGlyphConsecration);
             this.groupBox1.Controls.Add(this.chkGlyphJudgement);
-            this.groupBox1.Location = new System.Drawing.Point(3, 310);
+            this.groupBox1.Location = new System.Drawing.Point(3, 362);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(146, 91);
             this.groupBox1.TabIndex = 0;
@@ -161,198 +152,110 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.butPriority6Down);
-            this.groupBox2.Controls.Add(this.butPriority6Up);
-            this.groupBox2.Controls.Add(this.butPriority5Down);
-            this.groupBox2.Controls.Add(this.butPriority5Up);
-            this.groupBox2.Controls.Add(this.butPriority4Down);
-            this.groupBox2.Controls.Add(this.butPriority4Up);
-            this.groupBox2.Controls.Add(this.lblPriority6);
-            this.groupBox2.Controls.Add(this.butPriority3Down);
-            this.groupBox2.Controls.Add(this.lblPriority5);
-            this.groupBox2.Controls.Add(this.butPriority3Up);
-            this.groupBox2.Controls.Add(this.lblPriority4);
-            this.groupBox2.Controls.Add(this.butPriority2Down);
-            this.groupBox2.Controls.Add(this.lblPriority3);
-            this.groupBox2.Controls.Add(this.butPriority2Up);
-            this.groupBox2.Controls.Add(this.lblPriority2);
-            this.groupBox2.Controls.Add(this.butPriority1Down);
-            this.groupBox2.Controls.Add(this.butPriority1Up);
-            this.groupBox2.Controls.Add(this.lblPriority1);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.listLimitedPriority);
+            this.groupBox2.Controls.Add(this.butLimitedDown);
+            this.groupBox2.Controls.Add(this.butLimitedUp);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.listUnlimitedPriority);
+            this.groupBox2.Controls.Add(this.butUnlimitedDown);
+            this.groupBox2.Controls.Add(this.butUnlimitedUp);
             this.groupBox2.Location = new System.Drawing.Point(3, 110);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(235, 194);
+            this.groupBox2.Size = new System.Drawing.Size(162, 246);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
             // 
-            // butPriority6Down
+            // label4
             // 
-            this.butPriority6Down.Enabled = false;
-            this.butPriority6Down.Location = new System.Drawing.Point(206, 164);
-            this.butPriority6Down.Name = "butPriority6Down";
-            this.butPriority6Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority6Down.TabIndex = 8;
-            this.butPriority6Down.Text = "-";
-            this.butPriority6Down.UseVisualStyleBackColor = true;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 129);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(73, 13);
+            this.label4.TabIndex = 37;
+            this.label4.Text = "Limited Mana:";
             // 
-            // butPriority6Up
+            // listLimitedPriority
             // 
-            this.butPriority6Up.Location = new System.Drawing.Point(177, 164);
-            this.butPriority6Up.Name = "butPriority6Up";
-            this.butPriority6Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority6Up.TabIndex = 7;
-            this.butPriority6Up.Text = "+";
-            this.butPriority6Up.UseVisualStyleBackColor = true;
-            this.butPriority6Up.Click += new System.EventHandler(this.PrioritySwitch5);
+            this.listLimitedPriority.FormattingEnabled = true;
+            this.listLimitedPriority.Items.AddRange(new object[] {
+            "Judgement",
+            "Hammer of Wrath",
+            "Crusader Strike",
+            "Divine Storm",
+            "Consecration",
+            "Exorcism"});
+            this.listLimitedPriority.Location = new System.Drawing.Point(6, 145);
+            this.listLimitedPriority.Name = "listLimitedPriority";
+            this.listLimitedPriority.Size = new System.Drawing.Size(120, 94);
+            this.listLimitedPriority.TabIndex = 36;
+            this.listLimitedPriority.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listLimitedPriority_ItemCheck);
             // 
-            // butPriority5Down
+            // butLimitedDown
             // 
-            this.butPriority5Down.Location = new System.Drawing.Point(206, 135);
-            this.butPriority5Down.Name = "butPriority5Down";
-            this.butPriority5Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority5Down.TabIndex = 8;
-            this.butPriority5Down.Text = "-";
-            this.butPriority5Down.UseVisualStyleBackColor = true;
-            this.butPriority5Down.Click += new System.EventHandler(this.PrioritySwitch5);
+            this.butLimitedDown.Location = new System.Drawing.Point(132, 174);
+            this.butLimitedDown.Name = "butLimitedDown";
+            this.butLimitedDown.Size = new System.Drawing.Size(23, 23);
+            this.butLimitedDown.TabIndex = 35;
+            this.butLimitedDown.Text = "-";
+            this.butLimitedDown.UseVisualStyleBackColor = true;
+            this.butLimitedDown.Click += new System.EventHandler(this.butLimitedDown_Click);
             // 
-            // butPriority5Up
+            // butLimitedUp
             // 
-            this.butPriority5Up.Location = new System.Drawing.Point(177, 135);
-            this.butPriority5Up.Name = "butPriority5Up";
-            this.butPriority5Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority5Up.TabIndex = 7;
-            this.butPriority5Up.Text = "+";
-            this.butPriority5Up.UseVisualStyleBackColor = true;
-            this.butPriority5Up.Click += new System.EventHandler(this.PrioritySwitch4);
+            this.butLimitedUp.Location = new System.Drawing.Point(132, 145);
+            this.butLimitedUp.Name = "butLimitedUp";
+            this.butLimitedUp.Size = new System.Drawing.Size(23, 23);
+            this.butLimitedUp.TabIndex = 34;
+            this.butLimitedUp.Text = "+";
+            this.butLimitedUp.UseVisualStyleBackColor = true;
+            this.butLimitedUp.Click += new System.EventHandler(this.butLimitedUp_Click);
             // 
-            // butPriority4Down
+            // label3
             // 
-            this.butPriority4Down.Location = new System.Drawing.Point(206, 106);
-            this.butPriority4Down.Name = "butPriority4Down";
-            this.butPriority4Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority4Down.TabIndex = 8;
-            this.butPriority4Down.Text = "-";
-            this.butPriority4Down.UseVisualStyleBackColor = true;
-            this.butPriority4Down.Click += new System.EventHandler(this.PrioritySwitch4);
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 16);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(83, 13);
+            this.label3.TabIndex = 33;
+            this.label3.Text = "Unlimited Mana:";
             // 
-            // butPriority4Up
+            // listUnlimitedPriority
             // 
-            this.butPriority4Up.Location = new System.Drawing.Point(177, 106);
-            this.butPriority4Up.Name = "butPriority4Up";
-            this.butPriority4Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority4Up.TabIndex = 7;
-            this.butPriority4Up.Text = "+";
-            this.butPriority4Up.UseVisualStyleBackColor = true;
-            this.butPriority4Up.Click += new System.EventHandler(this.PrioritySwitch3);
+            this.listUnlimitedPriority.FormattingEnabled = true;
+            this.listUnlimitedPriority.Items.AddRange(new object[] {
+            "Judgement",
+            "Hammer of Wrath",
+            "Crusader Strike",
+            "Divine Storm",
+            "Consecration",
+            "Exorcism"});
+            this.listUnlimitedPriority.Location = new System.Drawing.Point(6, 32);
+            this.listUnlimitedPriority.Name = "listUnlimitedPriority";
+            this.listUnlimitedPriority.Size = new System.Drawing.Size(120, 94);
+            this.listUnlimitedPriority.TabIndex = 32;
+            this.listUnlimitedPriority.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.listUnlimitedPriority_ItemCheck);
             // 
-            // lblPriority6
+            // butUnlimitedDown
             // 
-            this.lblPriority6.Location = new System.Drawing.Point(6, 169);
-            this.lblPriority6.Name = "lblPriority6";
-            this.lblPriority6.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority6.TabIndex = 6;
-            this.lblPriority6.Text = "Judgement";
+            this.butUnlimitedDown.Location = new System.Drawing.Point(132, 61);
+            this.butUnlimitedDown.Name = "butUnlimitedDown";
+            this.butUnlimitedDown.Size = new System.Drawing.Size(23, 23);
+            this.butUnlimitedDown.TabIndex = 5;
+            this.butUnlimitedDown.Text = "-";
+            this.butUnlimitedDown.UseVisualStyleBackColor = true;
+            this.butUnlimitedDown.Click += new System.EventHandler(this.butUnlimitedDown_Click);
             // 
-            // butPriority3Down
+            // butUnlimitedUp
             // 
-            this.butPriority3Down.Location = new System.Drawing.Point(206, 77);
-            this.butPriority3Down.Name = "butPriority3Down";
-            this.butPriority3Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority3Down.TabIndex = 8;
-            this.butPriority3Down.Text = "-";
-            this.butPriority3Down.UseVisualStyleBackColor = true;
-            this.butPriority3Down.Click += new System.EventHandler(this.PrioritySwitch3);
-            // 
-            // lblPriority5
-            // 
-            this.lblPriority5.Location = new System.Drawing.Point(6, 140);
-            this.lblPriority5.Name = "lblPriority5";
-            this.lblPriority5.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority5.TabIndex = 6;
-            this.lblPriority5.Text = "Judgement";
-            // 
-            // butPriority3Up
-            // 
-            this.butPriority3Up.Location = new System.Drawing.Point(177, 77);
-            this.butPriority3Up.Name = "butPriority3Up";
-            this.butPriority3Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority3Up.TabIndex = 7;
-            this.butPriority3Up.Text = "+";
-            this.butPriority3Up.UseVisualStyleBackColor = true;
-            this.butPriority3Up.Click += new System.EventHandler(this.PrioritySwitch2);
-            // 
-            // lblPriority4
-            // 
-            this.lblPriority4.Location = new System.Drawing.Point(6, 111);
-            this.lblPriority4.Name = "lblPriority4";
-            this.lblPriority4.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority4.TabIndex = 6;
-            this.lblPriority4.Text = "Judgement";
-            // 
-            // butPriority2Down
-            // 
-            this.butPriority2Down.Location = new System.Drawing.Point(206, 48);
-            this.butPriority2Down.Name = "butPriority2Down";
-            this.butPriority2Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority2Down.TabIndex = 8;
-            this.butPriority2Down.Text = "-";
-            this.butPriority2Down.UseVisualStyleBackColor = true;
-            this.butPriority2Down.Click += new System.EventHandler(this.PrioritySwitch2);
-            // 
-            // lblPriority3
-            // 
-            this.lblPriority3.Location = new System.Drawing.Point(6, 82);
-            this.lblPriority3.Name = "lblPriority3";
-            this.lblPriority3.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority3.TabIndex = 6;
-            this.lblPriority3.Text = "Judgement";
-            // 
-            // butPriority2Up
-            // 
-            this.butPriority2Up.Location = new System.Drawing.Point(177, 48);
-            this.butPriority2Up.Name = "butPriority2Up";
-            this.butPriority2Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority2Up.TabIndex = 7;
-            this.butPriority2Up.Text = "+";
-            this.butPriority2Up.UseVisualStyleBackColor = true;
-            this.butPriority2Up.Click += new System.EventHandler(this.PrioritySwitch1);
-            // 
-            // lblPriority2
-            // 
-            this.lblPriority2.Location = new System.Drawing.Point(6, 53);
-            this.lblPriority2.Name = "lblPriority2";
-            this.lblPriority2.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority2.TabIndex = 6;
-            this.lblPriority2.Text = "Judgement";
-            // 
-            // butPriority1Down
-            // 
-            this.butPriority1Down.Location = new System.Drawing.Point(206, 19);
-            this.butPriority1Down.Name = "butPriority1Down";
-            this.butPriority1Down.Size = new System.Drawing.Size(23, 23);
-            this.butPriority1Down.TabIndex = 5;
-            this.butPriority1Down.Text = "-";
-            this.butPriority1Down.UseVisualStyleBackColor = true;
-            this.butPriority1Down.Click += new System.EventHandler(this.PrioritySwitch1);
-            // 
-            // butPriority1Up
-            // 
-            this.butPriority1Up.Enabled = false;
-            this.butPriority1Up.Location = new System.Drawing.Point(177, 19);
-            this.butPriority1Up.Name = "butPriority1Up";
-            this.butPriority1Up.Size = new System.Drawing.Size(23, 23);
-            this.butPriority1Up.TabIndex = 4;
-            this.butPriority1Up.Text = "+";
-            this.butPriority1Up.UseVisualStyleBackColor = true;
-            // 
-            // lblPriority1
-            // 
-            this.lblPriority1.Location = new System.Drawing.Point(6, 24);
-            this.lblPriority1.Name = "lblPriority1";
-            this.lblPriority1.Size = new System.Drawing.Size(167, 13);
-            this.lblPriority1.TabIndex = 0;
-            this.lblPriority1.Text = "Judgement";
+            this.butUnlimitedUp.Location = new System.Drawing.Point(132, 32);
+            this.butUnlimitedUp.Name = "butUnlimitedUp";
+            this.butUnlimitedUp.Size = new System.Drawing.Size(23, 23);
+            this.butUnlimitedUp.TabIndex = 4;
+            this.butUnlimitedUp.Text = "+";
+            this.butUnlimitedUp.UseVisualStyleBackColor = true;
+            this.butUnlimitedUp.Click += new System.EventHandler(this.butUnlimitedUp_Click);
             // 
             // label11
             // 
@@ -423,11 +326,23 @@
             this.lblTime20.TabIndex = 30;
             this.lblTime20.Text = "100%";
             // 
+            // chkSimulateMana
+            // 
+            this.chkSimulateMana.AutoSize = true;
+            this.chkSimulateMana.Location = new System.Drawing.Point(3, 459);
+            this.chkSimulateMana.Name = "chkSimulateMana";
+            this.chkSimulateMana.Size = new System.Drawing.Size(130, 17);
+            this.chkSimulateMana.TabIndex = 31;
+            this.chkSimulateMana.Text = "Simulate Mana Usage";
+            this.chkSimulateMana.UseVisualStyleBackColor = true;
+            this.chkSimulateMana.CheckedChanged += new System.EventHandler(this.chkSimulateMana_CheckedChanged);
+            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.chkSimulateMana);
             this.Controls.Add(this.lblTime20);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.trkTime20);
@@ -444,6 +359,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cmbLength)).EndInit();
             this.ResumeLayout(false);
@@ -467,24 +383,15 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown cmbLength;
         private System.Windows.Forms.Label lblTime20;
-        private System.Windows.Forms.Label lblPriority1;
-        private System.Windows.Forms.Button butPriority6Down;
-        private System.Windows.Forms.Button butPriority6Up;
-        private System.Windows.Forms.Button butPriority5Down;
-        private System.Windows.Forms.Button butPriority5Up;
-        private System.Windows.Forms.Button butPriority4Down;
-        private System.Windows.Forms.Button butPriority4Up;
-        private System.Windows.Forms.Label lblPriority6;
-        private System.Windows.Forms.Button butPriority3Down;
-        private System.Windows.Forms.Label lblPriority5;
-        private System.Windows.Forms.Button butPriority3Up;
-        private System.Windows.Forms.Label lblPriority4;
-        private System.Windows.Forms.Button butPriority2Down;
-        private System.Windows.Forms.Label lblPriority3;
-        private System.Windows.Forms.Button butPriority2Up;
-        private System.Windows.Forms.Label lblPriority2;
-        private System.Windows.Forms.Button butPriority1Down;
-        private System.Windows.Forms.Button butPriority1Up;
+        private System.Windows.Forms.Button butUnlimitedDown;
+        private System.Windows.Forms.Button butUnlimitedUp;
+        private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckedListBox listLimitedPriority;
+        private System.Windows.Forms.Button butLimitedDown;
+        private System.Windows.Forms.Button butLimitedUp;
+        private System.Windows.Forms.CheckBox chkSimulateMana;
 
     }
 }

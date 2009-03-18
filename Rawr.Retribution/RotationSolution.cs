@@ -13,6 +13,8 @@ namespace Rawr.Retribution
         public int Exorcism { get; set; }
         public int HammerOfWrath { get; set; }
 
+        public float FightLength { get; set; }
+
         public float JudgementCD { get; set; }
         public float CrusaderStrikeCD { get; set; }
         public float DivineStormCD { get; set; }

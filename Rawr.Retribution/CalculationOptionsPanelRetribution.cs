@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Rawr.Retribution
 {
@@ -37,7 +38,10 @@ namespace Rawr.Retribution
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
 
-            UpdatePriorityDisplay(calcOpts);
+            chkSimulateMana.Checked = calcOpts.SimulateMana;
+
+            UpdateUnlimitedPriority(calcOpts);
+            UpdateLimitedPriority(calcOpts);
 
             loading = false;
         }
@@ -113,59 +117,162 @@ namespace Rawr.Retribution
             }
         }
 
-        private void UpdatePriorityDisplay(CalculationOptionsRetribution calcOpts)
+        private void UpdateUnlimitedPriority(CalculationOptionsRetribution calcOpts)
         {
-            lblPriority1.Text = calcOpts.Priorities[0].ToString();
-            lblPriority2.Text = calcOpts.Priorities[1].ToString();
-            lblPriority3.Text = calcOpts.Priorities[2].ToString();
-            lblPriority4.Text = calcOpts.Priorities[3].ToString();
-            lblPriority5.Text = calcOpts.Priorities[4].ToString();
-            lblPriority6.Text = calcOpts.Priorities[5].ToString();
+            bool wasLoading = loading;
+            loading = true;
+
+            listUnlimitedPriority.Items.Clear();
+            listUnlimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.UnlimitedOrder[0]), Rotation.AbilityString(calcOpts.UnlimitedOrder[1]),
+                 Rotation.AbilityString(calcOpts.UnlimitedOrder[2]), Rotation.AbilityString(calcOpts.UnlimitedOrder[3]),
+                  Rotation.AbilityString(calcOpts.UnlimitedOrder[4]), Rotation.AbilityString(calcOpts.UnlimitedOrder[5])});
+
+            for (int i = 0; i < 6; i++) listUnlimitedPriority.SetItemChecked(i, calcOpts.UnlimitedSelected[i]);
+
+            loading = wasLoading;
         }
 
-        private void PrioritySwitch1(object sender, EventArgs e)
+        private void butUnlimitedUp_Click(object sender, EventArgs e)
         {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[1], calcOpts.Priorities[0], calcOpts.Priorities[2], 
-                calcOpts.Priorities[3], calcOpts.Priorities[4], calcOpts.Priorities[5] };
-            UpdatePriorityDisplay(calcOpts);
-            Character.OnCalculationsInvalidated();
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                int sel = listUnlimitedPriority.SelectedIndex;
+                if (sel > 0 && sel <= 5)
+                {
+                    Rotation.Ability temp1 = calcOpts.UnlimitedOrder[sel - 1];
+                    calcOpts.UnlimitedOrder[sel - 1] = calcOpts.UnlimitedOrder[sel];
+                    calcOpts.UnlimitedOrder[sel] = temp1;
+
+                    bool temp2 = calcOpts.UnlimitedSelected[sel - 1];
+                    calcOpts.UnlimitedSelected[sel - 1] = calcOpts.UnlimitedSelected[sel];
+                    calcOpts.UnlimitedSelected[sel] = temp2;
+
+                    UpdateUnlimitedPriority(calcOpts);
+                    listUnlimitedPriority.SelectedIndex = sel - 1;
+                    Character.OnCalculationsInvalidated();
+                }
+            }
         }
 
-        private void PrioritySwitch2(object sender, EventArgs e)
+        private void butUnlimitedDown_Click(object sender, EventArgs e)
         {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[2], calcOpts.Priorities[1], 
-                calcOpts.Priorities[3], calcOpts.Priorities[4], calcOpts.Priorities[5] };
-            UpdatePriorityDisplay(calcOpts);
-            Character.OnCalculationsInvalidated();
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                int sel = listUnlimitedPriority.SelectedIndex;
+                if (sel >= 0 && sel < 5)
+                {
+                    Rotation.Ability temp1 = calcOpts.UnlimitedOrder[sel + 1];
+                    calcOpts.UnlimitedOrder[sel + 1] = calcOpts.UnlimitedOrder[sel];
+                    calcOpts.UnlimitedOrder[sel] = temp1;
+
+                    bool temp2 = calcOpts.UnlimitedSelected[sel + 1];
+                    calcOpts.UnlimitedSelected[sel + 1] = calcOpts.UnlimitedSelected[sel];
+                    calcOpts.UnlimitedSelected[sel] = temp2;
+
+                    UpdateUnlimitedPriority(calcOpts);
+                    listUnlimitedPriority.SelectedIndex = sel + 1;
+                    Character.OnCalculationsInvalidated();
+                }
+            }
         }
 
-        private void PrioritySwitch3(object sender, EventArgs e)
+        private void listUnlimitedPriority_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[3], 
-                calcOpts.Priorities[2], calcOpts.Priorities[4], calcOpts.Priorities[5] };
-            UpdatePriorityDisplay(calcOpts);
-            Character.OnCalculationsInvalidated();
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                
+                if (e.NewValue == CheckState.Unchecked) calcOpts.UnlimitedSelected[e.Index] = false;
+                else calcOpts.UnlimitedSelected[e.Index] = true;
+
+                Character.OnCalculationsInvalidated();
+            }
         }
 
-        private void PrioritySwitch4(object sender, EventArgs e)
+        private void UpdateLimitedPriority(CalculationOptionsRetribution calcOpts)
         {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[2], 
-                calcOpts.Priorities[4], calcOpts.Priorities[3], calcOpts.Priorities[5] };
-            UpdatePriorityDisplay(calcOpts);
-            Character.OnCalculationsInvalidated();
+            bool wasLoading = loading;
+            loading = true;
+
+            listLimitedPriority.Items.Clear();
+            listLimitedPriority.Items.AddRange(new string[] { Rotation.AbilityString(calcOpts.LimitedOrder[0]), Rotation.AbilityString(calcOpts.LimitedOrder[1]),
+                 Rotation.AbilityString(calcOpts.LimitedOrder[2]), Rotation.AbilityString(calcOpts.LimitedOrder[3]),
+                  Rotation.AbilityString(calcOpts.LimitedOrder[4]), Rotation.AbilityString(calcOpts.LimitedOrder[5])});
+
+            for (int i = 0; i < 6; i++) listLimitedPriority.SetItemChecked(i, calcOpts.LimitedSelected[i]);
+
+            loading = wasLoading;
         }
 
-        private void PrioritySwitch5(object sender, EventArgs e)
+        private void butLimitedUp_Click(object sender, EventArgs e)
         {
-            CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
-            calcOpts.Priorities = new Rotation.Ability[] { calcOpts.Priorities[0], calcOpts.Priorities[1], calcOpts.Priorities[2], 
-                calcOpts.Priorities[3], calcOpts.Priorities[5], calcOpts.Priorities[4] };
-            UpdatePriorityDisplay(calcOpts);
-            Character.OnCalculationsInvalidated();
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                int sel = listLimitedPriority.SelectedIndex;
+                if (sel > 0 && sel <= 5)
+                {
+                    Rotation.Ability temp1 = calcOpts.LimitedOrder[sel - 1];
+                    calcOpts.LimitedOrder[sel - 1] = calcOpts.LimitedOrder[sel];
+                    calcOpts.LimitedOrder[sel] = temp1;
+
+                    bool temp2 = calcOpts.LimitedSelected[sel - 1];
+                    calcOpts.LimitedSelected[sel - 1] = calcOpts.LimitedSelected[sel];
+                    calcOpts.LimitedSelected[sel] = temp2;
+
+                    UpdateLimitedPriority(calcOpts);
+                    listLimitedPriority.SelectedIndex = sel - 1;
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+
+        private void butLimitedDown_Click(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                int sel = listLimitedPriority.SelectedIndex;
+                if (sel >= 0 && sel < 5)
+                {
+                    Rotation.Ability temp1 = calcOpts.LimitedOrder[sel + 1];
+                    calcOpts.LimitedOrder[sel + 1] = calcOpts.LimitedOrder[sel];
+                    calcOpts.LimitedOrder[sel] = temp1;
+
+                    bool temp2 = calcOpts.LimitedSelected[sel + 1];
+                    calcOpts.LimitedSelected[sel + 1] = calcOpts.LimitedSelected[sel];
+                    calcOpts.LimitedSelected[sel] = temp2;
+
+                    UpdateLimitedPriority(calcOpts);
+                    listLimitedPriority.SelectedIndex = sel + 1;
+                    Character.OnCalculationsInvalidated();
+                }
+            }
+        }
+
+        private void listLimitedPriority_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                
+                if (e.NewValue == CheckState.Unchecked) calcOpts.LimitedSelected[e.Index] = false;
+                else calcOpts.LimitedSelected[e.Index] = true;
+
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkSimulateMana_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.SimulateMana = chkSimulateMana.Checked;
+                Character.OnCalculationsInvalidated();               
+            }
         }
 
 
@@ -189,8 +296,91 @@ namespace Rawr.Retribution
         public float FightLength = 5f;
         public float TimeUnder20 = .18f;
 
-        public Rotation.Ability[] Priorities = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
+        public bool SimulateMana = false;
+
+        private Rotation.Ability[] _unlimitedOrder = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
                                                    Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
+        public Rotation.Ability[] UnlimitedOrder {
+            get { _unlimitedCache = null; return _unlimitedOrder; }
+            set { _unlimitedCache = null; _unlimitedOrder = value; }
+        }
+
+        private Rotation.Ability[] _limitedOrder = { Rotation.Ability.Judgement, Rotation.Ability.HammerOfWrath, Rotation.Ability.CrusaderStrike,
+                                                   Rotation.Ability.DivineStorm, Rotation.Ability.Consecration, Rotation.Ability.Exorcism };
+        public Rotation.Ability[] LimitedOrder
+        {
+            get { _limitedCache = null; return _limitedOrder; }
+            set { _limitedCache = null; _limitedOrder = value; }
+        }
+
+        private bool[] _unlimitedSelected = { true, true, true, true, true, true };
+        public bool[] UnlimitedSelected
+        {
+            get { _unlimitedCache = null; return _unlimitedSelected; }
+            set { _unlimitedCache = null; _unlimitedSelected = value; }
+        }
+
+        private bool[] _limitedSelected = { true, true, true, true, false, false };
+        public bool[] LimitedSelected
+        {
+            get { _limitedCache = null; return _limitedSelected; }
+            set { _limitedCache = null; _limitedSelected = value; }
+        }
+
+        private Rotation.Ability[] _unlimitedCache = null;
+
+        [XmlIgnore]        
+        public Rotation.Ability[] UnlimitedPriorities
+        {
+            get
+            {
+                if (_unlimitedCache == null)
+                {
+                    int count = 0;
+                    foreach (bool b in _unlimitedSelected) { if (b) count++; }
+                    _unlimitedCache = new Rotation.Ability[count];
+
+                    int sel = 0;
+                    for (int i = 0; i < _unlimitedOrder.Length; i++)
+                    {
+                        if (_unlimitedSelected[i])
+                        {
+                            _unlimitedCache[sel] = _unlimitedOrder[i];
+                            sel++;
+                        }
+                    }
+                }
+                return _unlimitedCache;
+            }
+        }
+
+        private Rotation.Ability[] _limitedCache;
+
+        [XmlIgnore]
+        public Rotation.Ability[] LimitedPriorities
+        {
+            get
+            {
+                if (_limitedCache == null)
+                {
+                    int count = 0;
+                    foreach (bool b in _limitedSelected) { if (b) count++; }
+                    _limitedCache = new Rotation.Ability[count];
+
+                    int sel = 0;
+                    for (int i = 0; i < _limitedOrder.Length; i++)
+                    {
+                        if (_limitedSelected[i])
+                        {
+                            _limitedCache[sel] = _limitedOrder[i];
+                            sel++;
+                        }
+                    }
+                }
+                return _limitedCache;
+            }
+        }
+        
 
         public bool GlyphJudgement = true;
         public bool GlyphConsecration = true;

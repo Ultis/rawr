@@ -18,30 +18,30 @@ namespace Rawr.Retribution
 
             public int GetHashCode(Rotation obj)
             {
-                int ret = encode[(int)obj.Priorities[0]] + encode[(int)obj.Priorities[1]] * 2 + encode[(int)obj.Priorities[2]] * 4
-                    + encode[(int)obj.Priorities[3]] * 8 + encode[(int)obj.Priorities[4]] * 16 + encode[(int)obj.Priorities[5]] * 32
-                    + (obj.T7_4pc ? 64 : 0) + (obj.GlyphConsecrate ? 128 : 0) + int.Parse(obj.FightLength.ToString()) * 256
-                    + int.Parse((obj.TimeUnder20 * 100).ToString()) * 512;
+                int ret = (obj.T7_4pc ? 512 : 0) + (obj.GlyphConsecrate ? 1024 : 0) + int.Parse((obj.TimeUnder20 * 100).ToString()) * 2048;
+
+                for (int i = 0; i < obj.Priorities.Length; i++)
+                {
+                    ret += (int)obj.Priorities[i] * (4 ^ i);
+                }
                 
                 return ret;
             }
 
         }
 
-        public enum Ability {Judgement=0, CrusaderStrike, DivineStorm, Consecration, HammerOfWrath, Exorcism };
+        public enum Ability { Judgement=0, CrusaderStrike, DivineStorm, Consecration, HammerOfWrath, Exorcism };
 
         public readonly bool T7_4pc;
         public readonly bool GlyphConsecrate;
         public readonly Ability[] Priorities;
-        public readonly float FightLength;
         public readonly float TimeUnder20;
 
-        public Rotation(Ability[] Priorities, float FightLength, float TimeUnder20, bool T7_4pc, bool GlyphConsecrate)
+        public Rotation(Ability[] Priorities, float TimeUnder20, bool T7_4pc, bool GlyphConsecrate)
         {
             this.Priorities = Priorities;
             this.T7_4pc = T7_4pc;
             this.GlyphConsecrate = GlyphConsecrate;
-            this.FightLength = FightLength;
             this.TimeUnder20 = TimeUnder20;
         }
 
@@ -59,11 +59,10 @@ namespace Rawr.Retribution
             return prior
                 && (T7_4pc == other.T7_4pc)
                 && (GlyphConsecrate == other.GlyphConsecrate)
-                && (FightLength == other.FightLength)
                 && (TimeUnder20 == other.TimeUnder20);
         }
 
-        public string ShortAbilityString(Ability ability)
+        public static string ShortAbilityString(Ability ability)
         {
             if (ability == Ability.Consecration) return "Con";
             if (ability == Ability.CrusaderStrike) return "CS";
@@ -71,6 +70,17 @@ namespace Rawr.Retribution
             if (ability == Ability.DivineStorm) return "DS";
             if (ability == Ability.Exorcism) return "Exo";
             if (ability == Ability.HammerOfWrath) return "HoW";
+            return "?";
+        }
+
+        public static string AbilityString(Ability ability)
+        {
+            if (ability == Ability.Consecration) return "Consecration";
+            if (ability == Ability.CrusaderStrike) return "Crusader Strike";
+            if (ability == Ability.Judgement) return "Judgement";
+            if (ability == Ability.DivineStorm) return "Divine Storm";
+            if (ability == Ability.Exorcism) return "Exorcism";
+            if (ability == Ability.HammerOfWrath) return "Hammer of Wrath";
             return "?";
         }
 
