@@ -1567,7 +1567,7 @@ Felhunter - Reduces all spell damage taken by 10%.
 Felguard - Increases all damage done by 5%, and reduces all damage taken by 5%.",})]
 		public int MasterDemonologist { get { return _data[43]; } set { _data[43] = value; } }
 
-        [TalentData(44, "Molten Core", 3, 2, 3, 6, -1, new string[] {
+        [TalentData(44, "Molten Core", 3, 1, 3, 6, -1, new string[] {
 @"Your Shadow spells and damage over time effects have a 5% chance to increase the damage of your Fire spells by 10% for 12 sec.",
 @"Your Shadow spells and damage over time effects have a 10% chance to increase the damage of your Fire spells by 10% for 12 sec.",
 @"Your Shadow spells and damage over time effects have a 15% chance to increase the damage of your Fire spells by 10% for 12 sec.",})]

@@ -142,7 +142,7 @@ namespace Rawr.Warlock
                     "Shadow:Curse of Agony",
                     "Shadow:Curse of Doom",
                     "Shadow:Corruption",
-                    "Shadow:Siphon Life",
+                    //"Shadow:Siphon Life",
                     "Shadow:Unstable Affliction",
                     "Shadow:Death Coil",
                     "Shadow:Drain Life",
@@ -242,7 +242,24 @@ namespace Rawr.Warlock
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = spell.Name;
-                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone;
+                        comparison.SubPoints[0] = spell.SpellStatistics.DamageDone / (float)dpssolver.time;
+                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    comparison = CreateNewComparisonCalculation();
+                    comparison.Name = dpssolver.CalculationOptions.Pet;
+                    comparison.SubPoints[0] = dpssolver.PetDPS;
+                    _currentChartTotal += comparison.SubPoints[0];
+                    comparison.OverallPoints = comparison.SubPoints[0];
+                    comparison.Equipped = false;
+                    comparisonList.Add(comparison);
+                    if (_currentChartTotal < dpssolver.TotalDPS)
+                    {
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = "Other";
+                        comparison.SubPoints[0] = dpssolver.TotalDPS - _currentChartTotal;
                         _currentChartTotal += comparison.SubPoints[0];
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;

@@ -144,7 +144,7 @@ namespace Rawr.Warlock
 //                                 && (time <= timeTillNextSpell - GetCastTime(spell)))
                                     )
                                 return spell;
-                            timeTillNextSpell = Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - GetCastTime(spell));
+//                            timeTillNextSpell = Math.Min(timeTillNextSpell, spell.SpellStatistics.CooldownReset - GetCastTime(spell));
                             break;
                         }
                 }
@@ -184,6 +184,7 @@ namespace Rawr.Warlock
             shadowBolt = SpellFactory.CreateSpell("Shadow Bolt", PlayerStats, character);
             lifeTap = SpellFactory.CreateSpell("Life Tap", PlayerStats, character);
             bool UAImmoChosen = false;
+            bool CurseChosen = false;
             foreach (string spellname in CalculationOptions.SpellPriority)
             {
                 Spell spelltmp = SpellFactory.CreateSpell(spellname, PlayerStats, character);
@@ -191,10 +192,14 @@ namespace Rawr.Warlock
                 {
                     if ((spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate") && UAImmoChosen)
                         continue;
+                    if (spelltmp.Name.Contains("Curse") && CurseChosen)
+                        continue;
                     SpellPriority.Add(spelltmp);
                     spelltmp.SpellStatistics.HitChance = (float)Math.Min(1f, HitChance / 100f + character.WarlockTalents.Suppression * 1f / 100f);
                     if (spelltmp.Name == "Unstable Affliction" || spelltmp.Name == "Immolate")
                         UAImmoChosen = true;
+                    if (spelltmp.Name.Contains("Curse"))
+                        CurseChosen = true;
                 }
             }
             if (SpellPriority.Count == 0) SpellPriority.Add(shadowBolt);
@@ -547,9 +552,12 @@ namespace Rawr.Warlock
             double manaGain = simStats.Mana;
             currentMana += manaGain;
             ManaSources.Add(new ManaSource("Intellect", manaGain));
-            manaGain = simStats.Mp5 / 5f * time;
-            currentMana += manaGain;
-            ManaSources.Add(new ManaSource("MP5", manaGain));
+            if (simStats.Mp5 > 0)
+            {
+                manaGain = simStats.Mp5 / 5f * time;
+                currentMana += manaGain;
+                ManaSources.Add(new ManaSource("MP5", manaGain));
+            }
             if (CalculationOptions.FSRRatio < 100)
             {
                 manaGain = Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * time;

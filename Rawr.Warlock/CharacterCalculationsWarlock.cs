@@ -57,11 +57,11 @@ namespace Rawr.Warlock
             set { _subPoints[1] = value; }
         }
 
-        public float SurvivalPoints
+        /*public float SurvivalPoints
         {
             get { return _subPoints[2]; }
             set { _subPoints[2] = value; }
-        }
+        }*/
 
         public Solver GetSolver(Character character, Stats stats)
         {
@@ -143,10 +143,10 @@ namespace Rawr.Warlock
             dictValues.Add("Curse of Agony", new CurseOfAgony(BasicStats, character).ToString());
             dictValues.Add("Curse of Doom", new CurseOfDoom(BasicStats, character).ToString());
             dictValues.Add("Corruption", new Corruption(BasicStats, character).ToString());
-            if (character.WarlockTalents.SiphonLife > 0)
+            /*if (character.WarlockTalents.SiphonLife > 0)
                 dictValues.Add("Siphon Life", new SiphonLife(BasicStats, character).ToString());
             else
-                dictValues.Add("Siphon Life", "- *Required talent not available");
+                dictValues.Add("Siphon Life", "- *Required talent not available");*/
             if (character.WarlockTalents.UnstableAffliction > 0)
                 dictValues.Add("Unstable Affliction", new UnstableAffliction(BasicStats, character).ToString());
             else
