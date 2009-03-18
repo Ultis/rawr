@@ -485,7 +485,7 @@ namespace Rawr.RestoSham
             float RTPerc3 = RTCast / RTCHRotLength;
             float RTCHCHPerc = (CHPerRotation * CHCast) / RTCHRotLength;
             float RTCHAA = (RTHPS * RTPerc3) * AACalc;
-            calcStats.RTCHHPS = (RTHPS * RTPerc3 * (1 + stats.SpellCrit)) + (RTCHCHPerc * CHHPS * (1 + stats.SpellCrit)) + RTCHAA + ESHPS + ELWHPS;
+            calcStats.RTCHHPS = (RTHPS * RTPerc3 * (1 + stats.SpellCrit)) + (RTCHCHPerc * (((CHHPS * (CHPerRotation - 1)) + (CHHPS * 1.2f)) / CHPerRotation) * (1 + stats.SpellCrit)) + RTCHAA + ESHPS + ELWHPS;
             calcStats.RTCHMPS = (RTMPS * RTPerc3) + (CHMPS * RTCHCHPerc) + ESMPS;
             #endregion
             #region HW Spam
