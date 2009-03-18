@@ -3626,32 +3626,39 @@ namespace Rawr.Optimizer
                     } while (tries < 100 && !promising);
                 }
 
-                // mutate
-                ItemInstance item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
-                ItemInstance item2 = ReplaceGem(items[(int)mutation2.Slot], mutation2.Index, mutation1.Gem);
-                Enchant enchant1, enchant2;
-                enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
-                enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
-                if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && itemAvailable.ContainsKey(item1.GemmedId))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && itemAvailable.ContainsKey(item2.GemmedId))))
+                if (promising)
                 {
-                    successful = true;
-                    items[(int)mutation1.Slot] = item1;
-                    items[(int)mutation2.Slot] = item2;
+                    // mutate
+                    ItemInstance item1 = ReplaceGem(items[(int)mutation1.Slot], mutation1.Index, mutation2.Gem);
+                    ItemInstance item2 = ReplaceGem(items[(int)mutation2.Slot], mutation2.Index, mutation1.Gem);
+                    Enchant enchant1, enchant2;
+                    enchant1 = parent.GetEnchantBySlot(mutation1.Slot);
+                    enchant2 = parent.GetEnchantBySlot(mutation2.Slot);
+                    if (((lockedSlot == mutation1.Slot && lockedItems.Contains(item1)) || (lockedSlot != mutation1.Slot && itemAvailable.ContainsKey(item1.GemmedId))) && ((lockedSlot == mutation2.Slot && lockedItems.Contains(item2)) || (lockedSlot != mutation2.Slot && itemAvailable.ContainsKey(item2.GemmedId))))
+                    {
+                        successful = true;
+                        items[(int)mutation1.Slot] = item1;
+                        items[(int)mutation2.Slot] = item2;
+                    }
                 }
             }
 
             // create character
 
-            Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
-                _character.ActiveBuffs, _character.CurrentModel);
-            //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
-            //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
-            character.CalculationOptions = _character.CalculationOptions;
-            character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character);
-            character.EnforceGemRequirements = _character.EnforceGemRequirements;
-            //character.RecalculateSetBonuses();
-            return character;
+            if (successful)
+            {
+                Character character = new Character(_character.Name, _character.Realm, _character.Region, _character.Race, items,
+                    _character.ActiveBuffs, _character.CurrentModel);
+                //foreach (KeyValuePair<string, string> kvp in _character.CalculationOptions)
+                //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
+                character.CalculationOptions = _character.CalculationOptions;
+                character.Class = _character.Class;
+                character.AssignAllTalentsFromCharacter(_character);
+                character.EnforceGemRequirements = _character.EnforceGemRequirements;
+                //character.RecalculateSetBonuses();
+                return character;
+            }
+            return null;
         }
 
         protected override Character BuildMutantIndividual(Character parent)

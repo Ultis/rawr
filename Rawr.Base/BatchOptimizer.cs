@@ -840,6 +840,115 @@ namespace Rawr.Optimizer
             return new BatchIndividual(items, itemList.Count, indexFromId, upgradeItems != null ? upgradeItems[0].Item : null, batchList);
         }
 
+        protected override BatchIndividual BuildMutantIndividual(BatchIndividual parent)
+        {
+            bool successful;
+            BatchIndividual mutant = null;
+            if (rand.NextDouble() < 0.9)
+            {
+                return base.BuildMutantIndividual(parent);
+            }
+            else
+            {
+                mutant = BuildSwapGemMutantCharacter(parent, out successful);
+                if (!successful)
+                {
+                    return base.BuildMutantIndividual(parent);
+                }
+            }
+            return mutant;
+        }
+
+        private struct GemInformation
+        {
+            public int Slot;
+            public int Index;
+            public Item Gem;
+            public Item.ItemSlot Socket;
+        }
+
+        private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
+        {
+            ItemInstance copy = new ItemInstance(item.Item, item.Gem1, item.Gem2, item.Gem3, item.Enchant);
+            copy.SetGem(index, gem);
+            return copy;
+        }
+
+        private BatchIndividual BuildSwapGemMutantCharacter(BatchIndividual parent, out bool successful)
+        {
+            object[] items = (object[])GetItems(parent).Clone();
+            successful = false;
+
+            // do the work
+
+            int tries = 0;
+            do
+            {
+                int c = rand.Next(batchList.Count);
+                Character character = parent.Character[c];
+                // build a list of possible mutation points
+                // make sure not to do meta gem swaps
+                List<GemInformation> locationList = new List<GemInformation>();
+                for (int slot = 0; slot < characterSlots; slot++)
+                {
+                    if (character._item[slot] != null)
+                    {
+                        for (int i = 1; i <= 3; i++)
+                        {
+                            Item gem = character._item[slot].GetGem(i);
+                            if (gem != null && gem.Slot != Item.ItemSlot.Meta) locationList.Add(new GemInformation() { Slot = slot, Index = i, Gem = gem, Socket = character._item[slot].Item.GetSocketColor(i) });
+                        }
+                    }
+                }
+
+                if (locationList.Count > 1)
+                {
+                    GemInformation mutation1;
+                    GemInformation mutation2;
+                    // randomly select mutation point
+                    bool promising;
+                    do
+                    {
+                        promising = true;
+                        int mutationIndex1 = rand.Next(locationList.Count);
+                        int mutationIndex2 = rand.Next(locationList.Count);
+                        mutation1 = locationList[mutationIndex1];
+                        mutation2 = locationList[mutationIndex2];
+                        if (mutation1.Gem.Slot == mutation2.Gem.Slot) promising = false;
+                        if (mutation1.Socket == mutation2.Socket) promising = false;
+                        int matchNow = 0;
+                        if (Item.GemMatchesSlot(mutation1.Gem, mutation1.Socket)) matchNow++;
+                        if (Item.GemMatchesSlot(mutation2.Gem, mutation2.Socket)) matchNow++;
+                        if (matchNow == 2) promising = false;
+                        int matchThen = 0;
+                        if (Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket)) matchThen++;
+                        if (Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) matchThen++;
+                        if (matchThen <= matchNow) promising = false;
+                        tries++;
+                    } while (tries % 10 != 0 && !promising);
+
+                    // mutate
+                    if (promising)
+                    {
+                        ItemInstance item1 = ReplaceGem(character._item[mutation1.Slot], mutation1.Index, mutation2.Gem);
+                        ItemInstance item2 = ReplaceGem(character._item[mutation2.Slot], mutation2.Index, mutation1.Gem);
+                        if (((upgradeItems != null && item1.Id == upgradeItems[0].Id && upgradeItems.Contains(item1)) || ((upgradeItems == null || item1.Id != upgradeItems[0].Id) && item1.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item1.GemmedId))) && ((upgradeItems != null && item2.Id == upgradeItems[0].Id && upgradeItems.Contains(item2)) || ((upgradeItems == null || item2.Id != upgradeItems[0].Id) && item2.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item2.GemmedId))))
+                        {
+                            successful = true;
+                            items[(upgradeItems != null && item1.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item1.Id]] = item1;
+                            items[(upgradeItems != null && item2.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item2.Id]] = item2;
+                        }
+                    }
+                }
+            } while (tries < 100 && !successful);
+
+            if (successful)
+            {
+                return GenerateIndividual(items);
+            }
+            return null;
+        }
+
         protected override BatchIndividual BuildChildIndividual(BatchIndividual father, BatchIndividual mother)
         {
             return GeneratorBuildIndividual(
