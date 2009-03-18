@@ -487,6 +487,7 @@ namespace Rawr //O O . .
 
         public void InvalidateItemInstances()
         {
+            _relevantItems.Clear();
             _relevantItemInstances.Clear();
         }
 
