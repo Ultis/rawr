@@ -180,6 +180,18 @@ namespace Rawr.Healadin
             }
         }
 
+        public override bool EnchantFitsInSlot(Enchant enchant, Character character, Item.ItemSlot slot)
+        {
+            if ((slot == Item.ItemSlot.OffHand && enchant.Slot != Item.ItemSlot.OffHand) || slot == Item.ItemSlot.Ranged) return false;
+            return base.EnchantFitsInSlot(enchant, character, slot);
+        }
+
+        public override bool ItemFitsInSlot(Item item, Character character, Character.CharacterSlot slot)
+        {
+            if (slot == Character.CharacterSlot.OffHand && item.Slot == Item.ItemSlot.OneHand) return false;
+            return base.ItemFitsInSlot(item, character, slot);
+        }
+
 		public override Character.CharacterClass TargetClass { get { return Character.CharacterClass.Paladin; } }
 		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationHealadin(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsHealadin(); }
