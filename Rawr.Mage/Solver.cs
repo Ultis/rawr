@@ -727,7 +727,7 @@ namespace Rawr.Mage
 
             int rowCount = ConstructRows(minimizeTime, drinkingEnabled, needsTimeExtension, afterFightRegen);
 
-            lp = new SolverLP(rowCount, 9 + (10 + spellList.Count * stateList.Count) * segmentList.Count, calculationResult, segmentList.Count);
+            lp = new SolverLP(rowCount, 9 + (12 + (calculationOptions.EnableHastedEvocation ? 6 : 0) + spellList.Count * stateList.Count) * segmentList.Count, calculationResult, segmentList.Count);
             tpsList = new List<double>();
             double tps;
             calculationResult.SolutionVariable = solutionVariable = new List<SolutionVariable>();

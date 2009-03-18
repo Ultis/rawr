@@ -407,9 +407,24 @@ namespace Rawr.Mage
             {
                 if (calculations.Solution[i] > 0 && calculations.SolutionVariable[i].Type == VariableType.Spell)
                 {
-                    cooldownList.Add(calculations.SolutionVariable[i].State.Cooldown & Cooldown.NonItemBasedMask);
-                    spellList.Add(calculations.SolutionVariable[i].Spell.SpellId);
-                    segmentList.Add(calculations.SolutionVariable[i].Segment);
+                    Cooldown cooldown = calculations.SolutionVariable[i].State.Cooldown & Cooldown.NonItemBasedMask;
+                    SpellId spellId = calculations.SolutionVariable[i].Spell.SpellId;
+                    int segment = calculations.SolutionVariable[i].Segment;
+                    bool found = false;
+                    for (int j = 0; j < cooldownList.Count; j++)
+                    {
+                        if (cooldownList[j] == cooldown && spellList[j] == spellId && segmentList[j] == segment)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        cooldownList.Add(cooldown);
+                        spellList.Add(spellId);
+                        segmentList.Add(segment);
+                    }
                 }
             }
             calculationOptions.IncrementalSetStateIndexes = cooldownList.ToArray();
