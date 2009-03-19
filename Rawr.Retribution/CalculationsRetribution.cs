@@ -241,7 +241,7 @@ namespace Rawr.Retribution
             float sanctBattle = 1f + 0.05f * talents.SanctityOfBattle;
 
             float awTimes = (float)Math.Ceiling((fightLength - 20f) / (180f - talents.SanctifiedWrath * 30f));
-            float aw = 1f + ((awTimes * 20f) / fightLength) * 1.2f;
+            float aw = 1f + ((awTimes * 20f) / fightLength) * .2f;
 
             float spellPowerMulti = (1f + stats.BonusHolyDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float physPowerMulti = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
@@ -351,6 +351,11 @@ namespace Rawr.Retribution
                     consAvgHit * limited.Consecration + howAvgHit * limited.HammerOfWrath) / limited.FightLength;
                 float limitedUsage = csMana / limited.CrusaderStrikeCD + judgeMana / limited.JudgementCD + dsMana / limited.DivineStormCD +
                     howMana / limited.HammerOfWrathCD + exoMana / limited.ExorcismCD + consMana / limited.ConsecrationCD;
+                //float limitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * unlimited.Judgement +
+                //    csAvgHit * unlimited.CrusaderStrike + (dsAvgHit + dsRightVen) * unlimited.DivineStorm +
+                //    howAvgHit * unlimited.HammerOfWrath) / unlimited.FightLength;
+                //float limitedUsage = csMana / unlimited.CrusaderStrikeCD + judgeMana / unlimited.JudgementCD + dsMana / unlimited.DivineStormCD +
+                //    howMana / unlimited.HammerOfWrathCD;
 
                 float divinePleas = (float)Math.Ceiling((fightLength - 30) / 60);
                 float jowProcs = fightLength * (1 / calc.AttackSpeed + 1 / unlimited.CrusaderStrikeCD + 1 / unlimited.DivineStormCD +
