@@ -1474,30 +1474,41 @@ namespace Rawr
         {
             switch (Name)
             {
-                case " Agility" :
-                    return "21";
-                case " Strength":
-                    return "20";
-                case " Intellect":
-                    return "23";
-                case " Attack Power":
-                    return "77";
-                case " Spell Power":
-                    return "123";
-                case " Expertise":
-                    return "117";
-                case " Hit Rating":
-                    return "119";
-                case " Crit Rating":
-                    return "96";
-                case " Spell Crit Rating":
-                    return "49";
-                case " Armor Penetration Rating":
-                    return "114";
-                case " Haste Rating":
-                    return "103";
-                case " Melee Crit":
-                    return "84";
+                case " Strength":  return "20";
+                case " Agility":   return "21";
+                case " Stamina":   return "22";
+                case " Intellect": return "23";
+                case " Spirit":    return "24";
+
+                case " Health":    return "115";
+                case " Mana":      return "116";
+                case " Health per 5 sec": return "60";
+                case " Mana per 5 sec":   return "61";
+
+                case " Armor":          return "41";
+                case " Defense Rating": return "42";
+                case " Block Value":    return "43";
+                case " Block Rating":   return "44";
+                case " Dodge Rating":   return "45";
+                case " Parry Rating":   return "46";
+                case " Bonus Armor":    return "109";
+                case " Resilience":     return "79";
+
+                case " Attack Power":     return "77";
+                case " Spell Power":      return "123";
+                case " Expertise Rating": return "117";
+                case " Hit Rating":       return "119";
+                case " Crit Rating":      return "96";
+                case " Haste Rating":     return "103";
+                case " Melee Crit":       return "84";
+
+                case " Feral Attack Power":  return "97";
+                case " Spell Crit Rating":   return "49";
+                case " Spell Arcane Damage": return "52";
+                case " Spell Fire Damage":   return "53";
+                case " Spell Nature Damage": return "56";
+                case " Spell Shadow Damage": return "57";
+                case " Armor Penetration Rating": return "114";
             }
             return string.Empty;
         }
