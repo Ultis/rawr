@@ -281,14 +281,18 @@ namespace Rawr.Retribution
             #endregion
 
             #region Crusader Strike
-            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) * talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
-            float csAvgHit = csDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
+            float csCrit = stats.PhysicalCrit + stats.CrusaderStrikeCrit;
+            float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) *
+                talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
+            float csAvgHit = csDamage * (1f + csCrit * critBonus - csCrit - calc.ToMiss - calc.ToDodge);
             calc.CrusaderStrikeDPS = csAvgHit / 6f;
             #endregion
 
             #region Divine Storm
-            float dsDamage = normalizedWeaponDamage * talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
-            float dsAvgHit = dsDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
+            float dsCrit = stats.PhysicalCrit + stats.DivineStormCrit;
+            float dsDamage = (normalizedWeaponDamage + stats.DivineStormDamage) *
+                talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
+            float dsAvgHit = dsDamage * (1f + dsCrit * critBonus - dsCrit - calc.ToMiss - calc.ToDodge);
             float dsRightVen = dsDamage * critBonus * rightVen;
             calc.DivineStormDPS = (dsAvgHit + dsRightVen) / 10f;
             #endregion
@@ -309,14 +313,14 @@ namespace Rawr.Retribution
 
             #region Exorcism
             float exoCrit = (calcOpts.MobType < 2 ? 1f : stats.SpellCrit);
-            float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle; 
+            float exoDamage = (1087f + .42f * stats.SpellPower) * vengeance * crusade * spellPowerMulti * partialResist * aw * sanctBattle * (1f + stats.ExorcismMultiplier); 
             float exoAvgHit = exoDamage * (1f + exoCrit * spellCritBonus - exoCrit - calc.ToResist);
             calc.ExorcismDPS = exoAvgHit / 15f;
             #endregion
 
             #region Hammer of Wrath
             float howCrit = stats.PhysicalCrit + .25f * talents.SanctifiedRetribution;
-            float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist * aw;
+            float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist * aw * (1f + stats.HammerOfWrathMultiplier);
             float howAvgHit = howDamage * (1f + howCrit * critBonus - howCrit - calc.ToMiss);
             calc.HammerOfWrathDPS = howAvgHit / 6f;
             #endregion
@@ -542,7 +546,12 @@ namespace Rawr.Retribution
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 APCrusaderStrike_6 = stats.APCrusaderStrike_6,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
-                JudgementCDReduction = stats.JudgementCDReduction
+                JudgementCDReduction = stats.JudgementCDReduction,
+                DivineStormDamage = stats.DivineStormDamage,
+                DivineStormCrit = stats.DivineStormCrit,
+                CrusaderStrikeCrit = stats.CrusaderStrikeCrit,
+                ExorcismMultiplier = stats.ExorcismMultiplier,
+                HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
             };
         }
 
@@ -555,7 +564,8 @@ namespace Rawr.Retribution
                 stats.BonusAttackPowerMultiplier + stats.BonusPhysicalDamageMultiplier + stats.BonusHolyDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.GreatnessProc + stats.CritDivineStorm_8 + stats.CritJudgement_5 + stats.CrusaderStrikeDamage + stats.APCrusaderStrike_6 + stats.ConsecrationSpellPower +
                 stats.JudgementCDReduction + stats.BerserkingProc + stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPerHit + stats.Mana +
-                stats.BonusIntellectMultiplier
+                stats.BonusIntellectMultiplier + stats.DivineStormDamage + stats.DivineStormCrit + stats.CrusaderStrikeCrit + stats.ExorcismMultiplier +
+                stats.HammerOfWrathMultiplier
                 ) != 0;
         }
     }
