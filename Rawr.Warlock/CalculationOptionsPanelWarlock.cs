@@ -23,9 +23,9 @@ namespace Rawr.Warlock
                 Character.CalculationOptions = new CalculationOptionsWarlock();
 
             CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-            
+
             cbTargetLevel.SelectedIndex = calcOpts.TargetLevel;
-            
+
             trkFightLength.Value = (int)calcOpts.FightLength;
             lblFightLength.Text = trkFightLength.Value + " minute fight.";
 
@@ -41,16 +41,35 @@ namespace Rawr.Warlock
             trkJoW.Value = (int)calcOpts.JoW;
             lblJoW.Text = trkJoW.Value + "% effect from JoW.";
 
-            trkSurvivability.Value = (int)calcOpts.Survivability;
-            lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
-            
             cbManaAmt.SelectedIndex = calcOpts.ManaPot;
 
             if (calcOpts.SpellPriority == null)
                 calcOpts.SpellPriority = new List<string>() {"Shadow Bolt"};
             lsSpellPriopity.Items.Clear();
             lsSpellPriopity.Items.AddRange(calcOpts.SpellPriority.ToArray());
-            
+
+            tbAffEffects.Text = calcOpts.AffEffectsNumber.ToString();
+
+            cbPet.SelectedItem = calcOpts.Pet;
+
+            chbUseInfernal.Checked = calcOpts.UseInfernal;
+            chbGlyphChaosBolt.Checked = calcOpts.GlyphChaosBolt;
+            chbGlyphConflag.Checked = calcOpts.GlyphConflag;
+            chbGlyphCorruption.Checked = calcOpts.GlyphCorruption;
+            chbGlyphCoA.Checked = calcOpts.GlyphCoA;
+            chbGlyphFelguard.Checked = calcOpts.GlyphFelguard;
+            chbGlyphHaunt.Checked = calcOpts.GlyphHaunt;
+            chbGlyphImmolate.Checked = calcOpts.GlyphImmolate;
+            chbGlyphImp.Checked = calcOpts.GlyphImp;
+            chbGlyphIncinerate.Checked = calcOpts.GlyphIncinerate;
+            chbGlyphLifeTap.Checked = calcOpts.GlyphLifeTap;
+            chbGlyphMetamorphosis.Checked = calcOpts.GlyphMetamorphosis;
+            chbGlyphSearingPain.Checked = calcOpts.GlyphSearingPain;
+            chbGlyphSB.Checked = calcOpts.GlyphSB;
+            chbGlyphShadowburn.Checked = calcOpts.GlyphShadowburn;
+            chbGlyphSiphonLife.Checked = calcOpts.GlyphSiphonLife;
+            chbGlyphUA.Checked = calcOpts.GlyphUA;
+
             loading = false;
         }
 
@@ -136,17 +155,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.Survivability = trkSurvivability.Value;
-                lblSurvivability.Text = trkSurvivability.Value + "% Focus on Survivability.";
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void cbPet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -157,12 +165,12 @@ namespace Rawr.Warlock
             }
         }
 
-        private void chbUseDoomguard_CheckedChanged(object sender, EventArgs e)
+        private void chbUseInfernal_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
             {
                 CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.UseDoomguard = chbUseDoomguard.Checked;
+                calcOpts.UseInfernal = chbUseInfernal.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -344,6 +352,18 @@ namespace Rawr.Warlock
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
 	{
+        public bool GetGlyphByName(string name)
+        {
+            Type t = typeof(CalculationOptionsWarlock);
+            return (bool)t.GetProperty(name).GetValue(this, null);
+        }
+
+        public void SetGlyphByName(string name, bool value)
+        {
+            Type t = typeof(CalculationOptionsWarlock);
+            t.GetProperty(name).SetValue(this, value, null);
+        }
+
         public int TargetLevel { get; set; }
         public int AffEffectsNumber { get; set; }
         public float FightLength { get; set; }
@@ -354,7 +374,7 @@ namespace Rawr.Warlock
         public float LTUsePercent { get; set; }
         public float Survivability { get; set; }
         public String Pet { get; set; }
-        public bool UseDoomguard { get; set; }
+        public bool UseInfernal { get; set; }
         public bool GlyphChaosBolt { get; set; }
         public bool GlyphConflag { get; set; }
         public bool GlyphCorruption { get; set; }

@@ -36,8 +36,7 @@
             this.trkFightLength = new System.Windows.Forms.TrackBar();
             this.trkFSR = new System.Windows.Forms.TrackBar();
             this.trkDelay = new System.Windows.Forms.TrackBar();
-            this.trkSurvivability = new System.Windows.Forms.TrackBar();
-            this.chbUseDoomguard = new System.Windows.Forms.CheckBox();
+            this.chbUseInfernal = new System.Windows.Forms.CheckBox();
             this.tbAffEffects = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -52,7 +51,6 @@
             this.cbTargetLevel = new System.Windows.Forms.ComboBox();
             this.lblFightLength = new System.Windows.Forms.Label();
             this.tabChar = new System.Windows.Forms.TabPage();
-            this.lblSurvivability = new System.Windows.Forms.Label();
             this.gbSpellPriority = new System.Windows.Forms.GroupBox();
             this.bChangePriority = new System.Windows.Forms.Button();
             this.lsSpellPriopity = new System.Windows.Forms.ListBox();
@@ -81,7 +79,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFSR)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabFight.SuspendLayout();
             this.tabChar.SuspendLayout();
@@ -147,28 +144,18 @@
                     "al brain farts you expect to have.");
             this.trkDelay.Scroll += new System.EventHandler(this.trkDelay_Scroll);
             // 
-            // trkSurvivability
+            // chbUseInfernal
             // 
-            this.trkSurvivability.Location = new System.Drawing.Point(6, 30);
-            this.trkSurvivability.Maximum = 100;
-            this.trkSurvivability.Name = "trkSurvivability";
-            this.trkSurvivability.Size = new System.Drawing.Size(244, 42);
-            this.trkSurvivability.TabIndex = 54;
-            this.trkSurvivability.TickFrequency = 5;
-            this.toolTip1.SetToolTip(this.trkSurvivability, "Tell Rawr how much you value your life. Use 0-5% for PvE, 10-15% for PvP");
-            this.trkSurvivability.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
-            // chbUseDoomguard
-            // 
-            this.chbUseDoomguard.AutoSize = true;
-            this.chbUseDoomguard.Location = new System.Drawing.Point(9, 41);
-            this.chbUseDoomguard.Name = "chbUseDoomguard";
-            this.chbUseDoomguard.Size = new System.Drawing.Size(103, 17);
-            this.chbUseDoomguard.TabIndex = 66;
-            this.chbUseDoomguard.Text = "Use Doomguard";
-            this.toolTip1.SetToolTip(this.chbUseDoomguard, "Check if you want to use a Doomguard during the last minute of the fight");
-            this.chbUseDoomguard.UseVisualStyleBackColor = true;
-            this.chbUseDoomguard.CheckedChanged += new System.EventHandler(this.chbUseDoomguard_CheckedChanged);
+            this.chbUseInfernal.AutoSize = true;
+            this.chbUseInfernal.Enabled = false;
+            this.chbUseInfernal.Location = new System.Drawing.Point(9, 41);
+            this.chbUseInfernal.Name = "chbUseInfernal";
+            this.chbUseInfernal.Size = new System.Drawing.Size(83, 17);
+            this.chbUseInfernal.TabIndex = 66;
+            this.chbUseInfernal.Text = "Use Infernal";
+            this.toolTip1.SetToolTip(this.chbUseInfernal, "Check if you want to use an Infernal during the last minute of the fight");
+            this.chbUseInfernal.UseVisualStyleBackColor = true;
+            this.chbUseInfernal.CheckedChanged += new System.EventHandler(this.chbUseInfernal_CheckedChanged);
             // 
             // tbAffEffects
             // 
@@ -327,8 +314,6 @@
             // tabChar
             // 
             this.tabChar.AutoScroll = true;
-            this.tabChar.Controls.Add(this.lblSurvivability);
-            this.tabChar.Controls.Add(this.trkSurvivability);
             this.tabChar.Controls.Add(this.gbSpellPriority);
             this.tabChar.Location = new System.Drawing.Point(4, 22);
             this.tabChar.Name = "tabChar";
@@ -338,20 +323,11 @@
             this.tabChar.Text = "Character";
             this.tabChar.UseVisualStyleBackColor = true;
             // 
-            // lblSurvivability
-            // 
-            this.lblSurvivability.AutoSize = true;
-            this.lblSurvivability.Location = new System.Drawing.Point(3, 14);
-            this.lblSurvivability.Name = "lblSurvivability";
-            this.lblSurvivability.Size = new System.Drawing.Size(121, 13);
-            this.lblSurvivability.TabIndex = 55;
-            this.lblSurvivability.Text = "% Focus on Survivability";
-            // 
             // gbSpellPriority
             // 
             this.gbSpellPriority.Controls.Add(this.bChangePriority);
             this.gbSpellPriority.Controls.Add(this.lsSpellPriopity);
-            this.gbSpellPriority.Location = new System.Drawing.Point(6, 78);
+            this.gbSpellPriority.Location = new System.Drawing.Point(18, 16);
             this.gbSpellPriority.Name = "gbSpellPriority";
             this.gbSpellPriority.Size = new System.Drawing.Size(244, 184);
             this.gbSpellPriority.TabIndex = 53;
@@ -378,7 +354,7 @@
             // 
             // tabPet
             // 
-            this.tabPet.Controls.Add(this.chbUseDoomguard);
+            this.tabPet.Controls.Add(this.chbUseInfernal);
             this.tabPet.Controls.Add(this.label1);
             this.tabPet.Controls.Add(this.cbPet);
             this.tabPet.Location = new System.Drawing.Point(4, 22);
@@ -630,12 +606,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFSR)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trkSurvivability)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabFight.ResumeLayout(false);
             this.tabFight.PerformLayout();
             this.tabChar.ResumeLayout(false);
-            this.tabChar.PerformLayout();
             this.gbSpellPriority.ResumeLayout(false);
             this.tabPet.ResumeLayout(false);
             this.tabPet.PerformLayout();
@@ -666,14 +640,12 @@
         private System.Windows.Forms.TrackBar trkDelay;
         private System.Windows.Forms.TabPage tabChar;
         private System.Windows.Forms.TabPage tabPet;
-        private System.Windows.Forms.Label lblSurvivability;
-        private System.Windows.Forms.TrackBar trkSurvivability;
         private System.Windows.Forms.GroupBox gbSpellPriority;
         private System.Windows.Forms.Button bChangePriority;
         private System.Windows.Forms.ListBox lsSpellPriopity;
         private System.Windows.Forms.ComboBox cbPet;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox chbUseDoomguard;
+        private System.Windows.Forms.CheckBox chbUseInfernal;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbAffEffects;
         private System.Windows.Forms.TabPage tabGlyphs;

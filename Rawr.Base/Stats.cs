@@ -354,6 +354,8 @@ namespace Rawr
         HammerOfTheRighteousMultiplier,
         #region Warlock set bonuses
         CorruptionTriggersCrit,
+        Warlock2T8,
+        Warlock4T8,
         #endregion
         #region Warrior set bonuses
         BonusShieldSlamDamage,
@@ -2796,6 +2798,26 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.CorruptionTriggersCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% damage on Unstable Affliction and Immolate")]
+        [Category("Equipment Procs")]
+        public float Warlock2T8
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T8] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% crit chance on Shadowbolt and Incinerate")]
+        [Category("Equipment Procs")]
+        public float Warlock4T8
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T8] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

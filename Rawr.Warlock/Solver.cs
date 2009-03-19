@@ -518,7 +518,7 @@ namespace Rawr.Warlock
                 }
             }
             float NightfallProcs = 0;
-            if (character.WarlockTalents.Nightfall > 0)
+            if (character.WarlockTalents.Nightfall > 0 || CalculationOptions.GlyphCorruption)
             {
                 NightfallProcs = NightfallCounter * (character.WarlockTalents.Nightfall * 0.02f + (CalculationOptions.GlyphCorruption ? 0.04f : 0));
                 if (shadowBolt != null)

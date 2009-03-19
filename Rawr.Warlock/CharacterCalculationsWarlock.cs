@@ -74,13 +74,6 @@ namespace Rawr.Warlock
             CalculationOptionsWarlock calcOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
             dictValues.Add("Health", BasicStats.Health.ToString());
-            float ResilienceCap = 15f, ResilienceFromRating = character.StatConversion.GetResilienceFromRating(1);
-            float Resilience = character.StatConversion.GetResilienceFromRating(BasicStats.Resilience);
-            dictValues.Add("Resilience", string.Format("{0}*-{1}% Damage from DoT and Mana Drains\n\r-{1}% Chance to be crit\r\n-{2}% Damage from Crits.\r\n{3}",
-                BasicStats.Resilience.ToString(),
-                Resilience.ToString("0.00"),
-                (Resilience * 2.2f).ToString("0.00"),
-                (Resilience > ResilienceCap) ? (string.Format("{0} rating above cap", ((float)Math.Floor((Resilience - ResilienceCap) / ResilienceFromRating)).ToString("0"))) : (string.Format("{0} rating below cap", ((float)Math.Ceiling((ResilienceCap - Resilience) / ResilienceFromRating)).ToString("0")))));
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Intellect", BasicStats.Intellect.ToString());

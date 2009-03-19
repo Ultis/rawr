@@ -69,7 +69,7 @@ namespace Rawr.Warlock
             petStats.AttackPower += (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.57f;
             petStats.AttackPower *= 1 + charStats.BonusAttackPowerMultiplier;
             if (Pet == "Felguard") petStats.AttackPower *= 1 + ((0.05f + (character.WarlockTalents.DemonicBrutality > 0 ? character.WarlockTalents.DemonicBrutality * 0.01f : 0)) * 10);
-            if (Pet == "Felguard") petStats.AttackPower *= 1.2f;
+            if (Pet == "Felguard" && CalculationOptions.GlyphFelguard) petStats.AttackPower *= 1.2f;
             //SpellPower
             petStats.SpellPower = (charStats.SpellPower + Math.Max(charStats.SpellShadowDamageRating, charStats.SpellFireDamageRating)) * 0.1495f;
             petStats.SpellPower *= 1 + charStats.BonusSpellPowerMultiplier;

@@ -108,7 +108,6 @@ namespace Rawr.Warlock
                     default:
                         _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
                         _subPointNameColors.Add("Pet DPS", System.Drawing.Color.Blue);
-                        _subPointNameColors.Add("Survivability", System.Drawing.Color.Green);
                         break;
                 }
                 _currentChartName = null;
@@ -128,7 +127,6 @@ namespace Rawr.Warlock
                     "Simulation:Pet DPS",
                     "Simulation:Total DPS",
                     "Basic Stats:Health",
-                    "Basic Stats:Resilience",
                     "Basic Stats:Mana",
                     "Basic Stats:Stamina",
                     "Basic Stats:Intellect",
@@ -177,13 +175,27 @@ namespace Rawr.Warlock
             }
         }
 
+        private string[] _optimizableCalculationLabels = null;
+	/// <summary>
+	/// Labels of the stats available to the Optimizer
+	/// </summary>
+	public override string[]  OptimizableCalculationLabels
+	{
+            get
+	    {
+                if (_optimizableCalculationLabels == null)
+                    _optimizableCalculationLabels = new string[] {"Hit",};
+                return _optimizableCalculationLabels;
+            }
+	}
+
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
         {
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", "Haste Rating Gain" };
+                    _customChartNames = new string[] { "DPS Sources", "Mana Sources", "Mana Usage", "Glyphs", "Haste Rating Gain" };
                 return _customChartNames;
             }
         }
@@ -208,6 +220,9 @@ namespace Rawr.Warlock
                 return _relevantItemTypes;
             }
         }
+
+        private static string[] GlyphList = { "GlyphChaosBolt", "GlyphConflag", "GlyphCorruption", "GlyphCoA", "GlyphFelguard", "GlyphHaunt", "GlyphImmolate", "GlyphImp", "GlyphIncinerate", "GlyphLifeTap", "GlyphMetamorphosis", "GlyphSearingPain", "GlyphSB", "GlyphShadowburn", "GlyphSiphonLife", "GlyphUA" };
+        private static string[] GlyphListFriendly = { "Glyph of Chaos Bolt", "Glyph of Conflagrate", "Glyph of Corruption", "Glyph of Curse of Agony", "Glyph of Felguard", "Glyph of Haunt", "Glyph of Immolate", "Glyph of Imp", "Glyph of Incinerate", "Glyph of Life Tap", "Glyph of Metamorphosis", "Glyph of Searing Pain", "Glyph of Shadowbolt", "Glyph of Shadowburn", "Glyph of Siphon Life", "Glyph of Unstable Affliction" };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
@@ -279,6 +294,42 @@ namespace Rawr.Warlock
                         comparison.OverallPoints = comparison.SubPoints[0];
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
+                    }
+                    return comparisonList.ToArray();
+                case "Glyphs":
+                    CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+                    CharacterCalculationsWarlock glyphcalcs = GetCharacterCalculations(character) as CharacterCalculationsWarlock;
+
+                    for (int index = 0; index < GlyphList.Length; index++)
+                    {
+                        string glyph = GlyphList[index];
+                        bool glyphEnabled = calcOpts.GetGlyphByName(glyph);
+
+                        if (glyphEnabled)
+                        {
+                            calcOpts.SetGlyphByName(glyph, false);
+                            CharacterCalculationsWarlock calc = GetCharacterCalculations(character, null) as CharacterCalculationsWarlock;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = GlyphListFriendly[index];
+                            comparison.Equipped = true;
+                            comparison.SubPoints[0] = (glyphcalcs.OverallPoints - calc.OverallPoints);
+                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparisonList.Add(comparison);
+                        }
+                        else
+                        {
+                            calcOpts.SetGlyphByName(glyph, true);
+                            CharacterCalculationsWarlock calc = GetCharacterCalculations(character, null) as CharacterCalculationsWarlock;
+
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = GlyphListFriendly[index];
+                            comparison.Equipped = false;
+                            comparison.SubPoints[0] = (calc.OverallPoints - glyphcalcs.OverallPoints);
+                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparisonList.Add(comparison);
+                        }
+                        calcOpts.SetGlyphByName(glyph, glyphEnabled);
                     }
                     return comparisonList.ToArray();
                 case "Haste Rating Gain":
@@ -511,7 +562,6 @@ namespace Rawr.Warlock
             {
                 Stamina = stats.Stamina,
                 Health = stats.Health,
-                Resilience = stats.Resilience,
                 Intellect = stats.Intellect,
                 Mana = stats.Mana,
                 Spirit = stats.Spirit,
@@ -552,7 +602,9 @@ namespace Rawr.Warlock
                 LightweaveEmbroideryProc = stats.LightweaveEmbroideryProc,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 CorruptionTriggersCrit = stats.CorruptionTriggersCrit,
-                LifeTapBonusSpirit = stats.LifeTapBonusSpirit
+                LifeTapBonusSpirit = stats.LifeTapBonusSpirit,
+                Warlock2T8 = stats.Warlock2T8,
+                Warlock4T8 = stats.Warlock4T8
             };
         }
 
@@ -561,7 +613,6 @@ namespace Rawr.Warlock
             return (
 //                  stats.Stamina
                 stats.Health
-                + stats.Resilience
                 + stats.Intellect
                 + stats.Mana
                 + stats.Spirit
@@ -607,6 +658,8 @@ namespace Rawr.Warlock
                 + stats.BonusSpellCritMultiplier
                 + stats.CorruptionTriggersCrit
                 + stats.LifeTapBonusSpirit
+                + stats.Warlock2T8
+                + stats.Warlock4T8
                 ) > 0;
         }
 

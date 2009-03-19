@@ -1783,6 +1783,24 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Deathbringer Garb 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock2T8 = 0.2f },
+                SetName = "Deathbringer Garb",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Deathbringer Garb 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock4T8 = 0.05f },
+                SetName = "Deathbringer Garb",
+                SetThreshold = 4
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Spellfire 3 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
