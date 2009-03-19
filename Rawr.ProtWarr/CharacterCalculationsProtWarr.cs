@@ -209,6 +209,7 @@ namespace Rawr.ProtWarr
                 case "Unlimited TPS": return UnlimitedThreat;
                 case "Limited TPS": return LimitedThreat;
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
+                case "% Total Mitigation": return TotalMitigation * 100.0f;
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
