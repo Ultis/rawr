@@ -292,6 +292,9 @@ namespace Rawr
         StarfireProc,
         EclipseBonus,
         #endregion
+        #region Warrior set bonuses
+        DevastateCritIncrease,
+        #endregion
     }
 
     enum MultiplicativeStat : int
@@ -315,9 +318,6 @@ namespace Rawr
         BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
         BonusRipDamageMultiplier,
-        BonusShieldSlamDamage,
-        BonusSlamDamage,
-        DreadnaughtBonusRageProc,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
         BonusSpiritMultiplier,
@@ -354,6 +354,11 @@ namespace Rawr
         HammerOfTheRighteousMultiplier,
         #region Warlock set bonuses
         CorruptionTriggersCrit,
+        #endregion
+        #region Warrior set bonuses
+        BonusShieldSlamDamage,
+        BonusSlamDamage,
+        DreadnaughtBonusRageProc,
         #endregion
     }
 
@@ -2738,6 +2743,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% increased critical strike chance on Devastate")]
+        public float DevastateCritIncrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

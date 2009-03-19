@@ -2112,6 +2112,15 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
+                Name = "Siegebreaker Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { DevastateCritIncrease = 0.1f },
+                SetName = "Siegebreaker Plate",
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
                 Name = "Primalstrike 3 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
