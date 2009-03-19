@@ -156,12 +156,13 @@ namespace Rawr
             return item;
 		}
 
-		public static Item GetItem(int id) { return GetItem(id.ToString(), true); }
-        public static Item GetItem(int id, bool filter) { return GetItem(id.ToString(), filter); }		
-		public static Item GetItem(string query, bool filter)
+        public static Item GetItem(int id) { return GetItem("www", id.ToString(), true); }
+        public static Item GetItem(int id, bool filter) { return GetItem("www", id.ToString(), filter); }
+        public static Item GetItem(string query, bool filter) { return GetItem("www", query, filter); }
+		public static Item GetItem(string site, string query, bool filter)
 		{
 			WebRequestWrapper wrw = new WebRequestWrapper();
-            XmlDocument docItem = wrw.DownloadItemWowhead(query);
+            XmlDocument docItem = wrw.DownloadItemWowhead(site, query);
 			if (docItem.InnerXml.Contains("Item not found!")) return null;
             // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
             int id = 0;
@@ -1234,6 +1235,283 @@ namespace Rawr
 			}
 		}
 
-		
-	}
+        public static void LoadUpgradesFromWowhead(Character character, bool usePTR)
+        {
+            if (!string.IsNullOrEmpty(character.Name))
+            {
+                WebRequestWrapper.ResetFatalErrorIndicator();
+                List<ComparisonCalculationBase> gemCalculations = new List<ComparisonCalculationBase>();
+                foreach (Item item in ItemCache.AllItems)
+                {
+                    if (item.Slot == Item.ItemSlot.Blue || item.Slot == Item.ItemSlot.Green || item.Slot == Item.ItemSlot.Meta
+                         || item.Slot == Item.ItemSlot.Orange || item.Slot == Item.ItemSlot.Prismatic || item.Slot == Item.ItemSlot.Purple
+                         || item.Slot == Item.ItemSlot.Red || item.Slot == Item.ItemSlot.Yellow)
+                    {
+                        gemCalculations.Add(Calculations.GetItemCalculations(item, character, item.Slot == Item.ItemSlot.Meta ? Character.CharacterSlot.Metas : Character.CharacterSlot.Gems));
+                    }
+                }
+
+                ComparisonCalculationBase idealRed = null, idealBlue = null, idealYellow = null, idealMeta = null;
+                foreach (ComparisonCalculationBase calc in gemCalculations)
+                {
+                    if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Meta) && (idealMeta == null || idealMeta.OverallPoints < calc.OverallPoints))
+                        idealMeta = calc;
+                    if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Red) && (idealRed == null || idealRed.OverallPoints < calc.OverallPoints))
+                        idealRed = calc;
+                    if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Blue) && (idealBlue == null || idealBlue.OverallPoints < calc.OverallPoints))
+                        idealBlue = calc;
+                    if (Item.GemMatchesSlot(calc.Item, Item.ItemSlot.Yellow) && (idealYellow == null || idealYellow.OverallPoints < calc.OverallPoints))
+                        idealYellow = calc;
+                }
+                Dictionary<Item.ItemSlot, int> idealGems = new Dictionary<Item.ItemSlot, int>();
+                idealGems.Add(Item.ItemSlot.Meta, idealMeta == null ? 0 : idealMeta.Item.Id);
+                idealGems.Add(Item.ItemSlot.Red, idealRed == null ? 0 : idealRed.Item.Id);
+                idealGems.Add(Item.ItemSlot.Blue, idealBlue == null ? 0 : idealBlue.Item.Id);
+                idealGems.Add(Item.ItemSlot.Yellow, idealYellow == null ? 0 : idealYellow.Item.Id);
+                idealGems.Add(Item.ItemSlot.None, 0);
+
+                #region status queuing
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Head.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Neck.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Shoulders.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Back.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Chest.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Wrist.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Hands.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Waist.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Legs.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Feet.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger1.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Finger2.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket1.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Trinket2.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.MainHand.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.OffHand.ToString(), "Queued");
+                StatusMessaging.UpdateStatus(Character.CharacterSlot.Ranged.ToString(), "Queued");
+                #endregion
+
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Head, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Neck, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Shoulders, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Back, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Chest, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Wrist, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Hands, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Waist, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Legs, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Feet, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Finger1, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Finger2, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket1, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Trinket2, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.MainHand, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.OffHand, idealGems, usePTR);
+                LoadUpgradesForSlot(character, Character.CharacterSlot.Ranged, idealGems, usePTR);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("You need to have a character loaded for Rawr to find Wowhead upgrades.");
+            }
+        }
+
+        private static void LoadUpgradesForSlot(Character character, Character.CharacterSlot slot, Dictionary<Item.ItemSlot, int> idealGems, bool usePTR)
+        {
+            XmlDocument docUpgradeSearch = null;
+            try
+            {
+                string site = usePTR ? "ptr" : "www";
+                StatusMessaging.UpdateStatus(slot.ToString(), "Downloading Upgrade List");
+                ItemInstance itemToUpgrade = character[slot];
+                if ((object)itemToUpgrade != null)
+                {
+                    WebRequestWrapper wrw = new WebRequestWrapper();
+                    string minLevel = "minle=" + itemToUpgrade.Item.ItemLevel.ToString() + ";";
+                    string filter = getWowheadSlotFilter(slot) + minLevel + getWowheadClassFilter(character.Class) + 
+                                    getWowheadWeightFilter(character); 
+                    docUpgradeSearch = wrw.DownloadUpgradesWowhead(site, filter);
+                    ComparisonCalculationBase currentCalculation = Calculations.GetItemCalculations(itemToUpgrade, character, slot);
+                    if (docUpgradeSearch != null)
+                    {
+                        // at this stage have an HTML doc that has upgrades in a <div class="listview-void"> block
+                        // need to get the itemID list out and then load them and add to cache if better than itemToUpgrade
+                        int startpos = docUpgradeSearch.InnerXml.IndexOf("<div class=\"listview-void\">");
+                        if (startpos > 1)
+                        {
+                            int endpos = docUpgradeSearch.InnerXml.IndexOf("</div>", startpos);
+                            XmlDocument doc = new XmlDocument();
+                            doc.InnerXml = docUpgradeSearch.InnerXml.Substring(startpos, endpos - startpos + 6);
+                            XmlNodeList nodeList = doc.SelectNodes("//a/@href");
+
+                            for (int i = 0; i < nodeList.Count; i++)
+                            {
+                                StatusMessaging.UpdateStatus(slot.ToString(), string.Format("Downloading definition {0} of {1} possible upgrades", i, nodeList.Count));
+                                string id = nodeList[i].Value.Substring(7);
+                                if (!ItemCache.Instance.ContainsItemId(int.Parse(id)))
+                                {
+                                    Item idealItem = GetItem(site, id, true);
+                                    if (idealItem != null)
+                                    {
+                                        ItemInstance idealGemmedItem = new ItemInstance(int.Parse(id), idealGems[idealItem.SocketColor1], idealGems[idealItem.SocketColor2], idealGems[idealItem.SocketColor3], itemToUpgrade.EnchantId);
+
+                                        Item newItem = ItemCache.AddItem(idealItem, false);
+
+                                        //This is calling OnItemsChanged and ItemCache.Add further down the call stack so if we add it to the cache first, 
+                                        // then do the compare and remove it if we don't want it, we can avoid that constant event trigger
+                                        ComparisonCalculationBase upgradeCalculation = Calculations.GetItemCalculations(idealGemmedItem, character, slot);
+
+                                        if (upgradeCalculation.OverallPoints < (currentCalculation.OverallPoints * .8f))
+                                            ItemCache.DeleteItem(newItem, false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        StatusMessaging.ReportError(slot.ToString(), null, "No response returned from Wowhead");
+                    }
+                }
+                StatusMessaging.UpdateStatusFinished(slot.ToString());
+            }
+            catch (Exception ex)
+            {
+                StatusMessaging.ReportError(slot.ToString(), ex, "Error interpreting the data returned from Wowhead");
+            }
+        }
+
+        private static string getWowheadClassFilter(Character.CharacterClass className)
+        {
+            switch (className)
+            {
+                case Character.CharacterClass.DeathKnight :
+                    return "ub=6;";
+                case Character.CharacterClass.Druid :
+                    return "ub=11;";
+                case Character.CharacterClass.Hunter :
+                    return "ub=3;";
+                case Character.CharacterClass.Mage :
+                    return "ub=8;";
+                case Character.CharacterClass.Paladin :
+                    return "ub=2;";
+                case Character.CharacterClass.Priest :
+                    return "ub=5;";
+                case Character.CharacterClass.Rogue :
+                    return "ub=4;";
+                case Character.CharacterClass.Shaman :
+                    return "ub=7;";
+                case Character.CharacterClass.Warlock :
+                    return "ub=9;";
+                case Character.CharacterClass.Warrior :
+                    return "ub=1;";
+            }
+            return string.Empty;
+        }
+
+        private static string getWowheadSlotFilter(Character.CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case Character.CharacterSlot.Back :
+                    return "sl=16;";
+                case Character.CharacterSlot.Chest:
+                    return "sl=5;";
+                case Character.CharacterSlot.Feet:
+                    return "sl=8;";
+                case Character.CharacterSlot.Finger1:
+                case Character.CharacterSlot.Finger2:
+                    return "sl=11;";
+                case Character.CharacterSlot.Hands:
+                    return "sl=10;";
+                case Character.CharacterSlot.Head:
+                    return "sl=1;";
+                case Character.CharacterSlot.Legs:
+                    return "sl=7;";
+                case Character.CharacterSlot.MainHand:
+                    return "sl=21:13:17;";
+                case Character.CharacterSlot.Neck:
+                    return "sl=2;";
+                case Character.CharacterSlot.OffHand:
+                    return "sl=13:14:22:23;";
+                case Character.CharacterSlot.Ranged:
+                    return "sl=15:28:25;";
+                case Character.CharacterSlot.Shoulders:
+                    return "sl=3;";
+                case Character.CharacterSlot.Trinket1:
+                case Character.CharacterSlot.Trinket2:
+                    return "sl=12;";
+                case Character.CharacterSlot.Waist:
+                    return "sl=6;";
+                case Character.CharacterSlot.Wrist:
+                    return "sl=9;";
+            }
+            return string.Empty;
+        }
+
+        private static string getWowheadWeightFilter(Character character)
+        {
+            StringBuilder wt = new StringBuilder("wt=");
+            StringBuilder wtv = new StringBuilder(";wtv=");
+            ComparisonCalculationBase[] statValues = CalculationsBase.GetRelativeStatValues(character);
+            Array.Sort(statValues, StatValueSorter);
+            foreach (ComparisonCalculationBase ccb in statValues)
+            {
+                string stat = getWowHeadStatID(ccb.Name);
+                if (!stat.Equals(string.Empty))
+                {
+                    wt.Append(stat);
+                    wtv.Append(ccb.OverallPoints.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+                    wt.Append(":");
+                    wtv.Append(":");
+                }
+            }
+            if (wt.Equals("wt="))
+                return string.Empty;
+            else
+                return wt.ToString().Substring(0, wt.Length - 1) + wtv.ToString().Substring(0, wtv.Length - 1);   
+        }
+
+        private static string getWowHeadStatID(string Name)
+        {
+            switch (Name)
+            {
+                case " Agility" :
+                    return "21";
+                case " Strength":
+                    return "20";
+                case " Intellect":
+                    return "23";
+                case " Attack Power":
+                    return "77";
+                case " Spell Power":
+                    return "123";
+                case " Expertise":
+                    return "117";
+                case " Hit Rating":
+                    return "119";
+                case " Crit Rating":
+                    return "96";
+                case " Spell Crit Rating":
+                    return "49";
+                case " Armor Penetration Rating":
+                    return "114";
+                case " Haste Rating":
+                    return "103";
+                case " Melee Crit":
+                    return "84";
+            }
+            return string.Empty;
+        }
+
+        private static int StatValueSorter(ComparisonCalculationBase x, ComparisonCalculationBase y)
+        {
+            if (x.OverallPoints > y.OverallPoints)
+                return -1;
+            else if (x.OverallPoints < y.OverallPoints)
+                return 1;
+            else
+                return 0;
+        }
+    
+    }
+
 }

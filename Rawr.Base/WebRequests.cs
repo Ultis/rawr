@@ -67,7 +67,8 @@ namespace Rawr
 			string ItemToolTipSheetURI { get; }
 			string ItemUpgradeURI { get; }
 			string ItemWowheadURI { get; }
-			string TalentIconURI { get; }
+            string ItemWowheadUpgradeURI { get; }
+            string TalentIconURI { get; }
 			string ItemInfoURI { get; }
             string ItemSearchURI { get; }
         }
@@ -192,6 +193,11 @@ namespace Rawr
 				get { return Rawr.Properties.NetworkSettings.Default.ItemWowheadURI; }
 			}
 
+            public string ItemWowheadUpgradeURI
+			{
+                get { return Rawr.Properties.NetworkSettings.Default.ItemWowheadUpgradeURI; }
+			}
+            
             public string TalentIconURI
             {
                 get { return Rawr.Properties.NetworkSettings.Default.TalentIconURI; }
@@ -341,17 +347,28 @@ namespace Rawr
             return doc;
         }
 
-		public XmlDocument DownloadItemWowhead(string id)
+        public XmlDocument DownloadItemWowhead(string id) { return DownloadItemWowhead("www", id); }
+        public XmlDocument DownloadItemWowhead(string site, string id)
 		{
 			XmlDocument doc = null;
-			if (!string.IsNullOrEmpty(id))
+            if (!string.IsNullOrEmpty(site) && !string.IsNullOrEmpty(id))
 			{
-				doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadURI, id), true);
+				doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadURI, site, id), true);
 			}
 			return doc;
 		}
 
-		/// <summary>
+        public XmlDocument DownloadUpgradesWowhead(string site, string filter)
+        {
+            XmlDocument doc = null;
+            if (!string.IsNullOrEmpty(site) && !string.IsNullOrEmpty(filter))
+            {
+                doc = DownloadXml(string.Format(NetworkSettingsProvider.ItemWowheadUpgradeURI, site, filter), true);
+            }
+            return doc;
+        }
+
+        /// <summary>
 		/// Downloads the Item icon
 		/// </summary>
 		/// <param name="iconName">the name of the item icon to download, no extension, no path</param>

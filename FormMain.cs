@@ -1147,6 +1147,20 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
             this.GetArmoryUpgrades(e.Argument as Character);
         }
 
+        private void loadPossibleUpgradesFromWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartProcessing();
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_GetWowheadUpgrades);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+            bw.RunWorkerAsync(Character);
+        }
+
+        void bw_GetWowheadUpgrades(object sender, DoWorkEventArgs e)
+        {
+            this.GetWowheadUpgrades(e.Argument as Character, usePTRDataToolStripMenuItem.Checked);
+        }
+
         private void StartProcessing()
         {
             Cursor = Cursors.WaitCursor;
@@ -1303,7 +1317,16 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
 			StatusMessaging.UpdateStatusFinished("GetArmoryUpgrades");
 		}
 
-		public Character ReloadCharacterFromArmory(Character character)
+        public void GetWowheadUpgrades(Character currentCharacter, bool usePTR)
+        {
+            WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus("GetWowheadUpgrades", "Getting Wowhead Updates");
+            Wowhead.LoadUpgradesFromWowhead(currentCharacter, usePTR);
+            ItemCache.OnItemsChanged();
+            StatusMessaging.UpdateStatusFinished("GetWowheadUpgrades");
+        }
+
+        public Character ReloadCharacterFromArmory(Character character)
 		{
 			WebRequestWrapper.ResetFatalErrorIndicator();
 			Character reload = GetCharacterFromArmory(character.Realm, character.Name, character.Region);
@@ -1802,5 +1825,6 @@ If you are an experienced C# dev, a knowledgable theorycrafter, and would like t
             FormUpgradeComparison.Instance.Show();
             FormUpgradeComparison.Instance.BringToFront();
         }
+
 	}
 }

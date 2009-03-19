@@ -36,7 +36,6 @@ namespace Rawr
             this.checkBoxWristBlacksmithingSocket = new System.Windows.Forms.CheckBox();
             this.tabControlCharacter = new System.Windows.Forms.TabControl();
             this.tabPageStats = new System.Windows.Forms.TabPage();
-            this.calculationDisplay1 = new Rawr.CalculationDisplay();
             this.label32 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.checkBoxEnforceGemRequirements = new System.Windows.Forms.CheckBox();
@@ -53,33 +52,9 @@ namespace Rawr
             this.label23 = new System.Windows.Forms.Label();
             this.label25 = new System.Windows.Forms.Label();
             this.tabPageTalents = new System.Windows.Forms.TabPage();
-            this.talentPicker1 = new Rawr.TalentPicker();
             this.tabPageBuffs = new System.Windows.Forms.TabPage();
-            this.buffSelector1 = new Rawr.BuffSelector();
             this.tabPageOptions = new System.Windows.Forms.TabPage();
-            this.itemButtonBack = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonChest = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonFeet = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonFinger1 = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonFinger2 = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonHands = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonHead = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonRanged = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonLegs = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonNeck = new Rawr.ItemButton();
-            this.itemButtonProjectileBag = new Rawr.ItemButton();
-            this.itemButtonProjectile = new Rawr.ItemButton();
-            this.itemButtonOffHand = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonShirt = new Rawr.ItemButton();
-            this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonTabard = new Rawr.ItemButton();
-            this.itemButtonTrinket1 = new Rawr.ItemButton();
-            this.itemButtonTrinket2 = new Rawr.ItemButton();
-            this.itemButtonWaist = new Rawr.ItemButton();
-            this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
-            this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.itemComparison1 = new Rawr.ItemComparison();
             this.toolStripItemComparison = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButtonSlot = new System.Windows.Forms.ToolStripDropDownButton();
@@ -158,12 +133,14 @@ namespace Rawr
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchToolsToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.upgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCharacterStatsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadInvetoryFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateItemCacheArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateItemCacheWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -179,7 +156,32 @@ namespace Rawr
             this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemFilteringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
-            this.upgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.calculationDisplay1 = new Rawr.CalculationDisplay();
+            this.talentPicker1 = new Rawr.TalentPicker();
+            this.buffSelector1 = new Rawr.BuffSelector();
+            this.itemButtonBack = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonChest = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonFeet = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonFinger1 = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonFinger2 = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonHands = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonHead = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonRanged = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonLegs = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonNeck = new Rawr.ItemButton();
+            this.itemButtonProjectileBag = new Rawr.ItemButton();
+            this.itemButtonProjectile = new Rawr.ItemButton();
+            this.itemButtonOffHand = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonShirt = new Rawr.ItemButton();
+            this.itemButtonShoulders = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonTabard = new Rawr.ItemButton();
+            this.itemButtonTrinket1 = new Rawr.ItemButton();
+            this.itemButtonTrinket2 = new Rawr.ItemButton();
+            this.itemButtonWaist = new Rawr.ItemButton();
+            this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
+            this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
+            this.itemComparison1 = new Rawr.ItemComparison();
+            this.usePTRDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -224,11 +226,11 @@ namespace Rawr
             this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonMainHand);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.itemButtonWrist);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.groupBox4);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(888, 677);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(888, 679);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(888, 701);
+            this.toolStripContainer1.Size = new System.Drawing.Size(888, 703);
             this.toolStripContainer1.TabIndex = 4;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -283,7 +285,7 @@ namespace Rawr
             this.tabControlCharacter.Location = new System.Drawing.Point(79, 3);
             this.tabControlCharacter.Name = "tabControlCharacter";
             this.tabControlCharacter.SelectedIndex = 0;
-            this.tabControlCharacter.Size = new System.Drawing.Size(311, 582);
+            this.tabControlCharacter.Size = new System.Drawing.Size(311, 584);
             this.tabControlCharacter.TabIndex = 3;
             // 
             // tabPageStats
@@ -294,27 +296,16 @@ namespace Rawr
             this.tabPageStats.Location = new System.Drawing.Point(4, 22);
             this.tabPageStats.Name = "tabPageStats";
             this.tabPageStats.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageStats.Size = new System.Drawing.Size(303, 556);
+            this.tabPageStats.Size = new System.Drawing.Size(303, 558);
             this.tabPageStats.TabIndex = 0;
             this.tabPageStats.Text = "Stats";
             this.tabPageStats.UseVisualStyleBackColor = true;
-            // 
-            // calculationDisplay1
-            // 
-            this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.calculationDisplay1.AutoScroll = true;
-            this.calculationDisplay1.Location = new System.Drawing.Point(0, 121);
-            this.calculationDisplay1.Name = "calculationDisplay1";
-            this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.calculationDisplay1.Size = new System.Drawing.Size(302, 419);
-            this.calculationDisplay1.TabIndex = 5;
             // 
             // label32
             // 
             this.label32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(-3, 543);
+            this.label32.Location = new System.Drawing.Point(-3, 545);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(131, 13);
             this.label32.TabIndex = 4;
@@ -505,10 +496,905 @@ namespace Rawr
             this.tabPageTalents.Location = new System.Drawing.Point(4, 22);
             this.tabPageTalents.Name = "tabPageTalents";
             this.tabPageTalents.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTalents.Size = new System.Drawing.Size(303, 556);
+            this.tabPageTalents.Size = new System.Drawing.Size(303, 558);
             this.tabPageTalents.TabIndex = 4;
             this.tabPageTalents.Text = "Talents";
             this.tabPageTalents.UseVisualStyleBackColor = true;
+            // 
+            // tabPageBuffs
+            // 
+            this.tabPageBuffs.Controls.Add(this.buffSelector1);
+            this.tabPageBuffs.Location = new System.Drawing.Point(4, 22);
+            this.tabPageBuffs.Name = "tabPageBuffs";
+            this.tabPageBuffs.Size = new System.Drawing.Size(303, 558);
+            this.tabPageBuffs.TabIndex = 2;
+            this.tabPageBuffs.Text = "Buffs";
+            this.tabPageBuffs.UseVisualStyleBackColor = true;
+            // 
+            // tabPageOptions
+            // 
+            this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
+            this.tabPageOptions.Name = "tabPageOptions";
+            this.tabPageOptions.Size = new System.Drawing.Size(303, 558);
+            this.tabPageOptions.TabIndex = 3;
+            this.tabPageOptions.Text = "Options";
+            this.tabPageOptions.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.itemComparison1);
+            this.groupBox4.Controls.Add(this.toolStripItemComparison);
+            this.groupBox4.Location = new System.Drawing.Point(472, 4);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(413, 672);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Comparisons";
+            // 
+            // toolStripItemComparison
+            // 
+            this.toolStripItemComparison.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.toolStripDropDownButtonSlot,
+            this.toolStripLabel2,
+            this.toolStripDropDownButtonSort,
+            this.toolStripDropDownButtonFilter});
+            this.toolStripItemComparison.Location = new System.Drawing.Point(3, 16);
+            this.toolStripItemComparison.Name = "toolStripItemComparison";
+            this.toolStripItemComparison.Size = new System.Drawing.Size(407, 25);
+            this.toolStripItemComparison.TabIndex = 4;
+            this.toolStripItemComparison.Text = "toolStripItemComparison";
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(38, 22);
+            this.toolStripLabel1.Text = "Chart:";
+            // 
+            // toolStripDropDownButtonSlot
+            // 
+            this.toolStripDropDownButtonSlot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButtonSlot.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gearToolStripMenuItem,
+            this.headToolStripMenuItem,
+            this.neckToolStripMenuItem,
+            this.shouldersToolStripMenuItem,
+            this.backToolStripMenuItem,
+            this.chestToolStripMenuItem,
+            this.wristsToolStripMenuItem,
+            this.handsToolStripMenuItem,
+            this.waistToolStripMenuItem,
+            this.legsToolStripMenuItem,
+            this.feetToolStripMenuItem,
+            this.finger1ToolStripMenuItem,
+            this.finger2ToolStripMenuItem,
+            this.trinket1ToolStripMenuItem,
+            this.trinket2ToolStripMenuItem,
+            this.weaponToolStripMenuItem,
+            this.offHandToolStripMenuItem1,
+            this.idolToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripSeparator1,
+            this.gemsToolStripMenuItem,
+            this.normalToolStripMenuItem,
+            this.metaToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.enchantsToolStripMenuItem,
+            this.headToolStripMenuItem1,
+            this.shouldersToolStripMenuItem1,
+            this.backToolStripMenuItem1,
+            this.chestToolStripMenuItem1,
+            this.wristsToolStripMenuItem1,
+            this.handsToolStripMenuItem1,
+            this.legsToolStripMenuItem1,
+            this.feetToolStripMenuItem1,
+            this.fingerToolStripMenuItem1,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
+            this.weaponToolStripMenuItem1,
+            this.toolStripSeparator6,
+            this.buffsToolStripMenuItem,
+            this.allBuffsToolStripMenuItem,
+            this.currentBuffsToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.talentSpecsMenuItem,
+            this.talentsMenuItem,
+            this.currentGearEnchantsBuffsToolStripMenuItem,
+            this.directUpgradesMenuItem,
+            this.toolStripSeparator9,
+            this.relativeStatValuesToolStripMenuItem,
+            this.toolStripSeparatorRelativeStats});
+            this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
+            this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
+            this.toolStripDropDownButtonSlot.Size = new System.Drawing.Size(45, 22);
+            this.toolStripDropDownButtonSlot.Text = "Head";
+            this.toolStripDropDownButtonSlot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // gearToolStripMenuItem
+            // 
+            this.gearToolStripMenuItem.Enabled = false;
+            this.gearToolStripMenuItem.Name = "gearToolStripMenuItem";
+            this.gearToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.gearToolStripMenuItem.Text = "Gear";
+            // 
+            // headToolStripMenuItem
+            // 
+            this.headToolStripMenuItem.Name = "headToolStripMenuItem";
+            this.headToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.headToolStripMenuItem.Tag = "Gear.Head";
+            this.headToolStripMenuItem.Text = " Head";
+            this.headToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // neckToolStripMenuItem
+            // 
+            this.neckToolStripMenuItem.Name = "neckToolStripMenuItem";
+            this.neckToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.neckToolStripMenuItem.Tag = "Gear.Neck";
+            this.neckToolStripMenuItem.Text = " Neck";
+            this.neckToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // shouldersToolStripMenuItem
+            // 
+            this.shouldersToolStripMenuItem.Name = "shouldersToolStripMenuItem";
+            this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.shouldersToolStripMenuItem.Tag = "Gear.Shoulders";
+            this.shouldersToolStripMenuItem.Text = " Shoulders";
+            this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // backToolStripMenuItem
+            // 
+            this.backToolStripMenuItem.Name = "backToolStripMenuItem";
+            this.backToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.backToolStripMenuItem.Tag = "Gear.Back";
+            this.backToolStripMenuItem.Text = " Back";
+            this.backToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // chestToolStripMenuItem
+            // 
+            this.chestToolStripMenuItem.Name = "chestToolStripMenuItem";
+            this.chestToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.chestToolStripMenuItem.Tag = "Gear.Chest";
+            this.chestToolStripMenuItem.Text = " Chest";
+            this.chestToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // wristsToolStripMenuItem
+            // 
+            this.wristsToolStripMenuItem.Name = "wristsToolStripMenuItem";
+            this.wristsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.wristsToolStripMenuItem.Tag = "Gear.Wrist";
+            this.wristsToolStripMenuItem.Text = " Wrists";
+            this.wristsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // handsToolStripMenuItem
+            // 
+            this.handsToolStripMenuItem.Name = "handsToolStripMenuItem";
+            this.handsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.handsToolStripMenuItem.Tag = "Gear.Hands";
+            this.handsToolStripMenuItem.Text = " Hands";
+            this.handsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // waistToolStripMenuItem
+            // 
+            this.waistToolStripMenuItem.Name = "waistToolStripMenuItem";
+            this.waistToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.waistToolStripMenuItem.Tag = "Gear.Waist";
+            this.waistToolStripMenuItem.Text = " Waist";
+            this.waistToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // legsToolStripMenuItem
+            // 
+            this.legsToolStripMenuItem.Name = "legsToolStripMenuItem";
+            this.legsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.legsToolStripMenuItem.Tag = "Gear.Legs";
+            this.legsToolStripMenuItem.Text = " Legs";
+            this.legsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // feetToolStripMenuItem
+            // 
+            this.feetToolStripMenuItem.Name = "feetToolStripMenuItem";
+            this.feetToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.feetToolStripMenuItem.Tag = "Gear.Feet";
+            this.feetToolStripMenuItem.Text = " Feet";
+            this.feetToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // finger1ToolStripMenuItem
+            // 
+            this.finger1ToolStripMenuItem.Name = "finger1ToolStripMenuItem";
+            this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.finger1ToolStripMenuItem.Tag = "Gear.Finger1";
+            this.finger1ToolStripMenuItem.Text = " Finger 1";
+            this.finger1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // finger2ToolStripMenuItem
+            // 
+            this.finger2ToolStripMenuItem.Name = "finger2ToolStripMenuItem";
+            this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.finger2ToolStripMenuItem.Tag = "Gear.Finger2";
+            this.finger2ToolStripMenuItem.Text = " Finger 2";
+            this.finger2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // trinket1ToolStripMenuItem
+            // 
+            this.trinket1ToolStripMenuItem.Name = "trinket1ToolStripMenuItem";
+            this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.trinket1ToolStripMenuItem.Tag = "Gear.Trinket1";
+            this.trinket1ToolStripMenuItem.Text = " Trinket 1";
+            this.trinket1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // trinket2ToolStripMenuItem
+            // 
+            this.trinket2ToolStripMenuItem.Name = "trinket2ToolStripMenuItem";
+            this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.trinket2ToolStripMenuItem.Tag = "Gear.Trinket2";
+            this.trinket2ToolStripMenuItem.Text = " Trinket 2";
+            this.trinket2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // weaponToolStripMenuItem
+            // 
+            this.weaponToolStripMenuItem.Name = "weaponToolStripMenuItem";
+            this.weaponToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.weaponToolStripMenuItem.Tag = "Gear.MainHand";
+            this.weaponToolStripMenuItem.Text = " Main Hand";
+            this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // offHandToolStripMenuItem1
+            // 
+            this.offHandToolStripMenuItem1.Name = "offHandToolStripMenuItem1";
+            this.offHandToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.offHandToolStripMenuItem1.Tag = "Gear.OffHand";
+            this.offHandToolStripMenuItem1.Text = " Off Hand";
+            this.offHandToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // idolToolStripMenuItem
+            // 
+            this.idolToolStripMenuItem.Name = "idolToolStripMenuItem";
+            this.idolToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.idolToolStripMenuItem.Tag = "Gear.Ranged";
+            this.idolToolStripMenuItem.Text = " Ranged";
+            this.idolToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(225, 22);
+            this.toolStripMenuItem2.Tag = "Gear.Projectile";
+            this.toolStripMenuItem2.Text = " Projectile";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(225, 22);
+            this.toolStripMenuItem3.Tag = "Gear.ProjectileBag";
+            this.toolStripMenuItem3.Text = " Projectile Bag";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // gemsToolStripMenuItem
+            // 
+            this.gemsToolStripMenuItem.Enabled = false;
+            this.gemsToolStripMenuItem.Name = "gemsToolStripMenuItem";
+            this.gemsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.gemsToolStripMenuItem.Text = "Gems";
+            this.gemsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // normalToolStripMenuItem
+            // 
+            this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.normalToolStripMenuItem.Tag = "Gems.Gems";
+            this.normalToolStripMenuItem.Text = " Normal";
+            this.normalToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // metaToolStripMenuItem
+            // 
+            this.metaToolStripMenuItem.Name = "metaToolStripMenuItem";
+            this.metaToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.metaToolStripMenuItem.Tag = "Gems.Metas";
+            this.metaToolStripMenuItem.Text = " Meta";
+            this.metaToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // enchantsToolStripMenuItem
+            // 
+            this.enchantsToolStripMenuItem.Enabled = false;
+            this.enchantsToolStripMenuItem.Name = "enchantsToolStripMenuItem";
+            this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.enchantsToolStripMenuItem.Text = "Enchants";
+            this.enchantsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // headToolStripMenuItem1
+            // 
+            this.headToolStripMenuItem1.Name = "headToolStripMenuItem1";
+            this.headToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.headToolStripMenuItem1.Tag = "Enchants.Head";
+            this.headToolStripMenuItem1.Text = " Head";
+            this.headToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // shouldersToolStripMenuItem1
+            // 
+            this.shouldersToolStripMenuItem1.Name = "shouldersToolStripMenuItem1";
+            this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.shouldersToolStripMenuItem1.Tag = "Enchants.Shoulders";
+            this.shouldersToolStripMenuItem1.Text = " Shoulders";
+            this.shouldersToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // backToolStripMenuItem1
+            // 
+            this.backToolStripMenuItem1.Name = "backToolStripMenuItem1";
+            this.backToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.backToolStripMenuItem1.Tag = "Enchants.Back";
+            this.backToolStripMenuItem1.Text = " Back";
+            this.backToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // chestToolStripMenuItem1
+            // 
+            this.chestToolStripMenuItem1.Name = "chestToolStripMenuItem1";
+            this.chestToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.chestToolStripMenuItem1.Tag = "Enchants.Chest";
+            this.chestToolStripMenuItem1.Text = " Chest";
+            this.chestToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // wristsToolStripMenuItem1
+            // 
+            this.wristsToolStripMenuItem1.Name = "wristsToolStripMenuItem1";
+            this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.wristsToolStripMenuItem1.Tag = "Enchants.Wrist";
+            this.wristsToolStripMenuItem1.Text = " Wrists";
+            this.wristsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // handsToolStripMenuItem1
+            // 
+            this.handsToolStripMenuItem1.Name = "handsToolStripMenuItem1";
+            this.handsToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.handsToolStripMenuItem1.Tag = "Enchants.Hands";
+            this.handsToolStripMenuItem1.Text = " Hands";
+            this.handsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // legsToolStripMenuItem1
+            // 
+            this.legsToolStripMenuItem1.Name = "legsToolStripMenuItem1";
+            this.legsToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.legsToolStripMenuItem1.Tag = "Enchants.Legs";
+            this.legsToolStripMenuItem1.Text = " Legs";
+            this.legsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // feetToolStripMenuItem1
+            // 
+            this.feetToolStripMenuItem1.Name = "feetToolStripMenuItem1";
+            this.feetToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.feetToolStripMenuItem1.Tag = "Enchants.Feet";
+            this.feetToolStripMenuItem1.Text = " Feet";
+            this.feetToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // fingerToolStripMenuItem1
+            // 
+            this.fingerToolStripMenuItem1.Name = "fingerToolStripMenuItem1";
+            this.fingerToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.fingerToolStripMenuItem1.Tag = "Enchants.Finger";
+            this.fingerToolStripMenuItem1.Text = " Fingers";
+            this.fingerToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(225, 22);
+            this.toolStripMenuItem4.Tag = "Enchants.MainHand";
+            this.toolStripMenuItem4.Text = " Main Hand";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(225, 22);
+            this.toolStripMenuItem5.Tag = "Enchants.OffHand";
+            this.toolStripMenuItem5.Text = " Off Hand";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // weaponToolStripMenuItem1
+            // 
+            this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
+            this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(225, 22);
+            this.weaponToolStripMenuItem1.Tag = "Enchants.Ranged";
+            this.weaponToolStripMenuItem1.Text = " Ranged";
+            this.weaponToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(222, 6);
+            this.toolStripSeparator6.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // buffsToolStripMenuItem
+            // 
+            this.buffsToolStripMenuItem.Enabled = false;
+            this.buffsToolStripMenuItem.Name = "buffsToolStripMenuItem";
+            this.buffsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.buffsToolStripMenuItem.Tag = "Buffs";
+            this.buffsToolStripMenuItem.Text = "Buffs";
+            this.buffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // allBuffsToolStripMenuItem
+            // 
+            this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
+            this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.allBuffsToolStripMenuItem.Tag = "Buffs.All";
+            this.allBuffsToolStripMenuItem.Text = " All Buffs";
+            this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // currentBuffsToolStripMenuItem
+            // 
+            this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
+            this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.currentBuffsToolStripMenuItem.Tag = "Buffs.All+";
+            this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
+            this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(222, 6);
+            // 
+            // talentSpecsMenuItem
+            // 
+            this.talentSpecsMenuItem.Name = "talentSpecsMenuItem";
+            this.talentSpecsMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.talentSpecsMenuItem.Tag = "TalentSpecs";
+            this.talentSpecsMenuItem.Text = "Talent Specs";
+            this.talentSpecsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // talentsMenuItem
+            // 
+            this.talentsMenuItem.Name = "talentsMenuItem";
+            this.talentsMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.talentsMenuItem.Tag = "Talents";
+            this.talentsMenuItem.Text = "Talents";
+            this.talentsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // currentGearEnchantsBuffsToolStripMenuItem
+            // 
+            this.currentGearEnchantsBuffsToolStripMenuItem.Name = "currentGearEnchantsBuffsToolStripMenuItem";
+            this.currentGearEnchantsBuffsToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.currentGearEnchantsBuffsToolStripMenuItem.Tag = "Current Gear/Enchants/Buffs";
+            this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
+            this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // directUpgradesMenuItem
+            // 
+            this.directUpgradesMenuItem.Name = "directUpgradesMenuItem";
+            this.directUpgradesMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.directUpgradesMenuItem.Tag = "Direct Upgrades";
+            this.directUpgradesMenuItem.Text = "Direct Upgrades";
+            this.directUpgradesMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(222, 6);
+            // 
+            // relativeStatValuesToolStripMenuItem
+            // 
+            this.relativeStatValuesToolStripMenuItem.Name = "relativeStatValuesToolStripMenuItem";
+            this.relativeStatValuesToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.relativeStatValuesToolStripMenuItem.Tag = "Relative Stat Values";
+            this.relativeStatValuesToolStripMenuItem.Text = "Relative Stat Values";
+            this.relativeStatValuesToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorRelativeStats
+            // 
+            this.toolStripSeparatorRelativeStats.Name = "toolStripSeparatorRelativeStats";
+            this.toolStripSeparatorRelativeStats.Size = new System.Drawing.Size(222, 6);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(61, 22);
+            this.toolStripLabel2.Text = "          Sort:";
+            // 
+            // toolStripDropDownButtonSort
+            // 
+            this.toolStripDropDownButtonSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButtonSort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.overallToolStripMenuItem,
+            this.alphabeticalToolStripMenuItem});
+            this.toolStripDropDownButtonSort.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSort.Image")));
+            this.toolStripDropDownButtonSort.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonSort.Name = "toolStripDropDownButtonSort";
+            this.toolStripDropDownButtonSort.Size = new System.Drawing.Size(54, 22);
+            this.toolStripDropDownButtonSort.Text = "Overall";
+            // 
+            // overallToolStripMenuItem
+            // 
+            this.overallToolStripMenuItem.Name = "overallToolStripMenuItem";
+            this.overallToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.overallToolStripMenuItem.Tag = -1;
+            this.overallToolStripMenuItem.Text = "Overall";
+            this.overallToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+            // 
+            // alphabeticalToolStripMenuItem
+            // 
+            this.alphabeticalToolStripMenuItem.Name = "alphabeticalToolStripMenuItem";
+            this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.alphabeticalToolStripMenuItem.Tag = -2;
+            this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
+            this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
+            // 
+            // toolStripDropDownButtonFilter
+            // 
+            this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemFilterOther});
+            this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
+            this.toolStripDropDownButtonFilter.Size = new System.Drawing.Size(57, 22);
+            this.toolStripDropDownButtonFilter.Text = "   Filter:";
+            // 
+            // toolStripMenuItemFilterOther
+            // 
+            this.toolStripMenuItemFilterOther.Checked = true;
+            this.toolStripMenuItemFilterOther.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemFilterOther.Name = "toolStripMenuItemFilterOther";
+            this.toolStripMenuItemFilterOther.Size = new System.Drawing.Size(113, 22);
+            this.toolStripMenuItemFilterOther.Text = "Other";
+            this.toolStripMenuItemFilterOther.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            // 
+            // menuStripMain
+            // 
+            this.menuStripMain.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
+            this.menuStripMain.Name = "menuStripMain";
+            this.menuStripMain.Size = new System.Drawing.Size(888, 24);
+            this.menuStripMain.TabIndex = 3;
+            this.menuStripMain.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.loadFromArmoryToolStripMenuItem,
+            this.loadFromCharacterProfilerToolStripMenuItem,
+            this.toolStripSeparator,
+            this.toolStripSeparator8,
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
+            this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.newToolStripMenuItem.Text = "&New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
+            this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.openToolStripMenuItem.Text = "&Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // loadFromArmoryToolStripMenuItem
+            // 
+            this.loadFromArmoryToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromArmoryToolStripMenuItem.Image")));
+            this.loadFromArmoryToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.loadFromArmoryToolStripMenuItem.Name = "loadFromArmoryToolStripMenuItem";
+            this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+            this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
+            this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
+            // 
+            // loadFromCharacterProfilerToolStripMenuItem
+            // 
+            this.loadFromCharacterProfilerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromCharacterProfilerToolStripMenuItem.Image")));
+            this.loadFromCharacterProfilerToolStripMenuItem.Name = "loadFromCharacterProfilerToolStripMenuItem";
+            this.loadFromCharacterProfilerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.loadFromCharacterProfilerToolStripMenuItem.Text = "Load from Character &Profiler";
+            this.loadFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.loadFromCharacterProfilerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(256, 6);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(256, 6);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
+            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.saveToolStripMenuItem.Text = "&Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.saveAsToolStripMenuItem.Text = "Save &As...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(256, 6);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editItemsToolStripMenuItem,
+            this.defaultGemControlToolStripMenuItem,
+            this.refineEquipmentParametersToolStripMenuItem,
+            this.toolStripMenuItem6,
+            this.optimizeToolStripMenuItem,
+            this.batchToolsToolStripMenuItem6,
+            this.upgradeListToolStripMenuItem,
+            this.copyCharacterStatsToClipboardToolStripMenuItem,
+            this.toolStripSeparator11,
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem,
+            this.toolStripSeparator12,
+            this.loadPossibleUpgradesFromArmoryToolStripMenuItem,
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem,
+            this.updateItemCacheArmoryToolStripMenuItem,
+            this.updateItemCacheWowheadToolStripMenuItem,
+            this.toolStripSeparator10,
+            this.optionsToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // editItemsToolStripMenuItem
+            // 
+            this.editItemsToolStripMenuItem.Name = "editItemsToolStripMenuItem";
+            this.editItemsToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.editItemsToolStripMenuItem.Text = "Edit Items...";
+            this.editItemsToolStripMenuItem.Click += new System.EventHandler(this.editItemsToolStripMenuItem_Click);
+            // 
+            // defaultGemControlToolStripMenuItem
+            // 
+            this.defaultGemControlToolStripMenuItem.Name = "defaultGemControlToolStripMenuItem";
+            this.defaultGemControlToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.defaultGemControlToolStripMenuItem.Text = "Edit Gemming Templates...";
+            this.defaultGemControlToolStripMenuItem.Click += new System.EventHandler(this.defaultGemControlToolStripMenuItem_Click);
+            // 
+            // refineEquipmentParametersToolStripMenuItem
+            // 
+            this.refineEquipmentParametersToolStripMenuItem.Name = "refineEquipmentParametersToolStripMenuItem";
+            this.refineEquipmentParametersToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.refineEquipmentParametersToolStripMenuItem.Text = "Refine Types of Items Listed...";
+            this.refineEquipmentParametersToolStripMenuItem.Click += new System.EventHandler(this.refineEquipmentParametersToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(322, 22);
+            this.toolStripMenuItem6.Text = "Edit Item Filters...";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItemItemFilterEditor_Click);
+            // 
+            // optimizeToolStripMenuItem
+            // 
+            this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
+            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.optimizeToolStripMenuItem.Text = "Optimize...";
+            this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
+            // 
+            // batchToolsToolStripMenuItem6
+            // 
+            this.batchToolsToolStripMenuItem6.Name = "batchToolsToolStripMenuItem6";
+            this.batchToolsToolStripMenuItem6.Size = new System.Drawing.Size(322, 22);
+            this.batchToolsToolStripMenuItem6.Text = "Batch Tools...";
+            this.batchToolsToolStripMenuItem6.Click += new System.EventHandler(this.BatchToolsToolStripMenuItem6_Click);
+            // 
+            // upgradeListToolStripMenuItem
+            // 
+            this.upgradeListToolStripMenuItem.Name = "upgradeListToolStripMenuItem";
+            this.upgradeListToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.upgradeListToolStripMenuItem.Text = "Upgrade List...";
+            this.upgradeListToolStripMenuItem.Click += new System.EventHandler(this.upgradeListToolStripMenuItem_Click);
+            // 
+            // copyCharacterStatsToClipboardToolStripMenuItem
+            // 
+            this.copyCharacterStatsToClipboardToolStripMenuItem.Name = "copyCharacterStatsToClipboardToolStripMenuItem";
+            this.copyCharacterStatsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.copyCharacterStatsToClipboardToolStripMenuItem.Text = "Copy Character Stats to Clipboard";
+            this.copyCharacterStatsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyCharacterStatsToClipboardToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator11
+            // 
+            this.toolStripSeparator11.Name = "toolStripSeparator11";
+            this.toolStripSeparator11.Size = new System.Drawing.Size(319, 6);
+            // 
+            // reloadCurrentCharacterFromArmoryToolStripMenuItem
+            // 
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Name = "reloadCurrentCharacterFromArmoryToolStripMenuItem";
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Text = "Reload Current Character from Armory";
+            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.reloadCurrentCharacterFromArmoryToolStripMenuItem_Click);
+            // 
+            // reloadInvetoryFromCharacterProfilerToolStripMenuItem
+            // 
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Name = "reloadInvetoryFromCharacterProfilerToolStripMenuItem";
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Text = "Reload Current Character from Character Profiler";
+            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator12
+            // 
+            this.toolStripSeparator12.Name = "toolStripSeparator12";
+            this.toolStripSeparator12.Size = new System.Drawing.Size(319, 6);
+            // 
+            // loadPossibleUpgradesFromArmoryToolStripMenuItem
+            // 
+            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Name = "loadPossibleUpgradesFromArmoryToolStripMenuItem";
+            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Text = "Load Possible Upgrades From Armory";
+            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromArmoryToolStripMenuItem_Click);
+            // 
+            // loadPossibleUpgradesFromWowheadToolStripMenuItem
+            // 
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.usePTRDataToolStripMenuItem});
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Name = "loadPossibleUpgradesFromWowheadToolStripMenuItem";
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Text = "Load Possible Upgrades From Wowhead";
+            this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromWowheadToolStripMenuItem_Click);
+            // 
+            // updateItemCacheArmoryToolStripMenuItem
+            // 
+            this.updateItemCacheArmoryToolStripMenuItem.Name = "updateItemCacheArmoryToolStripMenuItem";
+            this.updateItemCacheArmoryToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.updateItemCacheArmoryToolStripMenuItem.Text = "Update Item Cache from the Armory";
+            this.updateItemCacheArmoryToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheArmoryToolStripMenuItem_Click);
+            // 
+            // updateItemCacheWowheadToolStripMenuItem
+            // 
+            this.updateItemCacheWowheadToolStripMenuItem.Name = "updateItemCacheWowheadToolStripMenuItem";
+            this.updateItemCacheWowheadToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.updateItemCacheWowheadToolStripMenuItem.Text = "Update Item Cache from Wowhead";
+            this.updateItemCacheWowheadToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheWowheadToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(319, 6);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
+            this.optionsToolStripMenuItem.Text = "Options...";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rawrWebsiteToolStripMenuItem,
+            this.donateToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.rawrHelpPageToolStripMenuItem,
+            this.tourOfRawrToolStripMenuItem,
+            this.gemmingsToolStripMenuItem,
+            this.gearOptimizationToolStripMenuItem,
+            this.batchToolsToolStripMenuItem,
+            this.itemFilteringToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            // 
+            // rawrWebsiteToolStripMenuItem
+            // 
+            this.rawrWebsiteToolStripMenuItem.Name = "rawrWebsiteToolStripMenuItem";
+            this.rawrWebsiteToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.rawrWebsiteToolStripMenuItem.Text = "Rawr Website";
+            this.rawrWebsiteToolStripMenuItem.Click += new System.EventHandler(this.rawrWebsiteToolStripMenuItem_Click);
+            // 
+            // donateToolStripMenuItem
+            // 
+            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.donateToolStripMenuItem.Text = "Donate...";
+            this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
+            // 
+            // rawrHelpPageToolStripMenuItem
+            // 
+            this.rawrHelpPageToolStripMenuItem.Name = "rawrHelpPageToolStripMenuItem";
+            this.rawrHelpPageToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.rawrHelpPageToolStripMenuItem.Text = "Rawr Help Page";
+            this.rawrHelpPageToolStripMenuItem.Click += new System.EventHandler(this.rawrHelpPageToolStripMenuItem_Click);
+            // 
+            // tourOfRawrToolStripMenuItem
+            // 
+            this.tourOfRawrToolStripMenuItem.Name = "tourOfRawrToolStripMenuItem";
+            this.tourOfRawrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.tourOfRawrToolStripMenuItem.Text = "  Tour of Rawr";
+            this.tourOfRawrToolStripMenuItem.Click += new System.EventHandler(this.tourOfRawrToolStripMenuItem_Click);
+            // 
+            // gemmingsToolStripMenuItem
+            // 
+            this.gemmingsToolStripMenuItem.Name = "gemmingsToolStripMenuItem";
+            this.gemmingsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.gemmingsToolStripMenuItem.Text = "  Gemmings";
+            this.gemmingsToolStripMenuItem.Click += new System.EventHandler(this.gemmingsToolStripMenuItem_Click);
+            // 
+            // gearOptimizationToolStripMenuItem
+            // 
+            this.gearOptimizationToolStripMenuItem.Name = "gearOptimizationToolStripMenuItem";
+            this.gearOptimizationToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.gearOptimizationToolStripMenuItem.Text = "  Gear Optimization";
+            this.gearOptimizationToolStripMenuItem.Click += new System.EventHandler(this.gearOptimizationToolStripMenuItem_Click);
+            // 
+            // batchToolsToolStripMenuItem
+            // 
+            this.batchToolsToolStripMenuItem.Name = "batchToolsToolStripMenuItem";
+            this.batchToolsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.batchToolsToolStripMenuItem.Text = "  Batch Tools";
+            this.batchToolsToolStripMenuItem.Click += new System.EventHandler(this.batchToolsToolStripMenuItem_Click);
+            // 
+            // itemFilteringToolStripMenuItem
+            // 
+            this.itemFilteringToolStripMenuItem.Name = "itemFilteringToolStripMenuItem";
+            this.itemFilteringToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
+            this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
+            // 
+            // calculationDisplay1
+            // 
+            this.calculationDisplay1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.calculationDisplay1.AutoScroll = true;
+            this.calculationDisplay1.Location = new System.Drawing.Point(0, 121);
+            this.calculationDisplay1.Name = "calculationDisplay1";
+            this.calculationDisplay1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.calculationDisplay1.Size = new System.Drawing.Size(302, 421);
+            this.calculationDisplay1.TabIndex = 5;
             // 
             // talentPicker1
             // 
@@ -517,19 +1403,9 @@ namespace Rawr
             this.talentPicker1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.talentPicker1.Location = new System.Drawing.Point(3, 3);
             this.talentPicker1.Name = "talentPicker1";
-            this.talentPicker1.Size = new System.Drawing.Size(297, 550);
+            this.talentPicker1.Size = new System.Drawing.Size(297, 552);
             this.talentPicker1.TabIndex = 0;
             this.talentPicker1.Talents = null;
-            // 
-            // tabPageBuffs
-            // 
-            this.tabPageBuffs.Controls.Add(this.buffSelector1);
-            this.tabPageBuffs.Location = new System.Drawing.Point(4, 22);
-            this.tabPageBuffs.Name = "tabPageBuffs";
-            this.tabPageBuffs.Size = new System.Drawing.Size(303, 556);
-            this.tabPageBuffs.TabIndex = 2;
-            this.tabPageBuffs.Text = "Buffs";
-            this.tabPageBuffs.UseVisualStyleBackColor = true;
             // 
             // buffSelector1
             // 
@@ -539,17 +1415,8 @@ namespace Rawr
             this.buffSelector1.Location = new System.Drawing.Point(0, 0);
             this.buffSelector1.Name = "buffSelector1";
             this.buffSelector1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.buffSelector1.Size = new System.Drawing.Size(303, 556);
+            this.buffSelector1.Size = new System.Drawing.Size(303, 558);
             this.buffSelector1.TabIndex = 0;
-            // 
-            // tabPageOptions
-            // 
-            this.tabPageOptions.Location = new System.Drawing.Point(4, 22);
-            this.tabPageOptions.Name = "tabPageOptions";
-            this.tabPageOptions.Size = new System.Drawing.Size(303, 556);
-            this.tabPageOptions.TabIndex = 3;
-            this.tabPageOptions.Text = "Options";
-            this.tabPageOptions.UseVisualStyleBackColor = true;
             // 
             // itemButtonBack
             // 
@@ -648,7 +1515,7 @@ namespace Rawr
             this.itemButtonRanged.Character = null;
             this.itemButtonRanged.CharacterSlot = Rawr.Character.CharacterSlot.Ranged;
             this.itemButtonRanged.ItemIcon = null;
-            this.itemButtonRanged.Location = new System.Drawing.Point(253, 591);
+            this.itemButtonRanged.Location = new System.Drawing.Point(253, 593);
             this.itemButtonRanged.Name = "itemButtonRanged";
             this.itemButtonRanged.SelectedItem = null;
             this.itemButtonRanged.SelectedItemId = 0;
@@ -691,7 +1558,7 @@ namespace Rawr
             this.itemButtonProjectileBag.Character = null;
             this.itemButtonProjectileBag.CharacterSlot = Rawr.Character.CharacterSlot.ProjectileBag;
             this.itemButtonProjectileBag.ItemIcon = null;
-            this.itemButtonProjectileBag.Location = new System.Drawing.Point(344, 635);
+            this.itemButtonProjectileBag.Location = new System.Drawing.Point(344, 637);
             this.itemButtonProjectileBag.Name = "itemButtonProjectileBag";
             this.itemButtonProjectileBag.ReadOnly = false;
             this.itemButtonProjectileBag.SelectedItem = null;
@@ -708,7 +1575,7 @@ namespace Rawr
             this.itemButtonProjectile.Character = null;
             this.itemButtonProjectile.CharacterSlot = Rawr.Character.CharacterSlot.Projectile;
             this.itemButtonProjectile.ItemIcon = null;
-            this.itemButtonProjectile.Location = new System.Drawing.Point(344, 594);
+            this.itemButtonProjectile.Location = new System.Drawing.Point(344, 596);
             this.itemButtonProjectile.Name = "itemButtonProjectile";
             this.itemButtonProjectile.ReadOnly = false;
             this.itemButtonProjectile.SelectedItem = null;
@@ -725,7 +1592,7 @@ namespace Rawr
             this.itemButtonOffHand.Character = null;
             this.itemButtonOffHand.CharacterSlot = Rawr.Character.CharacterSlot.OffHand;
             this.itemButtonOffHand.ItemIcon = null;
-            this.itemButtonOffHand.Location = new System.Drawing.Point(167, 591);
+            this.itemButtonOffHand.Location = new System.Drawing.Point(167, 593);
             this.itemButtonOffHand.Name = "itemButtonOffHand";
             this.itemButtonOffHand.SelectedItem = null;
             this.itemButtonOffHand.SelectedItemId = 0;
@@ -832,7 +1699,7 @@ namespace Rawr
             this.itemButtonMainHand.Character = null;
             this.itemButtonMainHand.CharacterSlot = Rawr.Character.CharacterSlot.MainHand;
             this.itemButtonMainHand.ItemIcon = null;
-            this.itemButtonMainHand.Location = new System.Drawing.Point(82, 591);
+            this.itemButtonMainHand.Location = new System.Drawing.Point(82, 593);
             this.itemButtonMainHand.Name = "itemButtonMainHand";
             this.itemButtonMainHand.SelectedItem = null;
             this.itemButtonMainHand.SelectedItemId = 0;
@@ -853,20 +1720,6 @@ namespace Rawr
             this.itemButtonWrist.TabIndex = 2;
             this.itemButtonWrist.UseVisualStyleBackColor = true;
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox4.Controls.Add(this.itemComparison1);
-            this.groupBox4.Controls.Add(this.toolStripItemComparison);
-            this.groupBox4.Location = new System.Drawing.Point(472, 4);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(413, 670);
-            this.groupBox4.TabIndex = 2;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Comparisons";
-            // 
             // itemComparison1
             // 
             this.itemComparison1.BackColor = System.Drawing.Color.White;
@@ -877,856 +1730,22 @@ namespace Rawr
             this.itemComparison1.Location = new System.Drawing.Point(3, 41);
             this.itemComparison1.Name = "itemComparison1";
             this.itemComparison1.Padding = new System.Windows.Forms.Padding(2);
-            this.itemComparison1.Size = new System.Drawing.Size(407, 626);
+            this.itemComparison1.Size = new System.Drawing.Size(407, 628);
             this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.itemComparison1.TabIndex = 3;
             // 
-            // toolStripItemComparison
-            // 
-            this.toolStripItemComparison.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.toolStripDropDownButtonSlot,
-            this.toolStripLabel2,
-            this.toolStripDropDownButtonSort,
-            this.toolStripDropDownButtonFilter});
-            this.toolStripItemComparison.Location = new System.Drawing.Point(3, 16);
-            this.toolStripItemComparison.Name = "toolStripItemComparison";
-            this.toolStripItemComparison.Size = new System.Drawing.Size(407, 25);
-            this.toolStripItemComparison.TabIndex = 4;
-            this.toolStripItemComparison.Text = "toolStripItemComparison";
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(39, 22);
-            this.toolStripLabel1.Text = "Chart:";
-            // 
-            // toolStripDropDownButtonSlot
-            // 
-            this.toolStripDropDownButtonSlot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripDropDownButtonSlot.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gearToolStripMenuItem,
-            this.headToolStripMenuItem,
-            this.neckToolStripMenuItem,
-            this.shouldersToolStripMenuItem,
-            this.backToolStripMenuItem,
-            this.chestToolStripMenuItem,
-            this.wristsToolStripMenuItem,
-            this.handsToolStripMenuItem,
-            this.waistToolStripMenuItem,
-            this.legsToolStripMenuItem,
-            this.feetToolStripMenuItem,
-            this.finger1ToolStripMenuItem,
-            this.finger2ToolStripMenuItem,
-            this.trinket1ToolStripMenuItem,
-            this.trinket2ToolStripMenuItem,
-            this.weaponToolStripMenuItem,
-            this.offHandToolStripMenuItem1,
-            this.idolToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripSeparator1,
-            this.gemsToolStripMenuItem,
-            this.normalToolStripMenuItem,
-            this.metaToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.enchantsToolStripMenuItem,
-            this.headToolStripMenuItem1,
-            this.shouldersToolStripMenuItem1,
-            this.backToolStripMenuItem1,
-            this.chestToolStripMenuItem1,
-            this.wristsToolStripMenuItem1,
-            this.handsToolStripMenuItem1,
-            this.legsToolStripMenuItem1,
-            this.feetToolStripMenuItem1,
-            this.fingerToolStripMenuItem1,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.weaponToolStripMenuItem1,
-            this.toolStripSeparator6,
-            this.buffsToolStripMenuItem,
-            this.allBuffsToolStripMenuItem,
-            this.currentBuffsToolStripMenuItem,
-            this.toolStripSeparator7,
-            this.talentSpecsMenuItem,
-            this.talentsMenuItem,
-            this.currentGearEnchantsBuffsToolStripMenuItem,
-            this.directUpgradesMenuItem,
-            this.toolStripSeparator9,
-            this.relativeStatValuesToolStripMenuItem,
-            this.toolStripSeparatorRelativeStats});
-            this.toolStripDropDownButtonSlot.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSlot.Image")));
-            this.toolStripDropDownButtonSlot.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButtonSlot.Name = "toolStripDropDownButtonSlot";
-            this.toolStripDropDownButtonSlot.Size = new System.Drawing.Size(48, 22);
-            this.toolStripDropDownButtonSlot.Text = "Head";
-            this.toolStripDropDownButtonSlot.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // gearToolStripMenuItem
-            // 
-            this.gearToolStripMenuItem.Enabled = false;
-            this.gearToolStripMenuItem.Name = "gearToolStripMenuItem";
-            this.gearToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.gearToolStripMenuItem.Text = "Gear";
-            // 
-            // headToolStripMenuItem
-            // 
-            this.headToolStripMenuItem.Name = "headToolStripMenuItem";
-            this.headToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.headToolStripMenuItem.Tag = "Gear.Head";
-            this.headToolStripMenuItem.Text = " Head";
-            this.headToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // neckToolStripMenuItem
-            // 
-            this.neckToolStripMenuItem.Name = "neckToolStripMenuItem";
-            this.neckToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.neckToolStripMenuItem.Tag = "Gear.Neck";
-            this.neckToolStripMenuItem.Text = " Neck";
-            this.neckToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // shouldersToolStripMenuItem
-            // 
-            this.shouldersToolStripMenuItem.Name = "shouldersToolStripMenuItem";
-            this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.shouldersToolStripMenuItem.Tag = "Gear.Shoulders";
-            this.shouldersToolStripMenuItem.Text = " Shoulders";
-            this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // backToolStripMenuItem
-            // 
-            this.backToolStripMenuItem.Name = "backToolStripMenuItem";
-            this.backToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.backToolStripMenuItem.Tag = "Gear.Back";
-            this.backToolStripMenuItem.Text = " Back";
-            this.backToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // chestToolStripMenuItem
-            // 
-            this.chestToolStripMenuItem.Name = "chestToolStripMenuItem";
-            this.chestToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.chestToolStripMenuItem.Tag = "Gear.Chest";
-            this.chestToolStripMenuItem.Text = " Chest";
-            this.chestToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // wristsToolStripMenuItem
-            // 
-            this.wristsToolStripMenuItem.Name = "wristsToolStripMenuItem";
-            this.wristsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.wristsToolStripMenuItem.Tag = "Gear.Wrist";
-            this.wristsToolStripMenuItem.Text = " Wrists";
-            this.wristsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // handsToolStripMenuItem
-            // 
-            this.handsToolStripMenuItem.Name = "handsToolStripMenuItem";
-            this.handsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.handsToolStripMenuItem.Tag = "Gear.Hands";
-            this.handsToolStripMenuItem.Text = " Hands";
-            this.handsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // waistToolStripMenuItem
-            // 
-            this.waistToolStripMenuItem.Name = "waistToolStripMenuItem";
-            this.waistToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.waistToolStripMenuItem.Tag = "Gear.Waist";
-            this.waistToolStripMenuItem.Text = " Waist";
-            this.waistToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // legsToolStripMenuItem
-            // 
-            this.legsToolStripMenuItem.Name = "legsToolStripMenuItem";
-            this.legsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.legsToolStripMenuItem.Tag = "Gear.Legs";
-            this.legsToolStripMenuItem.Text = " Legs";
-            this.legsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // feetToolStripMenuItem
-            // 
-            this.feetToolStripMenuItem.Name = "feetToolStripMenuItem";
-            this.feetToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.feetToolStripMenuItem.Tag = "Gear.Feet";
-            this.feetToolStripMenuItem.Text = " Feet";
-            this.feetToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // finger1ToolStripMenuItem
-            // 
-            this.finger1ToolStripMenuItem.Name = "finger1ToolStripMenuItem";
-            this.finger1ToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.finger1ToolStripMenuItem.Tag = "Gear.Finger1";
-            this.finger1ToolStripMenuItem.Text = " Finger 1";
-            this.finger1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // finger2ToolStripMenuItem
-            // 
-            this.finger2ToolStripMenuItem.Name = "finger2ToolStripMenuItem";
-            this.finger2ToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.finger2ToolStripMenuItem.Tag = "Gear.Finger2";
-            this.finger2ToolStripMenuItem.Text = " Finger 2";
-            this.finger2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // trinket1ToolStripMenuItem
-            // 
-            this.trinket1ToolStripMenuItem.Name = "trinket1ToolStripMenuItem";
-            this.trinket1ToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.trinket1ToolStripMenuItem.Tag = "Gear.Trinket1";
-            this.trinket1ToolStripMenuItem.Text = " Trinket 1";
-            this.trinket1ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // trinket2ToolStripMenuItem
-            // 
-            this.trinket2ToolStripMenuItem.Name = "trinket2ToolStripMenuItem";
-            this.trinket2ToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.trinket2ToolStripMenuItem.Tag = "Gear.Trinket2";
-            this.trinket2ToolStripMenuItem.Text = " Trinket 2";
-            this.trinket2ToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // weaponToolStripMenuItem
-            // 
-            this.weaponToolStripMenuItem.Name = "weaponToolStripMenuItem";
-            this.weaponToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.weaponToolStripMenuItem.Tag = "Gear.MainHand";
-            this.weaponToolStripMenuItem.Text = " Main Hand";
-            this.weaponToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // offHandToolStripMenuItem1
-            // 
-            this.offHandToolStripMenuItem1.Name = "offHandToolStripMenuItem1";
-            this.offHandToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.offHandToolStripMenuItem1.Tag = "Gear.OffHand";
-            this.offHandToolStripMenuItem1.Text = " Off Hand";
-            this.offHandToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // idolToolStripMenuItem
-            // 
-            this.idolToolStripMenuItem.Name = "idolToolStripMenuItem";
-            this.idolToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.idolToolStripMenuItem.Tag = "Gear.Ranged";
-            this.idolToolStripMenuItem.Text = " Ranged";
-            this.idolToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem2.Tag = "Gear.Projectile";
-            this.toolStripMenuItem2.Text = " Projectile";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem3.Tag = "Gear.ProjectileBag";
-            this.toolStripMenuItem3.Text = " Projectile Bag";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(223, 6);
-            this.toolStripSeparator1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // gemsToolStripMenuItem
-            // 
-            this.gemsToolStripMenuItem.Enabled = false;
-            this.gemsToolStripMenuItem.Name = "gemsToolStripMenuItem";
-            this.gemsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.gemsToolStripMenuItem.Text = "Gems";
-            this.gemsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // normalToolStripMenuItem
-            // 
-            this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.normalToolStripMenuItem.Tag = "Gems.Gems";
-            this.normalToolStripMenuItem.Text = " Normal";
-            this.normalToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // metaToolStripMenuItem
-            // 
-            this.metaToolStripMenuItem.Name = "metaToolStripMenuItem";
-            this.metaToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.metaToolStripMenuItem.Tag = "Gems.Metas";
-            this.metaToolStripMenuItem.Text = " Meta";
-            this.metaToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(223, 6);
-            this.toolStripSeparator5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // enchantsToolStripMenuItem
-            // 
-            this.enchantsToolStripMenuItem.Enabled = false;
-            this.enchantsToolStripMenuItem.Name = "enchantsToolStripMenuItem";
-            this.enchantsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.enchantsToolStripMenuItem.Text = "Enchants";
-            this.enchantsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // headToolStripMenuItem1
-            // 
-            this.headToolStripMenuItem1.Name = "headToolStripMenuItem1";
-            this.headToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.headToolStripMenuItem1.Tag = "Enchants.Head";
-            this.headToolStripMenuItem1.Text = " Head";
-            this.headToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // shouldersToolStripMenuItem1
-            // 
-            this.shouldersToolStripMenuItem1.Name = "shouldersToolStripMenuItem1";
-            this.shouldersToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.shouldersToolStripMenuItem1.Tag = "Enchants.Shoulders";
-            this.shouldersToolStripMenuItem1.Text = " Shoulders";
-            this.shouldersToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // backToolStripMenuItem1
-            // 
-            this.backToolStripMenuItem1.Name = "backToolStripMenuItem1";
-            this.backToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.backToolStripMenuItem1.Tag = "Enchants.Back";
-            this.backToolStripMenuItem1.Text = " Back";
-            this.backToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // chestToolStripMenuItem1
-            // 
-            this.chestToolStripMenuItem1.Name = "chestToolStripMenuItem1";
-            this.chestToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.chestToolStripMenuItem1.Tag = "Enchants.Chest";
-            this.chestToolStripMenuItem1.Text = " Chest";
-            this.chestToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // wristsToolStripMenuItem1
-            // 
-            this.wristsToolStripMenuItem1.Name = "wristsToolStripMenuItem1";
-            this.wristsToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.wristsToolStripMenuItem1.Tag = "Enchants.Wrist";
-            this.wristsToolStripMenuItem1.Text = " Wrists";
-            this.wristsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // handsToolStripMenuItem1
-            // 
-            this.handsToolStripMenuItem1.Name = "handsToolStripMenuItem1";
-            this.handsToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.handsToolStripMenuItem1.Tag = "Enchants.Hands";
-            this.handsToolStripMenuItem1.Text = " Hands";
-            this.handsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // legsToolStripMenuItem1
-            // 
-            this.legsToolStripMenuItem1.Name = "legsToolStripMenuItem1";
-            this.legsToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.legsToolStripMenuItem1.Tag = "Enchants.Legs";
-            this.legsToolStripMenuItem1.Text = " Legs";
-            this.legsToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // feetToolStripMenuItem1
-            // 
-            this.feetToolStripMenuItem1.Name = "feetToolStripMenuItem1";
-            this.feetToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.feetToolStripMenuItem1.Tag = "Enchants.Feet";
-            this.feetToolStripMenuItem1.Text = " Feet";
-            this.feetToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // fingerToolStripMenuItem1
-            // 
-            this.fingerToolStripMenuItem1.Name = "fingerToolStripMenuItem1";
-            this.fingerToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.fingerToolStripMenuItem1.Tag = "Enchants.Finger";
-            this.fingerToolStripMenuItem1.Text = " Fingers";
-            this.fingerToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem4.Tag = "Enchants.MainHand";
-            this.toolStripMenuItem4.Text = " Main Hand";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem5.Tag = "Enchants.OffHand";
-            this.toolStripMenuItem5.Text = " Off Hand";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // weaponToolStripMenuItem1
-            // 
-            this.weaponToolStripMenuItem1.Name = "weaponToolStripMenuItem1";
-            this.weaponToolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.weaponToolStripMenuItem1.Tag = "Enchants.Ranged";
-            this.weaponToolStripMenuItem1.Text = " Ranged";
-            this.weaponToolStripMenuItem1.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(223, 6);
-            this.toolStripSeparator6.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // buffsToolStripMenuItem
-            // 
-            this.buffsToolStripMenuItem.Enabled = false;
-            this.buffsToolStripMenuItem.Name = "buffsToolStripMenuItem";
-            this.buffsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.buffsToolStripMenuItem.Tag = "Buffs";
-            this.buffsToolStripMenuItem.Text = "Buffs";
-            this.buffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // allBuffsToolStripMenuItem
-            // 
-            this.allBuffsToolStripMenuItem.Name = "allBuffsToolStripMenuItem";
-            this.allBuffsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.allBuffsToolStripMenuItem.Tag = "Buffs.All";
-            this.allBuffsToolStripMenuItem.Text = " All Buffs";
-            this.allBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // currentBuffsToolStripMenuItem
-            // 
-            this.currentBuffsToolStripMenuItem.Name = "currentBuffsToolStripMenuItem";
-            this.currentBuffsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.currentBuffsToolStripMenuItem.Tag = "Buffs.All+";
-            this.currentBuffsToolStripMenuItem.Text = " Current Buffs";
-            this.currentBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(223, 6);
-            // 
-            // talentSpecsMenuItem
-            // 
-            this.talentSpecsMenuItem.Name = "talentSpecsMenuItem";
-            this.talentSpecsMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.talentSpecsMenuItem.Tag = "TalentSpecs";
-            this.talentSpecsMenuItem.Text = "Talent Specs";
-            this.talentSpecsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // talentsMenuItem
-            // 
-            this.talentsMenuItem.Name = "talentsMenuItem";
-            this.talentsMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.talentsMenuItem.Tag = "Talents";
-            this.talentsMenuItem.Text = "Talents";
-            this.talentsMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // currentGearEnchantsBuffsToolStripMenuItem
-            // 
-            this.currentGearEnchantsBuffsToolStripMenuItem.Name = "currentGearEnchantsBuffsToolStripMenuItem";
-            this.currentGearEnchantsBuffsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.currentGearEnchantsBuffsToolStripMenuItem.Tag = "Current Gear/Enchants/Buffs";
-            this.currentGearEnchantsBuffsToolStripMenuItem.Text = "Current Gear/Enchants/Buffs";
-            this.currentGearEnchantsBuffsToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // directUpgradesMenuItem
-            // 
-            this.directUpgradesMenuItem.Name = "directUpgradesMenuItem";
-            this.directUpgradesMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.directUpgradesMenuItem.Tag = "Direct Upgrades";
-            this.directUpgradesMenuItem.Text = "Direct Upgrades";
-            this.directUpgradesMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(223, 6);
-            // 
-            // relativeStatValuesToolStripMenuItem
-            // 
-            this.relativeStatValuesToolStripMenuItem.Name = "relativeStatValuesToolStripMenuItem";
-            this.relativeStatValuesToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.relativeStatValuesToolStripMenuItem.Tag = "Relative Stat Values";
-            this.relativeStatValuesToolStripMenuItem.Text = "Relative Stat Values";
-            this.relativeStatValuesToolStripMenuItem.Click += new System.EventHandler(this.slotToolStripMenuItem_Click);
-            // 
-            // toolStripSeparatorRelativeStats
-            // 
-            this.toolStripSeparatorRelativeStats.Name = "toolStripSeparatorRelativeStats";
-            this.toolStripSeparatorRelativeStats.Size = new System.Drawing.Size(223, 6);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(61, 22);
-            this.toolStripLabel2.Text = "          Sort:";
-            // 
-            // toolStripDropDownButtonSort
-            // 
-            this.toolStripDropDownButtonSort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripDropDownButtonSort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.overallToolStripMenuItem,
-            this.alphabeticalToolStripMenuItem});
-            this.toolStripDropDownButtonSort.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButtonSort.Image")));
-            this.toolStripDropDownButtonSort.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButtonSort.Name = "toolStripDropDownButtonSort";
-            this.toolStripDropDownButtonSort.Size = new System.Drawing.Size(57, 22);
-            this.toolStripDropDownButtonSort.Text = "Overall";
-            // 
-            // overallToolStripMenuItem
-            // 
-            this.overallToolStripMenuItem.Name = "overallToolStripMenuItem";
-            this.overallToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.overallToolStripMenuItem.Tag = -1;
-            this.overallToolStripMenuItem.Text = "Overall";
-            this.overallToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
-            // 
-            // alphabeticalToolStripMenuItem
-            // 
-            this.alphabeticalToolStripMenuItem.Name = "alphabeticalToolStripMenuItem";
-            this.alphabeticalToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
-            this.alphabeticalToolStripMenuItem.Tag = -2;
-            this.alphabeticalToolStripMenuItem.Text = "Alphabetical";
-            this.alphabeticalToolStripMenuItem.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
-            // 
-            // toolStripDropDownButtonFilter
-            // 
-            this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemFilterOther});
-            this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
-            this.toolStripDropDownButtonFilter.Size = new System.Drawing.Size(58, 22);
-            this.toolStripDropDownButtonFilter.Text = "   Filter:";
-            // 
-            // toolStripMenuItemFilterOther
-            // 
-            this.toolStripMenuItemFilterOther.Checked = true;
-            this.toolStripMenuItemFilterOther.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemFilterOther.Name = "toolStripMenuItemFilterOther";
-            this.toolStripMenuItemFilterOther.Size = new System.Drawing.Size(104, 22);
-            this.toolStripMenuItemFilterOther.Text = "Other";
-            this.toolStripMenuItemFilterOther.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
-            // 
-            // menuStripMain
-            // 
-            this.menuStripMain.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
-            this.menuStripMain.Location = new System.Drawing.Point(0, 0);
-            this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Size = new System.Drawing.Size(888, 24);
-            this.menuStripMain.TabIndex = 3;
-            this.menuStripMain.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.loadFromArmoryToolStripMenuItem,
-            this.loadFromCharacterProfilerToolStripMenuItem,
-            this.toolStripSeparator,
-            this.toolStripSeparator8,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "&File";
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
-            this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.newToolStripMenuItem.Text = "&New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripMenuItem.Image")));
-            this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.openToolStripMenuItem.Text = "&Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
-            // loadFromArmoryToolStripMenuItem
-            // 
-            this.loadFromArmoryToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromArmoryToolStripMenuItem.Image")));
-            this.loadFromArmoryToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.loadFromArmoryToolStripMenuItem.Name = "loadFromArmoryToolStripMenuItem";
-            this.loadFromArmoryToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-            this.loadFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.loadFromArmoryToolStripMenuItem.Text = "&Load from Armory...";
-            this.loadFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadFromArmoryToolStripMenuItem_Click);
-            // 
-            // loadFromCharacterProfilerToolStripMenuItem
-            // 
-            this.loadFromCharacterProfilerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadFromCharacterProfilerToolStripMenuItem.Image")));
-            this.loadFromCharacterProfilerToolStripMenuItem.Name = "loadFromCharacterProfilerToolStripMenuItem";
-            this.loadFromCharacterProfilerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.loadFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.loadFromCharacterProfilerToolStripMenuItem.Text = "Load from Character &Profiler";
-            this.loadFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.loadFromCharacterProfilerToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator
-            // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(262, 6);
-            // 
-            // toolStripSeparator8
-            // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(262, 6);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
-            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.saveToolStripMenuItem.Text = "&Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.saveAsToolStripMenuItem.Text = "Save &As...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(262, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editItemsToolStripMenuItem,
-            this.defaultGemControlToolStripMenuItem,
-            this.refineEquipmentParametersToolStripMenuItem,
-            this.toolStripMenuItem6,
-            this.optimizeToolStripMenuItem,
-            this.batchToolsToolStripMenuItem6,
-            this.upgradeListToolStripMenuItem,
-            this.copyCharacterStatsToClipboardToolStripMenuItem,
-            this.toolStripSeparator11,
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem,
-            this.toolStripSeparator12,
-            this.loadPossibleUpgradesFromArmoryToolStripMenuItem,
-            this.updateItemCacheArmoryToolStripMenuItem,
-            this.updateItemCacheWowheadToolStripMenuItem,
-            this.toolStripSeparator10,
-            this.optionsToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "&Tools";
-            // 
-            // editItemsToolStripMenuItem
-            // 
-            this.editItemsToolStripMenuItem.Name = "editItemsToolStripMenuItem";
-            this.editItemsToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.editItemsToolStripMenuItem.Text = "Edit Items...";
-            this.editItemsToolStripMenuItem.Click += new System.EventHandler(this.editItemsToolStripMenuItem_Click);
-            // 
-            // defaultGemControlToolStripMenuItem
-            // 
-            this.defaultGemControlToolStripMenuItem.Name = "defaultGemControlToolStripMenuItem";
-            this.defaultGemControlToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.defaultGemControlToolStripMenuItem.Text = "Edit Gemming Templates...";
-            this.defaultGemControlToolStripMenuItem.Click += new System.EventHandler(this.defaultGemControlToolStripMenuItem_Click);
-            // 
-            // refineEquipmentParametersToolStripMenuItem
-            // 
-            this.refineEquipmentParametersToolStripMenuItem.Name = "refineEquipmentParametersToolStripMenuItem";
-            this.refineEquipmentParametersToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.refineEquipmentParametersToolStripMenuItem.Text = "Refine Types of Items Listed...";
-            this.refineEquipmentParametersToolStripMenuItem.Click += new System.EventHandler(this.refineEquipmentParametersToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(331, 22);
-            this.toolStripMenuItem6.Text = "Edit Item Filters...";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItemItemFilterEditor_Click);
-            // 
-            // optimizeToolStripMenuItem
-            // 
-            this.optimizeToolStripMenuItem.Name = "optimizeToolStripMenuItem";
-            this.optimizeToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.optimizeToolStripMenuItem.Text = "Optimize...";
-            this.optimizeToolStripMenuItem.Click += new System.EventHandler(this.optimizeToolStripMenuItem_Click);
-            // 
-            // batchToolsToolStripMenuItem6
-            // 
-            this.batchToolsToolStripMenuItem6.Name = "batchToolsToolStripMenuItem6";
-            this.batchToolsToolStripMenuItem6.Size = new System.Drawing.Size(331, 22);
-            this.batchToolsToolStripMenuItem6.Text = "Batch Tools...";
-            this.batchToolsToolStripMenuItem6.Click += new System.EventHandler(this.BatchToolsToolStripMenuItem6_Click);
-            // 
-            // copyCharacterStatsToClipboardToolStripMenuItem
-            // 
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Name = "copyCharacterStatsToClipboardToolStripMenuItem";
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Text = "Copy Character Stats to Clipboard";
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyCharacterStatsToClipboardToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator11
-            // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(328, 6);
-            // 
-            // reloadCurrentCharacterFromArmoryToolStripMenuItem
-            // 
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Name = "reloadCurrentCharacterFromArmoryToolStripMenuItem";
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Text = "Reload Current Character from Armory";
-            this.reloadCurrentCharacterFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.reloadCurrentCharacterFromArmoryToolStripMenuItem_Click);
-            // 
-            // reloadInvetoryFromCharacterProfilerToolStripMenuItem
-            // 
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Name = "reloadInvetoryFromCharacterProfilerToolStripMenuItem";
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Text = "Reload Current Character from Character Profiler";
-            this.reloadInvetoryFromCharacterProfilerToolStripMenuItem.Click += new System.EventHandler(this.reloadInvetoryFromCharacterProfilerToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator12
-            // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(328, 6);
-            // 
-            // loadPossibleUpgradesFromArmoryToolStripMenuItem
-            // 
-            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Name = "loadPossibleUpgradesFromArmoryToolStripMenuItem";
-            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Text = "Load Possible Upgrades From Armory";
-            this.loadPossibleUpgradesFromArmoryToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromArmoryToolStripMenuItem_Click);
-            // 
-            // updateItemCacheArmoryToolStripMenuItem
-            // 
-            this.updateItemCacheArmoryToolStripMenuItem.Name = "updateItemCacheArmoryToolStripMenuItem";
-            this.updateItemCacheArmoryToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.updateItemCacheArmoryToolStripMenuItem.Text = "Update Item Cache from the Armory";
-            this.updateItemCacheArmoryToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheArmoryToolStripMenuItem_Click);
-            // 
-            // updateItemCacheWowheadToolStripMenuItem
-            // 
-            this.updateItemCacheWowheadToolStripMenuItem.Name = "updateItemCacheWowheadToolStripMenuItem";
-            this.updateItemCacheWowheadToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.updateItemCacheWowheadToolStripMenuItem.Text = "Update Item Cache from Wowhead";
-            this.updateItemCacheWowheadToolStripMenuItem.Click += new System.EventHandler(this.updateItemCacheWowheadToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator10
-            // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(328, 6);
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.optionsToolStripMenuItem.Text = "Options...";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rawrWebsiteToolStripMenuItem,
-            this.donateToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.rawrHelpPageToolStripMenuItem,
-            this.tourOfRawrToolStripMenuItem,
-            this.gemmingsToolStripMenuItem,
-            this.gearOptimizationToolStripMenuItem,
-            this.batchToolsToolStripMenuItem,
-            this.itemFilteringToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "&Help";
-            // 
-            // rawrWebsiteToolStripMenuItem
-            // 
-            this.rawrWebsiteToolStripMenuItem.Name = "rawrWebsiteToolStripMenuItem";
-            this.rawrWebsiteToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.rawrWebsiteToolStripMenuItem.Text = "Rawr Website";
-            this.rawrWebsiteToolStripMenuItem.Click += new System.EventHandler(this.rawrWebsiteToolStripMenuItem_Click);
-            // 
-            // donateToolStripMenuItem
-            // 
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.donateToolStripMenuItem.Text = "Donate...";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(173, 6);
-            // 
-            // rawrHelpPageToolStripMenuItem
-            // 
-            this.rawrHelpPageToolStripMenuItem.Name = "rawrHelpPageToolStripMenuItem";
-            this.rawrHelpPageToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.rawrHelpPageToolStripMenuItem.Text = "Rawr Help Page";
-            this.rawrHelpPageToolStripMenuItem.Click += new System.EventHandler(this.rawrHelpPageToolStripMenuItem_Click);
-            // 
-            // tourOfRawrToolStripMenuItem
-            // 
-            this.tourOfRawrToolStripMenuItem.Name = "tourOfRawrToolStripMenuItem";
-            this.tourOfRawrToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.tourOfRawrToolStripMenuItem.Text = "  Tour of Rawr";
-            this.tourOfRawrToolStripMenuItem.Click += new System.EventHandler(this.tourOfRawrToolStripMenuItem_Click);
-            // 
-            // gemmingsToolStripMenuItem
-            // 
-            this.gemmingsToolStripMenuItem.Name = "gemmingsToolStripMenuItem";
-            this.gemmingsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.gemmingsToolStripMenuItem.Text = "  Gemmings";
-            this.gemmingsToolStripMenuItem.Click += new System.EventHandler(this.gemmingsToolStripMenuItem_Click);
-            // 
-            // gearOptimizationToolStripMenuItem
-            // 
-            this.gearOptimizationToolStripMenuItem.Name = "gearOptimizationToolStripMenuItem";
-            this.gearOptimizationToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.gearOptimizationToolStripMenuItem.Text = "  Gear Optimization";
-            this.gearOptimizationToolStripMenuItem.Click += new System.EventHandler(this.gearOptimizationToolStripMenuItem_Click);
-            // 
-            // batchToolsToolStripMenuItem
-            // 
-            this.batchToolsToolStripMenuItem.Name = "batchToolsToolStripMenuItem";
-            this.batchToolsToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.batchToolsToolStripMenuItem.Text = "  Batch Tools";
-            this.batchToolsToolStripMenuItem.Click += new System.EventHandler(this.batchToolsToolStripMenuItem_Click);
-            // 
-            // itemFilteringToolStripMenuItem
-            // 
-            this.itemFilteringToolStripMenuItem.Name = "itemFilteringToolStripMenuItem";
-            this.itemFilteringToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
-            this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
-            // 
-            // upgradeListToolStripMenuItem
-            // 
-            this.upgradeListToolStripMenuItem.Name = "upgradeListToolStripMenuItem";
-            this.upgradeListToolStripMenuItem.Size = new System.Drawing.Size(331, 22);
-            this.upgradeListToolStripMenuItem.Text = "Upgrade List...";
-            this.upgradeListToolStripMenuItem.Click += new System.EventHandler(this.upgradeListToolStripMenuItem_Click);
+            // usePTRDataToolStripMenuItem
+            // 
+            this.usePTRDataToolStripMenuItem.CheckOnClick = true;
+            this.usePTRDataToolStripMenuItem.Name = "usePTRDataToolStripMenuItem";
+            this.usePTRDataToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.usePTRDataToolStripMenuItem.Text = "Use PTR Data";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 701);
+            this.ClientSize = new System.Drawing.Size(888, 703);
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -1910,6 +1929,8 @@ namespace Rawr
 		private System.Windows.Forms.ToolStripMenuItem itemFilteringToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTipMain;
         private System.Windows.Forms.ToolStripMenuItem upgradeListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadPossibleUpgradesFromWowheadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem usePTRDataToolStripMenuItem;
         
     }
 }

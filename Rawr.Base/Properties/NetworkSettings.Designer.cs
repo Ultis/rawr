@@ -270,13 +270,24 @@ namespace Rawr.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://wotlk.wowhead.com/?item={0}&xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowhead.com/?item={1}&xml")]
         public string ItemWowheadURI {
             get {
                 return ((string)(this["ItemWowheadURI"]));
             }
         }
-        
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowhead.com/?items&filter={1}")]
+        public string ItemWowheadUpgradeURI
+        {
+            get
+            {
+                return ((string)(this["ItemWowheadUpgradeURI"]));
+            }
+        }
+
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items")]
