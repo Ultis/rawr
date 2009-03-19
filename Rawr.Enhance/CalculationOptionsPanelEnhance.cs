@@ -35,24 +35,6 @@ namespace Rawr
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null)
 				Character.CalculationOptions = new CalculationOptionsEnhance();
-			//if (!Character.CalculationOptions.ContainsKey("TargetLevel"))
-			//    Character.CalculationOptions["TargetLevel"] = "73";
-			//if (!Character.CalculationOptions.ContainsKey("TargetArmor"))
-			//    Character.CalculationOptions["TargetArmor"] = "7700";
-			//if (!Character.CalculationOptions.ContainsKey("ExposeWeaknessAPValue"))
-			//    Character.CalculationOptions["ExposeWeaknessAPValue"] = "200";
-			//if (!Character.CalculationOptions.ContainsKey("Powershift"))
-			//    Character.CalculationOptions["Powershift"] = "4";
-			//if (!Character.CalculationOptions.ContainsKey("PrimaryAttack"))
-			//    Character.CalculationOptions["PrimaryAttack"] = "Both";
-			//if (!Character.CalculationOptions.ContainsKey("Finisher"))
-			//    Character.CalculationOptions["Finisher"] = "Rip";
-			//if (!Character.CalculationOptions.ContainsKey("EnforceMetagemRequirements"))
-			//    Character.CalculationOptions["EnforceMetagemRequirements"] = "No";
-			//if (!Character.CalculationOptions.ContainsKey("BloodlustUptime"))
-			//    Character.CalculationOptions["BloodlustUptime"] = "15";
-			//if (!Character.CalculationOptions.ContainsKey("ShattrathFaction"))
-			//    Character.CalculationOptions["ShattrathFaction"] = "Aldor";
 
 			CalculationOptionsEnhance calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
 			comboBoxTargetLevel.SelectedItem = calcOpts.TargetLevel.ToString();
@@ -70,6 +52,7 @@ namespace Rawr
             chbGlyphShocking.Checked = calcOpts.GlyphShocking;
             chbGlyphSS.Checked = calcOpts.GlyphSS;
             chbGlyphWF.Checked = calcOpts.GlyphWF;
+            chbBaseStatOption.Checked = calcOpts.BaseStatOption;
 
             _glyphCount = (chbGlyphFT.Checked ? 1 : 0) + (chbGlyphLL.Checked ? 1 : 0) + (chbGlyphLB.Checked ? 1 : 0) +
                           (chbGlyphLS.Checked ? 1 : 0) + (chbGlyphSS.Checked ? 1 : 0) + (chbGlyphWF.Checked ? 1 : 0) +
@@ -121,6 +104,7 @@ namespace Rawr
                 calcOpts.GlyphShocking = chbGlyphShocking.Checked;
                 calcOpts.GlyphSS = chbGlyphSS.Checked;
                 calcOpts.GlyphWF = chbGlyphWF.Checked;
+                calcOpts.BaseStatOption = chbBaseStatOption.Checked;
 
 				Character.OnCalculationsInvalidated();
 			}
