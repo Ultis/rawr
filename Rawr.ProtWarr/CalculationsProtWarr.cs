@@ -184,6 +184,8 @@ threat and limited threat scaled by the threat scale.",
 					"% Chance to Avoid Attacks",
 					"% Chance to be Crit",
                     "% Chance to be Avoided", 
+                    "Burst Time", 
+                    "TankPoints", 
                     "Nature Survival",
                     "Fire Survival",
                     "Frost Survival",
@@ -333,6 +335,8 @@ threat and limited threat scaled by the threat scale.",
             am.RageModelMode = RageModelMode.Limited;
             calculatedStats.LimitedThreat = am.ThreatPerSecond;
 
+            calculatedStats.TankPoints = dm.TankPoints;
+            calculatedStats.BurstTime = dm.BurstTime;
             calculatedStats.RankingMode = calcOpts.RankingMode;
             calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f));
             switch (calcOpts.RankingMode)
@@ -345,13 +349,8 @@ threat and limited threat scaled by the threat scale.",
                     break;
                 case 3:
                     // Burst Time Mode
-                    double a = Convert.ToDouble(dm.DefendTable.AnyMiss);
-                    double h = Convert.ToDouble(stats.Health);
-                    double H = Convert.ToDouble(dm.AverageDamagePerHit);
-                    double s = Convert.ToDouble(dm.ParryModel.BossAttackSpeed / calcOpts.BossAttackSpeed);
                     float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
-
-                    calculatedStats.SurvivalPoints = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s) * 100.0f;
+                    calculatedStats.SurvivalPoints = (dm.BurstTime * 100.0f);
                     calculatedStats.MitigationPoints = 0.0f;
                     calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
                     break;
@@ -368,7 +367,7 @@ threat and limited threat scaled by the threat scale.",
                     break;
             }
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-
+            
             return calculatedStats;
         }
 
@@ -610,6 +609,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusStrengthMultiplier = talents.Vitality * 0.02f,
                 Expertise = talents.Vitality * 2.0f,
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
+                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -993,8 +993,8 @@ threat and limited threat scaled by the threat scale.",
                 ExecutionerProc = stats.ExecutionerProc,
 
                 BonusCommandingShoutHP = stats.BonusCommandingShoutHP,
-                BonusShieldSlamDamage = stats.BonusShieldSlamDamage
-
+                BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
+                DevastateCritIncrease = stats.DevastateCritIncrease
 			};
 		}
 
@@ -1018,7 +1018,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusBleedDamageMultiplier + stats.WindfuryAPBonus +
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
                     stats.ExecutionerProc +
-                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage
+                    stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease
                    ) != 0;
 		}
         /// <summary>

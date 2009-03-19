@@ -63,7 +63,7 @@ namespace Rawr.ProtWarr
         public static float StanceDamageMultipler(Character character, Stats stats)
         {
             // In Defensive Stance
-            return (0.9f * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f) * (1.0f + stats.BonusDamageMultiplier));
+            return (0.95f * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f) * (1.0f + stats.BonusDamageMultiplier));
         }
 
         public static float StanceThreatMultipler(Character character, Stats stats)
@@ -141,7 +141,7 @@ namespace Rawr.ProtWarr
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;
                 case Ability.Devastate:
-                    abilityCritChance += character.WarriorTalents.SwordAndBoard * 0.05f;
+                    abilityCritChance += stats.DevastateCritIncrease;
                     break;
                 case Ability.HeroicStrike:
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;

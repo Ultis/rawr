@@ -65,7 +65,9 @@ namespace Rawr.ProtWarr
         public float DamageTakenPerHit { get; set; }
         public float DamageTakenPerBlock { get; set; }
         public float DamageTakenPerCrit { get; set; }
+
         public float TankPoints { get; set; }
+        public float BurstTime { get; set; }
 
         public float NatureReduction { get; set; }
         public float FrostReduction { get; set; }
@@ -209,7 +211,9 @@ namespace Rawr.ProtWarr
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
-                case "% Chance to be Avoided": return AvoidedAttacks;
+                case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
+                case "Burst Time": return BurstTime;
+                case "TankPoints": return TankPoints;
                 case "Nature Survival": return NatureSurvivalPoints;
                 case "Fire Survival": return FireSurvivalPoints;
                 case "Frost Survival": return FrostSurvivalPoints;

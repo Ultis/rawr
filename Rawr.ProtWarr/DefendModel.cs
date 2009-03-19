@@ -23,6 +23,7 @@ namespace Rawr.ProtWarr
         public float Mitigation { get; set; }
         public float TankPoints { get; set; }
         public float EffectiveHealth { get; set; }
+        public float BurstTime { get; set; }
 
         public void Calculate()
         {
@@ -49,6 +50,12 @@ namespace Rawr.ProtWarr
             TankPoints          = (Stats.Health / (1.0f - Mitigation));
             EffectiveHealth     = (Stats.Health / guaranteedReduction);
             GuaranteedReduction = (1.0f - guaranteedReduction);
+
+            double a = Convert.ToDouble(DefendTable.AnyMiss);
+            double h = Convert.ToDouble(Stats.Health);
+            double H = Convert.ToDouble(AverageDamagePerHit);
+            double s = Convert.ToDouble(ParryModel.BossAttackSpeed / Options.BossAttackSpeed);
+            BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
         }
 
         public DefendModel(Character character, Stats stats)
