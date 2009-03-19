@@ -54,6 +54,7 @@ namespace Rawr.Mage
         public bool AutomaticArmor { get; set; }
         public bool IncrementalOptimizations { get; set; }
         public float SnaredTime { get; set; }
+        public bool Mode31 { get; set; }
 
         [XmlIgnore]
         public Cooldown[] IncrementalSetStateIndexes;
@@ -261,6 +262,9 @@ namespace Rawr.Mage
         public bool GlyphOfArcanePower { get; set; }
         public bool GlyphOfArcaneBlast { get; set; }
         public bool GlyphOfArcaneMissiles { get; set; }
+        public bool GlyphOfArcaneBarrage { get; set; }
+        public bool GlyphOfLivingBomb { get; set; }
+        public bool GlyphOfIceLance { get; set; }
 
         private CalculationOptionsMage()
         {

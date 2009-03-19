@@ -135,6 +135,8 @@ namespace Rawr.Mage
                     "Spell Info:AB2ABar2C*AB-AB-ABar, on MB proc do MBAM-ABar at 2 stack",
                     "Spell Info:AB2ABar3C*AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
                     "Spell Info:AB3AM2MBAM*AB-AB-AB-AM, if first AB procs MB do MBAM at 2 stack",
+                    "Spell Info:AB3AMABar2C*AB-AB-AB-AM-ABar, if ABar or first AB procs do MBAM-ABar at 2 stack",
+                    "Spell Info:AB3AMABar*AB-AB-AB-AM-ABar regardless of procs",
                     "Spell Info:AB3AM*AB-AB-AB-AM regardless of procs",
                     "Spell Info:AB3ABar3MBAM*AB-AB-AB-ABar, on MB proc do MBAM at 3 stack",
                     "Spell Info:AB3ABar3C*AB-AB-AB-ABar, on MB proc do MBAM-ABar at 3 stack",
@@ -825,12 +827,26 @@ namespace Rawr.Mage
             }
             if (statsTotal.MageMageArmor > 0)
             {
-                statsTotal.SpellCombatManaRegeneration += 0.3f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                if (calculationOptions.Mode31)
+                {
+                    statsTotal.SpellCombatManaRegeneration += 0.5f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                }
+                else
+                {
+                    statsTotal.SpellCombatManaRegeneration += 0.3f + (calculationOptions.GlyphOfMageArmor ? 0.2f : 0.0f);
+                }
                 statsTotal.AllResist += (calculationOptions.PlayerLevel < 71 ? 18f : (calculationOptions.PlayerLevel < 79 ? 21f : 40f)) * (1 + character.MageTalents.ArcaneShielding * 0.25f);
             }
             if (statsTotal.MageMoltenArmor > 0)
             {
-                statsTotal.SpellCrit += 0.03f + (calculationOptions.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                if (calculationOptions.Mode31)
+                {
+                    statsTotal.CritRating += (0.25f + (calculationOptions.GlyphOfMoltenArmor ? 0.15f : 0.0f)) * statsTotal.Spirit;
+                }
+                else
+                {
+                    statsTotal.SpellCrit += 0.03f + (calculationOptions.GlyphOfMoltenArmor ? 0.02f : 0.0f);
+                }
             }
             if (calculationOptions.EffectCritBonus > 0)
             {
@@ -841,8 +857,40 @@ namespace Rawr.Mage
                 statsTotal.BonusManaGem = (1 + statsTotal.BonusManaGem) * (1 + 0.1f) - 1;
             }
 
-            statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
-            statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.Pyromaniac;
+            if (calculationOptions.Mode31)
+            {
+                switch (character.MageTalents.ArcaneMeditation)
+                {
+                    case 1:
+                        statsTotal.SpellCombatManaRegeneration += 0.17f;
+                        break;
+                    case 2:
+                        statsTotal.SpellCombatManaRegeneration += 0.33f;
+                        break;
+                    case 3:
+                        statsTotal.SpellCombatManaRegeneration += 0.5f;
+                        break;
+                }
+                switch (character.MageTalents.Pyromaniac)
+                {
+                    case 1:
+                        statsTotal.SpellCombatManaRegeneration += 0.17f;
+                        break;
+                    case 2:
+                        statsTotal.SpellCombatManaRegeneration += 0.33f;
+                        break;
+                    case 3:
+                        statsTotal.SpellCombatManaRegeneration += 0.5f;
+                        break;
+                }
+            }
+            else
+            {
+                statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.ArcaneMeditation;
+                statsTotal.SpellCombatManaRegeneration += 0.1f * character.MageTalents.Pyromaniac;
+            }
+
+            if (statsTotal.SpellCombatManaRegeneration > 1.0f) statsTotal.SpellCombatManaRegeneration = 1.0f;
 
             //statsTotal.Mp5 += calculationOptions.ShadowPriest;
 
@@ -883,8 +931,8 @@ namespace Rawr.Mage
             return statsTotal;
         }
          
-        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire", "GlyphOfArcaneBlast", "GlyphOfArcaneMissiles" };
-        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire", "Glyph of Arcane Blast", "Glyph of Arcane Missiles" };
+        private static string[] GlyphList = { "GlyphOfFireball", "GlyphOfFrostbolt", "GlyphOfIceArmor", "GlyphOfImprovedScorch", "GlyphOfMageArmor", "GlyphOfManaGem", "GlyphOfMoltenArmor", "GlyphOfWaterElemental", "GlyphOfArcaneExplosion", "GlyphOfArcanePower", "GlyphOfFrostfire", "GlyphOfArcaneBlast", "GlyphOfArcaneMissiles", "GlyphOfIceLance", "GlyphOfArcaneBarrage", "GlyphOfLivingBomb" };
+        private static string[] GlyphListFriendly = { "Glyph of Fireball", "Glyph of Frostbolt", "Glyph of Ice Armor", "Glyph of Improved Scorch", "Glyph of Mage Armor", "Glyph of Mana Gem", "Glyph of Molten Armor", "Glyph of Water Elemental", "Glyph of Arcane Explosion", "Glyph of Arcane Power", "Glyph of Frostfire", "Glyph of Arcane Blast", "Glyph of Arcane Missiles", "Glyph of Ice Lance", "Glyph of Arcane Barrage", "Glyph of Living Bomb" };
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {

@@ -2737,20 +2737,25 @@ namespace Rawr.Mage
                         if (talents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
                         if (calculationOptions.PlayerLevel >= 75 && talents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
                         if (talents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar1C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar0MBAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2MBAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar2C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB2ABar3C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam3C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam03C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABSpam3MBAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar3C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar2C);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar2MBAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar1MBAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.AB3ABar3MBAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
+                        {
+                            list.Add(SpellId.ABABar1C);
+                            list.Add(SpellId.ABABar0MBAM);
+                            list.Add(SpellId.AB2ABar2MBAM);
+                            list.Add(SpellId.AB2ABar2C);
+                            list.Add(SpellId.AB2ABar3C);
+                            list.Add(SpellId.AB3ABar3C);
+                            list.Add(SpellId.ABSpam3C);
+                            list.Add(SpellId.ABSpam03C);
+                            list.Add(SpellId.ABSpam3MBAM);
+                            list.Add(SpellId.ABABar3C);
+                            list.Add(SpellId.ABABar2C);
+                            list.Add(SpellId.ABABar2MBAM);
+                            list.Add(SpellId.ABABar1MBAM);
+                            list.Add(SpellId.AB3ABar3MBAM);
+                            list.Add(SpellId.AB3AMABar);
+                            list.Add(SpellId.AB3AMABar2C);
+                        }
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)
