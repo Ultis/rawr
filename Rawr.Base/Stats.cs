@@ -269,6 +269,11 @@ namespace Rawr
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
+        ExorcismMultiplier,
+        HammerOfWrathMultiplier,
+        DivineStormCrit,
+        CrusaderStrikeCrit,
+        DivineStormDamage,
         APCrusaderStrike_6,
         CrusaderStrikeDamage,
         ConsecrationSpellPower,
@@ -2088,6 +2093,15 @@ namespace Rawr
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Divine Storm Damage")]
+        [Category("Equipment Procs")]
+        public float DivineStormDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Divine Storm Damage")]
         [Category("Equipment Procs")]
@@ -2095,6 +2109,46 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
             set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Exorcism Damage")]
+        [Category("Equipment Procs")]
+        public float ExorcismMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hammer of Wrath Damage")]
+        [Category("Equipment Procs")]
+        public float HammerOfWrathMultiplier
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Crusader Strike Crit")]
+        [Category("Equipment Procs")]
+        public float CrusaderStrikeCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeCrit] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Divine Storm Crit")]
+        [Category("Equipment Procs")]
+        public float DivineStormCrit
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormCrit]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineStormCrit] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

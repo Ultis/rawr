@@ -2553,7 +2553,27 @@ namespace Rawr
                 SetName = "Redemption Plate",
                 SetThreshold = 4
             });
-            
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ExorcismMultiplier = .1f, HammerOfWrathMultiplier = .1f },
+                SetName = "Aegis Battlegear",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { CrusaderStrikeCrit = .1f, DivineStormCrit = .1f },
+                SetName = "Aegis Battlegear",
+                SetThreshold = 4
+            });
+
 			#endregion
 
             #region Profession Buffs

@@ -849,6 +849,10 @@ namespace Rawr
             {
                 stats.CrusaderStrikeDamage = 115.5f;
             }
+            else if (line == "Increases the damage done by Divine Storm by 235. ")
+            {
+                stats.DivineStormDamage = 235f;
+            }     
             else if (line == "Causes your Divine Storm to increase your Critical Strike rating by 73 for 8 sec.")
             {
                 stats.CritDivineStorm_8 = 73f;
