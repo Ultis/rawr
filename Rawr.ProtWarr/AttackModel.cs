@@ -30,6 +30,7 @@ namespace Rawr.ProtWarr
         }
 
         public string Name { get; private set; }
+        public string Description { get; private set; }
         public float ThreatPerSecond { get; private set; }
         public float DamagePerSecond { get; private set; }
 
@@ -46,7 +47,8 @@ namespace Rawr.ProtWarr
                     {
                         // Basic Rotation
                         // Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor
-                        Name        = "Basic*Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor";
+                        Name        = "Basic Cycle";
+                        Description = "Shield Slam -> Revenge -> Sunder Armor -> Sunder Armor";
                         modelLength = 6.0f;
                         modelThreat = 
                             Abilities[Ability.ShieldSlam].Threat + 
@@ -66,7 +68,8 @@ namespace Rawr.ProtWarr
                         // Shield Slam -> Revenge -> Devastate -> Devastate
                         if (Character.WarriorTalents.Devastate == 1)
                         {
-                            Name        = "Devastate*Shield Slam -> Revenge -> Devastate -> Devastate";
+                            Name        = "Devastate";
+                            Description = "Shield Slam -> Revenge -> Devastate -> Devastate";
                             modelLength = 6.0f;
                             modelThreat =
                                 Abilities[Ability.ShieldSlam].Threat +
@@ -95,7 +98,8 @@ namespace Rawr.ProtWarr
                         // The cycle length is 4.7844s, abilities per cycle is 3.1896
                         if (Character.WarriorTalents.SwordAndBoard == 3)
                         {
-                            Name        = "Sword And Board*Shield Slam > Revenge > Devastate";
+                            Name        = "Sword And Board";
+                            Description = "Shield Slam > Revenge > Devastate";
                             modelLength = 4.7644f;
                             modelThreat =
                                 (1.0f * Abilities[Ability.ShieldSlam].Threat) +
@@ -124,7 +128,8 @@ namespace Rawr.ProtWarr
                         // The cycle length is 4.7844s, abilities per cycle is 3.1896
                         if (Character.WarriorTalents.SwordAndBoard == 3 && Character.WarriorTalents.ConcussionBlow == 1 && Character.WarriorTalents.Shockwave == 1)
                         {
-                            Name        = "Sword And Board + CB/SW*Shield Slam > Revenge > Devastate @ 3s Shield Slam Cooldown > Concussion Blow > Shockwave > Devastate";
+                            Name        = "Sword And Board + CB/SW";
+                            Description = "Shield Slam > Revenge > Devastate\n@ 3s Shield Slam Cooldown: Concussion Blow > Shockwave > Devastate";
                             modelLength = 4.7644f;
                             modelThreat =
                                 (1.0f * Abilities[Ability.ShieldSlam].Threat) +
@@ -165,17 +170,30 @@ namespace Rawr.ProtWarr
                         // Shield Slam -> Revenge -> Revenge -> Revenge
                         if (Character.WarriorTalents.UnrelentingAssault == 2)
                         {
-                            Name        = "Unrelenting Assault*Shield Slam -> Revenge -> Revenge -> Revenge";
-                            modelLength = 6.0f;
-                            modelThreat = 
-                                Abilities[Ability.ShieldSlam].Threat + 
-                                Abilities[Ability.Revenge].Threat * 3;
-                            modelDamage = 
-                                Abilities[Ability.ShieldSlam].Damage + 
-                                Abilities[Ability.Revenge].Damage * 3;
-                            modelCrits = 
-                                Abilities[Ability.ShieldSlam].CritPercentage + 
-                                Abilities[Ability.Revenge].CritPercentage * 3;
+                            if (Abilities[Ability.ShieldSlam].Threat < Abilities[Ability.Revenge].Threat)
+                            {
+                                Name        = "Unrelenting Assault";
+                                Description = "Revenge Only";
+                                modelLength = 1.5f;
+                                modelThreat = Abilities[Ability.Revenge].Threat;
+                                modelDamage = Abilities[Ability.Revenge].Damage;
+                                modelCrits  = Abilities[Ability.Revenge].CritPercentage;
+                            }
+                            else
+                            {
+                                Name        = "Unrelenting Assault";
+                                Description = "Shield Slam -> Revenge -> Revenge -> Revenge";
+                                modelLength = 6.0f;
+                                modelThreat =
+                                    Abilities[Ability.ShieldSlam].Threat +
+                                    Abilities[Ability.Revenge].Threat * 3;
+                                modelDamage =
+                                    Abilities[Ability.ShieldSlam].Damage +
+                                    Abilities[Ability.Revenge].Damage * 3;
+                                modelCrits =
+                                    Abilities[Ability.ShieldSlam].CritPercentage +
+                                    Abilities[Ability.Revenge].CritPercentage * 3;
+                            }
                         }
                         else
                             goto case AttackModelMode.Basic;

@@ -278,8 +278,16 @@ threat and limited threat scaled by the threat scale.",
             CalculationOptionsProtWarr      calcOpts        = character.CalculationOptions as CalculationOptionsProtWarr;
             Stats                           stats           = GetCharacterStats(character, additionalItem);
 
+            AttackModelMode amm = AttackModelMode.Basic;
+            if (character.WarriorTalents.UnrelentingAssault > 0)
+                amm = AttackModelMode.UnrelentingAssault;
+            else if (character.WarriorTalents.Shockwave > 0)
+                amm = AttackModelMode.FullProtection;
+            else if (character.WarriorTalents.Devastate > 0)
+                amm = AttackModelMode.Devastate;
+
             DefendModel dm = new DefendModel(character, stats);
-            AttackModel am = new AttackModel(character, stats, AttackModelMode.FullProtection);
+            AttackModel am = new AttackModel(character, stats, amm);
 
             calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = calcOpts.TargetLevel;
@@ -335,6 +343,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             am.RageModelMode = RageModelMode.Limited;
             calculatedStats.LimitedThreat = am.ThreatPerSecond;
+            calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
 
             calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;

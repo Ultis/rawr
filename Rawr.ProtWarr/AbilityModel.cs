@@ -71,7 +71,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Revenge:
                     baseDamage = 1615.0f + (Stats.AttackPower * 0.207f);
-                    DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f);
+                    DamageMultiplier *= (1.0f + Talents.ImprovedRevenge * 0.1f) * (1.0f + Talents.UnrelentingAssault * 0.1f);
                     break;
                 case Ability.ShieldSlam:
                     baseDamage = 1015.0f + Stats.BlockValue;

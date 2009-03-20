@@ -95,6 +95,7 @@ namespace Rawr.ProtWarr
         
         public float LimitedThreat { get; set; }
         public float UnlimitedThreat { get; set; }
+        public string ThreatModel { get; set; }
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
@@ -171,9 +172,9 @@ namespace Rawr.ProtWarr
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
-            dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond));
-            dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}",LimitedThreat));
-            dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat));
+            dictValues.Add("Total Damage/sec", string.Format("{0:0.0}", TotalDamagePerSecond) + "*" + ThreatModel);
+            dictValues.Add("Limited Threat/sec", string.Format("{0:0.0}", LimitedThreat) + "*" + ThreatModel);
+            dictValues.Add("Unlimited Threat/sec", string.Format("{0:0.0}", UnlimitedThreat) + "*" + ThreatModel);
 
             switch (RankingMode)
             {
