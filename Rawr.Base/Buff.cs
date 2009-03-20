@@ -1989,20 +1989,20 @@ namespace Rawr
 			// Feral Tier 8 set bonuses 
 			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
 			{
-			    Name = "Druid T8 Battlegear 2 Piece Bonus",
+			    Name = "Nightsong Battlegear 2 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
 			    Stats = { ClearcastOnBleedChance = 0.0583333333f },
-			    SetName = "Druid T8 Battlegear",
+				SetName = "Nightsong Battlegear",
 			    SetThreshold = 2
 			});
 			defaultBuffs.Add(new Buff() //TODO TODO TODO TODO
 			{
-			    Name = "Druid T8 Battlegear 4 Piece Bonus",
+				Name = "Nightsong Battlegear 4 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
 			    Stats = { BonusSavageRoarDuration = 8f },
-				SetName = "Druid T8 Battlegear",
+				SetName = "Nightsong Battlegear",
 			    SetThreshold = 4
 			});
             // Moonkin Tier 7 set bonuses
