@@ -203,7 +203,7 @@ the Threat Scale defined on the Options tab.",
 					"Threat Stats:Swipe",
 					"Threat Stats:Faerie Fire",
 					"Threat Stats:Lacerate",
-					"Threat Stats:Lacerate DOT Tick",
+					"Threat Stats:Lacerate DoT Tick",
 					"Threat Stats:Avoided Attacks",
 					};
 				return _characterDisplayCalculationLabels;
@@ -524,6 +524,7 @@ the Threat Scale defined on the Options tab.",
 			float rawChanceCrit = Math.Min(0.75f, (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f +
 							stats.PhysicalCrit) - (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
+			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			
 			calculatedStats.DodgedAttacks = chanceDodge * 100;
             calculatedStats.ParriedAttacks = chanceParry * 100;
@@ -537,9 +538,9 @@ the Threat Scale defined on the Options tab.",
 			float maulDamageRaw = (baseDamage + 578) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMaulDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
 			float mangleDamageRaw = (baseDamage * 1.15f + 299) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
 			float swipeDamageRaw = (stats.AttackPower * 0.063f + 108f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusSwipeDamageMultiplier) * modArmor;
-			float faerieFireDamageRaw = (stats.AttackPower * 0.05f + 1f) * (1f + stats.BonusDamageMultiplier);
+			float faerieFireDamageRaw = (stats.AttackPower * 0.15f + 1f) * (1f + stats.BonusDamageMultiplier);
 			float lacerateDamageRaw = (stats.AttackPower * 0.01f + 88f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor * (1f + stats.BonusLacerateDamageMultiplier);
-			float lacerateDamageDot = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
+			float lacerateDamageDotRaw = (stats.AttackPower * 0.01f + 64f) * 5f /*stack size*/ * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * (1f + stats.BonusLacerateDamageMultiplier);
 
 			//Calculate the average damage of each ability, including crits
 			float meleeDamageAverage = (chanceCrit * (meleeDamageRaw * critMultiplier)) + //Damage from crits
@@ -550,16 +551,16 @@ the Threat Scale defined on the Options tab.",
 			float swipeDamageAverage = (chanceCrit * (swipeDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (swipeDamageRaw));
 			float faerieFireDamageAverage = (0.25f * (faerieFireDamageRaw * spellCritMultiplier)) + (0.65f * (faerieFireDamageRaw)); //TODO: Assumes 25% spell crit and 10% spell miss
 			float lacerateDamageAverage = (chanceCrit * (lacerateDamageRaw * critMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (lacerateDamageRaw));
-			float lacerateDamageDotAverage = (chanceCrit * (lacerateDamageDot * spellCritMultiplier)) + ((1f - chanceCrit - chanceAvoided) * (lacerateDamageDot));
+			float lacerateDamageDotAverage = (chanceCritBleed * (lacerateDamageDotRaw * critMultiplier)) + ((1f - chanceCritBleed) * (lacerateDamageDotRaw));
 
 			//Calculate the raw threat of each attack
 			float meleeThreatRaw = bearThreatMultiplier * meleeDamageRaw;
 			float maulThreatRaw = bearThreatMultiplier * (maulDamageRaw + 424f / 1f); //NOTE! This assumes 1 target. If Maul hits 2 targets, replace 1 with 2.
-			float mangleThreatRaw = bearThreatMultiplier * mangleDamageRaw * (1 + stats.BonusMangleBearThreat);
+			float mangleThreatRaw = bearThreatMultiplier * mangleDamageRaw * (1f + stats.BonusMangleBearThreat);
 			float swipeThreatRaw = bearThreatMultiplier * swipeDamageRaw * 1.5f;
 			float faerieFireThreatRaw = bearThreatMultiplier * (faerieFireDamageRaw + 632f);
 			float lacerateThreatRaw = bearThreatMultiplier * (lacerateDamageRaw + 1031f) / 2f;
-			float lacerateDotThreat = bearThreatMultiplier * lacerateDamageDotAverage / 2f;
+			float lacerateDotThreatRaw = bearThreatMultiplier * lacerateDamageDotRaw / 2f;
 			
 			//Calculate the average threat of each attack, including crits
 			float meleeThreatAverage = bearThreatMultiplier * meleeDamageAverage;
@@ -568,7 +569,8 @@ the Threat Scale defined on the Options tab.",
 			float swipeThreatAverage = bearThreatMultiplier * swipeDamageAverage * 1.5f;
 			float faerieFireThreatAverage = bearThreatMultiplier * (faerieFireDamageAverage + (632f * (.9f))); //TODO: Assumes 10% spell miss rate
 			float lacerateThreatAverage = bearThreatMultiplier * (lacerateDamageAverage + (1031f * (1 - chanceAvoided))) / 2f;
-
+			float lacerateDotThreatAverage = bearThreatMultiplier * lacerateDamageDotAverage / 2f;
+			
 			//Calculate effective rage costs for the possible outcomes of eahc ability, and the average
 			float meleeRageHit = meleeDamageRaw / 120f + 35f / 9f;
 			float meleeRageGlance = (meleeDamageRaw * glanceMultiplier) / 120f + 35f / 9f;
@@ -612,8 +614,8 @@ the Threat Scale defined on the Options tab.",
 
 			//Use the BearRotationCalculator to model the potential rotations, and get their results
 			BearRotationCalculator rotationCalculator = new BearRotationCalculator(meleeDamageAverage, maulDamageAverage, mangleDamageAverage, swipeDamageAverage,
-				faerieFireDamageAverage, lacerateDamageAverage, lacerateDamageDot, meleeThreatAverage, maulThreatAverage, mangleThreatAverage, swipeThreatAverage,
-				faerieFireThreatAverage, lacerateThreatAverage, lacerateDotThreat, 6f - stats.MangleCooldownReduction, attackSpeed);
+				faerieFireDamageAverage, lacerateDamageAverage, lacerateDamageDotAverage, meleeThreatAverage, maulThreatAverage, mangleThreatAverage, swipeThreatAverage,
+				faerieFireThreatAverage, lacerateThreatAverage, lacerateDotThreatAverage, 6f - stats.MangleCooldownReduction, attackSpeed);
 
 			BearRotationCalculator.BearRotationCalculation rotationCalculationDPS, rotationCalculationTPS;
 			rotationCalculationDPS = rotationCalculationTPS = new BearRotationCalculator.BearRotationCalculation();
@@ -678,8 +680,10 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.LacerateThreatRaw = (float)Math.Round(lacerateThreatRaw);
 			calculatedStats.LacerateThreatAverage = (float)Math.Round(lacerateThreatAverage);
 
-			calculatedStats.LacerateDotDamage = (float)Math.Round(lacerateDamageDot);
-			calculatedStats.LacerateDotThreat = (float)Math.Round(lacerateDotThreat);
+			calculatedStats.LacerateDotDamageRaw = (float)Math.Round(lacerateDamageDotRaw);
+			calculatedStats.LacerateDotDamageAverage = (float)Math.Round(lacerateDamageDotAverage);
+			calculatedStats.LacerateDotThreatRaw = (float)Math.Round(lacerateDotThreatRaw);
+			calculatedStats.LacerateDotThreatAverage = (float)Math.Round(lacerateDotThreatAverage);
 
 			calculatedStats.MaulTPR = maulTPR;
 			calculatedStats.MaulDPR = maulDPR;
@@ -1200,9 +1204,9 @@ the Threat Scale defined on the Options tab.",
 
 					BearRotationCalculator rotationCalculatorDPS = new BearRotationCalculator(calcsDPS.MeleeDamageAverage,
 						calcsDPS.MaulDamageAverage, calcsDPS.MangleDamageAverage, calcsDPS.SwipeDamageAverage,
-						calcsDPS.FaerieFireDamageAverage, calcsDPS.LacerateDamageAverage, calcsDPS.LacerateDotDamage, calcsDPS.MeleeThreatAverage,
+						calcsDPS.FaerieFireDamageAverage, calcsDPS.LacerateDamageAverage, calcsDPS.LacerateDotDamageAverage, calcsDPS.MeleeThreatAverage,
 						calcsDPS.MaulThreatAverage, calcsDPS.MangleThreatAverage, calcsDPS.SwipeThreatAverage,
-						calcsDPS.FaerieFireThreatAverage, calcsDPS.LacerateThreatAverage, calcsDPS.LacerateDotThreat,
+						calcsDPS.FaerieFireThreatAverage, calcsDPS.LacerateThreatAverage, calcsDPS.LacerateDotThreatAverage,
 						6f - calcsDPS.BasicStats.MangleCooldownReduction, calcsDPS.AttackSpeed);
 
 					for (int useMaul = 0; useMaul < 3; useMaul++)
@@ -1233,9 +1237,9 @@ the Threat Scale defined on the Options tab.",
 
 					BearRotationCalculator rotationCalculatorTPS = new BearRotationCalculator(calcsTPS.MeleeDamageAverage,
 						calcsTPS.MaulDamageAverage, calcsTPS.MangleDamageAverage, calcsTPS.SwipeDamageAverage,
-						calcsTPS.FaerieFireDamageAverage, calcsTPS.LacerateDamageAverage, calcsTPS.LacerateDotDamage, calcsTPS.MeleeThreatAverage,
+						calcsTPS.FaerieFireDamageAverage, calcsTPS.LacerateDamageAverage, calcsTPS.LacerateDotDamageAverage, calcsTPS.MeleeThreatAverage,
 						calcsTPS.MaulThreatAverage, calcsTPS.MangleThreatAverage, calcsTPS.SwipeThreatAverage,
-						calcsTPS.FaerieFireThreatAverage, calcsTPS.LacerateThreatAverage, calcsTPS.LacerateDotThreat,
+						calcsTPS.FaerieFireThreatAverage, calcsTPS.LacerateThreatAverage, calcsTPS.LacerateDotThreatAverage,
 						6f - calcsTPS.BasicStats.MangleCooldownReduction, calcsTPS.AttackSpeed);
 
 					for (int useMaul = 0; useMaul < 3; useMaul++)
@@ -1425,7 +1429,7 @@ the Threat Scale defined on the Options tab.",
 		public float SwipeThreatRaw { get; set; }
 		public float FaerieFireThreatRaw { get; set; }
 		public float LacerateThreatRaw { get; set; }
-		public float LacerateDotThreat { get; set; }
+		public float LacerateDotThreatRaw { get; set; }
 
 		public float MeleeThreatAverage { get; set; }
 		public float MaulThreatAverage { get; set; }
@@ -1433,6 +1437,7 @@ the Threat Scale defined on the Options tab.",
 		public float SwipeThreatAverage { get; set; }
 		public float FaerieFireThreatAverage { get; set; }
 		public float LacerateThreatAverage { get; set; }
+		public float LacerateDotThreatAverage { get; set; }
 
 		public float MeleeDamageRaw { get; set; }
 		public float MaulDamageRaw { get; set; }
@@ -1440,7 +1445,7 @@ the Threat Scale defined on the Options tab.",
 		public float SwipeDamageRaw { get; set; }
 		public float FaerieFireDamageRaw { get; set; }
 		public float LacerateDamageRaw { get; set; }
-		public float LacerateDotDamage { get; set; }
+		public float LacerateDotDamageRaw { get; set; }
 
 		public float MeleeDamageAverage { get; set; }
 		public float MaulDamageAverage { get; set; }
@@ -1448,6 +1453,7 @@ the Threat Scale defined on the Options tab.",
 		public float SwipeDamageAverage { get; set; }
 		public float FaerieFireDamageAverage { get; set; }
 		public float LacerateDamageAverage { get; set; }
+		public float LacerateDotDamageAverage { get; set; }
 
 		public float MaulTPR { get; set; }
 		public float MaulDPR { get; set; }
@@ -1595,7 +1601,7 @@ the Threat Scale defined on the Options tab.",
 			dictValues["Swipe"] = String.Format(attackFormatWithRage, SwipeDamageRaw, SwipeThreatRaw, SwipeDamageAverage, SwipeThreatAverage, SwipeTPR, SwipeDPR);
 			dictValues["Faerie Fire"] = String.Format(attackFormat, FaerieFireDamageRaw, FaerieFireThreatRaw, FaerieFireDamageAverage, FaerieFireThreatAverage);
 			dictValues["Lacerate"] = String.Format(attackFormatWithRage, LacerateDamageRaw, LacerateThreatRaw, LacerateDamageAverage, LacerateThreatAverage, LacerateTPR, LacerateDPR);
-			dictValues["Lacerate DOT Tick"] = String.Format("{0} Dmg, {1} Threat*Per Tick: {0} Damage, {1} Threat", LacerateDotDamage, LacerateDotThreat);
+			dictValues["Lacerate DoT Tick"] = String.Format(attackFormat, LacerateDotDamageRaw, LacerateDotThreatRaw, LacerateDotDamageAverage, LacerateDotThreatAverage).Replace("Swing", "Tick");
 			
 			return dictValues;
 		}

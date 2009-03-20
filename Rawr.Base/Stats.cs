@@ -293,7 +293,8 @@ namespace Rawr
         EclipseBonus,
         #endregion
         #region Warrior set bonuses
-        DevastateCritIncrease,
+		DevastateCritIncrease,
+		DreadnaughtBonusRageProc,
         #endregion
     }
 
@@ -360,7 +361,6 @@ namespace Rawr
         #region Warrior set bonuses
         BonusShieldSlamDamage,
         BonusSlamDamage,
-        DreadnaughtBonusRageProc,
         #endregion
     }
 
@@ -2767,11 +2767,11 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("Extra Rage Proc")]
+        [DisplayName("% Extra Rage Proc")]
         public float DreadnaughtBonusRageProc
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.DreadnaughtBonusRageProc]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.DreadnaughtBonusRageProc] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc]; }
+			set { _rawAdditiveData[(int)AdditiveStat.DreadnaughtBonusRageProc] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
