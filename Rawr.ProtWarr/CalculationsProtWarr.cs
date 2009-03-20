@@ -964,6 +964,7 @@ threat and limited threat scaled by the threat scale.",
 				BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
+                DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				Miss = stats.Miss,
 				CritChanceReduction = stats.CritChanceReduction,
 				AllResist = stats.AllResist,
@@ -994,7 +995,6 @@ threat and limited threat scaled by the threat scale.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
-                WindfuryAPBonus = stats.WindfuryAPBonus,
 
                 MongooseProc = stats.MongooseProc,
                 MongooseProcAverage = stats.MongooseProcAverage,
@@ -1015,7 +1015,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.BonusAttackPowerMultiplier + stats.BonusArmorMultiplier +
 				    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.ParryRating +
                     stats.BlockRating + stats.BlockValue + stats.Health + stats.BonusHealthMultiplier +
-				    stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
+                    stats.DamageTakenMultiplier + stats.Miss + stats.Resilience + stats.Stamina + stats.AllResist +
 				    stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
 					stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
 					stats.NatureResistanceBuff + stats.FireResistanceBuff +
@@ -1025,7 +1025,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.WeaponDamage +
                     stats.BonusCritMultiplier + stats.CritChanceReduction +
                     stats.ThreatIncreaseMultiplier + stats.BonusDamageMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.BonusBleedDamageMultiplier + stats.WindfuryAPBonus +
+                    stats.BonusBleedDamageMultiplier + 
                     stats.MongooseProc + stats.MongooseProcAverage + stats.MongooseProcConstant +
                     stats.ExecutionerProc +
                     stats.BonusCommandingShoutHP + stats.BonusShieldSlamDamage + stats.DevastateCritIncrease

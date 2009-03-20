@@ -80,6 +80,8 @@ namespace Rawr.ProtWarr
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType)
         {
             // In Defensive Stance
+            float damageTaken = 0.9f * (1.0f + stats.DamageTakenMultiplier);
+            
             switch (damageType)
             {
                 case DamageType.Arcane:
@@ -88,10 +90,9 @@ namespace Rawr.ProtWarr
                 case DamageType.Nature:
                 case DamageType.Shadow:
                 case DamageType.Holy:
-                    return 0.9f * (1.0f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
+                    return damageTaken * (1.0f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
                 default:
-                    return 0.9f;
-
+                    return damageTaken;
             }
         }
 
