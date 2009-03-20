@@ -973,7 +973,7 @@ namespace Rawr.Moonkin
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, 0.0f, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
+            float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
             // Extend that to number of casts per fight.  Round down and ensure that only complete tree casts are counted.
             treeDamage *= (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1;
             // Multiply by raid-wide damage increases.
@@ -1359,12 +1359,18 @@ namespace Rawr.Moonkin
         }
 
         // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float bloodLust, float treantLifespan, int bramblesLevel)
+        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float armorPen, float meleeCrit, float bloodLust, float treantLifespan, int bramblesLevel)
         {
-            // 642 = base AP, 5.7% spell power scaling
-            float attackPower = 642.0f + (float)Math.Floor(0.057f * effectiveNatureDamage);
-            // 238.0 = base DPS, 1.7 = best observed swing speed
-            float damagePerHit = (238.0f + attackPower / 14.0f) * 1.7f;
+            // 642 = base AP, 57% spell power scaling
+            float attackPower = 642.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
+            // 398.8 = base DPS, 1.7 = best observed swing speed
+            float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
+            float critRate = 0.05f + meleeCrit;
+            float glancingRate = 0.2f;
+            float bossArmor = 10645f * (1.0f - armorPen);
+            float damageReduction = bossArmor / (bossArmor + 15232.5f);
+            damagePerHit *= 1.0f - damageReduction;
+            damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);
             float attackSpeed = 1.7f / (1 + meleeHaste) / (1 + bloodLust);
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit * (1 + 0.05f * bramblesLevel);
             return 3 * damagePerTree;
