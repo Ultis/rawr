@@ -982,8 +982,12 @@ namespace Rawr.Moonkin
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
 
 			// Do Starfall calculations.
+            bool starfallGlyph = calcOpts.glyph1 == "Starfall" || calcOpts.glyph2 == "Starfall" || calcOpts.glyph3 == "Starfall";
 			float starfallDamage = (character.DruidTalents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit, Wrath.CriticalDamageModifier) : 0.0f;
-			starfallDamage *= (int)Math.Floor(calcOpts.FightLength / (1.5f + 1.0f/6.0f)) + 1;
+            float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
+            float starfallDivisor = starfallCD + 1.0f / 6.0f;
+            float numStarfallCasts = (float)Math.Floor(calcOpts.FightLength / starfallDivisor) + 1.0f;
+            starfallDamage *= numStarfallCasts;
 			starfallDamage *= (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) * (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier);
 			float starfallDPS = starfallDamage / (calcOpts.FightLength * 60.0f);
 

@@ -2030,7 +2030,7 @@ namespace Rawr
                 Name = "Nightsong Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { EclipseBonus = 0.06f },
+                Stats = { EclipseBonus = 0.15f },
                 SetName = "Nightsong Garb",
                 SetThreshold = 2
             });

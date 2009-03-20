@@ -316,7 +316,8 @@
             "None",
             "Starfire",
             "Moonfire",
-            "Insect Swarm"});
+            "Insect Swarm",
+            "Starfall"});
             this.cmbGlyph1.Location = new System.Drawing.Point(108, 376);
             this.cmbGlyph1.Name = "cmbGlyph1";
             this.cmbGlyph1.Size = new System.Drawing.Size(93, 21);
@@ -330,7 +331,8 @@
             "None",
             "Starfire",
             "Moonfire",
-            "Insect Swarm"});
+            "Insect Swarm",
+            "Starfall"});
             this.cmbGlyph2.Location = new System.Drawing.Point(108, 403);
             this.cmbGlyph2.Name = "cmbGlyph2";
             this.cmbGlyph2.Size = new System.Drawing.Size(93, 21);
@@ -362,7 +364,8 @@
             "None",
             "Starfire",
             "Moonfire",
-            "Insect Swarm"});
+            "Insect Swarm",
+            "Starfall"});
             this.cmbGlyph3.Location = new System.Drawing.Point(108, 431);
             this.cmbGlyph3.Name = "cmbGlyph3";
             this.cmbGlyph3.Size = new System.Drawing.Size(93, 21);
