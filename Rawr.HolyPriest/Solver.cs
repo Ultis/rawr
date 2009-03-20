@@ -569,7 +569,7 @@ namespace Rawr.HolyPriest
             float solbhchance = 1f - (float)Math.Pow(1f - solchance, 2);
             float solcohchance = 1f - (float)Math.Pow(1f - solchance, (stats.GLYPH_CircleOfHealing > 0) ? 6 : 5);
             float solpohhnchance = 1f - (float)Math.Pow(1f - solchance, 5);
-            float solpromchance = 1f - (float)Math.Pow(1f - solchance, calculationOptions.ProMTicks / calculationOptions.ProMCast);
+            float solpromchance = 1f - (float)Math.Pow(1f - solchance, (calculationOptions.ProMCast == 0)?1:(calculationOptions.ProMTicks / calculationOptions.ProMCast));
 
             // Add on Renewed Hope crit for Disc Maintank Rotation, adjusted by uptime of Weakened Soul
             float WeakenedSoulUptime = (float)Math.Min(1f, calculationOptions.PWSCast * 15f / calculationOptions.FightLengthSeconds);
