@@ -677,6 +677,23 @@ namespace Rawr //O O . .
             return itemToBeChecked == this[slot];
         }
 
+        public bool IsEquipped(Item itemToBeChecked)
+        {
+            CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
+            if (slot == CharacterSlot.Finger1)
+                return IsEquipped(itemToBeChecked, CharacterSlot.Finger1) || IsEquipped(itemToBeChecked, CharacterSlot.Finger2);
+            else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.OneHand)
+                return IsEquipped(itemToBeChecked, CharacterSlot.MainHand) || IsEquipped(itemToBeChecked, CharacterSlot.OffHand);
+            else if (itemToBeChecked.Slot == Rawr.Item.ItemSlot.Trinket)
+                return IsEquipped(itemToBeChecked, CharacterSlot.Trinket1) || IsEquipped(itemToBeChecked, CharacterSlot.Trinket2);
+            else
+                return IsEquipped(itemToBeChecked, slot);
+        }
+        public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
+        {
+            return (object)this[slot] != null && itemToBeChecked.Id == this[slot].Id;
+        }
+
         public static Character.CharacterSlot GetCharacterSlotByItemSlot(Item.ItemSlot slot)
         {
             

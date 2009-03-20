@@ -880,12 +880,16 @@ namespace Rawr.Optimizer
             successful = false;
 
             // do the work
+            int c;
+            Character character;
+            GemInformation mutation1 = new GemInformation();
+            GemInformation mutation2 = new GemInformation();
 
             int tries = 0;
             do
             {
-                int c = rand.Next(batchList.Count);
-                Character character = parent.Character[c];
+                c = rand.Next(batchList.Count);
+                character = parent.Character[c];
                 // build a list of possible mutation points
                 // make sure not to do meta gem swaps
                 List<GemInformation> locationList = new List<GemInformation>();
@@ -903,8 +907,6 @@ namespace Rawr.Optimizer
 
                 if (locationList.Count > 1)
                 {
-                    GemInformation mutation1;
-                    GemInformation mutation2;
                     // randomly select mutation point
                     bool promising;
                     do
@@ -923,7 +925,15 @@ namespace Rawr.Optimizer
                         int matchThen = 0;
                         if (Item.GemMatchesSlot(mutation1.Gem, mutation2.Socket)) matchThen++;
                         if (Item.GemMatchesSlot(mutation2.Gem, mutation1.Socket)) matchThen++;
-                        if (matchThen <= matchNow) promising = false;
+                        if (tries < 50)
+                        {
+                            if (matchThen <= matchNow) promising = false;
+                        }
+                        else
+                        {
+                            // allow 1 to 1 trade, because the other socket bonus might be better
+                            if (matchThen < matchNow || matchThen == 0) promising = false;
+                        }
                         tries++;
                     } while (tries % 10 != 0 && !promising);
 
@@ -942,11 +952,207 @@ namespace Rawr.Optimizer
                 }
             } while (tries < 100 && !successful);
 
+            if (successful && (mutation1.Gem.IsJewelersGem || mutation2.Gem.IsJewelersGem))
+            {
+                // jeweler preserving mutation
+                // by making the swap the character at c will remain at 3 jewelers, but characters that don't have that item
+                // might now be left with a suboptimal count
+                // heuristic we use is that jeweler gems are better than any other
+                // and that by replacing an existing gem will increase value, specially if we can do it at
+                // a spot that doesn't match color
+                if (mutation2.Gem.IsJewelersGem)
+                {
+                    GemInformation tmp = mutation1;
+                    mutation1 = mutation2;
+                    mutation2 = tmp;
+                }
+                // we're moving jeweler gem from mutation1 to mutation2
+                // problematic cases are characters that have item1, but not item2 or have item2 but not item1
+                // in that case we'll either have too many or not enough
+                List<Character> fixedList = new List<Character>();
+                List<Character> oneDownList = new List<Character>();
+                List<Character> oneUpList = new List<Character>();
+                foreach (Character affectedCharacter in parent.Character)
+                {
+                    bool eq1 = affectedCharacter.IsEquipped(character._item[mutation1.Slot]);
+                    bool eq2 = affectedCharacter.IsEquipped(character._item[mutation2.Slot]);
+                    if (eq1 && !eq2 && affectedCharacter.JewelersGemCount <= 3)
+                    {
+                        oneDownList.Add(affectedCharacter);
+                    }
+                    else if (!eq1 && eq2 && affectedCharacter.JewelersGemCount >= 3)
+                    {
+                        oneUpList.Add(affectedCharacter);
+                    }
+                    else
+                    {
+                        fixedList.Add(affectedCharacter);
+                    }
+                }
+                // not to complicate things too much we can only fix characters if it does not affect
+                // those that are already fixed
+
+                for (int i = 0; i < oneUpList.Count; i++)
+                {
+                    Character affectedCharacter = oneUpList[i];
+                    // see if it has an item with a jeweler gem that does not appear on fixed list
+                    for (int slot = 0; slot < 2 * characterSlots; slot++)
+                    {
+                        ItemInstance originalitem = affectedCharacter._item[rand.Next(characterSlots)];
+                        ItemInstance item = originalitem;
+                        if ((object)item != null && ItemHasJewelerGem(item))
+                        {
+                            bool ok = true;
+                            foreach (Character ch in fixedList)
+                            {
+                                if (ch.IsEquipped(item))
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (ok)
+                            {
+                                // we're clear, we can remove the meta gem
+                                // anything will be better than breaking the jeweler constraint
+                                // pick from available instances that don't have jewelers gems
+                                List<ItemInstance> list = new List<ItemInstance>();
+                                foreach (ItemInstance it in item.Item.AvailabilityInformation.ItemList)
+                                {
+                                    if (!ItemHasJewelerGem(it))
+                                    {
+                                        list.Add(it);
+                                    }
+                                }
+                                if (list.Count > 0)
+                                {
+                                    item = list[rand.Next(list.Count)];
+                                    // we got it
+                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.Id]] = item;
+                                    // any item in up list that had it can be removed
+                                    for (int j = oneUpList.Count - 1; j > i; j--)
+                                    {
+                                        if (oneUpList[j].IsEquipped(originalitem))
+                                        {
+                                            fixedList.Add(oneUpList[j]);
+                                            oneUpList.RemoveAt(j);
+                                        }
+                                    }
+                                    fixedList.Add(oneUpList[i]);
+                                    oneUpList.RemoveAt(i);
+                                    i--;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (int i = 0; i < oneDownList.Count; i++)
+                {
+                    Character affectedCharacter = oneDownList[i];
+                    // see if it has an item with a free gem that does not appear on fixed list
+                    for (int slot = 0; slot < 2 * characterSlots; slot++)
+                    {
+                        ItemInstance originalitem = affectedCharacter._item[rand.Next(characterSlots)];
+                        ItemInstance item = originalitem;
+                        if ((object)item != null && ItemHasNonJewelerGem(item))
+                        {
+                            bool ok = true;
+                            foreach (Character ch in fixedList)
+                            {
+                                if (ch.IsEquipped(item))
+                                {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (ok)
+                            {
+                                // we're clear, we can remove the meta gem
+                                // anything will be better than breaking the jeweler constraint
+                                // pick from available instances that don't have jewelers gems
+                                int pickTries = 0;
+                                do
+                                {
+                                    item = originalitem.Clone();
+                                    int g = 1 + rand.Next(originalitem.Item.AvailabilityInformation.GemCount);
+                                    item.SetGem(g, mutation1.Gem);
+                                    pickTries++;
+                                } while (pickTries <= 5 && !originalitem.Item.AvailabilityInformation.ItemAvailable.ContainsKey(item.GemmedId));
+                                if (pickTries <= 5)
+                                {
+                                    // we got it
+                                    items[(upgradeItems != null && item.Id == upgradeItems[0].Id) ? itemList.Count : indexFromId[item.Id]] = item;
+                                    // any item in down list that had it can be removed
+                                    for (int j = oneDownList.Count - 1; j > i; j--)
+                                    {
+                                        if (oneDownList[j].IsEquipped(originalitem))
+                                        {
+                                            fixedList.Add(oneDownList[j]);
+                                            oneDownList.RemoveAt(j);
+                                        }
+                                    }
+                                    fixedList.Add(oneDownList[i]);
+                                    oneDownList.RemoveAt(i);
+                                    i--;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if (successful)
             {
                 return GenerateIndividual(items);
             }
             return null;
+        }
+
+        private static bool ItemHasJewelerGem(ItemInstance item)
+        {
+            for (int g = 1; g <= 3; g++)
+            {
+                Item gem = item.GetGem(g);
+                if (gem != null && gem.IsJewelersGem)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool ItemHasJewelerGem(ItemInstance item, Item jewelerGem)
+        {
+            for (int g = 1; g <= 3; g++)
+            {
+                Item gem = item.GetGem(g);
+                if (gem != null && gem.Id == jewelerGem.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private static bool ItemHasNonJewelerGem(ItemInstance item)
+        {
+            bool ok = false;
+            for (int g = 1; g <= 3; g++)
+            {
+                Item gem = item.GetGem(g);
+                if (gem != null && gem.IsJewelersGem)
+                {
+                    return false;
+                }
+                if (gem != null && gem.Slot != Item.ItemSlot.Meta && !gem.IsJewelersGem)
+                {
+                    ok = true;
+                }
+            }
+            return ok;
         }
 
         protected override BatchIndividual BuildChildIndividual(BatchIndividual father, BatchIndividual mother)

@@ -1549,7 +1549,7 @@ namespace Rawr.Mage
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             if (castingState.Frozen)
             {
-                if (castingState.CalculationOptions.GlyphOfIceLance)
+                if (castingState.CalculationOptions.GlyphOfIceLance && castingState.CalculationOptions.TargetLevel > castingState.CalculationOptions.PlayerLevel)
                 {
                     SpellModifier *= 4;
                 }

@@ -3182,6 +3182,8 @@ namespace Rawr.Optimizer
                         {
                             lockedSlot = Character.CharacterSlot.Trinket2;
                         }
+                        List<ItemInstance> savedItems = slotItems[(int)lockedSlot];
+                        slotItems[(int)lockedSlot] = lockedItems;
                         _character = BuildSingleItemSwapIndividual(_character, (int)lockedSlot, upgrade);
                         float best;
                         CharacterCalculationsBase bestCalculations;
@@ -3204,6 +3206,7 @@ namespace Rawr.Optimizer
                         if ((object)bestCharacter[lockedSlot] == null || bestCharacter[lockedSlot].Id != item.Id) throw new Exception("There was an internal error in Optimizer when evaluating upgrade.");
                         upgradeValue = best - baseValue;
                         if (upgradeValue < 0 && ((object)saveCharacter[lockedSlot] == null || saveCharacter[lockedSlot].Id != item.Id)) upgradeValue = 0f;
+                        slotItems[(int)lockedSlot] = savedItems;
                         _character = saveCharacter;
                     }
                 }
