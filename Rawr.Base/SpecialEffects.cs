@@ -730,6 +730,11 @@ namespace Rawr
 			{
 				stats.ManacostReduceWithin15OnHealingCast += 450;
             }
+                else if (line.StartsWith("Your healing spells have a chance to make your next heal cast within 15 sec cost 800 less mana."))
+			{
+				// Soul Preserver
+                stats.ManacostReduceWithin15OnHealingCast += 800;
+            }
             else if (line.StartsWith("Your damaging and healing spells have a chance to increase your spell power by 512 for 10 sec."))
             {
                 // Forge Ember

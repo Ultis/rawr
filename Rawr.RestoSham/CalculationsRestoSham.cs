@@ -279,7 +279,7 @@ namespace Rawr.RestoSham
             stats.Mp5 += (float)Math.Round((stats.Intellect * ((character.ShamanTalents.UnrelentingStorm / 3) * .1f)), 0);
             calcStats.TotalManaPool = (((((float)Math.Truncate(options.FightLength / 5.025f) + 1) * ((stats.Mana * (1 + stats.BonusManaMultiplier)) * (.24f +
                 ((options.ManaTidePlus ? .04f : 0))))) * character.ShamanTalents.ManaTideTotem) * (options.ManaTideEveryCD ? 1 : 0)) + stats.Mana + onUse + ((stats.ManaRestoreFromMaxManaPerSecond * stats.Mana) * ((options.FightLength * 60f)) *
-                (options.BurstPercentage * .01f)) + (((float)Math.Truncate(options.FightLength / 5.025f) + 1) * stats.ManaRestore5min);
+                (options.BurstPercentage * .01f));
             calcStats.SpellCrit = .022f + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) / 100f
                 + character.StatConversion.GetSpellCritFromRating(stats.CritRating) / 100f + stats.SpellCrit +
                 (.01f * (character.ShamanTalents.TidalMastery + character.ShamanTalents.ThunderingStrikes +
@@ -528,30 +528,6 @@ namespace Rawr.RestoSham
             if (options.HealingStyle.Equals("RT+CH"))
                 calcStats.FightMPS = (calcStats.RTCHMPS * RCP) + ESMPS;
             #endregion
-            #region Trinkets
-            //Trinket/Meta Calcs, works off simulated worst cast times for general idea of effect, submitted by patch from onyxmaster
-            float RotationTime = 0;
-            if (options.HealingStyle.Equals("CH Spam"))
-                RotationTime = CHCast;
-            if (options.HealingStyle.Equals("HW Spam"))
-                RotationTime = HWCast;
-            if (options.HealingStyle.Equals("LHW Spam"))
-                RotationTime = LHWCast;
-            if (options.HealingStyle.Equals("RT+HW"))
-                RotationTime = RTHWRotLength / (1 + HWPerRotation);
-            if (options.HealingStyle.Equals("RT+LHW"))
-                RotationTime = RTLHWRotLength / (1 + LHWPerRotation);
-            if (options.HealingStyle.Equals("RT+CH"))
-                RotationTime = RTCHRotLength / (1 + CHPerRotation);
-            float worstAverageCast = (float)Math.Max((RotationTime), 1.1f) / 1.13f;
-            if (stats.ManaRestoreOnCast_5_15 > 0)
-                stats.Mp5 += (float)Math.Ceiling(Time / (15f + worstAverageCast * 20f)) * stats.ManaRestoreOnCast_5_15 / Time * 5;
-            if (stats.ManaRestoreOnCast_10_45 > 0)
-                stats.Mp5 += (float)Math.Ceiling(Time / (45f + worstAverageCast * 10f)) * stats.ManaRestoreOnCast_10_45 / Time * 5;
-            if (stats.ManaRestoreOnCrit_25_45 > 0)
-                stats.Mp5 += (float)Math.Ceiling(Time / (45f + worstAverageCast * 4f / calcStats.SpellCrit)) * stats.ManaRestoreOnCrit_25_45 / Time * 5;
-            
-            #endregion
             #region Final Stats
             calcStats.TillOOM = (calcStats.TotalManaPool + (stats.Mp5 / 5 * 60 * options.FightLength)) / calcStats.FightMPS;
             if (calcStats.TillOOM > (60 * options.FightLength))
@@ -625,7 +601,6 @@ namespace Rawr.RestoSham
             return statsTotal;
             #endregion
         }
-       
         #region Chart data area
         //
         // Class used by stat relative weights custom chart.
@@ -703,42 +678,42 @@ namespace Rawr.RestoSham
 
         #endregion
         #region Relevant Stats
-        //
         public override Stats GetRelevantStats(Stats stats)
         {
-            return new Stats()
+            return SpecialEffects.GetRelevantStats(stats) + new Stats()
             {
+                #region Base Stats
                 Stamina = stats.Stamina,
                 Intellect = stats.Intellect,
-                Mp5 = stats.Mp5,
                 SpellPower = stats.SpellPower,
                 CritRating = stats.CritRating,
                 HasteRating = stats.HasteRating,
-                SpellHaste = stats.SpellHaste,
-                Health = stats.Health,
                 Mana = stats.Mana,
+                Mp5 = stats.Mp5,
+                #endregion
+                #region Trinkets
+                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
+                BonusManaPotion = stats.BonusManaPotion,
+                #endregion
+                #region Totems and Sets
                 WaterShieldIncrease = stats.WaterShieldIncrease,
                 CHHWHealIncrease = stats.CHHWHealIncrease,
-                BonusManaPotion = stats.BonusManaPotion,
-                ManaRestoreOnCast_5_15 = stats.ManaRestoreOnCast_5_15,
-                ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-				BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                #endregion
+                #region Gems
+                BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
-                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45
-			};
+                BonusIntellectMultiplier = stats.BonusIntellectMultiplier
+                #endregion
+            };
         }
-
 
         public override bool HasRelevantStats(Stats stats)
         {
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating +
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
-                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast +
-                stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreOnCrit_25_45) > 0;
+                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast/* +
+                stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreOnCrit_25_45*/) > 0;
         }
 
         #endregion
