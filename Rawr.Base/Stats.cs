@@ -2732,7 +2732,7 @@ namespace Rawr
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Hammer of the Righteous Damage")]
-        public float HammerOfTheRighteousMultiplier
+        public float BonusHammerOfTheRighteousMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }

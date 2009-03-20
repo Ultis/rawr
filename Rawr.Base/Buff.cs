@@ -2566,7 +2566,7 @@ namespace Rawr
                 Name = "Redemption Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { HammerOfTheRighteousMultiplier = .1f },
+                Stats = { BonusHammerOfTheRighteousMultiplier = .1f },
                 SetName = "Redemption Plate",
                 SetThreshold = 2
             });

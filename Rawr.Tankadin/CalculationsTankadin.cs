@@ -301,7 +301,8 @@ you are being killed by burst damage, focus on Survival Points.",
             float beHit = cs.Block + cs.Crit + cs.Hit;
             cs.DamageWhenHit = cs.Block / beHit * cs.DamagePerBlock + cs.Hit / beHit * cs.DamagePerHit + cs.Crit / beHit * cs.DamagePerHit * 2;
             //TODO: Find out what exactly the Ardent Defender multiplier here means
-            cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * calcOpts.AverageHit * (1f + .04285f * talents.ArdentDefender);
+            //cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * calcOpts.AverageHit * (1f + .04285f * talents.ArdentDefender);
+            cs.SurvivalPoints = stats.Health / cs.Mitigation * (1f + .04285f * talents.ArdentDefender);
 			
             //Threat Calculations
             float normalThreatMod = 1 / .7f * (1f + stats.ThreatIncreaseMultiplier);
@@ -341,7 +342,7 @@ you are being killed by burst damage, focus on Survival Points.",
             //Hammer of the Righteous (Per Hit)
             if (talents.HammerOfTheRighteous > 0)
             {
-            	cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti * (1f + stats.HammerOfTheRighteousMultiplier);
+            	cs.HotRDamage = wd / ws * 4f * damageMulti * holyMulti * (1f + stats.BonusHammerOfTheRighteousMultiplier);
                 cs.HotRThreat = cs.HotRDamage * holyThreatMod * (cs.ToLand + cs.ToCrit);
             }
 
