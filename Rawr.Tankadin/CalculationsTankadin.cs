@@ -299,10 +299,10 @@ you are being killed by burst damage, focus on Survival Points.",
             cs.MitigationPoints = calcOpts.MitigationScalePercent * .01f * 7000f / cs.DamageTaken;
 
             float beHit = cs.Block + cs.Crit + cs.Hit;
-            cs.DamageWhenHit = cs.Block / beHit * cs.DamagePerBlock + cs.Hit / beHit * cs.DamagePerHit + cs.Crit / beHit * cs.DamagePerHit * 2;
+            cs.DamageWhenHit = (cs.Block / beHit * cs.DamagePerBlock) + (cs.Hit / beHit * cs.DamagePerHit) + (cs.Crit / beHit * cs.DamagePerHit * 2);
             //TODO: Find out what exactly the Ardent Defender multiplier here means
-            //cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * calcOpts.AverageHit * (1f + .04285f * talents.ArdentDefender);
-            cs.SurvivalPoints = stats.Health / cs.Mitigation * (1f + .04285f * talents.ArdentDefender);
+            //cs.SurvivalPoints = stats.Health / cs.DamageWhenHit * (calcOpts.AverageHit * (1f + .04285f * talents.ArdentDefender));
+            cs.SurvivalPoints = stats.Health / cs.Mitigation; // *(1f + .04285f * talents.ArdentDefender);
 			
             //Threat Calculations
             float normalThreatMod = 1 / .7f * (1f + stats.ThreatIncreaseMultiplier);
@@ -405,17 +405,17 @@ you are being killed by burst damage, focus on Survival Points.",
 			{
 				case 2:
 					cs.ThreatPoints = cs.Rot2TPS * calcOpts.ThreatScale;
-                    cs.SecondaryThreatPoints = cs.Rot2TPSTWO * calcOpts.ThreatScale;
+                    //cs.SecondaryThreatPoints = cs.Rot2TPSTWO * calcOpts.ThreatScale;
 					break;
 				default:
                     cs.ThreatPoints = cs.Rot1TPS * calcOpts.ThreatScale;
-                    cs.SecondaryThreatPoints = cs.Rot1TPSTWO * calcOpts.ThreatScale;
+                    //cs.SecondaryThreatPoints = cs.Rot1TPSTWO * calcOpts.ThreatScale;
 					break;
 			}
 
-            cs.AoEThreatPoints = cs.TPSAOE * calcOpts.ThreatScale;
+            //cs.AoEThreatPoints = cs.TPSAOE * calcOpts.ThreatScale;
            
-            cs.OverallPoints = cs.ThreatPoints + cs.SecondaryThreatPoints + cs.AoEThreatPoints + cs.MitigationPoints + cs.SurvivalPoints;
+            cs.OverallPoints = cs.ThreatPoints + cs.MitigationPoints + cs.SurvivalPoints;
             return cs;
         }
 

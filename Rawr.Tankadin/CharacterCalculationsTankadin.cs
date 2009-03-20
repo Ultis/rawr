@@ -34,17 +34,17 @@ namespace Rawr.Tankadin
             set { _subPoints[2] = value; }
         }
 
-        public float SecondaryThreatPoints
-        {
-            get { return _subPoints[3]; }
-            set { _subPoints[3] = value; }
-        }
+        //public float SecondaryThreatPoints
+        //{
+        //    get { return _subPoints[3]; }
+        //    set { _subPoints[3] = value; }
+        //}
 
-        public float AoEThreatPoints
-        {
-            get { return _subPoints[4]; }
-            set { _subPoints[4] = value; }
-        }
+        //public float AoEThreatPoints
+        //{
+        //    get { return _subPoints[4]; }
+        //    set { _subPoints[4] = value; }
+        //}
 
         public Stats BasicStats { get; set; }
 

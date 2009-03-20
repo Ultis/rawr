@@ -39,6 +39,12 @@ namespace Rawr.Tankadin
             set { _subPoints[1] = value; }
         }
 
+        public float ThreatPoints
+        {
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
+        }
+
         private Item _item = null;
         public override Item Item
         {
@@ -62,7 +68,7 @@ namespace Rawr.Tankadin
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1}O {2}M {3}S)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints));
+            return string.Format("{0}: ({1}O {2}M {3}S {4}T)", Name, Math.Round(OverallPoints), Math.Round(MitigationPoints), Math.Round(SurvivalPoints), Math.Round(ThreatPoints));
         }
     }
 }
