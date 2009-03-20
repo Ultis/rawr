@@ -1720,7 +1720,7 @@ public int Shadowburn { get { return _data[60]; } set { _data[60] = value; } }
 @"Increases the critical strike chance of your Searing Pain spell by 10%.",})]
 		public int ImprovedSearingPain { get { return _data[64]; } set { _data[64] = value; } }
 
-        [TalentData(65, "Backlash", 3, 2, 4, 7, 62, new string[] {
+                [TalentData(65, "Backlash", 3, 2, 1, 5, 62, new string[] {
 @"Increases your critical strike chance with spells by an additional 1% and gives you a 8% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 2% and gives you a 16% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",
 @"Increases your critical strike chance with spells by an additional 3% and gives you a 25% chance when hit by a physical attack to reduce the cast time of your next Shadow Bolt or Incinerate spell by 100%. This effect lasts 8 sec and will not occur more than once every 8 seconds.",})]
@@ -1762,9 +1762,10 @@ Consumes an Immolate or Shadowflame effect on the enemy target to instantly deal
 @"Gives your Shadow Bolt, Shadowburn, Chaos Bolt, Soul Fire, Incinerate, Searing Pain and Conflagrate spells a 30% chance to return health equal to 20% of the damage caused.",})]
 		public int SoulLeech { get { return _data[72]; } set { _data[72] = value; } }
 
-        [TalentData(73, "Pyroclasm", 2, 2, 1, 5, -1, new string[] {
+        [TalentData(73, "Pyroclasm", 3, 2, 4, 7, -1, new string[] {
 @"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 2% for 10 sec.",
-@"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 4% for 10 sec.",})]
+@"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 4% for 10 sec.",
+@"When you critically strike with Searing Pain or Conflagrate, your Fire and Shadow Spell damage is increased by 6% for 10 sec.",})]
         public int Pyroclasm { get { return _data[73]; } set { _data[73] = value; } }
 
         [TalentData(74, "Shadow and Flame", 5, 2, 2, 8, -1, new string[] {

@@ -528,6 +528,7 @@ namespace Rawr.Warlock
             if (haunt != null)
                 hauntMisses = haunt.SpellStatistics.HitCount * (1 - haunt.SpellStatistics.HitChance);
             PetCalculations pet = new PetCalculations(simStats, character);
+            pet.getPetDPS(this);
             float pactUptime = 0;
             if (character.WarlockTalents.DemonicPact > 0)
             {
@@ -591,20 +592,25 @@ namespace Rawr.Warlock
                 ManaSources.Add(new ManaSource("Improved Soul Leech", manaGain));
             }
             manaGain = 0;
-            while (currentMana < 0)
+            if (currentMana < 0)
             {
-                currentMana -= lifeTap.ManaCost;
-                manaGain -= lifeTap.ManaCost;
-                fillerSpell.SpellStatistics.HitCount -= GetCastTime(lifeTap) / GetCastTime(fillerSpell);
-                fillerSpell.SpellStatistics.ManaUsed -= fillerSpell.SpellStatistics.ManaUsed / fillerSpell.SpellStatistics.HitCount * (GetCastTime(lifeTap)) / GetCastTime(fillerSpell);
-                if (simStats.LifeTapBonusSpirit > 0)
-                    simStats.SpellPower += (float)(300 * 0.3f * 10 / time);
+                float numberOfTaps = (float)currentMana / lifeTap.ManaCost;
+                manaGain -= currentMana;
+                currentMana = 0;
+
+                float fillerManaCost = fillerSpell.SpellStatistics.HitCount / fillerSpell.SpellStatistics.ManaUsed;
+                fillerSpell.SpellStatistics.HitCount -= numberOfTaps * GetCastTime(lifeTap) / GetCastTime(fillerSpell);
+                fillerSpell.SpellStatistics.ManaUsed -= numberOfTaps * GetCastTime(lifeTap) / GetCastTime(fillerSpell) * fillerManaCost;
+
+                if (simStats.LifeTapBonusSpirit > 0 && simStats.WarlockFelArmor > 0)
+                    simStats.SpellPower += (float)(300 * 0.3f * Math.Min(numberOfTaps * 10 / time, 1));
                 if (CalculationOptions.GlyphLifeTap)
-                    simStats.SpellPower += (float)(simStats.Spirit * 0.2f * 20 / time);
-            }
-            if (character.WarlockTalents.ManaFeed > 0)
+                    simStats.SpellPower += (float)(simStats.Spirit * 0.2f * Math.Min(numberOfTaps * 20 / time, 1));
+                if (character.WarlockTalents.ManaFeed > 0)
                     petManaGain += manaGain;
-            ManaSources.Add(new ManaSource("Life Tap", manaGain));
+                ManaSources.Add(new ManaSource("Life Tap", manaGain));
+                Rotation += String.Format("\r\n\nNumber of Life Taps: {0}", numberOfTaps);
+            }
 
 /*            if (MPS > regen && character.Race == Character.CharacterRace.BloodElf)
             {   // Arcane Torrent is 6% max mana every 2 minutes.
@@ -667,9 +673,9 @@ namespace Rawr.Warlock
                 float empImpProcs = pet.critCount * character.WarlockTalents.EmpoweredImp / 3;
                 simStats.SpellCrit += (float)(empImpProcs / PossibleCrits * 0.2f);
             }
-            if (character.WarlockTalents.Pyroclasm > 0)
+            float pyroclasmProcs = 0;
+            if (character.WarlockTalents.Pyroclasm > 0 && (GetSpellByName("Searing Pain") != null || GetSpellByName("Conflagrate") != null))
             {
-                float pyroclasmProcs = 0;
                 Spell searingPain = GetSpellByName("Searing Pain");
                 Spell conflagrate = GetSpellByName("Conflagrate");
                 if ( searingPain != null) pyroclasmProcs += searingPain.SpellStatistics.HitCount * searingPain.CritChance;
