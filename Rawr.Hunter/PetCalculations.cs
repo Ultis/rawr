@@ -33,8 +33,8 @@ namespace Rawr.Hunter
             //double targetArmor = options.TargetArmor - statsBuffs.ArmorPenetration;
             //this.armorReduction = 1.0 - (targetArmor / (467.5 * options.TargetLevel + targetArmor - 22167.5));
 
-            calculatePetStats();
-
+            /*            calculatePetStats();  // Wildebees: 20090321: Removed, since this function doesn't seem to consider everything that GetPetStats does */
+            
         }
 
         private void calculatePetStats()

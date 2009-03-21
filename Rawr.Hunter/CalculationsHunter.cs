@@ -764,7 +764,10 @@ namespace Rawr.Hunter
 
             // Marksmanship Talents
 			{
-				//Lethal Shots
+                //Focused Aim
+                talents.PhysicalHit += (talentTree.FocusedAim * 0.01f);
+                
+                //Lethal Shots
 				talents.PhysicalCrit += (talentTree.LethalShots * 0.01f);
 
                 //Master Marksman
@@ -785,7 +788,6 @@ namespace Rawr.Hunter
 				// TODO: Implement properly
 
 				//surefooted
-				talents.PhysicalHit += (talentTree.FocusedAim * 0.01f);
 
 				//Lighting Reflexes
 				talents.BonusAgilityMultiplier = ((1.0f + talents.BonusAgilityMultiplier) * (1.0f + .03f * talentTree.LightningReflexes)) - 1.0f;
@@ -901,6 +903,7 @@ namespace Rawr.Hunter
 		{
 			Stats petStats = new Stats()
 			{
+                //TODO: Level80 value?
 				Agility = 128,
 				Strength = 162,
 				Stamina = 307,
