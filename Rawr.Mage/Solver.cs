@@ -1764,7 +1764,11 @@ namespace Rawr.Mage
             lp.SetRHSUnsafe(rowManaGem, Math.Min(3, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem));
             lp.SetRHSUnsafe(rowManaGemMax, calculationOptions.AverageCooldowns ? calculationOptions.FightDuration / 120.0 : calculationResult.MaxManaGem);
             if (conjureManaGem) lp.SetRHSUnsafe(rowConjureManaGem, calculationResult.MaxConjureManaGem * calculationResult.ConjureManaGem.CastTime);
-            if (heroismAvailable) lp.SetRHSUnsafe(rowHeroism, 40);
+            if (heroismAvailable)
+            {
+                lp.SetRHSUnsafe(rowHeroism, 40.0);
+                lp.SetLHSUnsafe(rowHeroism, Math.Min(calculationOptions.FightDuration, 40.0)); // if heroism is marked as available then this implies that it has to be used, not only that it can be used
+            }
             if (powerInfusionAvailable) lp.SetRHSUnsafe(rowPowerInfusion, calculationOptions.AverageCooldowns ? calculationResult.PowerInfusionDuration / calculationResult.PowerInfusionCooldown * calculationOptions.FightDuration : pilength);
             if (arcanePowerAvailable) lp.SetRHSUnsafe(rowArcanePower, calculationOptions.AverageCooldowns ? calculationResult.ArcanePowerDuration / calculationResult.ArcanePowerCooldown * calculationOptions.FightDuration : aplength);
             if (heroismAvailable && arcanePowerAvailable) lp.SetRHSUnsafe(rowHeroismArcanePower, calculationResult.ArcanePowerDuration);

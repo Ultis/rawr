@@ -102,7 +102,7 @@ namespace Rawr.Mage
             sb.AppendLine("Optimal Cycle Palette:");
             sb.AppendLine("");
             sb.AppendLine("Cycle Code Legend:");
-            sb.AppendLine(@"1) at 0 stack with ABar not on cooldown do: 0 = AB, 1 = ABar, 2 = AM
+            sb.AppendLine(@"1) at 0 stack with ABar not on cooldown and you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
 2) at 1 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
 3) at 0 stack with ABar on cooldown if you don't see MB do: 0 = AB, 1 = AM
 4) at 0 stack with ABar on cooldown if you see MB do: 0 = AB, 1 = AM
@@ -111,6 +111,7 @@ namespace Rawr.Mage
 7) at 2 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
 8) at 3 stack if you don't see MB do: 0 = AB, 1 = ABar, 2 = AM
 9) at 3 stack if you see MB do: 0 = AB, 1 = ABar, 2 = AM
+10) at 0 stack with ABar not on cooldown and you see MB do: 0 = AB, 1 = ABar, 2 = AM
 ");
     
             sb.AppendLine("Base:");
@@ -144,23 +145,25 @@ namespace Rawr.Mage
                                     for (int control6 = 0; control6 < 3; control6++)
                                         for (int control7 = 0; control7 < 3; control7++)
                                             for (int control8 = 0; control8 < 3; control8++)
-                                            {
-                                                for (int i = 0; i < 46; i++) spellControl[i] = 0;
-                                                spellControl[0 + control0] = 1;
-                                                spellControl[5 + control1] = 1;
-                                                spellControl[11 + control2] = 1;
-                                                spellControl[15 + control3] = 1;
-                                                spellControl[19 + control4] = 1;
-                                                spellControl[24 + control5] = 1;
-                                                spellControl[30 + control6] = 1;
-                                                spellControl[35 + control7] = 1;
-                                                spellControl[41 + control8] = 1;
-                                                GenericArcane generic = new GenericArcane(control0.ToString() + control1.ToString() + control2.ToString() + control3.ToString() + control4.ToString() + control5.ToString() + control6.ToString() + control7.ToString() + control8.ToString(), baseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27], spellControl[28], spellControl[29], spellControl[30], spellControl[31], spellControl[32], spellControl[33], spellControl[34], spellControl[35], spellControl[36], spellControl[37], spellControl[38], spellControl[39], spellControl[40], spellControl[41], spellControl[42], spellControl[43], spellControl[44], spellControl[45]);
-                                                if (!cycleDict.ContainsKey(generic.SpellDistribution))
+                                                for (int control9 = 0; control9 < 3; control9++)
                                                 {
-                                                    cycleDict.Add(generic.SpellDistribution, generic);
+                                                    for (int i = 0; i < 28; i++) spellControl[i] = 0;
+                                                    spellControl[0 + control0] = 1;
+                                                    spellControl[3 + control1] = 1;
+                                                    spellControl[6 + control2] = 1;
+                                                    spellControl[8 + control3] = 1;
+                                                    spellControl[10 + control4] = 1;
+                                                    spellControl[13 + control5] = 1;
+                                                    spellControl[16 + control6] = 1;
+                                                    spellControl[19 + control7] = 1;
+                                                    spellControl[22 + control8] = 1;
+                                                    spellControl[25 + control9] = 1;
+                                                    GenericArcane generic = new GenericArcane(control0.ToString() + control1.ToString() + control2.ToString() + control3.ToString() + control4.ToString() + control5.ToString() + control6.ToString() + control7.ToString() + control8.ToString() + control9.ToString(), baseState, spellControl[0], spellControl[1], spellControl[2], spellControl[3], spellControl[4], spellControl[5], spellControl[6], spellControl[7], spellControl[8], spellControl[9], spellControl[10], spellControl[11], spellControl[12], spellControl[13], spellControl[14], spellControl[15], spellControl[16], spellControl[17], spellControl[18], spellControl[19], spellControl[20], spellControl[21], spellControl[22], spellControl[23], spellControl[24], spellControl[25], spellControl[26], spellControl[27]);
+                                                    if (!cycleDict.ContainsKey(generic.SpellDistribution))
+                                                    {
+                                                        cycleDict.Add(generic.SpellDistribution, generic);
+                                                    }
                                                 }
-                                            }
 
             List<GenericArcane> cyclePalette = new List<GenericArcane>();
 

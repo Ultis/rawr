@@ -8541,9 +8541,9 @@ namespace Rawr.Mage
 
     class GenericArcane : Spell
     {
-        public Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, ABar1C, ABar2C, ABar3C, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3, AM0C, AM1C, AM2C, AM3C, MBAM0C, MBAM1C, MBAM2C, MBAM3C;
-        public double S00, S01, S02, S10, S11, S12, S20, S21, S22, S30, S31, S32;
-        public float KAB0, KAB1, KAB2, KAB3, KABar0, KABar1, KABar2, KABar3, KABar1C, KABar2C, KABar3C, KAM0, KAM1, KAM2, KAM3, KMBAM0, KMBAM1, KMBAM2, KMBAM3, KAM0C, KAM1C, KAM2C, KAM3C, KMBAM0C, KMBAM1C, KMBAM2C, KMBAM3C;
+        public Spell AB0, AB1, AB2, AB3, ABar0, ABar1, ABar2, ABar3, AM0, AM1, AM2, AM3, MBAM0, MBAM1, MBAM2, MBAM3;
+        public double S00, S01, S02, S03, S10, S11, S12, S20, S21, S22, S30, S31, S32;
+        public float KAB0, KAB1, KAB2, KAB3, KABar0, KABar1, KABar2, KABar3, KAM0, KAM1, KAM2, KAM3, KMBAM0, KMBAM1, KMBAM2, KMBAM3;
         public string SpellDistribution;
 
         private void AppendFormat(StringBuilder sb, string format, double weight)
@@ -8551,131 +8551,33 @@ namespace Rawr.Mage
             if (weight > 0) sb.AppendFormat(format, weight);
         }
 
-        public unsafe GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X03, double X04, double X10, double X11, double X12, double X13, double X14, double X15, double X20, double X22, double X23, double X24, double X30, double X32, double X33, double X34, double X40, double X41, double X42, double X43, double X44, double X50, double X51, double X52, double X53, double X54, double X55, double X60, double X61, double X62, double X63, double X64, double X70, double X71, double X72, double X73, double X74, double X75, double X80, double X81, double X82, double X83, double X84)
+        public unsafe GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X10, double X11, double X12, double X20, double X22, double X30, double X32, double X40, double X41, double X42, double X50, double X51, double X52, double X60, double X61, double X62, double X70, double X71, double X72, double X80, double X81, double X82, double X90, double X91, double X92)
         {
             Name = name;
 
-            ArraySet arraySet = ArrayPool.RequestArraySet(12, 12);
-            LU M = new LU(12, arraySet);
+            const int size = 13;
 
-            double[] X = new double[12];
+            ArraySet arraySet = ArrayPool.RequestArraySet(size, size);
+            LU M = new LU(size, arraySet);
 
-            //AB0,MB0,ABar+: S00
-            //AB0       => AB1,MB0,ABar+    X00*(1-MB)
-            //AB0       => AB1,MB1,ABar+    X00*MB
-            //ABar      => AB0,MB0,ABar-    X01*(1-MB)
-            //ABar      => AB0,MB2,ABar-    X01*MB
-            //AM        => AB0,MB0,ABar+    X02
-            //AMABar    => AB0,MB0,ABar-    X03*(1-MB)
-            //AMABar    => AB0,MB2,ABar-    X03*MB
-            //AMABar*   => AB0,MB0,ABar-    X04*(1-MB)
-            //AMABar*   => AB0,MB2,ABar-    X04*MB
+            double[] X = new double[size];
 
-            //AB0,MB0,ABar-: S01
-            //AB0       => AB1,MB0,ABar+    X20*(1-MB)
-            //AB0       => AB1,MB1,ABar+    X20*MB
-            //AM        => AB0,MB0,ABar+    X22
-            //AMABar    => AB0,MB0,ABar-    X23*(1-MB)
-            //AMABar    => AB0,MB2,ABar-    X23*MB
-            //AMABar*   => AB0,MB0,ABar-    X24*(1-MB)
-            //AMABar*   => AB0,MB2,ABar-    X24*MB
+            const int s00 = 0;
+            const int s01 = 1;
+            const int s02 = 2;
+            const int s03 = 12;
+            const int s10 = 3;
+            const int s11 = 4;
+            const int s12 = 5;
+            const int s20 = 6;
+            const int s21 = 7;
+            const int s22 = 8;
+            const int s30 = 9;
+            const int s31 = 10;
+            const int s32 = 11;
 
-            //AB0,MB2,ABar-: S02
-            //AB0       => AB1,MB2,ABar+    X30
-            //MBAM      => AB0,MB0,ABar+    X32
-            //MBAMABar  => AB0,MB0,ABar-    X33*(1-MB)
-            //MBAMABar  => AB0,MB2,ABar-    X33*MB
-            //MBAMABar* => AB0,MB0,ABar-    X34*(1-MB)
-            //MBAMABar* => AB0,MB2,ABar-    X34*MB
-
-            //AB1,MB0,ABar+: S10
-            //AB1       => AB2,MB0,ABar+    X10*(1-MB)
-            //AB1       => AB2,MB1,ABar+    X10*MB
-            //ABar1     => AB0,MB0,ABar-    X11*(1-MB)
-            //ABar1     => AB0,MB2,ABar-    X11*MB
-            //AM1       => AB0,MB0,ABar+    X12
-            //AMABar1   => AB0,MB0,ABar-    X13*(1-MB)
-            //AMABar1   => AB0,MB2,ABar-    X13*MB
-            //AMABar1*  => AB0,MB0,ABar-    (X14 + X15)*(1-MB)
-            //AMABar1*  => AB0,MB2,ABar-    (X14 + X15)*MB
-
-            //AB1,MB1,ABar+: S11
-            //AB1       => AB2,MB2,ABar+    X10
-            //ABar1     => AB0,MB2,ABar-    X11
-            //MBAM1     => AB0,MB0,ABar+    X12
-            //MBAMABar1 => AB0,MB0,ABar-    (X13 + X15)*(1-MB)
-            //MBAMABar1 => AB0,MB2,ABar-    (X13 + X15)*MB
-            //MBAMABar1*=> AB0,MB0,ABar-    X14*(1-MB)
-            //MBAMABar1*=> AB0,MB2,ABar-    X14*MB
-
-            //AB1,MB2,ABar+: S12
-            //AB1       => AB2,MB2,ABar+    X40
-            //ABar1     => AB0,MB2,ABar-    X41
-            //MBAM1     => AB0,MB0,ABar+    X42
-            //MBAMABar1 => AB0,MB0,ABar-    X43*(1-MB)
-            //MBAMABar1 => AB0,MB2,ABar-    X43*MB
-            //MBAMABar1*=> AB0,MB0,ABar-    X44*(1-MB)
-            //MBAMABar1*=> AB0,MB2,ABar-    X44*MB
-
-            //AB2,MB0,ABar+: S20
-            //AB2       => AB3,MB0,ABar+    X50*(1-MB)
-            //AB2       => AB3,MB1,ABar+    X50*MB
-            //ABar2     => AB0,MB0,ABar-    X51*(1-MB)
-            //ABar2     => AB0,MB2,ABar-    X51*MB
-            //AM2       => AB0,MB0,ABar+    X52
-            //AMABar2   => AB0,MB0,ABar-    X53*(1-MB)
-            //AMABar2   => AB0,MB2,ABar-    X53*MB
-            //AMABar2*  => AB0,MB0,ABar-    (X54 + X55)*(1-MB)
-            //AMABar2*  => AB0,MB2,ABar-    (X54 + X55)*MB
-
-            //AB2,MB1,ABar+: S21
-            //AB2       => AB3,MB2,ABar+    X50
-            //ABar2     => AB0,MB2,ABar-    X51
-            //MBAM2     => AB0,MB0,ABar+    X52
-            //MBAMABar2 => AB0,MB0,ABar-    (X53 + X55)*(1-MB)
-            //MBAMABar2 => AB0,MB2,ABar-    (X53 + X55)*MB
-            //MBAMABar2*=> AB0,MB0,ABar-    X54*(1-MB)
-            //MBAMABar2*=> AB0,MB2,ABar-    X54*MB
-
-            //AB2,MB2,ABar+: S22
-            //AB2       => AB3,MB2,ABar+    X60
-            //ABar2     => AB0,MB2,ABar-    X61
-            //MBAM2     => AB0,MB0,ABar+    X62
-            //MBAMABar2 => AB0,MB0,ABar-    X63*(1-MB)
-            //MBAMABar2 => AB0,MB2,ABar-    X63*MB
-            //MBAMABar2*=> AB0,MB0,ABar-    X64*(1-MB)
-            //MBAMABar2*=> AB0,MB2,ABar-    X64*MB
-
-            //AB3,MB0,ABar+: S30
-            //AB3       => AB3,MB0,ABar+    X70*(1-MB)
-            //AB3       => AB3,MB1,ABar+    X70*MB
-            //ABar3     => AB0,MB0,ABar-    X71*(1-MB)
-            //ABar3     => AB0,MB2,ABar-    X71*MB
-            //AM3       => AB0,MB0,ABar+    X72
-            //AMABar3   => AB0,MB0,ABar-    X73*(1-MB)
-            //AMABar3   => AB0,MB2,ABar-    X73*MB
-            //AMABar3*  => AB0,MB0,ABar-    (X74 + X75)*(1-MB)
-            //AMABar3*  => AB0,MB2,ABar-    (X74 + X75)*MB
-
-            //AB3,MB1,ABar+: S31
-            //AB3       => AB3,MB2,ABar+    X70
-            //ABar3     => AB0,MB2,ABar-    X71
-            //MBAM3     => AB0,MB0,ABar+    X72
-            //MBAMABar3 => AB0,MB0,ABar-    (X73 + X75)*(1-MB)
-            //MBAMABar3 => AB0,MB2,ABar-    (X73 + X75)*MB
-            //MBAMABar3*=> AB0,MB0,ABar-    X74*(1-MB)
-            //MBAMABar3*=> AB0,MB2,ABar-    X74*MB
-
-            //AB3,MB2,ABar+: S32
-            //AB3       => AB3,MB2,ABar+    X80
-            //ABar3     => AB0,MB2,ABar-    X81
-            //MBAM3     => AB0,MB0,ABar+    X82
-            //MBAMABar3 => AB0,MB0,ABar-    X83*(1-MB)
-            //MBAMABar3 => AB0,MB2,ABar-    X83*MB
-            //MBAMABar3*=> AB0,MB0,ABar-    X84*(1-MB)
-            //MBAMABar3*=> AB0,MB2,ABar-    X84*MB
-
-            double MB = 0.04f * castingState.MageTalents.MissileBarrage;
+            double MB = 0.04 * castingState.MageTalents.MissileBarrage;
+            double T8 = 0.0;
 
             fixed (double* U = arraySet.LU_U, x = X)
             fixed (double* sL = arraySet.LUsparseL, column = arraySet.LUcolumn, column2 = arraySet.LUcolumn2)
@@ -8683,107 +8585,171 @@ namespace Rawr.Mage
             {
                 M.BeginUnsafe(U, sL, P, Q, LJ, sLI, sLstart, column, column2);
 
-                for (int replace = 11; replace >= 11; replace--)
+                for (int replace = size - 1; replace >= size - 1; replace--)
                 {
-                    for (int i = 0; i < 12; i++)
+                    for (int i = 0; i < size; i++)
                     {
-                        for (int j = 0; j < 12; j++)
+                        for (int j = 0; j < size; j++)
                         {
-                            U[i * 12 + j] = 0;
+                            U[i * size + j] = 0;
                         }
                     }
 
                     //U[i * rows + j]
-                    U[0 * 12 + 0] = X02 - 1;
-                    U[1 * 12 + 0] = X01 * (1 - MB) + (X03 + X04) * (1 - MB);
-                    U[2 * 12 + 0] = X01 * MB + (X03 + X04) * MB;
-                    U[3 * 12 + 0] = X00 * (1 - MB);
-                    U[4 * 12 + 0] = X00 * MB;
 
-                    U[0 * 12 + 1] = X22;
-                    U[1 * 12 + 1] = (X23 + X24) * (1 - MB) - 1;
-                    U[2 * 12 + 1] = (X23 + X24) * MB;
-                    U[3 * 12 + 1] = X20 * (1 - MB);
-                    U[4 * 12 + 1] = X20 * MB;
+                    //AB0,MB0,ABar+: S00
+                    //AB0       => AB1,MB0,ABar+    X00*(1-MB)
+                    //AB0       => AB1,MB1,ABar+    X00*MB
+                    //ABar      => AB0,MB0,ABar-    X01*(1-MB)
+                    //ABar      => AB0,MB2,ABar-    X01*MB
+                    //AM        => AB0,MB0,ABar+    X02
+                    U[s00 * size + s00] = X02 - 1;
+                    U[s01 * size + s00] = X01 * (1 - MB);
+                    U[s02 * size + s00] = X01 * MB;
+                    U[s10 * size + s00] = X00 * (1 - MB);
+                    U[s11 * size + s00] = X00 * MB;
 
-                    U[0 * 12 + 2] = X32;
-                    U[1 * 12 + 2] = (X33 + X34) * (1 - MB);
-                    U[2 * 12 + 2] = (X33 + X34) * MB - 1;
-                    U[5 * 12 + 2] = X30;
+                    //AB0,MB0,ABar-: S01
+                    //AB0       => AB1,MB0,ABar+    X20*(1-MB)
+                    //AB0       => AB1,MB1,ABar+    X20*MB
+                    //AM        => AB0,MB0,ABar+    X22
+                    U[s00 * size + s01] = X22;
+                    U[s01 * size + s01] = -1;
+                    U[s10 * size + s01] = X20 * (1 - MB);
+                    U[s11 * size + s01] = X20 * MB;
 
-                    U[0 * 12 + 3] = X12;
-                    U[1 * 12 + 3] = X11 * (1 - MB) + (X13 + X14 + X15) * (1 - MB);
-                    U[2 * 12 + 3] = X11 * MB + (X13 + X14 + X15) * MB;
-                    U[6 * 12 + 3] = X10 * (1 - MB);
-                    U[7 * 12 + 3] = X10 * MB;
-                    U[3 * 12 + 3] = -1;
+                    //AB0,MB2,ABar-: S02
+                    //AB0       => AB1,MB2,ABar+    X30
+                    //MBAM      => AB0,MB0,ABar+    X32*(1-T8)
+                    //MBAM      => AB0,MB2,ABar+    X32*T8
+                    U[s00 * size + s02] = X32 * (1 - T8);
+                    U[s02 * size + s02] = -1;
+                    U[s03 * size + s02] = X32 * T8;
+                    U[s12 * size + s02] = X30;
 
-                    U[0 * 12 + 4] = X12;
-                    U[1 * 12 + 4] = (X13 + X14 + X15) * (1 - MB);
-                    U[2 * 12 + 4] = X11 + (X13 + X14 + X15) * MB;
-                    U[8 * 12 + 4] = X10;
-                    U[4 * 12 + 4] = -1;
+                    //AB0,MB2,ABar+: S03
+                    //AB0       => AB1,MB2,ABar+    X90
+                    //ABar      => AB0,MB2,ABar-    X91
+                    //MBAM      => AB0,MB0,ABar+    X92*(1-T8)
+                    //MBAM      => AB0,MB2,ABar+    X92*T8
+                    U[s00 * size + s03] = X92 * (1 - T8);
+                    U[s02 * size + s03] = X91;
+                    U[s03 * size + s03] = X92 * T8 - 1;
+                    U[s12 * size + s03] = X90;
 
-                    U[0 * 12 + 5] = X42;
-                    U[1 * 12 + 5] = (X43 + X44) * (1 - MB);
-                    U[2 * 12 + 5] = X41 + (X43 + X44) * MB;
-                    U[8 * 12 + 5] = X40;
-                    U[5 * 12 + 5] = -1;
+                    //AB1,MB0,ABar+: S10
+                    //AB1       => AB2,MB0,ABar+    X10*(1-MB)
+                    //AB1       => AB2,MB1,ABar+    X10*MB
+                    //ABar1     => AB0,MB0,ABar-    X11*(1-MB)
+                    //ABar1     => AB0,MB2,ABar-    X11*MB
+                    //AM1       => AB0,MB0,ABar+    X12
+                    U[s00 * size + s10] = X12;
+                    U[s01 * size + s10] = X11 * (1 - MB);
+                    U[s02 * size + s10] = X11 * MB;
+                    U[s20 * size + s10] = X10 * (1 - MB);
+                    U[s21 * size + s10] = X10 * MB;
+                    U[s10 * size + s10] = -1;
 
-                    U[0 * 12 + 6] = X52;
-                    U[1 * 12 + 6] = X51 * (1 - MB) + (X53 + X54 + X55) * (1 - MB);
-                    U[2 * 12 + 6] = X51 * MB + (X53 + X54 + X55) * MB;
-                    U[9 * 12 + 6] = X50 * (1 - MB);
-                    U[10 * 12 + 6] = X50 * MB;
-                    U[6 * 12 + 6] = -1;
+                    //AB1,MB1,ABar+: S11
+                    //AB1       => AB2,MB2,ABar+    X10
+                    //ABar1     => AB0,MB2,ABar-    X11
+                    //MBAM1     => AB0,MB0,ABar+    X12*(1-T8)
+                    //MBAM1     => AB0,MB2,ABar+    X12*T8
+                    U[s00 * size + s11] = X12 * (1 - T8);
+                    U[s02 * size + s11] = X11;
+                    U[s03 * size + s11] = X12 * T8;
+                    U[s22 * size + s11] = X10;
+                    U[s11 * size + s11] = -1;
 
-                    U[0 * 12 + 7] = X52;
-                    U[1 * 12 + 7] = (X53 + X54 + X55) * (1 - MB);
-                    U[2 * 12 + 7] = X51 + (X53 + X54 + X55) * MB;
-                    U[11 * 12 + 7] = X50;
-                    U[7 * 12 + 7] = -1;
+                    //AB1,MB2,ABar+: S12
+                    //AB1       => AB2,MB2,ABar+    X40
+                    //ABar1     => AB0,MB2,ABar-    X41
+                    //MBAM1     => AB0,MB0,ABar+    X42*(1-T8)
+                    //MBAM1     => AB0,MB2,ABar+    X42*T8
+                    U[s00 * size + s12] = X42 * (1 - T8);
+                    U[s02 * size + s12] = X41;
+                    U[s03 * size + s12] = X42 * T8;
+                    U[s22 * size + s12] = X40;
+                    U[s12 * size + s12] = -1;
 
-                    U[0 * 12 + 8] = X62;
-                    U[1 * 12 + 8] = (X63 + X64) * (1 - MB);
-                    U[2 * 12 + 8] = X61 + (X63 + X64) * MB;
-                    U[11 * 12 + 8] = X60;
-                    U[8 * 12 + 8] = -1;
+                    //AB2,MB0,ABar+: S20
+                    //AB2       => AB3,MB0,ABar+    X50*(1-MB)
+                    //AB2       => AB3,MB1,ABar+    X50*MB
+                    //ABar2     => AB0,MB0,ABar-    X51*(1-MB)
+                    //ABar2     => AB0,MB2,ABar-    X51*MB
+                    //AM2       => AB0,MB0,ABar+    X52
+                    U[s00 * size + s20] = X52;
+                    U[s01 * size + s20] = X51 * (1 - MB);
+                    U[s02 * size + s20] = X51 * MB;
+                    U[s30 * size + s20] = X50 * (1 - MB);
+                    U[s31 * size + s20] = X50 * MB;
+                    U[s20 * size + s20] = -1;
 
-                    U[0 * 12 + 9] = X72;
-                    U[1 * 12 + 9] = X71 * (1 - MB) + (X73 + X74 + X75) * (1 - MB);
-                    U[2 * 12 + 9] = X71 * MB + (X73 + X74 + X75) * MB;
-                    U[9 * 12 + 9] = X70 * (1 - MB) - 1;
-                    U[10 * 12 + 9] = X70 * MB;
+                    //AB2,MB1,ABar+: S21
+                    //AB2       => AB3,MB2,ABar+    X50
+                    //ABar2     => AB0,MB2,ABar-    X51
+                    //MBAM2     => AB0,MB0,ABar+    X52*(1-T8)
+                    //MBAM2     => AB0,MB2,ABar+    X52*T8
+                    U[s00 * size + s21] = X52 * (1 - T8);
+                    U[s02 * size + s21] = X51;
+                    U[s03 * size + s21] = X52 * T8;
+                    U[s32 * size + s21] = X50;
+                    U[s21 * size + s21] = -1;
 
-                    U[0 * 12 + 10] = X72;
-                    U[1 * 12 + 10] = (X73 + X74 + X75) * (1 - MB);
-                    U[2 * 12 + 10] = X71 + (X73 + X74 + X75) * MB;
-                    U[11 * 12 + 10] = X70;
-                    U[10 * 12 + 10] = -1;
+                    //AB2,MB2,ABar+: S22
+                    //AB2       => AB3,MB2,ABar+    X60
+                    //ABar2     => AB0,MB2,ABar-    X61
+                    //MBAM2     => AB0,MB0,ABar+    X62*(1-T8)
+                    //MBAM2     => AB0,MB2,ABar+    X62*T8
+                    U[s00 * size + s22] = X62 * (1 - T8);
+                    U[s02 * size + s22] = X61;
+                    U[s03 * size + s22] = X62 * T8;
+                    U[s32 * size + s22] = X60;
+                    U[s22 * size + s22] = -1;
 
-                    U[0 * 12 + 11] = X82;
-                    U[1 * 12 + 11] = (X83 + X84) * (1 - MB);
-                    U[2 * 12 + 11] = X81 + (X83 + X84) * MB;
-                    U[11 * 12 + 11] = X80 - 1;
+                    //AB3,MB0,ABar+: S30
+                    //AB3       => AB3,MB0,ABar+    X70*(1-MB)
+                    //AB3       => AB3,MB1,ABar+    X70*MB
+                    //ABar3     => AB0,MB0,ABar-    X71*(1-MB)
+                    //ABar3     => AB0,MB2,ABar-    X71*MB
+                    //AM3       => AB0,MB0,ABar+    X72
+                    U[s00 * size + s30] = X72;
+                    U[s01 * size + s30] = X71 * (1 - MB);
+                    U[s02 * size + s30] = X71 * MB;
+                    U[s30 * size + s30] = X70 * (1 - MB) - 1;
+                    U[s31 * size + s30] = X70 * MB;
+
+                    //AB3,MB1,ABar+: S31
+                    //AB3       => AB3,MB2,ABar+    X70
+                    //ABar3     => AB0,MB2,ABar-    X71
+                    //MBAM3     => AB0,MB0,ABar+    X72*(1-T8)
+                    //MBAM3     => AB0,MB2,ABar+    X72*T8
+                    U[s00 * size + s31] = X72 * (1 - T8);
+                    U[s02 * size + s31] = X71;
+                    U[s03 * size + s31] = X72 * T8;
+                    U[s32 * size + s31] = X70;
+                    U[s31 * size + s31] = -1;
+
+                    //AB3,MB2,ABar+: S32
+                    //AB3       => AB3,MB2,ABar+    X80
+                    //ABar3     => AB0,MB2,ABar-    X81
+                    //MBAM3     => AB0,MB0,ABar+    X82*(1-T8)
+                    //MBAM3     => AB0,MB2,ABar+    X82*T8
+                    U[s00 * size + s32] = X82 * (1 - T8);
+                    U[s02 * size + s32] = X81;
+                    U[s03 * size + s32] = X82 * T8;
+                    U[s32 * size + s32] = X80 - 1;
 
                     // the above system is singular, "guess" which one is dependent and replace with sum=1
                     // since not all states are used always we'll get a singular system anyway sometimes, but in those cases the FSolve should still work ok on the nonsingular part
-                    for (int i = 0; i < 12; i++) x[i] = 0;
+                    for (int i = 0; i < size; i++) x[i] = 0;
 
-                    if (replace < 12)
+                    if (replace < size)
                     {
-                        U[replace * 12 + 0] = 1;
-                        U[replace * 12 + 1] = 1;
-                        U[replace * 12 + 2] = 1;
-                        U[replace * 12 + 3] = 1;
-                        U[replace * 12 + 4] = 1;
-                        U[replace * 12 + 5] = 1;
-                        U[replace * 12 + 6] = 1;
-                        U[replace * 12 + 7] = 1;
-                        U[replace * 12 + 8] = 1;
-                        U[replace * 12 + 9] = 1;
-                        U[replace * 12 + 10] = 1;
-                        U[replace * 12 + 11] = 1;
+                        for (int i = 0; i < size; i++)
+                        {
+                            U[replace * size + i] = 1;
+                        }
 
                         x[replace] = 1;
                     }
@@ -8795,18 +8761,19 @@ namespace Rawr.Mage
 
                 M.EndUnsafe();
 
-                S00 = x[0];
-                S01 = x[1];
-                S02 = x[2];
-                S10 = x[3];
-                S11 = x[4];
-                S12 = x[5];
-                S20 = x[6];
-                S21 = x[7];
-                S22 = x[8];
-                S30 = x[9];
-                S31 = x[10];
-                S32 = x[11];
+                S00 = x[s00];
+                S01 = x[s01];
+                S02 = x[s02];
+                S03 = x[s03];
+                S10 = x[s10];
+                S11 = x[s11];
+                S12 = x[s12];
+                S20 = x[s20];
+                S21 = x[s21];
+                S22 = x[s22];
+                S30 = x[s30];
+                S31 = x[s31];
+                S32 = x[s32];
             }
 
             AB0 = castingState.GetSpell(SpellId.ArcaneBlast00);
@@ -8817,96 +8784,58 @@ namespace Rawr.Mage
             ABar1 = castingState.GetSpell(SpellId.ArcaneBarrage1);
             ABar2 = castingState.GetSpell(SpellId.ArcaneBarrage2);
             ABar3 = castingState.GetSpell(SpellId.ArcaneBarrage3);
-            ABar1C = castingState.GetSpell(SpellId.ArcaneBarrage1Combo);
-            ABar2C = castingState.GetSpell(SpellId.ArcaneBarrage2Combo);
-            ABar3C = castingState.GetSpell(SpellId.ArcaneBarrage3Combo);
             AM0 = castingState.GetSpell(SpellId.ArcaneMissiles);
             AM1 = castingState.GetSpell(SpellId.ArcaneMissiles1);
             AM2 = castingState.GetSpell(SpellId.ArcaneMissiles2);
             AM3 = castingState.GetSpell(SpellId.ArcaneMissiles3);
-            AM0C = castingState.GetSpell(SpellId.ArcaneMissiles0Clipped);
-            AM1C = castingState.GetSpell(SpellId.ArcaneMissiles1Clipped);
-            AM2C = castingState.GetSpell(SpellId.ArcaneMissiles2Clipped);
-            AM3C = castingState.GetSpell(SpellId.ArcaneMissiles3Clipped);
             MBAM0 = castingState.GetSpell(SpellId.ArcaneMissilesMB);
             MBAM1 = castingState.GetSpell(SpellId.ArcaneMissilesMB1);
             MBAM2 = castingState.GetSpell(SpellId.ArcaneMissilesMB2);
             MBAM3 = castingState.GetSpell(SpellId.ArcaneMissilesMB3);
-            MBAM0C = castingState.GetSpell(SpellId.ArcaneMissilesMB0Clipped);
-            MBAM1C = castingState.GetSpell(SpellId.ArcaneMissilesMB1Clipped);
-            MBAM2C = castingState.GetSpell(SpellId.ArcaneMissilesMB2Clipped);
-            MBAM3C = castingState.GetSpell(SpellId.ArcaneMissilesMB3Clipped);
 
-            KAB0 = (float)(S00 * X00 + S01 * X20 + S02 * X30);
-            KABar0 = (float)(S00 * X01 + S00 * X03 + S01 * X23 + S02 * X33 + S00 * X04 + S01 * X24 + S02 * X34);
-            KAM0 = (float)(S00 * X02 + S00 * X03 + S01 * X22 + S01 * X23);
-            KMBAM0 = (float)(S02 * X32 + S02 * X33);
+            KAB0 = (float)(S00 * X00 + S01 * X20 + S02 * X30 + S03 * X90);
+            KABar0 = (float)(S00 * X01 + S03 * X91);
+            KAM0 = (float)(S00 * X02 + S01 * X22);
+            KMBAM0 = (float)(S02 * X32 + S03 * X92);
             KAB1 = (float)(S10 * X10 + S11 * X10 + S12 * X40);
-            KABar1 = (float)(S10 * X11 + S11 * X11 + S12 * X41 + S10 * X14 + S11 * X14 + S12 * X44 + S10 * X15);
-            KABar1C = (float)(S10 * X13 + S11 * X13 + S12 * X43 + S11 * X15);
-            KAM1 = (float)(S10 * X12 + S10 * X13);
-            KMBAM1 = (float)(S11 * X12 + S11 * X13 + S12 * X42 + S12 * X43 + S11 * X15);
+            KABar1 = (float)(S10 * X11 + S11 * X11 + S12 * X41);
+            KAM1 = (float)(S10 * X12);
+            KMBAM1 = (float)(S11 * X12 + S12 * X42);
             KAB2 = (float)(S20 * X50 + S21 * X50 + S22 * X60);
-            KABar2 = (float)(S20 * X51 + S21 * X51 + S22 * X61 + S20 * X54 + S21 * X54 + S22 * X64 + S20 * X55);
-            KABar2C = (float)(S20 * X53 + S21 * X53 + S22 * X63 + S21 * X55);
-            KAM2 = (float)(S20 * X52 + S20 * X53);
-            KMBAM2 = (float)(S21 * X52 + S21 * X53 + S22 * X62 + S22 * X63 + S21 * X55);
+            KABar2 = (float)(S20 * X51 + S21 * X51 + S22 * X61);
+            KAM2 = (float)(S20 * X52);
+            KMBAM2 = (float)(S21 * X52 + S22 * X62);
             KAB3 = (float)(S30 * X70 + S31 * X70 + S32 * X80);
-            KABar3 = (float)(S30 * X71 + S31 * X71 + S32 * X81 + S30 * X74 + S31 * X74 + S32 * X84 + S30 * X75);
-            KABar3C = (float)(S30 * X73 + S31 * X73 + S32 * X83 + S31 * X75);
-            KAM3 = (float)(S30 * X72 + S30 * X73);
-            KMBAM3 = (float)(S31 * X72 + S31 * X73 + S32 * X82 + S32 * X83 + S31 * X75);
-            KAM0C = (float)(S00 * X04 + S01 * X24);
-            KMBAM0C = (float)(S02 * X34);
-            KAM1C = (float)(S10 * X14 + S10 * X15);
-            KMBAM1C = (float)(S11 * X14 + S12 * X44);
-            KAM2C = (float)(S20 * X54 + S20 * X55);
-            KMBAM2C = (float)(S21 * X54 + S22 * X64);
-            KAM3C = (float)(S30 * X74 + S30 * X75);
-            KMBAM3C = (float)(S31 * X74 + S32 * X84);
+            KABar3 = (float)(S30 * X71 + S31 * X71 + S32 * X81);
+            KAM3 = (float)(S30 * X72);
+            KMBAM3 = (float)(S31 * X72 + S32 * X82);
 
-            CastTime = KAB0 * AB0.CastTime + KABar0 * ABar0.CastTime + KAM0 * AM0.CastTime + KMBAM0 * MBAM0.CastTime + KAB1 * AB1.CastTime + KABar1 * ABar1.CastTime + KAM1 * AM1.CastTime + KMBAM1 * MBAM1.CastTime + KAB2 * AB2.CastTime + KABar2 * ABar2.CastTime + KAM2 * AM2.CastTime + KMBAM2 * MBAM2.CastTime + KAB3 * AB3.CastTime + KABar3 * ABar3.CastTime + KAM3 * AM3.CastTime + KMBAM3 * MBAM3.CastTime + KABar1C * ABar1C.CastTime + KABar2C * ABar2C.CastTime + KABar3C * ABar3C.CastTime + KAM0C * AM0C.CastTime + KAM1C * AM1C.CastTime + KAM2C * AM2C.CastTime + KAM3C * AM3C.CastTime + KMBAM0C * MBAM0C.CastTime + KMBAM1C * MBAM1C.CastTime + KMBAM2C * MBAM2C.CastTime + KMBAM3C * MBAM3C.CastTime;
-            CostPerSecond = (KAB0 * AB0.CastTime * AB0.CostPerSecond + KABar0 * ABar0.CastTime * ABar0.CostPerSecond + KAM0 * AM0.CastTime * AM0.CostPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.CostPerSecond + KAB1 * AB1.CastTime * AB1.CostPerSecond + KABar1 * ABar1.CastTime * ABar1.CostPerSecond + KAM1 * AM1.CastTime * AM1.CostPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.CostPerSecond + KAB2 * AB2.CastTime * AB2.CostPerSecond + KABar2 * ABar2.CastTime * ABar2.CostPerSecond + KAM2 * AM2.CastTime * AM2.CostPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.CostPerSecond + KAB3 * AB3.CastTime * AB3.CostPerSecond + KABar3 * ABar3.CastTime * ABar3.CostPerSecond + KAM3 * AM3.CastTime * AM3.CostPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.CostPerSecond + KABar1C * ABar1C.CastTime * ABar1C.CostPerSecond + KABar2C * ABar2C.CastTime * ABar2C.CostPerSecond + KABar3C * ABar3C.CastTime * ABar3C.CostPerSecond + KAM0C * AM0C.CastTime * AM0C.CostPerSecond + KAM1C * AM1C.CastTime * AM1C.CostPerSecond + KAM2C * AM2C.CastTime * AM2C.CostPerSecond + KAM3C * AM3C.CastTime * AM3C.CostPerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.CostPerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.CostPerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.CostPerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.CostPerSecond) / CastTime;
-            DamagePerSecond = (KAB0 * AB0.CastTime * AB0.DamagePerSecond + KABar0 * ABar0.CastTime * ABar0.DamagePerSecond + KAM0 * AM0.CastTime * AM0.DamagePerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.DamagePerSecond + KAB1 * AB1.CastTime * AB1.DamagePerSecond + KABar1 * ABar1.CastTime * ABar1.DamagePerSecond + KAM1 * AM1.CastTime * AM1.DamagePerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.DamagePerSecond + KAB2 * AB2.CastTime * AB2.DamagePerSecond + KABar2 * ABar2.CastTime * ABar2.DamagePerSecond + KAM2 * AM2.CastTime * AM2.DamagePerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.DamagePerSecond + KAB3 * AB3.CastTime * AB3.DamagePerSecond + KABar3 * ABar3.CastTime * ABar3.DamagePerSecond + KAM3 * AM3.CastTime * AM3.DamagePerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.DamagePerSecond + KABar1C * ABar1C.CastTime * ABar1C.DamagePerSecond + KABar2C * ABar2C.CastTime * ABar2C.DamagePerSecond + KABar3C * ABar3C.CastTime * ABar3C.DamagePerSecond + KAM0C * AM0C.CastTime * AM0C.DamagePerSecond + KAM1C * AM1C.CastTime * AM1C.DamagePerSecond + KAM2C * AM2C.CastTime * AM2C.DamagePerSecond + KAM3C * AM3C.CastTime * AM3C.DamagePerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.DamagePerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.DamagePerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.DamagePerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (KAB0 * AB0.CastTime * AB0.ThreatPerSecond + KABar0 * ABar0.CastTime * ABar0.ThreatPerSecond + KAM0 * AM0.CastTime * AM0.ThreatPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ThreatPerSecond + KAB1 * AB1.CastTime * AB1.ThreatPerSecond + KABar1 * ABar1.CastTime * ABar1.ThreatPerSecond + KAM1 * AM1.CastTime * AM1.ThreatPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ThreatPerSecond + KAB2 * AB2.CastTime * AB2.ThreatPerSecond + KABar2 * ABar2.CastTime * ABar2.ThreatPerSecond + KAM2 * AM2.CastTime * AM2.ThreatPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ThreatPerSecond + KAB3 * AB3.CastTime * AB3.ThreatPerSecond + KABar3 * ABar3.CastTime * ABar3.ThreatPerSecond + KAM3 * AM3.CastTime * AM3.ThreatPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ThreatPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ThreatPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ThreatPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ThreatPerSecond + KAM0C * AM0C.CastTime * AM0C.ThreatPerSecond + KAM1C * AM1C.CastTime * AM1C.ThreatPerSecond + KAM2C * AM2C.CastTime * AM2C.ThreatPerSecond + KAM3C * AM3C.CastTime * AM3C.ThreatPerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.ThreatPerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.ThreatPerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.ThreatPerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (KAB0 * AB0.CastTime * AB0.ManaRegenPerSecond + KABar0 * ABar0.CastTime * ABar0.ManaRegenPerSecond + KAM0 * AM0.CastTime * AM0.ManaRegenPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ManaRegenPerSecond + KAB1 * AB1.CastTime * AB1.ManaRegenPerSecond + KABar1 * ABar1.CastTime * ABar1.ManaRegenPerSecond + KAM1 * AM1.CastTime * AM1.ManaRegenPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ManaRegenPerSecond + KAB2 * AB2.CastTime * AB2.ManaRegenPerSecond + KABar2 * ABar2.CastTime * ABar2.ManaRegenPerSecond + KAM2 * AM2.CastTime * AM2.ManaRegenPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ManaRegenPerSecond + KAB3 * AB3.CastTime * AB3.ManaRegenPerSecond + KABar3 * ABar3.CastTime * ABar3.ManaRegenPerSecond + KAM3 * AM3.CastTime * AM3.ManaRegenPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ManaRegenPerSecond + KABar1C * ABar1C.CastTime * ABar1C.ManaRegenPerSecond + KABar2C * ABar2C.CastTime * ABar2C.ManaRegenPerSecond + KABar3C * ABar3C.CastTime * ABar3C.ManaRegenPerSecond + KAM0C * AM0C.CastTime * AM0C.ManaRegenPerSecond + KAM1C * AM1C.CastTime * AM1C.ManaRegenPerSecond + KAM2C * AM2C.CastTime * AM2C.ManaRegenPerSecond + KAM3C * AM3C.CastTime * AM3C.ManaRegenPerSecond + KMBAM0C * MBAM0C.CastTime * MBAM0C.ManaRegenPerSecond + KMBAM1C * MBAM1C.CastTime * MBAM1C.ManaRegenPerSecond + KMBAM2C * MBAM2C.CastTime * MBAM2C.ManaRegenPerSecond + KMBAM3C * MBAM3C.CastTime * MBAM3C.ManaRegenPerSecond) / CastTime;
+            CastTime = KAB0 * AB0.CastTime + KABar0 * ABar0.CastTime + KAM0 * AM0.CastTime + KMBAM0 * MBAM0.CastTime + KAB1 * AB1.CastTime + KABar1 * ABar1.CastTime + KAM1 * AM1.CastTime + KMBAM1 * MBAM1.CastTime + KAB2 * AB2.CastTime + KABar2 * ABar2.CastTime + KAM2 * AM2.CastTime + KMBAM2 * MBAM2.CastTime + KAB3 * AB3.CastTime + KABar3 * ABar3.CastTime + KAM3 * AM3.CastTime + KMBAM3 * MBAM3.CastTime;
+            CostPerSecond = (KAB0 * AB0.CastTime * AB0.CostPerSecond + KABar0 * ABar0.CastTime * ABar0.CostPerSecond + KAM0 * AM0.CastTime * AM0.CostPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.CostPerSecond + KAB1 * AB1.CastTime * AB1.CostPerSecond + KABar1 * ABar1.CastTime * ABar1.CostPerSecond + KAM1 * AM1.CastTime * AM1.CostPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.CostPerSecond + KAB2 * AB2.CastTime * AB2.CostPerSecond + KABar2 * ABar2.CastTime * ABar2.CostPerSecond + KAM2 * AM2.CastTime * AM2.CostPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.CostPerSecond + KAB3 * AB3.CastTime * AB3.CostPerSecond + KABar3 * ABar3.CastTime * ABar3.CostPerSecond + KAM3 * AM3.CastTime * AM3.CostPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.CostPerSecond) / CastTime;
+            DamagePerSecond = (KAB0 * AB0.CastTime * AB0.DamagePerSecond + KABar0 * ABar0.CastTime * ABar0.DamagePerSecond + KAM0 * AM0.CastTime * AM0.DamagePerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.DamagePerSecond + KAB1 * AB1.CastTime * AB1.DamagePerSecond + KABar1 * ABar1.CastTime * ABar1.DamagePerSecond + KAM1 * AM1.CastTime * AM1.DamagePerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.DamagePerSecond + KAB2 * AB2.CastTime * AB2.DamagePerSecond + KABar2 * ABar2.CastTime * ABar2.DamagePerSecond + KAM2 * AM2.CastTime * AM2.DamagePerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.DamagePerSecond + KAB3 * AB3.CastTime * AB3.DamagePerSecond + KABar3 * ABar3.CastTime * ABar3.DamagePerSecond + KAM3 * AM3.CastTime * AM3.DamagePerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.DamagePerSecond) / CastTime;
+            ThreatPerSecond = (KAB0 * AB0.CastTime * AB0.ThreatPerSecond + KABar0 * ABar0.CastTime * ABar0.ThreatPerSecond + KAM0 * AM0.CastTime * AM0.ThreatPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ThreatPerSecond + KAB1 * AB1.CastTime * AB1.ThreatPerSecond + KABar1 * ABar1.CastTime * ABar1.ThreatPerSecond + KAM1 * AM1.CastTime * AM1.ThreatPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ThreatPerSecond + KAB2 * AB2.CastTime * AB2.ThreatPerSecond + KABar2 * ABar2.CastTime * ABar2.ThreatPerSecond + KAM2 * AM2.CastTime * AM2.ThreatPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ThreatPerSecond + KAB3 * AB3.CastTime * AB3.ThreatPerSecond + KABar3 * ABar3.CastTime * ABar3.ThreatPerSecond + KAM3 * AM3.CastTime * AM3.ThreatPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ThreatPerSecond) / CastTime;
+            ManaRegenPerSecond = (KAB0 * AB0.CastTime * AB0.ManaRegenPerSecond + KABar0 * ABar0.CastTime * ABar0.ManaRegenPerSecond + KAM0 * AM0.CastTime * AM0.ManaRegenPerSecond + KMBAM0 * MBAM0.CastTime * MBAM0.ManaRegenPerSecond + KAB1 * AB1.CastTime * AB1.ManaRegenPerSecond + KABar1 * ABar1.CastTime * ABar1.ManaRegenPerSecond + KAM1 * AM1.CastTime * AM1.ManaRegenPerSecond + KMBAM1 * MBAM1.CastTime * MBAM1.ManaRegenPerSecond + KAB2 * AB2.CastTime * AB2.ManaRegenPerSecond + KABar2 * ABar2.CastTime * ABar2.ManaRegenPerSecond + KAM2 * AM2.CastTime * AM2.ManaRegenPerSecond + KMBAM2 * MBAM2.CastTime * MBAM2.ManaRegenPerSecond + KAB3 * AB3.CastTime * AB3.ManaRegenPerSecond + KABar3 * ABar3.CastTime * ABar3.ManaRegenPerSecond + KAM3 * AM3.CastTime * AM3.ManaRegenPerSecond + KMBAM3 * MBAM3.CastTime * MBAM3.ManaRegenPerSecond) / CastTime;
 
             StringBuilder sb = new StringBuilder();
             AppendFormat(sb, "AB0:\t{0:F}%\r\n", 100.0 * (S00 * X00 + S01 * X20 + S02 * X30));
             AppendFormat(sb, "ABar0:\t{0:F}%\r\n", 100.0 * (S00 * X01));
             AppendFormat(sb, "AM0:\t{0:F}%\r\n", 100.0 * (S00 * X02 + S01 * X22));
-            AppendFormat(sb, "AMABar0:\t{0:F}%\r\n", 100.0 * (S00 * X03 + S01 * X23));
-            AppendFormat(sb, "AMABarClip0:\t{0:F}%\r\n", 100.0 * (S00 * X04 + S01 * X24));
             AppendFormat(sb, "MBAM0:\t{0:F}%\r\n", 100.0 * (S02 * X32));
-            AppendFormat(sb, "MBAMABar0:\t{0:F}%\r\n", 100.0 * (S02 * X33));
-            AppendFormat(sb, "MBAMABarClip0:\t{0:F}%\r\n", 100.0 * (S02 * X34));
 
             AppendFormat(sb, "AB1:\t{0:F}%\r\n", 100.0 * (S10 * X10 + S11 * X10 + S12 * X40));
             AppendFormat(sb, "ABar1:\t{0:F}%\r\n", 100.0 * (S10 * X11 + S11 * X11 + S12 * X41));
             AppendFormat(sb, "AM1:\t{0:F}%\r\n", 100.0 * (S10 * X12));
-            AppendFormat(sb, "AMABar1:\t{0:F}%\r\n", 100.0 * (S10 * X13));
-            AppendFormat(sb, "AMABarClip1:\t{0:F}%\r\n", 100.0 * (S10 * X14 + S10 * X15));
             AppendFormat(sb, "MBAM1:\t{0:F}%\r\n", 100.0 * (S11 * X12 + S12 * X42));
-            AppendFormat(sb, "MBAMABar1:\t{0:F}%\r\n", 100.0 * (S11 * X13 + S11 * X15 + S12 * X43));
-            AppendFormat(sb, "MBAMABarClip1:\t{0:F}%\r\n", 100.0 * (S11 * X14 + S12 * X44));
 
             AppendFormat(sb, "AB2:\t{0:F}%\r\n", 100.0 * (S20 * X50 + S21 * X50 + S22 * X60));
             AppendFormat(sb, "ABar2:\t{0:F}%\r\n", 100.0 * (S20 * X51 + S21 * X51 + S22 * X61));
             AppendFormat(sb, "AM2:\t{0:F}%\r\n", 100.0 * (S20 * X52));
-            AppendFormat(sb, "AMABar2:\t{0:F}%\r\n", 100.0 * (S20 * X53));
-            AppendFormat(sb, "AMABarClip2:\t{0:F}%\r\n", 100.0 * (S20 * X54 + S20 * X55));
             AppendFormat(sb, "MBAM2:\t{0:F}%\r\n", 100.0 * (S21 * X52 + S22 * X62));
-            AppendFormat(sb, "MBAMABar2:\t{0:F}%\r\n", 100.0 * (S21 * X53 + S21 * X55 + S22 * X63));
-            AppendFormat(sb, "MBAMABarClip2:\t{0:F}%\r\n", 100.0 * (S21 * X54 + S22 * X64));
 
             AppendFormat(sb, "AB3:\t{0:F}%\r\n", 100.0 * (S30 * X70 + S31 * X70 + S32 * X80));
             AppendFormat(sb, "ABar3:\t{0:F}%\r\n", 100.0 * (S30 * X71 + S31 * X71 + S32 * X81));
             AppendFormat(sb, "AM3:\t{0:F}%\r\n", 100.0 * (S30 * X72));
-            AppendFormat(sb, "AMABar3:\t{0:F}%\r\n", 100.0 * (S30 * X73));
-            AppendFormat(sb, "AMABarClip3:\t{0:F}%\r\n", 100.0 * (S30 * X74 + S30 * X75));
             AppendFormat(sb, "MBAM3:\t{0:F}%\r\n", 100.0 * (S31 * X72 + S32 * X82));
-            AppendFormat(sb, "MBAMABar3:\t{0:F}%\r\n", 100.0 * (S31 * X73 + S31 * X75 + S32 * X83));
-            AppendFormat(sb, "MBAMABarClip3:\t{0:F}%\r\n", 100.0 * (S31 * X74 + S32 * X84));
 
             SpellDistribution = sb.ToString();
             ArrayPool.ReleaseArraySet(arraySet);
@@ -8938,17 +8867,6 @@ namespace Rawr.Mage
             ABar3.AddSpellContribution(dict, KABar3 * ABar3.CastTime / CastTime * duration);
             AM3.AddSpellContribution(dict, KAM3 * AM3.CastTime / CastTime * duration);
             MBAM3.AddSpellContribution(dict, KMBAM3 * MBAM3.CastTime / CastTime * duration);
-            ABar1C.AddSpellContribution(dict, KABar1C * ABar1C.CastTime / CastTime * duration);
-            ABar2C.AddSpellContribution(dict, KABar2C * ABar2C.CastTime / CastTime * duration);
-            ABar3C.AddSpellContribution(dict, KABar3C * ABar3C.CastTime / CastTime * duration);
-            AM0C.AddSpellContribution(dict, KAM0C * AM0C.CastTime / CastTime * duration);
-            AM1C.AddSpellContribution(dict, KAM1C * AM1C.CastTime / CastTime * duration);
-            AM2C.AddSpellContribution(dict, KAM2C * AM2C.CastTime / CastTime * duration);
-            AM3C.AddSpellContribution(dict, KAM3C * AM3C.CastTime / CastTime * duration);
-            MBAM0C.AddSpellContribution(dict, KMBAM0C * MBAM0C.CastTime / CastTime * duration);
-            MBAM1C.AddSpellContribution(dict, KMBAM1C * MBAM1C.CastTime / CastTime * duration);
-            MBAM2C.AddSpellContribution(dict, KMBAM2C * MBAM2C.CastTime / CastTime * duration);
-            MBAM3C.AddSpellContribution(dict, KMBAM3C * MBAM3C.CastTime / CastTime * duration);
         }
     }
     #endregion
