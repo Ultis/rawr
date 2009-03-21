@@ -854,7 +854,7 @@ namespace Rawr.Mage
             }
             if (calculationOptions.GlyphOfManaGem)
             {
-                statsTotal.BonusManaGem = (1 + statsTotal.BonusManaGem) * (1 + 0.1f) - 1;
+                statsTotal.BonusManaGem += 0.4f;
             }
 
             if (calculationOptions.Mode31)
