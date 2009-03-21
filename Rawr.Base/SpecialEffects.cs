@@ -900,6 +900,10 @@ namespace Rawr
                 }
             }
             #endregion
+            else if (line == "Reduces the mana cost of your spells by 42.")
+            {
+                stats.SpellsManaReduction = 42f;
+            }
         }
 
 		public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id)

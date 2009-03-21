@@ -266,6 +266,7 @@ namespace Rawr
         HolyShockCrit,
         GreatnessProc,
         Heal1Min,
+        SpellsManaReduction,
         #endregion
         #region Rawr.Retribution
         DivineStormMultiplier,
@@ -2205,6 +2206,15 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower]; }
             set { _rawAdditiveData[(int)AdditiveStat.HolyLightSpellPower] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spells Mana Cost Reduction")]
+        [Category("Equipment Procs")]
+        public float SpellsManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
