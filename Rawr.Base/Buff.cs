@@ -1992,7 +1992,7 @@ namespace Rawr
 			    Name = "Nightsong Battlegear 2 Piece Bonus",
 			    Group = "Set Bonuses",
 			    ConflictingBuffs = new List<string>(new string[] { }),
-			    Stats = { ClearcastOnBleedChance = 0.0583333333f },
+			    Stats = { ClearcastOnBleedChance = 0.02f },
 				SetName = "Nightsong Battlegear",
 			    SetThreshold = 2
 			});

@@ -35,9 +35,26 @@ namespace Rawr
             }
             catch (Exception ex)
             {
-               MessageBox.Show("Rawr encountered a serious error. Please copy and paste this into an e-mail to cnervig@hotmail.com. Thanks!\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace);
+               MessageBox.Show(GetErrorMessage(ex), "Rawr Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
+
+		private static string GetErrorMessage(Exception ex)
+		{
+			string error = "\r\n\r\n\r\n" + ex.Message + "\r\n\r\n" + ex.StackTrace;
+			if (error.Contains("Could not load file or assembly 'Rawr.Base") ||
+				error.Contains("Rawr.FormMain.LoadModel(String"))
+			{
+				return "Rawr was unable to find its required data files. Please make sure that you have fully unzipped Rawr to a location that you have full permissions to (such as My Documents). " +
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			}
+			if (error.Contains("Error creating window handle."))
+			{
+				return "Rawr encounted a serious error caused by an old version of the .NET Framework. Please download and install the latest version of the .NET Framework from Microsoft (http://www.microsoft.com/Net/Download.aspx)." +
+					"If you still have this problem, please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+			}
+			return "Rawr encountered a serious error. Please copy (CTRL-C) and paste this into an e-mail to cnervig@hotmail.com. Thanks!" + error;
+		}
 
 		//private static void RawrCatIntro()
 		//{
