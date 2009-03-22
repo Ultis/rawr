@@ -798,7 +798,7 @@ the Threat Scale defined on the Options tab.",
 				BonusSwipeDamageMultiplier = 0.1f * talents.FeralInstinct,
                 DamageTakenMultiplier = -0.04f * talents.ProtectorOfThePack,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") ? 0f : 0.3f * talents.Mangle),
-				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.22f * talents.SurvivalOfTheFittest) - 1f,
+				BaseArmorMultiplier = 4.7f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.11f * talents.SurvivalOfTheFittest) - 1f,
 			};
 			
 			Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;

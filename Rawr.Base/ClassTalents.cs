@@ -2134,17 +2134,17 @@ When activated, this ability temporarily grants you 30% of your maximum health f
 		public int NaturalReaction { get { return _data[43]; } set { _data[43] = value; } }
 
 		[TalentData(44, "Heart of the Wild", 5, 1, 2, 6, 37, new string[] {
-@"Increases your Intellect by 4%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 4% and while in Cat Form your attack power is increased by 2%.",
-@"Increases your Intellect by 8%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 8% and while in Cat Form your attack power is increased by 4%.",
-@"Increases your Intellect by 12%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 12% and while in Cat Form your attack power is increased by 6%.",
-@"Increases your Intellect by 16%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 16% and while in Cat Form your attack power is increased by 8%.",
-@"Increases your Intellect by 20%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 20% and while in Cat Form your attack power is increased by 10%.",})]
+@"Increases your Intellect by 4%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 2% and while in Cat Form your attack power is increased by 2%.",
+@"Increases your Intellect by 8%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 4% and while in Cat Form your attack power is increased by 4%.",
+@"Increases your Intellect by 12%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 6% and while in Cat Form your attack power is increased by 6%.",
+@"Increases your Intellect by 16%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 8% and while in Cat Form your attack power is increased by 8%.",
+@"Increases your Intellect by 20%. In addition, while in Bear or Dire Bear Form your Stamina is increased by 10% and while in Cat Form your attack power is increased by 10%.",})]
 		public int HeartOfTheWild { get { return _data[44]; } set { _data[44] = value; } }
 
 		[TalentData(45, "Survival of the Fittest", 3, 1, 3, 6, -1, new string[] {
-@"Increases all attributes by 2% and reduces the chance you'll be critically hit by melee attacks by 2%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 22%.",
-@"Increases all attributes by 4% and reduces the chance you'll be critically hit by melee attacks by 4%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 44%.",
-@"Increases all attributes by 6% and reduces the chance you'll be critically hit by melee attacks by 6%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 66%.",})]
+@"Increases all attributes by 2% and reduces the chance you'll be critically hit by melee attacks by 2%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 11%.",
+@"Increases all attributes by 4% and reduces the chance you'll be critically hit by melee attacks by 4%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 22%.",
+@"Increases all attributes by 6% and reduces the chance you'll be critically hit by melee attacks by 6%, and increases your armor contribution from cloth and leather items in Bear Form and Dire Bear Form by 33%.",})]
 		public int SurvivalOfTheFittest { get { return _data[45]; } set { _data[45] = value; } }
 
 		[TalentData(46, "Leader of the Pack", 1, 1, 2, 7, -1, new string[] {
