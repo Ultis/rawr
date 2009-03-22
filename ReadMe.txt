@@ -1,8 +1,27 @@
-Rawr v2.2.0b4
+Rawr v2.2.0b5
 ------------
  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
    
 Recent Changes:
+v2.2.0b5
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b5. Thanks!
+ - Fixed a bug where relevant items and gemmings wouldn't be updated immediately upon switching models.
+ - Fix for the Direct Upgrades chart being broken in some models.
+ - More performance improvements to the Optimizer
+ - Added 'Load Possible Upgrades from Wowhead' feature. Check the 'Use PTR Data' item inside of it to load upgrades from the PTR Wowhead, as they're discovered on the PTR.
+ - Rawr.Bear: Fix for a minor issue with Savage Defense. Support for more 3.1 changes.
+ - Rawr.Cat: Support for more 3.1 changes.
+ - Rawr.Moonkin: Support for more 3.1 changes.
+ - Rawr.Mage: Support for more 3.1 changes.
+ - Rawr.HolyPriest: New Custom Role feature (please test this!)
+ - Rawr.Retribution: Support for more 3.1 changes.
+ - Rawr.Healadin: Support for more 3.1 changes.
+ - Rawr.Tankadin: Support for more 3.1 changes.
+ - Rawr.Warlock: Fixes for several more talents, pets, and glyphs.
+ - Rawr.RestoSham: Support for more 3.1 changes and some bugfixes.
+ - Rawr.Hunter: Fix for a display bug with AP.
+ - Rawr.ProtWarr: Support for more 3.1 changes.
+
 v2.2.0b4
  - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b4. Thanks!
  - Multithreading! Rawr will now better utilize your processor, resulting in a 40% to 100% speed boost for rendering most charts, and optimizing. There is potential for hangs from this, so please test as much as you can, and report if you can make it hang, along with very explicitly telling us what you were doing when it hung, and including the character file. NOTE: If you encounter frequent hangs in b4, you can turn off Multithreading in the Tools > Options dialog. If you can't get to that dialog before it hangs, you can edit the config file at /Data/Rawr.Base.dll.config. PLEASE report any hangs you experience!

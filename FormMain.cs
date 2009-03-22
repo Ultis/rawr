@@ -15,19 +15,32 @@ namespace Rawr
 {
 	public partial class FormMain : Form, IFormItemSelectionProvider
 	{
-		private const int INTRO_VERSION = 20;
+		private const int INTRO_VERSION = 21;
 		private const string INTRO_TEXT =
-@"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which should greatly ease the pains we've all had with gems in Rawr up til now.
+@"  Welcome to Rawr 2.2.0. Rawr now has a brand new gemming system, which 
+should greatly  ease the pains we've all had with gems in Rawr up til now.
    
 Recent Changes:
-v2.2.0b4
- - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same level of testing that we normally put into releases, but we're releasing it in its current form, due to the large number of changes. If you do run into bugs, please post them on our Issue Tracker. Please use the current release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 2.2.0b4. Thanks!
- - Multithreading! Rawr will now better utilize your processor, resulting in a 40% to 100% speed boost for rendering most charts, and optimizing. There is potential for hangs from this, so please test as much as you can, and report if you can make it hang, along with very explicitly telling us what you were doing when it hung, and including the character file. NOTE: If you encounter frequent hangs in b4, you can turn off Multithreading in the Tools > Options dialog. If you can't get to that dialog before it hangs, you can edit the config file at /Data/Rawr.Base.dll.config. PLEASE report any hangs you experience!
- - Addition to the new dynamic gemming feature: You can now choose to display the Top X gemmings for an item. Check it out on the Tools > Edit Gemming Templates dialog.
- - Fixes for a few crashes and minor bugs. Batch tools now include a batch optimizer. You can now save, load, and export Upgrade Lists.
- - Models: Tons of model updates; see ReadMe.txt for details on the changes and status of each model.
+v2.2.0b5
+ - PLEASE NOTE: This is a beta of Rawr 2.2. It has not received the same 
+level of testing that we normally put into releases, but we're releasing 
+it in its current form, due to the large number of changes. If you do run 
+into bugs, please post them on our Issue Tracker. Please use the current 
+release version, Rawr 2.1.9, if you encounter showstopping bugs in Rawr 
+2.2.0b5. Thanks!
+ - Fixed a bug where relevant items and gemmings wouldn't be updated 
+immediately upon switching models.
+ - Fix for the Direct Upgrades chart being broken in some models.
+ - More performance improvements to the Optimizer
+ - Added 'Load Possible Upgrades from Wowhead' feature. Check the 'Use 
+PTR Data' item inside of it to load upgrades from the PTR Wowhead, as 
+they're discovered on the PTR.
+ - Models: Tons of model updates; see ReadMe.txt for details on the 
+changes and status of each model.
 
-If you are an experienced C# dev, a knowledgable theorycrafter, and would like to help out, especially with the models which aren't fully complete, please contact me at cnervig@hotmail.com. Thanks!";
+If you are an experienced C# dev, a knowledgable theorycrafter, and 
+would like to help out, especially with the models which aren't fully 
+complete, please contact me at cnervig@hotmail.com. Thanks!";
 
         private string _storedCharacterPath;
         private bool _storedUnsavedChanged;
