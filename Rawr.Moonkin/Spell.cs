@@ -975,9 +975,9 @@ namespace Rawr.Moonkin
             // Do tree calculations: Calculate damage per cast.
             float treeDamage = (character.DruidTalents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.ArmorPenetration, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.Bloodlust, calcOpts.TreantLifespan, character.DruidTalents.Brambles) : 0.0f;
             // Extend that to number of casts per fight.  Round down and ensure that only complete tree casts are counted.
-            treeDamage *= (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1;
+            treeDamage *= (int)Math.Floor(calcOpts.FightLength / 3.5f) + 1.0f;
             // Multiply by raid-wide damage increases.
-            treeDamage *= 1 + calcs.BasicStats.BonusDamageMultiplier;
+            treeDamage *= (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier);
             // Calculate the DPS averaged over the fight length.
             float treeDPS = treeDamage / (calcOpts.FightLength * 60.0f);
 
@@ -1026,6 +1026,8 @@ namespace Rawr.Moonkin
                 }
                 // Calculate stat-boosting trinkets, taking into effect interactions with other stat-boosting procs
                 int sign = 1;
+                Dictionary<List<int>, float> cachedDamages = new Dictionary<List<int>, float>();
+                Dictionary<List<int>, float> cachedUptimes = new Dictionary<List<int>, float>();
                 for (int i = 1; i <= activatedEffects.Count; ++i)
                 {
                     CombinationGenerator gen = new CombinationGenerator(activatedEffects.Count, i);
@@ -1043,10 +1045,42 @@ namespace Rawr.Moonkin
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
                             activatedEffects[idx].Deactivate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
                         }
-                        accumulatedDamage += tempDamage * sign * tempUpTime;
+                        List<int> pairs = new List<int>(vals);
+                        cachedUptimes[pairs] = tempUpTime;
+                        cachedDamages[pairs] = tempDamage;
                         totalUpTime += sign * tempUpTime;
                     }
                     sign = -sign;
+                }
+                // Iterate through the probability table and adjust probabilities relative to each other
+                // This accomplishes the effect of finding the probability that any proc or combination of procs,
+                // and ONLY that particular set of procs, will be active at a given time.
+                List<List<int>> keys = new List<List<int>>(cachedUptimes.Keys);
+                foreach (List<int> vals in keys)
+                {
+                    int newSign = 1;
+                    int keyCount = vals.Count;
+                    foreach (List<int> innerVals in keys)
+                    {
+                        if (innerVals == vals) continue;
+                        if (innerVals.Count > keyCount)
+                        {
+                            keyCount = innerVals.Count;
+                            newSign = -newSign;
+                        }
+                        if (vals.TrueForAll(delegate(int val)
+                        {
+                            return innerVals.Contains(val);
+                        }))
+                        {
+                            cachedUptimes[vals] += newSign * cachedUptimes[innerVals];
+                        }
+                    }
+                }
+                // Apply the above-calculated probabilities to the previously stored damage calculations and add to the result.
+                foreach (KeyValuePair<List<int>, float> kvp in cachedUptimes)
+                {
+                    accumulatedDamage += kvp.Value * cachedDamages[kvp.Key];
                 }
                 accumulatedDamage += (1 - totalUpTime) * rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
                 float burstDPS = accumulatedDamage / rot.Duration;
@@ -1348,7 +1382,7 @@ namespace Rawr.Moonkin
                 }
                 float innervateManaRate = spiritRegen * 4 + calcs.BasicStats.Mp5 / 5f;
                 float innervateTime = numInnervates * 20.0f;
-                totalInnervateMana = innervateManaRate * innervateTime - (numInnervates * CalculationsMoonkin.BaseMana * 0.04f);
+                totalInnervateMana = innervateManaRate * innervateTime;
             }
             // Replenishment calculations
             float replenishmentPerTick = calcs.BasicStats.Mana * calcs.BasicStats.ManaRestoreFromMaxManaPerSecond;
