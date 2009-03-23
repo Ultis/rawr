@@ -4364,6 +4364,11 @@ Places a Blessing on the friendly target, reducing damage taken from all sources
 @"Increases all damage you deal when a one-handed melee weapon is equipped by 10%.",})]
 		public int OneHandedWeaponSpecialization { get { return _data[40]; } set { _data[40] = value; } }
 
+        [TalentData(34, "Spiritual Attunement", 2, 1, 1, 7, -1, new string[] {
+@"A passive ability that gives the Paladin mana when healed by other friendly targets' spells.  The amount of mana gained is equal to 5% of the amount healed.",
+@"A passive ability that gives the Paladin mana when healed by other friendly targets' spells.  The amount of mana gained is equal to 10% of the amount healed.",})]
+        public int SpiritualAttunement { get { return _data[34]; } set { _data[34] = value; } }
+
 		[TalentData(41, "Holy Shield", 1, 1, 2, 7, 37, new string[] {
 @"527 Mana
 Instant cast,8 sec cooldown,

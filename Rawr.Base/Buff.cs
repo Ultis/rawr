@@ -2540,6 +2540,8 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Paladin Set Bonuses
+            //Holy T7
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Regalia 2 Piece Bonus",
@@ -2560,6 +2562,7 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Retribution T7
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Battlegear 2 Piece Bonus",
@@ -2580,6 +2583,7 @@ namespace Rawr
                 SetThreshold = 4
             });
             
+            //Protection T7
             defaultBuffs.Add(new Buff()
             {
                 Name = "Redemption Plate 2 Piece Bonus",
@@ -2600,6 +2604,7 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Retribution T8
             defaultBuffs.Add(new Buff()
             {
                 Name = "Aegis Battlegear 2 Piece Bonus",
@@ -2619,7 +2624,7 @@ namespace Rawr
                 SetName = "Aegis Battlegear",
                 SetThreshold = 4
             });
-
+                      
 			#endregion
 
             #region Profession Buffs
