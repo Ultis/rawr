@@ -40,7 +40,7 @@ namespace Rawr.Mage
 
         private bool restrictThreat;
 
-        private bool advancedConstraints;
+        private int advancedConstraintsLevel;
         private bool segmentCooldowns;
         private bool segmentNonCooldowns;
         private bool integralMana;
@@ -177,13 +177,13 @@ namespace Rawr.Mage
             cancellationPending = true;
         }
 
-        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, bool advancedConstraints, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
+        public Solver(Character character, CalculationOptionsMage calculationOptions, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, string armor, bool useIncrementalOptimizations, bool useGlobalOptimizations)
         {
             this.character = character;
             this.talents = character.MageTalents;
             this.calculationOptions = calculationOptions;
             this.segmentCooldowns = segmentCooldowns;
-            this.advancedConstraints = advancedConstraints;
+            this.advancedConstraintsLevel = advancedConstraintsLevel;
             this.integralMana = integralMana;
             this.armor = armor;
             this.useIncrementalOptimizations = useIncrementalOptimizations;
@@ -298,9 +298,9 @@ namespace Rawr.Mage
             return total;
         }
 
-        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, bool advancedConstraints, bool useIncrementalOptimizations, bool useGlobalOptimizations)
+        public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations)
         {
-            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraints, armor, useIncrementalOptimizations, useGlobalOptimizations);
+            Solver solver = new Solver(character, calculationOptions, segmentCooldowns, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations);
             return solver.GetCharacterCalculations(additionalItem, calculations);
         }
 
@@ -463,7 +463,7 @@ namespace Rawr.Mage
             else
             {
                 calculationResult.UpperBound = upperBound;
-                if (integralMana && segmentCooldowns && advancedConstraints) calculationResult.LowerBound = lowerBound;
+                if (integralMana && segmentCooldowns && advancedConstraintsLevel >= 5) calculationResult.LowerBound = lowerBound;
             }
 
             if (minimizeTime)
@@ -909,7 +909,7 @@ namespace Rawr.Mage
                         calculationResult.EvocationDurationHero = characterStats.Mana / calculationResult.EvocationRegenHero;
                         calculationResult.EvocationDurationIVHero = characterStats.Mana / calculationResult.EvocationRegenIVHero;
                     }
-                    if (segmentCooldowns && advancedConstraints)
+                    if (segmentCooldowns && advancedConstraintsLevel >= 3)
                     {
                         calculationResult.MaxEvocation = Math.Max(1, 1 + Math.Floor((calculationOptions.FightDuration - evocationDuration) / calculationResult.EvocationCooldown));
                     }
@@ -1264,7 +1264,7 @@ namespace Rawr.Mage
                 if (calculationOptions.ManaGemEnabled)
                 {
                     int manaGemSegments = (segmentCooldowns && (flameCapAvailable || restrictManaUse)) ? segmentList.Count : 1;
-                    if (segmentCooldowns && advancedConstraints)
+                    if (segmentCooldowns && advancedConstraintsLevel >= 3)
                     {
                         calculationResult.MaxManaGem = 1 + (int)((calculationOptions.FightDuration - 1f) / 120f);
                     }

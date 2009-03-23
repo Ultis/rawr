@@ -29,6 +29,7 @@ namespace Rawr.Mage
         {
             public TextBox TextBox { get; set; }
             private StringBuilder sb = new StringBuilder();
+            private IAsyncResult updateEvent = null;
 
             public override Encoding Encoding
             {
@@ -39,12 +40,27 @@ namespace Rawr.Mage
             {
                 if (TextBox.Visible)
                 {
-                    TextBox.Invoke((MethodInvoker)delegate                    
+                    if (TextBox.InvokeRequired)
                     {
+                        // if the last update didn't go through yet then there is no point in calling again
+                        // add synchronization mechanisms if needed
+                        if (updateEvent == null || updateEvent.IsCompleted)                            
+                        {
+                            updateEvent = TextBox.BeginInvoke((MethodInvoker)delegate
+                            {
+                                TextBox.Text = sb.ToString();
+                                TextBox.Select(TextBox.Text.Length, 0);
+                                TextBox.ScrollToCaret();
+                            });
+                        }
+                    }
+                    else
+                    {
+                        updateEvent = null;
                         TextBox.Text = sb.ToString();
                         TextBox.Select(TextBox.Text.Length, 0);
                         TextBox.ScrollToCaret();
-                    });
+                    }
                 }
             }
 
@@ -132,13 +148,17 @@ namespace Rawr.Mage
         {
             if (Visible)
             {
-                Invoke((MethodInvoker)delegate
+                if (InvokeRequired)
                 {
-                    lock (solverLock)
+                    Invoke((MethodInvoker)delegate
                     {
                         buttonCancel.Enabled = (advancedSolver != null);
-                    }
-                });
+                    });
+                }
+                else
+                {
+                    buttonCancel.Enabled = (advancedSolver != null);
+                }
             }
         }
 

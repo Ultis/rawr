@@ -200,10 +200,10 @@ namespace Rawr.Mage
                 bestTiming = timing.ToString();
             }
 
-            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraints))
+            if (unexplained > 0 && !(CalculationOptions.DisplaySegmentCooldowns && CalculationOptions.DisplayIntegralMana && CalculationOptions.DisplayAdvancedConstraintsLevel >= 5))
             {
                 CalculationOptions.AdviseAdvancedSolver = true;
-                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable\r\nadvanced solver by using segment cooldowns, integral mana consumables and advanced constraints options!\r\n\r\n" + bestTiming.TrimStart('*');
+                bestTiming = "*Sequence Reconstruction was not fully successful, it is recommended that you enable more options in\r\nadvanced solver (segment cooldowns, integral mana consumables, advanced constraints options)!\r\n\r\n" + bestTiming.TrimStart('*');
             }
 
             return bestTiming;
@@ -311,7 +311,7 @@ namespace Rawr.Mage
                 ret["Tps"] = "...";
                 ret["Spell Cycles"] = "...";
                 ret["By Spell"] = "...";
-                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraints, MageArmor, false, CalculationOptions.SmartOptimization);
+                displaySolver = new Solver(Character, CalculationOptions, CalculationOptions.DisplaySegmentCooldowns, CalculationOptions.DisplayIntegralMana, CalculationOptions.DisplayAdvancedConstraintsLevel, MageArmor, false, CalculationOptions.SmartOptimization);
                 SolverLogForm.Instance.EnableSolver(displaySolver);
                 CalculationOptions.SequenceReconstruction = null;
                 return ret;
@@ -331,7 +331,7 @@ namespace Rawr.Mage
         {
             get
             {
-                return CalculationOptions.DisplaySegmentCooldowns != CalculationOptions.ComparisonSegmentCooldowns || CalculationOptions.DisplayIntegralMana != CalculationOptions.ComparisonIntegralMana || (CalculationOptions.DisplaySegmentCooldowns == true && CalculationOptions.DisplayAdvancedConstraints != CalculationOptions.ComparisonAdvancedConstraints);
+                return CalculationOptions.DisplaySegmentCooldowns != CalculationOptions.ComparisonSegmentCooldowns || CalculationOptions.DisplayIntegralMana != CalculationOptions.ComparisonIntegralMana || (CalculationOptions.DisplaySegmentCooldowns == true && CalculationOptions.DisplayAdvancedConstraintsLevel != CalculationOptions.ComparisonAdvancedConstraintsLevel);
             }
         }
 

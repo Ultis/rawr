@@ -692,7 +692,7 @@ namespace Rawr.Mage
             }
 
             // low resolution
-            if (segmentCooldowns && advancedConstraints)
+            if (segmentCooldowns && advancedConstraintsLevel >= 1)
             {
                 resolution = lowResolution;
                 // drums
@@ -742,7 +742,7 @@ namespace Rawr.Mage
             }
 
             // high resolution
-            if (segmentCooldowns && advancedConstraints)
+            if (segmentCooldowns && advancedConstraintsLevel >= 2)
             {
                 resolution = highResolution;
                 // drums
@@ -792,13 +792,13 @@ namespace Rawr.Mage
                 if (potionOfSpeedAvailable && !ValidateCooldown(Cooldown.PotionOfSpeed, 15, -1)) return false;
             }
 
-            if (integralMana && advancedConstraints)
+            if (integralMana && advancedConstraintsLevel >= 2)
             {
                 if (calculationOptions.ManaPotionEnabled && !ValidateIntegralConsumable(VariableType.ManaPotion)) return false;
                 if (calculationOptions.ManaGemEnabled && !ValidateIntegralConsumable(VariableType.ManaGem)) return false;
             }
 
-            if (segmentCooldowns && advancedConstraints)
+            if (segmentCooldowns && advancedConstraintsLevel >= 3)
             {
                 if (flameCapAvailable && !ValidateFlamecap()) return false;
                 if (!ValidateCycling()) return false;
@@ -812,6 +812,10 @@ namespace Rawr.Mage
                     if (icyVeinsAvailable && heroismAvailable && !ValidateActivationAdvanced(Cooldown.Evocation, VariableType.EvocationIVHero, calculationResult.EvocationDurationIVHero, calculationResult.EvocationCooldown, VariableType.EvocationIVHero, Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism)) return false;
                 }
 
+            }
+
+            if (segmentCooldowns && advancedConstraintsLevel >= 4)
+            {
                 // advanced cooldown validation
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced(Cooldown.ArcanePower, calculationResult.ArcanePowerDuration, calculationResult.ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced(Cooldown.IcyVeins, 20.0, calculationResult.IcyVeinsCooldown, VariableType.None)) return false;
@@ -819,7 +823,10 @@ namespace Rawr.Mage
                 if (trinket1Available && !ValidateCooldownAdvanced(Cooldown.Trinket1, trinket1Duration, trinket1Cooldown, VariableType.None)) return false;
                 if (trinket2Available && !ValidateCooldownAdvanced(Cooldown.Trinket2, trinket2Duration, trinket2Cooldown, VariableType.None)) return false;
                 if (manaGemEffectAvailable && !ValidateCooldownAdvanced(Cooldown.ManaGemEffect, manaGemEffectDuration, 120.0, VariableType.None)) return false;
+            }
 
+            if (segmentCooldowns && advancedConstraintsLevel >= 5)
+            {
                 if (calculationOptions.DrumsOfBattle && !ValidateActivation(Cooldown.DrumsOfBattle, VariableType.None, 30.0, 120.0, VariableType.DrumsOfBattle, Cooldown.None)) return false;
                 if (waterElementalAvailable)
                 {

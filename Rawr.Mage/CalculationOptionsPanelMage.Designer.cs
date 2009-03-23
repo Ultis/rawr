@@ -33,7 +33,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.comboBoxPlayerLevel = new System.Windows.Forms.ComboBox();
-            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label80 = new System.Windows.Forms.Label();
             this.comboBoxFaction = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
@@ -245,8 +244,6 @@
             this.checkBoxEnableHastedEvocation = new System.Windows.Forms.CheckBox();
             this.buttonCooldownRestrictionsEditor = new System.Windows.Forms.Button();
             this.label101 = new System.Windows.Forms.Label();
-            this.checkBoxDisplayAdvancedConstraints = new System.Windows.Forms.CheckBox();
-            this.checkBoxComparisonAdvancedConstraints = new System.Windows.Forms.CheckBox();
             this.textBoxLowerBoundHint = new System.Windows.Forms.TextBox();
             this.label100 = new System.Windows.Forms.Label();
             this.textBoxAdditionalSegmentSplits = new System.Windows.Forms.TextBox();
@@ -276,15 +273,20 @@
             this.label23 = new System.Windows.Forms.Label();
             this.checkBoxSmartOptimization = new System.Windows.Forms.CheckBox();
             this.toolTipMage = new System.Windows.Forms.ToolTip(this.components);
+            this.numericUpDownComparisonAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDisplayAdvancedConstraintsLevel = new System.Windows.Forms.NumericUpDown();
+            this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -346,11 +348,6 @@
             this.comboBoxPlayerLevel.Name = "comboBoxPlayerLevel";
             this.comboBoxPlayerLevel.Size = new System.Drawing.Size(75, 21);
             this.comboBoxPlayerLevel.TabIndex = 153;
-            // 
-            // calculationOptionsMageBindingSource
-            // 
-            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
-            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
             // 
             // label80
             // 
@@ -2478,6 +2475,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.numericUpDownDisplayAdvancedConstraintsLevel);
+            this.tabPage4.Controls.Add(this.numericUpDownComparisonAdvancedConstraintsLevel);
             this.tabPage4.Controls.Add(this.label104);
             this.tabPage4.Controls.Add(this.checkBoxMode31);
             this.tabPage4.Controls.Add(this.buttonAdvancedSolverLog);
@@ -2485,8 +2484,6 @@
             this.tabPage4.Controls.Add(this.checkBoxEnableHastedEvocation);
             this.tabPage4.Controls.Add(this.buttonCooldownRestrictionsEditor);
             this.tabPage4.Controls.Add(this.label101);
-            this.tabPage4.Controls.Add(this.checkBoxDisplayAdvancedConstraints);
-            this.tabPage4.Controls.Add(this.checkBoxComparisonAdvancedConstraints);
             this.tabPage4.Controls.Add(this.textBoxLowerBoundHint);
             this.tabPage4.Controls.Add(this.label100);
             this.tabPage4.Controls.Add(this.textBoxAdditionalSegmentSplits);
@@ -2594,26 +2591,6 @@
             this.label101.Text = "Advanced Constraints: *";
             this.toolTipMage.SetToolTip(this.label101, resources.GetString("label101.ToolTip"));
             // 
-            // checkBoxDisplayAdvancedConstraints
-            // 
-            this.checkBoxDisplayAdvancedConstraints.AutoSize = true;
-            this.checkBoxDisplayAdvancedConstraints.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraints", true));
-            this.checkBoxDisplayAdvancedConstraints.Location = new System.Drawing.Point(188, 230);
-            this.checkBoxDisplayAdvancedConstraints.Name = "checkBoxDisplayAdvancedConstraints";
-            this.checkBoxDisplayAdvancedConstraints.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxDisplayAdvancedConstraints.TabIndex = 188;
-            this.checkBoxDisplayAdvancedConstraints.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxComparisonAdvancedConstraints
-            // 
-            this.checkBoxComparisonAdvancedConstraints.AutoSize = true;
-            this.checkBoxComparisonAdvancedConstraints.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraints", true));
-            this.checkBoxComparisonAdvancedConstraints.Location = new System.Drawing.Point(167, 230);
-            this.checkBoxComparisonAdvancedConstraints.Name = "checkBoxComparisonAdvancedConstraints";
-            this.checkBoxComparisonAdvancedConstraints.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxComparisonAdvancedConstraints.TabIndex = 187;
-            this.checkBoxComparisonAdvancedConstraints.UseVisualStyleBackColor = true;
-            // 
             // textBoxLowerBoundHint
             // 
             this.textBoxLowerBoundHint.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "LowerBoundHint", true));
@@ -2710,7 +2687,7 @@
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(0, 263);
+            this.label99.Location = new System.Drawing.Point(0, 274);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(117, 13);
             this.label99.TabIndex = 176;
@@ -2720,7 +2697,7 @@
             // checkBoxDebugCooldownSegmentation
             // 
             this.checkBoxDebugCooldownSegmentation.AutoSize = true;
-            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(188, 263);
+            this.checkBoxDebugCooldownSegmentation.Location = new System.Drawing.Point(188, 274);
             this.checkBoxDebugCooldownSegmentation.Name = "checkBoxDebugCooldownSegmentation";
             this.checkBoxDebugCooldownSegmentation.Size = new System.Drawing.Size(15, 14);
             this.checkBoxDebugCooldownSegmentation.TabIndex = 175;
@@ -2773,7 +2750,7 @@
             // 
             this.checkBoxComparisonIntegralMana.AutoSize = true;
             this.checkBoxComparisonIntegralMana.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonIntegralMana", true));
-            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(167, 190);
+            this.checkBoxComparisonIntegralMana.Location = new System.Drawing.Point(154, 190);
             this.checkBoxComparisonIntegralMana.Name = "checkBoxComparisonIntegralMana";
             this.checkBoxComparisonIntegralMana.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonIntegralMana.TabIndex = 170;
@@ -2832,7 +2809,7 @@
             // 
             this.checkBoxComparisonSegmentCooldowns.AutoSize = true;
             this.checkBoxComparisonSegmentCooldowns.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.calculationOptionsMageBindingSource, "ComparisonSegmentCooldowns", true));
-            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(167, 210);
+            this.checkBoxComparisonSegmentCooldowns.Location = new System.Drawing.Point(154, 210);
             this.checkBoxComparisonSegmentCooldowns.Name = "checkBoxComparisonSegmentCooldowns";
             this.checkBoxComparisonSegmentCooldowns.Size = new System.Drawing.Size(15, 14);
             this.checkBoxComparisonSegmentCooldowns.TabIndex = 160;
@@ -2909,6 +2886,37 @@
             this.toolTipMage.InitialDelay = 500;
             this.toolTipMage.ReshowDelay = 100;
             // 
+            // numericUpDownComparisonAdvancedConstraintsLevel
+            // 
+            this.numericUpDownComparisonAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "ComparisonAdvancedConstraintsLevel", true));
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Location = new System.Drawing.Point(140, 228);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Name = "numericUpDownComparisonAdvancedConstraintsLevel";
+            this.numericUpDownComparisonAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownComparisonAdvancedConstraintsLevel.TabIndex = 196;
+            // 
+            // numericUpDownDisplayAdvancedConstraintsLevel
+            // 
+            this.numericUpDownDisplayAdvancedConstraintsLevel.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.calculationOptionsMageBindingSource, "DisplayAdvancedConstraintsLevel", true));
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Location = new System.Drawing.Point(174, 228);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Name = "numericUpDownDisplayAdvancedConstraintsLevel";
+            this.numericUpDownDisplayAdvancedConstraintsLevel.Size = new System.Drawing.Size(29, 20);
+            this.numericUpDownDisplayAdvancedConstraintsLevel.TabIndex = 197;
+            // 
+            // calculationOptionsMageBindingSource
+            // 
+            this.calculationOptionsMageBindingSource.DataSource = typeof(Rawr.Mage.CalculationOptionsMage);
+            this.calculationOptionsMageBindingSource.CurrentItemChanged += new System.EventHandler(this.calculationOptionsMageBindingSource_CurrentItemChanged);
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2920,7 +2928,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
@@ -2933,6 +2940,9 @@
             this.tabPage7.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownComparisonAdvancedConstraintsLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDisplayAdvancedConstraintsLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationOptionsMageBindingSource)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -3169,8 +3179,6 @@
         private System.Windows.Forms.TextBox textBoxLowerBoundHint;
         private System.Windows.Forms.Label label100;
         private System.Windows.Forms.Label label101;
-        private System.Windows.Forms.CheckBox checkBoxDisplayAdvancedConstraints;
-        private System.Windows.Forms.CheckBox checkBoxComparisonAdvancedConstraints;
         private System.Windows.Forms.Button buttonCooldownRestrictionsEditor;
         private System.Windows.Forms.Label label102;
         private System.Windows.Forms.CheckBox checkBoxEnableHastedEvocation;
@@ -3185,6 +3193,8 @@
         private System.Windows.Forms.CheckBox checkBoxGlyphOfIceLance;
         private System.Windows.Forms.Label label105;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfArcaneBarrage;
+        private System.Windows.Forms.NumericUpDown numericUpDownComparisonAdvancedConstraintsLevel;
+        private System.Windows.Forms.NumericUpDown numericUpDownDisplayAdvancedConstraintsLevel;
 
     }
 }

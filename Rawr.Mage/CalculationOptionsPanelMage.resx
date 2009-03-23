@@ -127,6 +127,8 @@
     <value>Setting this to a low value simulates having a limited time to regen mana on chain pulls (value is in seconds, optimizer has the option to continue drinking into the pull if it increases overall damage done, but that time counts toward total time).</value>
   </data>
   <data name="label101.ToolTip" xml:space="preserve">
-    <value>Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction (only has effect if segment cooldowns is enabled, also removes some heuristic constraints).</value>
+    <value>Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction.
+The number specifies the level of constraints enabled, the higher values indicate more expensive constraints (max 5).
+Only has effect if segment cooldowns is enabled, also removes some heuristic constraints.</value>
   </data>
 </root>

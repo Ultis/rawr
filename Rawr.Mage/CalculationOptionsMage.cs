@@ -106,8 +106,8 @@ namespace Rawr.Mage
         public bool DisplaySegmentCooldowns { get; set; }
         public bool ComparisonIntegralMana { get; set; }
         public bool DisplayIntegralMana { get; set; }
-        public bool ComparisonAdvancedConstraints { get; set; }
-        public bool DisplayAdvancedConstraints { get; set; }
+        public int ComparisonAdvancedConstraintsLevel { get; set; }
+        public int DisplayAdvancedConstraintsLevel { get; set; }
         public int FixedSegmentDuration { get; set; }
         public bool VariableSegmentDuration { get; set; }
         public string AdditionalSegmentSplits { get; set; }
