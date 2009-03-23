@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkGlyphDivinity = new System.Windows.Forms.CheckBox();
+            this.chkGlyphHoW = new System.Windows.Forms.CheckBox();
+            this.chkGlyphCS = new System.Windows.Forms.CheckBox();
+            this.chkGlyphExorcism = new System.Windows.Forms.CheckBox();
             this.chkGlyphSenseUndead = new System.Windows.Forms.CheckBox();
             this.chkGlyphConsecration = new System.Windows.Forms.CheckBox();
             this.chkGlyphJudgement = new System.Windows.Forms.CheckBox();
@@ -37,7 +41,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.cmbLevel = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.chkSimulateMana = new System.Windows.Forms.CheckBox();
+            this.lblLimitedMana = new System.Windows.Forms.Label();
             this.listLimitedPriority = new System.Windows.Forms.CheckedListBox();
             this.butLimitedDown = new System.Windows.Forms.Button();
             this.butLimitedUp = new System.Windows.Forms.Button();
@@ -50,7 +55,6 @@
             this.label12 = new System.Windows.Forms.Label();
             this.cmbLength = new System.Windows.Forms.NumericUpDown();
             this.lblTime20 = new System.Windows.Forms.Label();
-            this.chkSimulateMana = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trkTime20)).BeginInit();
@@ -59,20 +63,68 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkGlyphDivinity);
+            this.groupBox1.Controls.Add(this.chkGlyphHoW);
+            this.groupBox1.Controls.Add(this.chkGlyphCS);
+            this.groupBox1.Controls.Add(this.chkGlyphExorcism);
             this.groupBox1.Controls.Add(this.chkGlyphSenseUndead);
             this.groupBox1.Controls.Add(this.chkGlyphConsecration);
             this.groupBox1.Controls.Add(this.chkGlyphJudgement);
-            this.groupBox1.Location = new System.Drawing.Point(3, 362);
+            this.groupBox1.Location = new System.Drawing.Point(3, 385);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(146, 91);
+            this.groupBox1.Size = new System.Drawing.Size(294, 109);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Glyphs";
             // 
+            // chkGlyphDivinity
+            // 
+            this.chkGlyphDivinity.AutoSize = true;
+            this.chkGlyphDivinity.Location = new System.Drawing.Point(6, 42);
+            this.chkGlyphDivinity.Name = "chkGlyphDivinity";
+            this.chkGlyphDivinity.Size = new System.Drawing.Size(102, 17);
+            this.chkGlyphDivinity.TabIndex = 6;
+            this.chkGlyphDivinity.Text = "Glyph of Divinity";
+            this.chkGlyphDivinity.UseVisualStyleBackColor = true;
+            this.chkGlyphDivinity.CheckedChanged += new System.EventHandler(this.chkGlyphDivinity_CheckedChanged);
+            // 
+            // chkGlyphHoW
+            // 
+            this.chkGlyphHoW.AutoSize = true;
+            this.chkGlyphHoW.Location = new System.Drawing.Point(137, 65);
+            this.chkGlyphHoW.Name = "chkGlyphHoW";
+            this.chkGlyphHoW.Size = new System.Drawing.Size(151, 17);
+            this.chkGlyphHoW.TabIndex = 5;
+            this.chkGlyphHoW.Text = "Glyph of Hammer of Wrath";
+            this.chkGlyphHoW.UseVisualStyleBackColor = true;
+            this.chkGlyphHoW.CheckedChanged += new System.EventHandler(this.chkGlyphHoW_CheckedChanged);
+            // 
+            // chkGlyphCS
+            // 
+            this.chkGlyphCS.AutoSize = true;
+            this.chkGlyphCS.Location = new System.Drawing.Point(137, 42);
+            this.chkGlyphCS.Name = "chkGlyphCS";
+            this.chkGlyphCS.Size = new System.Drawing.Size(140, 17);
+            this.chkGlyphCS.TabIndex = 4;
+            this.chkGlyphCS.Text = "Glyph of Crusader Strike";
+            this.chkGlyphCS.UseVisualStyleBackColor = true;
+            this.chkGlyphCS.CheckedChanged += new System.EventHandler(this.chkGlyphCS_CheckedChanged);
+            // 
+            // chkGlyphExorcism
+            // 
+            this.chkGlyphExorcism.AutoSize = true;
+            this.chkGlyphExorcism.Location = new System.Drawing.Point(6, 65);
+            this.chkGlyphExorcism.Name = "chkGlyphExorcism";
+            this.chkGlyphExorcism.Size = new System.Drawing.Size(110, 17);
+            this.chkGlyphExorcism.TabIndex = 3;
+            this.chkGlyphExorcism.Text = "Glyph of Exorcism";
+            this.chkGlyphExorcism.UseVisualStyleBackColor = true;
+            this.chkGlyphExorcism.CheckedChanged += new System.EventHandler(this.chkGlyphExorcism_CheckedChanged);
+            // 
             // chkGlyphSenseUndead
             // 
             this.chkGlyphSenseUndead.AutoSize = true;
-            this.chkGlyphSenseUndead.Location = new System.Drawing.Point(6, 65);
+            this.chkGlyphSenseUndead.Location = new System.Drawing.Point(6, 88);
             this.chkGlyphSenseUndead.Name = "chkGlyphSenseUndead";
             this.chkGlyphSenseUndead.Size = new System.Drawing.Size(139, 17);
             this.chkGlyphSenseUndead.TabIndex = 2;
@@ -83,7 +135,7 @@
             // chkGlyphConsecration
             // 
             this.chkGlyphConsecration.AutoSize = true;
-            this.chkGlyphConsecration.Location = new System.Drawing.Point(6, 42);
+            this.chkGlyphConsecration.Location = new System.Drawing.Point(137, 19);
             this.chkGlyphConsecration.Name = "chkGlyphConsecration";
             this.chkGlyphConsecration.Size = new System.Drawing.Size(130, 17);
             this.chkGlyphConsecration.TabIndex = 1;
@@ -152,7 +204,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.chkSimulateMana);
+            this.groupBox2.Controls.Add(this.lblLimitedMana);
             this.groupBox2.Controls.Add(this.listLimitedPriority);
             this.groupBox2.Controls.Add(this.butLimitedDown);
             this.groupBox2.Controls.Add(this.butLimitedUp);
@@ -162,19 +215,30 @@
             this.groupBox2.Controls.Add(this.butUnlimitedUp);
             this.groupBox2.Location = new System.Drawing.Point(3, 110);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(162, 246);
+            this.groupBox2.Size = new System.Drawing.Size(162, 269);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Rotation";
             // 
-            // label4
+            // chkSimulateMana
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 129);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 13);
-            this.label4.TabIndex = 37;
-            this.label4.Text = "Limited Mana:";
+            this.chkSimulateMana.AutoSize = true;
+            this.chkSimulateMana.Location = new System.Drawing.Point(6, 132);
+            this.chkSimulateMana.Name = "chkSimulateMana";
+            this.chkSimulateMana.Size = new System.Drawing.Size(130, 17);
+            this.chkSimulateMana.TabIndex = 31;
+            this.chkSimulateMana.Text = "Simulate Mana Usage";
+            this.chkSimulateMana.UseVisualStyleBackColor = true;
+            this.chkSimulateMana.CheckedChanged += new System.EventHandler(this.chkSimulateMana_CheckedChanged);
+            // 
+            // lblLimitedMana
+            // 
+            this.lblLimitedMana.AutoSize = true;
+            this.lblLimitedMana.Location = new System.Drawing.Point(6, 152);
+            this.lblLimitedMana.Name = "lblLimitedMana";
+            this.lblLimitedMana.Size = new System.Drawing.Size(73, 13);
+            this.lblLimitedMana.TabIndex = 37;
+            this.lblLimitedMana.Text = "Limited Mana:";
             // 
             // listLimitedPriority
             // 
@@ -186,7 +250,7 @@
             "Divine Storm",
             "Consecration",
             "Exorcism"});
-            this.listLimitedPriority.Location = new System.Drawing.Point(6, 145);
+            this.listLimitedPriority.Location = new System.Drawing.Point(6, 168);
             this.listLimitedPriority.Name = "listLimitedPriority";
             this.listLimitedPriority.Size = new System.Drawing.Size(120, 94);
             this.listLimitedPriority.TabIndex = 36;
@@ -194,7 +258,7 @@
             // 
             // butLimitedDown
             // 
-            this.butLimitedDown.Location = new System.Drawing.Point(132, 174);
+            this.butLimitedDown.Location = new System.Drawing.Point(132, 197);
             this.butLimitedDown.Name = "butLimitedDown";
             this.butLimitedDown.Size = new System.Drawing.Size(23, 23);
             this.butLimitedDown.TabIndex = 35;
@@ -204,7 +268,7 @@
             // 
             // butLimitedUp
             // 
-            this.butLimitedUp.Location = new System.Drawing.Point(132, 145);
+            this.butLimitedUp.Location = new System.Drawing.Point(132, 168);
             this.butLimitedUp.Name = "butLimitedUp";
             this.butLimitedUp.Size = new System.Drawing.Size(23, 23);
             this.butLimitedUp.TabIndex = 34;
@@ -326,23 +390,11 @@
             this.lblTime20.TabIndex = 30;
             this.lblTime20.Text = "100%";
             // 
-            // chkSimulateMana
-            // 
-            this.chkSimulateMana.AutoSize = true;
-            this.chkSimulateMana.Location = new System.Drawing.Point(3, 459);
-            this.chkSimulateMana.Name = "chkSimulateMana";
-            this.chkSimulateMana.Size = new System.Drawing.Size(130, 17);
-            this.chkSimulateMana.TabIndex = 31;
-            this.chkSimulateMana.Text = "Simulate Mana Usage";
-            this.chkSimulateMana.UseVisualStyleBackColor = true;
-            this.chkSimulateMana.CheckedChanged += new System.EventHandler(this.chkSimulateMana_CheckedChanged);
-            // 
             // CalculationOptionsPanelRetribution
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.Controls.Add(this.chkSimulateMana);
             this.Controls.Add(this.lblTime20);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.trkTime20);
@@ -387,11 +439,15 @@
         private System.Windows.Forms.Button butUnlimitedUp;
         private System.Windows.Forms.CheckedListBox listUnlimitedPriority;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblLimitedMana;
         private System.Windows.Forms.CheckedListBox listLimitedPriority;
         private System.Windows.Forms.Button butLimitedDown;
         private System.Windows.Forms.Button butLimitedUp;
         private System.Windows.Forms.CheckBox chkSimulateMana;
+        private System.Windows.Forms.CheckBox chkGlyphExorcism;
+        private System.Windows.Forms.CheckBox chkGlyphHoW;
+        private System.Windows.Forms.CheckBox chkGlyphCS;
+        private System.Windows.Forms.CheckBox chkGlyphDivinity;
 
     }
 }

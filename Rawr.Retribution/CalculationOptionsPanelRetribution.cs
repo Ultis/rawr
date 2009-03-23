@@ -37,8 +37,16 @@ namespace Rawr.Retribution
             chkGlyphJudgement.Checked = calcOpts.GlyphJudgement;
             chkGlyphConsecration.Checked = calcOpts.GlyphConsecration;
             chkGlyphSenseUndead.Checked = calcOpts.GlyphSenseUndead;
+            chkGlyphCS.Checked = calcOpts.GlyphCrusaderStrike;
+            chkGlyphDivinity.Checked = calcOpts.GlyphDivinity;
+            chkGlyphExorcism.Checked = calcOpts.GlyphExorcism;
+            chkGlyphHoW.Checked = calcOpts.GlyphHammerOfWrath;
 
             chkSimulateMana.Checked = calcOpts.SimulateMana;
+            listLimitedPriority.Enabled = chkSimulateMana.Checked;
+            butLimitedDown.Enabled = chkSimulateMana.Checked;
+            butLimitedUp.Enabled = chkSimulateMana.Checked;
+            lblLimitedMana.Enabled = chkSimulateMana.Checked;
 
             UpdateUnlimitedPriority(calcOpts);
             UpdateLimitedPriority(calcOpts);
@@ -271,7 +279,51 @@ namespace Rawr.Retribution
             {
                 CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
                 calcOpts.SimulateMana = chkSimulateMana.Checked;
+                listLimitedPriority.Enabled = chkSimulateMana.Checked;
+                butLimitedDown.Enabled = chkSimulateMana.Checked;
+                butLimitedUp.Enabled = chkSimulateMana.Checked;
+                lblLimitedMana.Enabled = chkSimulateMana.Checked;
                 Character.OnCalculationsInvalidated();               
+            }
+        }
+
+        private void chkGlyphExorcism_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.GlyphExorcism = chkGlyphExorcism.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGlyphCS_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.GlyphCrusaderStrike = chkGlyphCS.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGlyphHoW_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.GlyphHammerOfWrath = chkGlyphHoW.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void chkGlyphDivinity_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsRetribution calcOpts = Character.CalculationOptions as CalculationOptionsRetribution;
+                calcOpts.GlyphDivinity = chkGlyphDivinity.Checked;
+                Character.OnCalculationsInvalidated();
             }
         }
 
@@ -385,6 +437,36 @@ namespace Rawr.Retribution
         public bool GlyphJudgement = true;
         public bool GlyphConsecration = true;
         public bool GlyphSenseUndead = true;
+        public bool GlyphExorcism = true;
+        public bool GlyphCrusaderStrike = false;
+        public bool GlyphHammerOfWrath = false;
+        public bool GlyphDivinity = false;
 
-	}
+        public CalculationOptionsRetribution Clone()
+        {
+            CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
+
+            clone.TargetLevel = TargetLevel;
+            clone.MobType = MobType;
+            clone.FightLength = FightLength;
+            clone.TimeUnder20 = TimeUnder20;
+            clone.SimulateMana = SimulateMana;
+
+            clone._limitedOrder = (Rotation.Ability[])_limitedOrder.Clone();
+            clone._limitedSelected = (bool[])_limitedSelected.Clone();
+            clone._unlimitedOrder = (Rotation.Ability[])_unlimitedOrder.Clone();
+            clone._unlimitedSelected = (bool[])_unlimitedSelected.Clone();
+
+            clone.GlyphJudgement = GlyphJudgement;
+            clone.GlyphConsecration = GlyphConsecration;
+            clone.GlyphSenseUndead = GlyphSenseUndead;
+            clone.GlyphExorcism = GlyphExorcism;
+            clone.GlyphCrusaderStrike = GlyphCrusaderStrike;
+            clone.GlyphHammerOfWrath = GlyphHammerOfWrath;
+            clone.GlyphDivinity = GlyphDivinity;
+
+            return clone;
+        }
+
+    }
 }
