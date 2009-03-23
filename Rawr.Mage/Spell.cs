@@ -276,6 +276,8 @@ namespace Rawr.Mage
         public float CastTime;
 
         public abstract void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration);
+        public abstract void AddManaUsageContribution(Dictionary<string, float> dict, float duration);
+        public abstract void AddManaSourcesContribution(Dictionary<string, float> dict, float duration);
     }
 
     public class SpellCustomMix : Spell
@@ -312,6 +314,24 @@ namespace Rawr.Mage
             {
                 Spell spell = castingState.GetSpell(spellWeight.Spell);
                 spell.AddSpellContribution(dict, duration * spellWeight.Weight / weightTotal);
+            }
+        }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            foreach (SpellWeight spellWeight in castingState.CalculationOptions.CustomSpellMix)
+            {
+                Spell spell = castingState.GetSpell(spellWeight.Spell);
+                spell.AddManaSourcesContribution(dict, duration * spellWeight.Weight / weightTotal);
+            }
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            foreach (SpellWeight spellWeight in castingState.CalculationOptions.CustomSpellMix)
+            {
+                Spell spell = castingState.GetSpell(spellWeight.Spell);
+                spell.AddManaUsageContribution(dict, duration * spellWeight.Weight / weightTotal);
             }
         }
     }
@@ -416,6 +436,8 @@ namespace Rawr.Mage
 
         private CastingState castingState;
         private Waterbolt waterbolt;
+
+        private float OO5SR = 0;
 
         public virtual void Calculate(CastingState castingState)
         {
@@ -810,8 +832,6 @@ namespace Rawr.Mage
                 OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance, Name, casttimeHash);
             }*/
 
-            float OO5SR = 0;
-
             if (outOfFiveSecondRule)
             {
                 OO5SR = 1;
@@ -928,6 +948,34 @@ namespace Rawr.Mage
                 contrib.Damage += boltDps * duration;
             }
         }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            dict["Intellect/Spirit"] += duration * (castingState.SpiritRegen * castingState.BaseStats.SpellCombatManaRegeneration + OO5SR * (castingState.SpiritRegen - castingState.SpiritRegen * castingState.BaseStats.SpellCombatManaRegeneration));
+            dict["MP5"] += duration * castingState.BaseStats.Mp5 / 5f;
+            dict["Innervate"] += duration * ((castingState.SpiritRegen * 4 * 20 * castingState.CalculationOptions.Innervate / castingState.CalculationOptions.FightDuration) * (OO5SR) + (castingState.SpiritRegen * (5 - castingState.BaseStats.SpellCombatManaRegeneration) * 20 * castingState.CalculationOptions.Innervate / castingState.CalculationOptions.FightDuration) * (1 - OO5SR));
+            dict["Mana Tide"] += duration * castingState.CalculationOptions.ManaTide * 0.24f * castingState.BaseStats.Mana / castingState.CalculationOptions.FightDuration;
+            dict["Replenishment"] += duration * castingState.BaseStats.ManaRestoreFromMaxManaPerSecond * castingState.BaseStats.Mana;
+            dict["Judgement of Wisdom"] += duration * castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            dict["Other"] += duration * (castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f));
+            if (castingState.WaterElemental)
+            {
+                dict["Water Elemental"] += duration * 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
+            }
+            if (castingState.Mp5OnCastFor20Sec > 0 && CastProcs > 0)
+            {
+                float totalMana = castingState.Mp5OnCastFor20Sec / 5f / CastTime * 0.5f * (20 - CastTime / HitProcs / 2f) * (20 - CastTime / HitProcs / 2f);
+                dict["Other"] += duration * totalMana / 20f;
+            }
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            float contrib;
+            dict.TryGetValue(Name, out contrib);
+            contrib += CostPerSecond * duration;
+            dict[Name] = contrib;
+        }
     }
 
     #region Base Spells
@@ -974,6 +1022,16 @@ namespace Rawr.Mage
             }
             contrib.Hits += duration / CastTime;
             contrib.Damage += DamagePerSecond * duration;
+        }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -2102,6 +2160,8 @@ namespace Rawr.Mage
 
         private List<Spell> spellList;
         private FSRCalc fsr;
+        private CastingState castingState;
+        private float OO5SR = 0;
 
         public SpellCycle()
         {
@@ -2160,8 +2220,7 @@ namespace Rawr.Mage
             CostPerSecond = Cost / CastTime;
             DamagePerSecond = AverageDamage / CastTime;
             ThreatPerSecond = AverageThreat / CastTime;
-
-            float OO5SR = 0;
+            this.castingState = castingState;            
 
             if (recalc5SR)
             {
@@ -2169,6 +2228,10 @@ namespace Rawr.Mage
             }
 
             ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+            if (castingState.WaterElemental)
+            {
+                ManaRegenPerSecond += 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
+            }
 
             if (castingState.Mp5OnCastFor20Sec > 0)
             {
@@ -2188,9 +2251,111 @@ namespace Rawr.Mage
                 }
             }
         }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            //ManaRegenPerSecond = castingState.ManaRegen5SR + OO5SR * (castingState.ManaRegen - castingState.ManaRegen5SR) + castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs + castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f);
+
+            //if (castingState.Mp5OnCastFor20Sec > 0)
+            //{
+            //    float averageCastTime = CastTime / SpellCount;
+            //    float totalMana = castingState.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
+            //    ManaRegenPerSecond += totalMana / 20f;
+            //}
+            dict["Intellect/Spirit"] += duration * (castingState.SpiritRegen * castingState.BaseStats.SpellCombatManaRegeneration + OO5SR * (castingState.SpiritRegen - castingState.SpiritRegen * castingState.BaseStats.SpellCombatManaRegeneration));
+            dict["MP5"] += duration * castingState.BaseStats.Mp5 / 5f;
+            dict["Innervate"] += duration * ((castingState.SpiritRegen * 4 * 20 * castingState.CalculationOptions.Innervate / castingState.CalculationOptions.FightDuration) * (OO5SR) + (castingState.SpiritRegen * (5 - castingState.BaseStats.SpellCombatManaRegeneration) * 20 * castingState.CalculationOptions.Innervate / castingState.CalculationOptions.FightDuration) * (1 - OO5SR));
+            dict["Mana Tide"] += duration * castingState.CalculationOptions.ManaTide * 0.24f * castingState.BaseStats.Mana / castingState.CalculationOptions.FightDuration;
+            dict["Replenishment"] += duration * castingState.BaseStats.ManaRestoreFromMaxManaPerSecond * castingState.BaseStats.Mana;
+            dict["Judgement of Wisdom"] += duration * castingState.BaseStats.ManaRestoreFromBaseManaPerHit * 3268 / CastTime * HitProcs;
+            dict["Other"] += duration * (castingState.BaseStats.ManaRestorePerCast * CastProcs / CastTime + castingState.BaseStats.ManaRestoreOnCrit_25_45 / (45f + CastTime / CritProcs / 0.25f) + castingState.BaseStats.ManaRestoreOnCast_5_15 / (15f + CastTime / CastProcs / 0.05f) + castingState.BaseStats.ManaRestoreOnCast_10_45 / (45f + CastTime / CastProcs / 0.1f));
+            if (castingState.WaterElemental)
+            {
+                dict["Water Elemental"] += duration * 0.002f * castingState.BaseStats.Mana / 5.0f * castingState.MageTalents.ImprovedWaterElemental;
+            }
+            if (castingState.Mp5OnCastFor20Sec > 0)
+            {
+                float averageCastTime = CastTime / SpellCount;
+                float totalMana = castingState.Mp5OnCastFor20Sec / 5f / averageCastTime * 0.5f * (20 - averageCastTime / HitProcs / 2f) * (20 - averageCastTime / HitProcs / 2f);
+                dict["Other"] += duration * totalMana / 20f;
+            }
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            foreach (Spell spell in spellList)
+            {
+                if (spell != null)
+                {
+                    spell.AddManaUsageContribution(dict, spell.CastTime * duration / CastTime);
+                }
+            }
+        }
     }
 
     #region Spell Cycles
+
+    public class DynamicCycle : Spell
+    {
+        protected Spell[] Spell;
+        protected float[] Weight;
+
+        protected DynamicCycle(int count)
+        {
+            Spell = new Spell[count];
+            Weight = new float[count];
+        }
+
+        protected void Calculate()
+        {
+            for (int i = 0; i < Spell.Length; i++)
+            {
+                if (Spell[i] != null)
+                {
+                    CastTime += Weight[i] * Spell[i].CastTime;
+                    CastProcs += Weight[i] * Spell[i].CastProcs;
+                }
+            }
+            for (int i = 0; i < Spell.Length; i++)
+            {
+                if (Spell[i] != null)
+                {
+                    CostPerSecond += Weight[i] * Spell[i].CastTime * Spell[i].CostPerSecond;
+                    DamagePerSecond += Weight[i] * Spell[i].CastTime * Spell[i].DamagePerSecond;
+                    ThreatPerSecond += Weight[i] * Spell[i].CastTime * Spell[i].ThreatPerSecond;
+                    ManaRegenPerSecond += Weight[i] * Spell[i].CastTime * Spell[i].ManaRegenPerSecond;
+                }
+            }
+            CostPerSecond /= CastTime;
+            DamagePerSecond /= CastTime;
+            ThreatPerSecond /= CastTime;
+            ManaRegenPerSecond /= CastTime;
+        }
+
+        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            for (int i = 0; i < Spell.Length; i++)
+            {
+                if (Spell[i] != null) Spell[i].AddSpellContribution(dict, Weight[i] * Spell[i].CastTime / CastTime * duration);
+            }
+        }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            for (int i = 0; i < Spell.Length; i++)
+            {
+                if (Spell[i] != null) Spell[i].AddManaSourcesContribution(dict, Weight[i] * Spell[i].CastTime / CastTime * duration);
+            }
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            for (int i = 0; i < Spell.Length; i++)
+            {
+                if (Spell[i] != null) Spell[i].AddManaUsageContribution(dict, Weight[i] * Spell[i].CastTime / CastTime * duration);
+            }
+        }
+    }
 
     class ArcaneMissilesCC : Spell
     {
@@ -2232,6 +2397,20 @@ namespace Rawr.Mage
             AM10.AddSpellContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
             AM11.AddSpellContribution(dict, duration * CC / (1 - CC) / (1 + 1 / (1 - CC)));
         }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            AMc1.AddManaSourcesContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM10.AddManaSourcesContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM11.AddManaSourcesContribution(dict, duration * CC / (1 - CC) / (1 + 1 / (1 - CC)));
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            AMc1.AddManaUsageContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM10.AddManaUsageContribution(dict, duration * 1 / (1 + 1 / (1 - CC)));
+            AM11.AddManaUsageContribution(dict, duration * CC / (1 - CC) / (1 + 1 / (1 - CC)));
+        }
     }
 
     class ABAMP : SpellCycle
@@ -2267,13 +2446,13 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAM : Spell
+    class ABAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public ABAM(CastingState castingState)
+        public ABAM(CastingState castingState) : base(2)
         {
             Name = "ABAM";
 
@@ -2290,6 +2469,9 @@ namespace Rawr.Mage
                 chain1.AddSpell(AB, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -2311,36 +2493,23 @@ namespace Rawr.Mage
                 chain2.AddSpell(MBAM, castingState);
                 chain2.Calculate(castingState);
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-            }
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                Spell[0] = chain1;
+                Weight[0] = (1 - MB);
+                Spell[1] = chain2;
+                Weight[1] = MB;
+                Calculate();
             }
         }
     }
 
-    class AB3AM : Spell
+    class AB3AM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
         float K1, K2;
 
-        public AB3AM(CastingState castingState)
+        public AB3AM(CastingState castingState) : base(2)
         {
             Name = "AB3AM";
 
@@ -2370,28 +2539,22 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM3, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB3AMABar : Spell
+    class AB3AMABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
         float K1, K2;
 
-        public AB3AMABar(CastingState castingState)
+        public AB3AMABar(CastingState castingState) : base(2)
         {
             Name = "AB3AMABar";
 
@@ -2424,21 +2587,15 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB3AM2MBAM : Spell
+    class AB3AM2MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -2446,7 +2603,7 @@ namespace Rawr.Mage
         float MB;
         float K1, K2, K3;
 
-        public AB3AM2MBAM(CastingState castingState)
+        public AB3AM2MBAM(CastingState castingState) : base(3)
         {
             Name = "AB3AM2MBAM";
 
@@ -2485,22 +2642,17 @@ namespace Rawr.Mage
             chain3.AddSpell(MBAM2, castingState);
             chain3.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Calculate();
         }
     }
 
-    class AB3AMABar2C : Spell
+    class AB3AMABar2C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -2508,7 +2660,7 @@ namespace Rawr.Mage
         float MB;
         float K1, K2, K3;
 
-        public AB3AMABar2C(CastingState castingState)
+        public AB3AMABar2C(CastingState castingState) : base(3)
         {
             Name = "AB3AMABar2C";
 
@@ -2551,28 +2703,23 @@ namespace Rawr.Mage
             chain3.AddSpell(ABar, castingState);
             chain3.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Calculate();
         }
     }
 
-    class ABarAM : Spell
+    class ABarAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public ABarAM(CastingState castingState)
+        public ABarAM(CastingState castingState) : base(2)
         {
             Name = "ABarAM";
 
@@ -2589,6 +2736,9 @@ namespace Rawr.Mage
                 chain1.AddSpell(ABar, castingState);
                 chain1.AddSpell(AM, castingState);
                 chain1.Calculate(castingState);
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -2611,29 +2761,16 @@ namespace Rawr.Mage
                 if (ABar.CastTime + MBAM.CastTime < 3.0) chain2.AddPause(3.0f - ABar.CastTime - MBAM.CastTime);
                 chain2.Calculate(castingState);
 
-                CastTime = (1 - MB) * chain1.CastTime + MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-            }
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, MB * chain2.CastTime / CastTime * duration);
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - MB;
+                Weight[1] = MB;
+                Calculate();
             }
         }
     }
 
-    class ABABarSlow : Spell
+    class ABABarSlow : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -2644,7 +2781,7 @@ namespace Rawr.Mage
         float S0;
         float S1;
 
-        public ABABarSlow(CastingState castingState)
+        public ABABarSlow(CastingState castingState) : base(4)
         {
             // TODO not updated for 3.0.8 mode, consider deprecated?
             Name = "ABABarSlow";
@@ -2724,11 +2861,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = (1 - X) * S0 * chain1.CastTime + (1 - X) * S1 * chain2.CastTime + X * S0 * chain3.CastTime + X * S1 * chain4.CastTime;
-            CostPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.CostPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.CostPerSecond + X * S0 * chain3.CastTime * chain3.CostPerSecond + X * S1 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.DamagePerSecond + (1 - X) * S1 * chain2.CastTime * chain2.DamagePerSecond + X * S0 * chain3.CastTime * chain3.DamagePerSecond + X * S1 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ThreatPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ThreatPerSecond + X * S0 * chain3.CastTime * chain3.ThreatPerSecond + X * S1 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ManaRegenPerSecond + X * S0 * chain3.CastTime * chain3.ManaRegenPerSecond + X * S1 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = (1 - X) * S0;
+            Weight[1] = (1 - X) * S1;
+            Weight[2] = X * S0;
+            Weight[3] = X * S1;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -2740,17 +2881,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, (1 - X) * S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, (1 - X) * S1 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, X * S0 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, X * S1 * chain4.CastTime / CastTime * duration);
-        }
     }
 
-    class FBABarSlow : Spell
+    class FBABarSlow : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -2761,7 +2894,7 @@ namespace Rawr.Mage
         float S0;
         float S1;
 
-        public FBABarSlow(CastingState castingState)
+        public FBABarSlow(CastingState castingState) : base(4)
         {
             Name = "FBABarSlow";
             AffectedByFlameCap = true;
@@ -2811,11 +2944,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = (1 - X) * S0 * chain1.CastTime + (1 - X) * S1 * chain2.CastTime + X * S0 * chain3.CastTime + X * S1 * chain4.CastTime;
-            CostPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.CostPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.CostPerSecond + X * S0 * chain3.CastTime * chain3.CostPerSecond + X * S1 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.DamagePerSecond + (1 - X) * S1 * chain2.CastTime * chain2.DamagePerSecond + X * S0 * chain3.CastTime * chain3.DamagePerSecond + X * S1 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ThreatPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ThreatPerSecond + X * S0 * chain3.CastTime * chain3.ThreatPerSecond + X * S1 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ManaRegenPerSecond + X * S0 * chain3.CastTime * chain3.ManaRegenPerSecond + X * S1 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = (1 - X) * S0;
+            Weight[1] = (1 - X) * S1;
+            Weight[2] = X * S0;
+            Weight[3] = X * S1;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -2827,17 +2964,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, (1 - X) * S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, (1 - X) * S1 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, X * S0 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, X * S1 * chain4.CastTime / CastTime * duration);
-        }
     }
 
-    class FrBABarSlow : Spell
+    class FrBABarSlow : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -2848,7 +2977,7 @@ namespace Rawr.Mage
         float S0;
         float S1;
 
-        public FrBABarSlow(CastingState castingState)
+        public FrBABarSlow(CastingState castingState) : base(4)
         {
             Name = "FrBABarSlow";
 
@@ -2897,11 +3026,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = (1 - X) * S0 * chain1.CastTime + (1 - X) * S1 * chain2.CastTime + X * S0 * chain3.CastTime + X * S1 * chain4.CastTime;
-            CostPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.CostPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.CostPerSecond + X * S0 * chain3.CastTime * chain3.CostPerSecond + X * S1 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.DamagePerSecond + (1 - X) * S1 * chain2.CastTime * chain2.DamagePerSecond + X * S0 * chain3.CastTime * chain3.DamagePerSecond + X * S1 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ThreatPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ThreatPerSecond + X * S0 * chain3.CastTime * chain3.ThreatPerSecond + X * S1 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - X) * S0 * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - X) * S1 * chain2.CastTime * chain2.ManaRegenPerSecond + X * S0 * chain3.CastTime * chain3.ManaRegenPerSecond + X * S1 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = (1 - X) * S0;
+            Weight[1] = (1 - X) * S1;
+            Weight[2] = X * S0;
+            Weight[3] = X * S1;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -2913,23 +3046,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, (1 - X) * S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, (1 - X) * S1 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, X * S0 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, X * S1 * chain4.CastTime / CastTime * duration);
-        }
     }
 
-    class ABABar0C : Spell
+    class ABABar0C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public ABABar0C(CastingState castingState)
+        public ABABar0C(CastingState castingState) : base(2)
         {
             Name = "ABABar0C";
 
@@ -2948,6 +3073,9 @@ namespace Rawr.Mage
                 if (AB.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB.CastTime - ABar.CastTime);
                 chain1.AddSpell(ABar1, castingState);
                 chain1.Calculate(castingState);
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -3002,11 +3130,11 @@ namespace Rawr.Mage
                 if (MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - MBAM.CastTime - ABar.CastTime);
                 chain2.Calculate(castingState);
 
-                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - MB;
+                Weight[1] = (2 - MB) * MB;
+                Calculate();
             }
         }
 
@@ -3017,29 +3145,16 @@ namespace Rawr.Mage
                 return chain1.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
-            }
-        }
     }
 
-    class ABABar1C : Spell
+    class ABABar1C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
         float S0, S1;
 
-        public ABABar1C(CastingState castingState)
+        public ABABar1C(CastingState castingState) : base(2)
         {
             Name = "ABABar1C";
 
@@ -3097,11 +3212,11 @@ namespace Rawr.Mage
             }
             chain2.Calculate(castingState);
 
-            CastTime = S0 * chain1.CastTime + S1 * chain2.CastTime;
-            CostPerSecond = (S0 * chain1.CastTime * chain1.CostPerSecond + S1 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (S0 * chain1.CastTime * chain1.DamagePerSecond + S1 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (S0 * chain1.CastTime * chain1.ThreatPerSecond + S1 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (S0 * chain1.CastTime * chain1.ManaRegenPerSecond + S1 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = S0;
+            Weight[1] = S1;
+            Calculate();
         }
 
         public override string Sequence
@@ -3111,22 +3226,16 @@ namespace Rawr.Mage
                 return chain1.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, S1 * chain2.CastTime / CastTime * duration);
-        }
     }
 
-    class ABABar0MBAM : Spell
+    class ABABar0MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
         float S0, S1;
 
-        public ABABar0MBAM(CastingState castingState)
+        public ABABar0MBAM(CastingState castingState) : base(2)
         {
             Name = "ABABar0MBAM";
 
@@ -3166,11 +3275,11 @@ namespace Rawr.Mage
             }
             chain2.Calculate(castingState);
 
-            CastTime = S0 * chain1.CastTime + S1 * chain2.CastTime;
-            CostPerSecond = (S0 * chain1.CastTime * chain1.CostPerSecond + S1 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (S0 * chain1.CastTime * chain1.DamagePerSecond + S1 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (S0 * chain1.CastTime * chain1.ThreatPerSecond + S1 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (S0 * chain1.CastTime * chain1.ManaRegenPerSecond + S1 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = S0;
+            Weight[1] = S1;
+            Calculate();
         }
 
         public override string Sequence
@@ -3180,22 +3289,16 @@ namespace Rawr.Mage
                 return chain1.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, S1 * chain2.CastTime / CastTime * duration);
-        }
     }
 
-    class ABABarY : Spell
+    class ABABarY : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
         float S0, S1;
 
-        public ABABarY(CastingState castingState)
+        public ABABarY(CastingState castingState) : base(2)
         {
             Name = "ABABarY";
 
@@ -3238,11 +3341,11 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM1, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = S0 * chain1.CastTime + S1 * chain2.CastTime;
-            CostPerSecond = (S0 * chain1.CastTime * chain1.CostPerSecond + S1 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (S0 * chain1.CastTime * chain1.DamagePerSecond + S1 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (S0 * chain1.CastTime * chain1.ThreatPerSecond + S1 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (S0 * chain1.CastTime * chain1.ManaRegenPerSecond + S1 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = S0;
+            Weight[1] = S1;
+            Calculate();
         }
 
         public override string Sequence
@@ -3252,15 +3355,9 @@ namespace Rawr.Mage
                 return chain1.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, S0 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, S1 * chain2.CastTime / CastTime * duration);
-        }
     }
 
-    class AB2ABarMBAM : Spell
+    class AB2ABarMBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -3268,7 +3365,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float K1, K2, K3, K4;
 
-        public AB2ABarMBAM(CastingState castingState)
+        public AB2ABarMBAM(CastingState castingState) : base(4)
         {
             Name = "AB2ABarMBAM";
 
@@ -3331,11 +3428,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -3347,17 +3448,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
-        }
     }
 
-    class AB3ABar : Spell
+    class AB3ABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -3367,7 +3460,7 @@ namespace Rawr.Mage
         SpellCycle chain6;
         float K1, K2, K3, K4, K5, K6;
 
-        public AB3ABar(CastingState castingState)
+        public AB3ABar(CastingState castingState) : base(6)
         {
             Name = "AB3ABar";
 
@@ -3458,11 +3551,19 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime + K5 * chain5.CastTime + K6 * chain6.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond + K5 * chain5.CastTime * chain5.CostPerSecond + K6 * chain6.CastTime * chain6.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond + K5 * chain5.CastTime * chain5.DamagePerSecond + K6 * chain6.CastTime * chain6.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond + K5 * chain5.CastTime * chain5.ThreatPerSecond + K6 * chain6.CastTime * chain6.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond + K5 * chain5.CastTime * chain5.ManaRegenPerSecond + K6 * chain6.CastTime * chain6.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Spell[4] = chain5;
+            Spell[5] = chain6;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Weight[4] = K5;
+            Weight[5] = K6;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -3474,19 +3575,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
-            chain5.AddSpellContribution(dict, K5 * chain5.CastTime / CastTime * duration);
-            chain6.AddSpellContribution(dict, K6 * chain6.CastTime / CastTime * duration);
-        }
     }
 
-    class AB3ABarX : Spell
+    class AB3ABarX : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -3494,7 +3585,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float K1, K2, K3, K4;
 
-        public AB3ABarX(CastingState castingState)
+        public AB3ABarX(CastingState castingState) : base(4)
         {
             Name = "AB3ABarX";
 
@@ -3562,11 +3653,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -3578,17 +3673,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
-            chain4.AddSpellContribution(dict, K4 * chain4.CastTime / CastTime * duration);
-        }
     }
 
-    class AB3ABarY : Spell
+    class AB3ABarY : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -3596,7 +3683,7 @@ namespace Rawr.Mage
         SpellCycle chain5;
         float K1, K2, K3, K5;
 
-        public AB3ABarY(CastingState castingState)
+        public AB3ABarY(CastingState castingState) : base(4)
         {
             Name = "AB3ABarY";
 
@@ -3658,11 +3745,15 @@ namespace Rawr.Mage
 
             commonChain = chain1;
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K5 * chain5.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K5 * chain5.CastTime * chain5.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K5 * chain5.CastTime * chain5.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K5 * chain5.CastTime * chain5.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K5 * chain5.CastTime * chain5.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain5;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K5;
+            Calculate();
         }
 
         private SpellCycle commonChain;
@@ -3674,23 +3765,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-            chain3.AddSpellContribution(dict, K3 * chain3.CastTime / CastTime * duration);
-            chain5.AddSpellContribution(dict, K5 * chain5.CastTime / CastTime * duration);
-        }
     }
 
-    class AB2ABar : Spell
+    class AB2ABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float K;
 
-        public AB2ABar(CastingState castingState)
+        public AB2ABar(CastingState castingState) : base(2)
         {
             Name = "AB2ABar";
 
@@ -3716,6 +3799,9 @@ namespace Rawr.Mage
                     chain1.Calculate(castingState);
 
                     commonChain = chain1;
+
+                    Spell[0] = chain1;
+                    Weight[0] = 1;
 
                     CastTime = chain1.CastTime;
                     CostPerSecond = chain1.CostPerSecond;
@@ -3763,178 +3849,13 @@ namespace Rawr.Mage
 
                     commonChain = chain1;
 
-                    CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
-                    CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                    DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                    ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                    ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                    Spell[0] = chain1;
+                    Spell[1] = chain2;
+                    Weight[0] = 1 - K;
+                    Weight[1] = K;
+                    Calculate();
                 }
             }
-            /*else
-            {
-                if (AB1.CastTime + ABar.CastTime < 3.0)
-                {
-                    if (MB == 0.0f)
-                    {
-                        Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
-                        // if we don't have barrage then this degenerates to AB-AB-ABar
-                        chain1 = new SpellCycle(3);
-                        chain1.AddSpell(AB3, castingState);
-                        chain1.AddSpell(AB3, castingState);
-                        if (AB3.CastTime + AB3.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB3.CastTime - AB3.CastTime - ABar.CastTime);
-                        chain1.AddSpell(ABar, castingState);
-                        chain1.Calculate(castingState);
-
-                        commonChain = chain1;
-
-                        CastTime = chain1.CastTime;
-                        CostPerSecond = chain1.CostPerSecond;
-                        DamagePerSecond = chain1.DamagePerSecond;
-                        ThreatPerSecond = chain1.ThreatPerSecond;
-                        ManaRegenPerSecond = chain1.ManaRegenPerSecond;
-                    }
-                    else
-                    {
-                        Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast22);
-                        Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast33);
-                        //AB0:
-                        //AB0-AB1-ABar => AB2 1 - MB3
-                        //             => MB  MB3
-
-                        //AB1:
-                        //AB1-AB2-ABar => AB3 1 - MB3
-                        //             => MB  MB3
-
-                        //AB2:
-                        //AB2-AB3-ABar => AB3 1 - MB3
-                        //             => MB  MB3
-
-                        //AB3:
-                        //AB3-AB3-ABar => AB3 1 - MB3
-                        //             => MB  MB3
-
-                        //MB:
-                        //MBAM-AB0-ABar => AB1 1 - MB2
-                        //              => MB  MB2
-
-
-                        //AB0 + AB1 + AB2 + AB3 + MB = 1
-                        //AB0 = 0
-                        //AB1 = MB * (1 - MB2)
-                        //AB2 = AB0 * (1 - MB3) = 0
-                        //AB3 = (AB1 + AB2 + AB3) * (1 - MB3)
-                        //MB = (AB0 + AB1 + AB2 + AB3) * MB3 + MB * MB2
-
-                        //AB1 = MB * (1 - MB2)
-                        //AB3 = (AB1 + AB3) * (1 - MB3)
-                        //MB = (AB1 + AB3) * MB3 + MB * MB2
-
-
-                        //(AB1 + AB3) = MB * (1 - MB2) / MB3
-
-                        //AB1 + AB3 + MB = 1
-
-                        // K := MB = 1 / (1 + (1 - MB2) / MB3)
-                        // K1 := AB1 = MB * (1 - MB2)
-                        // K2 := AB3 = AB1 * (1 - MB3) / MB3
-
-                        K = 1.0f / (1.0f + (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB)));
-                        K1 = K * (1 - MB) * (1 - MB);
-                        K2 = K1 * (1 - MB) * (1 - MB) * (1 - MB) / (1.0f - (1 - MB) * (1 - MB) * (1 - MB));
-
-                        //AB1-AB2-ABar
-                        chain1 = new SpellCycle(3);
-                        chain1.AddSpell(ABar, castingState);
-                        chain1.AddSpell(AB1, castingState);
-                        chain1.AddSpell(AB2, castingState);
-                        if (AB1.CastTime + AB2.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB1.CastTime - AB2.CastTime - ABar.CastTime);
-                        chain1.Calculate(castingState);
-
-                        //AB3-AB3-ABar
-                        chain2 = new SpellCycle(3);
-                        chain2.AddSpell(ABar, castingState);
-                        chain2.AddSpell(AB3, castingState);
-                        chain2.AddSpell(AB3, castingState);
-                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                        chain2.Calculate(castingState);
-
-                        //MBAM-AB0-ABar
-                        chain3 = new SpellCycle(3);
-                        chain3.AddSpell(ABar, castingState);
-                        chain3.AddSpell(MBAM, castingState);
-                        chain3.AddSpell(AB0, castingState);
-                        if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain3.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                        chain3.Calculate(castingState);
-
-                        commonChain = chain1;
-
-                        CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K * chain3.CastTime;
-                        CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-                        DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-                        ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-                        ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
-                    }
-                }
-                else
-                {
-                    if (MB == 0.0f)
-                    {
-                        // if we don't have barrage then this degenerates to AB-AB-ABar
-                        chain1 = new SpellCycle(3);
-                        chain1.AddSpell(AB0, castingState);
-                        chain1.AddSpell(AB1, castingState);
-                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                        chain1.AddSpell(ABar, castingState);
-                        chain1.Calculate(castingState);
-
-                        commonChain = chain1;
-
-                        CastTime = chain1.CastTime;
-                        CostPerSecond = chain1.CostPerSecond;
-                        DamagePerSecond = chain1.DamagePerSecond;
-                        ThreatPerSecond = chain1.ThreatPerSecond;
-                        ManaRegenPerSecond = chain1.ManaRegenPerSecond;
-                    }
-                    else
-                    {
-                        // A: MBAM-AB-ABar  (1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB) => A
-                        // B: AB-AB-ABar    (1-MB)*(1-MB)*(1-MB) => B, 1 - (1-MB)*(1-MB)*(1-MB) => A
-
-                        // A + B = 1
-                        // A = (1 - (1-MB)*(1-MB)) * A + (1 - (1-MB)*(1-MB)*(1-MB)) * B
-                        // B = (1-MB)*(1-MB) * A + (1-MB)*(1-MB)*(1-MB) * B
-
-                        // B * (1 + (1-MB)*(1-MB) - (1-MB)*(1-MB)*(1-MB)) = (1-MB)*(1-MB)
-                        // B = (1-MB)*(1-MB) / [1 + (1-MB)*(1-MB)*MB]
-
-                        //AB-ABar 0.8 * 0.8
-                        chain1 = new SpellCycle(3);
-                        chain1.AddSpell(ABar, castingState);
-                        chain1.AddSpell(AB0, castingState);
-                        chain1.AddSpell(AB1, castingState);
-                        if (AB0.CastTime + AB1.CastTime + ABar.CastTime < 3.0) chain1.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                        chain1.Calculate(castingState);
-
-                        //ABar-MBAM
-                        chain2 = new SpellCycle(3);
-                        chain2.AddSpell(ABar, castingState);
-                        chain2.AddSpell(MBAM, castingState);
-                        chain2.AddSpell(AB0, castingState);
-                        if (AB0.CastTime + MBAM.CastTime + ABar.CastTime < 3.0) chain2.AddPause(3.0f + castingState.CalculationOptions.Latency - AB0.CastTime - AB1.CastTime - ABar.CastTime);
-                        chain2.Calculate(castingState);
-
-                        commonChain = chain1;
-
-                        K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
-
-                        CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
-                        CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                        DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                        ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                        ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-                    }
-                }
-            }*/
         }
 
         private SpellCycle commonChain;
@@ -3946,34 +3867,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else /*if (chain3 == null)*/
-            {
-                chain1.AddSpellContribution(dict, (1 - K) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
-            }
-            /*else
-            {
-                chain1.AddSpellContribution(dict, K1 * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, K2 * chain2.CastTime / CastTime * duration);
-                chain3.AddSpellContribution(dict, K * chain3.CastTime / CastTime * duration);
-            }*/
-        }
     }
 
-    class FB2ABar : Spell
+    class FB2ABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float K;
 
-        public FB2ABar(CastingState castingState)
+        public FB2ABar(CastingState castingState) : base(2)
         {
             Name = "FB2ABar";
             AffectedByFlameCap = true;
@@ -3995,6 +3897,9 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 commonChain = chain1;
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -4034,11 +3939,11 @@ namespace Rawr.Mage
 
                 K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
 
-                CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
-                CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - K;
+                Weight[1] = K;
+                Calculate();
             }
         }
 
@@ -4051,28 +3956,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - K) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
-            }
-        }
     }
 
-    class FrB2ABar : Spell
+    class FrB2ABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float K;
 
-        public FrB2ABar(CastingState castingState)
+        public FrB2ABar(CastingState castingState) : base(2)
         {
             Name = "FrB2ABar";
 
@@ -4093,6 +3985,9 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 commonChain = chain1;
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -4132,11 +4027,11 @@ namespace Rawr.Mage
 
                 K = 1 - (1 - MB) * (1 - MB) / (1 + (1 - MB) * (1 - MB) * MB);
 
-                CastTime = (1 - K) * chain1.CastTime + K * chain2.CastTime;
-                CostPerSecond = ((1 - K) * chain1.CastTime * chain1.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - K) * chain1.CastTime * chain1.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - K) * chain1.CastTime * chain1.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - K) * chain1.CastTime * chain1.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - K;
+                Weight[1] = K;
+                Calculate();
             }
         }
 
@@ -4149,28 +4044,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - K) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
-            }
-        }
     }
 
-    class FBABar : Spell
+    class FBABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public FBABar(CastingState castingState)
+        public FBABar(CastingState castingState) : base(2)
         {
             Name = "FBABar";
             AffectedByFlameCap = true;
@@ -4192,6 +4074,9 @@ namespace Rawr.Mage
 
                 commonChain = chain1;
 
+                Spell[0] = chain1;
+                Weight[0] = 1;
+
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
                 DamagePerSecond = chain1.DamagePerSecond;
@@ -4214,11 +4099,11 @@ namespace Rawr.Mage
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - MB;
+                Weight[1] = (2 - MB) * MB;
+                Calculate();
             }
         }
 
@@ -4231,28 +4116,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
-            }
-        }
     }
 
-    class FrBABar : Spell
+    class FrBABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public FrBABar(CastingState castingState)
+        public FrBABar(CastingState castingState) : base(2)
         {
             Name = "FrBABar";
 
@@ -4272,6 +4144,9 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 commonChain = chain1;
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -4295,11 +4170,11 @@ namespace Rawr.Mage
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - MB;
+                Weight[1] = (2 - MB) * MB;
+                Calculate();
             }
         }
 
@@ -4312,28 +4187,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
-            }
-        }
     }
 
-    class FFBABar : Spell
+    class FFBABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB;
 
-        public FFBABar(CastingState castingState)
+        public FFBABar(CastingState castingState) : base(2)
         {
             Name = "FFBABar";
             AffectedByFlameCap = true;
@@ -4354,6 +4216,9 @@ namespace Rawr.Mage
                 chain1.Calculate(castingState);
 
                 commonChain = chain1;
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -4377,11 +4242,11 @@ namespace Rawr.Mage
 
                 commonChain = chain2;
 
-                CastTime = (1 - MB) * chain1.CastTime + (2 - MB) * MB * chain2.CastTime;
-                CostPerSecond = ((1 - MB) * chain1.CastTime * chain1.CostPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - MB) * chain1.CastTime * chain1.DamagePerSecond + (2 - MB) * MB * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - MB) * chain1.CastTime * chain1.ThreatPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * chain1.CastTime * chain1.ManaRegenPerSecond + (2 - MB) * MB * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = 1 - MB;
+                Weight[1] = (2 - MB) * MB;
+                Calculate();
             }
         }
 
@@ -4392,19 +4257,6 @@ namespace Rawr.Mage
             get
             {
                 return commonChain.Sequence;
-            }
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain2 == null)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, (1 - MB) * chain1.CastTime / CastTime * duration);
-                chain2.AddSpellContribution(dict, (2 - MB) * MB * chain2.CastTime / CastTime * duration);
             }
         }
     }
@@ -4510,9 +4362,19 @@ namespace Rawr.Mage
                 AB0M.AddSpellContribution(dict, duration * (1 - hit) * k41 * AB0M.CastTime / CastTime);
             }
         }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    class ABSpamMBAM : Spell
+    class ABSpamMBAM : DynamicCycle
     {
         BaseSpell AB3;
         SpellCycle chain1;
@@ -4521,7 +4383,7 @@ namespace Rawr.Mage
         SpellCycle chain5;
         float MB, MB3, MB4, MB5, hit, miss;
 
-        public ABSpamMBAM(CastingState castingState)
+        public ABSpamMBAM(CastingState castingState) : base(5)
         {
             Name = "ABSpamMBAM";
 
@@ -4570,30 +4432,17 @@ namespace Rawr.Mage
             {
                 // TODO take hit rate into account
                 // if we don't have barrage then this degenerates to AB
+
+                Spell[0] = AB3;
+                Weight[0] = 1;
+
                 CastTime = AB3.CastTime;
                 CostPerSecond = AB3.CostPerSecond;
                 DamagePerSecond = AB3.DamagePerSecond;
                 ThreatPerSecond = AB3.ThreatPerSecond;
                 ManaRegenPerSecond = AB3.ManaRegenPerSecond;
             }
-            /*else if (AB3.CastTime + MBAM.CastTime < 3.0 && !castingState.CalculationOptions.Mode308)
-            {
-                // TODO take hit rate into account
-                //AB3 0.85
-
-                //AB3-MBAM 0.15
-                chain1 = new SpellCycle(3);
-                chain1.AddSpell(AB3, castingState);
-                chain1.AddSpell(AB3, castingState); // account for latency
-                chain1.AddSpell(MBAM, castingState);
-
-                CastTime = (1 - MB) * AB3.CastTime + MB * chain1.CastTime;
-                CostPerSecond = ((1 - MB) * AB3.CostPerSecond * AB3.CastTime + MB * chain1.CostPerSecond * chain1.CastTime) / CastTime;
-                DamagePerSecond = ((1 - MB) * AB3.DamagePerSecond * AB3.CastTime + MB * chain1.DamagePerSecond * chain1.CastTime) / CastTime;
-                ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * chain1.ThreatPerSecond * chain1.CastTime) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * chain1.ManaRegenPerSecond * chain1.CastTime) / CastTime;
-            }*/
-            else /*if (AB3.HitRate >= 1.0f || castingState.CalculationOptions.Mode308)*/
+            else
             {
                 //AB3 0.85
 
@@ -4632,124 +4481,22 @@ namespace Rawr.Mage
                 MB4 = MB / (1 - MB) / (1 - MB);
                 MB5 = MB / (1 - MB) / (1 - MB) / (1 - MB);
 
-                CastTime = (1 - MB) * AB3.CastTime + MB * (chain1.CastTime + MB3 * chain3.CastTime + MB4 * chain4.CastTime + MB5 * chain5.CastTime);
-                CostPerSecond = ((1 - MB) * AB3.CostPerSecond * AB3.CastTime + MB * (chain1.CostPerSecond * chain1.CastTime + MB3 * chain3.CostPerSecond * chain3.CastTime + MB4 * chain4.CostPerSecond * chain4.CastTime + MB5 * chain5.CostPerSecond * chain5.CastTime)) / CastTime;
-                DamagePerSecond = ((1 - MB) * AB3.DamagePerSecond * AB3.CastTime + MB * (chain1.DamagePerSecond * chain1.CastTime + MB3 * chain3.DamagePerSecond * chain3.CastTime + MB4 * chain4.DamagePerSecond * chain4.CastTime + MB5 * chain5.DamagePerSecond * chain5.CastTime)) / CastTime;
-                ThreatPerSecond = ((1 - MB) * AB3.ThreatPerSecond * AB3.CastTime + MB * (chain1.ThreatPerSecond * chain1.CastTime + MB3 * chain3.ThreatPerSecond * chain3.CastTime + MB4 * chain4.ThreatPerSecond * chain4.CastTime + MB5 * chain5.ThreatPerSecond * chain5.CastTime)) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * AB3.ManaRegenPerSecond * AB3.CastTime + MB * (chain1.ManaRegenPerSecond * chain1.CastTime + MB3 * chain3.ManaRegenPerSecond * chain3.CastTime + MB4 * chain4.ManaRegenPerSecond * chain4.CastTime + MB5 * chain5.ManaRegenPerSecond * chain5.CastTime)) / CastTime;
+                Spell[0] = AB3;
+                Spell[1] = chain1;
+                Spell[2] = chain3;
+                Spell[3] = chain4;
+                Spell[4] = chain5;
+                Weight[0] = 1 - MB;
+                Weight[1] = MB;
+                Weight[2] = MB * MB3;
+                Weight[3] = MB * MB4;
+                Weight[4] = MB * MB5;
+                Calculate();
             }
-            /*else
-            {
-                Spell AB0H = castingState.GetSpell(SpellId.ArcaneBlast0Hit);
-                Spell AB1H = castingState.GetSpell(SpellId.ArcaneBlast1Hit);
-                Spell AB2H = castingState.GetSpell(SpellId.ArcaneBlast2Hit);
-                Spell AB3H = castingState.GetSpell(SpellId.ArcaneBlast3Hit);
-                AB0M = castingState.GetSpell(SpellId.ArcaneBlast0Miss);
-                Spell AB1M = castingState.GetSpell(SpellId.ArcaneBlast1Miss);
-                Spell AB2M = castingState.GetSpell(SpellId.ArcaneBlast2Miss);
-                Spell AB3M = castingState.GetSpell(SpellId.ArcaneBlast3Miss);
-                //AB3H 0.85*hit
-
-                //AB3H-AB3-MBAM-RAMP 0.15*hit
-                chain1 = new SpellCycle(6);
-                chain1.AddSpell(AB3H, castingState);
-                chain1.AddSpell(AB3, castingState); // account for latency
-                chain1.AddSpell(MBAM, castingState);
-                chain1.AddSpell(AB0H, castingState);
-                chain1.AddSpell(AB1H, castingState);
-                chain1.AddSpell(AB2H, castingState);
-                chain1.Calculate(castingState);
-
-                //AB3M-RAMP miss
-                chain2 = new SpellCycle(4);
-                chain2.AddSpell(AB3M, castingState);
-                chain2.AddSpell(AB0H, castingState);
-                chain2.AddSpell(AB1H, castingState);
-                chain2.AddSpell(AB2H, castingState);
-                chain2.Calculate(castingState);
-
-                chain3 = new SpellCycle(5);
-                chain3.AddSpell(AB0H, castingState);
-                chain3.AddSpell(AB1H, castingState);
-                chain3.AddSpell(AB2H, castingState);
-                chain3.AddSpell(AB3, castingState); // account for latency
-                chain3.AddSpell(MBAM, castingState);
-                chain3.Calculate(castingState);
-
-                chain4 = new SpellCycle(4);
-                chain4.AddSpell(AB0H, castingState);
-                chain4.AddSpell(AB1H, castingState);
-                chain4.AddSpell(AB2, castingState); // account for latency
-                chain4.AddSpell(MBAM, castingState);
-                chain4.Calculate(castingState);
-
-                chain5 = new SpellCycle(3);
-                chain5.AddSpell(AB0H, castingState);
-                chain5.AddSpell(AB1, castingState); // account for latency
-                chain5.AddSpell(MBAM, castingState);
-                chain5.Calculate(castingState);
-
-                chain6 = new SpellCycle(3);
-                chain6.AddSpell(AB0H, castingState);
-                chain6.AddSpell(AB1H, castingState);
-                chain6.AddSpell(AB2M, castingState);
-                chain6.Calculate(castingState);
-
-                chain7 = new SpellCycle(2);
-                chain7.AddSpell(AB0H, castingState);
-                chain7.AddSpell(AB1M, castingState);
-                chain7.Calculate(castingState);
-
-                MB3 = MB / (1 - MB);
-                MB4 = MB / (1 - MB) / (1 - MB) / hit;
-                MB5 = MB / (1 - MB) / (1 - MB) / (1 - MB) / hit / hit;
-                MB6 = miss / (1 - MB) / hit;
-                MB7 = miss / (1 - MB) / hit / (1 - MB) / hit;
-                MB8 = miss / (1 - MB) / hit / (1 - MB) / hit / (1 - MB) / hit;
-
-                CastTime = (1 - MB) * hit * AB3.CastTime + MB * hit * chain1.CastTime + miss * chain2.CastTime + (1 - (1 - MB) * hit) * (MB3 * chain3.CastTime + MB4 * chain4.CastTime + MB5 * chain5.CastTime + MB6 * chain6.CastTime + MB7 * chain7.CastTime + MB8 * AB0M.CastTime);
-                CostPerSecond = ((1 - MB) * hit * AB3.CostPerSecond * AB3.CastTime + MB * hit * chain1.CostPerSecond * chain1.CastTime + miss * chain2.CostPerSecond * chain2.CastTime + (1 - (1 - MB) * hit) * (MB3 * chain3.CostPerSecond * chain3.CastTime + MB4 * chain4.CostPerSecond * chain4.CastTime + MB5 * chain5.CostPerSecond * chain5.CastTime + MB6 * chain6.CostPerSecond * chain6.CastTime + MB7 * chain7.CostPerSecond * chain7.CastTime + MB8 * AB0M.CostPerSecond * AB0M.CastTime)) / CastTime;
-                DamagePerSecond = ((1 - MB) * hit * AB3.DamagePerSecond * AB3.CastTime + MB * hit * chain1.DamagePerSecond * chain1.CastTime + miss * chain2.DamagePerSecond * chain2.CastTime + (1 - (1 - MB) * hit) * (MB3 * chain3.DamagePerSecond * chain3.CastTime + MB4 * chain4.DamagePerSecond * chain4.CastTime + MB5 * chain5.DamagePerSecond * chain5.CastTime + MB6 * chain6.DamagePerSecond * chain6.CastTime + MB7 * chain7.DamagePerSecond * chain7.CastTime + MB8 * AB0M.DamagePerSecond * AB0M.CastTime)) / CastTime;
-                ThreatPerSecond = ((1 - MB) * hit * AB3.ThreatPerSecond * AB3.CastTime + MB * hit * chain1.ThreatPerSecond * chain1.CastTime + miss * chain2.ThreatPerSecond * chain2.CastTime + (1 - (1 - MB) * hit) * (MB3 * chain3.ThreatPerSecond * chain3.CastTime + MB4 * chain4.ThreatPerSecond * chain4.CastTime + MB5 * chain5.ThreatPerSecond * chain5.CastTime + MB6 * chain6.ThreatPerSecond * chain6.CastTime + MB7 * chain7.ThreatPerSecond * chain7.CastTime + MB8 * AB0M.ThreatPerSecond * AB0M.CastTime)) / CastTime;
-                ManaRegenPerSecond = ((1 - MB) * hit * AB3.ManaRegenPerSecond * AB3.CastTime + MB * hit * chain1.ManaRegenPerSecond * chain1.CastTime + miss * chain2.ManaRegenPerSecond * chain2.CastTime + (1 - (1 - MB) * hit) * (MB3 * chain3.ManaRegenPerSecond * chain3.CastTime + MB4 * chain4.ManaRegenPerSecond * chain4.CastTime + MB5 * chain5.ManaRegenPerSecond * chain5.CastTime + MB6 * chain6.ManaRegenPerSecond * chain6.CastTime + MB7 * chain7.ManaRegenPerSecond * chain7.CastTime + MB8 * AB0M.ManaRegenPerSecond * AB0M.CastTime)) / CastTime;
-            }*/
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (chain1 == null)
-            {
-                AB3.AddSpellContribution(dict, duration);
-            }
-            /*else if (chain3 == null)
-            {
-                AB3.AddSpellContribution(dict, duration * (1 - MB) * AB3.CastTime / CastTime);
-                chain1.AddSpellContribution(dict, duration * MB * chain1.CastTime / CastTime);
-            }*/
-            else /*if (AB3.HitRate >= 1.0f || mode308)*/
-            {
-                AB3.AddSpellContribution(dict, duration * (1 - MB) * AB3.CastTime / CastTime);
-                chain1.AddSpellContribution(dict, duration * MB * chain1.CastTime / CastTime);
-                chain3.AddSpellContribution(dict, duration * MB * MB3 * chain3.CastTime / CastTime);
-                chain4.AddSpellContribution(dict, duration * MB * MB4 * chain4.CastTime / CastTime);
-                chain5.AddSpellContribution(dict, duration * MB * MB5 * chain5.CastTime / CastTime);
-            }
-            /*else
-            {
-                AB3.AddSpellContribution(dict, duration * (1 - MB) * hit * AB3.CastTime / CastTime);
-                chain1.AddSpellContribution(dict, duration * MB * hit * chain1.CastTime / CastTime);
-                chain2.AddSpellContribution(dict, duration * miss * chain1.CastTime / CastTime);
-                chain3.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB3 * chain3.CastTime / CastTime);
-                chain4.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB4 * chain4.CastTime / CastTime);
-                chain5.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB5 * chain5.CastTime / CastTime);
-                chain6.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB6 * chain6.CastTime / CastTime);
-                chain7.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB7 * chain7.CastTime / CastTime);
-                AB0M.AddSpellContribution(dict, duration * (1 - (1 - MB) * hit) * MB8 * AB0M.CastTime / CastTime);
-            }*/
         }
     }
 
-    class ABSpam3C : Spell
+    class ABSpam3C : DynamicCycle
     {
         BaseSpell AB3;
         SpellCycle chain1;
@@ -4758,7 +4505,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float MB, K1, K2, K3, K4, K5, S0, S1;
 
-        public ABSpam3C(CastingState castingState)
+        public ABSpam3C(CastingState castingState) : base(5)
         {
             Name = "ABSpam3C";
 
@@ -4828,24 +4575,21 @@ namespace Rawr.Mage
             chain4.AddSpell(ABar, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime + K5 * AB3.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond + K5 * AB3.CastTime * AB3.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond + K5 * AB3.CastTime * AB3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond + K5 * AB3.CastTime * AB3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond + K5 * AB3.CastTime * AB3.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * K3 * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * K4 * chain4.CastTime / CastTime);
-            AB3.AddSpellContribution(dict, duration * K5 * AB3.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain1;
+            Spell[2] = chain2;
+            Spell[3] = chain3;
+            Spell[4] = AB3;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Weight[4] = K5;
+            Calculate();
         }
     }
 
-    class ABSpam03C : Spell
+    class ABSpam03C : DynamicCycle
     {
         BaseSpell AB3;
         SpellCycle chain1;
@@ -4855,7 +4599,7 @@ namespace Rawr.Mage
         SpellCycle chain6;
         float MB, K1, K2, K3, K4, K5, K6, S0, S1;
 
-        public ABSpam03C(CastingState castingState)
+        public ABSpam03C(CastingState castingState) : base(6)
         {
             Name = "ABSpam03C";
 
@@ -4931,25 +4675,23 @@ namespace Rawr.Mage
             chain4.AddSpell(ABar, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime + K5 * AB3.CastTime + K6 * chain6.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond + K5 * AB3.CastTime * AB3.CostPerSecond + K6 * chain6.CastTime * chain6.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond + K5 * AB3.CastTime * AB3.DamagePerSecond + K6 * chain6.CastTime * chain6.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond + K5 * AB3.CastTime * AB3.ThreatPerSecond + K6 * chain6.CastTime * chain6.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond + K5 * AB3.CastTime * AB3.ManaRegenPerSecond + K6 * chain6.CastTime * chain6.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * K3 * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * K4 * chain4.CastTime / CastTime);
-            AB3.AddSpellContribution(dict, duration * K5 * AB3.CastTime / CastTime);
-            chain6.AddSpellContribution(dict, duration * K6 * chain6.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Spell[4] = AB3;
+            Spell[5] = chain6;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Weight[4] = K5;
+            Weight[5] = K6;
+            Calculate();
         }
     }
 
-    class ABSpam3MBAM : Spell
+    class ABSpam3MBAM : DynamicCycle
     {
         BaseSpell AB3;
         SpellCycle chain1;
@@ -4958,7 +4700,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float MB, K1, K2, K3, K4, K5, S0, S1;
 
-        public ABSpam3MBAM(CastingState castingState)
+        public ABSpam3MBAM(CastingState castingState) : base(5)
         {
             Name = "ABSpam3MBAM";
 
@@ -5021,30 +4763,27 @@ namespace Rawr.Mage
             chain4.AddSpell(MBAM3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime + K4 * chain4.CastTime + K5 * AB3.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond + K4 * chain4.CastTime * chain4.CostPerSecond + K5 * AB3.CastTime * AB3.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond + K4 * chain4.CastTime * chain4.DamagePerSecond + K5 * AB3.CastTime * AB3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond + K4 * chain4.CastTime * chain4.ThreatPerSecond + K5 * AB3.CastTime * AB3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond + K4 * chain4.CastTime * chain4.ManaRegenPerSecond + K5 * AB3.CastTime * AB3.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * K3 * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * K4 * chain4.CastTime / CastTime);
-            AB3.AddSpellContribution(dict, duration * K5 * AB3.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Spell[4] = AB3;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Weight[3] = K4;
+            Weight[4] = K5;
+            Calculate();
         }
     }
 
-    class AB2ABar2C : Spell
+    class AB2ABar2C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB2ABar2C(CastingState castingState)
+        public AB2ABar2C(CastingState castingState) : base(2)
         {
             Name = "AB2ABar2C";
 
@@ -5092,27 +4831,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB2ABar2MBAM : Spell
+    class AB2ABar2MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB2ABar2MBAM(CastingState castingState)
+        public AB2ABar2MBAM(CastingState castingState) : base(2)
         {
             Name = "AB2ABar2MBAM";
 
@@ -5155,27 +4888,21 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM2, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB2ABar3C : Spell
+    class AB2ABar3C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB2ABar3C(CastingState castingState)
+        public AB2ABar3C(CastingState castingState) : base(2)
         {
             Name = "AB2ABar3C";
 
@@ -5223,27 +4950,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class ABABar3C : Spell
+    class ABABar3C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public ABABar3C(CastingState castingState)
+        public ABABar3C(CastingState castingState) : base(2)
         {
             Name = "ABABar3C";
 
@@ -5288,27 +5009,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class ABABar2C : Spell
+    class ABABar2C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public ABABar2C(CastingState castingState)
+        public ABABar2C(CastingState castingState) : base(2)
         {
             Name = "ABABar2C";
 
@@ -5351,27 +5066,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class ABABar2MBAM : Spell
+    class ABABar2MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public ABABar2MBAM(CastingState castingState)
+        public ABABar2MBAM(CastingState castingState) : base(2)
         {
             Name = "ABABar2MBAM";
 
@@ -5411,27 +5120,21 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM2, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class ABABar1MBAM : Spell
+    class ABABar1MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public ABABar1MBAM(CastingState castingState)
+        public ABABar1MBAM(CastingState castingState) : base(2)
         {
             Name = "ABABar1MBAM";
 
@@ -5469,27 +5172,21 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM1, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB3ABar3C : Spell
+    class AB3ABar3C : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB3ABar3C(CastingState castingState)
+        public AB3ABar3C(CastingState castingState) : base(2)
         {
             Name = "AB3ABar3C";
 
@@ -5541,27 +5238,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB3ABar3MBAM : Spell
+    class AB3ABar3MBAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB3ABar3MBAM(CastingState castingState)
+        public AB3ABar3MBAM(CastingState castingState) : base(2)
         {
             Name = "AB3ABar3MBAM";
 
@@ -5606,28 +5297,22 @@ namespace Rawr.Mage
             chain2.AddSpell(MBAM3, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class AB32AMABar : Spell
+    class AB32AMABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         SpellCycle chain3;
         float MB, K1, K2, K3;
 
-        public AB32AMABar(CastingState castingState)
+        public AB32AMABar(CastingState castingState) : base(3)
         {
             Name = "AB32AMABar";
 
@@ -5678,28 +5363,23 @@ namespace Rawr.Mage
             chain3.AddSpell(ABar, castingState);
             chain3.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime + K3 * chain3.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond + K3 * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond + K3 * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond + K3 * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond + K3 * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * K3 * chain3.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Weight[2] = K3;
+            Calculate();
         }
     }
 
-    class AB2AMABar : Spell
+    class AB2AMABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public AB2AMABar(CastingState castingState)
+        public AB2AMABar(CastingState castingState) : base(2)
         {
             Name = "AB2AMABar";
 
@@ -5734,27 +5414,21 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
-    class ABAMABar : Spell
+    class ABAMABar : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float MB, K1, K2;
 
-        public ABAMABar(CastingState castingState)
+        public ABAMABar(CastingState castingState) : base(2)
         {
             Name = "ABAMABar";
 
@@ -5786,17 +5460,11 @@ namespace Rawr.Mage
             chain2.AddSpell(ABar, castingState);
             chain2.Calculate(castingState);
 
-            CastTime = K1 * chain1.CastTime + K2 * chain2.CastTime;
-            CostPerSecond = (K1 * chain1.CastTime * chain1.CostPerSecond + K2 * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = (K1 * chain1.CastTime * chain1.DamagePerSecond + K2 * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (K1 * chain1.CastTime * chain1.ThreatPerSecond + K2 * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (K1 * chain1.CastTime * chain1.ManaRegenPerSecond + K2 * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * K1 * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * K2 * chain2.CastTime / CastTime);
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Weight[0] = K1;
+            Weight[1] = K2;
+            Calculate();
         }
     }
 
@@ -6166,13 +5834,13 @@ namespace Rawr.Mage
         }
     }
 
-    class FBPyro : Spell
+    class FBPyro : DynamicCycle
     {
         Fireball FB;
         SpellCycle chain2;
         float K;
 
-        public FBPyro(CastingState castingState)
+        public FBPyro(CastingState castingState) : base(2)
         {
             Name = "FBPyro";
             AffectedByFlameCap = true;
@@ -6199,29 +5867,21 @@ namespace Rawr.Mage
             K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
 
-            CastTime = (1 - K) * FB.CastTime + K * chain2.CastTime;
-            CostPerSecond = ((1 - K) * FB.CastTime * FB.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - K) * FB.CastTime * FB.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - K) * FB.CastTime * FB.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - K) * FB.CastTime * FB.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-            // needed for Combustion calculations
-            CastProcs = (1 - K) * FB.CastProcs + K * chain2.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FB.AddSpellContribution(dict, (1 - K) * FB.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+            Spell[0] = FB;
+            Spell[1] = chain2;
+            Weight[0] = 1 - K;
+            Weight[1] = K;
+            Calculate();
         }
     }
 
-    class FrBFB : Spell
+    class FrBFB : DynamicCycle
     {
         BaseSpell FrB;
         SpellCycle chain2;
         float K;
 
-        public FrBFB(CastingState castingState)
+        public FrBFB(CastingState castingState) : base(2)
         {
             Name = "FrBFB";
 
@@ -6239,28 +5899,20 @@ namespace Rawr.Mage
 
             K = 0.05f * castingState.MageTalents.BrainFreeze;
 
-            CastTime = (1 - K) * FrB.CastTime + K * chain2.CastTime;
-            CostPerSecond = ((1 - K) * FrB.CastTime * FrB.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - K) * FrB.CastTime * FrB.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - K) * FrB.CastTime * FrB.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - K) * FrB.CastTime * FrB.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-            // needed for Combustion calculations
-            CastProcs = (1 - K) * FrB.CastProcs + K * chain2.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FrB.AddSpellContribution(dict, (1 - K) * FrB.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+            Spell[0] = FrB;
+            Spell[1] = chain2;
+            Weight[0] = 1 - K;
+            Weight[1] = K;
+            Calculate();
         }
     }
 
-    class FrBFBIL : Spell
+    class FrBFBIL : DynamicCycle
     {
         Spell FrB, FrBS, FB, FBS, ILS;
         float KFrB, KFrBS, KFB, KFBS, KILS;
 
-        public FrBFBIL(CastingState castingState)
+        public FrBFBIL(CastingState castingState) : base(5)
         {
             Name = "FrBFBIL";
 
@@ -6337,24 +5989,21 @@ namespace Rawr.Mage
             ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
             sequence = "Frostbolt";
 
-            CastTime = KFrB * FrB.CastTime + KFB * FB.CastTime + KFrBS * FrBS.CastTime + KFBS * FBS.CastTime + KILS * ILS.CastTime;
-            CostPerSecond = (KFrB * FrB.CastTime * FrB.CostPerSecond + KFB * FB.CastTime * FB.CostPerSecond + KFrBS * FrBS.CastTime * FrBS.CostPerSecond + KFBS * FBS.CastTime * FBS.CostPerSecond + KILS * ILS.CastTime * ILS.CostPerSecond) / CastTime;
-            DamagePerSecond = (KFrB * FrB.CastTime * FrB.DamagePerSecond + KFB * FB.CastTime * FB.DamagePerSecond + KFrBS * FrBS.CastTime * FrBS.DamagePerSecond + KFBS * FBS.CastTime * FBS.DamagePerSecond + KILS * ILS.CastTime * ILS.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (KFrB * FrB.CastTime * FrB.ThreatPerSecond + KFB * FB.CastTime * FB.ThreatPerSecond + KFrBS * FrBS.CastTime * FrBS.ThreatPerSecond + KFBS * FBS.CastTime * FBS.ThreatPerSecond + KILS * ILS.CastTime * ILS.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (KFrB * FrB.CastTime * FrB.ManaRegenPerSecond + KFB * FB.CastTime * FB.ManaRegenPerSecond + KFrBS * FrBS.CastTime * FrBS.ManaRegenPerSecond + KFBS * FBS.CastTime * FBS.ManaRegenPerSecond + KILS * ILS.CastTime * ILS.ManaRegenPerSecond) / CastTime;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FrB.AddSpellContribution(dict, KFrB * FrB.CastTime / CastTime * duration);
-            FB.AddSpellContribution(dict, KFB * FB.CastTime / CastTime * duration);
-            FrBS.AddSpellContribution(dict, KFrBS * FrBS.CastTime / CastTime * duration);
-            FBS.AddSpellContribution(dict, KFBS * FBS.CastTime / CastTime * duration);
-            ILS.AddSpellContribution(dict, KILS * ILS.CastTime / CastTime * duration);
+            Spell[0] = FrB;
+            Spell[1] = FB;
+            Spell[2] = FrBS;
+            Spell[3] = FBS;
+            Spell[4] = ILS;
+            Weight[0] = KFrB;
+            Weight[1] = KFB;
+            Weight[2] = KFrBS;
+            Weight[3] = KFBS;
+            Weight[4] = KILS;
+            Calculate();
         }
     }
 
-    class FBLBPyro : Spell
+    class FBLBPyro : DynamicCycle
     {
         BaseSpell FB;
         BaseSpell LB;
@@ -6362,7 +6011,7 @@ namespace Rawr.Mage
         float X;
         float K;
 
-        public FBLBPyro(CastingState castingState)
+        public FBLBPyro(CastingState castingState) : base(3)
         {
             Name = "FBLBPyro";
             AffectedByFlameCap = true;
@@ -6478,23 +6127,17 @@ namespace Rawr.Mage
                 X = (12.0f - LB.CastTime) / (12.0f + FB.CastTime - LB.CastTime + Pyro.CastTime * K);
             }*/
 
-            CastTime = X * FB.CastTime + (1 - X) * LB.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FB.CastTime * FB.CostPerSecond + (1 - X) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FB.CastTime * FB.DamagePerSecond + (1 - X) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FB.CastTime * FB.ThreatPerSecond + (1 - X) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FB.CastTime * FB.ManaRegenPerSecond + (1 - X) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FB.CastProcs + (1 - X) * LB.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FB.AddSpellContribution(dict, X * FB.CastTime / CastTime * duration);
-            LB.AddSpellContribution(dict, (1 - X) * LB.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FB;
+            Spell[1] = LB;
+            Spell[2] = Pyro;
+            Weight[0] = X;
+            Weight[1] = (1 - X);
+            Weight[2] = K;
+            Calculate();
         }
     }
 
-    class FFBLBPyro : Spell
+    class FFBLBPyro : DynamicCycle
     {
         BaseSpell FFB;
         BaseSpell LB;
@@ -6502,7 +6145,7 @@ namespace Rawr.Mage
         float X;
         float K;
 
-        public FFBLBPyro(CastingState castingState)
+        public FFBLBPyro(CastingState castingState) : base(3)
         {
             Name = "FFBLBPyro";
             AffectedByFlameCap = true;
@@ -6539,23 +6182,17 @@ namespace Rawr.Mage
                 X = (12.0f - LB.CastTime) / (12.0f + FFB.CastTime - LB.CastTime + Pyro.CastTime * K);
             }*/
 
-            CastTime = X * FFB.CastTime + (1 - X) * LB.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FFB.CastTime * FFB.CostPerSecond + (1 - X) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FFB.CastTime * FFB.DamagePerSecond + (1 - X) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FFB.CastTime * FFB.ThreatPerSecond + (1 - X) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FFB.CastTime * FFB.ManaRegenPerSecond + (1 - X) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FFB.CastProcs + (1 - X) * LB.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
-            LB.AddSpellContribution(dict, (1 - X) * LB.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FFB;
+            Spell[1] = LB;
+            Spell[2] = Pyro;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Weight[2] = K;
+            Calculate();
         }
     }
 
-    class ScLBPyro : Spell
+    class ScLBPyro : DynamicCycle
     {
         BaseSpell Sc;
         BaseSpell LB;
@@ -6563,7 +6200,7 @@ namespace Rawr.Mage
         float X;
         float K;
 
-        public ScLBPyro(CastingState castingState)
+        public ScLBPyro(CastingState castingState) : base(3)
         {
             Name = "ScLBPyro";
             ProvidesScorch = (castingState.MageTalents.ImprovedScorch > 0);
@@ -6601,29 +6238,23 @@ namespace Rawr.Mage
                 X = (12.0f - LB.CastTime) / (12.0f + Sc.CastTime - LB.CastTime + Pyro.CastTime * K);
             }*/
 
-            CastTime = X * Sc.CastTime + (1 - X) * LB.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * Sc.CastTime * Sc.CostPerSecond + (1 - X) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * Sc.CastTime * Sc.DamagePerSecond + (1 - X) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * Sc.CastTime * Sc.ThreatPerSecond + (1 - X) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * Sc.CastTime * Sc.ManaRegenPerSecond + (1 - X) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * Sc.CastProcs + (1 - X) * LB.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            Sc.AddSpellContribution(dict, X * Sc.CastTime / CastTime * duration);
-            LB.AddSpellContribution(dict, (1 - X) * LB.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = Sc;
+            Spell[1] = LB;
+            Spell[2] = Pyro;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Weight[2] = K;
+            Calculate();
         }
     }
 
-    class FFBPyro : Spell
+    class FFBPyro : DynamicCycle
     {
         BaseSpell FFB;
         SpellCycle chain2;
         float K;
 
-        public FFBPyro(CastingState castingState)
+        public FFBPyro(CastingState castingState) : base(2)
         {
             Name = "FFBPyro";
             AffectedByFlameCap = true;
@@ -6650,23 +6281,15 @@ namespace Rawr.Mage
             K = FFB.CritRate * FFB.CritRate / (1.0f + FFB.CritRate) * castingState.MageTalents.HotStreak / 3.0f;
             if (castingState.MageTalents.Pyroblast == 0) K = 0.0f;
 
-            CastTime = (1 - K) * FFB.CastTime + K * chain2.CastTime;
-            CostPerSecond = ((1 - K) * FFB.CastTime * FFB.CostPerSecond + K * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-            DamagePerSecond = ((1 - K) * FFB.CastTime * FFB.DamagePerSecond + K * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-            ThreatPerSecond = ((1 - K) * FFB.CastTime * FFB.ThreatPerSecond + K * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = ((1 - K) * FFB.CastTime * FFB.ManaRegenPerSecond + K * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
-            // needed for Combustion calculations
-            CastProcs = (1 - K) * FFB.CastProcs + K * chain2.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FFB.AddSpellContribution(dict, (1 - K) * FFB.CastTime / CastTime * duration);
-            chain2.AddSpellContribution(dict, K * chain2.CastTime / CastTime * duration);
+            Spell[0] = FFB;
+            Spell[1] = chain2;
+            Weight[0] = 1 - K;
+            Weight[1] = K;
+            Calculate();
         }
     }
 
-    class FBScPyro : Spell
+    class FBScPyro : DynamicCycle
     {
         BaseSpell FB;
         BaseSpell Sc;
@@ -6674,7 +6297,7 @@ namespace Rawr.Mage
         float K;
         float X;
 
-        public FBScPyro(CastingState castingState)
+        public FBScPyro(CastingState castingState) : base(3)
         {
             Name = "FBScPyro";
             ProvidesScorch = true;
@@ -6789,24 +6412,17 @@ namespace Rawr.Mage
             float C = X * (FBcrit - SCcrit) + SCcrit;
             K = H * C * C / (1 + C);
 
-            // X * value(FB) + (1 - X) * value(Sc) + value(Pyro) * H * C * C / (1 + C)
-            CastTime = X * FB.CastTime + (1 - X) * Sc.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FB.CastTime * FB.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FB.CastTime * FB.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FB.CastTime * FB.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FB.CastTime * FB.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FB.CastProcs + (1 - X) * Sc.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FB.AddSpellContribution(dict, X * FB.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FB;
+            Spell[1] = Sc;
+            Spell[2] = Pyro;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Weight[2] = K;
+            Calculate();
         }
     }
 
-    class FBScLBPyro : Spell
+    class FBScLBPyro : DynamicCycle
     {
         BaseSpell FB;
         BaseSpell Sc;
@@ -6816,7 +6432,7 @@ namespace Rawr.Mage
         float X;
         float Y;
 
-        public FBScLBPyro(CastingState castingState)
+        public FBScLBPyro(CastingState castingState) : base(4)
         {
             Name = "FBScLBPyro";
             ProvidesScorch = true;
@@ -7099,25 +6715,19 @@ namespace Rawr.Mage
                 }
             }*/
 
-            // X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + K * value(Pyro)
-            CastTime = X * FB.CastTime + Y * Sc.CastTime + (1 - X - Y) * LB.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FB.CastTime * FB.CostPerSecond + Y * Sc.CastTime * Sc.CostPerSecond + (1 - X - Y) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FB.CastTime * FB.DamagePerSecond + Y * Sc.CastTime * Sc.DamagePerSecond + (1 - X - Y) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FB.CastTime * FB.ThreatPerSecond + Y * Sc.CastTime * Sc.ThreatPerSecond + (1 - X - Y) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FB.CastTime * FB.ManaRegenPerSecond + Y * Sc.CastTime * Sc.ManaRegenPerSecond + (1 - X - Y) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FB.CastProcs + Y * Sc.CastProcs + (1 - X - Y) * LB.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FB.AddSpellContribution(dict, X * FB.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, Y * Sc.CastTime / CastTime * duration);
-            LB.AddSpellContribution(dict, (1 - X - Y) * LB.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FB;
+            Spell[1] = Sc;
+            Spell[2] = LB;
+            Spell[3] = Pyro;
+            Weight[0] = X;
+            Weight[1] = Y;
+            Weight[2] = (1 - X - Y);
+            Weight[3] = K;
+            Calculate();
         }
     }
 
-    class FFBScLBPyro : Spell
+    class FFBScLBPyro : DynamicCycle
     {
         BaseSpell FFB;
         BaseSpell Sc;
@@ -7127,7 +6737,7 @@ namespace Rawr.Mage
         float X;
         float Y;
 
-        public FFBScLBPyro(CastingState castingState)
+        public FFBScLBPyro(CastingState castingState) : base(4)
         {
             Name = "FFBScLBPyro";
             ProvidesScorch = true;
@@ -7247,25 +6857,19 @@ namespace Rawr.Mage
                 }
             }*/
 
-            // X * value(FB) + Y * value(Sc) + (1 - X - Y) * value(LB) + K * value(Pyro)
-            CastTime = X * FFB.CastTime + Y * Sc.CastTime + (1 - X - Y) * LB.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FFB.CastTime * FFB.CostPerSecond + Y * Sc.CastTime * Sc.CostPerSecond + (1 - X - Y) * LB.CastTime * LB.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FFB.CastTime * FFB.DamagePerSecond + Y * Sc.CastTime * Sc.DamagePerSecond + (1 - X - Y) * LB.CastTime * LB.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FFB.CastTime * FFB.ThreatPerSecond + Y * Sc.CastTime * Sc.ThreatPerSecond + (1 - X - Y) * LB.CastTime * LB.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FFB.CastTime * FFB.ManaRegenPerSecond + Y * Sc.CastTime * Sc.ManaRegenPerSecond + (1 - X - Y) * LB.CastTime * LB.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FFB.CastProcs + Y * Sc.CastProcs + (1 - X - Y) * LB.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, Y * Sc.CastTime / CastTime * duration);
-            LB.AddSpellContribution(dict, (1 - X - Y) * LB.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FFB;
+            Spell[1] = Sc;
+            Spell[2] = LB;
+            Spell[3] = Pyro;
+            Weight[0] = X;
+            Weight[1] = Y;
+            Weight[2] = (1 - X - Y);
+            Weight[3] = K;
+            Calculate();
         }
     }
 
-    class FFBScPyro : Spell
+    class FFBScPyro : DynamicCycle
     {
         BaseSpell FFB;
         BaseSpell Sc;
@@ -7273,7 +6877,7 @@ namespace Rawr.Mage
         float K;
         float X;
 
-        public FFBScPyro(CastingState castingState)
+        public FFBScPyro(CastingState castingState) : base(3)
         {
             Name = "FFBScPyro";
             ProvidesScorch = true;
@@ -7318,30 +6922,23 @@ namespace Rawr.Mage
             float C = X * (FFBcrit - SCcrit) + SCcrit;
             K = H * C * C / (1 + C);
 
-            // X * value(FB) + (1 - X) * value(Sc) + value(Pyro) * H * C * C / (1 + C)
-            CastTime = X * FFB.CastTime + (1 - X) * Sc.CastTime + K * Pyro.CastTime;
-            CostPerSecond = (X * FFB.CastTime * FFB.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond + K * Pyro.CastTime * Pyro.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * FFB.CastTime * FFB.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond + K * Pyro.CastTime * Pyro.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * FFB.CastTime * FFB.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond + K * Pyro.CastTime * Pyro.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * FFB.CastTime * FFB.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond + K * Pyro.CastTime * Pyro.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * FFB.CastProcs + (1 - X) * Sc.CastProcs + K * Pyro.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            FFB.AddSpellContribution(dict, X * FFB.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
-            Pyro.AddSpellContribution(dict, K * Pyro.CastTime / CastTime * duration);
+            Spell[0] = FFB;
+            Spell[1] = Sc;
+            Spell[2] = Pyro;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Weight[2] = K;
+            Calculate();
         }
     }
 
-    class ABABarSc : Spell
+    class ABABarSc : DynamicCycle
     {
         Spell ABABar;
         BaseSpell Sc;
         float X;
 
-        public ABABarSc(CastingState castingState)
+        public ABABarSc(CastingState castingState) : base(2)
         {
             Name = "ABABarSc";
             ProvidesScorch = true;
@@ -7375,28 +6972,21 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABar.CastTime * (1 - gap));
 
-            CastTime = X * ABABar.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * ABABar.CastTime * ABABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * ABABar.CastTime * ABABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * ABABar.CastTime * ABABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * ABABar.CastTime * ABABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * ABABar.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            ABABar.AddSpellContribution(dict, X * ABABar.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = ABABar;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
-    class ABABarCSc : Spell
+    class ABABarCSc : DynamicCycle
     {
         Spell ABABarC;
         BaseSpell Sc;
         float X;
 
-        public ABABarCSc(CastingState castingState)
+        public ABABarCSc(CastingState castingState) : base(2)
         {
             Name = "ABABarCSc";
             ProvidesScorch = true;
@@ -7430,28 +7020,21 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + ABABarC.CastTime * (1 - gap));
 
-            CastTime = X * ABABarC.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * ABABarC.CastTime * ABABarC.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * ABABarC.CastTime * ABABarC.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * ABABarC.CastTime * ABABarC.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * ABABarC.CastTime * ABABarC.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * ABABarC.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            ABABarC.AddSpellContribution(dict, X * ABABarC.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = ABABarC;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
-    class ABAMABarSc : Spell
+    class ABAMABarSc : DynamicCycle
     {
         Spell ABAMABar;
         BaseSpell Sc;
         float X;
 
-        public ABAMABarSc(CastingState castingState)
+        public ABAMABarSc(CastingState castingState) : base(2)
         {
             Name = "ABAMABarSc";
             ProvidesScorch = true;
@@ -7485,28 +7068,21 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + ABAMABar.CastTime * (1 - gap));
 
-            CastTime = X * ABAMABar.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * ABAMABar.CastTime * ABAMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * ABAMABar.CastTime * ABAMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * ABAMABar.CastTime * ABAMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * ABAMABar.CastTime * ABAMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * ABAMABar.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            ABAMABar.AddSpellContribution(dict, X * ABAMABar.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = ABAMABar;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
-    class AB3AMABarSc : Spell
+    class AB3AMABarSc : DynamicCycle
     {
         Spell AB3AMABar;
         BaseSpell Sc;
         float X;
 
-        public AB3AMABarSc(CastingState castingState)
+        public AB3AMABarSc(CastingState castingState) : base(2)
         {
             Name = "AB3AMABarSc";
             ProvidesScorch = true;
@@ -7540,28 +7116,21 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3AMABar.CastTime * (1 - gap));
 
-            CastTime = X * AB3AMABar.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * AB3AMABar.CastTime * AB3AMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * AB3AMABar.CastTime * AB3AMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * AB3AMABar.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            AB3AMABar.AddSpellContribution(dict, X * AB3AMABar.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = AB3AMABar;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
-    class AB3ABarCSc : Spell
+    class AB3ABarCSc : DynamicCycle
     {
         Spell AB3ABarC;
         BaseSpell Sc;
         float X;
 
-        public AB3ABarCSc(CastingState castingState)
+        public AB3ABarCSc(CastingState castingState) : base(2)
         {
             Name = "AB3ABarCSc";
             ProvidesScorch = true;
@@ -7595,28 +7164,21 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3ABarC.CastTime * (1 - gap));
 
-            CastTime = X * AB3ABarC.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * AB3ABarC.CastTime * AB3ABarC.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * AB3ABarC.CastTime * AB3ABarC.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * AB3ABarC.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            AB3ABarC.AddSpellContribution(dict, X * AB3ABarC.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = AB3ABarC;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
-    class AB3MBAMABarSc : Spell
+    class AB3MBAMABarSc : DynamicCycle
     {
         Spell AB3MBAMABar;
         BaseSpell Sc;
         float X;
 
-        public AB3MBAMABarSc(CastingState castingState)
+        public AB3MBAMABarSc(CastingState castingState) : base(2)
         {
             Name = "AB3MBAMABarSc";
             ProvidesScorch = true;
@@ -7650,18 +7212,11 @@ namespace Rawr.Mage
 
             X = gap * Sc.CastTime / (gap * Sc.CastTime + AB3MBAMABar.CastTime * (1 - gap));
 
-            CastTime = X * AB3MBAMABar.CastTime + (1 - X) * Sc.CastTime;
-            CostPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.CostPerSecond + (1 - X) * Sc.CastTime * Sc.CostPerSecond) / CastTime;
-            DamagePerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.DamagePerSecond + (1 - X) * Sc.CastTime * Sc.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.ThreatPerSecond + (1 - X) * Sc.CastTime * Sc.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (X * AB3MBAMABar.CastTime * AB3MBAMABar.ManaRegenPerSecond + (1 - X) * Sc.CastTime * Sc.ManaRegenPerSecond) / CastTime;
-            CastProcs = X * AB3MBAMABar.CastProcs + (1 - X) * Sc.CastProcs;
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            AB3MBAMABar.AddSpellContribution(dict, X * AB3MBAMABar.CastTime / CastTime * duration);
-            Sc.AddSpellContribution(dict, (1 - X) * Sc.CastTime / CastTime * duration);
+            Spell[0] = AB3MBAMABar;
+            Spell[1] = Sc;
+            Weight[0] = X;
+            Weight[1] = 1 - X;
+            Calculate();
         }
     }
 
@@ -7787,7 +7342,7 @@ namespace Rawr.Mage
         }
     }
 
-    class ABAM3ScCCAM : Spell
+    class ABAM3ScCCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -7795,7 +7350,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float CC;
 
-        public ABAM3ScCCAM(CastingState castingState)
+        public ABAM3ScCCAM(CastingState castingState) : base(4)
         {
             Name = "ABAM3ScCC";
 
@@ -7863,11 +7418,15 @@ namespace Rawr.Mage
             chain4.AddSpell(AB3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
-            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = CC;
+            Weight[1] = CC * (1 - CC);
+            Weight[2] = CC * (1 - CC) * (1 - CC);
+            Weight[3] = (1 - CC) * (1 - CC) * (1 - CC);
+            Calculate();
 
             commonChain = chain4;
         }
@@ -7881,17 +7440,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
-        }
     }
 
-    class ABAM3Sc2CCAM : Spell
+    class ABAM3Sc2CCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -7899,7 +7450,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float CC;
 
-        public ABAM3Sc2CCAM(CastingState castingState)
+        public ABAM3Sc2CCAM(CastingState castingState) : base(4)
         {
             Name = "ABAM3Sc2CC";
 
@@ -7967,11 +7518,15 @@ namespace Rawr.Mage
             chain4.AddSpell(AB3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
-            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = CC;
+            Weight[1] = CC * (1 - CC);
+            Weight[2] = CC * (1 - CC) * (1 - CC);
+            Weight[3] = (1 - CC) * (1 - CC) * (1 - CC);
+            Calculate();
 
             commonChain = chain4;
         }
@@ -7985,17 +7540,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
-        }
     }
 
-    class ABAM3FrBCCAM : Spell
+    class ABAM3FrBCCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -8003,7 +7550,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float CC;
 
-        public ABAM3FrBCCAM(CastingState castingState)
+        public ABAM3FrBCCAM(CastingState castingState) : base(4)
         {
             Name = "ABAM3FrBCC";
 
@@ -8071,11 +7618,15 @@ namespace Rawr.Mage
             chain4.AddSpell(AB3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
-            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = CC;
+            Weight[1] = CC * (1 - CC);
+            Weight[2] = CC * (1 - CC) * (1 - CC);
+            Weight[3] = (1 - CC) * (1 - CC) * (1 - CC);
+            Calculate();
 
             commonChain = chain4;
         }
@@ -8089,17 +7640,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
-        }
     }
 
-    class ABAM3FrBCCAMFail : Spell
+    class ABAM3FrBCCAMFail : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -8107,7 +7650,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float CC;
 
-        public ABAM3FrBCCAMFail(CastingState castingState)
+        public ABAM3FrBCCAMFail(CastingState castingState) : base(4)
         {
             Name = "ABAM3FrBCCFail";
 
@@ -8175,11 +7718,15 @@ namespace Rawr.Mage
             chain4.AddSpell(AB3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
-            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = CC;
+            Weight[1] = CC * (1 - CC);
+            Weight[2] = CC * (1 - CC) * (1 - CC);
+            Weight[3] = (1 - CC) * (1 - CC) * (1 - CC);
+            Calculate();
 
             commonChain = chain4;
         }
@@ -8193,17 +7740,9 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
-        }
     }
 
-    class ABAM3FrBScCCAM : Spell
+    class ABAM3FrBScCCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
@@ -8211,7 +7750,7 @@ namespace Rawr.Mage
         SpellCycle chain4;
         float CC;
 
-        public ABAM3FrBScCCAM(CastingState castingState)
+        public ABAM3FrBScCCAM(CastingState castingState) : base(4)
         {
             Name = "ABAM3FrBScCC";
 
@@ -8297,11 +7836,15 @@ namespace Rawr.Mage
             chain4.AddSpell(AB3, castingState);
             chain4.Calculate(castingState);
 
-            CastTime = CC * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * (1 - CC) * (1 - CC) * chain3.CastTime + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime;
-            CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.CostPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.CostPerSecond) / CastTime;
-            DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.DamagePerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.DamagePerSecond) / CastTime;
-            ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ThreatPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ThreatPerSecond) / CastTime;
-            ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * (1 - CC) * (1 - CC) * chain3.CastTime * chain3.ManaRegenPerSecond + (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime * chain4.ManaRegenPerSecond) / CastTime;
+            Spell[0] = chain1;
+            Spell[1] = chain2;
+            Spell[2] = chain3;
+            Spell[3] = chain4;
+            Weight[0] = CC;
+            Weight[1] = CC * (1 - CC);
+            Weight[2] = CC * (1 - CC) * (1 - CC);
+            Weight[3] = (1 - CC) * (1 - CC) * (1 - CC);
+            Calculate();
 
             commonChain = chain4;
         }
@@ -8315,23 +7858,15 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-            chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-            chain3.AddSpellContribution(dict, duration * CC * (1 - CC) * (1 - CC) * chain3.CastTime / CastTime);
-            chain4.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * (1 - CC) * chain4.CastTime / CastTime);
-        }
     }
 
-    class ABAMCCAM : Spell
+    class ABAMCCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         float CC;
 
-        public ABAMCCAM(CastingState castingState)
+        public ABAMCCAM(CastingState castingState) : base(2)
         {
             Name = "ABAMCC";
 
@@ -8355,6 +7890,9 @@ namespace Rawr.Mage
                 chain1.AddSpell(AMc0, castingState);
                 chain1.AddSpell(AB33, castingState);
                 chain1.Calculate(castingState);
+
+                Spell[0] = chain1;
+                Weight[0] = 1;
 
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
@@ -8382,11 +7920,11 @@ namespace Rawr.Mage
                 chain2.AddSpell(AB33, castingState);
                 chain2.Calculate(castingState);
 
-                CastTime = CC * chain1.CastTime + (1 - CC) * chain2.CastTime;
-                CostPerSecond = (CC * chain1.CastTime * chain1.CostPerSecond + (1 - CC) * chain2.CastTime * chain2.CostPerSecond) / CastTime;
-                DamagePerSecond = (CC * chain1.CastTime * chain1.DamagePerSecond + (1 - CC) * chain2.CastTime * chain2.DamagePerSecond) / CastTime;
-                ThreatPerSecond = (CC * chain1.CastTime * chain1.ThreatPerSecond + (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = (CC * chain1.CastTime * chain1.ManaRegenPerSecond + (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Weight[0] = CC;
+                Weight[1] = (1 - CC);
+                Calculate();
 
                 commonChain = chain2;
             }
@@ -8401,29 +7939,16 @@ namespace Rawr.Mage
                 return commonChain.Sequence;
             }
         }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (CC == 0)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, duration * CC * chain1.CastTime / CastTime);
-                chain2.AddSpellContribution(dict, duration * (1 - CC) * chain2.CastTime / CastTime);
-            }
-        }
     }
 
-    class ABAM3CCAM : Spell
+    class ABAM3CCAM : DynamicCycle
     {
         SpellCycle chain1;
         SpellCycle chain2;
         SpellCycle chain3;
         float CC;
 
-        public ABAM3CCAM(CastingState castingState)
+        public ABAM3CCAM(CastingState castingState) : base(3)
         {
             Name = "ABAM3CC";
 
@@ -8464,6 +7989,9 @@ namespace Rawr.Mage
                 chain1.AddSpell(AB3, castingState);
                 chain1.Calculate(castingState);
 
+                Spell[0] = chain1;
+                Weight[0] = 1;
+
                 CastTime = chain1.CastTime;
                 CostPerSecond = chain1.CostPerSecond;
                 DamagePerSecond = chain1.DamagePerSecond;
@@ -8503,12 +8031,13 @@ namespace Rawr.Mage
                 chain3.AddSpell(AMCC, castingState);
                 chain3.Calculate(castingState);
 
-
-                CastTime = (1 - CC) * (1 - CC) * chain1.CastTime + CC * (1 - CC) * chain2.CastTime + CC * chain3.CastTime;
-                CostPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.CostPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.CostPerSecond + CC * chain3.CastTime * chain3.CostPerSecond) / CastTime;
-                DamagePerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.DamagePerSecond + CC * (1 - CC) * chain2.CastTime * chain2.DamagePerSecond + CC * chain3.CastTime * chain3.DamagePerSecond) / CastTime;
-                ThreatPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ThreatPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ThreatPerSecond + CC * chain3.CastTime * chain3.ThreatPerSecond) / CastTime;
-                ManaRegenPerSecond = ((1 - CC) * (1 - CC) * chain1.CastTime * chain1.ManaRegenPerSecond + CC * (1 - CC) * chain2.CastTime * chain2.ManaRegenPerSecond + CC * chain3.CastTime * chain3.ManaRegenPerSecond) / CastTime;
+                Spell[0] = chain1;
+                Spell[1] = chain2;
+                Spell[2] = chain3;
+                Weight[0] = (1 - CC) * (1 - CC);
+                Weight[1] = CC * (1 - CC);
+                Weight[2] = CC;
+                Calculate();
 
                 commonChain = chain3;
             }
@@ -8521,20 +8050,6 @@ namespace Rawr.Mage
             get
             {
                 return commonChain.Sequence;
-            }
-        }
-
-        public override void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            if (CC == 0)
-            {
-                chain1.AddSpellContribution(dict, duration);
-            }
-            else
-            {
-                chain1.AddSpellContribution(dict, duration * (1 - CC) * (1 - CC) * chain1.CastTime / CastTime);
-                chain2.AddSpellContribution(dict, duration * CC * (1 - CC) * chain2.CastTime / CastTime);
-                chain3.AddSpellContribution(dict, duration * CC * chain3.CastTime / CastTime);
             }
         }
     }
@@ -8867,6 +8382,16 @@ namespace Rawr.Mage
             ABar3.AddSpellContribution(dict, KABar3 * ABar3.CastTime / CastTime * duration);
             AM3.AddSpellContribution(dict, KAM3 * AM3.CastTime / CastTime * duration);
             MBAM3.AddSpellContribution(dict, KMBAM3 * MBAM3.CastTime / CastTime * duration);
+        }
+
+        public override void AddManaSourcesContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            throw new NotImplementedException();
         }
     }
     #endregion

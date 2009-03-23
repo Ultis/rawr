@@ -43,18 +43,28 @@ namespace Rawr.Mage
             list.Add(new GemmingTemplate() { Model = "Mage", Group = name, RedId = runed, YellowId = luminous, BlueId = blue, PrismaticId = runed, MetaId = 41285, Enabled = enabled });
         }
 
+        public CalculationsMage()
+        {
+            _subPointNameColorsRating = new Dictionary<string, System.Drawing.Color>();
+            _subPointNameColorsRating.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
+            _subPointNameColorsRating.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
+
+            _subPointNameColorsMana = new Dictionary<string, Color>();
+            _subPointNameColorsMana.Add("Mana", System.Drawing.Color.FromArgb(0, 0, 255));
+
+            _subPointNameColors = _subPointNameColorsRating;
+        }
+
         private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
+        private Dictionary<string, System.Drawing.Color> _subPointNameColorsRating = null;
+        private Dictionary<string, System.Drawing.Color> _subPointNameColorsMana = null;
         public override Dictionary<string, System.Drawing.Color> SubPointNameColors
         {
             get
             {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Dps", System.Drawing.Color.FromArgb(0, 128, 255));
-                    _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
-                }
-                return _subPointNameColors;
+                Dictionary<string, System.Drawing.Color> ret = _subPointNameColors;
+                _subPointNameColors = _subPointNameColorsRating;
+                return ret;
             }
         }
 
@@ -184,7 +194,7 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-                    _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget", "Glyphs" };
+                    _customChartNames = new string[] { "Talents (per talent point)", "Talent Specs", "Item Budget", "Glyphs", "Mana Sources", "Mana Usage" };
                 return _customChartNames;
             }
         }
@@ -941,12 +951,13 @@ namespace Rawr.Mage
             ComparisonCalculationBase comparison;
             float[] subPoints;
 
+            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
+            MageTalents talents = character.MageTalents;
+            CharacterCalculationsMage calculationResult = calculationOptions.Calculations;
+
             switch (chartName)
             {
                 case "Talents (per talent point)":
-                    CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-                    MageTalents talents = character.MageTalents;
-
                     currentCalc = GetCharacterCalculations(character) as CharacterCalculationsMage;
 
                     Type t = typeof(MageTalents);
@@ -1098,6 +1109,40 @@ namespace Rawr.Mage
                     return comparisonList.ToArray();
                 case "Item Budget":
                     return EvaluateItemBudget(character);
+                case "Mana Sources":
+                    _subPointNameColors = _subPointNameColorsMana;
+                    foreach (KeyValuePair<string, float> kvp in calculationResult.ManaSources)
+                    {
+                        if (kvp.Value > 0)
+                        {
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = kvp.Key;
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = kvp.Value;
+                            subPoints = new float[] { kvp.Value };
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+                    }
+                    return comparisonList.ToArray();
+                case "Mana Usage":
+                    _subPointNameColors = _subPointNameColorsMana;
+                    foreach (KeyValuePair<string, float> kvp in calculationResult.ManaUsage)
+                    {
+                        if (kvp.Value > 0)
+                        {
+                            comparison = CreateNewComparisonCalculation();
+                            comparison.Name = kvp.Key;
+                            comparison.Equipped = false;
+                            comparison.OverallPoints = kvp.Value;
+                            subPoints = new float[] { kvp.Value };
+                            comparison.SubPoints = subPoints;
+
+                            comparisonList.Add(comparison);
+                        }
+                    }
+                    return comparisonList.ToArray();
                 default:
                     return new ComparisonCalculationBase[0];
             }

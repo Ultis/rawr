@@ -407,9 +407,9 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 			CharacterCalculationsBase calcs = Calculations.GetCharacterCalculations(Character);
 			_calculatedStats = calcs;
 
-			LoadComparisonData();
 			FormItemSelection.CurrentCalculations = calcs;
             calculationDisplay1.SetCalculations(calcs.GetCharacterDisplayCalculationValues());
+            LoadComparisonData();
             if (calcs.RequiresAsynchronousDisplayCalculation)
             {
                 asyncCalculation = AsyncOperationManager.CreateOperation(null);

@@ -85,6 +85,7 @@ namespace Rawr.Mage
 
         public CalculationsMage Calculations { get; set; }
         public Stats BaseStats { get; set; }
+        public Stats EvocationStats { get; set; }
         public CastingState BaseState { get; set; }
         public CalculationOptionsMage CalculationOptions { get; set; }
 
@@ -347,10 +348,12 @@ namespace Rawr.Mage
 
         public static bool DebugCooldownSegmentation { get; set; }
         public Dictionary<string, string> DisplayCalculationValues { get; private set; }
+        public Dictionary<string, SpellContribution> DamageSources { get; private set; }
+        public Dictionary<string, float> ManaSources { get; private set; }
+        public Dictionary<string, float> ManaUsage { get; private set; }
 
         internal Dictionary<string, string> GetCharacterDisplayCalculationValuesInternal(bool computeReconstruction)
         {
-            CalculationOptions.Calculations = this;
             Dictionary<string, string> dictValues = DisplayCalculationValues = new Dictionary<string, string>();
             dictValues.Add("Stamina", BaseStats.Stamina.ToString());
             dictValues.Add("Intellect", BaseStats.Intellect.ToString());
@@ -428,7 +431,28 @@ namespace Rawr.Mage
             double we = 0;
             double cmg = 0;
             bool segmentedOutput = DebugCooldownSegmentation;
-            Dictionary<string, SpellContribution> byspell = new Dictionary<string, SpellContribution>();
+            DamageSources = new Dictionary<string, SpellContribution>();
+            ManaSources = new Dictionary<string, float>();
+            ManaUsage = new Dictionary<string, float>();
+            ManaSources["Initial Mana"] = StartingMana;
+            ManaSources["Replenishment"] = 0.0f;
+            ManaSources["Mana Gem"] = 0.0f;
+            ManaSources["Mana Potion"] = 0.0f;
+            ManaSources["MP5"] = 0.0f;
+            ManaSources["Intellect/Spirit"] = 0.0f;
+            ManaSources["Evocation"] = 0.0f;
+            ManaSources["Judgement of Wisdom"] = 0.0f;
+            ManaSources["Innervate"] = 0.0f;
+            ManaSources["Mana Tide"] = 0.0f;
+            ManaSources["Drinking"] = 0.0f;
+            ManaSources["Other"] = 0.0f;
+            ManaUsage["Overflow"] = 0.0f;
+            ManaUsage["Summon Water Elemental"] = 0.0f;
+            float spiritFactor = 0.005575f;
+            if (CalculationOptions.Mode31)
+            {
+                spiritFactor = 0.003345f;
+            }
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)
@@ -437,14 +461,39 @@ namespace Rawr.Mage
                     {
                         case VariableType.IdleRegen:
                             idleRegen += Solution[i];
+                            // manaRegen = -(calculationResult.BaseState.ManaRegen * (1 - calculationOptions.Fragmentation) + calculationResult.BaseState.ManaRegen5SR * calculationOptions.Fragmentation);
+                            // ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
+                            // ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * (1 - CalculationOptions.Fragmentation) + BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration * CalculationOptions.Fragmentation);
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * ((BaseState.SpiritRegen * 4 * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration) * (1 - CalculationOptions.Fragmentation) + (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration) * CalculationOptions.Fragmentation);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F} sec", "Idle Regen", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Evocation:
                             evocation += Solution[i];
+                            //double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration);
+                            //double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
+                            //calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
+                            //calculationResult.EvocationRegenHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.3;
+                            //calculationResult.EvocationRegenIVHero = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2 * 1.3;
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Evocation", Solution[i] / EvocationDuration, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.EvocationIV:
                             evocationIV += Solution[i];
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins))
@@ -459,6 +508,12 @@ namespace Rawr.Mage
                             break;
                         case VariableType.EvocationHero:
                             evocationHero += Solution[i];
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.Heroism))
@@ -473,6 +528,12 @@ namespace Rawr.Mage
                             break;
                         case VariableType.EvocationIVHero:
                             evocationIVHero += Solution[i];
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (0.001f + EvocationStats.Spirit * spiritFactor * (float)Math.Sqrt(EvocationStats.Intellect)) * EvocationStats.SpellCombatManaRegeneration;
+                            ManaSources["MP5"] += (float)Solution[i] * EvocationStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * EvocationStats.ManaRestoreFromMaxManaPerSecond * EvocationStats.Mana;
+                            ManaSources["Evocation"] += (float)Solution[i] * 0.15f * EvocationStats.Mana / 2f * BaseState.CastingSpeed * 1.2f * 1.3f;
                             if (segmentedOutput)
                             {
                                 if (SolutionVariable[i].State != null && SolutionVariable[i].State.GetCooldown(Cooldown.IcyVeins | Cooldown.Heroism))
@@ -487,40 +548,94 @@ namespace Rawr.Mage
                             break;
                         case VariableType.ManaPotion:
                             manaPotion += Solution[i];
+                            // (1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue
+                            ManaSources["Mana Potion"] += (float)(Solution[i] * (1 + BaseStats.BonusManaPotion) * ManaPotionValue);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Potion", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ManaGem:
                             manaGem += Solution[i];
+                            ManaSources["Mana Gem"] += (float)(Solution[i] * (1 + BaseStats.BonusManaGem) * ManaGemValue);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Gem", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.DrumsOfBattle:
                             drums += Solution[i];
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Drums of Battle", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Drinking:
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * 4 * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            if (CalculationOptions.PlayerLevel < 75)
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 240f;
+                            }
+                            else if (CalculationOptions.PlayerLevel < 80)
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 306f;
+                            }
+                            else
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 432f;
+                            }
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking", Solution[i]));
                             break;
                         case VariableType.TimeExtension:
                             break;
                         case VariableType.ManaOverflow:
+                            ManaUsage["Overflow"] += (float)Solution[i];
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Mana Overflow", Solution[i], SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.AfterFightRegen:
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen);
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * 4 * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            if (CalculationOptions.PlayerLevel < 75)
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 240f;
+                            }
+                            else if (CalculationOptions.PlayerLevel < 80)
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 306f;
+                            }
+                            else
+                            {
+                                ManaSources["Drinking"] += (float)Solution[i] * 432f;
+                            }
                             sb.AppendLine(String.Format("{0}: {1:F} sec", "Drinking Regen", Solution[i]));
                             break;
                         case VariableType.SummonWaterElemental:
                             we += Solution[i];
+                            ManaSources["Intellect/Spirit"] += (float)Solution[i] * (BaseState.SpiritRegen * BaseStats.SpellCombatManaRegeneration);
+                            ManaSources["MP5"] += (float)Solution[i] * BaseStats.Mp5 / 5f;
+                            ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
+                            ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
+                            ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
+                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * BaseSpell.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ConjureManaGem:
                             cmg += Solution[i];
+                            Spell smg = SolutionVariable[i].Spell;
+                            smg.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
+                            smg.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.Wand:
                         case VariableType.Spell:
                             double value;
                             Spell s = SolutionVariable[i].Spell;
-                            s.AddSpellContribution(byspell, (float)Solution[i]);
+                            s.AddSpellContribution(DamageSources, (float)Solution[i]);
+                            s.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
+                            s.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             string label = ((SolutionVariable[i].State.BuffLabel.Length > 0) ? (SolutionVariable[i].State.BuffLabel + "+") : "") + s.Name;
                             combinedSolution.TryGetValue(label, out value);
                             combinedSolution[label] = value + Solution[i];
@@ -588,13 +703,14 @@ namespace Rawr.Mage
             //if (WaterElemental) sb.AppendLine(String.Format("Water Elemental: {0:F}x", WaterElementalDuration / 45f));
             dictValues.Add("Spell Cycles", sb.ToString());
             sb = new StringBuilder("*");
-            List<SpellContribution> contribList = new List<SpellContribution>(byspell.Values);
+            List<SpellContribution> contribList = new List<SpellContribution>(DamageSources.Values);
             contribList.Sort();
             foreach (SpellContribution contrib in contribList)
             {
                 sb.AppendFormat("{0}: {1:F}%, {2:F} Damage, {3:F} Hits\r\n", contrib.Name, 100.0 * contrib.Damage / totalDamage, contrib.Damage, contrib.Hits);
             }
             dictValues.Add("By Spell", sb.ToString());
+            CalculationOptions.Calculations = this;
             return dictValues;
         }
 

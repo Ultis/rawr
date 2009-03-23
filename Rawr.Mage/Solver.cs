@@ -844,6 +844,7 @@ namespace Rawr.Mage
                 }
                 #endregion
                 #region Evocation
+                calculationResult.EvocationStats = calculationResult.BaseStats;
                 if (calculationOptions.EvocationEnabled)
                 {
                     int evocationSegments = (restrictManaUse) ? segmentList.Count : 1;
@@ -883,10 +884,16 @@ namespace Rawr.Mage
                         evocationRawStats.Intellect += calculationOptions.EvocationWeapon;
                         evocationRawStats.Spirit += calculationOptions.EvocationSpirit;
                         Stats evocationStats = calculations.GetCharacterStats(character, additionalItem, evocationRawStats, calculationOptions);
-                        double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * 0.009327f * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration);
+                        float spiritFactor = 0.005575f;
+                        if (calculationOptions.Mode31)
+                        {
+                            spiritFactor = 0.003345f;
+                        }
+                        double evoManaRegen5SR = ((0.001f + evocationStats.Spirit * spiritFactor * (float)Math.Sqrt(evocationStats.Intellect)) * evocationStats.SpellCombatManaRegeneration + evocationStats.Mp5 / 5f + calculationResult.BaseState.SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + evocationStats.ManaRestoreFromMaxManaPerSecond * evocationStats.Mana);
                         double evocationRegen = evoManaRegen5SR + 0.15f * evocationStats.Mana / 2f * calculationResult.BaseState.CastingSpeed;
                         if (evocationRegen > calculationResult.EvocationRegen)
                         {
+                            calculationResult.EvocationStats = evocationStats;
                             evocationMana = evocationStats.Mana;
                             calculationResult.EvocationRegen = evocationRegen;
                             calculationResult.EvocationRegenIV = evoManaRegen5SR + 0.15f * evocationMana / 2f * calculationResult.BaseState.CastingSpeed * 1.2;
