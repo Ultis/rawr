@@ -596,7 +596,7 @@ namespace Rawr.RestoSham
 
             CalculationOptionsRestoSham options = character.CalculationOptions as CalculationOptionsRestoSham;
             float OrbRegen = (options.WaterShield3 ? 130 : 100);
-            statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0)) + (options.TotemWS1 ? 2 : 0) + (options.WaterShield ? statsTotal.WaterShieldIncrease : 0);
+            statsTotal.Mp5 += ((options.WaterShield ? OrbRegen : 0)) + (options.TotemWS1 ? 2 : 0) + (options.WaterShield ? (100f * statsTotal.WaterShieldIncrease) : 0);
 
             return statsTotal;
             #endregion
