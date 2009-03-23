@@ -254,6 +254,8 @@ namespace Rawr
         CHManaReduction,
         CHHealIncrease,
         LHWManaReduction,
+        RTCDDecrease,
+        CHCTDecrease,
         #endregion
         #region Rawr.Healadin
         FlashOfLightSpellPower,
@@ -2578,6 +2580,20 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase]; }
             set { _rawAdditiveData[(int)AdditiveStat.ManaSpringMp5Increase] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("second off Riptide Cooldown")]
+        public float RTCDDecrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.RTCDDecrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.RTCDDecrease] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("tenths of a second cast time off Chain Heal")]
+        public float CHCTDecrease
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CHCTDecrease]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CHCTDecrease] = value; }
         }
         #endregion
         #region Added by Rawr.Moonkin

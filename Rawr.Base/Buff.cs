@@ -2165,8 +2165,8 @@ namespace Rawr
                 SetThreshold = 3
             });
 
-            // Resto Shammy set bonuses:
-            defaultBuffs.Add(new Buff()
+            // Resto Shammy set bonuses:  Removed BC sets as we push to Ulduar
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Cyclone Raiment 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2204,7 +2204,7 @@ namespace Rawr
                 SetName = "Skyshatter Raiment",
                 Stats = { CHHealIncrease = .05f },
                 SetThreshold = 4
-            });
+            });*/
             // Tier 7
             defaultBuffs.Add(new Buff()
             {
@@ -2212,7 +2212,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Regalia",
-                Stats = { WaterShieldIncrease = 10f },
+                Stats = { WaterShieldIncrease = .1f },
                 SetThreshold = 2
             });
             defaultBuffs.Add(new Buff()
@@ -2222,6 +2222,25 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Earthshatter Regalia",
                 Stats = { CHHWHealIncrease = .05f },
+                SetThreshold = 4
+            });
+            // Tier 8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Regalia",
+                Stats = { RTCDDecrease = 1f },
+                SetThreshold = 2
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Regalia",
+                Stats = { CHCTDecrease = .2f },
                 SetThreshold = 4
             });
 

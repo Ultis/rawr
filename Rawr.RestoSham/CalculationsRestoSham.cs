@@ -336,7 +336,7 @@ namespace Rawr.RestoSham
             float TankCH = (options.TankHeal ? 1 : (1.75f + (options.GlyphCH ? .125f : 0)));
             float CHMana = (((835 - ((TotemCH1 + TotemCH3) + (preserve * (options.TankHeal ? 1 : (3f + (options.GlyphCH ? 1f : 0)))))) * 
                 (1f - ((character.ShamanTalents.TidalFocus) * .01f))));
-            float CHCast = (float)Math.Max((2.6 * (1 - (calcStats.SpellHaste))), 1.1f);
+            float CHCast = (float)Math.Max(((2.6 - stats.CHCTDecrease) * (1 - (calcStats.SpellHaste))), 1.1f);
             float CHHeal = ((((((1130 + TotemCH2 + TotemCH4) + (Healing * (2.5f / 3.5f))) * (1f + (character.ShamanTalents.ImprovedChainHeal * .02f)) *
                 (1f + ((character.ShamanTalents.Purification) * .02f))) * Critical) * TankCH)  + (ExtraELW * ELWHPS * CHCast / 2f)) * (1f + stats.CHHWHealIncrease);
             float CHHPS = CHHeal / CHCast;
@@ -409,18 +409,18 @@ namespace Rawr.RestoSham
             float HWR1 = (RTCast + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))));
             float HWR2 = (RTCast + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + HWCast);
             float HWR3 = (RTCast + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + HWCast + HWCast);
-            if (HWR1 > 6)
+            if (HWR1 > (6 - stats.RTCDDecrease))
                 HWPerRotation = 2;
-            if (HWR1 < 6)
-                if (HWR2 > 6)
+            if (HWR1 < (6 - stats.RTCDDecrease))
+                if (HWR2 > (6 - stats.RTCDDecrease))
                     HWPerRotation = 3;
-            if (HWR1 < 6)
-                if (HWR2 < 6)
-                    if (HWR3 > 6)
+            if (HWR1 < (6 - stats.RTCDDecrease))
+                if (HWR2 < (6 - stats.RTCDDecrease))
+                    if (HWR3 > (6 - stats.RTCDDecrease))
                         HWPerRotation = 4;
-            if (HWR1 < 6)
-                if (HWR2 < 6)
-                    if (HWR3 < 6)
+            if (HWR1 < (6 - stats.RTCDDecrease))
+                if (HWR2 < (6 - stats.RTCDDecrease))
+                    if (HWR3 < (6 - stats.RTCDDecrease))
                         HWPerRotation = 5;
             #endregion
             float RTHWRotLength = RTCast + ((HWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) * 2) + (HWCast * (HWPerRotation - 2));
@@ -438,18 +438,18 @@ namespace Rawr.RestoSham
             float LHWR1 = (RTCast + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))));
             float LHWR2 = (RTCast + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + LHWCast);
             float LHWR3 = (RTCast + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + (LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) + LHWCast + LHWCast);
-            if (LHWR1 > 6)
+            if (LHWR1 > (6 - stats.RTCDDecrease))
                 LHWPerRotation = 2;
-            if (LHWR1 < 6)
-                if (LHWR2 > 6)
+            if (LHWR1 < (6 - stats.RTCDDecrease))
+                if (LHWR2 > (6 - stats.RTCDDecrease))
                     LHWPerRotation = 3;
-            if (LHWR1 < 6)
-                if (LHWR2 < 6)
-                    if (LHWR3 > 6)
+            if (LHWR1 < (6 - stats.RTCDDecrease))
+                if (LHWR2 < (6 - stats.RTCDDecrease))
+                    if (LHWR3 > (6 - stats.RTCDDecrease))
                         LHWPerRotation = 4;
-            if (LHWR1 < 6)
-                if (LHWR2 < 6)
-                    if (LHWR3 < 6)
+            if (LHWR1 < (6 - stats.RTCDDecrease))
+                if (LHWR2 < (6 - stats.RTCDDecrease))
+                    if (LHWR3 < (6 - stats.RTCDDecrease))
                         LHWPerRotation = 5;
             #endregion
             float RTLHWRotLength = RTCast + ((LHWCast * (1 - (character.ShamanTalents.TidalWaves * .06f))) * 2) + (LHWCast * (LHWPerRotation - 2));
@@ -467,18 +467,18 @@ namespace Rawr.RestoSham
             float CHR1 = RTCast + (CHCast * 2);
             float CHR2 = RTCast + (CHCast * 3);
             float CHR3 = RTCast + (CHCast * 4);
-            if (CHR1 > 6)
+            if (CHR1 > (6 - stats.RTCDDecrease))
                 CHPerRotation = 2;
-            if (CHR1 < 6)
-                if (CHR2 > 6)
+            if (CHR1 < (6 - stats.RTCDDecrease))
+                if (CHR2 > (6 - stats.RTCDDecrease))
                     CHPerRotation = 3;
-            if (CHR1 < 6)
-                if (CHR2 < 6)
-                    if (CHR3 > 6)
+            if (CHR1 < (6 - stats.RTCDDecrease))
+                if (CHR2 < (6 - stats.RTCDDecrease))
+                    if (CHR3 > (6 - stats.RTCDDecrease))
                         CHPerRotation = 4;
-            if (CHR1 < 6)
-                if (CHR2 < 6)
-                    if (CHR3 < 6)
+            if (CHR1 < (6 - stats.RTCDDecrease))
+                if (CHR2 < (6 - stats.RTCDDecrease))
+                    if (CHR3 < (6 - stats.RTCDDecrease))
                         CHPerRotation = 5;
             #endregion
             float RTCHRotLength = RTCast + (CHCast * CHPerRotation);
@@ -698,6 +698,8 @@ namespace Rawr.RestoSham
                 #region Totems and Sets
                 WaterShieldIncrease = stats.WaterShieldIncrease,
                 CHHWHealIncrease = stats.CHHWHealIncrease,
+                CHCTDecrease = stats.CHCTDecrease,
+                RTCDDecrease = stats.RTCDDecrease,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -712,8 +714,8 @@ namespace Rawr.RestoSham
             return (stats.Stamina + stats.Intellect + stats.Mp5 + stats.SpellPower + stats.CritRating + stats.HasteRating +
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
-                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast/* +
-                stats.ManaRestoreOnCast_10_45 + stats.ManaRestoreOnCrit_25_45*/) > 0;
+                stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
+                stats.RTCDDecrease) > 0;
         }
 
         #endregion
