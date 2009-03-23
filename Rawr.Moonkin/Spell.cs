@@ -1243,7 +1243,6 @@ namespace Rawr.Moonkin
                 });
             }
             // Moonkin 4T8 set bonus (?? chance on IS tick to proc an instant-cast Starfire)
-            // TODO: Fill in proc chance!  Defaulting to 5%
             if (calcs.BasicStats.StarfireProc > 0)
             {
                 procEffects.Add(new ProcEffect()
@@ -1266,7 +1265,7 @@ namespace Rawr.Moonkin
                             SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
                         };
                         r.DoSpecialStarfire(c, ref newSF, sp, sHi, sc, sHa);
-                        float timeBetweenProcs = 1 / (r.Duration / r.InsectSwarmTicks * 0.05f);
+                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.03f;
                         float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
                         float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
                         return (replaceWrathWithSFDPS * (r.WrathCount / (r.WrathCount + r.StarfireCount)) + 
