@@ -135,6 +135,9 @@ namespace Rawr
 			{
 				if (_characterDisplayCalculationLabels == null)
 					_characterDisplayCalculationLabels = new string[] {
+                    "Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
+                    "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
+                    "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
 					"Basic Stats:Health",
                     "Basic Stats:Mana",
 					"Basic Stats:Attack Power",
@@ -158,8 +161,6 @@ namespace Rawr
                     "Complex Stats:Flurry Uptime",
                     "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
                     "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
-                    "Complex Stats:DPS Points*DPS Points is your theoretical DPS.",
-					"Complex Stats:Overall Points*Rawr is designed to support an Overall point value, comprised of one or more sub point values. Enhancement shamans only care about DPS, so Overall Points will always be identical to DPS Points.",
                     "Attacks:White Damage",
                     "Attacks:Windfury Attack",
                     "Attacks:Flametongue Attack",
@@ -512,11 +513,9 @@ namespace Rawr
 
             #region Individual DPS
             //1: Melee DPS
-            float APDPS = attackPower / 14;
-            float adjustedMHDPS = wdpsMH + APDPS;
-            float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
-            float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
-            float damageOHSwing = adjustedOHDPS * unhastedOHSpeed;
+            float APDPS = attackPower / 14f;
+            float adjustedMHDPS = (wdpsMH + APDPS); // *unhastedMHSpeed / hastedMHSpeed;
+            float adjustedOHDPS = (wdpsOH + APDPS) * .5f; // * unhastedOHSpeed / hastedOHSpeed;
         
             float dpsMHMeleeCrits = adjustedMHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsMHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
@@ -528,6 +527,8 @@ namespace Rawr
                         * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
             //2: Stormstrike DPS
+            float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
+            float damageOHSwing = adjustedOHDPS * unhastedOHSpeed;
             float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
             float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
@@ -603,8 +604,8 @@ namespace Rawr
             #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
-			calculatedStats.SurvivabilityPoints = stats.Health * 0.002f;
-			calculatedStats.OverallPoints = calculatedStats.DPSPoints;
+			calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
+            calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
 			calculatedStats.AvoidedAttacks = chanceWhiteMiss * 100f;
 			calculatedStats.DodgedAttacks = chanceDodge * 100f;
 			calculatedStats.MissedAttacks = calculatedStats.AvoidedAttacks - calculatedStats.DodgedAttacks;
@@ -1258,6 +1259,7 @@ namespace Rawr
             dictValues.Add("Avg Time to 5 Stack", SecondsTo5Stack.ToString("F2", CultureInfo.InvariantCulture) + " sec");
 
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
+            dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
 
             dictValues.Add("White Damage", dpsOutputFormat(SwingDamage,DPSPoints));
