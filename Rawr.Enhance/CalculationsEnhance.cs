@@ -151,6 +151,7 @@ namespace Rawr
                     "Basic Stats:Spell Crit",
                     "Basic Stats:Spellpower",
 					"Basic Stats:Total Expertise",
+   				    "Basic Stats:Hit Rating",
 					"Basic Stats:Haste Rating",
 					"Basic Stats:Armour Pen Rating",
 					"Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
@@ -268,6 +269,7 @@ namespace Rawr
             #region Applied Stats
             //_cachedCharacter = character;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            StatConversion sc = character.StatConversion;
             int targetLevel = calcOpts.TargetLevel;
             float targetArmor = calcOpts.TargetArmor;
             float bloodlustUptime = calcOpts.BloodlustUptime;
@@ -390,20 +392,20 @@ namespace Rawr
             // stats.ArmorPenetrationRating /= 1.25f; // remove 25% effectiveness to get back to patch 3.0.8
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
-            float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
-            float expertiseBonus = stats.Expertise * 0.0025f + stats.ExpertiseRating / 3278.998947f;
+            float hitBonus = stats.PhysicalHit + sc.GetHitFromRating(stats.HitRating) / 100f;
+            float expertiseBonus = 0.0025f * (stats.Expertise + sc.GetExpertiseFromRating(stats.ExpertiseRating));
             float glancingRate = 0.24f;
 
             float meleeCritModifier = stats.PhysicalCrit;
-            float baseMeleeCrit = (stats.CritMeleeRating + stats.CritRating) / 4590.598679f + stats.Agility / 8333.333333f + .01f * TS;
+            float baseMeleeCrit = .01f * (sc.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + sc.GetCritFromAgility(stats.Agility) + TS);
             float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
-            float hitBonusSpell = stats.SpellHit + (stats.HitRating / 2623.199272f);
+            float hitBonusSpell = stats.SpellHit + sc.GetSpellHitFromRating(stats.HitRating) / 100f;
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float baseSpellCrit = (stats.SpellCritRating + stats.CritRating) / 4590.598679f + stats.Intellect / 16666.66709f + .01f * TS;
+            float baseSpellCrit = .01f * (sc.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + sc.GetSpellCritFromIntellect(stats.Intellect) + TS);
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
@@ -414,7 +416,7 @@ namespace Rawr
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = stats.HasteRating / 2522.3068823f;
+            float hasteBonus = sc.GetHasteFromRating(stats.HasteRating) / 100f; //stats.HasteRating / 2522.3068823f;
             // float hasteBonus = stats.HasteRating / 3278.998947f; // patch 3.08 level
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
@@ -431,15 +433,16 @@ namespace Rawr
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedMHSpeed;
                     float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
                     float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedMHSpeed, true);
-                    if (character.MainHandEnchant.Id == 2673)
+                    if (character.MainHandEnchant.Id == 2673) // Mongoose Enchant
                     {
                         float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
-                        attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+                        chanceCrit = Math.Min(0.75f, chanceCrit + sc.GetCritFromAgility(mongooseAgility));
+                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
-                    if (character.MainHandEnchant.Id == 3789)
+                    if (character.MainHandEnchant.Id == 3789) // Berserker Enchant
                     {
                         float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float berserkingUptime = 15f / timeBetweenBerserkingProcs;
@@ -451,15 +454,16 @@ namespace Rawr
                     float whiteAttacksPerSecond = (1f - chanceWhiteMiss - chanceDodge) / baseHastedOHSpeed;
                     float yellowChanceHit = (1f - chanceYellowMiss - chanceDodge);
                     float yellowAttacksPerSecond = getYellowAttacksPerSecond(character, yellowChanceHit, baseHastedOHSpeed, false);
-                    if (character.OffHandEnchant.Id == 2673) 
+                    if (character.OffHandEnchant.Id == 2673)  // Mongoose Enchant
                     {
                         float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float mongooseUptime = 15f / timeBetweenMongooseProcs;
-                        chanceCrit = Math.Min(0.75f, chanceCrit + (120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier)) / 8333.333333f);
-                        attackPower += 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier) * (1 + stats.BonusAttackPowerMultiplier);
+                        float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
+                        chanceCrit = Math.Min(0.75f, chanceCrit + sc.GetCritFromAgility(mongooseAgility));
+                        attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
-                    if (character.OffHandEnchant.Id == 3789)
+                    if (character.OffHandEnchant.Id == 3789) // Berserker Enchant
                     {
                         float timeBetweenBerserkingProcs = 45f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float berserkingUptime = 15f / timeBetweenBerserkingProcs;
@@ -603,20 +607,27 @@ namespace Rawr
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
-            if (calcOpts.MainhandImbue == "Flametongue" | calcOpts.OffhandImbue == "Flametongue")
+            float damageFTCoef = .1f;
+            if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 35 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
-                // however that figure "varies according to weapon speed"
-                float damageFTCoef = .1f;
+                float damageFTBase = 70 * hastedMHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
+                                                         // however that figure "varies according to weapon speed"
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
-                dpsFT = hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
+                dpsFT += hitRollMultiplier * damageFT * hitsPerSMH * (1 + bonusFireDamage);
+            }
+            if (calcOpts.OffhandImbue == "Flametongue")
+            {
+                float damageFTBase = 70 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
+                                                         // however that figure "varies according to weapon speed"
+                float damageFT = damageFTBase + damageFTCoef * spellDamage;
+                dpsFT += hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
             } 
 
             //10: Doggies!  TTT article suggests 300-450 dps while the dogs are up plus 30% of AP
             float dpsDogs = 0f;
             float bonusFSattackpower = calcOpts.GlyphFS ? attackPower * .3f : 0f;
             if (character.ShamanTalents.FeralSpirit == 1)
-                dpsDogs = ((375f + .3f * APDPS + bonusFSattackpower / 14f) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
+                dpsDogs = 2 * ((375f + .3f * APDPS + bonusFSattackpower / 14f) * (45f / 180f)) * (1 + bonusPhysicalDamage); 
             #endregion
 
             calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsLB + dpsWF + dpsLS + dpsST + dpsFT + dpsDogs;
@@ -1236,10 +1247,8 @@ namespace Rawr
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
-            //"Complex Stats:Avg MH Speed",
-            //"Complex Stats:Avg OH Speed",
-
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
+            StatConversion sc = new StatConversion(Character.CharacterClass.Shaman);
             dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Mana", BasicStats.Mana.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
@@ -1254,8 +1263,6 @@ namespace Rawr
             dictValues.Add("Spell Crit", SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%");
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-
-
             dictValues.Add("Total Expertise",
                 String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise, {2} Expertise Rating, {3}% Dodged" : 
                                                      "{0}*{1} Expertise, {2} Expertise Rating, {3}% Dodged"),
@@ -1263,8 +1270,15 @@ namespace Rawr
                 BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
                 DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Armour Pen Rating", BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Haste", 
+                BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
+                sc.GetHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Hit",
+                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
+                sc.GetHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
+                BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
+                sc.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged, {2}% Spell Misses, {3}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
