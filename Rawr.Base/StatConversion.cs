@@ -128,9 +128,11 @@ namespace Rawr
 
         public void SetLevel(int Level) { _Level = Level; }
 
-        public StatConversion(Character _character)
+        public StatConversion(Character _character) : this(_character.Class, _character.Level) { }
+        public StatConversion(Character.CharacterClass _class) : this(_class, MaxLevel) { }
+        public StatConversion(Character.CharacterClass _class, int _level)
         {
-            SetLevel(_character.Level);
+            SetLevel(_level);
 
             #region Combat Rating Calculations
             // Level 60 values, rest is extrapolated           
@@ -179,7 +181,7 @@ namespace Rawr
                     86.2068944f, 92.59259244f, 99.00990313f, 107.526879f, 114.9425283f, 123.4567927f, 133.333327f, 142.857139f, 153.8461534f, 166.6666709f // 71-80
                 };
 
-            switch (_character.Class)
+            switch (_class)
             {
                 case Character.CharacterClass.DeathKnight:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
