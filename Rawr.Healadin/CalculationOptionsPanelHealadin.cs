@@ -36,12 +36,15 @@ namespace Rawr.Healadin
             chkJotP.Checked = calcOpts.JotP;
             chkLoHSelf.Checked = calcOpts.LoHSelf;
 
-            chkGHL.Checked = calcOpts.Glyph_HL;
-            chkGFoL.Checked = calcOpts.Glyph_FoL;
-            chkGSoL.Checked = calcOpts.Glyph_SoL;
-            chkGSoW.Checked = calcOpts.Glyph_SoW;
-            chkGLoH.Checked = calcOpts.Glyph_LoH;
-            chkGDivinity.Checked = calcOpts.Glyph_Divinity;
+            chkGlyphHolyLight.Checked = calcOpts.GlyphHolyLight;
+            chkGlyphFlashOfLight.Checked = calcOpts.GlyphFlashOfLight;
+            chkGlyphSealOfLight.Checked = calcOpts.GlyphSealOfLight;
+            chkGlyphSealOfWisdom.Checked = calcOpts.GlyphSealOfWisdom;
+            chkGlyphDivinity.Checked = calcOpts.GlyphDivinity;
+            chkGlyphHolyShock.Checked = calcOpts.GlyphHolyShock;
+            chkGlyphBeaconOfLight.Checked = calcOpts.GlyphBeaconOfLight;
+            if (chkGlyphSealOfLight.Checked) chkGlyphSealOfWisdom.Enabled = false;
+            else if (chkGlyphSealOfWisdom.Checked) chkGlyphSealOfLight.Enabled = false;
 
             trkReplenishment.Value = (int)(calcOpts.Replenishment * 100);
             lblReplenishment.Text = trkReplenishment.Value + "%";
@@ -189,17 +192,8 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_SoW = chkGSoW.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
-        private void chkGLoH_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_LoH = chkGLoH.Checked;
+                calcOpts.GlyphSealOfWisdom = chkGlyphSealOfWisdom.Checked;
+                chkGlyphSealOfLight.Enabled = !chkGlyphSealOfWisdom.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -209,7 +203,7 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_HL = chkGHL.Checked;
+                calcOpts.GlyphHolyLight = chkGlyphHolyLight.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -219,7 +213,7 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_Divinity = chkGDivinity.Checked;
+                calcOpts.GlyphDivinity = chkGlyphDivinity.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -229,7 +223,7 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_FoL = chkGFoL.Checked;
+                calcOpts.GlyphFlashOfLight = chkGlyphFlashOfLight.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -239,7 +233,8 @@ namespace Rawr.Healadin
             if (!loading)
             {
                 CalculationOptionsHealadin calcOpts = Character.CalculationOptions as CalculationOptionsHealadin;
-                calcOpts.Glyph_SoL = chkGSoL.Checked;
+                calcOpts.GlyphSealOfLight = chkGlyphSealOfLight.Checked;
+                chkGlyphSealOfWisdom.Enabled = !chkGlyphSealOfLight.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -276,6 +271,16 @@ namespace Rawr.Healadin
             }
         }
 
+        private void chkGlyphHolyShock_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkGlyphBeaconOfLight_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 
 	[Serializable]
@@ -305,12 +310,42 @@ namespace Rawr.Healadin
 
         public bool JotP = true;
         public bool LoHSelf = false;
-        public bool Glyph_HL = true;
-        public bool Glyph_FoL = false;
-        public bool Glyph_Divinity = true;
-        public bool Glyph_LoH = true;
-        public bool Glyph_SoW = true;
-        public bool Glyph_SoL = false;
+        public bool GlyphHolyLight = true;
+        public bool GlyphFlashOfLight = false;
+        public bool GlyphDivinity = true;
+        public bool GlyphSealOfWisdom = true;
+        public bool GlyphSealOfLight = false;
+        public bool GlyphHolyShock = false;
+        public bool GlyphBeaconOfLight = false;
+
+        public CalculationOptionsHealadin Clone()
+        {
+            CalculationOptionsHealadin clone = new CalculationOptionsHealadin();
+
+            clone.Length = Length;
+            clone.ManaAmt = ManaAmt;
+            clone.Activity = Activity;
+            clone.Spiritual = Spiritual;
+            clone.Replenishment = Replenishment;
+            clone.DivinePlea = DivinePlea;
+            clone.BoLUp = BoLUp;
+            clone.BoLEff = BoLEff;
+            clone.HolyShock = HolyShock;
+            clone.BurstScale = BurstScale;
+            clone.GHL_Targets = GHL_Targets;
+
+            clone.JotP = JotP;
+            clone.LoHSelf = LoHSelf;
+            clone.GlyphHolyLight = GlyphHolyLight;
+            clone.GlyphFlashOfLight = GlyphFlashOfLight;
+            clone.GlyphDivinity = GlyphDivinity;
+            clone.GlyphSealOfWisdom = GlyphSealOfWisdom;
+            clone.GlyphSealOfLight = GlyphSealOfLight;
+            clone.GlyphHolyShock = GlyphHolyShock;
+            clone.GlyphBeaconOfLight = GlyphBeaconOfLight;
+
+            return clone;
+        }
 
 	}
 }

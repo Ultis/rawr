@@ -58,16 +58,16 @@
             this.lblHS = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.chkGFoL = new System.Windows.Forms.CheckBox();
-            this.chkGLoH = new System.Windows.Forms.CheckBox();
-            this.chkGDivinity = new System.Windows.Forms.CheckBox();
-            this.chkGSoL = new System.Windows.Forms.CheckBox();
-            this.chkGSoW = new System.Windows.Forms.CheckBox();
-            this.chkGHL = new System.Windows.Forms.CheckBox();
+            this.chkGlyphBeaconOfLight = new System.Windows.Forms.CheckBox();
+            this.chkGlyphHolyShock = new System.Windows.Forms.CheckBox();
+            this.chkGlyphFlashOfLight = new System.Windows.Forms.CheckBox();
+            this.chkGlyphDivinity = new System.Windows.Forms.CheckBox();
+            this.chkGlyphSealOfLight = new System.Windows.Forms.CheckBox();
+            this.chkGlyphSealOfWisdom = new System.Windows.Forms.CheckBox();
+            this.chkGlyphHolyLight = new System.Windows.Forms.CheckBox();
             this.chkJotP = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
             this.nudGHL = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.lblBurstScale = new System.Windows.Forms.Label();
             this.trkBurstScale = new System.Windows.Forms.TrackBar();
@@ -453,89 +453,101 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.chkGFoL);
-            this.groupBox3.Controls.Add(this.chkGLoH);
-            this.groupBox3.Controls.Add(this.chkGDivinity);
-            this.groupBox3.Controls.Add(this.chkGSoL);
-            this.groupBox3.Controls.Add(this.chkGSoW);
-            this.groupBox3.Controls.Add(this.chkGHL);
+            this.groupBox3.Controls.Add(this.chkGlyphBeaconOfLight);
+            this.groupBox3.Controls.Add(this.chkGlyphHolyShock);
+            this.groupBox3.Controls.Add(this.chkGlyphFlashOfLight);
+            this.groupBox3.Controls.Add(this.chkGlyphDivinity);
+            this.groupBox3.Controls.Add(this.chkGlyphSealOfLight);
+            this.groupBox3.Controls.Add(this.chkGlyphSealOfWisdom);
+            this.groupBox3.Controls.Add(this.chkGlyphHolyLight);
             this.groupBox3.Location = new System.Drawing.Point(147, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(150, 161);
+            this.groupBox3.Size = new System.Drawing.Size(150, 182);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Glyphs";
             // 
-            // chkGFoL
+            // chkGlyphBeaconOfLight
             // 
-            this.chkGFoL.AutoSize = true;
-            this.chkGFoL.Location = new System.Drawing.Point(6, 88);
-            this.chkGFoL.Name = "chkGFoL";
-            this.chkGFoL.Size = new System.Drawing.Size(131, 17);
-            this.chkGFoL.TabIndex = 5;
-            this.chkGFoL.Text = "Glyph of Flash of Light";
-            this.chkGFoL.UseVisualStyleBackColor = true;
-            this.chkGFoL.CheckedChanged += new System.EventHandler(this.chkGFoL_CheckedChanged);
+            this.chkGlyphBeaconOfLight.AutoSize = true;
+            this.chkGlyphBeaconOfLight.Location = new System.Drawing.Point(6, 157);
+            this.chkGlyphBeaconOfLight.Name = "chkGlyphBeaconOfLight";
+            this.chkGlyphBeaconOfLight.Size = new System.Drawing.Size(101, 17);
+            this.chkGlyphBeaconOfLight.TabIndex = 7;
+            this.chkGlyphBeaconOfLight.Text = "Beacon of Light";
+            this.chkGlyphBeaconOfLight.UseVisualStyleBackColor = true;
+            this.chkGlyphBeaconOfLight.CheckedChanged += new System.EventHandler(this.chkGlyphBeaconOfLight_CheckedChanged);
             // 
-            // chkGLoH
+            // chkGlyphHolyShock
             // 
-            this.chkGLoH.AutoSize = true;
-            this.chkGLoH.Location = new System.Drawing.Point(6, 42);
-            this.chkGLoH.Name = "chkGLoH";
-            this.chkGLoH.Size = new System.Drawing.Size(134, 17);
-            this.chkGLoH.TabIndex = 4;
-            this.chkGLoH.Text = "Glyph of Lay on Hands";
-            this.chkGLoH.UseVisualStyleBackColor = true;
-            this.chkGLoH.CheckedChanged += new System.EventHandler(this.chkGLoH_CheckedChanged);
+            this.chkGlyphHolyShock.AutoSize = true;
+            this.chkGlyphHolyShock.Location = new System.Drawing.Point(6, 134);
+            this.chkGlyphHolyShock.Name = "chkGlyphHolyShock";
+            this.chkGlyphHolyShock.Size = new System.Drawing.Size(81, 17);
+            this.chkGlyphHolyShock.TabIndex = 6;
+            this.chkGlyphHolyShock.Text = "Holy Shock";
+            this.chkGlyphHolyShock.UseVisualStyleBackColor = true;
+            this.chkGlyphHolyShock.CheckedChanged += new System.EventHandler(this.chkGlyphHolyShock_CheckedChanged);
             // 
-            // chkGDivinity
+            // chkGlyphFlashOfLight
             // 
-            this.chkGDivinity.AutoSize = true;
-            this.chkGDivinity.Location = new System.Drawing.Point(6, 65);
-            this.chkGDivinity.Name = "chkGDivinity";
-            this.chkGDivinity.Size = new System.Drawing.Size(102, 17);
-            this.chkGDivinity.TabIndex = 3;
-            this.chkGDivinity.Text = "Glyph of Divinity";
-            this.chkGDivinity.UseVisualStyleBackColor = true;
-            this.chkGDivinity.CheckedChanged += new System.EventHandler(this.chkGDivinity_CheckedChanged);
+            this.chkGlyphFlashOfLight.AutoSize = true;
+            this.chkGlyphFlashOfLight.Location = new System.Drawing.Point(6, 65);
+            this.chkGlyphFlashOfLight.Name = "chkGlyphFlashOfLight";
+            this.chkGlyphFlashOfLight.Size = new System.Drawing.Size(89, 17);
+            this.chkGlyphFlashOfLight.TabIndex = 5;
+            this.chkGlyphFlashOfLight.Text = "Flash of Light";
+            this.chkGlyphFlashOfLight.UseVisualStyleBackColor = true;
+            this.chkGlyphFlashOfLight.CheckedChanged += new System.EventHandler(this.chkGFoL_CheckedChanged);
             // 
-            // chkGSoL
+            // chkGlyphDivinity
             // 
-            this.chkGSoL.AutoSize = true;
-            this.chkGSoL.Location = new System.Drawing.Point(6, 111);
-            this.chkGSoL.Name = "chkGSoL";
-            this.chkGSoL.Size = new System.Drawing.Size(127, 17);
-            this.chkGSoL.TabIndex = 2;
-            this.chkGSoL.Text = "Glyph of Seal of Light";
-            this.chkGSoL.UseVisualStyleBackColor = true;
-            this.chkGSoL.CheckedChanged += new System.EventHandler(this.chkGSoL_CheckedChanged);
+            this.chkGlyphDivinity.AutoSize = true;
+            this.chkGlyphDivinity.Location = new System.Drawing.Point(6, 42);
+            this.chkGlyphDivinity.Name = "chkGlyphDivinity";
+            this.chkGlyphDivinity.Size = new System.Drawing.Size(60, 17);
+            this.chkGlyphDivinity.TabIndex = 3;
+            this.chkGlyphDivinity.Text = "Divinity";
+            this.chkGlyphDivinity.UseVisualStyleBackColor = true;
+            this.chkGlyphDivinity.CheckedChanged += new System.EventHandler(this.chkGDivinity_CheckedChanged);
             // 
-            // chkGSoW
+            // chkGlyphSealOfLight
             // 
-            this.chkGSoW.AutoSize = true;
-            this.chkGSoW.Location = new System.Drawing.Point(6, 134);
-            this.chkGSoW.Name = "chkGSoW";
-            this.chkGSoW.Size = new System.Drawing.Size(142, 17);
-            this.chkGSoW.TabIndex = 1;
-            this.chkGSoW.Text = "Glyph of Seal of Wisdom";
-            this.chkGSoW.UseVisualStyleBackColor = true;
-            this.chkGSoW.CheckedChanged += new System.EventHandler(this.chkGSoW_CheckedChanged);
+            this.chkGlyphSealOfLight.AutoSize = true;
+            this.chkGlyphSealOfLight.Location = new System.Drawing.Point(6, 88);
+            this.chkGlyphSealOfLight.Name = "chkGlyphSealOfLight";
+            this.chkGlyphSealOfLight.Size = new System.Drawing.Size(85, 17);
+            this.chkGlyphSealOfLight.TabIndex = 2;
+            this.chkGlyphSealOfLight.Text = "Seal of Light";
+            this.chkGlyphSealOfLight.UseVisualStyleBackColor = true;
+            this.chkGlyphSealOfLight.CheckedChanged += new System.EventHandler(this.chkGSoL_CheckedChanged);
             // 
-            // chkGHL
+            // chkGlyphSealOfWisdom
             // 
-            this.chkGHL.AutoSize = true;
-            this.chkGHL.Location = new System.Drawing.Point(6, 19);
-            this.chkGHL.Name = "chkGHL";
-            this.chkGHL.Size = new System.Drawing.Size(115, 17);
-            this.chkGHL.TabIndex = 0;
-            this.chkGHL.Text = "Glyph of Holy Light";
-            this.chkGHL.UseVisualStyleBackColor = true;
-            this.chkGHL.CheckedChanged += new System.EventHandler(this.chkGHL_CheckedChanged);
+            this.chkGlyphSealOfWisdom.AutoSize = true;
+            this.chkGlyphSealOfWisdom.Location = new System.Drawing.Point(6, 111);
+            this.chkGlyphSealOfWisdom.Name = "chkGlyphSealOfWisdom";
+            this.chkGlyphSealOfWisdom.Size = new System.Drawing.Size(100, 17);
+            this.chkGlyphSealOfWisdom.TabIndex = 1;
+            this.chkGlyphSealOfWisdom.Text = "Seal of Wisdom";
+            this.chkGlyphSealOfWisdom.UseVisualStyleBackColor = true;
+            this.chkGlyphSealOfWisdom.CheckedChanged += new System.EventHandler(this.chkGSoW_CheckedChanged);
+            // 
+            // chkGlyphHolyLight
+            // 
+            this.chkGlyphHolyLight.AutoSize = true;
+            this.chkGlyphHolyLight.Location = new System.Drawing.Point(6, 19);
+            this.chkGlyphHolyLight.Name = "chkGlyphHolyLight";
+            this.chkGlyphHolyLight.Size = new System.Drawing.Size(73, 17);
+            this.chkGlyphHolyLight.TabIndex = 0;
+            this.chkGlyphHolyLight.Text = "Holy Light";
+            this.chkGlyphHolyLight.UseVisualStyleBackColor = true;
+            this.chkGlyphHolyLight.CheckedChanged += new System.EventHandler(this.chkGHL_CheckedChanged);
             // 
             // chkJotP
             // 
             this.chkJotP.AutoSize = true;
-            this.chkJotP.Location = new System.Drawing.Point(153, 209);
+            this.chkJotP.Location = new System.Drawing.Point(153, 217);
             this.chkJotP.Name = "chkJotP";
             this.chkJotP.Size = new System.Drawing.Size(90, 17);
             this.chkJotP.TabIndex = 37;
@@ -546,11 +558,11 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(151, 167);
+            this.label12.Location = new System.Drawing.Point(151, 193);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(99, 13);
+            this.label12.Size = new System.Drawing.Size(101, 13);
             this.label12.TabIndex = 38;
-            this.label12.Text = "Glyph of Holy Light:";
+            this.label12.Text = "Glyph of HL targets:";
             // 
             // nudGHL
             // 
@@ -560,7 +572,7 @@
             0,
             0,
             65536});
-            this.nudGHL.Location = new System.Drawing.Point(154, 183);
+            this.nudGHL.Location = new System.Drawing.Point(258, 191);
             this.nudGHL.Maximum = new decimal(new int[] {
             5,
             0,
@@ -570,15 +582,6 @@
             this.nudGHL.Size = new System.Drawing.Size(37, 20);
             this.nudGHL.TabIndex = 39;
             this.nudGHL.ValueChanged += new System.EventHandler(this.nudGHL_ValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(197, 185);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(39, 13);
-            this.label13.TabIndex = 40;
-            this.label13.Text = "targets";
             // 
             // label19
             // 
@@ -618,7 +621,6 @@
             this.Controls.Add(this.label19);
             this.Controls.Add(this.lblBurstScale);
             this.Controls.Add(this.trkBurstScale);
-            this.Controls.Add(this.label13);
             this.Controls.Add(this.nudGHL);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.chkJotP);
@@ -687,19 +689,19 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.CheckBox chkGLoH;
-        private System.Windows.Forms.CheckBox chkGDivinity;
-        private System.Windows.Forms.CheckBox chkGSoL;
-        private System.Windows.Forms.CheckBox chkGSoW;
-        private System.Windows.Forms.CheckBox chkGHL;
+        private System.Windows.Forms.CheckBox chkGlyphDivinity;
+        private System.Windows.Forms.CheckBox chkGlyphSealOfLight;
+        private System.Windows.Forms.CheckBox chkGlyphSealOfWisdom;
+        private System.Windows.Forms.CheckBox chkGlyphHolyLight;
         private System.Windows.Forms.CheckBox chkLoHSelf;
-        private System.Windows.Forms.CheckBox chkGFoL;
+        private System.Windows.Forms.CheckBox chkGlyphFlashOfLight;
         private System.Windows.Forms.CheckBox chkJotP;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown nudGHL;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label lblBurstScale;
         private System.Windows.Forms.TrackBar trkBurstScale;
+        private System.Windows.Forms.CheckBox chkGlyphBeaconOfLight;
+        private System.Windows.Forms.CheckBox chkGlyphHolyShock;
     }
 }
