@@ -272,7 +272,7 @@ namespace Rawr
 		}
 
 		public int TargetLevel = 83;
-		public int TargetArmor = 13083;
+		public int TargetArmor = 10645;
 		public int ExposeWeaknessAPValue = 200;
 		public int NumberOfFerociousInspirations = 2;
 		public float BloodlustUptime = 0.15f;

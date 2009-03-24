@@ -255,6 +255,7 @@
             this.trackBarNumberOfFerociousInspirations.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarNumberOfFerociousInspirations.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarNumberOfFerociousInspirations.Enabled = false;
             this.trackBarNumberOfFerociousInspirations.Location = new System.Drawing.Point(74, 142);
             this.trackBarNumberOfFerociousInspirations.Maximum = 4;
             this.trackBarNumberOfFerociousInspirations.Minimum = 1;
@@ -278,6 +279,7 @@
             this.trackBarBloodlustUptime.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarBloodlustUptime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarBloodlustUptime.Enabled = false;
             this.trackBarBloodlustUptime.Location = new System.Drawing.Point(74, 91);
             this.trackBarBloodlustUptime.Maximum = 100;
             this.trackBarBloodlustUptime.Minimum = 5;
@@ -292,6 +294,7 @@
             this.trackBarExposeWeakness.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarExposeWeakness.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarExposeWeakness.Enabled = false;
             this.trackBarExposeWeakness.LargeChange = 50;
             this.trackBarExposeWeakness.Location = new System.Drawing.Point(74, 40);
             this.trackBarExposeWeakness.Maximum = 500;
@@ -308,6 +311,7 @@
             this.trackBarTargetArmor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarTargetArmor.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.trackBarTargetArmor.Enabled = false;
             this.trackBarTargetArmor.LargeChange = 1000;
             this.trackBarTargetArmor.Location = new System.Drawing.Point(74, 193);
             this.trackBarTargetArmor.Maximum = 15000;
