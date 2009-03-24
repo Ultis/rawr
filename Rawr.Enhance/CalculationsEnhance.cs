@@ -607,18 +607,17 @@ namespace Rawr
 
             //9: Flametongue Weapon DPS
             float dpsFT = 0f;
-            float damageFTCoef = .1f;
             if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 70 * hastedMHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
-                                                         // however that figure "varies according to weapon speed"
+                float damageFTBase = 274 * unhastedMHSpeed / 4.0f;
+                float damageFTCoef = .16f * unhastedMHSpeed / 4.0f;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT += hitRollMultiplier * damageFT * hitsPerSMH * (1 + bonusFireDamage);
             }
             if (calcOpts.OffhandImbue == "Flametongue")
             {
-                float damageFTBase = 70 * hastedOHSpeed; // TODO - fix FTW dps base numbers for lvl 80s range is 88.96-274 dmg according to tooltip
-                                                         // however that figure "varies according to weapon speed"
+                float damageFTBase = 274 * unhastedOHSpeed / 4.0f;
+                float damageFTCoef = .16f * unhastedOHSpeed / 4.0f;
                 float damageFT = damageFTBase + damageFTCoef * spellDamage;
                 dpsFT += hitRollMultiplier * damageFT * hitsPerSOH * (1 + bonusFireDamage);
             } 
