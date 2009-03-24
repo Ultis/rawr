@@ -150,6 +150,11 @@ namespace Rawr
             RatingConversionBase60[(int)RatingType.SpellHaste] = 10f;
             RatingConversionBase60[(int)RatingType.SpellHit] = 8f;
 
+            //patch 3.1 haste change - four classes get 30% more melee haste from haste rating
+            if (_class == Character.CharacterClass.DeathKnight || _class == Character.CharacterClass.Druid ||
+                _class == Character.CharacterClass.Paladin || _class == Character.CharacterClass.Shaman)
+                RatingConversionBase60[(int)RatingType.Haste] /= 1.3f;
+
             for (int x = 0; x < 81; x++)
             {
                 float RatingConversion = 0;
