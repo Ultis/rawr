@@ -54,7 +54,7 @@ namespace Rawr.ProtPaladin
                     { sovereign,    enduring,   solid,      solid,      austere },  // Balanced Threat + Avoidance, Austere
                     { sovereign,    enduring,   solid,      solid,      eternal },  // Balanced Threat + Avoidance, Eternal
                     { solid,        solid,      solid,      solid,      austere },  // Max Stam, Austere
-                    { solid,        solid,      solid,      solid,      austere },  // Max Stam, Eternal
+                    { solid,        solid,      solid,      solid,      eternal },  // Max Stam, Eternal
                 };
 
                 // Generate List of Gemming Templates

@@ -484,6 +484,7 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfExorcism.TabIndex = 11;
             this.checkBoxGlyphOfExorcism.Text = "Glyph of Exorcism";
             this.checkBoxGlyphOfExorcism.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfExorcism.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfExorcism_CheckedChanged);
             // 
             // checkBoxGlyphOfDivinePlea
             // 
@@ -493,6 +494,7 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfDivinePlea.TabIndex = 10;
             this.checkBoxGlyphOfDivinePlea.Text = "Glyph of Divine Plea";
             this.checkBoxGlyphOfDivinePlea.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfDivinePlea.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfDivinePlea_CheckedChanged);
             // 
             // checkBoxGlyphOfSealOfVengeance
             // 
@@ -502,6 +504,7 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfSealOfVengeance.TabIndex = 9;
             this.checkBoxGlyphOfSealOfVengeance.Text = "Glyph of Seal of Vengeance";
             this.checkBoxGlyphOfSealOfVengeance.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfSealOfVengeance.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfSealOfVengeance_CheckedChanged);
             // 
             // checkBoxGlyphOfJudgement
             // 
@@ -511,6 +514,7 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfJudgement.TabIndex = 8;
             this.checkBoxGlyphOfJudgement.Text = "Glyph of Judgement";
             this.checkBoxGlyphOfJudgement.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfJudgement.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfJudgement_CheckedChanged);
             // 
             // CalculationOptionsPanelProtPaladin
             // 

@@ -57,18 +57,29 @@ namespace Rawr.ProtPaladin
                 case Ability.JudgementOfVengeance:
                     baseDamage = (1.0f + 0.28f * Stats.SpellPower + 0.175f * Stats.AttackPower) * 1.5f;
 					DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    if (Options.GlyphJudgement)
+                    {
+                        DamageMultiplier *= (1.0f + 0.01f);
+                    }
 					ArmorReduction = 0.0f;
                     break;
-				case Ability.SealOfRighteousness:
+                case Ability.SealOfRighteousness:
+                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.JudgementOfRighteousness:
+                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    if (Options.GlyphJudgement)
+                    {
+                        DamageMultiplier *= (1.0f + 0.01f);
+                    }
 					ArmorReduction = 0.0f;
 					break;
 				// 5 stacks of Holy Vengeance are assumed
 				// TODO: implement stacking mechanic for beginning-of-fight TPS
                 case Ability.HolyVengeance:
-                    baseDamage = 5f * (0.016f * Stats.SpellPower + 0.032f * Stats.AttackPower) * (1 + 0.03f * Talents.SealsOfThePure);
+                    baseDamage = 5f * (0.016f * Stats.SpellPower + 0.032f * Stats.AttackPower);
+                    DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HolyShield:
@@ -81,13 +92,13 @@ namespace Rawr.ProtPaladin
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.Exorcism:
-                    baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f + Stats.AttackPower);
+                    baseDamage = (1028f + 0.15f * Stats.SpellPower + 0.15f * Stats.AttackPower);
                         if (Options.GlyphExorcism)
                         DamageMultiplier *= (1.0f + 0.30f);
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.AvengersShield:
-					baseDamage = 846f + 0.07f * Stats.SpellPower + 0.07f + Stats.AttackPower;
+					baseDamage = 846f + 0.07f * Stats.SpellPower + 0.07f * Stats.AttackPower;
 					ArmorReduction = 0.0f;
 					break;
             }

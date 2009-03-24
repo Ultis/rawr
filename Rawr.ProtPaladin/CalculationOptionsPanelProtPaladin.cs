@@ -54,6 +54,8 @@ namespace Rawr.ProtPaladin
             // Glyphs
             checkBoxGlyphOfJudgement.Checked = calcOpts.GlyphJudgement;
             checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
+            checkBoxGlyphOfExorcism.Checked = calcOpts.GlyphExorcism;
+            checkBoxGlyphOfDivinePlea.Checked = calcOpts.GlyphDivinePlea;
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -133,7 +135,7 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        void CheckBoxGlyphOfJudgementCheckedChanged(object sender, EventArgs e)
+        void checkBoxGlyphOfJudgement_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
@@ -143,12 +145,32 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        void CheckBoxGlyphOfSealOfVengeanceCheckedChanged(object sender, EventArgs e)
+        void checkBoxGlyphOfSealOfVengeance_CheckedChanged(object sender, EventArgs e)
         {
             if (!_loadingCalculationOptions)
             {
                 CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
                 calcOpts.GlyphSealVengeance = checkBoxGlyphOfSealOfVengeance.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfExorcism_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.GlyphExorcism = checkBoxGlyphOfExorcism.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void checkBoxGlyphOfDivinePlea_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.GlyphDivinePlea = checkBoxGlyphOfDivinePlea.Checked;
                 Character.OnCalculationsInvalidated();
             }
         }
@@ -202,6 +224,7 @@ namespace Rawr.ProtPaladin
         public bool GlyphSealVengeance = false;
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
+        public bool GlyphDivinePlea = false;
 		public PaladinTalents talents = null;
 	}
 }
