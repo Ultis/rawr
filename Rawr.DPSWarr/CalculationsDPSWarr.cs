@@ -176,8 +176,8 @@ namespace Rawr.DPSWarr
             calculatedStats.AddRoundedDisplayValue(DisplayValue.ArmorPenetration, stats.ArmorPenetrationRating);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.HitPercent, stats.HitRating);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.CritPercent, stats.CritRating);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, (int)combatFactors.MhExpertise);
-            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, (int)combatFactors.OhExpertise);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.MhExpertise, combatFactors.MhExpertise);
+            calculatedStats.AddRoundedDisplayValue(DisplayValue.OhExpertise, combatFactors.OhExpertise);
             calculatedStats.AddRoundedDisplayValue(DisplayValue.Armor, (int)stats.Armor);
 
             calculatedStats.AddRoundedDisplayValue(DisplayValue.buffedMhCrit, combatFactors.MhCrit*100);

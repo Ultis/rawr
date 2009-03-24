@@ -88,7 +88,7 @@ namespace Rawr.DPSWarr
         {
             get
             {
-                var missChance = 28f;
+                var missChance = 27f;
                 if (MainHand.Slot == Item.ItemSlot.TwoHand && _talents.TitansGrip != 1)
                     missChance = 8f;
                 missChance -= HitPercent;
@@ -261,7 +261,7 @@ namespace Rawr.DPSWarr
 
         private float CalcDodgeChance(float mhExpertise)
         {
-            var mhDodgeChance = 6.4f - .25f * (int)mhExpertise;
+            var mhDodgeChance = 6.5f - .25f * mhExpertise;
             mhDodgeChance -= _talents.WeaponMastery;
             if (mhDodgeChance < 0f)
                 mhDodgeChance = 0f;
