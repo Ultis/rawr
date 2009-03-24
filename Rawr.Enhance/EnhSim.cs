@@ -111,7 +111,7 @@ namespace Rawr.Enhance
             sb.AppendLine("shamanistic_focus               " + character.ShamanTalents.ShamanisticFocus + "/1");
             sb.AppendLine("flurry                          " + character.ShamanTalents.Flurry + "/5");
             sb.AppendLine("elemental_weapons               " + character.ShamanTalents.ElementalWeapons + "/3");
-            sb.AppendLine("unleashed_rage                  " + character.ShamanTalents.UnleashedRage + "/5");
+            sb.AppendLine("unleashed_rage                  " + character.ShamanTalents.UnleashedRage + "/3");
             sb.AppendLine("weapon_mastery                  " + character.ShamanTalents.WeaponMastery + "/3");
             sb.AppendLine("dual_wield_specialization       " + character.ShamanTalents.DualWieldSpecialization + "/3");
             sb.AppendLine("mental_quickness                " + character.ShamanTalents.MentalQuickness + "/3");

@@ -273,7 +273,7 @@ namespace Rawr
             float bloodlustUptime = calcOpts.BloodlustUptime;
             Stats stats = GetCharacterStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
-            calculatedStats.BasicStats = stats;
+            calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -300,9 +300,10 @@ namespace Rawr
                     windfuryWeaponBonus += windfuryWeaponBonus * .4f;
                     break;
             }
-            float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1, character.ShamanTalents.Flurry) + stats.BonusFlurryHaste;
+            float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + stats.BonusFlurryHaste;
+            //patch 3.08 float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1, character.ShamanTalents.Flurry) + stats.BonusFlurryHaste;
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
-            float critMultiplierMelee = 2;
+            float critMultiplierMelee = 2f;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
             float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon;
             int stormstrikeSpeed = 8;
@@ -318,7 +319,19 @@ namespace Rawr
                     weaponMastery = 1.1f;
                     break;
             }
-
+            float unleashedRage = 0f;
+            switch (character.ShamanTalents.UnleashedRage){
+                case 1:
+                    unleashedRage = 1.04f;
+                    break;
+                case 2:
+                    unleashedRage = 1.07f;
+                    break;
+                case 3:
+                    unleashedRage = 1.1f;
+                    break;
+            }
+            // unleashedRage = .1f; patch 3.08 5 talents
             //gear stuff
             string shattrathFaction = calcOpts.ShattrathFaction;
             if (stats.ShatteredSunMightProc > 0)
@@ -374,6 +387,7 @@ namespace Rawr
             ////////////////////////////
 
 			#region Damage Model
+            // stats.ArmorPenetrationRating /= 1.25f; // remove 25% effectiveness to get back to patch 3.0.8
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.PhysicalHit + (stats.HitRating / 3278.998947f);
@@ -400,7 +414,8 @@ namespace Rawr
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = 1.3f * stats.HasteRating / 3278.998947f;
+            float hasteBonus = stats.HasteRating / 2522.3068823f;
+            // float hasteBonus = stats.HasteRating / 3278.998947f; // patch 3.08 level
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
@@ -509,13 +524,14 @@ namespace Rawr
                 averageMeleeCritChance = chanceYellowCrit + edUptime * edCritBonus;
             }
             urUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, 10 * couldCritSwingsPerSecond);
+            attackPower += attackPower * unleashedRage * urUptime;
             #endregion
 
             #region Individual DPS
             //1: Melee DPS
             float APDPS = attackPower / 14f;
-            float adjustedMHDPS = (wdpsMH + APDPS); // *unhastedMHSpeed / hastedMHSpeed;
-            float adjustedOHDPS = (wdpsOH + APDPS) * .5f; // * unhastedOHSpeed / hastedOHSpeed;
+            float adjustedMHDPS = (wdpsMH + APDPS);
+            float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
         
             float dpsMHMeleeCrits = adjustedMHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsMHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
@@ -746,12 +762,15 @@ namespace Rawr
 			float strBonus = (float)Math.Floor(statsGearEnchantsBuffs.Strength * (1 + statsRace.BonusStrengthMultiplier));
             float intBase = (float)Math.Floor(statsRace.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK)+ .0001f); // added fudge factor because apparently Visual Studio can't multiply 125 * 1.04 to get 130.
             float intBonus = (float)Math.Floor(statsGearEnchantsBuffs.Intellect * (1 + statsRace.BonusIntellectMultiplier) * (1 + .02f * AK));
-            float staBase = (float)Math.Floor(statsRace.Stamina);  // need to add mining bonus if have profession
+            float staBase = (float)Math.Floor(statsRace.Stamina);  
 			float staBonus = (float)Math.Floor(statsGearEnchantsBuffs.Stamina);
+            float spiBase = (float)Math.Floor(statsRace.Spirit);  
+			float spiBonus = (float)Math.Floor(statsGearEnchantsBuffs.Spirit);
 						
 			Stats statsTotal = GetRelevantStats(statsRace + statsGearEnchantsBuffs);
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsRace.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusIntellectMultiplier = ((1 + statsRace.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
+            statsTotal.BonusSpiritMultiplier = ((1 + statsRace.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
             statsTotal.BonusAgilityMultiplier = ((1 + statsRace.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
 			statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
@@ -761,6 +780,7 @@ namespace Rawr
 			statsTotal.Stamina = (float)Math.Round((staBase + staBonus) * (1 + statsBuffs.BonusStaminaMultiplier));
 			statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
             statsTotal.Intellect = (float)Math.Floor((intBase + intBonus) * (1 + statsBuffs.BonusIntellectMultiplier));
+            statsTotal.Spirit = (float)Math.Floor((spiBase + spiBonus) * (1 + statsBuffs.BonusSpiritMultiplier)); 
             statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
            
             int MD = character.ShamanTalents.MentalDexterity;
@@ -807,7 +827,7 @@ namespace Rawr
 						calcCritWhite.OverallPoints = calcCritWhite.DPSPoints = currentCalculationsEnhanceWhite.MeleeCrit;
 						calcGlanceWhite.OverallPoints = calcGlanceWhite.DPSPoints = 25f;
 						calcHitWhite.OverallPoints = calcHitWhite.DPSPoints = (100f - calcMissWhite.OverallPoints - 
-						calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
+						                             calcDodgeWhite.OverallPoints - calcCritWhite.OverallPoints - calcGlanceWhite.OverallPoints);
 					}
 					return new ComparisonCalculationBase[] { calcMissWhite, calcDodgeWhite, calcCritWhite, calcGlanceWhite, calcHitWhite };
 
@@ -878,7 +898,8 @@ namespace Rawr
 					Agility = stats.Agility,
 					Strength = stats.Strength,
                     Intellect = stats.Intellect,
-					AttackPower = stats.AttackPower,
+					Spirit = stats.Spirit,
+                    AttackPower = stats.AttackPower,
 					CritRating = stats.CritRating,
 					HitRating = stats.HitRating,
 					Stamina = stats.Stamina,
@@ -896,6 +917,7 @@ namespace Rawr
 					BonusDamageMultiplier = stats.BonusDamageMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
+                    BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                     BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                     BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
@@ -939,13 +961,13 @@ namespace Rawr
 				stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
                 stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating + stats.HasteRating +
                 stats.HitRating + stats.Stamina + stats.Mana + stats.ArmorPenetrationRating + stats.Strength + 
-				stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating +
+				stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating + stats.Spirit +
 				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
                 stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
                 stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + 
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
-                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + 
+                stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusSpiritMultiplier + 
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
                 stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
                 stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
