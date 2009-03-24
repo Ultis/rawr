@@ -266,8 +266,6 @@ namespace Rawr.RestoSham
             #region Spell Power and Haste Based Calcs
             if (character.ActiveBuffsContains("Earthliving Weapon"))
                 stats.SpellPower += (character.ShamanTalents.ElementalWeapons * .1f * 150f);
-            if (character.ActiveBuffsContains("Flametongue Totem"))
-                stats.SpellPower += (character.ShamanTalents.EnhancingTotems * .05f * 144);
             calcStats.SpellHaste = (stats.HasteRating / 3270) + stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
             float Time = (options.FightLength * 60f);

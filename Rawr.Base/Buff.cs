@@ -655,7 +655,10 @@ namespace Rawr
             {
                 Name = "Flametongue Totem",
                 Group = "Spell Power",
-                Stats = { SpellPower = 144f }
+                Stats = { SpellPower = 144f },
+                Improvements = { 
+					new Buff { Name = "Enhancing Totem", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
+                },
             });
             defaultBuffs.Add(new Buff
             {
