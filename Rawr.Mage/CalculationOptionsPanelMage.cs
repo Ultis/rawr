@@ -18,6 +18,13 @@ namespace Rawr.Mage
             {
                 comboBoxMIPMethod.Items.Add(value);
             }
+            if (Properties.Settings.Default.MaxThreads < 1)
+            {
+                Properties.Settings.Default.MaxThreads = 2;
+                Properties.Settings.Default.Save();
+            }
+            numericUpDownMaxThreads.Value = Properties.Settings.Default.MaxThreads;
+            checkBoxDebugCooldownSegmentation.Checked = Properties.Settings.Default.DebugSegmentation;
 		}
 
         private bool loading = false;
@@ -78,8 +85,10 @@ namespace Rawr.Mage
 
         private void checkBoxDebugCooldownSegmentation_CheckedChanged(object sender, EventArgs e)
         {
+            Properties.Settings.Default.DebugSegmentation = checkBoxDebugCooldownSegmentation.Checked;
+            Properties.Settings.Default.Save();
             CharacterCalculationsMage.DebugCooldownSegmentation = checkBoxDebugCooldownSegmentation.Checked;
-            Character.OnCalculationsInvalidated();
+            if (Character != null) Character.OnCalculationsInvalidated();
         }
 
         private void buttonComputeOptimalArcaneCycles_Click(object sender, EventArgs e)
@@ -237,6 +246,13 @@ namespace Rawr.Mage
         {
             SolverLogForm.Instance.Show();
             SolverLogForm.Instance.BringToFront();
+        }
+
+        private void numericUpDownMaxThreads_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.MaxThreads = (int)numericUpDownMaxThreads.Value;
+            Properties.Settings.Default.Save();
+            ArrayPool.MaximumPoolSize = (int)numericUpDownMaxThreads.Value;
         }
 	}
 }

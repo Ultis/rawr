@@ -34,5 +34,29 @@ namespace Rawr.Mage.Properties {
                 this["DisplayedSMPWarning"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MaxThreads {
+            get {
+                return ((int)(this["MaxThreads"]));
+            }
+            set {
+                this["MaxThreads"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DebugSegmentation {
+            get {
+                return ((bool)(this["DebugSegmentation"]));
+            }
+            set {
+                this["DebugSegmentation"] = value;
+            }
+        }
     }
 }
