@@ -851,7 +851,7 @@ namespace Rawr.Mage
             {
                 if (calculationOptions.Mode31)
                 {
-                    statsTotal.CritRating += (0.25f + (calculationOptions.GlyphOfMoltenArmor ? 0.15f : 0.0f)) * statsTotal.Spirit;
+                    statsTotal.CritRating += (0.35f + (calculationOptions.GlyphOfMoltenArmor ? 0.15f : 0.0f)) * statsTotal.Spirit;
                 }
                 else
                 {

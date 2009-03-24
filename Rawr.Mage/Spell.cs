@@ -1147,6 +1147,10 @@ namespace Rawr.Mage
         {
             base.Calculate(castingState);
             CritRate += 0.02f * castingState.MageTalents.Incineration;
+            if (castingState.CalculationOptions.Mode31)
+            {
+                CritRate += 0.03f * castingState.MageTalents.ImprovedScorch;
+            }
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CalculateDerivedStats(castingState, false);
         }
