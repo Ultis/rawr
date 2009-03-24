@@ -270,7 +270,9 @@ threat and limited threat scaled by the threat scale.",
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            AttackModelMode amm = AttackModelMode.Basic;
+            AttackModelMode amm = AttackModelMode.BasicSoV;            
+            if (calcOpts.SealChoice == "Seal of Righteousness")
+                amm = AttackModelMode.BasicSoR;
 
             DefendModel dm = new DefendModel(character, stats);
             AttackModel am = new AttackModel(character, stats, amm);
@@ -329,6 +331,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             //am.RageModelMode = RageModelMode.Limited;
             calculatedStats.LimitedThreat = am.ThreatPerSecond;
+            calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
 
             calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;
@@ -679,9 +682,9 @@ threat and limited threat scaled by the threat scale.",
             {
                 Parry = talents.Deflection * 1.0f,
                 Dodge = talents.Anticipation * 1.0f,
-                BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
+                Block = talents.HolyShield * 30.0f,
                 BonusDamageMultiplier = (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0),
-                BonusStaminaMultiplier = (1f + talents.SacredDuty * 0.04f) * (1f + talents.CombatExpertise * 0.02f) - 1f,
+                BonusStaminaMultiplier = ((1.0f + talents.SacredDuty * 0.04f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f),
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
@@ -692,16 +695,15 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1 + statsTalents.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTalents.BonusStaminaMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)
             {
                 statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
             }
-            if (calcOpts.GlyphSealVengeance) 
+            if (calcOpts.GlyphSealVengeance && calcOpts.SealChoice == "Seal of Vengeance") 
             {
                 statsTotal.Expertise += 10;
             }
@@ -1150,12 +1152,12 @@ threat and limited threat scaled by the threat scale.",
 
     public class ProtPaladin
     {
-        public static readonly float AgilityToDodge = 1.0f / 52.08333333f;
+        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
         public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 52.08333333f;
+        public static readonly float AgilityToCrit = 1.0f / 62.5f;
         public static readonly float StaminaToHP = 10.0f;
         public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
         public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;

@@ -62,7 +62,6 @@ namespace Rawr.ProtPaladin
 
         public static float StanceThreatMultipler(Character character, Stats stats)
         {
-             //In Defensive Stance
             return (1.42f * (1.0f + stats.ThreatIncreaseMultiplier));
         }
 
@@ -73,7 +72,16 @@ namespace Rawr.ProtPaladin
 
         public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType)
         {
+            PaladinTalents talents = character.PaladinTalents;
+            CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
+
             float damageTaken = 1.0f * (1.0f + stats.DamageTakenMultiplier);
+            //Talents
+            damageTaken *= (1f - talents.ImprovedRighteousFury * 0.02f) * (1f - talents.ShieldOfTheTemplar * 0.01f);
+            if (calcOpts.GlyphDivinePlea)
+            {
+                damageTaken *= (1f - 0.03f);
+            }
             			
             switch (damageType)
             {
@@ -83,7 +91,7 @@ namespace Rawr.ProtPaladin
                 case DamageType.Nature:
                 case DamageType.Shadow:
                 case DamageType.Holy:
-                    return damageTaken * (1.0f - character.PaladinTalents.GuardedByTheLight * 0.03f);
+                    return damageTaken * (1.0f - talents.GuardedByTheLight * 0.03f);
                 default:
                     return damageTaken;
 

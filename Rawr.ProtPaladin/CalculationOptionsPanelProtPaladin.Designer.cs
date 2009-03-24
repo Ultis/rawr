@@ -158,6 +158,7 @@ namespace Rawr.ProtPaladin
             this.radioButtonSoR.TabStop = true;
             this.radioButtonSoR.Text = "Seal of Righteousness";
             this.radioButtonSoR.UseVisualStyleBackColor = true;
+            this.radioButtonSoR.CheckedChanged += new System.EventHandler(this.radioButtonSealChoice_CheckedChanged);
             // 
             // radioButtonSoV
             // 
@@ -169,6 +170,7 @@ namespace Rawr.ProtPaladin
             this.radioButtonSoV.TabStop = true;
             this.radioButtonSoV.Text = "Seal of Vengeance";
             this.radioButtonSoV.UseVisualStyleBackColor = true;
+            this.radioButtonSoV.CheckedChanged += new System.EventHandler(this.radioButtonSealChoice_CheckedChanged);
             // 
             // labelBossAttack
             // 

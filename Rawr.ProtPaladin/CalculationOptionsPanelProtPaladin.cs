@@ -51,6 +51,10 @@ namespace Rawr.ProtPaladin
             trackBarThreatScale.Enabled = labelThreatScale.Enabled = (calcOpts.RankingMode != 4);
             trackBarMitigationScale.Enabled = labelMitigationScale.Enabled = (calcOpts.RankingMode == 1);
 
+            // Seal Choice
+            radioButtonSoR.Checked = (calcOpts.SealChoice == "Seal of Righteousness");
+            radioButtonSoV.Checked = (calcOpts.SealChoice == "Seal of Vengeance");
+
             // Glyphs
             checkBoxGlyphOfJudgement.Checked = calcOpts.GlyphJudgement;
             checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
@@ -198,6 +202,23 @@ namespace Rawr.ProtPaladin
             if (!radioButtonDamageOutput.Checked)
                 radioButtonDamageOutput.Checked = true;
         }
+
+        private void radioButtonSealChoice_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                if (radioButtonSoR.Checked)
+                {
+                    calcOpts.SealChoice = "Seal of Righteousness";
+                }
+                else
+                {
+                    calcOpts.SealChoice = "Seal of Vengeance";
+                }
+                Character.OnCalculationsInvalidated();
+            }
+        }
 	}
 
 	[Serializable]
@@ -225,6 +246,7 @@ namespace Rawr.ProtPaladin
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
         public bool GlyphDivinePlea = false;
+        public string SealChoice = "Seal of Vengeance";
 		public PaladinTalents talents = null;
 	}
 }

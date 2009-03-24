@@ -37,11 +37,9 @@ namespace Rawr.ProtPaladin
 
     public enum AttackModelMode
     {
-        Basic,
-        Devastate,
-        SwordAndBoard,
-        FullProtection,
-        UnrelentingAssault,
+        BasicSoV,
+        BasicSoR,
+        
     }
 
     //public enum RageModelMode

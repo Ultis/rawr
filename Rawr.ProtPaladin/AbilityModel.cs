@@ -49,7 +49,7 @@ namespace Rawr.ProtPaladin
 				// Seal of Vengeance is the tiny damage that applies on each swing; Holy Vengeance is the DoT
 				// While trivial threat and damage, it's modeled for compatibility with Seal of Righteousness
 				case Ability.SealOfVengeance:
-					baseDamage = (0.02f * Stats.SpellPower) * (1.0f + 0.02f * Stats.SpellPower);
+					baseDamage = (1.0f + 0.02f * Stats.SpellPower);
 					DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
 					break;
@@ -60,14 +60,17 @@ namespace Rawr.ProtPaladin
                     if (Options.GlyphJudgement)
                     {
                         DamageMultiplier *= (1.0f + 0.01f);
-                    }
+                    }                    
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.SealOfRighteousness:
+                    baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * Stats.AttackPower) + 
+                                 (Lookup.WeaponSpeed(Character, Stats) * 0.044f * Stats.SpellPower);
                     DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.JudgementOfRighteousness:
+                    baseDamage = (1.0f + 0.2f * Stats.AttackPower + 0.32f * Stats.SpellPower);
                     DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
                     if (Options.GlyphJudgement)
                     {
