@@ -279,12 +279,13 @@ namespace Rawr.Retribution
             float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) *
                 talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
             float csAvgHit = csDamage * (1f + csCrit * critBonus - csCrit - calc.ToMiss - calc.ToDodge);
-            calc.CrusaderStrikeDPS = csAvgHit / 6f;
+            float csRightVen = csDamage * critBonus * rightVen;
+            calc.CrusaderStrikeDPS = (csAvgHit + csRightVen) / 6f;
             #endregion
 
             #region Divine Storm
             float dsCrit = stats.PhysicalCrit + stats.DivineStormCrit;
-            float dsDamage = (normalizedWeaponDamage + stats.DivineStormDamage) *
+            float dsDamage = (normalizedWeaponDamage + stats.DivineStormDamage) * 1.1f *
                 talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
             float dsAvgHit = dsDamage * (1f + dsCrit * critBonus - dsCrit - calc.ToMiss - calc.ToDodge);
             float dsRightVen = dsDamage * critBonus * rightVen;
@@ -328,7 +329,7 @@ namespace Rawr.Retribution
             #endregion
 
             float unlimitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * unlimited.Judgement +
-                csAvgHit * unlimited.CrusaderStrike + (dsAvgHit + dsRightVen) * unlimited.DivineStorm + exoAvgHit * unlimited.Exorcism +
+                (csAvgHit + csRightVen) * unlimited.CrusaderStrike + (dsAvgHit + dsRightVen) * unlimited.DivineStorm + exoAvgHit * unlimited.Exorcism +
                 consAvgHit * unlimited.Consecration + howAvgHit * unlimited.HammerOfWrath) / unlimited.FightLength;
 
             if (calcOpts.SimulateMana)
@@ -336,7 +337,8 @@ namespace Rawr.Retribution
                 const float baseMana = 4394f;
                 float benediction = 1f - .02f * talents.Benediction;
                 float csMana = baseMana * -.08f * benediction * (calcOpts.GlyphCrusaderStrike ? .8f : 1f);
-                float judgeMana = baseMana * -.05f * benediction + (1f - calc.ToMiss) * .15f * baseMana;
+                float judgeMana = baseMana * -.05f * benediction +
+                    (1f - calc.ToMiss) * 25f / 3f * baseMana * talents.JudgementsOfTheWise;
                 float dsMana = baseMana * -.12f * benediction;
                 float howMana = baseMana * -.12f * benediction * (calcOpts.GlyphHammerOfWrath ? .5f : 1f);
                 float exoMana = baseMana * -.08f * benediction;
@@ -346,7 +348,7 @@ namespace Rawr.Retribution
                     howMana / unlimited.HammerOfWrathCD + exoMana / unlimited.ExorcismCD + consMana / unlimited.ConsecrationCD;
 
                 float limitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * limited.Judgement +
-                    csAvgHit * limited.CrusaderStrike + (dsAvgHit + dsRightVen) * limited.DivineStorm + exoAvgHit * limited.Exorcism +
+                    (csAvgHit + csRightVen) * limited.CrusaderStrike + (dsAvgHit + dsRightVen) * limited.DivineStorm + exoAvgHit * limited.Exorcism +
                     consAvgHit * limited.Consecration + howAvgHit * limited.HammerOfWrath) / limited.FightLength;
                 float limitedUsage = csMana / limited.CrusaderStrikeCD + judgeMana / limited.JudgementCD + dsMana / limited.DivineStormCD +
                     howMana / limited.HammerOfWrathCD + exoMana / limited.ExorcismCD + consMana / limited.ConsecrationCD;
