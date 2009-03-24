@@ -279,7 +279,7 @@ namespace Rawr.Retribution
             float csDamage = (normalizedWeaponDamage * 1.1f + stats.CrusaderStrikeDamage) *
                 talentMulti * physPowerMulti * armorReduction * aow * aw * sanctBattle;
             float csAvgHit = csDamage * (1f + csCrit * critBonus - csCrit - calc.ToMiss - calc.ToDodge);
-            float csRightVen = csDamage * critBonus * rightVen;
+            float csRightVen = csDamage * critBonus * rightVen * csCrit;
             calc.CrusaderStrikeDPS = (csAvgHit + csRightVen) / 6f;
             #endregion
 
@@ -288,7 +288,7 @@ namespace Rawr.Retribution
             float dsDamage = (normalizedWeaponDamage + stats.DivineStormDamage) * 1.1f *
                 talentMulti * physPowerMulti * armorReduction * aow * (1f + stats.DivineStormMultiplier) * aw;
             float dsAvgHit = dsDamage * (1f + dsCrit * critBonus - dsCrit - calc.ToMiss - calc.ToDodge);
-            float dsRightVen = dsDamage * critBonus * rightVen;
+            float dsRightVen = dsDamage * critBonus * rightVen * dsCrit;
             calc.DivineStormDPS = (dsAvgHit + dsRightVen) / 10f;
             #endregion
 
@@ -297,7 +297,7 @@ namespace Rawr.Retribution
             float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
-            float judgeRightVen = judgeDamage * critBonus * rightVen;
+            float judgeRightVen = judgeDamage * critBonus * rightVen * judgeCrit;
             calc.JudgementDPS = (judgeAvgHit + judgeRightVen) / (8f - stats.JudgementCDReduction);
             #endregion
 
@@ -315,7 +315,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Hammer of Wrath
-            float howCrit = stats.PhysicalCrit + .25f * talents.SanctifiedRetribution;
+            float howCrit = stats.PhysicalCrit + .25f * talents.SanctifiedWrath;
             float howDamage = (1198f + .15f * stats.SpellPower + .15f * stats.AttackPower) * spellPowerMulti * talentMulti * partialResist * aw * (1f + stats.HammerOfWrathMultiplier);
             float howAvgHit = howDamage * (1f + howCrit * critBonus - howCrit - calc.ToMiss);
             calc.HammerOfWrathDPS = howAvgHit / 6f;
