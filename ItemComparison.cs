@@ -359,6 +359,7 @@ namespace Rawr
             Character baseChar = Character.Clone();
             Character newChar = Character.Clone();
             CharacterCalculationsBase currentCalc;
+            ComparisonCalculationBase compare;
             int orig;
             foreach (PropertyInfo pi in baseChar.CurrentTalents.GetType().GetProperties())
             {
@@ -370,7 +371,9 @@ namespace Rawr
                     if (talentData.MaxPoints == (int)pi.GetValue(baseChar.CurrentTalents, null)) baseChar.CurrentTalents.Data[talentData.Index]--;
                     else newChar.CurrentTalents.Data[talentData.Index]++;
                     currentCalc = Calculations.GetCharacterCalculations(baseChar);
-                    talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalc, newChar, talentData.Name, talentData.MaxPoints == orig));
+                    compare = Calculations.GetCharacterComparisonCalculations(currentCalc, newChar, talentData.Name, talentData.MaxPoints == orig);
+                    compare.Item = null;
+                    talentCalculations.Add(compare);
                     baseChar.CurrentTalents.Data[talentData.Index] = orig;
                     newChar.CurrentTalents.Data[talentData.Index] = orig;
                 }
@@ -404,13 +407,15 @@ namespace Rawr
                     default: baseChar.DruidTalents = new DruidTalents(); break;
                 }
                 CharacterCalculationsBase currentCalculations = Calculations.GetCharacterCalculations(baseChar);
+                ComparisonCalculationBase compare;
                 Character newChar;
                 foreach (SavedTalentSpec spec in picker.SpecsFor(Character.Class))
                 {
                     newChar = Character.Clone();
                     newChar.CurrentTalents = spec.TalentSpec();
-                    talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, spec == picker.CurrentSpec()));
-                    //talentCalculations.Add(Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, ));
+                    compare = Calculations.GetCharacterComparisonCalculations(currentCalculations, newChar, spec.Name, spec == picker.CurrentSpec());
+                    compare.Item = null;
+                    talentCalculations.Add(compare);
                 }
             }
 
