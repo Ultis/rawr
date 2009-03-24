@@ -536,15 +536,19 @@ namespace Rawr
             float APDPS = attackPower / 14f;
             float adjustedMHDPS = (wdpsMH + APDPS);
             float adjustedOHDPS = (wdpsOH + APDPS) * .5f;
-        
+
+            float dpsMHMeleeNormal = adjustedMHDPS * (1 - chanceWhiteCrit - glancingRate);
             float dpsMHMeleeCrits = adjustedMHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsMHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
+            float dpsOHMeleeNormal = adjustedOHDPS * (1 - chanceWhiteCrit - glancingRate);
             float dpsOHMeleeCrits = adjustedOHDPS * chanceWhiteCrit * critMultiplierMelee;
             float dpsOHMeleeGlances = adjustedMHDPS * glancingRate * .35f;
 
-            float dpsMelee = (adjustedMHDPS + dpsMHMeleeCrits + dpsMHMeleeGlances + adjustedOHDPS + dpsOHMeleeCrits + dpsOHMeleeGlances)
-                        * weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
+            float meleeMultipliers = weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
+
+            float dpsMelee = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * hastedMHSpeed / unhastedMHSpeed +
+                              (dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * hastedOHSpeed / unhastedOHSpeed) * meleeMultipliers;
 
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
