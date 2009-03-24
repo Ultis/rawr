@@ -285,7 +285,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
 
-            calculatedStats.Defense = (float)Math.Floor(400.0f + stats.Defense + (stats.DefenseRating * ProtPaladin.DefenseRatingToDefense));
+            calculatedStats.Defense = 400.0f + stats.Defense + (float)Math.Floor(stats.DefenseRating * ProtPaladin.DefenseRatingToDefense);
             calculatedStats.BlockValue = stats.BlockValue;
 
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
@@ -366,22 +366,41 @@ threat and limited threat scaled by the threat scale.",
             return calculatedStats;
         }
 
-
+        
         #region Paladin Race Stats
         private static float[,] BasePaladinRaceStats = new float[,] 
 		{
-							//	Strength,	Agility,	Stamina
-            /*Human*/		{	174f,	    113f,	    159f,   },
-            /*Orc*/			{	178f,		110f,		162f,	},
-            /*Dwarf*/		{	176f,	    109f,	    162f,   },
-			/*Night Elf*/	{	172f,	    118f,	    159f,   },
-	        /*Undead*/		{	174f,	    111f,	    160f,   },
-			/*Tauren*/		{	180f,		108f,		162f,	},
-	        /*Gnome*/		{	170f,	    116f,	    159f,   },
-			/*Troll*/		{	175f,	    115f,	    160f,   },	
-			/*BloodElf*/	{	0f,		    0f,		    0f,	    },
-			/*Draenei*/		{	175f,		110f,		158f,	},
+        	 /* These values are well-defined by the sum of base value for Race, Class and gains from level.
+        	 * For information about Race and Class values see http://www.wowwiki.com/Race
+        	 * Infomation about Paladin stat gains from level is Negarines own research.
+        	 * 
+        	 * 						Strength,	Agility,	Stamina,	Intellect,	Spirit
+        	 * ["GainLvl80"]	{	129,		70,			121,		78,			84	}
+        	 * ["ClassBonus"]	{	2,			0,			2,			0,			1	}
+        	 * ["Human"]		{	20, 		20, 		20, 		20, 		21	}
+        	 * ["Orc"] 			{	23, 		17, 		22, 		17, 		23	}
+        	 * ["Dwarf"]		{	22, 		16, 		23, 		19, 		19	}
+        	 * ["NightElf"]		{	17, 		25, 		19, 		20, 		20	}
+        	 * ["Undead"]		{	19, 		18, 		21, 		18, 		25	}
+        	 * ["Tauren"]		{	25, 		15, 		22, 		15, 		22	}
+        	 * ["Gnome"]		{	15, 		23, 		19, 		24, 		20	}
+        	 * ["Troll"]		{	21, 		22, 		21, 		16, 		21	}
+        	 * ["Draenei"]		{	21, 		17, 		19, 		21, 		22	}
+        	 * ["BloodElf"]		{	17, 		22, 		18, 		24, 		19	}
+        	 */
+							//	Strength,	Agility,	Stamina,	Intellect,	Spirit,
+            /*Human*/		{	151f,	    90f,	    143f,   	98f,		105f,	},
+            /*Orc*/			{	154f,		87f,		145f,		95f,		108f,	},
+            /*Dwarf*/		{	153f,	    86f,	    146f,   	97f,		104f,	},
+			/*Night Elf*/	{	148f,	    95f,	    142f,   	98f,		105f,	},
+	        /*Undead*/		{	150f,	    88f,	    144f,   	96f,		110f,	},
+			/*Tauren*/		{	156f,		85f,		145f,		93f,		107f,	},
+	        /*Gnome*/		{	146f,	    93f,	    142f,   	102f,		105f,	},
+			/*Troll*/		{	153f,	    87f,	    144f,   	94f,		106f,	},
+			/*Draenei*/		{	153f,		92f,		142f,		99f,		107f,	},
+			/*BloodElf*/	{	148f,		92f,		141f,		102f,		104f,	},
 		};
+        
 
         private Stats GetRaceStats(Character character)
         {
@@ -391,16 +410,19 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Human:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[0, 0],
                         Agility = (float)BasePaladinRaceStats[0, 1],
                         Stamina = (float)BasePaladinRaceStats[0, 2],
+                        Intellect = (float)BasePaladinRaceStats[0, 3],
+                        Spirit = (float)BasePaladinRaceStats[0, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Miss = 0.05f,
                         Parry = 5f,
                         PhysicalCrit = 0.03185f,
+                        //Spirit *= 1.03f	// Human spirit bonus is 3%, need to research if wowwiki race spirit value already includes this. (20*1.03 = 21)
                     };
                     if ((character.MainHand != null) &&
                         ((character.MainHand.Item.Type == Item.ItemType.OneHandSword) ||
@@ -412,13 +434,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Orc:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[1, 0],
                         Agility = (float)BasePaladinRaceStats[1, 1],
                         Stamina = (float)BasePaladinRaceStats[1, 2],
+                        Intellect = (float)BasePaladinRaceStats[1, 3],
+                        Spirit = (float)BasePaladinRaceStats[1, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -433,13 +457,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Dwarf:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[2, 0],
                         Agility = (float)BasePaladinRaceStats[2, 1],
                         Stamina = (float)BasePaladinRaceStats[2, 2],
+                        Intellect = (float)BasePaladinRaceStats[2, 3],
+                        Spirit = (float)BasePaladinRaceStats[2, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -453,13 +479,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.NightElf:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[3, 0],
                         Agility = (float)BasePaladinRaceStats[3, 1],
                         Stamina = (float)BasePaladinRaceStats[3, 2],
+                        Intellect = (float)BasePaladinRaceStats[3, 3],
+                        Spirit = (float)BasePaladinRaceStats[3, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Miss = 0.05f + 0.02f,
                         Parry = 5f,
                         PhysicalCrit = 0.03185f,
@@ -468,13 +496,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Undead:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[4, 0],
                         Agility = (float)BasePaladinRaceStats[4, 1],
                         Stamina = (float)BasePaladinRaceStats[4, 2],
+                        Intellect = (float)BasePaladinRaceStats[4, 3],
+                        Spirit = (float)BasePaladinRaceStats[4, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -483,13 +513,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Tauren:
                     statsRace = new Stats()
                     {
-                        Health = 8338f,
+                        Health = 7280f, // = 6934f * 1.05f
                         Strength = (float)BasePaladinRaceStats[5, 0],
                         Agility = (float)BasePaladinRaceStats[5, 1],
                         Stamina = (float)BasePaladinRaceStats[5, 2],
+                        Intellect = (float)BasePaladinRaceStats[5, 3],
+                        Spirit = (float)BasePaladinRaceStats[5, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -498,13 +530,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Gnome:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[6, 0],
                         Agility = (float)BasePaladinRaceStats[6, 1],
                         Stamina = (float)BasePaladinRaceStats[6, 2],
+                        Intellect = (float)BasePaladinRaceStats[6, 3],
+                        Spirit = (float)BasePaladinRaceStats[6, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -513,13 +547,15 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Troll:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
+                        Health = 6934f,
                         Strength = (float)BasePaladinRaceStats[7, 0],
                         Agility = (float)BasePaladinRaceStats[7, 1],
                         Stamina = (float)BasePaladinRaceStats[7, 2],
+                        Intellect = (float)BasePaladinRaceStats[7, 3],
+                        Spirit = (float)BasePaladinRaceStats[7, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
@@ -528,17 +564,38 @@ threat and limited threat scaled by the threat scale.",
                 case Character.CharacterRace.Draenei:
                     statsRace = new Stats()
                     {
-                        Health = 7941f,
-                        Strength = (float)BasePaladinRaceStats[9, 0],
-                        Agility = (float)BasePaladinRaceStats[9, 1],
-                        Stamina = (float)BasePaladinRaceStats[9, 2],
+                        Health = 6934f,
+                        Strength = (float)BasePaladinRaceStats[8, 0],
+                        Agility = (float)BasePaladinRaceStats[8, 1],
+                        Stamina = (float)BasePaladinRaceStats[8, 2],
+                        Intellect = (float)BasePaladinRaceStats[8, 3],
+                        Spirit = (float)BasePaladinRaceStats[8, 4],
 
                         AttackPower = 220f,
-                        Dodge = 3.4636f,
+                        Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
                         PhysicalCrit = 0.03185f,
                         PhysicalHit = 0.01f,
+                        SpellHit = 0.01f,
+                    };
+                    break;
+                case Character.CharacterRace.BloodElf:
+                    statsRace = new Stats()
+                    {
+                        Health = 6934f,
+                        Strength = (float)BasePaladinRaceStats[9, 0],
+                        Agility = (float)BasePaladinRaceStats[9, 1],
+                        Stamina = (float)BasePaladinRaceStats[9, 2],
+                        Intellect = (float)BasePaladinRaceStats[9, 3],
+                        Spirit = (float)BasePaladinRaceStats[9, 4],
+
+                        AttackPower = 220f,
+                        Dodge = 3.2685f,
+                        Parry = 5f,
+                        Miss = 0.05f,
+                        PhysicalCrit = 0.03185f,
+                        //TODO Magic Resistance: Reduces the chance to be hit by spells by 2% There's no definition for this in Stats.cs
                     };
                     break;
                 default:
@@ -547,6 +604,31 @@ threat and limited threat scaled by the threat scale.",
             }
 
             return statsRace;
+            /* 			
+            Stats uniform to all races of paladins:
+            I plan to pull those variables out of the switch case to make the Race gains more distinct from Class attributes
+            something like:
+            statsClass = new Stats()
+            {
+            	AttackPower = 220f,			// Base AP = (LVL * 3f) - 20f
+            	Dodge = 3.2685f,			// Base Dodge for the paladin class
+            	Health = 6934f,				// this is the Base Health for any level 80 character of any class. (tauren get 5% bonus on this value)
+            	Parry = 5f,					// Base Parry for a character with maxed out defense skill
+            	Miss = 0.05f,				// Base Miss for a character with maxed out defense skill
+            	PhysicalCrit = 0.032685f,	// Base Crit for the paladin class TODO: Check if this is different for other classes
+            	Parry = .05f,				// Base Dodge for a character with maxed out defense skill
+            	Mana = 4114,				// this is the Base Mana for any level 80 character of any class
+            	Block = ?					// look into the block formula, this is a base value after all
+            };
+            Stats statsBase = StatsRace + StatsClass;
+            
+            later in the code, the following arrays of stats are used,
+            
+            Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
+            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            
+            which suggests I will have to rename the later used StatsRace to StatsBase.
+			*/
         }
         #endregion
 
@@ -597,9 +679,9 @@ threat and limited threat scaled by the threat scale.",
             {
                 Parry = talents.Deflection * 1.0f,
                 Dodge = talents.Anticipation * 1.0f,
-                BonusBlockValueMultiplier = talents.Redoubt * 0.15f,
-                BonusDamageMultiplier = talents.OneHandedWeaponSpecialization * 0.02f,
-                BonusStaminaMultiplier = talents.SacredDuty * 0.04f,
+                BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
+                BonusDamageMultiplier = (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0),
+                BonusStaminaMultiplier = (1f + talents.SacredDuty * 0.04f) * (1f + talents.CombatExpertise * 0.02f) - 1f,
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
@@ -610,8 +692,9 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1 + statsTalents.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTalents.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsBuffs.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)
@@ -624,7 +707,7 @@ threat and limited threat scaled by the threat scale.",
             }
             statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Health += statsTotal.Stamina * 10f;
+            statsTotal.Health += (statsTotal.Stamina - 18f) * 10f;
             if (character.ActiveBuffsContains("Commanding Shout"))
                 statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
             statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
@@ -632,8 +715,9 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.AttackPower += statsTotal.Strength * 2;
-            statsTotal.SpellPower += statsTotal.Stamina * talents.TouchedByTheLight * 0.1f;
-            statsTotal.AttackPower *= (1 + statsTotal.BonusAttackPowerMultiplier);
+            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1 + statsTotal.BonusAttackPowerMultiplier));
+            statsTotal.SpellPower += (float)Math.Floor(statsTotal.Stamina * talents.TouchedByTheLight * 0.1f);
+            //statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower * (1 + statsTotal.BonusSpellPowerMultiplier));// not sure there's such a thing
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -1066,12 +1150,12 @@ threat and limited threat scaled by the threat scale.",
 
     public class ProtPaladin
     {
-        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
+        public static readonly float AgilityToDodge = 1.0f / 52.08333333f;
         public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 62.5f;
+        public static readonly float AgilityToCrit = 1.0f / 52.08333333f;
         public static readonly float StaminaToHP = 10.0f;
         public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
         public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;

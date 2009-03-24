@@ -97,7 +97,7 @@ namespace Rawr.ProtPaladin
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
         {
-            return (((stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise) + stats.Expertise)
+        	return (((float)Math.Floor(stats.ExpertiseRating * ProtPaladin.ExpertiseRatingToExpertise) + stats.Expertise)
                     * ProtPaladin.ExpertiseToDodgeParryReduction) / 100.0f;
         }
 
@@ -230,12 +230,12 @@ namespace Rawr.ProtPaladin
                     baseAvoid = stats.Dodge + (stats.BaseAgility * ProtPaladin.AgilityToDodge) - LevelModifier(character);
                     modifiedAvoid = ((stats.Agility - stats.BaseAgility) * ProtPaladin.AgilityToDodge) +
                                         (stats.DodgeRating * ProtPaladin.DodgeRatingToDodge) + (defSkill * ProtPaladin.DefenseToDodge);
-                    modifiedAvoid = 1.0f / (1.0f / 88.129021f + 0.9560f / modifiedAvoid);
+                    modifiedAvoid = 1.0f / (1.0f / 88.1290208866f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Parry:
                     baseAvoid = stats.Parry - LevelModifier(character);
                     modifiedAvoid = (stats.ParryRating * ProtPaladin.ParryRatingToParry) + (defSkill * ProtPaladin.DefenseToParry);
-                    modifiedAvoid = 1.0f / (1.0f / 47.003525f + 0.9560f / modifiedAvoid);
+                    modifiedAvoid = 1.0f / (1.0f / 47.003525644f + 0.9560f / modifiedAvoid);
                     break;
                 case HitResult.Miss:
                     baseAvoid = stats.Miss * 100f - LevelModifier(character);

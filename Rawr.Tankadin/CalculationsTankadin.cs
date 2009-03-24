@@ -434,7 +434,7 @@ you are being killed by burst damage, focus on Survival Points.",
                     statsRace = new Stats() { Strength = 21f, Agility = 17f, Stamina = 19f, Intellect = 21f, Spirit = 22f, PhysicalHit = .01f, SpellHit = .01f };
                     break;
                 case Character.CharacterRace.Human:
-                    statsRace = new Stats() { Strength = 20f, Agility = 20f, Stamina = 20f, Intellect = 20f, Spirit = 20f, BonusSpiritMultiplier = 0.1f, };
+                    statsRace = new Stats() { Strength = 20f, Agility = 20f, Stamina = 20f, Intellect = 20f, Spirit = 20f, BonusSpiritMultiplier = 0.03f, };
                     //Expertise for Humans
                     if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace || character.MainHand.Type == Item.ItemType.OneHandSword))
                         statsRace.Expertise = 3f;
