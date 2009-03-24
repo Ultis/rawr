@@ -117,6 +117,14 @@ namespace Rawr.ProtWarr
             return ((stats.HitRating * ProtWarr.HitRatingToHit) / 100.0f) + stats.PhysicalHit;
         }
 
+        public static float BonusCritMultiplier(Character character, Stats stats, Ability ability)
+        {
+            if (ability == Ability.None)
+                return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f);
+            else
+                return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f) * (1.0f + character.WarriorTalents.Impale * 0.1f);
+        }
+
         public static float BonusCritPercentage(Character character, Stats stats)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
@@ -211,11 +219,6 @@ namespace Rawr.ProtWarr
             return Math.Max(0.0f, Math.Min(0.75f, stats.Armor / (stats.Armor + (467.5f * calcOpts.TargetLevel - 22167.5f))));
         }
 
-        public static float BlockReduction(Character character, Stats stats)
-        {
-            return (stats.BlockValue * (1.0f + (character.WarriorTalents.CriticalBlock * 0.1f)));
-        }
-
         public static float MagicReduction(Character character, Stats stats, DamageType school)
         {
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
@@ -236,7 +239,7 @@ namespace Rawr.ProtWarr
                 resistScale = 400.0f;
             else
                 // This number is still being tested by many and may be slightly higher
-                resistScale = 500.0f;
+                resistScale = 510.0f;
 
             return Math.Max(0.0f, (1.0f - (totalResist / (resistScale + totalResist))) * damageReduction);
         }

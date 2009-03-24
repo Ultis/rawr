@@ -170,30 +170,12 @@ namespace Rawr.ProtWarr
                         // Shield Slam -> Revenge -> Revenge -> Revenge
                         if (Character.WarriorTalents.UnrelentingAssault == 2)
                         {
-                            if (Abilities[Ability.ShieldSlam].Threat < Abilities[Ability.Revenge].Threat)
-                            {
-                                Name        = "Unrelenting Assault";
-                                Description = "Revenge Only";
-                                modelLength = 1.5f;
-                                modelThreat = Abilities[Ability.Revenge].Threat;
-                                modelDamage = Abilities[Ability.Revenge].Damage;
-                                modelCrits  = Abilities[Ability.Revenge].CritPercentage;
-                            }
-                            else
-                            {
-                                Name        = "Unrelenting Assault";
-                                Description = "Shield Slam -> Revenge -> Revenge -> Revenge";
-                                modelLength = 6.0f;
-                                modelThreat =
-                                    Abilities[Ability.ShieldSlam].Threat +
-                                    Abilities[Ability.Revenge].Threat * 3;
-                                modelDamage =
-                                    Abilities[Ability.ShieldSlam].Damage +
-                                    Abilities[Ability.Revenge].Damage * 3;
-                                modelCrits =
-                                    Abilities[Ability.ShieldSlam].CritPercentage +
-                                    Abilities[Ability.Revenge].CritPercentage * 3;
-                            }
+                            Name        = "Unrelenting Assault";
+                            Description = "Revenge";
+                            modelLength = 1.0f;
+                            modelThreat = Abilities[Ability.Revenge].Threat;
+                            modelDamage = Abilities[Ability.Revenge].Damage;
+                            modelCrits  = Abilities[Ability.Revenge].CritPercentage;
                         }
                         else
                             goto case AttackModelMode.Basic;

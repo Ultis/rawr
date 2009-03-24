@@ -658,17 +658,24 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
  
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
+            if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandMace))
+            {
+                statsTotal.ArmorPenetration += talents.MaceSpecialization * 0.03f;
+            }
             statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
+            statsTotal.BonusCritMultiplier = statsRace.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
+            if (character.MainHand != null && (character.MainHand.Type == Item.ItemType.OneHandAxe))
+            {
+                statsTotal.PhysicalCrit += talents.PoleaxeSpecialization * 0.01f;
+                statsTotal.BonusCritMultiplier += talents.PoleaxeSpecialization * 0.01f;
+            }
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
-            // Haste Trinkets
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
             statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
-            statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
-            statsTotal.Bloodlust = statsRace.Bloodlust + statsGearEnchantsBuffs.Bloodlust;
-            statsTotal.WindfuryAPBonus = statsGearEnchantsBuffs.WindfuryAPBonus;
+
+            // Haste Trinkets
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
 
 			return statsTotal;
 		}

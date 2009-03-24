@@ -34,7 +34,9 @@ namespace Rawr.ProtWarr
 
             DamagePerHit    = Options.BossAttackValue * guaranteedReduction;
             DamagePerCrit   = 2.0f * DamagePerHit;
-            DamagePerBlock  = Math.Max(0.0f, DamagePerHit - Lookup.BlockReduction(Character, Stats));
+            DamagePerBlock  = 
+                (Math.Max(0.0f, DamagePerHit - Stats.BlockValue) * (1.0f - Character.WarriorTalents.CriticalBlock * 0.1f)) +
+                (Math.Max(0.0f, DamagePerHit - (Stats.BlockValue * 2.0f)) * (Character.WarriorTalents.CriticalBlock * 0.1f));
 
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +

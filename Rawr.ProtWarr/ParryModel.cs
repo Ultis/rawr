@@ -31,11 +31,15 @@ namespace Rawr.ProtWarr
                 // Iterate on this a few times to get a 'stable' result
                 for (int j = 0; j < 4; j++)
                 {
-                    bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.5f));
-                    weaponHaste     = DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed);
-
-                    BossAttackSpeed = baseBossAttackSpeed / (1.0f + bossAttackHaste);
+                    weaponHaste = DefendTable.Parry * 0.24f * (WeaponSpeed / BossAttackSpeed);
+                    // Unrelenting Assault 'Revenge Spam' builds have 1.0s GCD instead of 1.5s
+                    if(Character.WarriorTalents.UnrelentingAssault == 2)
+                        bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.0f));
+                    else
+                        bossAttackHaste = AttackTable.Parry * 0.24f * ((BossAttackSpeed / WeaponSpeed) + (BossAttackSpeed / 1.5f));
+                    
                     WeaponSpeed     = baseWeaponSpeed / (1.0f + weaponHaste);
+                    BossAttackSpeed = baseBossAttackSpeed / (1.0f + bossAttackHaste);
                 }
             }
             else

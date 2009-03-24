@@ -27,12 +27,7 @@ namespace Rawr.ProtWarr
         private void CalculateDamage()
         {
             float baseDamage        = 0.0f;
-            float critMultiplier    = 1.0f;
-
-            if (Ability == Ability.None)
-                critMultiplier = (2.0f * (1.0f + Stats.BonusCritMultiplier));
-            else
-                critMultiplier = ((2.0f * (1.0f + Stats.BonusCritMultiplier)) * (1.0f + (Talents.Impale * 0.1f)));
+            float critMultiplier    = 1.0f + Lookup.BonusCritMultiplier(Character, Stats, Ability);
 
             switch (Ability)
             {
@@ -65,7 +60,7 @@ namespace Rawr.ProtWarr
                     baseDamage = 12.0f + (Stats.AttackPower * 0.5f);
                     break;
                 case Ability.Rend:
-                    baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, true);
+                    baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, false);
                     DamageMultiplier *= (1.0f + Talents.ImprovedRend * 0.2f) * (1.0f + Stats.BonusBleedDamageMultiplier);
                     ArmorReduction = 0.0f;
                     break;
