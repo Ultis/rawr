@@ -17,11 +17,28 @@ namespace Rawr.Retribution
             sol.FightLength = 1000;
 
             int judgeCD = rot.T7_4pc ? 7 : 8;
+            float judgeFirst = -1;
+            float judgeLast = -1;
+
             int csCD = 6;
+            float csFirst = -1;
+            float csLast = -1;
+
             int dsCD = 10;
+            float dsFirst = -1;
+            float dsLast = -1;
+
             int consCD = rot.GlyphConsecrate ? 10 : 8;
+            float consFirst = -1;
+            float consLast = -1;
+
             int exoCD = 15;
+            float exoFirst = -1;
+            float exoLast = -1;
+
             int howCD = 6;
+            float howFirst = -1;
+            float howLast = -1;
 
             float judgeNext = 0;
             float csNext = 0;
@@ -39,6 +56,8 @@ namespace Rawr.Retribution
                     {
                         if (judgeNext <= currentTime)
                         {
+                            if (judgeFirst < 0) judgeFirst = currentTime;
+                            judgeLast = currentTime;
                             gcdUsed = true;
                             judgeNext = currentTime + judgeCD;
                             sol.Judgement++;
@@ -49,6 +68,8 @@ namespace Rawr.Retribution
                     {
                         if (csNext <= currentTime)
                         {
+                            if (csFirst < 0) csFirst = currentTime;
+                            csLast = currentTime;
                             gcdUsed = true;
                             csNext = currentTime + csCD;
                             sol.CrusaderStrike++;
@@ -59,6 +80,8 @@ namespace Rawr.Retribution
                     {
                         if (dsNext <= currentTime)
                         {
+                            if (dsFirst < 0) dsFirst = currentTime;
+                            dsLast = currentTime;
                             gcdUsed = true;
                             dsNext = currentTime + dsCD;
                             sol.DivineStorm++;
@@ -69,6 +92,8 @@ namespace Rawr.Retribution
                     {
                         if (howNext <= currentTime)
                         {
+                            if (howFirst < 0) howFirst = currentTime;
+                            howLast = currentTime;
                             gcdUsed = true;
                             howNext = currentTime + howCD;
                             sol.HammerOfWrath++;
@@ -79,6 +104,8 @@ namespace Rawr.Retribution
                     {
                         if (consNext <= currentTime)
                         {
+                            if (consFirst < 0) consFirst = currentTime;
+                            consLast = currentTime;
                             gcdUsed = true;
                             consNext = currentTime + consCD;
                             sol.Consecration++;
@@ -89,6 +116,8 @@ namespace Rawr.Retribution
                     {
                         if (exoNext <= currentTime)
                         {
+                            if (exoFirst < 0) exoFirst = currentTime;
+                            exoLast = currentTime;
                             gcdUsed = true;
                             exoNext = currentTime + exoCD;
                             sol.Exorcism++;
@@ -100,12 +129,12 @@ namespace Rawr.Retribution
                 gcdUsed = false;
             }
 
-            sol.JudgementCD = sol.FightLength / sol.Judgement;
-            sol.CrusaderStrikeCD = sol.FightLength / sol.CrusaderStrike;
-            sol.DivineStormCD = sol.FightLength / sol.DivineStorm;
-            sol.ConsecrationCD = sol.FightLength / sol.Consecration;
-            sol.ExorcismCD = sol.FightLength / sol.Exorcism;
-            sol.HammerOfWrathCD = sol.FightLength / sol.HammerOfWrath;
+            sol.JudgementCD = (judgeLast - judgeFirst) / (sol.Judgement - 1);
+            sol.CrusaderStrikeCD = (csLast - csFirst) / (sol.CrusaderStrike - 1);
+            sol.DivineStormCD = (dsLast - dsFirst) / (sol.DivineStorm - 1);
+            sol.ConsecrationCD = (consLast - consFirst) / (sol.Consecration - 1);
+            sol.ExorcismCD = (exoLast - exoFirst) / (sol.Exorcism - 1);
+            sol.HammerOfWrathCD = (howLast - howFirst) / (sol.HammerOfWrath - 1);
 
             savedSolutions[rot] = sol;
 

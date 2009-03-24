@@ -32,6 +32,8 @@ namespace Rawr.Retribution
             set { _subPoints[1] = value; }
         }
 
+        public RotationSolution Rotation { get; set; }
+
         public float WhiteDPS { get; set; }
         public float SealDPS { get; set; }
         public float CrusaderStrikeDPS { get; set; }
@@ -73,6 +75,13 @@ namespace Rawr.Retribution
             dictValues.Add("Divine Storm", DivineStormDPS.ToString("N0"));
             dictValues.Add("Hammer of Wrath", HammerOfWrathDPS.ToString("N0"));
             dictValues.Add("Total DPS", OverallPoints.ToString("N0"));
+
+            dictValues.Add("Crusader Strike CD", Rotation.CrusaderStrikeCD.ToString("N2"));
+            dictValues.Add("Judgement CD", Rotation.JudgementCD.ToString("N2"));
+            dictValues.Add("Consecration CD", Rotation.ConsecrationCD.ToString("N2"));
+            dictValues.Add("Exorcism CD", Rotation.ExorcismCD.ToString("N2"));
+            dictValues.Add("Divine Storm CD", Rotation.DivineStormCD.ToString("N2"));
+            dictValues.Add("Hammer of Wrath CD", Rotation.HammerOfWrathCD.ToString("N2"));
 
             return dictValues;
         }

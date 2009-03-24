@@ -126,7 +126,13 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
-                        "DPS Breakdown:Total DPS"
+                        "DPS Breakdown:Total DPS",
+					    "Rotation Info:Crusader Strike CD",
+                        "Rotation Info:Judgement CD",
+                        "Rotation Info:Consecration CD",
+                        "Rotation Info:Exorcism CD",
+                        "Rotation Info:Divine Storm CD",
+                        "Rotation Info:Hammer of Wrath CD",
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -227,6 +233,7 @@ namespace Rawr.Retribution
 
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = stats;
+            calc.Rotation = unlimited;
 
             //damage multipliers
             float twoHandedSpec = 1f + 0.02f * talents.TwoHandedWeaponSpecialization;
@@ -459,7 +466,7 @@ namespace Rawr.Retribution
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Intellect = stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            float libramAP = stats.APCrusaderStrike_6 * 6f * sol.CrusaderStrike / fightLength;
+            float libramAP = stats.APCrusaderStrike_6;// *6f * sol.CrusaderStrike / fightLength;
             stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
             stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
@@ -508,6 +515,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 Judgement = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Judgement", initOpts.GlyphJudgement);
                 deltaOpts.GlyphJudgement = baseOpts.GlyphJudgement = initOpts.GlyphJudgement;
+                Judgement.Item = null;
 
                 ComparisonCalculationBase Consecration;
                 baseOpts.GlyphConsecration = false;
@@ -515,6 +523,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 Consecration = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Consecration", initOpts.GlyphConsecration);
                 deltaOpts.GlyphConsecration = baseOpts.GlyphConsecration = initOpts.GlyphConsecration;
+                Consecration.Item = null;
 
                 ComparisonCalculationBase SenseUndead;
                 baseOpts.GlyphSenseUndead = false;
@@ -522,6 +531,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 SenseUndead = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Sense Undead", initOpts.GlyphSenseUndead);
                 deltaOpts.GlyphSenseUndead = baseOpts.GlyphSenseUndead = initOpts.GlyphSenseUndead;
+                SenseUndead.Item = null;
 
                 ComparisonCalculationBase CrusaderStrike;
                 baseOpts.GlyphCrusaderStrike = false;
@@ -529,6 +539,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 CrusaderStrike = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Crusader Strike", initOpts.GlyphCrusaderStrike);
                 deltaOpts.GlyphCrusaderStrike = baseOpts.GlyphCrusaderStrike = initOpts.GlyphCrusaderStrike;
+                CrusaderStrike.Item = null;
 
                 ComparisonCalculationBase Exorcism;
                 baseOpts.GlyphExorcism = false;
@@ -536,6 +547,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 Exorcism = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Exorcism", initOpts.GlyphExorcism);
                 deltaOpts.GlyphExorcism = baseOpts.GlyphExorcism = initOpts.GlyphExorcism;
+                Exorcism.Item = null;
 
                 ComparisonCalculationBase HammerOfWrath;
                 baseOpts.GlyphHammerOfWrath = false;
@@ -543,6 +555,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 HammerOfWrath = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Hammer of Wrath", initOpts.GlyphHammerOfWrath);
                 deltaOpts.GlyphHammerOfWrath = baseOpts.GlyphHammerOfWrath = initOpts.GlyphHammerOfWrath;
+                HammerOfWrath.Item = null;
 
                 ComparisonCalculationBase Divinity;
                 baseOpts.GlyphDivinity = false;
@@ -550,6 +563,7 @@ namespace Rawr.Retribution
                 baseCalc = Calculations.GetCharacterCalculations(baseChar);
                 Divinity = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Divinity", initOpts.GlyphDivinity);
                 deltaOpts.GlyphDivinity = baseOpts.GlyphDivinity = initOpts.GlyphDivinity;
+                Divinity.Item = null;
 
                 return new ComparisonCalculationBase[] { Judgement, Consecration, SenseUndead, Exorcism, 
                     CrusaderStrike, HammerOfWrath, Divinity };
