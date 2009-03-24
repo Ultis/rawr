@@ -141,7 +141,7 @@ namespace Rawr
             RatingConversionBase60[(int)RatingType.Crit] = 14f;
             RatingConversionBase60[(int)RatingType.Defense] = 1.5f;
             RatingConversionBase60[(int)RatingType.Dodge] = 12f;
-            RatingConversionBase60[(int)RatingType.Expertise] = 10f;
+            RatingConversionBase60[(int)RatingType.Expertise] = 2.5f;
             RatingConversionBase60[(int)RatingType.Haste] = 10f;
             RatingConversionBase60[(int)RatingType.Hit] = 10f;
             RatingConversionBase60[(int)RatingType.Parry] = 15f;
