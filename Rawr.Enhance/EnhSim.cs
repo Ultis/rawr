@@ -196,14 +196,13 @@ namespace Rawr.Enhance
             // this routine needs to remove the effects of meta gems, enchants, trinkets and totems
             // Rawr adds in average proc effects whereas EnhSim uses the raw data and the name of
             // the meta gem, enchants, trinkets and totems
-            _trinket1name = adjustTrinketStats(character.Trinket1, stats);
-            _trinket2name = adjustTrinketStats(character.Trinket2, stats);
-            _totemname = adjustTotemStats(character.Ranged, stats);
-            _mhEnchant = adjustWeaponEnchantStats(character.MainHandEnchant, stats);
-            _ohEnchant = adjustWeaponEnchantStats(character.OffHandEnchant, stats);
-            _metagem = adjustMetaGemStats(character.Head, stats);
-            stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45; // deals with Meteorite Whetstone/Dragonspine Trophy
-
+            _trinket1name = adjustTrinketStats(character, character.Trinket1, stats);
+            _trinket2name = adjustTrinketStats(character, character.Trinket2, stats);
+            _totemname = adjustTotemStats(character, character.Ranged, stats);
+            _mhEnchant = adjustWeaponEnchantStats(character, character.MainHandEnchant, stats);
+            _ohEnchant = adjustWeaponEnchantStats(character, character.OffHandEnchant, stats);
+            _metagem = adjustMetaGemStats(character, character.Head, stats);
+           
             // having removed all the stuff added by on use/procs we need to take the ceiling values as 100+2.66 would have been floored to 102
             // if we take 2.66 from 102 we get 101.33 which is too low.
             stats.AttackPower = (float) Math.Ceiling(stats.AttackPower);
@@ -213,10 +212,11 @@ namespace Rawr.Enhance
             stats.ArmorPenetrationRating = (float)Math.Ceiling(stats.ArmorPenetrationRating);
         }
 
-        private String adjustMetaGemStats(ItemInstance head, Stats stats)
+        private String adjustMetaGemStats(Character character, ItemInstance head, Stats stats)
         {
             if (head != null)
             {
+                float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
                 switch (head.Gem1Id)
                 {
                     case 32409:
@@ -241,12 +241,14 @@ namespace Rawr.Enhance
             }
         }
 
-        private String adjustWeaponEnchantStats(Enchant enchant, Stats stats)
+        private String adjustWeaponEnchantStats(Character character, Enchant enchant, Stats stats)
         {
             if (enchant == null)
                 return "-";
             // check weapon enchant return enchant name for EnhSim
-            switch (enchant.Id) {
+            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
+            switch (enchant.Id)
+            {
                 case 2673:
                     return "mongoose";
                 case 3225:
@@ -262,11 +264,13 @@ namespace Rawr.Enhance
             }
         }
 
-        private String adjustTotemStats(ItemInstance totem, Stats stats)
+        private String adjustTotemStats(Character character, ItemInstance totem, Stats stats)
         {
             if (totem == null)
                 return "-";
-            switch (totem.Id) {
+            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
+            switch (totem.Id)
+            {
                 case 33507:
                     return "stonebreakers_totem";
                 case 27815:
@@ -309,14 +313,15 @@ namespace Rawr.Enhance
             }
         }
 
-        private String adjustTrinketStats(ItemInstance trinket, Stats stats)
+        private String adjustTrinketStats(Character character, ItemInstance trinket, Stats stats)
         {
             if (trinket == null)
                 return "-";
+            float spellpowerBonus = .1f * character.ShamanTalents.MentalQuickness;
             switch (trinket.Id)
             {
 	            case 28830:
-                    // dealt with by HasteRatingOnPhysicalAttack
+                    stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45;
 		            return "dragonspine_trophy";
 	            case 32419:
                     // no effect added in SpecialEffects class
@@ -326,18 +331,23 @@ namespace Rawr.Enhance
 		            return "madness_of_the_betrayer";
 	            case 28034:
                     stats.AttackPower -= 300f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 300f / 6f;
 		            return "hourglass_of_the_unraveller";
 	            case 30627:
                     stats.AttackPower -= 340f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 340f / 6f;
 		            return "tsunami_talisman";
 	            case 34472:
                     stats.AttackPower -= 90f;
+                    stats.SpellPower -= spellpowerBonus * 90f;
 		            return "shard_of_contempt";
 	            case 33831:
                     stats.AttackPower -= 360f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 360f / 6f;
 		            return "berserkers_call";
 	            case 29383:
                     stats.AttackPower -= 278f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 278f / 6f;
 		            return "bloodlust_brooch";
 	            case 28288:
                     stats.HasteRating -= 260f / 12f;
@@ -345,34 +355,40 @@ namespace Rawr.Enhance
 	            case 32658:
                     stats.CritRating -= ((150f / 6f) / 25f) * 45.90598679f;
                     stats.AttackPower -= (150f / 6f) * 1.03f;
+                    stats.SpellPower -= spellpowerBonus * (150f / 6f) * 1.03f;
 		            return "badge_of_tenacity";
 	            case 35702:
                     stats.AttackPower -= 320f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 320f / 6f;
 		            return "shadowsong_panther";
 	            case 34427:
                     // no effect added in SpecialEffects class
 		            return "blackened_naaru_silver";
 	            case 31856:
                     stats.AttackPower -= 120; 
+                    stats.SpellPower -= spellpowerBonus * 120;
                     stats.SpellPower -= 80;
 		            return "darkmoon_card_crusade";
 	            case 40431:
                     stats.AttackPower -= 320;
-		            return "fury_of_the_five_flights";
+                    stats.SpellPower -= spellpowerBonus * 320;
+                    return "fury_of_the_five_flights";
 	            case 40256:
                     stats.ArmorPenetrationRating -= 612f / 5f;
 		            return "grim_toll";
 	            case 39257:
                     stats.AttackPower -= 670f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 670f / 6f;
 		            return "loathebs_shadow";
 	            case 40684:
                     stats.AttackPower -= 1000f / 7f;
+                    stats.SpellPower -= spellpowerBonus * 1000f / 7f;
 		            return "mirror_of_truth";
 	            case 32483:
                     // stats.HasteRatingFor20SecOnUse2Min += 175;
 		            return "the_skull_of_guldan";
 	            case 37390:
-                    // dealt with by HasteRatingOnPhysicalAttack
+                    stats.HasteRating -= stats.HasteRatingOnPhysicalAttack * 10 / 45;
                     return "meteorite_whetstone";
 	            case 39229:
                     // stats.SpellHasteFor10SecOnCast_10_45 -= 505;
@@ -397,6 +413,7 @@ namespace Rawr.Enhance
 		            return "mark_of_the_war_prisoner";
 	            case 37166:
                     stats.AttackPower -= 670f / 6f;
+                    stats.SpellPower -= spellpowerBonus * 670f / 6f;
 		            return "sphere_of_red_dragons_blood";
 	            case 36972:
                     stats.HasteRating -= 256f / 6f;
@@ -406,6 +423,7 @@ namespace Rawr.Enhance
 		            return "mark_of_norgannon";
 	            case 44014:
                     stats.AttackPower -= 54f;
+                    stats.SpellPower -= spellpowerBonus * 54f;
 		            return "fezziks_pocketwatch";
 	            case 43836:
                     stats.HasteRating -= 212f / 6f;
