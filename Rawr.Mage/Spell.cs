@@ -241,6 +241,11 @@ namespace Rawr.Mage
 
         public CastingState CastingState;
 
+        protected Cycle(CastingState castingState)
+        {
+            CastingState = castingState;
+        }
+
         private bool calculated;
 
         internal float damagePerSecond;
@@ -477,11 +482,10 @@ namespace Rawr.Mage
         {
             private Spell spell;
 
-            public SpellCycle(Spell spell)
+            public SpellCycle(Spell spell) : base(spell.castingState)
             {
                 this.spell = spell;
                 Name = spell.Name;
-                CastingState = spell.castingState;
                 sequence = spell.Name;
                 Casts = 1;
                 CastTime = spell.CastTime;
@@ -2220,17 +2224,17 @@ namespace Rawr.Mage
         private List<Spell> spellList;
         private FSRCalc fsr;
 
-        public StaticCycle()
+        public StaticCycle() : base(null)
         {
             spellList = new List<Spell>();
         }
 
-        public StaticCycle(int capacity)
+        public StaticCycle(int capacity) : base(null)
         {
             spellList = new List<Spell>(capacity);
         }
 
-        public StaticCycle(int capacity, bool recalcFiveSecondRule)
+        public StaticCycle(int capacity, bool recalcFiveSecondRule) : base(null)
         {
             spellList = new List<Spell>(capacity);
             recalc5SR = recalcFiveSecondRule;
@@ -2313,9 +2317,8 @@ namespace Rawr.Mage
         protected Cycle[] Cycle;
         protected float[] Weight;
 
-        protected DynamicCycle(int count, CastingState castingState)
+        protected DynamicCycle(int count, CastingState castingState) : base(castingState)
         {
-            CastingState = castingState;
             Cycle = new Cycle[count];
             Weight = new float[count];
         }
@@ -2371,7 +2374,7 @@ namespace Rawr.Mage
         Spell AM11;
         float CC;
 
-        public ArcaneMissilesCC(CastingState castingState)
+        public ArcaneMissilesCC(CastingState castingState) : base(castingState)
         {
             Name = "Arcane Missiles CC";
 
@@ -4283,7 +4286,7 @@ namespace Rawr.Mage
         Spell AB0M;
         float hit, k21, k31, k41;
 
-        public AB(CastingState castingState)
+        public AB(CastingState castingState) : base(castingState)
         {
             Name = "Arcane Blast";
 
@@ -8107,7 +8110,7 @@ namespace Rawr.Mage
             if (weight > 0) sb.AppendFormat(format, weight);
         }
 
-        public unsafe GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X10, double X11, double X12, double X20, double X22, double X30, double X32, double X40, double X41, double X42, double X50, double X51, double X52, double X60, double X61, double X62, double X70, double X71, double X72, double X80, double X81, double X82, double X90, double X91, double X92)
+        public unsafe GenericArcane(string name, CastingState castingState, double X00, double X01, double X02, double X10, double X11, double X12, double X20, double X22, double X30, double X32, double X40, double X41, double X42, double X50, double X51, double X52, double X60, double X61, double X62, double X70, double X71, double X72, double X80, double X81, double X82, double X90, double X91, double X92) : base(castingState)
         {
             Name = name;
 
