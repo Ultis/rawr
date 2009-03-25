@@ -21,8 +21,7 @@ namespace Rawr.Enhance
             CalculationsEnhance ce = new CalculationsEnhance();
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
-            Stats buffs = calcs.BuffStats ?? new Stats();
-            Stats stats = calcs.BaseStats + (buffs * -1f);
+            Stats stats = calcs.BaseStats;
             removeUseProcEffects(character, stats);
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();

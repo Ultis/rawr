@@ -278,7 +278,7 @@ namespace Rawr
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             calculatedStats.BasicStats = stats;
-            calculatedStats.BaseStats = statsRace + statsBaseGear;
+            calculatedStats.BaseStats = ApplyTalents(character, statsRace + statsBaseGear);
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -369,16 +369,31 @@ namespace Rawr
                 float expectedInt = (float)Math.Floor(stats.Intellect * (1 + stats.BonusIntellectMultiplier));
                 // Highest stat
                 if (expectedAgi > expectedStr)
+                {
                     if (expectedAgi > expectedInt)
+                    {
                         stats.Agility += stats.GreatnessProc * 15f / 47f;  // proc calc lifted from Rawr.Cat odd that its 47sec CD??
+                        stats.AttackPower += stats.GreatnessProc * 15f / 47f;
+                    }
                     else
+                    {
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
+                        stats.AttackPower += AddAPFromStrAgiInt(character, 0, 0, stats.GreatnessProc * 15f / 47f);
+                    }
+                }
                 else
+                {
                     if (expectedAgi > expectedInt)
+                    {
                         stats.Strength += stats.GreatnessProc * 15f / 47f;
+                        stats.AttackPower += stats.GreatnessProc * 15f / 47f;
+                    }
                     else
+                    {
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
-                stats.AttackPower += stats.GreatnessProc * 15f / 47f;
+                        stats.AttackPower += AddAPFromStrAgiInt(character, 0, 0, stats.GreatnessProc * 15f / 47f);
+                    }
+                }
             }
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
             stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
@@ -386,7 +401,7 @@ namespace Rawr
             stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
             stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
             // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
-            stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP); 
+            stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP);
             #endregion
 
             ////////////////////////////
@@ -394,7 +409,6 @@ namespace Rawr
             ////////////////////////////
 
 			#region Damage Model
-            // stats.ArmorPenetrationRating /= 1.25f; // remove 25% effectiveness to get back to patch 3.0.8
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
             float hitBonus = stats.PhysicalHit + sc.GetHitFromRating(stats.HitRating) / 100f;
@@ -791,37 +805,52 @@ namespace Rawr
 			statsTotal.BonusStrengthMultiplier = ((1 + statsRace.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
 			statsTotal.BonusStaminaMultiplier = ((1 + statsRace.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsRace.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
+            statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
             statsTotal.Agility = (float)Math.Floor((agiBase + agiBonus) * (1 + statsBuffs.BonusAgilityMultiplier));
 			statsTotal.Strength = (float)Math.Floor((strBase + strBonus) * (1 + statsBuffs.BonusStrengthMultiplier));
 			statsTotal.Stamina = (float)Math.Round((staBase + staBonus) * (1 + statsBuffs.BonusStaminaMultiplier));
-			statsTotal.Health = (float)Math.Round(statsRace.Health * (1 + statsRace.BonusStaminaMultiplier) + statsGearEnchantsBuffs.Health + (statsTotal.Stamina * 10f));
+			statsTotal.Health = (float)Math.Round((statsRace.Health + statsGearEnchantsBuffs.Health) * (1 + statsRace.BonusStaminaMultiplier) );
             statsTotal.Intellect = (float)Math.Floor((intBase + intBonus) * (1 + statsBuffs.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((spiBase + spiBonus) * (1 + statsBuffs.BonusSpiritMultiplier)); 
-            statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana + 15f * statsTotal.Intellect;
-           
-            int MD = character.ShamanTalents.MentalDexterity;
-            float intBonusToAP = 0.0f;
-            switch (MD)
-            {
-                case 1:
-                    intBonusToAP = .33f * statsTotal.Intellect;
-                    break;
-                case 2:
-                    intBonusToAP = .66f * statsTotal.Intellect;
-                    break;
-                case 3:
-                    intBonusToAP = 1f * statsTotal.Intellect;
-                    break;
-            }
-
-            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower + statsTotal.Agility + statsTotal.Strength + intBonusToAP) * (1f + statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-						
-            int MQ = character.ShamanTalents.MentalQuickness;
-            statsTotal.SpellPower = (float) Math.Floor((statsTotal.AttackPower * .1f * MQ) + statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower);
-            statsTotal.Expertise = 3 * character.ShamanTalents.UnleashedRage;
+            statsTotal.Mana = statsRace.Mana + statsGearEnchantsBuffs.Mana;
+            statsTotal.AttackPower = (float)Math.Floor((statsRace.AttackPower + statsGearEnchantsBuffs.AttackPower) * (1f + statsTotal.BonusAttackPowerMultiplier));
+			statsTotal.SpellPower = (statsRace.SpellPower + statsGearEnchantsBuffs.SpellPower) * (1f + statsTotal.BonusSpellPowerMultiplier);
+            statsTotal = ApplyTalents(character, statsTotal);
             return statsTotal;
 		}
+
+        private float AddAPFromStrAgiInt(Character character, float strength, float agility, float intellect) 
+        {
+            float intBonusToAP = 0.0f;
+            switch (character.ShamanTalents.MentalDexterity)
+            {
+                case 1:
+                    intBonusToAP = .33f * intellect;
+                    break;
+                case 2:
+                    intBonusToAP = .66f * intellect;
+                    break;
+                case 3:
+                    intBonusToAP = 1f * intellect;
+                    break;
+            }
+            return (float)Math.Floor(strength + agility + intBonusToAP);
+        }
+
+        private Stats ApplyTalents(Character character, Stats stats) // also includes basic class benefits
+        {
+            
+            stats.Mana += 15f * stats.Intellect;
+            stats.Health += 10f * stats.Stamina;
+            stats.Expertise += 3 * character.ShamanTalents.UnleashedRage;
+            
+            int MQ = character.ShamanTalents.MentalQuickness;
+            stats.AttackPower += AddAPFromStrAgiInt(character, stats.Strength, stats.Agility, stats.Intellect); 
+            stats.AttackPower = (float)Math.Floor(stats.AttackPower * (1f + stats.BonusAttackPowerMultiplier));
+            stats.SpellPower = (float)Math.Floor(stats.SpellPower + (stats.AttackPower * .1f * MQ * (1f + stats.BonusSpellPowerMultiplier)));
+            return stats;
+        }
+
         #endregion
 
         #region Custom Chart Data
