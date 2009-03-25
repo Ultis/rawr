@@ -424,7 +424,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Miss = 0.05f,
                         Parry = 5f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                         //Spirit *= 1.03f	// Human spirit bonus is 3%, need to research if wowwiki race spirit value already includes this. (20*1.03 = 21)
                     };
                     if ((character.MainHand != null) &&
@@ -448,7 +448,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
 
                     if ((character.MainHand != null) &&
@@ -471,7 +471,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     if ((character.MainHand != null) &&
                         (character.MainHand.Item.Type == Item.ItemType.OneHandMace))
@@ -493,7 +493,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Miss = 0.05f + 0.02f,
                         Parry = 5f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     break;
                 case Character.CharacterRace.Undead:
@@ -510,7 +510,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     break;
                 case Character.CharacterRace.Tauren:
@@ -527,7 +527,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     break;
                 case Character.CharacterRace.Gnome:
@@ -544,7 +544,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     break;
                 case Character.CharacterRace.Troll:
@@ -561,7 +561,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                     };
                     break;
                 case Character.CharacterRace.Draenei:
@@ -578,7 +578,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                         PhysicalHit = 0.01f,
                         SpellHit = 0.01f,
                     };
@@ -597,7 +597,7 @@ threat and limited threat scaled by the threat scale.",
                         Dodge = 3.2685f,
                         Parry = 5f,
                         Miss = 0.05f,
-                        PhysicalCrit = 0.03185f,
+                        PhysicalCrit = 0.032685f,
                         //TODO Magic Resistance: Reduces the chance to be hit by spells by 2% There's no definition for this in Stats.cs
                     };
                     break;
@@ -619,9 +619,8 @@ threat and limited threat scaled by the threat scale.",
             	Parry = 5f,					// Base Parry for a character with maxed out defense skill
             	Miss = 0.05f,				// Base Miss for a character with maxed out defense skill
             	PhysicalCrit = 0.032685f,	// Base Crit for the paladin class TODO: Check if this is different for other classes
-            	Parry = .05f,				// Base Dodge for a character with maxed out defense skill
             	Mana = 4114,				// this is the Base Mana for any level 80 character of any class
-            	Block = ?					// look into the block formula, this is a base value after all
+            	Block = 5f,					// look into the block formula, this is a base value after all
             };
             Stats statsBase = StatsRace + StatsClass;
             
@@ -683,8 +682,9 @@ threat and limited threat scaled by the threat scale.",
                 Parry = talents.Deflection * 1.0f,
                 Dodge = talents.Anticipation * 1.0f,
                 Block = talents.HolyShield * 30.0f,
-                BonusDamageMultiplier = (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0),
-                BonusStaminaMultiplier = ((1.0f + talents.SacredDuty * 0.04f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f),
+                BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
+                BonusDamageMultiplier = (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0.0f),
+                BonusStaminaMultiplier = (1.0f + talents.SacredDuty * 0.04f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f,
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
                 PhysicalCrit = (talents.CombatExpertise * 0.02f) + (talents.Conviction * 0.01f) + (talents.SanctityOfBattle * 0.01f),
@@ -695,10 +695,11 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1 + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1.0f + statsTalents.BonusStaminaMultiplier));
+            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1.0f + statsTalents.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier));
+            statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)
             {
                 statsTotal.Strength += (float)Math.Floor(statsTotal.GreatnessProc * 15f / 48f);
@@ -707,8 +708,8 @@ threat and limited threat scaled by the threat scale.",
             {
                 statsTotal.Expertise += 10;
             }
-            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
-            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1 + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1f + statsTotal.BonusAgilityMultiplier));
+            statsTotal.Agility += (float)Math.Floor((statsItems.Agility + statsBuffs.Agility) * (1f + statsTotal.BonusAgilityMultiplier));
             statsTotal.Health += (statsTotal.Stamina - 18f) * 10f;
             if (character.ActiveBuffsContains("Commanding Shout"))
                 statsBuffs.Health += statsBuffs.BonusCommandingShoutHP;
@@ -716,10 +717,10 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
             statsTotal.Armor += 2f * (float)Math.Floor(statsTotal.Agility) + statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength * 2;
-            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1 + statsTotal.BonusAttackPowerMultiplier));
+            statsTotal.AttackPower += statsTotal.Strength * 2f;
+            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.SpellPower += (float)Math.Floor(statsTotal.Stamina * talents.TouchedByTheLight * 0.1f);
-            //statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower * (1 + statsTotal.BonusSpellPowerMultiplier));// not sure there's such a thing
+            //statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower * (1f + statsTotal.BonusSpellPowerMultiplier));// not sure there's such a thing
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff + statsTotal.AllResist;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff + statsTotal.AllResist;
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff + statsTotal.AllResist;
@@ -727,15 +728,15 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff + statsTotal.AllResist;
 
             statsTotal.BlockValue += (float)Math.Floor(statsTotal.Strength * ProtPaladin.StrengthToBlockValue - 10f);
-            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
+            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1f + statsTotal.BonusBlockValueMultiplier));
 
             statsTotal.ArmorPenetration = statsRace.ArmorPenetration + statsGearEnchantsBuffs.ArmorPenetration;
-            statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;
+            statsTotal.BonusCritMultiplier = ((1 + statsRace.BonusCritMultiplier) * (1f + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1f;
+            statsTotal.CritRating = statsRace.CritRating + statsGearEnchantsBuffs.CritRating;            
             statsTotal.ExpertiseRating = statsRace.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsRace.HasteRating + statsGearEnchantsBuffs.HasteRating;
             // Haste Trinkets
-            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10 / 45;
+            statsTotal.HasteRating += statsGearEnchantsBuffs.HasteRatingOnPhysicalAttack * 10f / 45f;
             statsTotal.HitRating = statsRace.HitRating + statsGearEnchantsBuffs.HitRating;
             statsTotal.WeaponDamage = statsRace.WeaponDamage + statsGearEnchantsBuffs.WeaponDamage;
             statsTotal.ExposeWeakness = statsRace.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness;
@@ -1152,12 +1153,12 @@ threat and limited threat scaled by the threat scale.",
 
     public class ProtPaladin
     {
-        public static readonly float AgilityToDodge = 1.0f / 73.52941176f;
+        public static readonly float AgilityToDodge = 1.0f / 52.08333333f;
         public static readonly float DodgeRatingToDodge = 1.0f / 39.34798813f;
         public static readonly float StrengthToAP = 2.0f;
         public static readonly float StrengthToBlockValue = 1.0f / 2.0f;
         public static readonly float AgilityToArmor = 2.0f;
-        public static readonly float AgilityToCrit = 1.0f / 62.5f;
+        public static readonly float AgilityToCrit = 1.0f / 52.08333333f;
         public static readonly float StaminaToHP = 10.0f;
         public static readonly float HitRatingToHit = 1.0f / 32.78998947f;
         public static readonly float CritRatingToCrit = 1.0f / 45.90598679f;
