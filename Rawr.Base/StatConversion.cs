@@ -4,6 +4,21 @@ using System.Text;
 
 namespace Rawr
 {
+    // To be done:
+    // Physical Combat:
+    // float GetPhysicalMiss(int LevelDelta, bool DualWield)
+    // float GetPhysicalDodge(int LevelDelta)
+    // float GetPhysicalParry(int LevelDelta)
+    // float GetPhysicalGlancing(int LevelDelta)
+    // float[??] GetPhysicalCombatTable(int LevelDelta, float Hit, float Expertise, float Block)
+    // float GetPhysicalMitigation(int TargetLevel)
+    // Magical Combat:
+    // float GetSpellMiss(int LevelDelta, bool PvP)
+    // float GetAverageSpellResist(int LevelDelta, float Resistance)
+    // float[11] GetSpellResistTable(int LevelDelta, float Resistance)
+    // float GetMinimumSpellResist(int LevelDelta, float Resistance)
+
+
 	public static class ArmorCalculations
 	{
 		//Added as part of the change to ArPen functionality; should integrate with StatConversion or something,
@@ -77,52 +92,80 @@ namespace Rawr
 
         #region Functions that return something.
 
-        // Returns a Percentage (0.0357 = 3.57% Armor Ignored)
         public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% Armor Ignored)
+        /// </summary>
+        /// <param name="Rating">Armor Penetration Rating</param>
+        /// <returns>A Percentage (0.05 = 5% Armor Ignored)</returns>
         public static float GetArmorPenetrationFromRating(float Rating)
         {
             return Rating / RATING_PER_ARMORPENETRATION;
         }
 
-        // Returns a Percentage (0.0254 = 2.54% added Chance to Block)
         public static float GetBlockFromRating(float Rating, Character.CharacterClass Class) { return GetBlockFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% added chance to Block)
+        /// </summary>
+        /// <param name="Rating">Block Rating</param>
+        /// <returns>A Percentage (0.05 = 5% added chance to Block)</returns>
         public static float GetBlockFromRating(float Rating)
         {
             return Rating / RATING_PER_BLOCK;
         }
 
-        // Returns a Value (5.4 = 5 extra Defense)
         public static float GetDefenseFromRating(float Rating, Character.CharacterClass Class) { return GetDefenseFromRating(Rating); }
+        /// <summary>
+        /// Returns a Value (5.4 = 5 extra Defense)
+        /// </summary>
+        /// <param name="Rating">Defense Rating</param>
+        /// <returns>A Value (5.4 = 5 extra Defense)</returns>
         public static float GetDefenseFromRating(float Rating)
         {
             return Rating / RATING_PER_DEFENSE;
         }
 
-        // Returns a Percentage
         public static float GetDodgeFromRating(float Rating, Character.CharacterClass Class) { return GetDodgeFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Dodge)
+        /// </summary>
+        /// <param name="Rating">Dodge Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Dodge)</returns>
         public static float GetDodgeFromRating(float Rating)
         {
             return Rating / RATING_PER_DODGE;
         }
 
-        // Returns a Value
         public static float GetExpertiseFromRating(float Rating, Character.CharacterClass Class) { return GetExpertiseFromRating(Rating); }
+        /// <summary>
+        /// Returns a Value (6.34 = 6.34 extra Expertise)
+        /// </summary>
+        /// <param name="Rating">Expertise Rating</param>
+        /// <returns>A Value (6.34 = 6.34 extra Expertise)</returns>
         public static float GetExpertiseFromRating(float Rating)
         {
             return Rating / RATING_PER_EXPERTISE;
         }
 
-        // Returns a Percentage
         public static float GetParryFromRating(float Rating, Character.CharacterClass Class) { return GetParryFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Parry)
+        /// </summary>
+        /// <param name="Rating">Parry Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Parry)</returns>
         public static float GetParryFromRating(float Rating)
         {
             return Rating / RATING_PER_PARRY;
         }
 
-        // Returns a Percentage
         public static float GetCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
         public static float GetCritFromRating(float Rating) { return GetPhysicalCritFromRating(Rating); }
         public static float GetPhysicalCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra chance to Crit)
+        /// </summary>
+        /// <param name="Rating">Crit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
         public static float GetPhysicalCritFromRating(float Rating)
         {
             return Rating / RATING_PER_PHYSICALCRIT;
@@ -130,6 +173,12 @@ namespace Rawr
 
         // Returns a Percentage
         public static float GetHasteFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Haste)
+        /// </summary>
+        /// <param name="Rating">Haste Rating</param>
+        /// <param name="Class">Character.CharacterClass</param>
+        /// <returns>A Percentage (0.05 = 5% extra Haste)</returns>
         public static float GetPhysicalHasteFromRating(float Rating, Character.CharacterClass Class)
         {
             if (Class == Character.CharacterClass.DeathKnight
@@ -140,10 +189,14 @@ namespace Rawr
             return Rating / RATING_PER_PHYSICALHASTE;
         }
 
-        // Returns a Percentage
         public static float GetHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
         public static float GetHitFromRating(float Rating) { return GetPhysicalHitFromRating(Rating); }
         public static float GetPhysicalHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Hit)
+        /// </summary>
+        /// <param name="Rating">Hit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
         public static float GetPhysicalHitFromRating(float Rating)
         {
             return Rating / RATING_PER_PHYSICALHIT;
@@ -151,54 +204,90 @@ namespace Rawr
 
         // Returns a Percentage
         public static float GetResilienceFromRating(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Resilience)
+        /// </summary>
+        /// <param name="Rating">Resilience Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Resilience)</returns>
         public static float GetResilienceFromRating(float Rating)
         {
             return Rating / RATING_PER_RESILIENCE;
         }
 
-        // Returns a Percentage
         public static float GetSpellCritFromRating(float Rating, Character.CharacterClass Class) { return GetSpellCritFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra chance to Crit)
+        /// </summary>
+        /// <param name="Rating">Crit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
         public static float GetSpellCritFromRating(float Rating)
         {
             return Rating / RATING_PER_SPELLCRIT;
         }
 
-        // Returns a Percentage
         public static float GetSpellHasteFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHasteFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Haste)
+        /// </summary>
+        /// <param name="Rating">Haste Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Haste)</returns>
         public static float GetSpellHasteFromRating(float Rating)
         {
             return Rating / RATING_PER_SPELLHASTE;
         }
 
-        // Returns a Percentage
         public static float GetSpellHitFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHitFromRating(Rating); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra chance to Hit)
+        /// </summary>
+        /// <param name="Rating">Hit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra chance to Hit)</returns>
         public static float GetSpellHitFromRating(float Rating)
         {
             return Rating / RATING_PER_SPELLHIT;
         }
 
-        // Returns a Percentage
         public static float GetSpellCritFromIntellect(float Intellect, Character.CharacterClass Class) { return GetSpellCritFromIntellect(Intellect); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra chance to Crit)
+        /// </summary>
+        /// <param name="Intellect">Intellect</param>
+        /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
         public static float GetSpellCritFromIntellect(float Intellect)
         {
             return Intellect / INT_PER_SPELLCRIT * 0.01f;
         }
 
-        // Returns a Percentage
         public static float GetCritFromAgility(float Agility, Character.CharacterClass Class) { return GetPhysicalCritFromAgility(Agility, Class); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra chance to Crit)
+        /// </summary>
+        /// <param name="Agility">Agility</param>
+        /// <param name="Class">Character.CharacterClass</param>
+        /// <returns>A Percentage (0.05 = 5% extra chance to Crit)</returns>
         public static float GetPhysicalCritFromAgility(float Agility, Character.CharacterClass Class)
         {
             return Agility / AGI_PER_PHYSICALCRIT[(int)Class] * 0.01f;
         }
 
-        // Returns a Percentage
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Dodge)
+        /// </summary>
+        /// <param name="Agility">Agility</param>
+        /// <param name="Class">Character.CharacterClass</param>
+        /// <returns>A Percentage (0.05 = 5% extra Dodge)</returns>
         public static float GetDodgeFromAgility(float Agility, Character.CharacterClass Class)
         {
             return Agility / AGI_PER_DODGE[(int)Class] * 0.01f;
         }
 
-        // Returns a Number, How much mana is gained each Second. (Multiply by 5 to get MP5)
         public static float GetSpiritRegenSec(float Spirit, float Intellect, Character.CharacterClass Class) { return GetSpiritRegenSec(Spirit, Intellect); }
+        /// <summary>
+        /// Returns a Number, How much mana is gained each Second. (Multiply by 5 to get MP5)
+        /// </summary>
+        /// <param name="Spirit">Spirit</param>
+        /// <param name="Intellect">Intellect</param>
+        /// <returns>A Number, How much mana is gained each Second. (Multiply by 5 to get MP5)</returns>
         public static float GetSpiritRegenSec(float Spirit, float Intellect)
         {
             return 0.001f + Spirit * REGEN_CONSTANT * (float)Math.Sqrt(Intellect);
@@ -206,7 +295,7 @@ namespace Rawr
         #endregion
     }
 
-/*
+/* Old:
     // This class converts combat ratings from Rating to % stat.
     // It convertrs Intellect to Spell Crit (Reliable for lvl 70-80, below 70 only reliable for Mage)
     // It converts Agility to Dodge and Melee Crit as well (Not all classes implemented yet.)
