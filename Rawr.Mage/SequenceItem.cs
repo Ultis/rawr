@@ -27,7 +27,7 @@ namespace Rawr.Mage.SequenceReconstruction
             this.index = index;
             this.variableType = Calculations.SolutionVariable[index].Type;
             this.Duration = duration;
-            this.spell = Calculations.SolutionVariable[index].Spell;
+            this.cycle = Calculations.SolutionVariable[index].Cycle;
             this.castingState = Calculations.SolutionVariable[index].State;
             this.segment = Calculations.SolutionVariable[index].Segment;
             if (castingState == null) castingState = Calculations.BaseState;
@@ -42,9 +42,9 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             else if (variableType == VariableType.Wand)
             {
-                spell = Calculations.BaseState.GetSpell(SpellId.Wand);
-                mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
-                tps = spell.ThreatPerSecond;
+                cycle = Calculations.BaseState.GetSpell(SpellId.Wand);
+                mps = cycle.ManaPerSecond;
+                tps = cycle.ThreatPerSecond;
             }
             else if (variableType == VariableType.Evocation)
             {
@@ -85,8 +85,8 @@ namespace Rawr.Mage.SequenceReconstruction
             }
             else if (variableType == VariableType.Spell)
             {
-                mps = spell.CostPerSecond - spell.ManaRegenPerSecond;
-                tps = spell.ThreatPerSecond;
+                mps = cycle.ManaPerSecond;
+                tps = cycle.ThreatPerSecond;
             }
         }
 
@@ -175,12 +175,12 @@ namespace Rawr.Mage.SequenceReconstruction
         public int CooldownHex;
         public int OrderIndex;
 
-        private Spell spell;
-        public Spell Spell
+        private Cycle cycle;
+        public Cycle Cycle
         {
             get
             {
-                return spell;
+                return cycle;
             }
         }
 
@@ -229,8 +229,8 @@ namespace Rawr.Mage.SequenceReconstruction
 
         public override string ToString()
         {
-            if (spell == null) return index.ToString();
-            return castingState.BuffLabel + "+" + spell.Name;
+            if (cycle == null) return index.ToString();
+            return castingState.BuffLabel + "+" + cycle.Name;
         }
     }
 }

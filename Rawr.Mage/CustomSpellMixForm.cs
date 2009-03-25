@@ -39,23 +39,23 @@ namespace Rawr.Mage
         /// </summary>
         /// <param name="enumType">typeof(your enum type)</param>
         /// <returns>A list of KeyValuePairs with enum values and descriptions</returns>
-        private static List<KeyValuePair<SpellId, string>> GetValuesAndDescription()
+        private static List<KeyValuePair<CycleId, string>> GetValuesAndDescription()
         {
-            List<KeyValuePair<SpellId, string>> kvPairList = new List<KeyValuePair<SpellId, string>>();
+            List<KeyValuePair<CycleId, string>> kvPairList = new List<KeyValuePair<CycleId, string>>();
 
-            foreach (SpellId enumValue in Enum.GetValues(typeof(SpellId)))
+            foreach (CycleId enumValue in Enum.GetValues(typeof(CycleId)))
             {
                 string description = GetDescription(enumValue);
                 if (description != null)
                 {
-                    kvPairList.Add(new KeyValuePair<SpellId, string>(enumValue, description));
+                    kvPairList.Add(new KeyValuePair<CycleId, string>(enumValue, description));
                 }
             }
 
             kvPairList.Sort((x, y) =>
                 {
-                    bool xnone = (x.Key == SpellId.None);
-                    bool ynone = (y.Key == SpellId.None);
+                    bool xnone = (x.Key == CycleId.None);
+                    bool ynone = (y.Key == CycleId.None);
                     int comp = xnone.CompareTo(ynone);
                     if (comp != 0) return -comp;
                     return x.Value.CompareTo(y.Value);
@@ -65,7 +65,7 @@ namespace Rawr.Mage
 
         private void bindingSourceSpellMix_AddingNew(object sender, AddingNewEventArgs e)
         {
-            e.NewObject = new SpellWeight() { Spell = ((List<KeyValuePair<SpellId, string>>)Spell.DataSource)[0].Key };
+            e.NewObject = new SpellWeight() { Spell = ((List<KeyValuePair<CycleId, string>>)Spell.DataSource)[0].Key };
         }
     }
 }

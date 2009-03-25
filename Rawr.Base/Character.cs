@@ -624,18 +624,34 @@ namespace Rawr //O O . .
             return items;
         }
 
-        public void AssignAllTalentsFromCharacter(Character character)
+        public void AssignAllTalentsFromCharacter(Character character, bool clone)
         {
-            WarriorTalents = character.WarriorTalents.Clone();
-            PaladinTalents = character.PaladinTalents.Clone();
-            HunterTalents = character.HunterTalents.Clone();
-            RogueTalents = character.RogueTalents.Clone();
-            PriestTalents = character.PriestTalents.Clone();
-            ShamanTalents = character.ShamanTalents.Clone();
-            MageTalents = character.MageTalents.Clone();
-            WarlockTalents = character.WarlockTalents.Clone();
-            DruidTalents = character.DruidTalents.Clone();
-            DeathKnightTalents = character.DeathKnightTalents.Clone();
+            if (clone)
+            {
+                WarriorTalents = character.WarriorTalents.Clone();
+                PaladinTalents = character.PaladinTalents.Clone();
+                HunterTalents = character.HunterTalents.Clone();
+                RogueTalents = character.RogueTalents.Clone();
+                PriestTalents = character.PriestTalents.Clone();
+                ShamanTalents = character.ShamanTalents.Clone();
+                MageTalents = character.MageTalents.Clone();
+                WarlockTalents = character.WarlockTalents.Clone();
+                DruidTalents = character.DruidTalents.Clone();
+                DeathKnightTalents = character.DeathKnightTalents.Clone();
+            }
+            else
+            {
+                WarriorTalents = character.WarriorTalents;
+                PaladinTalents = character.PaladinTalents;
+                HunterTalents = character.HunterTalents;
+                RogueTalents = character.RogueTalents;
+                PriestTalents = character.PriestTalents;
+                ShamanTalents = character.ShamanTalents;
+                MageTalents = character.MageTalents;
+                WarlockTalents = character.WarlockTalents;
+                DruidTalents = character.DruidTalents;
+                DeathKnightTalents = character.DeathKnightTalents;
+            }
         }
 
 		//[XmlIgnore]
@@ -1668,7 +1684,7 @@ namespace Rawr //O O . .
             Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, clonedItemInstances, ActiveBuffs, CurrentModel);
 			clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
-            clone.AssignAllTalentsFromCharacter(this);
+            clone.AssignAllTalentsFromCharacter(this, true);
 			clone.EnforceGemRequirements = this.EnforceGemRequirements;
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;
             clone.WristBlacksmithingSocketEnabled = this.WristBlacksmithingSocketEnabled;

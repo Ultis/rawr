@@ -138,6 +138,7 @@ namespace Rawr
         SpellDamageFor10SecOnHit_5,
         SpellPowerFor10SecOnResist,
         SpellPowerFor15SecOnCrit_20_45,
+        SpellPowerFor15SecOnCast_50_45,
         SpellPowerFor15SecOnManaGem,
         SpellPowerFor15SecOnUse90Sec,
         SpellPowerFor15SecOnUse2Min,
@@ -1652,6 +1653,16 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCrit_20_45] = value; }
+        }
+
+        // 50% chance, 45 sec internal cooldown
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Spell Power (15 sec)")]
+        [Category("Equipment Procs")]
+        public float SpellPowerFor15SecOnCast_50_45
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCast_50_45]; }
+            set { _rawAdditiveData[(int)AdditiveStat.SpellPowerFor15SecOnCast_50_45] = value; }
         }
 
         // 20% chance, 45 sec internal cooldown

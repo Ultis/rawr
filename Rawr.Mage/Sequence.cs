@@ -1216,7 +1216,7 @@ namespace Rawr.Mage.SequenceReconstruction
             foreach (SequenceItem item in cooldownItems)
             {
                 totalDuration += item.Duration;
-                if (combustionMode) combustionCount += item.Duration / (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                if (combustionMode) combustionCount += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                 bool chained = false;
                 foreach (List<SequenceItem> chain in chains)
                 {
@@ -1265,7 +1265,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     double tempSum = 0;
                     foreach (SequenceItem item in group.Item)
-                        tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                        tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                     gap = 1 - tempSum;
                 }
                 else
@@ -1300,7 +1300,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             double tempSum = 0;
                             foreach (SequenceItem item in subgroup.Item)
-                                tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                tempSum += item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                             gapReduction = tempSum;
                         }
                         else
@@ -1343,7 +1343,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                 double activationGapReduction = 0.0;
                                 if (combustionMode)
                                 {
-                                    gapReduction = item.Duration / (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                    gapReduction = item.Duration / (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                                 }
                                 else
                                 {
@@ -1364,7 +1364,7 @@ namespace Rawr.Mage.SequenceReconstruction
                                     double split = 0;
                                     if (combustionMode)
                                     {
-                                        split = gap * (item.CastingState.CombustionDuration * item.Spell.CastTime / item.Spell.CastProcs);
+                                        split = gap * (item.CastingState.CombustionDuration * item.Cycle.CastTime / item.Cycle.CastProcs);
                                     }
                                     else if (activationGapReduction > eps && activationGap > eps)
                                     {
@@ -2845,7 +2845,7 @@ namespace Rawr.Mage.SequenceReconstruction
                 int index = sequence[i].Index;
                 VariableType type = sequence[i].VariableType;
                 double duration = sequence[i].Duration;
-                Spell spell = sequence[i].Spell;
+                Cycle cycle = sequence[i].Cycle;
                 CastingState state = sequence[i].CastingState;
                 double mps = sequence[i].Mps;
                 if (sequence[i].IsManaPotionOrGem) duration = 0;
@@ -3404,14 +3404,14 @@ namespace Rawr.Mage.SequenceReconstruction
                 {
                     if (state != null && state.Combustion)
                     {
-                        if (duration / (state.CombustionDuration * spell.CastTime / spell.CastProcs) >= combustionLeft + eps)
+                        if (duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs) >= combustionLeft + eps)
                         {
-                            unexplained += time + duration - combustionTime - (state.CombustionDuration * spell.CastTime / spell.CastProcs);
+                            unexplained += time + duration - combustionTime - (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                             if (timing != null) timing.AppendLine("WARNING: Combustion duration too long!");
                         }
-                        combustionLeft -= duration / (state.CombustionDuration * spell.CastTime / spell.CastProcs);
+                        combustionLeft -= duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                     }
-                    else if (spell != null && duration > 0 && combustionLeft > eps)
+                    else if (cycle != null && duration > 0 && combustionLeft > eps)
                     {
                         //unexplained += Math.Min(duration, 15 - (time - apTime));
                         combustionTime = -1;
@@ -3440,10 +3440,10 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (timing != null && reportMode == ReportMode.Listing) timing.AppendLine(TimeFormat(time) + ": Combustion (" + Math.Round(manabefore).ToString() + " mana)");
                             combustionLeft = 1;
-                            combustionCooldown = 180 + (state.CombustionDuration * spell.CastTime / spell.CastProcs);
+                            combustionCooldown = 180 + (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                             combustionTime = time;
                             combustionWarning = false;
-                            combustionLeft -= duration / (state.CombustionDuration * spell.CastTime / spell.CastProcs);
+                            combustionLeft -= duration / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs);
                             combustionActive = true;
                         }
                     }
@@ -3729,15 +3729,15 @@ namespace Rawr.Mage.SequenceReconstruction
                 }
                 else if (type == VariableType.Spell)
                 {
-                    label = spell.Name;
+                    label = cycle.Name;
                 }
                 if (reportMode == ReportMode.Listing)
                 {
-                    if (timing != null && label != null && (i == 0 || spell == null || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Spell != sequence[i - 1].Spell)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");
+                    if (timing != null && label != null && (i == 0 || cycle == null || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Cycle != sequence[i - 1].Cycle)) timing.AppendLine(TimeFormat(time) + ": " + label + " (" + Math.Round(manabefore).ToString() + " mana)");
                 }
                 else if (reportMode == ReportMode.Compact)
                 {
-                    if (timing != null && label != null && (i == 0 || sequence[i].VariableType != sequence[i - 1].VariableType || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Spell != sequence[i - 1].Spell))
+                    if (timing != null && label != null && (i == 0 || sequence[i].VariableType != sequence[i - 1].VariableType || sequence[i].CastingState != sequence[i - 1].CastingState || sequence[i].Cycle != sequence[i - 1].Cycle))
                     {
                         timing.AppendLine(TimeFormat(time) + ": " + (string.IsNullOrEmpty(state.BuffLabel) ? "" : (state.BuffLabel + "+")) + label + " (" + Math.Round(manabefore).ToString() + " mana)");
                     }

@@ -25,7 +25,7 @@ namespace Rawr.Mage
         private List<SolutionVariable> solutionVariable;
 
         private List<CastingState> stateList;
-        private List<SpellId> spellList;
+        private List<CycleId> spellList;
 
         private SolverLP lp;
         private double[] solution;
@@ -807,15 +807,16 @@ namespace Rawr.Mage
                 if (character.Ranged != null && character.Ranged.Item.Type == Item.ItemType.Wand)
                 {
                     int wandSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    Spell wand = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed);
-                    calculationResult.BaseState.SetSpell(SpellId.Wand, wand);
-                    manaRegen = wand.CostPerSecond - wand.ManaRegenPerSecond;
+                    Spell w = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed);
+                    calculationResult.BaseState.SetSpell(SpellId.Wand, w);
+                    Cycle wand = w;
+                    manaRegen = wand.ManaPerSecond;
                     for (int segment = 0; segment < wandSegments; segment++)
                     {
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, (wandSegments > 1) ? segmentList[segment].Duration : calculationOptions.FightDuration);
                         if (segment == 0) calculationResult.ColumnWand = column;
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Spell = wand, Segment = segment, State = calculationResult.BaseState });
+                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.Wand, Cycle = wand, Segment = segment, State = calculationResult.BaseState });
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -1450,7 +1451,7 @@ namespace Rawr.Mage
                 if (waterElementalAvailable)
                 {
                     int waterElementalSegments = segmentList.Count; // always segment, we need it to guarantee each block has activation
-                    manaRegen = (int)(0.16 * BaseSpell.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseState.GlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
+                    manaRegen = (int)(0.16 * Spell.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseState.GlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
                     List<CastingState> states = new List<CastingState>();
                     bool found = false;
                     // WE = 0x100
@@ -1471,8 +1472,8 @@ namespace Rawr.Mage
                     {
                         foreach (CastingState state in states)
                         {
-                            Waterbolt waterbolt = new Waterbolt(state, state.FrostDamage);
-                            solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state, Spell = waterbolt });
+                            Spell waterbolt = new Waterbolt(state, state.FrostDamage);
+                            solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseState.GlobalCooldown);
                             if (segment == 0 && state == states[0]) calculationResult.ColumnSummonWaterElemental = column;
@@ -1595,15 +1596,15 @@ namespace Rawr.Mage
                 if (conjureManaGem)
                 {
                     int conjureSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    Spell spell = new ConjureManaGem(calculationResult.BaseState);
+                    Cycle spell = new ConjureManaGem(calculationResult.BaseState);
                     calculationResult.ConjureManaGem = spell;
                     calculationResult.MaxConjureManaGem = (int)((calculationOptions.FightDuration - 300.0f) / 360.0f) + 1;
-                    manaRegen = spell.CostPerSecond - spell.ManaRegenPerSecond;
+                    manaRegen = spell.ManaPerSecond;
                     for (int segment = 0; segment < conjureSegments; segment++)
                     {
                         column = lp.AddColumnUnsafe();
                         lp.SetColumnUpperBound(column, spell.CastTime * ((conjureSegments > 1) ? 1 : calculationResult.MaxConjureManaGem));                        
-                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Spell = spell, Segment = segment, State = calculationResult.BaseState });
+                        solutionVariable.Add(new SolutionVariable() { Type = VariableType.ConjureManaGem, Cycle = spell, Segment = segment, State = calculationResult.BaseState });
                         lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
                         lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
                         lp.SetElementUnsafe(rowConjureManaGem, column, 1.0);
@@ -1646,7 +1647,7 @@ namespace Rawr.Mage
                                 if (calculationOptions.CooldownRestrictionsValid(segmentList[calculationOptions.IncrementalSetSegments[index]], stateList[buffset]))
                                 {
                                     column = lp.AddColumnUnsafe();
-                                    Spell s = stateList[buffset].GetSpell(calculationOptions.IncrementalSetSpells[index]);
+                                    Cycle c = stateList[buffset].GetCycle(calculationOptions.IncrementalSetSpells[index]);
                                     int seg = calculationOptions.IncrementalSetSegments[index];
                                     if (seg != lastSegment)
                                     {
@@ -1655,8 +1656,8 @@ namespace Rawr.Mage
                                             segmentColumn[++lastSegment] = column;
                                         }
                                     }
-                                    solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
-                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                    solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                    SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
                                 }
                             }
                         }
@@ -1670,7 +1671,7 @@ namespace Rawr.Mage
                 {
                     int firstMoltenFurySegment = segmentList.FindIndex(s => s.TimeEnd > calculationOptions.FightDuration * (1 - calculationOptions.MoltenFuryPercentage) + 0.00001);
 
-                    List<Spell> placed = new List<Spell>();
+                    List<Cycle> placed = new List<Cycle>();
                     for (int seg = 0; seg < segmentList.Count; seg++)
                     {
                         segmentColumn[seg] = column + 1;
@@ -1685,24 +1686,24 @@ namespace Rawr.Mage
                                     if (segmentCooldowns && moltenFuryAvailable && !stateList[buffset].MoltenFury && seg >= firstMoltenFurySegment) continue;
                                     if (!segmentNonCooldowns && stateList[buffset] == calculationResult.BaseState && seg != 0) continue;
                                     if (segmentCooldowns && calculationOptions.HeroismControl == 3 && stateList[buffset].Heroism && seg < firstMoltenFurySegment) continue;
-                                    Spell s = stateList[buffset].GetSpell(spellList[spell]);
+                                    Cycle c = stateList[buffset].GetCycle(spellList[spell]);
                                     bool skip = false;
-                                    foreach (Spell s2 in placed)
+                                    foreach (Cycle s2 in placed)
                                     {
                                         // TODO verify it this is ok, it assumes that spells placed under same casting state are independent except for aoe spells
                                         // assuming there are no constraints that depend on properties of particular spell cycle instead of properties of casting state
-                                        if (!s.AreaEffect && s2.DamagePerSecond >= s.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= s.ManaPerSecond + 0.00001)
+                                        if (!c.AreaEffect && s2.DamagePerSecond >= c.DamagePerSecond - 0.00001 && s2.ManaPerSecond <= c.ManaPerSecond + 0.00001)
                                         {
                                             skip = true;
                                             break;
                                         }
                                     }
-                                    if (!skip && (s.AffectedByFlameCap || !stateList[buffset].FlameCap))
+                                    if (!skip && (c.AffectedByFlameCap || !stateList[buffset].FlameCap))
                                     {
-                                        placed.Add(s);
+                                        placed.Add(c);
                                         column = lp.AddColumnUnsafe();
-                                        solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Spell = s, Segment = seg, Type = VariableType.Spell });
-                                        SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, s);
+                                        solutionVariable.Add(new SolutionVariable() { State = stateList[buffset], Cycle = c, Segment = seg, Type = VariableType.Spell });
+                                        SetSpellColumn(minimizeTime, tpsList, seg, stateList[buffset], column, c);
                                     }
                                 }
                             }
@@ -2292,10 +2293,10 @@ namespace Rawr.Mage
             return rowCount;
         }
 
-        private void SetSpellColumn(bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Spell spell)
+        private void SetSpellColumn(bool minimizeTime, List<double> tpsList, int segment, CastingState state, int column, Cycle cycle)
         {
             double bound = calculationOptions.FightDuration;
-            double manaRegen = spell.CostPerSecond - spell.ManaRegenPerSecond;
+            double manaRegen = cycle.ManaPerSecond;
             lp.SetElementUnsafe(rowAfterFightRegenMana, column, manaRegen);
             lp.SetElementUnsafe(rowManaRegen, column, manaRegen);
             lp.SetElementUnsafe(rowFightDuration, column, 1.0);
@@ -2327,10 +2328,10 @@ namespace Rawr.Mage
             if (state.Heroism && state.Trinket1) lp.SetElementUnsafe(rowHeroismTrinket1, column, 1.0);
             if (state.Heroism && state.Trinket2) lp.SetElementUnsafe(rowHeroismTrinket2, column, 1.0);
             lp.SetElementUnsafe(rowManaGemEffectActivation, column, ((state.ManaGemEffect) ? 1 / manaGemEffectDuration : 0));
-            if (spell.AreaEffect) lp.SetElementUnsafe(rowAoe, column, 1.0);
-            if (spell.AreaEffect)
+            if (cycle.AreaEffect) lp.SetElementUnsafe(rowAoe, column, 1.0);
+            if (cycle.AreaEffect)
             {
-                Flamestrike fs = spell as Flamestrike;
+                Flamestrike fs = cycle.AoeSpell as Flamestrike;
                 if (fs != null)
                 {
                     if (!fs.SpammedDot) lp.SetElementUnsafe(rowFlamestrike, column, fs.DotDuration / fs.CastTime);
@@ -2339,7 +2340,7 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowFlamestrike, column, -1.0);
                 }
-                ConeOfCold coc = spell as ConeOfCold;
+                ConeOfCold coc = cycle.AoeSpell as ConeOfCold;
                 if (coc != null)
                 {
                     lp.SetElementUnsafe(rowConeOfCold, column, (coc.Cooldown / coc.CastTime - 1.0));
@@ -2348,7 +2349,7 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowConeOfCold, column, -1.0);
                 }
-                BlastWave bw = spell as BlastWave;
+                BlastWave bw = cycle.AoeSpell as BlastWave;
                 if (bw != null)
                 {
                     lp.SetElementUnsafe(rowBlastWave, column, (bw.Cooldown / bw.CastTime - 1.0));
@@ -2357,7 +2358,7 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowBlastWave, column, -1);
                 }
-                DragonsBreath db = spell as DragonsBreath;
+                DragonsBreath db = cycle.AoeSpell as DragonsBreath;
                 if (db != null)
                 {
                     lp.SetElementUnsafe(rowDragonsBreath, column, (db.Cooldown / db.CastTime - 1.0));
@@ -2367,9 +2368,9 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowDragonsBreath, column, -1.0);
                 }
             }
-            if (state.Combustion) lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * spell.CastTime / spell.CastProcs)));
-            if (state.Combustion && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * spell.CastTime / spell.CastProcs)));
-            if (state.Combustion && state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * spell.CastTime / spell.CastProcs)));
+            if (state.Combustion) lp.SetElementUnsafe(rowCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+            if (state.Combustion && state.MoltenFury) lp.SetElementUnsafe(rowMoltenFuryCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
+            if (state.Combustion && state.Heroism) lp.SetElementUnsafe(rowHeroismCombustion, column, (1 / (state.CombustionDuration * cycle.CastTime / cycle.CastProcs)));
             if (state.IcyVeins && state.Heroism) lp.SetElementUnsafe(rowHeroismIcyVeins, column, 1.0);
             //if (state.DrumsOfBattle) lp.SetElementUnsafe(rowDrumsOfBattle, column, 1.0);
             if (state.DrumsOfBattle) lp.SetElementUnsafe(rowDrumsOfBattleActivation, column, 1 / (30 - calculationResult.BaseState.GlobalCooldown));
@@ -2378,11 +2379,11 @@ namespace Rawr.Mage
             if (state.DrumsOfBattle && state.IcyVeins) lp.SetElementUnsafe(rowIcyVeinsDrumsOfBattle, column, 1.0);
             if (state.DrumsOfBattle && state.ArcanePower) lp.SetElementUnsafe(rowArcanePowerDrumsOfBattle, column, 1.0);
             if (state.WaterElemental) lp.SetElementUnsafe(rowSummonWaterElemental, column, 1 / (calculationResult.WaterElementalDuration - calculationResult.BaseState.GlobalCooldown));
-            lp.SetElementUnsafe(rowThreat, column, spell.ThreatPerSecond);
-            tpsList.Add(spell.ThreatPerSecond);
+            lp.SetElementUnsafe(rowThreat, column, cycle.ThreatPerSecond);
+            tpsList.Add(cycle.ThreatPerSecond);
             //lp[rowManaPotionManaGem, index] = (statsList[buffset].FlameCap ? 1 : 0) + (statsList[buffset].DestructionPotion ? 40.0 / 15.0 : 0);
-            lp.SetElementUnsafe(rowTargetDamage, column, -spell.DamagePerSecond);
-            lp.SetCostUnsafe(column, minimizeTime ? -1 : spell.DamagePerSecond);
+            lp.SetElementUnsafe(rowTargetDamage, column, -cycle.DamagePerSecond);
+            lp.SetCostUnsafe(column, minimizeTime ? -1 : cycle.DamagePerSecond);
             if (segmentCooldowns)
             {
                 // mf, heroism, ap, iv, combustion, drums, flamecap, destro, t1, t2
@@ -2497,19 +2498,19 @@ namespace Rawr.Mage
             {
                 for (int ss = segment; ss < segmentList.Count - 1; ss++)
                 {
-                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, spell.ThreatPerSecond);
+                    lp.SetElementUnsafe(rowSegmentThreat + ss, column, cycle.ThreatPerSecond);
                 }
             }
             lp.SetColumnUpperBound(column, bound);
         }
 
-        private List<SpellId> GetSpellList()
+        private List<CycleId> GetSpellList()
         {
-            List<SpellId> list = new List<SpellId>();
+            List<CycleId> list = new List<CycleId>();
 
             if (calculationOptions.CustomSpellMixEnabled || calculationOptions.CustomSpellMixOnly)
             {
-                list.Add(SpellId.CustomSpellMix);
+                list.Add(CycleId.CustomSpellMix);
             }
             if (!calculationOptions.CustomSpellMixOnly)
             {
@@ -2523,34 +2524,34 @@ namespace Rawr.Mage
                     {
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
-                            list.Add(SpellId.ABABarSc);
-                            list.Add(SpellId.ABABarCSc);
-                            list.Add(SpellId.ABAMABarSc);
-                            list.Add(SpellId.AB3AMABarSc);
-                            list.Add(SpellId.AB3ABarCSc);
-                            list.Add(SpellId.AB3MBAMABarSc);
+                            list.Add(CycleId.ABABarSc);
+                            list.Add(CycleId.ABABarCSc);
+                            list.Add(CycleId.ABAMABarSc);
+                            list.Add(CycleId.AB3AMABarSc);
+                            list.Add(CycleId.AB3ABarCSc);
+                            list.Add(CycleId.AB3MBAMABarSc);
                         }
                         else if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                         {
                             if (talents.LivingBomb > 0)
                             {
-                                list.Add(SpellId.FFBScLBPyro);
+                                list.Add(CycleId.FFBScLBPyro);
                             }
-                            list.Add(SpellId.FFBScPyro);
+                            list.Add(CycleId.FFBScPyro);
                         }
                         else
                         {
                             if (talents.LivingBomb > 0)
                             {
-                                list.Add(SpellId.FBScLBPyro);
+                                list.Add(CycleId.FBScLBPyro);
                             }
                             if (talents.HotStreak > 0)
                             {
-                                list.Add(SpellId.FBScPyro);
+                                list.Add(CycleId.FBScPyro);
                             }
                             else
                             {
-                                list.Add(SpellId.FBSc);
+                                list.Add(CycleId.FBSc);
                             }
                         }
                     }
@@ -2558,34 +2559,34 @@ namespace Rawr.Mage
                     {
                         if (talents.LivingBomb > 0)
                         {
-                            list.Add(SpellId.FBScLBPyro);
-                            list.Add(SpellId.ScLBPyro);
+                            list.Add(CycleId.FBScLBPyro);
+                            list.Add(CycleId.ScLBPyro);
                         }
                         if (talents.HotStreak > 0)
                         {
-                            list.Add(SpellId.FBScPyro);
+                            list.Add(CycleId.FBScPyro);
                         }
                         else
                         {
-                            list.Add(SpellId.FBSc);
+                            list.Add(CycleId.FBSc);
                         }
                         if (calculationOptions.PlayerLevel >= 75)
                         {
-                            list.Add(SpellId.FFBScPyro);
+                            list.Add(CycleId.FFBScPyro);
                             if (talents.LivingBomb > 0)
                             {
-                                list.Add(SpellId.FFBScLBPyro);
+                                list.Add(CycleId.FFBScLBPyro);
                             }
                         }
-                        list.Add(SpellId.FBFBlast);
+                        list.Add(CycleId.FBFBlast);
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
-                            list.Add(SpellId.ABABarSc);
-                            list.Add(SpellId.ABABarCSc);
-                            list.Add(SpellId.ABAMABarSc);
-                            list.Add(SpellId.AB3AMABarSc);
-                            list.Add(SpellId.AB3ABarCSc);
-                            list.Add(SpellId.AB3MBAMABarSc);
+                            list.Add(CycleId.ABABarSc);
+                            list.Add(CycleId.ABABarCSc);
+                            list.Add(CycleId.ABAMABarSc);
+                            list.Add(CycleId.AB3AMABarSc);
+                            list.Add(CycleId.AB3ABarCSc);
+                            list.Add(CycleId.AB3MBAMABarSc);
                         }
                     }
                 }
@@ -2597,29 +2598,29 @@ namespace Rawr.Mage
                         {
                             if (talents.ImprovedFrostbolt > 0)
                             {
-                                list.Add(SpellId.FrBABarSlow);
+                                list.Add(CycleId.FrBABarSlow);
                             }
                             if (talents.ImprovedFireball > 0)
                             {
-                                list.Add(SpellId.FBABarSlow);
+                                list.Add(CycleId.FBABarSlow);
                             }
                             if (talents.ArcaneEmpowerment > 0)
                             {
-                                list.Add(SpellId.ABABarSlow);
+                                list.Add(CycleId.ABABarSlow);
                             }
                             if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
                             {
-                                list.Add(SpellId.FrBABarSlow);
-                                list.Add(SpellId.FBABarSlow);
-                                list.Add(SpellId.ABABarSlow);
+                                list.Add(CycleId.FrBABarSlow);
+                                list.Add(CycleId.FBABarSlow);
+                                list.Add(CycleId.ABABarSlow);
                             }
                         }
                     }
                     else
                     {
-                        list.Add(SpellId.FrBABarSlow);
-                        list.Add(SpellId.FBABarSlow);
-                        list.Add(SpellId.ABABarSlow);
+                        list.Add(CycleId.FrBABarSlow);
+                        list.Add(CycleId.FBABarSlow);
+                        list.Add(CycleId.ABABarSlow);
                     }
                 }
                 else
@@ -2630,154 +2631,154 @@ namespace Rawr.Mage
                         {
                             if (talents.PiercingIce == 3 && talents.IceShards == 3 && calculationOptions.PlayerLevel >= 75)
                             {
-                                list.Add(SpellId.FFBPyro);
-                                if (talents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
+                                list.Add(CycleId.FFBPyro);
+                                if (talents.LivingBomb > 0) list.Add(CycleId.FFBLBPyro);
                             }
                             else
                             {
                                 if (talents.HotStreak > 0 && talents.Pyroblast > 0)
                                 {
-                                    list.Add(SpellId.FBPyro);
+                                    list.Add(CycleId.FBPyro);
                                 }
                                 else
                                 {
-                                    list.Add(SpellId.Fireball);
+                                    list.Add(CycleId.Fireball);
                                 }
-                                if (talents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
+                                if (talents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
                             }
                         }
                         else if (talents.EmpoweredFrostbolt > 0)
                         {
                             if (talents.BrainFreeze > 0)
                             {
-                                list.Add(SpellId.FrBFB);
+                                list.Add(CycleId.FrBFB);
                             }
                             else
                             {
-                                list.Add(SpellId.FrostboltFOF);
+                                list.Add(CycleId.FrostboltFOF);
                             }
                         }
                         else if (talents.ArcaneBarrage > 0)
                         {
                             if (talents.ImprovedFrostbolt > 0)
                             {
-                                list.Add(SpellId.Frostbolt);
-                                list.Add(SpellId.FrBABar);
-                                list.Add(SpellId.FrB2ABar);
+                                list.Add(CycleId.FrostboltFOF);
+                                list.Add(CycleId.FrBABar);
+                                list.Add(CycleId.FrB2ABar);
                             }
                             if (talents.ImprovedFireball > 0)
                             {
-                                list.Add(SpellId.Fireball);
-                                list.Add(SpellId.FBABar);
-                                list.Add(SpellId.FB2ABar);
+                                list.Add(CycleId.Fireball);
+                                list.Add(CycleId.FBABar);
+                                list.Add(CycleId.FB2ABar);
                             }
                             if (talents.ArcaneEmpowerment > 0)
                             {
-                                list.Add(SpellId.ABAM);
-                                list.Add(SpellId.AB3AM2MBAM);
-                                list.Add(SpellId.AB3AM);
+                                list.Add(CycleId.ABAM);
+                                list.Add(CycleId.AB3AM2MBAM);
+                                list.Add(CycleId.AB3AM);
                                 if (talents.MissileBarrage > 0)
                                 {
-                                    list.Add(SpellId.ABABar1MBAM);
-                                    list.Add(SpellId.ABABar2MBAM);
-                                    list.Add(SpellId.AB3ABar3MBAM);
-                                    list.Add(SpellId.ABSpam3MBAM);
+                                    list.Add(CycleId.ABABar1MBAM);
+                                    list.Add(CycleId.ABABar2MBAM);
+                                    list.Add(CycleId.AB3ABar3MBAM);
+                                    list.Add(CycleId.ABSpam3MBAM);
                                 }
                             }
                             if (talents.ImprovedFrostbolt == 0 && talents.ImprovedFireball == 0 && talents.ArcaneEmpowerment == 0)
                             {
-                                list.Add(SpellId.FrBABar);
-                                list.Add(SpellId.FBABar);
-                                list.Add(SpellId.ABABar0C);
-                                list.Add(SpellId.FB2ABar);
-                                list.Add(SpellId.FrB2ABar);
-                                list.Add(SpellId.ABAM);
-                                list.Add(SpellId.AB3AM2MBAM);
-                                list.Add(SpellId.AB3AM);
+                                list.Add(CycleId.FrBABar);
+                                list.Add(CycleId.FBABar);
+                                list.Add(CycleId.ABABar0C);
+                                list.Add(CycleId.FB2ABar);
+                                list.Add(CycleId.FrB2ABar);
+                                list.Add(CycleId.ABAM);
+                                list.Add(CycleId.AB3AM2MBAM);
+                                list.Add(CycleId.AB3AM);
                                 if (talents.MissileBarrage > 0)
                                 {
-                                    list.Add(SpellId.ABABar1MBAM);
-                                    list.Add(SpellId.ABABar2MBAM);
-                                    list.Add(SpellId.AB3ABar3MBAM);
-                                    list.Add(SpellId.ABSpam3MBAM);
+                                    list.Add(CycleId.ABABar1MBAM);
+                                    list.Add(CycleId.ABABar2MBAM);
+                                    list.Add(CycleId.AB3ABar3MBAM);
+                                    list.Add(CycleId.ABSpam3MBAM);
                                 }
                             }
                         }
                         else
                         {
-                            list.Add(SpellId.ArcaneMissiles);
-                            list.Add(SpellId.Fireball);
-                            list.Add(SpellId.FrostboltFOF);
-                            if (calculationOptions.PlayerLevel >= 75) list.Add(SpellId.FrostfireBoltFOF);
+                            list.Add(CycleId.ArcaneMissiles);
+                            list.Add(CycleId.Fireball);
+                            list.Add(CycleId.FrostboltFOF);
+                            if (calculationOptions.PlayerLevel >= 75) list.Add(CycleId.FrostfireBoltFOF);
                         }
                     }
                     else
                     {
-                        list.Add(SpellId.ArcaneMissiles);
-                        list.Add(SpellId.Scorch);
-                        if (talents.LivingBomb > 0) list.Add(SpellId.ScLBPyro);
+                        list.Add(CycleId.ArcaneMissiles);
+                        list.Add(CycleId.Scorch);
+                        if (talents.LivingBomb > 0) list.Add(CycleId.ScLBPyro);
                         if (talents.HotStreak > 0 && talents.Pyroblast > 0)
                         {
-                            list.Add(SpellId.FBPyro);
+                            list.Add(CycleId.FBPyro);
                         }
                         else
                         {
-                            list.Add(SpellId.Fireball);
+                            list.Add(CycleId.Fireball);
                         }
                         if (calculationOptions.PlayerLevel >= 75)
                         {
-                            list.Add(SpellId.FrostfireBoltFOF);
-                            list.Add(SpellId.FFBPyro);
-                            if (talents.LivingBomb > 0) list.Add(SpellId.FFBLBPyro);
+                            list.Add(CycleId.FrostfireBoltFOF);
+                            list.Add(CycleId.FFBPyro);
+                            if (talents.LivingBomb > 0) list.Add(CycleId.FFBLBPyro);
                         }
-                        list.Add(SpellId.FBFBlast);
-                        if (talents.LivingBomb > 0) list.Add(SpellId.FBLBPyro);
-                        list.Add(SpellId.FrostboltFOF);
-                        if (talents.BrainFreeze > 0) list.Add(SpellId.FrBFB);
-                        if (talents.FingersOfFrost > 0) list.Add(SpellId.FrBFBIL);
-                        list.Add(SpellId.ArcaneBlast33);
-                        list.Add(SpellId.ABAM);
-                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(SpellId.ABABar0C);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.ABarAM);
-                        if (talents.MissileBarrage > 0) list.Add(SpellId.ABSpamMBAM);
-                        if (talents.MissileBarrage > 0) list.Add(SpellId.AB3AM);
-                        if (talents.MissileBarrage > 0) list.Add(SpellId.AB3AM2MBAM);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FB2ABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FrBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.FrB2ABar);
-                        if (calculationOptions.PlayerLevel >= 75 && talents.ArcaneBarrage > 0) list.Add(SpellId.FFBABar);
-                        if (talents.ArcaneBarrage > 0) list.Add(SpellId.ABABar);
+                        list.Add(CycleId.FBFBlast);
+                        if (talents.LivingBomb > 0) list.Add(CycleId.FBLBPyro);
+                        list.Add(CycleId.FrostboltFOF);
+                        if (talents.BrainFreeze > 0) list.Add(CycleId.FrBFB);
+                        if (talents.FingersOfFrost > 0) list.Add(CycleId.FrBFBIL);
+                        list.Add(CycleId.ArcaneBlastSpam);
+                        list.Add(CycleId.ABAM);
+                        if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0) list.Add(CycleId.ABABar0C);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.ABarAM);
+                        if (talents.MissileBarrage > 0) list.Add(CycleId.ABSpamMBAM);
+                        if (talents.MissileBarrage > 0) list.Add(CycleId.AB3AM);
+                        if (talents.MissileBarrage > 0) list.Add(CycleId.AB3AM2MBAM);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FB2ABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FrBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.FrB2ABar);
+                        if (calculationOptions.PlayerLevel >= 75 && talents.ArcaneBarrage > 0) list.Add(CycleId.FFBABar);
+                        if (talents.ArcaneBarrage > 0) list.Add(CycleId.ABABar);
                         if (talents.ArcaneBarrage > 0 && talents.MissileBarrage > 0)
                         {
-                            list.Add(SpellId.ABABar1C);
-                            list.Add(SpellId.ABABar0MBAM);
-                            list.Add(SpellId.AB2ABar2MBAM);
-                            list.Add(SpellId.AB2ABar2C);
-                            list.Add(SpellId.AB2ABar3C);
-                            list.Add(SpellId.AB3ABar3C);
-                            list.Add(SpellId.ABSpam3C);
-                            list.Add(SpellId.ABSpam03C);
-                            list.Add(SpellId.ABSpam3MBAM);
-                            list.Add(SpellId.ABABar3C);
-                            list.Add(SpellId.ABABar2C);
-                            list.Add(SpellId.ABABar2MBAM);
-                            list.Add(SpellId.ABABar1MBAM);
-                            list.Add(SpellId.AB3ABar3MBAM);
-                            list.Add(SpellId.AB3AMABar);
-                            list.Add(SpellId.AB3AMABar2C);
+                            list.Add(CycleId.ABABar1C);
+                            list.Add(CycleId.ABABar0MBAM);
+                            list.Add(CycleId.AB2ABar2MBAM);
+                            list.Add(CycleId.AB2ABar2C);
+                            list.Add(CycleId.AB2ABar3C);
+                            list.Add(CycleId.AB3ABar3C);
+                            list.Add(CycleId.ABSpam3C);
+                            list.Add(CycleId.ABSpam03C);
+                            list.Add(CycleId.ABSpam3MBAM);
+                            list.Add(CycleId.ABABar3C);
+                            list.Add(CycleId.ABABar2C);
+                            list.Add(CycleId.ABABar2MBAM);
+                            list.Add(CycleId.ABABar1MBAM);
+                            list.Add(CycleId.AB3ABar3MBAM);
+                            list.Add(CycleId.AB3AMABar);
+                            list.Add(CycleId.AB3AMABar2C);
                         }
                     }
                 }
                 if (calculationOptions.AoeDuration > 0)
                 {
-                    list.Add(SpellId.ArcaneExplosion);
-                    list.Add(SpellId.FlamestrikeSpammed);
-                    list.Add(SpellId.FlamestrikeSingle);
-                    list.Add(SpellId.Blizzard);
-                    list.Add(SpellId.ConeOfCold);
-                    if (talents.BlastWave == 1) list.Add(SpellId.BlastWave);
-                    if (talents.DragonsBreath == 1) list.Add(SpellId.DragonsBreath);
+                    list.Add(CycleId.ArcaneExplosion);
+                    list.Add(CycleId.FlamestrikeSpammed);
+                    list.Add(CycleId.FlamestrikeSingle);
+                    list.Add(CycleId.Blizzard);
+                    list.Add(CycleId.ConeOfCold);
+                    if (talents.BlastWave == 1) list.Add(CycleId.BlastWave);
+                    if (talents.DragonsBreath == 1) list.Add(CycleId.DragonsBreath);
                 }
             }
             return list;

@@ -209,7 +209,10 @@ namespace Rawr.Mage
                     else
                     {
                         maintainSnareState = (CastingState)MemberwiseClone();
-                        maintainSnareState.Spells = new Spell[SpellIdCount];
+                        //maintainSnareState.Spells = new Spell[SpellIdCount];
+                        //maintainSnareState.Cycles = new Cycle[CycleIdCount];
+                        maintainSnareState.Spells = new Dictionary<int, Spell>();
+                        maintainSnareState.Cycles = new Dictionary<int, Cycle>();
                         maintainSnareState.Spells[(int)SpellId.Wand] = Spells[(int)SpellId.Wand];
                         maintainSnareState.SnaredTime = 1.0f;
                     }
@@ -524,7 +527,7 @@ namespace Rawr.Mage
             GlobalCooldownLimit = 1f;
             GlobalCooldown = Math.Max(GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusSpellPowerMultiplier) * (1 + characterStats.BonusDamageMultiplier);
+            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusDamageMultiplier);
             if (arcanePower)
             {
                 ArcaneSpellModifier *= 1.2f;
@@ -582,23 +585,23 @@ namespace Rawr.Mage
 
             if (BaseStats.LightningCapacitorProc > 0)
             {
-                LightningBolt = (LightningBolt)GetSpell(SpellId.LightningBolt);
+                LightningBolt = new LightningBolt(this);
             }
             if (BaseStats.ThunderCapacitorProc > 0)
             {
-                ThunderBolt = (ThunderBolt)GetSpell(SpellId.ThunderBolt);
+                ThunderBolt = new ThunderBolt(this);
             }
             if (BaseStats.LightweaveEmbroideryProc > 0)
             {
-                LightweaveBolt = (LightweaveBolt)GetSpell(SpellId.LightweaveBolt);
+                LightweaveBolt = new LightweaveBolt(this);
             }
             if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
             {
-                ArcaneBolt = (ArcaneBolt)GetSpell(SpellId.ArcaneBolt);
+                ArcaneBolt = new ArcaneBolt(this);
             }
             if (BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
-                PendulumOfTelluricCurrents = (PendulumOfTelluricCurrents)GetSpell(SpellId.PendulumOfTelluricCurrents);
+                PendulumOfTelluricCurrents = new PendulumOfTelluricCurrents(this);
             }
         }
 
@@ -608,45 +611,320 @@ namespace Rawr.Mage
         public LightweaveBolt LightweaveBolt { get; set; }
         public PendulumOfTelluricCurrents PendulumOfTelluricCurrents { get; set; }
 
+        private static int CycleIdCount;
         private static int SpellIdCount;
 
-        static CastingState()
-        {
-            SpellIdCount = Enum.GetValues(typeof(SpellId)).Length;
-        }
+        //static CastingState()
+        //{
+        //    CycleIdCount = Enum.GetValues(typeof(CycleId)).Length;
+        //    SpellIdCount = Enum.GetValues(typeof(SpellId)).Length;
+        //}
 
-        private Spell[] Spells = new Spell[SpellIdCount];
+        //private Cycle[] Cycles = new Cycle[CycleIdCount];
+        //private Spell[] Spells = new Spell[SpellIdCount];
 
-        //private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
+        private Dictionary<int, Spell> Spells = new Dictionary<int, Spell>();
+        private Dictionary<int, Cycle> Cycles = new Dictionary<int, Cycle>();
 
         public void SetSpell(SpellId spellId, Spell spell)
         {
             Spells[(int)spellId] = spell;
         }
 
+        public Cycle GetCycle(CycleId cycleId)
+        {
+            //Cycle c = Cycles[(int)cycleId];
+            //if (c != null) return c;
+            Cycle c = null;
+            if (Cycles.TryGetValue((int)cycleId, out c)) return c;
+
+            switch (cycleId)
+            {
+                case CycleId.FrostboltFOF:
+                    c = GetSpell(SpellId.FrostboltFOF);
+                    break;
+                case CycleId.Fireball:
+                    c = GetSpell(SpellId.Fireball);
+                    break;
+                case CycleId.FBPyro:
+                    c = new FBPyro(this);
+                    break;
+                case CycleId.FBLBPyro:
+                    c = new FBLBPyro(this);
+                    break;
+                case CycleId.FFBLBPyro:
+                    c = new FFBLBPyro(this);
+                    break;
+                case CycleId.FBScPyro:
+                    c = new FBScPyro(this);
+                    break;
+                case CycleId.FFBPyro:
+                    c = new FFBPyro(this);
+                    break;
+                case CycleId.FFBScPyro:
+                    c = new FFBScPyro(this);
+                    break;
+                case CycleId.FFBScLBPyro:
+                    c = new FFBScLBPyro(this);
+                    break;
+                case CycleId.FrostfireBoltFOF:
+                    c = GetSpell(SpellId.FrostfireBoltFOF);
+                    break;
+                case CycleId.ABABarSc:
+                    c = new ABABarSc(this);
+                    break;
+                case CycleId.ABABarCSc:
+                    c = new ABABarCSc(this);
+                    break;
+                case CycleId.ABAMABarSc:
+                    c = new ABAMABarSc(this);
+                    break;
+                case CycleId.AB3ABarCSc:
+                    c = new AB3ABarCSc(this);
+                    break;
+                case CycleId.AB3AMABarSc:
+                    c = new AB3AMABarSc(this);
+                    break;
+                case CycleId.AB3MBAMABarSc:
+                    c = new AB3MBAMABarSc(this);
+                    break;
+                case CycleId.ArcaneBlastSpam:
+                    c = GetSpell(SpellId.ArcaneBlast33);
+                    break;
+                case CycleId.ABarAM:
+                    c = new ABarAM(this);
+                    break;
+                case CycleId.ABP:
+                    c = new ABP(this);
+                    break;
+                case CycleId.ABAM:
+                    c = new ABAM(this);
+                    break;
+                case CycleId.ABSpamMBAM:
+                    c = new ABSpamMBAM(this);
+                    break;
+                case CycleId.ABSpam3C:
+                    c = new ABSpam3C(this);
+                    break;
+                case CycleId.ABSpam03C:
+                    c = new ABSpam03C(this);
+                    break;
+                case CycleId.AB2ABar3C:
+                    c = new AB2ABar3C(this);
+                    break;
+                case CycleId.ABABar2C:
+                    c = new ABABar2C(this);
+                    break;
+                case CycleId.ABABar2MBAM:
+                    c = new ABABar2MBAM(this);
+                    break;
+                case CycleId.ABABar1MBAM:
+                    c = new ABABar1MBAM(this);
+                    break;
+                case CycleId.ABABar3C:
+                    c = new ABABar3C(this);
+                    break;
+                case CycleId.AB3ABar3MBAM:
+                    c = new AB3ABar3MBAM(this);
+                    break;
+                case CycleId.AB3AM:
+                    c = new AB3AM(this);
+                    break;
+                case CycleId.AB3AM2MBAM:
+                    c = new AB3AM2MBAM(this);
+                    break;
+                case CycleId.AB2ABar2MBAM:
+                    c = new AB2ABar2MBAM(this);
+                    break;
+                case CycleId.ABABar0MBAM:
+                    c = new ABABar0MBAM(this);
+                    break;
+                case CycleId.ABABar:
+                    c = new ABABar(this);
+                    break;
+                case CycleId.ABSpam3MBAM:
+                    c = new ABSpam3MBAM(this);
+                    break;
+                case CycleId.ABAMABar:
+                    c = new ABAMABar(this);
+                    break;
+                case CycleId.AB2AMABar:
+                    c = new AB2AMABar(this);
+                    break;
+                case CycleId.AB3AMABar:
+                    c = new AB3AMABar(this);
+                    break;
+                case CycleId.AB3AMABar2C:
+                    c = new AB3AMABar2C(this);
+                    break;
+                case CycleId.AB32AMABar:
+                    c = new AB32AMABar(this);
+                    break;
+                case CycleId.AB3ABar3C:
+                    c = new AB3ABar3C(this);
+                    break;
+                case CycleId.ABABar0C:
+                    c = new ABABar0C(this);
+                    break;
+                case CycleId.ABABar1C:
+                    c = new ABABar1C(this);
+                    break;
+                case CycleId.ABABarY:
+                    c = new ABABarY(this);
+                    break;
+                case CycleId.AB2ABar:
+                    c = new AB2ABar(this);
+                    break;
+                case CycleId.AB2ABar2C:
+                    c = new AB2ABar2C(this);
+                    break;
+                case CycleId.AB2ABarMBAM:
+                    c = new AB2ABarMBAM(this);
+                    break;
+                case CycleId.AB3ABar:
+                    c = new AB3ABar(this);
+                    break;
+                case CycleId.AB3ABarX:
+                    c = new AB3ABarX(this);
+                    break;
+                case CycleId.AB3ABarY:
+                    c = new AB3ABarY(this);
+                    break;
+                case CycleId.FBABar:
+                    c = new FBABar(this);
+                    break;
+                case CycleId.FrBABar:
+                    c = new FrBABar(this);
+                    break;
+                case CycleId.FFBABar:
+                    c = new FFBABar(this);
+                    break;
+                case CycleId.ABAMP:
+                    c = new ABAMP(this);
+                    break;
+                case CycleId.AB3AMSc:
+                    c = new AB3AMSc(this);
+                    break;
+                case CycleId.ABAM3Sc:
+                    c = new ABAM3Sc(this);
+                    break;
+                case CycleId.ABAM3Sc2:
+                    c = new ABAM3Sc2(this);
+                    break;
+                case CycleId.ABAM3FrB:
+                    c = new ABAM3FrB(this);
+                    break;
+                case CycleId.ABAM3FrB2:
+                    c = new ABAM3FrB2(this);
+                    break;
+                case CycleId.ABFrB:
+                    c = new ABFrB(this);
+                    break;
+                case CycleId.AB3FrB:
+                    c = new AB3FrB(this);
+                    break;
+                case CycleId.ABFrB3FrB:
+                    c = new ABFrB3FrB(this);
+                    break;
+                case CycleId.ABFrB3FrB2:
+                    c = new ABFrB3FrB2(this);
+                    break;
+                case CycleId.ABFrB3FrBSc:
+                    c = new ABFrB3FrBSc(this);
+                    break;
+                case CycleId.ABFB3FBSc:
+                    c = new ABFB3FBSc(this);
+                    break;
+                case CycleId.AB3Sc:
+                    c = new AB3Sc(this);
+                    break;
+                case CycleId.FBSc:
+                    c = new FBSc(this);
+                    break;
+                case CycleId.FBFBlast:
+                    c = new FBFBlast(this);
+                    break;
+                case CycleId.FrBFBIL:
+                    c = new FrBFBIL(this);
+                    break;
+                case CycleId.FrBFB:
+                    c = new FrBFB(this);
+                    break;
+                case CycleId.FBScLBPyro:
+                    c = new FBScLBPyro(this);
+                    break;
+                case CycleId.FB2ABar:
+                    c = new FB2ABar(this);
+                    break;
+                case CycleId.FrB2ABar:
+                    c = new FrB2ABar(this);
+                    break;
+                case CycleId.ScLBPyro:
+                    c = new ScLBPyro(this);
+                    break;
+                case CycleId.ABABarSlow:
+                    c = new ABABarSlow(this);
+                    break;
+                case CycleId.FBABarSlow:
+                    c = new FBABarSlow(this);
+                    break;
+                case CycleId.FrBABarSlow:
+                    c = new FrBABarSlow(this);
+                    break;
+                case CycleId.CustomSpellMix:
+                    c = new SpellCustomMix(this);
+                    break;
+                case CycleId.ArcaneMissiles:
+                    c = GetSpell(SpellId.ArcaneMissiles);
+                    break;
+                case CycleId.Scorch:
+                    c = GetSpell(SpellId.Scorch);
+                    break;
+                case CycleId.ArcaneExplosion:
+                    c = GetSpell(SpellId.ArcaneExplosion);
+                    break;
+                case CycleId.FlamestrikeSpammed:
+                    c = GetSpell(SpellId.FlamestrikeSpammed);
+                    break;
+                case CycleId.FlamestrikeSingle:
+                    c = GetSpell(SpellId.FlamestrikeSingle);
+                    break;
+                case CycleId.Blizzard:
+                    c = GetSpell(SpellId.Blizzard);
+                    break;
+                case CycleId.BlastWave:
+                    c = GetSpell(SpellId.BlastWave);
+                    break;
+                case CycleId.DragonsBreath:
+                    c = GetSpell(SpellId.DragonsBreath);
+                    break;
+                case CycleId.ConeOfCold:
+                    c = GetSpell(SpellId.ConeOfCold);
+                    break;
+            }
+            if (c != null)
+            {
+                c.CycleId = cycleId;
+                Cycles[(int)cycleId] = c;
+            }
+
+            return c;
+        }
+
         public Spell GetSpell(SpellId spellId)
         {
-            Spell s = Spells[(int)spellId];
-            if (s != null) return s;
-            //Spell s = null;
-            //if (Spells.TryGetValue((int)spellId, out s)) return s;
+            //Spell s = Spells[(int)spellId];
+            //if (s != null) return s;
+            Spell s = null;
+            if (Spells.TryGetValue((int)spellId, out s)) return s;
 
             switch (spellId)
             {
-                case SpellId.ArcaneBolt:
-                    s = new ArcaneBolt(this);
+                case SpellId.FrostboltFOF:
+                    s = new Frostbolt(this, false, false, false, true);
                     break;
-                case SpellId.ThunderBolt:
-                    s = new ThunderBolt(this);
-                    break;
-                case SpellId.LightweaveBolt:
-                    s = new LightweaveBolt(this);
-                    break;
-                case SpellId.PendulumOfTelluricCurrents:
-                    s = new PendulumOfTelluricCurrents(this);
-                    break;
-                case SpellId.LightningBolt:
-                    s = new LightningBolt(this);
+                case SpellId.FrostfireBoltFOF:
+                    s = new FrostfireBolt(this, false, true);
                     break;
                 case SpellId.ArcaneMissiles:
                     s = new ArcaneMissiles(this, false, 0);
@@ -660,18 +938,6 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissiles3:
                     s = new ArcaneMissiles(this, false, 3);
                     break;
-                case SpellId.ArcaneMissiles0Clipped:
-                    s = new ArcaneMissiles(this, false, 0, 4);
-                    break;
-                case SpellId.ArcaneMissiles1Clipped:
-                    s = new ArcaneMissiles(this, false, 1, 4);
-                    break;
-                case SpellId.ArcaneMissiles2Clipped:
-                    s = new ArcaneMissiles(this, false, 2, 4);
-                    break;
-                case SpellId.ArcaneMissiles3Clipped:
-                    s = new ArcaneMissiles(this, false, 3, 4);
-                    break;
                 case SpellId.ArcaneMissilesMB:
                     s = new ArcaneMissiles(this, true, 0);
                     break;
@@ -684,35 +950,11 @@ namespace Rawr.Mage
                 case SpellId.ArcaneMissilesMB3:
                     s = new ArcaneMissiles(this, true, 3);
                     break;
-                case SpellId.ArcaneMissilesMB0Clipped:
-                    s = new ArcaneMissiles(this, true, 0, 4);
-                    break;
-                case SpellId.ArcaneMissilesMB1Clipped:
-                    s = new ArcaneMissiles(this, true, 1, 4);
-                    break;
-                case SpellId.ArcaneMissilesMB2Clipped:
-                    s = new ArcaneMissiles(this, true, 2, 4);
-                    break;
-                case SpellId.ArcaneMissilesMB3Clipped:
-                    s = new ArcaneMissiles(this, true, 3, 4);
-                    break;
-                case SpellId.ArcaneMissilesCC:
-                    s = new ArcaneMissilesCC(this);
-                    break;
                 case SpellId.ArcaneMissilesNoProc:
                     s = new ArcaneMissiles(this, false, true, false, false, 0, 5);
                     break;
-                /*case SpellId.ArcaneMissilesFTF:
-                    s = new ArcaneMissiles(this);
-                    break;
-                case SpellId.ArcaneMissilesFTT:
-                    s = new ArcaneMissiles(this);
-                    break;*/
                 case SpellId.Frostbolt:
                     s = new Frostbolt(this);
-                    break;
-                case SpellId.FrostboltFOF:
-                    s = new Frostbolt(this, false, false, false, true);
                     break;
                 case SpellId.FrostboltNoCC:
                     s = new Frostbolt(this, true, false, false, false);
@@ -723,32 +965,8 @@ namespace Rawr.Mage
                 case SpellId.FireballBF:
                     s = new Fireball(this, false, true);
                     break;
-                case SpellId.FBPyro:
-                    s = new FBPyro(this);
-                    break;
-                case SpellId.FBLBPyro:
-                    s = new FBLBPyro(this);
-                    break;
-                case SpellId.FFBLBPyro:
-                    s = new FFBLBPyro(this);
-                    break;
-                case SpellId.FBScPyro:
-                    s = new FBScPyro(this);
-                    break;
-                case SpellId.FFBPyro:
-                    s = new FFBPyro(this);
-                    break;
-                case SpellId.FFBScPyro:
-                    s = new FFBScPyro(this);
-                    break;
-                case SpellId.FFBScLBPyro:
-                    s = new FFBScLBPyro(this);
-                    break;
                 case SpellId.FrostfireBolt:
                     s = new FrostfireBolt(this, false, false);
-                    break;
-                case SpellId.FrostfireBoltFOF:
-                    s = new FrostfireBolt(this, false, true);
                     break;
                 case SpellId.Pyroblast:
                     s = new Pyroblast(this, false);
@@ -762,24 +980,6 @@ namespace Rawr.Mage
                 case SpellId.ScorchNoCC:
                     s = new Scorch(this, false);
                     break;
-                case SpellId.ABABarSc:
-                    s = new ABABarSc(this);
-                    break;
-                case SpellId.ABABarCSc:
-                    s = new ABABarCSc(this);
-                    break;
-                case SpellId.ABAMABarSc:
-                    s = new ABAMABarSc(this);
-                    break;
-                case SpellId.AB3ABarCSc:
-                    s = new AB3ABarCSc(this);
-                    break;
-                case SpellId.AB3AMABarSc:
-                    s = new AB3AMABarSc(this);
-                    break;
-                case SpellId.AB3MBAMABarSc:
-                    s = new AB3MBAMABarSc(this);
-                    break;
                 case SpellId.ArcaneBarrage:
                     s = new ArcaneBarrage(this, 0);
                     break;
@@ -791,15 +991,6 @@ namespace Rawr.Mage
                     break;
                 case SpellId.ArcaneBarrage3:
                     s = new ArcaneBarrage(this, 3);
-                    break;
-                case SpellId.ArcaneBarrage1Combo:
-                    s = new ArcaneBarrage(this, 0/* 1 * CalculationOptions.ComboReliability*/);
-                    break;
-                case SpellId.ArcaneBarrage2Combo:
-                    s = new ArcaneBarrage(this, 0/* 2 * CalculationOptions.ComboReliability*/);
-                    break;
-                case SpellId.ArcaneBarrage3Combo:
-                    s = new ArcaneBarrage(this, 0/* 3 * CalculationOptions.ComboReliability*/);
                     break;
                 case SpellId.ArcaneBlast33:
                     s = new ArcaneBlast(this, 3, 3);
@@ -864,188 +1055,8 @@ namespace Rawr.Mage
                 case SpellId.ArcaneBlast3Miss:
                     s = new ArcaneBlast(this, 3, 3, false);
                     break;
-                case SpellId.ArcaneBlastSpam:
-                    s = new AB(this);
-                    break;
-                case SpellId.ABarAM:
-                    s = new ABarAM(this);
-                    break;
-                case SpellId.ABP:
-                    s = new ABP(this);
-                    break;
-                case SpellId.ABAM:
-                    s = new ABAM(this);
-                    break;
-                case SpellId.ABSpamMBAM:
-                    s = new ABSpamMBAM(this);
-                    break;
-                case SpellId.ABSpam3C:
-                    s = new ABSpam3C(this);
-                    break;
-                case SpellId.ABSpam03C:
-                    s = new ABSpam03C(this);
-                    break;
-                case SpellId.AB2ABar3C:
-                    s = new AB2ABar3C(this);
-                    break;
-                case SpellId.ABABar2C:
-                    s = new ABABar2C(this);
-                    break;
-                case SpellId.ABABar2MBAM:
-                    s = new ABABar2MBAM(this);
-                    break;
-                case SpellId.ABABar1MBAM:
-                    s = new ABABar1MBAM(this);
-                    break;
-                case SpellId.ABABar3C:
-                    s = new ABABar3C(this);
-                    break;
-                case SpellId.AB3ABar3MBAM:
-                    s = new AB3ABar3MBAM(this);
-                    break;
-                case SpellId.AB3AM:
-                    s = new AB3AM(this);
-                    break;
-                case SpellId.AB3AM2MBAM:
-                    s = new AB3AM2MBAM(this);
-                    break;
-                case SpellId.AB2ABar2MBAM:
-                    s = new AB2ABar2MBAM(this);
-                    break;
-                case SpellId.ABABar0MBAM:
-                    s = new ABABar0MBAM(this);
-                    break;
-                case SpellId.ABABar:
-                    s = new ABABar(this);
-                    break;
-                case SpellId.ABSpam3MBAM:
-                    s = new ABSpam3MBAM(this);
-                    break;
-                case SpellId.ABAMABar:
-                    s = new ABAMABar(this);
-                    break;
-                case SpellId.AB2AMABar:
-                    s = new AB2AMABar(this);
-                    break;
-                case SpellId.AB3AMABar:
-                    s = new AB3AMABar(this);
-                    break;
-                case SpellId.AB3AMABar2C:
-                    s = new AB3AMABar2C(this);
-                    break;
-                case SpellId.AB32AMABar:
-                    s = new AB32AMABar(this);
-                    break;
-                case SpellId.AB3ABar3C:
-                    s = new AB3ABar3C(this);
-                    break;
-                case SpellId.ABABar0C:
-                    s = new ABABar0C(this);
-                    break;
-                case SpellId.ABABar1C:
-                    s = new ABABar1C(this);
-                    break;
-                case SpellId.ABABarY:
-                    s = new ABABarY(this);
-                    break;
-                case SpellId.AB2ABar:
-                    s = new AB2ABar(this);
-                    break;
-                case SpellId.AB2ABar2C:
-                    s = new AB2ABar2C(this);
-                    break;
-                case SpellId.AB2ABarMBAM:
-                    s = new AB2ABarMBAM(this);
-                    break;
-                case SpellId.AB3ABar:
-                    s = new AB3ABar(this);
-                    break;
-                case SpellId.AB3ABarX:
-                    s = new AB3ABarX(this);
-                    break;
-                case SpellId.AB3ABarY:
-                    s = new AB3ABarY(this);
-                    break;
-                case SpellId.FBABar:
-                    s = new FBABar(this);
-                    break;
-                case SpellId.FrBABar:
-                    s = new FrBABar(this);
-                    break;
-                case SpellId.FFBABar:
-                    s = new FFBABar(this);
-                    break;
-                case SpellId.ABAMP:
-                    s = new ABAMP(this);
-                    break;
-                case SpellId.AB3AMSc:
-                    s = new AB3AMSc(this);
-                    break;
-                case SpellId.ABAM3Sc:
-                    s = new ABAM3Sc(this);
-                    break;
-                case SpellId.ABAM3Sc2:
-                    s = new ABAM3Sc2(this);
-                    break;
-                case SpellId.ABAM3FrB:
-                    s = new ABAM3FrB(this);
-                    break;
-                case SpellId.ABAM3FrB2:
-                    s = new ABAM3FrB2(this);
-                    break;
-                case SpellId.ABFrB:
-                    s = new ABFrB(this);
-                    break;
-                case SpellId.AB3FrB:
-                    s = new AB3FrB(this);
-                    break;
-                case SpellId.ABFrB3FrB:
-                    s = new ABFrB3FrB(this);
-                    break;
-                case SpellId.ABFrB3FrB2:
-                    s = new ABFrB3FrB2(this);
-                    break;
-                case SpellId.ABFrB3FrBSc:
-                    s = new ABFrB3FrBSc(this);
-                    break;
-                case SpellId.ABFB3FBSc:
-                    s = new ABFB3FBSc(this);
-                    break;
-                case SpellId.AB3Sc:
-                    s = new AB3Sc(this);
-                    break;
-                case SpellId.FBSc:
-                    s = new FBSc(this);
-                    break;
-                case SpellId.FBFBlast:
-                    s = new FBFBlast(this);
-                    break;
-                case SpellId.ABAM3ScCCAM:
-                    s = new ABAM3ScCCAM(this);
-                    break;
-                case SpellId.ABAM3Sc2CCAM:
-                    s = new ABAM3Sc2CCAM(this);
-                    break;
-                case SpellId.ABAM3FrBCCAM:
-                    s = new ABAM3FrBCCAM(this);
-                    break;
-                case SpellId.ABAM3FrBCCAMFail:
-                    s = new ABAM3FrBCCAMFail(this);
-                    break;
-                case SpellId.ABAM3FrBScCCAM:
-                    s = new ABAM3FrBScCCAM(this);
-                    break;
-                case SpellId.ABAMCCAM:
-                    s = new ABAMCCAM(this);
-                    break;
-                case SpellId.ABAM3CCAM:
-                    s = new ABAM3CCAM(this);
-                    break;
                 case SpellId.IceLance:
                     s = new IceLance(this);
-                    break;
-                case SpellId.FrBFBIL:
-                    s = new FrBFBIL(this);
                     break;
                 case SpellId.ArcaneExplosion:
                     s = new ArcaneExplosion(this);
@@ -1074,32 +1085,8 @@ namespace Rawr.Mage
                 case SpellId.FireballPOM:
                     s = new Fireball(this, true, false);
                     break;
-                case SpellId.FrBFB:
-                    s = new FrBFB(this);
-                    break;
-                case SpellId.FBScLBPyro:
-                    s = new FBScLBPyro(this);
-                    break;
-                case SpellId.FB2ABar:
-                    s = new FB2ABar(this);
-                    break;
-                case SpellId.FrB2ABar:
-                    s = new FrB2ABar(this);
-                    break;
-                case SpellId.ScLBPyro:
-                    s = new ScLBPyro(this);
-                    break;
                 case SpellId.Slow:
                     s = new Slow(this);
-                    break;
-                case SpellId.ABABarSlow:
-                    s = new ABABarSlow(this);
-                    break;
-                case SpellId.FBABarSlow:
-                    s = new FBABarSlow(this);
-                    break;
-                case SpellId.FrBABarSlow:
-                    s = new FrBABarSlow(this);
                     break;
                 case SpellId.FrostboltPOM:
                     s = new Frostbolt(this, false, false, true, false);
@@ -1110,13 +1097,9 @@ namespace Rawr.Mage
                 case SpellId.LivingBomb:
                     s = new LivingBomb(this);
                     break;
-                case SpellId.CustomSpellMix:
-                    s = new SpellCustomMix(this);
-                    break;
             }
             if (s != null)
             {
-                s.SpellId = spellId;
                 Spells[(int)spellId] = s;
             }
 

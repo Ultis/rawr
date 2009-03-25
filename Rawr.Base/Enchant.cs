@@ -615,7 +615,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", Item.ItemSlot.Hands, new Stats() { HasteRating = (56 + 2.0f / 3.0f) }));
 
             // Tailoring enchant
-            defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { LightweaveEmbroideryProc = 1 }));
+            defaultEnchants.Add(new Enchant(3722, "Lightweave Embroidery", Item.ItemSlot.Back, new Stats() { SpellPowerFor15SecOnCast_50_45 = 250 }));
 
             //3.0.8 enchants
             defaultEnchants.Add(new Enchant(3850, "Major Stamina", Item.ItemSlot.Wrist, new Stats() { Stamina = 40 }));

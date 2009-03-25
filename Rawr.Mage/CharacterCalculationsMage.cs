@@ -34,7 +34,7 @@ namespace Rawr.Mage
     {
         public int Segment;
         public CastingState State;
-        public Spell Spell;
+        public Cycle Cycle;
         public VariableType Type;
 
         public bool IsZeroTime
@@ -156,7 +156,7 @@ namespace Rawr.Mage
         public int ColumnManaOverflow = -1;
         public int ColumnSummonWaterElemental = -1;
 
-        public Spell ConjureManaGem { get; set; }
+        public Cycle ConjureManaGem { get; set; }
         public int MaxConjureManaGem { get; set; }
 
         public float ChanceToDie { get; set; }
@@ -263,7 +263,7 @@ namespace Rawr.Mage
                         CastingState state = SolutionVariable[i].State;
                         if (state != null && !state.GetCooldown(Cooldown.ManaGemEffect))
                         {
-                            float burn = SolutionVariable[i].Spell.ManaPerSecond;
+                            float burn = SolutionVariable[i].Cycle.ManaPerSecond;
                             if (burn > manaBurn) manaBurn = burn;
                         }
                     }
@@ -385,31 +385,32 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneMissiles, SpellId.ABSpamMBAM, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.ABAM, SpellId.FBSc, SpellId.FBFBlast, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.ABABar0C, SpellId.FBABar, SpellId.FrBABar, SpellId.FFBABar, SpellId.ABarAM, SpellId.LivingBomb, SpellId.FBPyro, SpellId.FFBPyro, SpellId.FBScPyro, SpellId.FFBScPyro, SpellId.FBLBPyro, SpellId.FrBFB, SpellId.FBScLBPyro, SpellId.FB2ABar, SpellId.FrB2ABar, SpellId.ScLBPyro, SpellId.ABABarSlow, SpellId.FBABarSlow, SpellId.FrBABarSlow, SpellId.FFBLBPyro, SpellId.FFBScLBPyro, SpellId.ABABar1C, SpellId.ABSpam3C, SpellId.AB3ABar3C, SpellId.IceLance, SpellId.FrBFBIL, SpellId.AB2ABar2C, SpellId.ABSpam3MBAM, SpellId.ABSpam03C, SpellId.AB2ABar2MBAM, SpellId.ABABar0MBAM, SpellId.ABABar, SpellId.AB2ABar3C, SpellId.ABABar3C, SpellId.ABABar2C, SpellId.ABABar2MBAM, SpellId.ABABar1MBAM, SpellId.AB3ABar3MBAM, SpellId.AB3AM, SpellId.AB3AM2MBAM, SpellId.AB3AMABar, SpellId.AB3AMABar2C };
-            Spell AB = BaseState.GetSpell(SpellId.ArcaneBlast33);
-            BaseSpell bs;
-            foreach (SpellId spell in spellList)
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.ArcaneMissiles, CycleId.ABSpamMBAM, CycleId.ABAM, CycleId.FBSc, CycleId.FBFBlast, CycleId.ABABar0C, CycleId.FBABar, CycleId.FrBABar, CycleId.FFBABar, CycleId.ABarAM, CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FBScLBPyro, CycleId.FB2ABar, CycleId.FrB2ABar, CycleId.ScLBPyro, CycleId.ABABarSlow, CycleId.FBABarSlow, CycleId.FrBABarSlow, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.ABABar1C, CycleId.ABSpam3C, CycleId.AB3ABar3C, CycleId.FrBFBIL, CycleId.AB2ABar2C, CycleId.ABSpam3MBAM, CycleId.ABSpam03C, CycleId.AB2ABar2MBAM, CycleId.ABABar0MBAM, CycleId.ABABar, CycleId.AB2ABar3C, CycleId.ABABar3C, CycleId.ABABar2C, CycleId.ABABar2MBAM, CycleId.ABABar1MBAM, CycleId.AB3ABar3MBAM, CycleId.AB3AM, CycleId.AB3AM2MBAM, CycleId.AB3AMABar, CycleId.AB3AMABar2C };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
+            foreach (CycleId cycle in cycleList)
             {
-                Spell s = BaseState.GetSpell(spell);
+                Cycle s = BaseState.GetCycle(cycle);
                 if (s != null)
                 {
-                    if (s is BaseSpell)
-                    {
-                        bs = s as BaseSpell;
-                        dictValues.Add(bs.Name, String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
-                    }
-                    else
-                    {
-                        dictValues.Add(s.Name, String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAverage Cast Time: {4:F} sec\r\n{5}", s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond, (AB.DamagePerSecond - s.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - s.CostPerSecond + s.ManaRegenPerSecond), s.CastTime, s.Sequence));
-                    }
+                    dictValues.Add(s.Name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\nAverage Cast Time: {3:F} sec\r\n{4}", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastTime, s.Sequence));
                 }
             }
-            bs = BaseState.GetSpell(SpellId.ArcaneBlast00) as BaseSpell;
-            dictValues.Add("Arcane Blast(0)", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
-            bs = BaseState.GetSpell(SpellId.ArcaneBlast33) as BaseSpell;
-            dictValues.Add("Arcane Blast(3)", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
-            bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB) as BaseSpell;
-            dictValues.Add("MBAM", String.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{14:F} Mana\r\n{9:F} - {10:F} Hit\r\n{11:F} - {12:F} Crit{13}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier", bs.DamagePerSecond, bs.CostPerSecond - bs.ManaRegenPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, (AB.DamagePerSecond - bs.DamagePerSecond) / (AB.CostPerSecond - AB.ManaRegenPerSecond - bs.CostPerSecond + bs.ManaRegenPerSecond), bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
+            Spell bs;
+            string spellFormatString = "{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit{12}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
+            foreach (SpellId spell in spellList)
+            {
+                bs = BaseState.GetSpell(spell);
+                if (bs != null)
+                {
+                    dictValues.Add(bs.Name, string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
+                }
+            }
+            bs = BaseState.GetSpell(SpellId.ArcaneBlast00);
+            dictValues.Add("Arcane Blast(0)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
+            bs = BaseState.GetSpell(SpellId.ArcaneBlast33);
+            dictValues.Add("Arcane Blast(3)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
+            bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB);
+            dictValues.Add("MBAM", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : DpsRating * CalculationOptions.FightDuration;
             dictValues.Add("Total Damage", String.Format("{0:F}*Upper Bound: {1:F}\r\nLower Bound: {2:F}", totalDamage, UpperBound, LowerBound));
             dictValues.Add("Score", String.Format("{0:F}", OverallPoints));
@@ -619,12 +620,12 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * BaseSpell.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
+                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * Spell.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ConjureManaGem:
                             cmg += Solution[i];
-                            Spell smg = SolutionVariable[i].Spell;
+                            Cycle smg = SolutionVariable[i].Cycle;
                             smg.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             smg.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Conjure Mana Gem", Solution[i] / ConjureManaGem.CastTime, SegmentList[SolutionVariable[i].Segment]));
@@ -632,7 +633,7 @@ namespace Rawr.Mage
                         case VariableType.Wand:
                         case VariableType.Spell:
                             double value;
-                            Spell s = SolutionVariable[i].Spell;
+                            Cycle s = SolutionVariable[i].Cycle;
                             s.AddSpellContribution(DamageSources, (float)Solution[i]);
                             s.AddManaUsageContribution(ManaUsage, (float)Solution[i]);
                             s.AddManaSourcesContribution(ManaSources, (float)Solution[i]);
@@ -689,10 +690,10 @@ namespace Rawr.Mage
                 }
                 foreach (KeyValuePair<string, double> kvp in combinedSolution)
                 {
-                    Spell s = SolutionVariable[combinedSolutionData[kvp.Key]].Spell;
+                    Cycle s = SolutionVariable[combinedSolutionData[kvp.Key]].Cycle;
                     if (s != null)
                     {
-                        sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.CostPerSecond - s.ManaRegenPerSecond, s.ThreatPerSecond));
+                        sb.AppendLine(String.Format("{0}: {1:F} sec ({2:F} dps, {3:F} mps, {4:F} tps)", kvp.Key, kvp.Value, s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond));
                     }
                     else
                     {

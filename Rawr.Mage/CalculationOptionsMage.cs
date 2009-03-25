@@ -9,7 +9,7 @@ namespace Rawr.Mage
     [Serializable]
     public class SpellWeight
     {
-        public SpellId Spell { get; set; }
+        public CycleId Spell { get; set; }
         public float Weight { get; set; }
     }
 
@@ -63,7 +63,7 @@ namespace Rawr.Mage
         [XmlIgnore]
         public int[] IncrementalSetSegments;
         [XmlIgnore]
-        public SpellId[] IncrementalSetSpells;
+        public CycleId[] IncrementalSetSpells;
         [XmlIgnore]
         public string IncrementalSetArmor;
         [XmlIgnore]

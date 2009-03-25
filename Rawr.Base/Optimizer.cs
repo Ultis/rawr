@@ -3420,7 +3420,7 @@ namespace Rawr.Optimizer
                 _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character);
+            character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -3562,7 +3562,7 @@ namespace Rawr.Optimizer
             //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character);
+            character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -3656,7 +3656,7 @@ namespace Rawr.Optimizer
                 //	character.CalculationOptions.Add(kvp.Key, kvp.Value);
                 character.CalculationOptions = _character.CalculationOptions;
                 character.Class = _character.Class;
-                character.AssignAllTalentsFromCharacter(_character);
+                character.AssignAllTalentsFromCharacter(_character, false);
                 character.EnforceGemRequirements = _character.EnforceGemRequirements;
                 //character.RecalculateSetBonuses();
                 return character;
@@ -4605,7 +4605,7 @@ namespace Rawr.Optimizer
                 _character.ActiveBuffs, _character.CurrentModel);
             character.CalculationOptions = _character.CalculationOptions;
             character.Class = _character.Class;
-            character.AssignAllTalentsFromCharacter(_character);
+            character.AssignAllTalentsFromCharacter(_character, false);
             character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
@@ -4751,7 +4751,7 @@ namespace Rawr.Optimizer
                         _character.ActiveBuffs, _character.CurrentModel);
                     charSwap.CalculationOptions = _character.CalculationOptions;
                     charSwap.Class = _character.Class;
-                    charSwap.AssignAllTalentsFromCharacter(_character);
+                    charSwap.AssignAllTalentsFromCharacter(_character, false);
                     charSwap.EnforceGemRequirements = _character.EnforceGemRequirements;
                     CharacterCalculationsBase calculations;
                     value = GetOptimizationValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));

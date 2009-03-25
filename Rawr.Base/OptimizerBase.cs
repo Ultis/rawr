@@ -217,8 +217,15 @@ namespace Rawr.Optimizer
             return bestIndividual;
         }
 
+        private int noImprove;
+
+        private float bestValue;
+        private TValuation bestValuation;
+        private TIndividual bestIndividual;
+
         private TIndividual[] population;
-        private TValuation[] valuation;
+        private float[] values;
+        private object bestValueLock = new object();
         private AutoResetEvent valuationsComplete = new AutoResetEvent(false);
         private int threadPoolStarted;
         private int threadPoolComplete;
@@ -227,7 +234,19 @@ namespace Rawr.Optimizer
         private void GetThreadPoolValuation(object state)
         {
             int i = Interlocked.Increment(ref threadPoolStarted) - 1;
-            valuation[i] = GetValuation(population[i]);
+            TValuation valuation = GetValuation(population[i]);
+            values[i] = GetOptimizationValue(population[i], valuation);
+            lock (bestValueLock)
+            {
+                if (values[i] > this.bestValue)
+                {
+                    this.bestValue = values[i];
+                    this.bestValuation = valuation;
+                    bestIndividual = population[i];
+                    noImprove = -1;
+                    //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
+                }
+            }
             if (Interlocked.Increment(ref threadPoolComplete) == threadPoolSize)
             {
                 valuationsComplete.Set();
@@ -237,9 +256,9 @@ namespace Rawr.Optimizer
 		private TIndividual OptimizeGA(TIndividual injectIndividual, float injectValue, out float bestValue, out TValuation bestValuation, out bool injected)
 		{
 			//Begin Genetic
-			int noImprove, i1, i2;
-			bestValue = -10000000;
-            bestValuation = default(TValuation);
+			int i1, i2;
+			this.bestValue = bestValue = -10000000;
+            this.bestValuation = bestValuation = default(TValuation);
             injected = false;
             // verify inject individual
             if (injectIndividual != null && !IsIndividualValid(injectIndividual))
@@ -253,9 +272,8 @@ namespace Rawr.Optimizer
             int islandCount = (popSize - 1) / islandSize + 1;
 			int cycleLimit = _thoroughness;
             population = new TIndividual[popSize];
-            valuation = new TValuation[popSize];
             TIndividual[] popCopy = new TIndividual[popSize];
-			float[] values = new float[popSize];
+			values = new float[popSize];
             float[] minIsland = new float[islandCount];
             float[] maxIsland = new float[islandCount];
             float[] bestIsland = new float[islandCount];
@@ -267,7 +285,7 @@ namespace Rawr.Optimizer
             }
             float[] share = new float[popSize];
 			float s, sum;
-            TIndividual bestIndividual = null;
+            bestIndividual = null;
 			rand = new Random();
 
 			if (_thoroughness > 1)
@@ -284,7 +302,7 @@ namespace Rawr.Optimizer
                 {
                     bestIndividual = BuildRandomIndividual();
                 }
-                bestValue = GetOptimizationValue(injectIndividual);
+                this.bestValue = GetOptimizationValue(injectIndividual);
 			}
 
 			noImprove = 0;
@@ -292,8 +310,13 @@ namespace Rawr.Optimizer
 			{
 				if (_thoroughness > 1)
 				{
-				    if (cancellationPending) return null;
-					ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), bestValue);
+                    if (cancellationPending)
+                    {
+                        population = null;
+                        values = null;
+                        return null;
+                    }
+					ReportProgress((int)Math.Round((float)noImprove / ((float)cycleLimit / 100f)), this.bestValue);
 
                     for (int i = 0; i < islandCount; i++)
                     {
@@ -318,13 +341,21 @@ namespace Rawr.Optimizer
                     {
                         for (int i = 0; i < popSize; i++)
                         {
-                            valuation[i] = GetValuation(population[i]);
+                            TValuation valuation = GetValuation(population[i]);
+                            values[i] = GetOptimizationValue(population[i], valuation);
+                            if (values[i] > this.bestValue)
+                            {
+                                this.bestValue = values[i];
+                                this.bestValuation = valuation;
+                                bestIndividual = population[i];
+                                noImprove = -1;
+                                //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
+                            }
                         }
                     }
 				    for (int i = 0; i < popSize; i++)
 				    {
                         int island = i / islandSize;
-                        values[i] = GetOptimizationValue(population[i], valuation[i]);
                         if (values[i] < minIsland[island]) minIsland[island] = values[i];
                         if (values[i] > maxIsland[island]) maxIsland[island] = values[i];
                         if (values[i] > bestIsland[island])
@@ -333,14 +364,6 @@ namespace Rawr.Optimizer
                             individualIsland[island] = population[i];
                             islandNoImprove[island] = 0;
                         }
-                        if (values[i] > bestValue)
-					    {
-						    bestValue = values[i];
-                            bestValuation = valuation[i];
-						    bestIndividual = population[i];
-						    noImprove = -1;
-                            //if (population[i].Geneology != null) System.Diagnostics.Trace.WriteLine(best + " " + population[i].Geneology);
-					    }
 				    }
                     for (int island = 0; island < islandCount; island++)
                     {
@@ -417,7 +440,7 @@ namespace Rawr.Optimizer
                         }
 					}
 				}
-                else if (_thoroughness > 1 && injectIndividual != null && !injected && injectValue > bestValue)
+                else if (_thoroughness > 1 && injectIndividual != null && !injected && injectValue > this.bestValue)
                 {
                     population[popSize - 1] = injectIndividual;
                     noImprove = 0;
@@ -430,11 +453,11 @@ namespace Rawr.Optimizer
                     TValuation directValuation;
                     for (int slot = 0; slot < slotCount; slot++)
                     {
-                        results = LookForDirectItemUpgrades(slotItems[slot], slot, bestValue, bestIndividual, out directValuation);
-                        if (results.Key > bestValue)
+                        results = LookForDirectItemUpgrades(slotItems[slot], slot, this.bestValue, bestIndividual, out directValuation);
+                        if (results.Key > this.bestValue)
                         {
-                            bestValue = results.Key;
-                            bestValuation = directValuation; 
+                            this.bestValue = results.Key;
+                            this.bestValuation = directValuation; 
                             bestIndividual = results.Value; 
                             noImprove = 0;
                             population[0] = bestIndividual;
@@ -444,14 +467,22 @@ namespace Rawr.Optimizer
                 }
 			}
 
-            if (bestValue == 0)
+            if (this.bestValue == 0)
             {
                 bestIndividual = null;
-                bestValuation = default(TValuation);
+                this.bestValuation = default(TValuation);
             }
-            else
-                ToString();
-			return bestIndividual;
+
+            bestValuation = this.bestValuation;
+            bestValue = this.bestValue;
+            TIndividual ret = bestIndividual;
+
+            population = null;
+            values = null;
+            bestIndividual = null;
+            this.bestValuation = default(TValuation);
+
+            return ret;
 		}
 
         private object directValuationLock = new object();
@@ -532,6 +563,8 @@ namespace Rawr.Optimizer
                         bestIndividual = bestDirectIndividual;
                         foundUpgrade = true;
                     }
+                    bestDirectIndividual = null;
+                    bestDirectValuation = default(TValuation);
                 }
             }
 			if (foundUpgrade)

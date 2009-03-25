@@ -376,7 +376,7 @@ namespace Rawr.Mage
                     {
                         if (calculations.SolutionVariable[i].Type == VariableType.Spell)
                         {
-                            sb.AppendLine(String.Format("{2} {0}: {1:F}", calculations.SolutionVariable[i].State.BuffLabel + "+" + calculations.SolutionVariable[i].Spell.Name, compactSolution[i], calculations.SolutionVariable[i].Segment));
+                            sb.AppendLine(String.Format("{2} {0}: {1:F}", calculations.SolutionVariable[i].State.BuffLabel + "+" + calculations.SolutionVariable[i].Cycle.Name, compactSolution[i], calculations.SolutionVariable[i].Segment));
                         }
                         else
                         {

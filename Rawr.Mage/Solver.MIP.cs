@@ -4382,23 +4382,23 @@ namespace Rawr.Mage
             float manaBurn = 80;
             if (calculationOptions.AoeDuration > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                Cycle s = calculationResult.BaseState.GetSpell(SpellId.ArcaneExplosion);
+                manaBurn = s.ManaPerSecond;
             }
             else if (talents.EmpoweredFire > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.Fireball);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                Cycle s = calculationResult.BaseState.GetCycle(CycleId.Fireball);
+                manaBurn = s.ManaPerSecond;
             }
             else if (talents.EmpoweredFrostbolt > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.FrostboltFOF);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                Cycle s = calculationResult.BaseState.GetCycle(CycleId.FrostboltFOF);
+                manaBurn = s.ManaPerSecond;
             }
             else if (talents.SpellPower > 0)
             {
-                Spell s = calculationResult.BaseState.GetSpell(SpellId.AB3ABar3C);
-                manaBurn = s.CostPerSecond - s.ManaRegenPerSecond;
+                Cycle s = calculationResult.BaseState.GetCycle(CycleId.AB3ABar3C);
+                manaBurn = s.ManaPerSecond;
             }
             if (icyVeinsAvailable)
             {

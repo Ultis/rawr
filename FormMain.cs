@@ -1355,7 +1355,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
         {
             //load values for gear from armory into original character
             character.SetItems(reload, true);
-            character.AssignAllTalentsFromCharacter(reload);
+            character.AssignAllTalentsFromCharacter(reload, false);
         }
 
 		public Character GetCharacterFromArmory(string realm, string name, Character.CharacterRegion region)
@@ -1699,7 +1699,7 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 				if (reload.AvailableItems.Contains(itemId)) reload.AvailableItems.Remove(itemId);
 			}
             character.AvailableItems.AddRange(reload.AvailableItems);
-            character.AssignAllTalentsFromCharacter(reload);
+            character.AssignAllTalentsFromCharacter(reload, false);
 			character.IsLoading = false;
 			character.OnCalculationsInvalidated();
         }
