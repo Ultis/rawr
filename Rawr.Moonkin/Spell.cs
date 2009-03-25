@@ -275,8 +275,7 @@ namespace Rawr.Moonkin
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
         public float DamageDone(Character character, CharacterCalculationsMoonkin calcs, float spellPower, float spellHit, float spellCrit, float spellHaste)
         {
-            // No support for 1 dot + Eclipse rotations
-            if (character.DruidTalents.Eclipse > 0 && (SpellsUsed.Count == 1 || SpellsUsed.Count == 3))
+            if (character.DruidTalents.Eclipse > 0)
             {
                 return DoEclipseCalcs(character, calcs, Solver, spellPower, spellHit, spellCrit, spellHaste);
             }
