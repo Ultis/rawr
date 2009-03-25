@@ -229,6 +229,8 @@ namespace Rawr
         TotemWFAttackPower,
         BonusFlurryHaste,
         BonusLSDamage,
+        BonusLLSSDamage,
+        BonusMWFreq,
         #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
@@ -2459,6 +2461,20 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusLSDamage]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusLSDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusLLSSDamage
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusLLSSDamage]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusLLSSDamage] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float BonusMWFreq
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusMWFreq]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusMWFreq] = value; }
         }
 
         #endregion

@@ -2311,6 +2311,28 @@ namespace Rawr
                 SetThreshold = 4
             });
 
+            //Enhancement Shaman Tier 8 Set Bonuses
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Battlegear 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Battlegear",
+                Stats = { BonusLLSSDamage = 0.2f },
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Worldbreaker Battlegear 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                SetName = "Worldbreaker Battlegear",
+                Stats = { BonusMWFreq = 0.2f },
+                SetThreshold = 4
+            });
+
             //Hunter Set Bonuses
             defaultBuffs.Add(new Buff()
             {

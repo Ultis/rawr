@@ -21,8 +21,8 @@ namespace Rawr.Enhance
             CalculationsEnhance ce = new CalculationsEnhance();
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
-            Stats subtractBuffs = calcs.BuffStats ?? new Stats();
-            Stats stats = calcs.BasicStats + (subtractBuffs * -1f);
+            Stats buffs = calcs.BuffStats ?? new Stats();
+            Stats stats = calcs.BaseStats + (buffs * -1f);
             removeUseProcEffects(character, stats);
 
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -42,15 +42,15 @@ namespace Rawr.Enhance
             sb.AppendLine("oh_dps                          " + wdpsOH.ToString("F1", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_crit                         " + calcs.MeleeCrit.ToString("F2", CultureInfo.InvariantCulture));
-            float hitBonus = stats.HitRating / 32.78998947f;
+            float hitBonus = character.StatConversion.GetHitFromRating(stats.HitRating);
             sb.AppendLine("mh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_hit                          " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("mh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("oh_expertise_rating             " + stats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("ap                              " + stats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
-            float hasteBonus = stats.HasteRating / 32.78998947f;
-            sb.AppendLine("haste                           " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
-            float armourPenBonus = stats.ArmorPenetrationRating / 15.39529991f;
+            float hasteBonus = character.StatConversion.GetHasteFromRating(stats.HasteRating);
+            sb.AppendLine("melee_haste                     " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
+            float armourPenBonus = character.StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
             sb.AppendLine("armor_penetration               " + armourPenBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("str                             " + stats.Strength.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("agi                             " + stats.Agility.ToString("F0", CultureInfo.InvariantCulture));
@@ -58,8 +58,10 @@ namespace Rawr.Enhance
             sb.AppendLine("spi                             " + stats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spellpower                      " + stats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
             sb.AppendLine("spell_crit                      " + calcs.SpellCrit.ToString("F2", CultureInfo.InvariantCulture));
-            hitBonus = stats.HitRating / 26.23199272f;
+            hitBonus = character.StatConversion.GetSpellHitFromRating(stats.HitRating);
             sb.AppendLine("spell_hit                       " + hitBonus.ToString("F2", CultureInfo.InvariantCulture));
+            hasteBonus = character.StatConversion.GetSpellHasteFromRating(stats.HasteRating);
+            sb.AppendLine("spell_haste                     " + hasteBonus.ToString("F2", CultureInfo.InvariantCulture));
             sb.AppendLine("max_mana                        " + stats.Mana.ToString());
             sb.AppendLine("mp5                             " + stats.Mp5.ToString());
             sb.AppendLine();
@@ -141,7 +143,9 @@ namespace Rawr.Enhance
         public void copyToClipboard()
         {
             Clipboard.SetText(_configText);
-            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\nPaste the config data into your config file in a decent text editor!",
+            System.Windows.Forms.MessageBox.Show("EnhSim config data copied to clipboard\n" + 
+                "Use the Import Clipboard Config option in EnhSimGUI to use it\n" +
+                "Or paste the config data into your config file in a decent text editor!",
                 "Enhance Module", System.Windows.Forms.MessageBoxButtons.OK);         
             
         }
@@ -149,6 +153,11 @@ namespace Rawr.Enhance
         private void addGlyphs(CalculationOptionsEnhance calcOpts, System.Text.StringBuilder sb)
         {
             int glyphNumber = 0;
+            if (calcOpts.GlyphFS)
+            {
+                glyphNumber += 1;
+                sb.AppendLine("glyph_major" + glyphNumber + "                    feral_spirit");
+            }
             if (calcOpts.GlyphFT)
             {
                 glyphNumber += 1;

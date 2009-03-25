@@ -274,8 +274,11 @@ namespace Rawr
             float targetArmor = calcOpts.TargetArmor;
             float bloodlustUptime = calcOpts.BloodlustUptime;
             Stats stats = GetCharacterStats(character, additionalItem);
+            Stats statsRace = GetRaceStats(character);
+            Stats statsBaseGear = GetItemStats(character, additionalItem);
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
-            calculatedStats.BasicStats = GetCharacterStats(character, additionalItem);
+            calculatedStats.BasicStats = stats;
+            calculatedStats.BaseStats = statsRace + statsBaseGear;
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
             calculatedStats.TargetLevel = targetLevel;
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
@@ -307,7 +310,7 @@ namespace Rawr
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
             float critMultiplierMelee = 2f;
             float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
-            float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon;
+            float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon * (1 + stats.BonusMWFreq);
             int stormstrikeSpeed = 8;
             float weaponMastery = 1f;
             switch (character.ShamanTalents.WeaponMastery){
@@ -324,16 +327,15 @@ namespace Rawr
             float unleashedRage = 0f;
             switch (character.ShamanTalents.UnleashedRage){
                 case 1:
-                    unleashedRage = 1.04f;
+                    unleashedRage = .04f;
                     break;
                 case 2:
-                    unleashedRage = 1.07f;
+                    unleashedRage = .07f;
                     break;
                 case 3:
-                    unleashedRage = 1.1f;
+                    unleashedRage = .1f;
                     break;
             }
-            // unleashedRage = .1f; patch 3.08 5 talents
             //gear stuff
             string shattrathFaction = calcOpts.ShattrathFaction;
             if (stats.ShatteredSunMightProc > 0)
@@ -556,10 +558,11 @@ namespace Rawr
             float dpsMHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageMHSwing * hitsPerSMHSS;
             float dpsOHSS = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSOHSS;
 
-            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage);
+            float dpsSS = (dpsMHSS + dpsOHSS) * weaponMastery * (1 - damageReduction) * (1 - chanceYellowMiss) * (1 + bonusNatureDamage) * (1 + stats.BonusLLSSDamage);
 
             //3: Lavalash DPS
-            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL * (1 - chanceYellowMiss) * (1 + bonusFireDamage); //and no armor reduction yeya!
+            float dpsLL = (1 + chanceYellowCrit * (critMultiplierMelee - 1)) * damageOHSwing * hitsPerSLL
+                * (1 - chanceYellowMiss) * (1 + bonusFireDamage) * (1 + stats.BonusLLSSDamage); //and no armor reduction yeya!
             if (calcOpts.OffhandImbue == "Flametongue")
             {  // 25% bonus dmg if FT imbue in OH
                 if (calcOpts.GlyphLL)
@@ -671,33 +674,20 @@ namespace Rawr
        
         private float getYellowAttacksPerSecond(Character character, float yellowHitChance, float weaponSpeed, bool mainhand)
         {
-            float yellowAttacksPerSecond = 0f;
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
-//                switch (character.ShamanTalents.ImprovedStormstrike)
-//                {
-//                    case 0:
-//                        // 3+5 etc is number of SS and number of LL per time interval
-//                        yellowAttacksPerSecond = (3 + 5) * yellowHitChance / 30;
-//                        break;
-//                    case 1:
-//                        yellowAttacksPerSecond = (2 + 3) * yellowHitChance / 18;
-//                        break;
-//                    case 2:
-//                        yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24;
-//                        break;
-//                }
+            float yellowAttacksPerSecond = (3 + 4) * yellowHitChance / 24; // Stormstrike attacks
             float WFProcChance = 1f / 6f;
             if (calcOpts.GlyphWF)
             {
                 // need to modify WFProcChance if WF Glyph
+                WFProcChance += .02f;
             }
             // now add WF yellow attacks
             if (calcOpts.MainhandImbue == "windfury" && mainhand)
             {
                 if (calcOpts.OffhandImbue == "windfury")
                 {
-                    // wf on both need to modify chances
+                    // TODO wf on both need to modify chances
                 }
                 else
                     yellowAttacksPerSecond += (2 * yellowHitChance) / (weaponSpeed / WFProcChance);
@@ -708,19 +698,21 @@ namespace Rawr
         }
         #endregion 
 
-        #region Get Character Stats
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-		{
-            Stats statsRace = new Stats() { 
-                    Mana = 4116f,
-                    AttackPower = 140f, 
-                    SpellCritRating = 101f,
-                    CritMeleeRating = 134f};
+        #region Get Race Stats
+        private Stats GetRaceStats(Character character)
+        {
+            Stats statsRace = new Stats()
+            {
+                Mana = 4116f,
+                AttackPower = 140f,
+                SpellCritRating = 101f,
+                CritMeleeRating = 134f
+            };
 
             switch (character.Race)
             {
                 case Character.CharacterRace.Draenei:
-					statsRace.Health = 6305f;
+                    statsRace.Health = 6305f;
                     statsRace.Strength = 121f;
                     statsRace.Agility = 71f;
                     statsRace.Stamina = 135f;
@@ -729,7 +721,7 @@ namespace Rawr
                     break;
 
                 case Character.CharacterRace.Tauren:
- 					statsRace.Health = 6313f;
+                    statsRace.Health = 6313f;
                     statsRace.BonusStaminaMultiplier = .05f;
                     statsRace.Strength = 125f;
                     statsRace.Agility = 69f;
@@ -756,7 +748,14 @@ namespace Rawr
                     statsRace.Spirit = 144f;
                     break;
             }
+            return statsRace;
+        }
+        #endregion
 
+        #region Get Character Stats
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+		{
+            Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
 			// Stats statsEnchants = GetEnchantsStats(character);
 			Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -954,6 +953,8 @@ namespace Rawr
                     GreatnessProc = stats.GreatnessProc,
                     BonusLSDamage = stats.BonusLSDamage,
                     BonusFlurryHaste = stats.BonusFlurryHaste,
+                    BonusMWFreq = stats.BonusMWFreq,
+                    BonusLLSSDamage = stats.BonusLLSSDamage,
                     HasteRatingOnPhysicalAttack = stats.HasteRatingOnPhysicalAttack,
                     HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
                     SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
@@ -978,14 +979,14 @@ namespace Rawr
 				stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust + stats.CritMeleeRating + stats.Spirit +
 				stats.ShatteredSunMightProc + stats.SpellPower + stats.BonusIntellectMultiplier + stats.MongooseProc +
                 stats.BerserkingProc + stats.BonusSpellPowerMultiplier + stats.HasteRatingOnPhysicalAttack +
-                stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + 
+                stats.BonusDamageMultiplier + stats.SpellCritRating + stats.LightningSpellPower + stats.BonusMWFreq +
                 stats.LightningBoltHasteProc_15_45 + stats.TotemWFAttackPower + stats.TotemSSHaste +
                 stats.TotemShockSpellPower + stats.TotemShockAttackPower + stats.TotemLLAttackPower + 
                 stats.GreatnessProc + stats.HasteRatingFor20SecOnUse2Min + stats.BonusSpiritMultiplier + 
                 stats.SpellHasteFor10SecOnCast_10_45 + stats.SpellPowerFor10SecOnCast_15_45 + stats.BonusFlurryHaste +
                 stats.BonusLSDamage + stats.PhysicalCrit + stats.SpellPowerFor10SecOnHit_10_45 +
                 stats.PendulumOfTelluricCurrentsProc + stats.PhysicalHaste + stats.PhysicalHit + stats.SpellCrit +
-                stats.SpellHit + stats.SpellHaste + stats.BonusPhysicalDamageMultiplier + 
+                stats.SpellHit + stats.SpellHaste + stats.BonusPhysicalDamageMultiplier + stats.BonusLLSSDamage +
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier) > 0;
         }
         #endregion
@@ -1027,6 +1028,13 @@ namespace Rawr
 			get { return _basicStats; }
 			set { _basicStats = value; }
 		}
+
+        private Stats _baseStats;
+        public Stats BaseStats
+        {
+            get { return _baseStats; }
+            set { _baseStats = value; }
+        }
 
         private Stats _buffStats;
         public Stats BuffStats
@@ -1273,12 +1281,14 @@ namespace Rawr
                 BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
                 DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Haste", 
+            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste, {2}% Spell Haste", 
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
-                sc.GetHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Hit",
+                sc.GetHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture),
+                sc.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit, {2}% Spell Hit",
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                sc.GetHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture)));
+                sc.GetHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture),
+                sc.GetSpellHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
                 BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
                 sc.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating).ToString("F2", CultureInfo.InvariantCulture)));
