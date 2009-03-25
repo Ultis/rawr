@@ -284,7 +284,7 @@ namespace Rawr
             calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             
             //Set up some talent variables
-            // int ET = character.ShamanTalents.EnhancingTotems;
+            float initialAP = stats.AttackPower;
             int TS = character.ShamanTalents.ThunderingStrikes;
             int DWS = character.ShamanTalents.DualWieldSpecialization;
             float shockSpeed = 6f - (.2f * character.ShamanTalents.Reverberation);
@@ -378,12 +378,15 @@ namespace Rawr
                         stats.Strength += stats.GreatnessProc * 15f / 47f;
                     else
                         stats.Intellect += stats.GreatnessProc * 15f / 47f;
+                stats.AttackPower += stats.GreatnessProc * 15f / 47f;
             }
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45; // Haste trinket (Meteorite Whetstone/Dragonspine Trophy)
             stats.HasteRating += stats.HasteRatingFor20SecOnUse2Min * 20f / 120f;
             stats.HasteRating += stats.SpellHasteFor10SecOnCast_10_45 * 10f / 45f;
             stats.SpellPower += stats.SpellPowerFor10SecOnCast_15_45 * 10f / 45f;
             stats.SpellPower += stats.SpellPowerFor10SecOnHit_10_45 * 10f / 45f;
+            // Finally make sure to add in the spellpower from MQ gained from all the bonus AP added in this section
+            stats.SpellPower += character.ShamanTalents.MentalQuickness * .1f * (stats.AttackPower - initialAP); 
             #endregion
 
             ////////////////////////////
