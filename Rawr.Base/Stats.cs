@@ -328,6 +328,7 @@ namespace Rawr
         BonusRipDamageMultiplier,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
+        BonusSpellPowerDemonicPactMultiplier,
         BonusSpiritMultiplier,
         BonusHealthMultiplier,
         BonusManaMultiplier,
@@ -2981,6 +2982,15 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Warlock Spell Power")]
+        public float BonusSpellPowerDemonicPactMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

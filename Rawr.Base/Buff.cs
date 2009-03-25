@@ -649,7 +649,7 @@ namespace Rawr
             {
                 Name = "Demonic Pact",
                 Group = "Spell Power",
-                Stats = { BonusSpellPowerMultiplier = 0.1f }
+                Stats = { BonusSpellPowerDemonicPactMultiplier = 0.1f }
             });
             defaultBuffs.Add(new Buff
             {

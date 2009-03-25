@@ -55,6 +55,7 @@ namespace Rawr.Mage
         public bool IncrementalOptimizations { get; set; }
         public float SnaredTime { get; set; }
         public bool Mode31 { get; set; }
+        public float WarlockSpellPower { get; set; }
 
         [XmlIgnore]
         public Cooldown[] IncrementalSetStateIndexes;
@@ -311,6 +312,7 @@ namespace Rawr.Mage
             FocusMagicTargetCritRate = 0.2f;
             SnaredTime = 1f;
             FixedSegmentDuration = 30;
+            WarlockSpellPower = 2800;
         }
 
         public CalculationOptionsMage(Character character)

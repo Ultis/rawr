@@ -278,6 +278,8 @@
             this.calculationOptionsMageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.numericUpDownMaxThreads = new System.Windows.Forms.NumericUpDown();
             this.label108 = new System.Windows.Forms.Label();
+            this.textBoxWarlockSpellPower = new System.Windows.Forms.TextBox();
+            this.label109 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -424,6 +426,8 @@
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.textBoxWarlockSpellPower);
+            this.tabPage2.Controls.Add(this.label109);
             this.tabPage2.Controls.Add(this.label103);
             this.tabPage2.Controls.Add(this.checkBoxPowerInfusion);
             this.tabPage2.Controls.Add(this.label91);
@@ -2956,6 +2960,24 @@
             this.toolTipMage.SetToolTip(this.label108, "Controls how many threads can be executed in parallel if multithreading is enable" +
                     "d, higher values will require more memory.");
             // 
+            // textBoxWarlockSpellPower
+            // 
+            this.textBoxWarlockSpellPower.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.calculationOptionsMageBindingSource, "WarlockSpellPower", true));
+            this.textBoxWarlockSpellPower.Location = new System.Drawing.Point(142, 460);
+            this.textBoxWarlockSpellPower.Name = "textBoxWarlockSpellPower";
+            this.textBoxWarlockSpellPower.Size = new System.Drawing.Size(75, 20);
+            this.textBoxWarlockSpellPower.TabIndex = 200;
+            // 
+            // label109
+            // 
+            this.label109.AutoSize = true;
+            this.label109.Location = new System.Drawing.Point(0, 463);
+            this.label109.Name = "label109";
+            this.label109.Size = new System.Drawing.Size(116, 13);
+            this.label109.TabIndex = 199;
+            this.label109.Text = "Warlock Spell Power: *";
+            this.toolTipMage.SetToolTip(this.label109, "Spell Power used for Demonic Pact buff value.");
+            // 
             // CalculationOptionsPanelMage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3237,6 +3259,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDisplayAdvancedConstraintsLevel;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxThreads;
         private System.Windows.Forms.Label label108;
+        private System.Windows.Forms.TextBox textBoxWarlockSpellPower;
+        private System.Windows.Forms.Label label109;
 
     }
 }
