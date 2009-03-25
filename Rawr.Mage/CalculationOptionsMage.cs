@@ -9,7 +9,7 @@ namespace Rawr.Mage
     [Serializable]
     public class SpellWeight
     {
-        public CycleId Spell { get; set; }
+        public SpellId Spell { get; set; }
         public float Weight { get; set; }
     }
 

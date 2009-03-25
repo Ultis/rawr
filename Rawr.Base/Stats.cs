@@ -1816,6 +1816,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.LotPCritRating] = value; }
         }
 
+        [DisplayName("Ice Armor")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float MageIceArmor
         {
@@ -1823,6 +1824,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.MageIceArmor] = value; }
         }
 
+        [DisplayName("Mage Armor")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float MageMageArmor
         {
@@ -1830,6 +1832,7 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.MageMageArmor] = value; }
         }
 
+        [DisplayName("Molten Armor")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
         public float MageMoltenArmor
         {

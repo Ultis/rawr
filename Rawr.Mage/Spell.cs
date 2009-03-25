@@ -70,20 +70,20 @@ namespace Rawr.Mage
         ScorchNoCC,
         [Description("Living Bomb")]
         LivingBomb,
-        [Description("Arcane Blast (3)")]
-        ArcaneBlast33,
         ArcaneBlast33NoCC,
-        [Description("Arcane Blast(0)")]
+        [Description("Arcane Blast (0)")]
         ArcaneBlast00,
         ArcaneBlast00NoCC,
         ArcaneBlast0POM,
         ArcaneBlast10,
         ArcaneBlast01,
-        [Description("Arcane Blast(1)")]
+        [Description("Arcane Blast (1)")]
         ArcaneBlast11,
         ArcaneBlast11NoCC,
-        [Description("Arcane Blast(2)")]
+        [Description("Arcane Blast (2)")]
         ArcaneBlast22,
+        [Description("Arcane Blast (3)")]
+        ArcaneBlast33,
         ArcaneBlast22NoCC,
         ArcaneBlast12,
         ArcaneBlast23,
@@ -382,7 +382,7 @@ namespace Rawr.Mage
             for (int i = 0; i < castingState.CalculationOptions.CustomSpellMix.Count; i++)
             {
                 SpellWeight spellWeight = castingState.CalculationOptions.CustomSpellMix[i];
-                Cycle[i] = castingState.GetCycle(spellWeight.Spell);
+                Cycle[i] = castingState.GetSpell(spellWeight.Spell);
                 Weight[i] = spellWeight.Weight;
             }
             Calculate();
