@@ -60,6 +60,8 @@ namespace Rawr.ProtPaladin
             checkBoxGlyphOfSealOfVengeance.Checked = calcOpts.GlyphSealVengeance;
             checkBoxGlyphOfExorcism.Checked = calcOpts.GlyphExorcism;
             checkBoxGlyphOfDivinePlea.Checked = calcOpts.GlyphDivinePlea;
+
+            calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
 			
 			labelTargetArmorDescription.Text = trackBarTargetArmor.Value.ToString() + (armorBosses.ContainsKey(trackBarTargetArmor.Value) ? armorBosses[trackBarTargetArmor.Value] : "");
             labelBossAttackValue.Text = trackBarBossAttackValue.Value.ToString();
@@ -219,6 +221,26 @@ namespace Rawr.ProtPaladin
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void checkBoxUseHolyShield_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.UseHolyShield = checkBoxUseHolyShield.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
+
+        private void groupBoxGlyphs_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBoxPaladinSkills_Enter(object sender, EventArgs e)
+        {
+
+        }
 	}
 
 	[Serializable]
@@ -246,6 +268,7 @@ namespace Rawr.ProtPaladin
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
         public bool GlyphDivinePlea = false;
+        public bool UseHolyShield = true;
         public string SealChoice = "Seal of Vengeance";
 		public PaladinTalents talents = null;
 	}

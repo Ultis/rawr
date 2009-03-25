@@ -133,8 +133,8 @@ namespace Rawr.ProtPaladin
 					"Offensive Stats:Weapon Damage",
                     "Offensive Stats:Missed Attacks",
                     "Offensive Stats:Total Damage/sec",
-                    "Offensive Stats:Limited Threat/sec",
-                    "Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
+                    "Offensive Stats:Threat/sec",
+                    //"Offensive Stats:Unlimited Threat/sec*All white damage converted to Heroic Strikes.",
 
                     "Resistances:Nature Resist",
 					"Resistances:Fire Resist",
@@ -160,8 +160,7 @@ but rather get 'enough' of it, and then focus on Mitigation.
 'Enough' can vary greatly by fight and by your healers.
 If you find that you are being killed by burst damage,
 focus on Survival Points.",
-                    @"Complex Stats:Threat Points*Threat Points represents the average between unlimited
-threat and limited threat scaled by the threat scale.",
+                    @"Complex Stats:Threat Points*Threat Points represents the average threat per second accumulated scaled by the threat scale.",
                     "Complex Stats:Nature Survival",
                     "Complex Stats:Fire Survival",
                     "Complex Stats:Frost Survival",
@@ -328,15 +327,15 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
-            calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
+            //calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             //am.RageModelMode = RageModelMode.Limited;
-            calculatedStats.LimitedThreat = am.ThreatPerSecond;
+            calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
             calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
 
             calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;
             calculatedStats.RankingMode = calcOpts.RankingMode;
-            calculatedStats.ThreatPoints = (calcOpts.ThreatScale * ((calculatedStats.LimitedThreat + calculatedStats.UnlimitedThreat) / 2.0f));
+            calculatedStats.ThreatPoints = calcOpts.ThreatScale * calculatedStats.ThreatPerSecond;
             switch (calcOpts.RankingMode)
             {
                 case 2:
@@ -681,9 +680,10 @@ threat and limited threat scaled by the threat scale.",
             {
                 Parry = talents.Deflection * 1.0f,
                 Dodge = talents.Anticipation * 1.0f,
-                Block = talents.HolyShield * 30.0f,
+                Block = (calcOpts.UseHolyShield ? talents.HolyShield * 30.0f : 0),
                 BonusBlockValueMultiplier = talents.Redoubt * 0.1f,
-                BonusDamageMultiplier = (talents.OneHandedWeaponSpecialization > 0 ? talents.OneHandedWeaponSpecialization * .03f + .01f : 0.0f),
+                BonusDamageMultiplier = (1.0f + talents.Crusade * 0.01f) *
+                    (talents.OneHandedWeaponSpecialization > 0 ? 1.0f + talents.OneHandedWeaponSpecialization * .03f + .01f : 1.0f) - 1.0f,
                 BonusStaminaMultiplier = (1.0f + talents.SacredDuty * 0.04f) * (1.0f + talents.CombatExpertise * 0.02f) - 1.0f,
                 Expertise = talents.CombatExpertise * 2.0f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
@@ -697,7 +697,7 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.BaseAgility = statsRace.Agility + statsTalents.Agility;
             statsTotal.Stamina = (float)Math.Floor(statsRace.Stamina * (1.0f + statsTalents.BonusStaminaMultiplier));
             statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1.0f + statsTalents.BonusStaminaMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier));
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             if (statsTotal.GreatnessProc > 0)

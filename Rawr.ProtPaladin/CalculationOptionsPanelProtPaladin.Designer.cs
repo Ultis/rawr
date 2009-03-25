@@ -64,6 +64,8 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfDivinePlea = new System.Windows.Forms.CheckBox();
             this.checkBoxGlyphOfSealOfVengeance = new System.Windows.Forms.CheckBox();
             this.checkBoxGlyphOfJudgement = new System.Windows.Forms.CheckBox();
+            this.groupBoxPaladinAbilities = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseHolyShield = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).BeginInit();
             this.groupBoxPaladinSkills.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).BeginInit();
@@ -73,6 +75,7 @@ namespace Rawr.ProtPaladin
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).BeginInit();
             this.groupBoxGlyphs.SuspendLayout();
+            this.groupBoxPaladinAbilities.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -97,7 +100,7 @@ namespace Rawr.ProtPaladin
             "83"});
             this.comboBoxTargetLevel.Location = new System.Drawing.Point(86, 13);
             this.comboBoxTargetLevel.Name = "comboBoxTargetLevel";
-            this.comboBoxTargetLevel.Size = new System.Drawing.Size(272, 21);
+            this.comboBoxTargetLevel.Size = new System.Drawing.Size(284, 21);
             this.comboBoxTargetLevel.TabIndex = 1;
             this.comboBoxTargetLevel.SelectedIndexChanged += new System.EventHandler(this.calculationOptionControl_Changed);
             // 
@@ -119,7 +122,7 @@ namespace Rawr.ProtPaladin
             this.trackBarTargetArmor.Location = new System.Drawing.Point(86, 165);
             this.trackBarTargetArmor.Maximum = 20000;
             this.trackBarTargetArmor.Name = "trackBarTargetArmor";
-            this.trackBarTargetArmor.Size = new System.Drawing.Size(272, 45);
+            this.trackBarTargetArmor.Size = new System.Drawing.Size(284, 45);
             this.trackBarTargetArmor.SmallChange = 100;
             this.trackBarTargetArmor.TabIndex = 2;
             this.trackBarTargetArmor.TickFrequency = 1000;
@@ -132,7 +135,7 @@ namespace Rawr.ProtPaladin
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTargetArmorDescription.Location = new System.Drawing.Point(92, 202);
             this.labelTargetArmorDescription.Name = "labelTargetArmorDescription";
-            this.labelTargetArmorDescription.Size = new System.Drawing.Size(266, 34);
+            this.labelTargetArmorDescription.Size = new System.Drawing.Size(278, 34);
             this.labelTargetArmorDescription.TabIndex = 0;
             this.labelTargetArmorDescription.Text = "13100: Tier 7 Bosses";
             // 
@@ -142,12 +145,13 @@ namespace Rawr.ProtPaladin
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPaladinSkills.Controls.Add(this.radioButtonSoR);
             this.groupBoxPaladinSkills.Controls.Add(this.radioButtonSoV);
-            this.groupBoxPaladinSkills.Location = new System.Drawing.Point(3, 450);
+            this.groupBoxPaladinSkills.Location = new System.Drawing.Point(12, 450);
             this.groupBoxPaladinSkills.Name = "groupBoxPaladinSkills";
-            this.groupBoxPaladinSkills.Size = new System.Drawing.Size(364, 73);
+            this.groupBoxPaladinSkills.Size = new System.Drawing.Size(376, 73);
             this.groupBoxPaladinSkills.TabIndex = 4;
             this.groupBoxPaladinSkills.TabStop = false;
             this.groupBoxPaladinSkills.Text = "Seal Choice";
+            this.groupBoxPaladinSkills.Enter += new System.EventHandler(this.groupBoxPaladinSkills_Enter);
             // 
             // radioButtonSoR
             // 
@@ -192,7 +196,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackValue.Maximum = 100000;
             this.trackBarBossAttackValue.Minimum = 500;
             this.trackBarBossAttackValue.Name = "trackBarBossAttackValue";
-            this.trackBarBossAttackValue.Size = new System.Drawing.Size(272, 45);
+            this.trackBarBossAttackValue.Size = new System.Drawing.Size(284, 45);
             this.trackBarBossAttackValue.SmallChange = 500;
             this.trackBarBossAttackValue.TabIndex = 2;
             this.trackBarBossAttackValue.TickFrequency = 5000;
@@ -229,7 +233,7 @@ namespace Rawr.ProtPaladin
             this.trackBarThreatScale.Location = new System.Drawing.Point(86, 16);
             this.trackBarThreatScale.Maximum = 30;
             this.trackBarThreatScale.Name = "trackBarThreatScale";
-            this.trackBarThreatScale.Size = new System.Drawing.Size(272, 45);
+            this.trackBarThreatScale.Size = new System.Drawing.Size(284, 45);
             this.trackBarThreatScale.TabIndex = 2;
             this.trackBarThreatScale.Value = 10;
             this.trackBarThreatScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -253,7 +257,7 @@ namespace Rawr.ProtPaladin
             this.trackBarMitigationScale.Location = new System.Drawing.Point(86, 67);
             this.trackBarMitigationScale.Maximum = 30;
             this.trackBarMitigationScale.Name = "trackBarMitigationScale";
-            this.trackBarMitigationScale.Size = new System.Drawing.Size(272, 45);
+            this.trackBarMitigationScale.Size = new System.Drawing.Size(284, 45);
             this.trackBarMitigationScale.TabIndex = 2;
             this.trackBarMitigationScale.Value = 10;
             this.trackBarMitigationScale.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -286,9 +290,9 @@ namespace Rawr.ProtPaladin
             this.groupBox1.Controls.Add(this.labelThreatScaleText);
             this.groupBox1.Controls.Add(this.trackBarMitigationScale);
             this.groupBox1.Controls.Add(this.radioButtonMitigationScale);
-            this.groupBox1.Location = new System.Drawing.Point(3, 245);
+            this.groupBox1.Location = new System.Drawing.Point(12, 245);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 199);
+            this.groupBox1.Size = new System.Drawing.Size(376, 199);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ranking System";
@@ -398,9 +402,9 @@ namespace Rawr.ProtPaladin
             this.groupBox2.Controls.Add(this.trackBarTargetArmor);
             this.groupBox2.Controls.Add(this.trackBarBossAttackValue);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(3, 3);
+            this.groupBox2.Location = new System.Drawing.Point(12, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(364, 236);
+            this.groupBox2.Size = new System.Drawing.Size(376, 236);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Attacker Stats";
@@ -458,7 +462,7 @@ namespace Rawr.ProtPaladin
             this.trackBarBossAttackSpeed.Maximum = 20;
             this.trackBarBossAttackSpeed.Minimum = 1;
             this.trackBarBossAttackSpeed.Name = "trackBarBossAttackSpeed";
-            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(272, 45);
+            this.trackBarBossAttackSpeed.Size = new System.Drawing.Size(284, 45);
             this.trackBarBossAttackSpeed.TabIndex = 5;
             this.trackBarBossAttackSpeed.Value = 8;
             this.trackBarBossAttackSpeed.ValueChanged += new System.EventHandler(this.calculationOptionControl_Changed);
@@ -471,12 +475,13 @@ namespace Rawr.ProtPaladin
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfDivinePlea);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfSealOfVengeance);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfJudgement);
-            this.groupBoxGlyphs.Location = new System.Drawing.Point(3, 529);
+            this.groupBoxGlyphs.Location = new System.Drawing.Point(12, 529);
             this.groupBoxGlyphs.Name = "groupBoxGlyphs";
-            this.groupBoxGlyphs.Size = new System.Drawing.Size(364, 115);
+            this.groupBoxGlyphs.Size = new System.Drawing.Size(376, 115);
             this.groupBoxGlyphs.TabIndex = 6;
             this.groupBoxGlyphs.TabStop = false;
             this.groupBoxGlyphs.Text = "Paladin Glyphs";
+            this.groupBoxGlyphs.Enter += new System.EventHandler(this.groupBoxGlyphs_Enter);
             // 
             // checkBoxGlyphOfExorcism
             // 
@@ -518,17 +523,43 @@ namespace Rawr.ProtPaladin
             this.checkBoxGlyphOfJudgement.UseVisualStyleBackColor = true;
             this.checkBoxGlyphOfJudgement.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfJudgement_CheckedChanged);
             // 
+            // groupBoxPaladinAbilities
+            // 
+            this.groupBoxPaladinAbilities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPaladinAbilities.Controls.Add(this.checkBoxUseHolyShield);
+            this.groupBoxPaladinAbilities.Location = new System.Drawing.Point(12, 650);
+            this.groupBoxPaladinAbilities.Name = "groupBoxPaladinAbilities";
+            this.groupBoxPaladinAbilities.Size = new System.Drawing.Size(376, 50);
+            this.groupBoxPaladinAbilities.TabIndex = 8;
+            this.groupBoxPaladinAbilities.TabStop = false;
+            this.groupBoxPaladinAbilities.Text = "Paladin Abilities";
+            // 
+            // checkBoxUseHolyShield
+            // 
+            this.checkBoxUseHolyShield.AutoSize = true;
+            this.checkBoxUseHolyShield.Checked = true;
+            this.checkBoxUseHolyShield.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxUseHolyShield.Location = new System.Drawing.Point(95, 19);
+            this.checkBoxUseHolyShield.Name = "checkBoxUseHolyShield";
+            this.checkBoxUseHolyShield.Size = new System.Drawing.Size(101, 17);
+            this.checkBoxUseHolyShield.TabIndex = 0;
+            this.checkBoxUseHolyShield.Text = "Use Holy Shield";
+            this.checkBoxUseHolyShield.UseVisualStyleBackColor = true;
+            this.checkBoxUseHolyShield.CheckedChanged += new System.EventHandler(this.checkBoxUseHolyShield_CheckedChanged);
+            // 
             // CalculationOptionsPanelProtPaladin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
+            this.Controls.Add(this.groupBoxPaladinAbilities);
             this.Controls.Add(this.groupBoxGlyphs);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxPaladinSkills);
             this.Name = "CalculationOptionsPanelProtPaladin";
-            this.Size = new System.Drawing.Size(370, 718);
+            this.Size = new System.Drawing.Size(403, 718);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxPaladinSkills.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
@@ -540,6 +571,8 @@ namespace Rawr.ProtPaladin
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackSpeed)).EndInit();
             this.groupBoxGlyphs.ResumeLayout(false);
+            this.groupBoxPaladinAbilities.ResumeLayout(false);
+            this.groupBoxPaladinAbilities.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -582,5 +615,7 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.CheckBox checkBoxGlyphOfJudgement;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfExorcism;
         private System.Windows.Forms.CheckBox checkBoxGlyphOfDivinePlea;
+        private System.Windows.Forms.GroupBox groupBoxPaladinAbilities;
+        private System.Windows.Forms.CheckBox checkBoxUseHolyShield;
 	}
 }

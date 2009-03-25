@@ -107,19 +107,20 @@ namespace Rawr.ProtPaladin
 					modelCrits  += Abilities[Ability.SealOfVengeance].CritPercentage * weaponHits;
                     
                     //Holy Vengeance (Seal of Vengeance DOT)
-                    modelThreat += Abilities[Ability.HolyVengeance].Threat * modelCrits;
-                    modelDamage += Abilities[Ability.HolyVengeance].Damage * modelCrits;
+                    modelThreat += Abilities[Ability.HolyVengeance].Threat;
+                    modelDamage += Abilities[Ability.HolyVengeance].Damage;
 					break;
 			}
 
-
-            // Holy Shield
-            // TODO: Model Holy Shield Charges
-            float attackerBlocks = DefendTable.Block * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
-            modelThreat += Abilities[Ability.HolyShield].Threat * attackerBlocks;
-            modelDamage += Abilities[Ability.HolyShield].Damage * attackerBlocks;
-            modelCrits += Abilities[Ability.HolyShield].CritPercentage * attackerBlocks;
-
+            if (Options.UseHolyShield)
+            {
+                // Holy Shield
+                // TODO: Model Holy Shield Charges
+                float attackerBlocks = DefendTable.Block * (modelLength / ParryModel.BossAttackSpeed); //Options.BossAttackSpeed;
+                modelThreat += Abilities[Ability.HolyShield].Threat * attackerBlocks;
+                modelDamage += Abilities[Ability.HolyShield].Damage * attackerBlocks;
+                modelCrits += Abilities[Ability.HolyShield].CritPercentage * attackerBlocks;
+            }
 
             ThreatPerSecond = modelThreat / modelLength;
             DamagePerSecond = modelDamage / modelLength;
