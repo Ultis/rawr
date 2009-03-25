@@ -171,7 +171,7 @@ namespace Rawr.Warlock
                 PlayerStats.HasteRating += playerStats.HasteRatingFor20SecOnUse5Min * 20f / 300f;
             if (playerStats.SpellHasteFor10SecOnCast_10_45 > 0.0f)
                 PlayerStats.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
-            PlayerStats.SpellHaste = character.StatConversion.GetSpellHasteFromRating(PlayerStats.HasteRating) / 100f;
+            PlayerStats.SpellHaste = StatConversion.GetSpellHasteFromRating(PlayerStats.HasteRating);
 
             CalculationOptions = character.CalculationOptions as CalculationOptionsWarlock;
 
@@ -561,7 +561,7 @@ namespace Rawr.Warlock
             }
             if (CalculationOptions.FSRRatio < 100)
             {
-                manaGain = Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * time;
+                manaGain = Math.Floor(StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * time;
                 currentMana += manaGain;
                 ManaSources.Add(new ManaSource("OutFSR", manaGain));
             }

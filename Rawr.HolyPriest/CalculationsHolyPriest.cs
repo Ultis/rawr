@@ -328,7 +328,7 @@ namespace Rawr.HolyPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5 * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
+            calculatedStats.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
             if (calculationOptions.NewManaRegen)
             {
                 calculatedStats.SpiritRegen *= 0.6f;
@@ -510,10 +510,10 @@ namespace Rawr.HolyPriest
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                 + 0.0124f;
-            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
                  
             return statsTotal;
         }

@@ -18,7 +18,195 @@ namespace Rawr
 		}
 	}
 
+    public static class StatConversion
+    {   // Class only works for Level 80 Characters
+        // Numbers reverse engineered by Whitetooth (hotdogee [at] gmail [dot] com)
 
+        #region Constants
+
+        public const float LEVEL_80_COMBATRATING_MODIFIER = 3.2789987789987789987789987789988f; // 82/52 * Math.Pow(131/63, ((80 - 70) / 10));
+        public const float RATING_PER_ARMORPENETRATION = 1231.6239f; // 4.69512177f / 1.25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_BLOCK = 1639.4994f; // 5f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_DEFENSE = 4.9184987f; // 1.5f * LEVEL_80_COMBATRATING_MODIFIER;
+        public const float RATING_PER_DODGE = 3934.7985f; // 12f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_EXPERTISE = 8.1974969f; // 2.5f * LEVEL_80_COMBATRATING_MODIFIER;
+        public const float RATING_PER_PARRY = 4918.4987f; // 15f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_PHYSICALCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_PHYSICALHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_PHYSICALHIT = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_RESILIENCE = 8197.4969f; // 25f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_SPELLCRIT = 4590.5983f; // 14f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_SPELLHASTE = 3278.9988f; // 10f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+        public const float RATING_PER_SPELLHIT = 2623.1990f; //8f * LEVEL_80_COMBATRATING_MODIFIER * 100f;
+
+        // Same for all classes
+        public const float INT_PER_SPELLCRIT = 166.66667f;
+        public const float REGEN_CONSTANT = 0.005575f;
+
+        // Sigh, depends on class.
+        public static float[] AGI_PER_PHYSICALCRIT = { 0.0f, // CharacterClass starts at 1
+            62.50f, // Warrior 1
+            52.08f, // Paladin 2
+            83.33f, // Hunter 3
+            83.33f, // Rogue 4
+            52.08f, // Priest 5
+            62.50f, // Death Knight 6
+            83.33f, // Shaman 7
+            51.02f, // Mage 8
+            50.51f, // Warlock 9
+            0.0f,   // Empty 10
+            83.33f, // Druid 11
+        };
+
+        public static float[] AGI_PER_DODGE = { 0.0f, // Starts at 0
+            73.52941176f, // Warrior 1
+            52.08333333f, // Paladin 2
+            75.18796992f, // Hunter 3
+            41.49377593f, // Rogue 4
+            52.08333333f, // Priest 5
+            73.52941176f, // Death Knight 6
+            52.08333333f, // Shaman 7
+            51.28205128f, // Mage 8
+            52.08333333f, // Warlock 9
+            0.0f,         // Empty 10
+            41.66666667f, // Druid 11
+        };
+
+        #endregion
+
+
+        #region Functions that return something.
+
+        // Returns a Percentage (0.0357 = 3.57% Armor Ignored)
+        public static float GetArmorPenetrationFromRating(float Rating, Character.CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
+        public static float GetArmorPenetrationFromRating(float Rating)
+        {
+            return Rating / RATING_PER_ARMORPENETRATION;
+        }
+
+        // Returns a Percentage (0.0254 = 2.54% added Chance to Block)
+        public static float GetBlockFromRating(float Rating, Character.CharacterClass Class) { return GetBlockFromRating(Rating); }
+        public static float GetBlockFromRating(float Rating)
+        {
+            return Rating / RATING_PER_BLOCK;
+        }
+
+        // Returns a Value (5.4 = 5 extra Defense)
+        public static float GetDefenseFromRating(float Rating, Character.CharacterClass Class) { return GetDefenseFromRating(Rating); }
+        public static float GetDefenseFromRating(float Rating)
+        {
+            return Rating / RATING_PER_DEFENSE;
+        }
+
+        // Returns a Percentage
+        public static float GetDodgeFromRating(float Rating, Character.CharacterClass Class) { return GetDodgeFromRating(Rating); }
+        public static float GetDodgeFromRating(float Rating)
+        {
+            return Rating / RATING_PER_DODGE;
+        }
+
+        // Returns a Value
+        public static float GetExpertiseFromRating(float Rating, Character.CharacterClass Class) { return GetExpertiseFromRating(Rating); }
+        public static float GetExpertiseFromRating(float Rating)
+        {
+            return Rating / RATING_PER_EXPERTISE;
+        }
+
+        // Returns a Percentage
+        public static float GetParryFromRating(float Rating, Character.CharacterClass Class) { return GetParryFromRating(Rating); }
+        public static float GetParryFromRating(float Rating)
+        {
+            return Rating / RATING_PER_PARRY;
+        }
+
+        // Returns a Percentage
+        public static float GetCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
+        public static float GetCritFromRating(float Rating) { return GetPhysicalCritFromRating(Rating); }
+        public static float GetPhysicalCritFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalCritFromRating(Rating); }
+        public static float GetPhysicalCritFromRating(float Rating)
+        {
+            return Rating / RATING_PER_PHYSICALCRIT;
+        }
+
+        // Returns a Percentage
+        public static float GetHasteFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHasteFromRating(Rating, Class); }
+        public static float GetPhysicalHasteFromRating(float Rating, Character.CharacterClass Class)
+        {
+            if (Class == Character.CharacterClass.DeathKnight
+                || Class == Character.CharacterClass.Druid
+                || Class == Character.CharacterClass.Paladin
+                || Class == Character.CharacterClass.Shaman)
+                return Rating / RATING_PER_PHYSICALHASTE * 1.3f;    // Patch 3.1: Hybrids gain 30% more Phyiscal Haste from Haste Rating.
+            return Rating / RATING_PER_PHYSICALHASTE;
+        }
+
+        // Returns a Percentage
+        public static float GetHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
+        public static float GetHitFromRating(float Rating) { return GetPhysicalHitFromRating(Rating); }
+        public static float GetPhysicalHitFromRating(float Rating, Character.CharacterClass Class) { return GetPhysicalHitFromRating(Rating); }
+        public static float GetPhysicalHitFromRating(float Rating)
+        {
+            return Rating / RATING_PER_PHYSICALHIT;
+        }
+
+        // Returns a Percentage
+        public static float GetResilienceFromRating(float Rating, Character.CharacterClass Class) { return GetResilienceFromRating(Rating); }
+        public static float GetResilienceFromRating(float Rating)
+        {
+            return Rating / RATING_PER_RESILIENCE;
+        }
+
+        // Returns a Percentage
+        public static float GetSpellCritFromRating(float Rating, Character.CharacterClass Class) { return GetSpellCritFromRating(Rating); }
+        public static float GetSpellCritFromRating(float Rating)
+        {
+            return Rating / RATING_PER_SPELLCRIT;
+        }
+
+        // Returns a Percentage
+        public static float GetSpellHasteFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHasteFromRating(Rating); }
+        public static float GetSpellHasteFromRating(float Rating)
+        {
+            return Rating / RATING_PER_SPELLHASTE;
+        }
+
+        // Returns a Percentage
+        public static float GetSpellHitFromRating(float Rating, Character.CharacterClass Class) { return GetSpellHitFromRating(Rating); }
+        public static float GetSpellHitFromRating(float Rating)
+        {
+            return Rating / RATING_PER_SPELLHIT;
+        }
+
+        // Returns a Percentage
+        public static float GetSpellCritFromIntellect(float Intellect, Character.CharacterClass Class) { return GetSpellCritFromIntellect(Intellect); }
+        public static float GetSpellCritFromIntellect(float Intellect)
+        {
+            return Intellect / INT_PER_SPELLCRIT * 0.01f;
+        }
+
+        // Returns a Percentage
+        public static float GetCritFromAgility(float Agility, Character.CharacterClass Class) { return GetPhysicalCritFromAgility(Agility, Class); }
+        public static float GetPhysicalCritFromAgility(float Agility, Character.CharacterClass Class)
+        {
+            return Agility / AGI_PER_PHYSICALCRIT[(int)Class] * 0.01f;
+        }
+
+        // Returns a Percentage
+        public static float GetDodgeFromAgility(float Agility, Character.CharacterClass Class)
+        {
+            return Agility / AGI_PER_DODGE[(int)Class] * 0.01f;
+        }
+
+        // Returns a Number, How much mana is gained each Second. (Multiply by 5 to get MP5)
+        public static float GetSpiritRegenSec(float Spirit, float Intellect, Character.CharacterClass Class) { return GetSpiritRegenSec(Spirit, Intellect); }
+        public static float GetSpiritRegenSec(float Spirit, float Intellect)
+        {
+            return 0.001f + Spirit * REGEN_CONSTANT * (float)Math.Sqrt(Intellect);
+        }
+        #endregion
+    }
+
+/*
     // This class converts combat ratings from Rating to % stat.
     // It convertrs Intellect to Spell Crit (Reliable for lvl 70-80, below 70 only reliable for Mage)
     // It converts Agility to Dodge and Melee Crit as well (Not all classes implemented yet.)
@@ -128,11 +316,9 @@ namespace Rawr
 
         public void SetLevel(int Level) { _Level = Level; }
 
-        public StatConversion(Character _character) : this(_character.Class, _character.Level) { }
-        public StatConversion(Character.CharacterClass _class) : this(_class, MaxLevel) { }
-        public StatConversion(Character.CharacterClass _class, int _level)
+        public StatConversion(Character _character)
         {
-            SetLevel(_level);
+            SetLevel(_character.Level);
 
             #region Combat Rating Calculations
             // Level 60 values, rest is extrapolated           
@@ -141,7 +327,7 @@ namespace Rawr
             RatingConversionBase60[(int)RatingType.Crit] = 14f;
             RatingConversionBase60[(int)RatingType.Defense] = 1.5f;
             RatingConversionBase60[(int)RatingType.Dodge] = 12f;
-            RatingConversionBase60[(int)RatingType.Expertise] = 2.5f;
+            RatingConversionBase60[(int)RatingType.Expertise] = 10f;
             RatingConversionBase60[(int)RatingType.Haste] = 10f;
             RatingConversionBase60[(int)RatingType.Hit] = 10f;
             RatingConversionBase60[(int)RatingType.Parry] = 15f;
@@ -149,11 +335,6 @@ namespace Rawr
             RatingConversionBase60[(int)RatingType.SpellCrit] = 14f;
             RatingConversionBase60[(int)RatingType.SpellHaste] = 10f;
             RatingConversionBase60[(int)RatingType.SpellHit] = 8f;
-
-            //patch 3.1 haste change - four classes get 30% more melee haste from haste rating
-            if (_class == Character.CharacterClass.DeathKnight || _class == Character.CharacterClass.Druid ||
-                _class == Character.CharacterClass.Paladin || _class == Character.CharacterClass.Shaman)
-                RatingConversionBase60[(int)RatingType.Haste] /= 1.3f;
 
             for (int x = 0; x < 81; x++)
             {
@@ -186,7 +367,7 @@ namespace Rawr
                     86.2068944f, 92.59259244f, 99.00990313f, 107.526879f, 114.9425283f, 123.4567927f, 133.333327f, 142.857139f, 153.8461534f, 166.6666709f // 71-80
                 };
 
-            switch (_class)
+            switch (_character.Class)
             {
                 case Character.CharacterClass.DeathKnight:
                     StatConversionTable[(int)StatType.AgilityToCrit] = new float[] { 0.0f,   // 00
@@ -421,4 +602,5 @@ namespace Rawr
             #endregion
         }
     }
+ */
 }

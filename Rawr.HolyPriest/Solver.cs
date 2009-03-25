@@ -109,9 +109,9 @@ namespace Rawr.HolyPriest
                 if (simstats.SpellPowerFor20SecOnUse2Min > 0)
                     UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
                 if (simstats.HasteRatingFor20SecOnUse5Min > 0)
-                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f / 100f;
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f;
                 if (simstats.HasteRatingFor20SecOnUse2Min > 0)
-                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f / 100f;
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f;
             }
 
             UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
@@ -336,7 +336,7 @@ namespace Rawr.HolyPriest
             float avgcastlen = cyclelen / castctr;
             float avgcritcast = crittable / sr.Count;
 
-            float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
+            float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
             if (calculationOptions.NewManaRegen)
                 periodicRegenOutFSR *= 0.6f;
 
@@ -505,7 +505,7 @@ namespace Rawr.HolyPriest
                 calculatedStats.HPSSustainPoints = calculatedStats.HPSBurstPoints * regen / mp1use;
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, character.StatConversion.GetResilienceFromRating(simstats.Resilience)) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetResilienceFromRating(simstats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
         }   
 
@@ -541,9 +541,9 @@ namespace Rawr.HolyPriest
                 if (simstats.SpellPowerFor20SecOnUse2Min > 0)
                     UseProcs.SpellPower += simstats.SpellPowerFor20SecOnUse2Min * 20f / 120f;
                 if (simstats.HasteRatingFor20SecOnUse5Min > 0)
-                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f / 100f;
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse5Min) * 20f / 300f;
                 if (simstats.HasteRatingFor20SecOnUse2Min > 0)
-                    UseProcs.SpellHaste += character.StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f / 100f;
+                    UseProcs.SpellHaste += StatConversion.GetSpellHasteFromRating(simstats.HasteRatingFor20SecOnUse2Min) * 20f / 120f;
             }
 
             UseProcs.Spirit = (float)Math.Round(UseProcs.Spirit * (1 + simstats.BonusSpiritMultiplier));
@@ -773,7 +773,7 @@ namespace Rawr.HolyPriest
             {
                 float mp1use = ManaUsed / calculationOptions.FightLengthSeconds;
 
-                float periodicRegenOutFSR = character.StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
+                float periodicRegenOutFSR = StatConversion.GetSpiritRegenSec(simstats.Spirit, simstats.Intellect);
                 if (calculationOptions.NewManaRegen)
                     periodicRegenOutFSR *= 0.6f;
 
@@ -899,7 +899,7 @@ namespace Rawr.HolyPriest
             }
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, character.StatConversion.GetResilienceFromRating(simstats.Resilience)) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetResilienceFromRating(simstats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivabilityPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * calculationOptions.Survivability / 100f;
         }
     }

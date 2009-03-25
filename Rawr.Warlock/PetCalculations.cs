@@ -210,7 +210,7 @@ namespace Rawr.Warlock
             double availableMana = petStats.Mana;
             availableMana += petStats.Mp5 / 5f * solver.time;
             if (CalculationOptions.FSRRatio < 100)
-                availableMana += Math.Floor(character.StatConversion.GetSpiritRegenSec(petStats.Spirit, petStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * solver.time;
+                availableMana += Math.Floor(StatConversion.GetSpiritRegenSec(petStats.Spirit, petStats.Intellect)) * (1f - CalculationOptions.FSRRatio / 100f) * solver.time;
             if (CalculationOptions.Replenishment > 0)
                 availableMana += petStats.Mana * 0.0025f * (CalculationOptions.Replenishment / 100f) * solver.time;
             availableMana += solver.petManaGain;

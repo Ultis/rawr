@@ -98,7 +98,7 @@ namespace Rawr.ShadowPriest
                 // HACK FOR EMBRACE OF THE SPIDER. I HATE HASTE.
                 Twinkets.HasteRating += playerStats.SpellHasteFor10SecOnCast_10_45 * 10f / 75f;
             // This is a very very wrong way of adding haste from Trinkets, due to the multiplicative nature of Haste.
-            Twinkets.SpellHaste += character.StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating) / 100f;
+            Twinkets.SpellHaste += StatConversion.GetSpellHasteFromRating(Twinkets.HasteRating);
 
 
             PlayerStats = playerStats + Twinkets;
@@ -447,7 +447,7 @@ namespace Rawr.ShadowPriest
 
             SustainDPS = DPS;
             float MPS = OverallMana / timer;
-            float SpiritRegen = (float)Math.Floor(character.StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
+            float SpiritRegen = (float)Math.Floor(StatConversion.GetSpiritRegenSec(simStats.Spirit, simStats.Intellect));
             float regen = 0, tmpregen = 0;
             tmpregen = SpiritRegen * simStats.SpellCombatManaRegeneration * (CalculationOptions.FSRRatio / 100f);
             if (tmpregen > 0f)
@@ -528,7 +528,7 @@ namespace Rawr.ShadowPriest
             calculatedStats.SustainPoints = SustainDPS;
 
             // Lets just say that 15% of resilience scales all health by 150%.
-            float Resilience = (float)Math.Min(15f, character.StatConversion.GetResilienceFromRating(simStats.Resilience)) / 15f;
+            float Resilience = (float)Math.Min(15f, StatConversion.GetResilienceFromRating(simStats.Resilience) * 100f) / 15f;
             calculatedStats.SurvivalPoints = calculatedStats.BasicStats.Health * (Resilience * 1.5f + 1f) * CalculationOptions.Survivability / 100f;
         }
     }

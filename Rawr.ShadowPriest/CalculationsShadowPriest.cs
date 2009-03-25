@@ -433,7 +433,7 @@ namespace Rawr.ShadowPriest
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5f * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
+            calculatedStats.SpiritRegen = (float)Math.Floor(5f * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
 
@@ -588,11 +588,11 @@ namespace Rawr.ShadowPriest
                 + GetInnerFireSpellPowerBonus(character));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating) / 100f
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
+                + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                 + 0.0124f;
-            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
-            statsTotal.SpellHit += character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) / 100f;
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
 
             return statsTotal;
         }

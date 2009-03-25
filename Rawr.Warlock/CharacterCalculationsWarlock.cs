@@ -85,11 +85,11 @@ namespace Rawr.Warlock
             dictValues.Add("Regen", String.Format("{0}*MP5: {1}\r\nOutFSR: {2}" , RegenInFSR.ToString("0"), BasicStats.Mp5.ToString(), RegenOutFSR.ToString("0")));
             dictValues.Add("Crit", string.Format("{0}%*{1}% from {2} Spell Crit rating\r\n{3}% from Intellect\r\n{4}% from Base Crit\r\n{5}% from Buffs",
                 (BasicStats.SpellCrit * 100f).ToString("0.00"),
-                character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating).ToString("0.00"),
+                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("0.00"),
                 BasicStats.CritRating.ToString("0"),
-                (character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect)).ToString("0.00"),
+                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f).ToString("0.00"),
                 "1,701",
-                (BasicStats.SpellCrit * 100f - character.StatConversion.GetSpellCritFromRating(BasicStats.CritRating) - character.StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) - 1.24f).ToString("0.00")));
+                (BasicStats.SpellCrit * 100f - StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f - StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect) * 100f - 1.701f).ToString("0.00")));
 
             float Hit = calcOptions.TargetHit;
             float BonusHit = BasicStats.SpellHit * 100f;
@@ -102,14 +102,14 @@ namespace Rawr.Warlock
                 if (!character.ActiveBuffsContains("Heroic Presence"))
                     BonusHit += 1;
             }
-            float RHitRating = 1f / character.StatConversion.GetSpellHitFromRating(1);
+            float RHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
             float TalentHit = character.WarlockTalents.Suppression * 1f;
             float TotalHit = Hit + BonusHit;
             dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}{5}% from {6} points in Suppression\r\n{7}",
                 BonusHit.ToString("0.00"),
-                character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating).ToString("0.00"),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("0.00"),
                 BasicStats.HitRating,
-                (BonusHit - character.StatConversion.GetSpellHitFromRating(BasicStats.HitRating) - RacialHit - TalentHit).ToString("0.00"),
+                (BonusHit - StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f - RacialHit - TalentHit).ToString("0.00"),
                 RacialText,
                 TalentHit,
                 character.WarlockTalents.Suppression,
@@ -117,9 +117,9 @@ namespace Rawr.Warlock
 
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% from Buffs\r\n{4}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"),
-                character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("0.00"),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"),
                 BasicStats.HasteRating.ToString(),
-                (BasicStats.SpellHaste * 100f - character.StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) - character.PriestTalents.Enlightenment).ToString("0.00"),
+                (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"),
                 Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
             Solver solver = GetSolver(character, BasicStats);

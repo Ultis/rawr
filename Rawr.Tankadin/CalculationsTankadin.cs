@@ -479,8 +479,9 @@ you are being killed by burst damage, focus on Survival Points.",
             // stats.Armor = (float)Math.Round((stats.Armor * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier) * (1f + talents.Toughness * .02f));
 			stats.Armor = (float)Math.Round((stats.Armor  * (1f + talents.Toughness * .02f) * (1f + stats.BaseArmorMultiplier) + stats.BonusArmor + stats.Agility * 2f) * (1 + statsBuffs.BonusArmorMultiplier));
 
-            stats.PhysicalHit += character.StatConversion.GetHitFromRating(stats.HitRating) * .01f;
-            stats.SpellHit += character.StatConversion.GetSpellHitFromRating(stats.HitRating) * .01f; 
+            stats.PhysicalHit += StatConversion.GetHitFromRating(stats.HitRating);
+            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating); 
+            // Shouldn't this be StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) ?
             stats.Expertise += talents.CombatExpertise * 2f + (float)Math.Floor(stats.ExpertiseRating / 32.78998947f * 4f);
             if (calcOpts.GlyphSealVengeance && calcOpts.ThreatRotationChoice == 1)
             {
@@ -490,23 +491,23 @@ you are being killed by burst damage, focus on Survival Points.",
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
-            stats.PhysicalCrit = statsRace.PhysicalCrit + character.StatConversion.GetCritFromRating(stats.CritRating) * .01f +
-                character.StatConversion.GetCritFromAgility(stats.Agility) * .01f + talentCrit;
-            stats.SpellCrit = stats.SpellCrit + character.StatConversion.GetSpellCritFromRating(stats.CritRating) * .01f
-                + character.StatConversion.GetSpellCritFromIntellect(stats.Intellect) * .01f + talentCrit;
+            stats.PhysicalCrit = statsRace.PhysicalCrit + StatConversion.GetCritFromRating(stats.CritRating) +
+                StatConversion.GetCritFromAgility(stats.Agility, Character.CharacterClass.Paladin) + talentCrit;
+            stats.SpellCrit = stats.SpellCrit + StatConversion.GetSpellCritFromRating(stats.CritRating)
+                + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + talentCrit;
 
-            stats.Defense += character.StatConversion.GetDefenseFromRating(stats.DefenseRating);
+            stats.Defense += StatConversion.GetDefenseFromRating(stats.DefenseRating);
             stats.JudgementBlockValue = (float)Math.Floor((stats.JudgementBlockValue) * (1f + talents.Redoubt * .1f));
             //stats.BlockValue = (float)Math.Floor((float)Math.Floor((stats.BlockValue + (stats.Strength - 20) / 2f) * (1f + talents.Redoubt * .1f)) * (1 + stats.BonusBlockValueMultiplier));
             stats.BlockValue = (float)Math.Floor((stats.BlockValue + (float)Math.Floor((stats.Strength - 20) / 2f)) * (1f + stats.BonusBlockValueMultiplier + talents.Redoubt * .1f));
-            stats.Block += .05f + (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetBlockFromRating(stats.BlockRating) * 0.01f;
+            stats.Block += .05f + (float)Math.Floor(stats.Defense) * .0004f + StatConversion.GetBlockFromRating(stats.BlockRating);
 
-            float fullDodge = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility)
-                + character.StatConversion.GetDodgeFromRating(stats.DodgeRating) * .01f;
-            stats.Dodge = statsRace.Dodge + character.PaladinTalents.Anticipation * .01f + character.StatConversion.GetDodgeFromAgility(statsRace.Agility)
+            float fullDodge = (float)Math.Floor(stats.Defense) * .0004f + StatConversion.GetDodgeFromAgility(stats.Agility - statsRace.Agility, Character.CharacterClass.Paladin)
+                + StatConversion.GetDodgeFromRating(stats.DodgeRating);
+            stats.Dodge = statsRace.Dodge + character.PaladinTalents.Anticipation * .01f + StatConversion.GetDodgeFromAgility(statsRace.Agility, Character.CharacterClass.Paladin)
                 + DRDodge(fullDodge);
 
-            float fullParry = (float)Math.Floor(stats.Defense) * .0004f + character.StatConversion.GetParryFromRating(stats.ParryRating) * .01f;
+            float fullParry = (float)Math.Floor(stats.Defense) * .0004f + StatConversion.GetParryFromRating(stats.ParryRating);
             stats.Parry = .05f + character.PaladinTalents.Deflection * .01f + DRParry(fullParry);
             
             float fullMiss = (float)Math.Floor(stats.Defense) * .0004f;

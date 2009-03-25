@@ -363,7 +363,7 @@ namespace Rawr.Warlock
             calculatedStats.BasicStats = stats;
             calculatedStats.Character = character;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5f * character.StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
+            calculatedStats.SpiritRegen = (float)Math.Floor(5f * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
             calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration + calculatedStats.BasicStats.Mp5;
             calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen + calculatedStats.BasicStats.Mp5;
 
@@ -518,12 +518,12 @@ namespace Rawr.Warlock
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Mana += (statsTotal.Intellect - 20f) * 15f + 20f;
             statsTotal.Health += statsTotal.Stamina * 10f;
-            statsTotal.SpellCrit += character.StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) / 100f
-                                 + character.StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49) * (1 + character.WarlockTalents.MasterConjuror * 1.5f)) / 100f
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
+                                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating + (statsTotal.WarlockGrandFirestone * 49) * (1 + character.WarlockTalents.MasterConjuror * 1.5f))
                                  + 0.01701f;
             statsTotal.HasteRating += (statsTotal.WarlockGrandSpellstone * 60) * (1 + character.WarlockTalents.MasterConjuror * 1.5f);
-            statsTotal.SpellHaste += character.StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating) / 100f;
-            statsTotal.SpellHit += (character.StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + character.WarlockTalents.Suppression) / 100f;
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            statsTotal.SpellHit += (StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + character.WarlockTalents.Suppression * 0.01f);
             if (statsTotal.WarlockFelArmor > 0)
             {
                 statsTotal.SpellDamageFromSpiritPercentage += 0.3f;

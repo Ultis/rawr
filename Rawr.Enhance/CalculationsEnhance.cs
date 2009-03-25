@@ -269,7 +269,6 @@ namespace Rawr
             #region Applied Stats
             //_cachedCharacter = character;
 			CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            StatConversion sc = character.StatConversion;
             int targetLevel = calcOpts.TargetLevel;
             float targetArmor = calcOpts.TargetArmor;
             float bloodlustUptime = calcOpts.BloodlustUptime;
@@ -411,20 +410,20 @@ namespace Rawr
 			#region Damage Model
             float damageReduction = ArmorCalculations.GetDamageReduction(character.Level, targetArmor, stats.ArmorPenetration, stats.ArmorPenetrationRating);
             float attackPower = stats.AttackPower + (stats.ExposeWeakness * calcOpts.ExposeWeaknessAPValue * (1 + stats.BonusAttackPowerMultiplier));
-            float hitBonus = stats.PhysicalHit + sc.GetHitFromRating(stats.HitRating) / 100f;
-            float expertiseBonus = 0.0025f * (stats.Expertise + sc.GetExpertiseFromRating(stats.ExpertiseRating));
+            float hitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating);
+            float expertiseBonus = 0.0025f * (stats.Expertise + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating));
             float glancingRate = 0.24f;
 
             float meleeCritModifier = stats.PhysicalCrit;
-            float baseMeleeCrit = .01f * (sc.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + sc.GetCritFromAgility(stats.Agility) + TS);
+            float baseMeleeCrit = .01f * (StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + TS);
             float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
 
-            float hitBonusSpell = stats.SpellHit + sc.GetSpellHitFromRating(stats.HitRating) / 100f;
+            float hitBonusSpell = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating);
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float baseSpellCrit = .01f * (sc.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + sc.GetSpellCritFromIntellect(stats.Intellect) + TS);
+            float baseSpellCrit = .01f * (StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + TS);
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
@@ -435,7 +434,7 @@ namespace Rawr
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = sc.GetHasteFromRating(stats.HasteRating) / 100f; //stats.HasteRating / 2522.3068823f;
+            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, character.Class); //stats.HasteRating / 2522.3068823f;
             // float hasteBonus = stats.HasteRating / 3278.998947f; // patch 3.08 level
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
@@ -457,7 +456,7 @@ namespace Rawr
                         float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float mongooseUptime = 15f / timeBetweenMongooseProcs;
                         float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + sc.GetCritFromAgility(mongooseAgility));
+                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
                         attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedMHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
@@ -478,7 +477,7 @@ namespace Rawr
                         float timeBetweenMongooseProcs = 60f / (whiteAttacksPerSecond + yellowAttacksPerSecond);
                         float mongooseUptime = 15f / timeBetweenMongooseProcs;
                         float mongooseAgility = 120f * mongooseUptime * (1 + stats.BonusAgilityMultiplier);
-                        chanceCrit = Math.Min(0.75f, chanceCrit + sc.GetCritFromAgility(mongooseAgility));
+                        chanceCrit = Math.Min(0.75f, chanceCrit + StatConversion.GetCritFromAgility(mongooseAgility, character.Class));
                         attackPower += mongooseAgility * (1 + stats.BonusAttackPowerMultiplier);
                         baseHastedOHSpeed /= 1f + (0.02f * mongooseUptime);
                     }
@@ -1291,7 +1290,6 @@ namespace Rawr
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
 		{
 			Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            StatConversion sc = new StatConversion(Character.CharacterClass.Shaman);
             dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Mana", BasicStats.Mana.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
@@ -1313,17 +1311,17 @@ namespace Rawr
                 BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
                 DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste, {2}% Spell Haste", 
+            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Physical Haste\r\n{2}% Spell Haste", 
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
-                sc.GetHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture),
-                sc.GetSpellHasteFromRating(BasicStats.HasteRating).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit, {2}% Spell Hit",
+                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Physical Hit\r\n{2}% Spell Hit",
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                sc.GetHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture),
-                sc.GetSpellHitFromRating(BasicStats.HitRating).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Armour Pen Rating", String.Format("{0}*{1}% Armour Penetration",
                 BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
-                sc.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged, {2}% Spell Misses, {3}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
