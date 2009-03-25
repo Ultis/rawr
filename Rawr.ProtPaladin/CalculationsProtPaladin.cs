@@ -1076,6 +1076,11 @@ threat and limited threat scaled by the threat scale.",
                 ExecutionerProc = stats.ExecutionerProc,
 
                 JudgementBlockValue = stats.JudgementBlockValue,
+                BonusHammerOfTheRighteousMultiplier = stats.BonusHammerOfTheRighteousMultiplier,
+                ShieldOfRighteousnessBlockValue = stats.ShieldOfRighteousnessBlockValue,
+                BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
+                BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
+                BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
             };
         }
@@ -1112,8 +1117,13 @@ threat and limited threat scaled by the threat scale.",
                 stats.ArmorPenetrationRating + 
                 stats.ArmorPenetration + 
                 // Paladin Stats
-                stats.JudgementBlockValue + 
+                stats.JudgementBlockValue +
+                stats.BonusHammerOfTheRighteousMultiplier +
                 stats.ConsecrationSpellPower +
+                stats.ShieldOfRighteousnessBlockValue +
+                stats.BonusSealOfCorruptionDamageMultiplier +
+                stats.BonusSealOfRighteousnessDamageMultiplier +
+                stats.BonusSealOfVengeanceDamageMultiplier +
                 // Multipliers
                 stats.BonusStrengthMultiplier +
                 stats.BonusAgilityMultiplier +

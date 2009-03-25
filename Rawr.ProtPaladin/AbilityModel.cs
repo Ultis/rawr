@@ -38,7 +38,7 @@ namespace Rawr.ProtPaladin
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false);
                     break;               
                 case Ability.ShieldOfRighteousness:
-                    baseDamage = Stats.BlockValue * 1.3f + 520f;
+                    baseDamage = (Stats.BlockValue + Stats.ShieldOfRighteousnessBlockValue) * 1.3f + 520f;
 					ArmorReduction = 0.0f;
                     break;
                 case Ability.HammerOfTheRighteous:

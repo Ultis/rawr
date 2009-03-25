@@ -284,9 +284,10 @@ namespace Rawr
         CritJudgement_5,
         JudgementCDReduction,
         #endregion
-        #region Added by Rawr.Tankadin
-        JudgementBlockValue,
+        #region Added by Rawr.ProtPaladin
         DivineProtectionDurationBonus,
+        JudgementBlockValue,
+        ShieldOfRighteousnessBlockValue,        
         #endregion
         #region Warlock set bonuses
         LifeTapBonusSpirit,
@@ -355,7 +356,12 @@ namespace Rawr
         #region Added by Rawr.Elemental
         BonusLavaBurstDamage,
         #endregion        
+        #region Added by Rawr.ProtPaladin
+        BonusSealOfCorruptionDamageMultiplier,
+        BonusSealOfRighteousnessDamageMultiplier,
+        BonusSealOfVengeanceDamageMultiplier,
         HammerOfTheRighteousMultiplier,
+        #endregion
         #region Warlock set bonuses
         CorruptionTriggersCrit,
         Warlock2T8,
@@ -1289,14 +1295,6 @@ namespace Rawr
 		}
         
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Divine Protection Duration Bonus")]
-        public float DivineProtectionDurationBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Windfury")]
         public float WindfuryAPBonus
         {
@@ -1682,15 +1680,6 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.StarfireDmg]; }
             set { _rawAdditiveData[(int)AdditiveStat.StarfireDmg] = value; }
-        }
-        
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Judgement Block Value")]
-        [Category("Equipment Procs")]
-        public float JudgementBlockValue
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
         }
 
         // Tree 2-piece T5
@@ -2409,7 +2398,7 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT]; }
             set { _rawAdditiveData[(int)AdditiveStat.NourishBonusPerHoT] = value; }
         }
-
+		
         #region Added by Rawr.Enhance
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2596,6 +2585,35 @@ namespace Rawr
             set { _rawAdditiveData[(int)AdditiveStat.CHCTDecrease] = value; }
         }
         #endregion
+        #region Added by Rawr.ProtPaladin
+             
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Judgement Block Value")]
+        [Category("Equipment Procs")]
+        public float JudgementBlockValue
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue]; }
+            set { _rawAdditiveData[(int)AdditiveStat.JudgementBlockValue] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("ShoR Block Value")]
+        [Category("Equipment Procs")]
+        public float ShieldOfRighteousnessBlockValue
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.ShieldOfRighteousnessBlockValue]; }
+            set { _rawAdditiveData[(int)AdditiveStat.ShieldOfRighteousnessBlockValue] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Divine Protection Duration Bonus")]
+        public float DivineProtectionDurationBonus
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus]; }
+            set { _rawAdditiveData[(int)AdditiveStat.DivineProtectionDurationBonus] = value; }
+        }
+
+        #endregion
         #region Added by Rawr.Moonkin
 
         // Moonfire idol
@@ -2753,15 +2771,6 @@ namespace Rawr
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusMangleBearThreat] = value; }
-        }
-        
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Hammer of the Righteous Damage")]
-        public float BonusHammerOfTheRighteousMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -3365,6 +3374,45 @@ namespace Rawr
             get { return _rawAdditiveData[(int)AdditiveStat.CHHealIncrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.CHHealIncrease] = value; }
         }
+        #endregion
+        #region Added by Rawr.ProtPaladin
+             
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Hammer of the Righteous Damage")]
+        public float BonusHammerOfTheRighteousMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.HammerOfTheRighteousMultiplier] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Seal of Corruption Damage")]
+        public float BonusSealOfCorruptionDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfCorruptionDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfCorruptionDamageMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Seal of Righteousness Damage")]
+        public float BonusSealOfRighteousnessDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfRighteousnessDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfRighteousnessDamageMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Seal of Vengeance Damage")]
+        public float BonusSealOfVengeanceDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfVengeanceDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSealOfVengeanceDamageMultiplier] = value; }
+        }
+        
         #endregion
 
         #endregion

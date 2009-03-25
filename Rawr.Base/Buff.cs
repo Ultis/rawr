@@ -1220,7 +1220,7 @@ namespace Rawr
             {
                 Name = "Flask of Stoneblood",
                 Group = "Elixirs and Flasks",
-                Stats = { Health = 650 },
+                Stats = { Health = 750 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
                 Improvements = { new Buff { Name = "Flask of Stoneblood (Mixology)", Stats = { Health = 320 } } }
             });
@@ -2604,6 +2604,32 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { DivineProtectionDurationBonus = 3f },
                 SetName = "Redemption Plate",
+                SetThreshold = 4
+            });
+
+            //Protection T8
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Plate 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = 
+                {
+                	BonusSealOfVengeanceDamageMultiplier = .1f,
+                	BonusSealOfCorruptionDamageMultiplier = .1f,
+                	BonusSealOfRighteousnessDamageMultiplier = .1f,
+                },
+                SetName = "Aegis Plate",
+                SetThreshold = 2
+            });
+
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Aegis Plate 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { ShieldOfRighteousnessBlockValue = 225f },
+                SetName = "Aegis Plate",
                 SetThreshold = 4
             });
 
