@@ -178,9 +178,11 @@ focus on Survival Points.",
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
 					"Health",
+                    "Threat Per Second",
                     "% Total Mitigation",
 					"% Guaranteed Reduction",
 					"% Chance to Avoid Attacks",
+                    "% chance to Avoid + Block Attacks",
 					"% Chance to be Crit",
                     "% Chance to be Avoided", 
                     "Burst Time", 

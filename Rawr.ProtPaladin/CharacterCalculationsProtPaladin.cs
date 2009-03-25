@@ -216,6 +216,7 @@ namespace Rawr.ProtPaladin
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
                 case "% Chance to Avoid Attacks": return DodgePlusMissPlusParry * 100.0f;
+                case "% chance to Avoid + Block Attacks": return DodgePlusMissPlusParryPlusBlock * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;
                 case "Burst Time": return BurstTime;
@@ -225,6 +226,7 @@ namespace Rawr.ProtPaladin
                 case "Frost Survival": return FrostSurvivalPoints;
                 case "Shadow Survival": return ShadowSurvivalPoints;
                 case "Arcane Survival": return ArcaneSurvivalPoints;
+                case "Threat Per Second": return ThreatPerSecond;
             }
             return 0.0f;
         }
