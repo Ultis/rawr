@@ -59,9 +59,11 @@
             this.lblGlyph2 = new System.Windows.Forms.Label();
             this.cmbGlyph3 = new System.Windows.Forms.ComboBox();
             this.lblGlyph3 = new System.Windows.Forms.Label();
-            this.chkSmartSwitching = new System.Windows.Forms.CheckBox();
             this.lblUserRotation = new System.Windows.Forms.Label();
             this.cmbUserRotation = new System.Windows.Forms.ComboBox();
+            this.lblEclipseType = new System.Windows.Forms.Label();
+            this.cmbEclipseType = new System.Windows.Forms.ComboBox();
+            this.chkMoonfireAlways = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).BeginInit();
             this.SuspendLayout();
@@ -111,7 +113,7 @@
             this.txtFightLength.Location = new System.Drawing.Point(108, 57);
             this.txtFightLength.Name = "txtFightLength";
             this.txtFightLength.Size = new System.Drawing.Size(93, 20);
-            this.txtFightLength.TabIndex = 10;
+            this.txtFightLength.TabIndex = 3;
             this.txtFightLength.Leave += new System.EventHandler(this.txtFightLength_Leave);
             // 
             // label1
@@ -129,7 +131,7 @@
             this.chkInnervate.Location = new System.Drawing.Point(6, 83);
             this.chkInnervate.Name = "chkInnervate";
             this.chkInnervate.Size = new System.Drawing.Size(135, 17);
-            this.chkInnervate.TabIndex = 12;
+            this.chkInnervate.TabIndex = 4;
             this.chkInnervate.Text = "Cast Innervate on self?";
             this.chkInnervate.UseVisualStyleBackColor = true;
             this.chkInnervate.CheckedChanged += new System.EventHandler(this.chkInnervate_CheckedChanged);
@@ -140,7 +142,7 @@
             this.chkManaPots.Location = new System.Drawing.Point(6, 132);
             this.chkManaPots.Name = "chkManaPots";
             this.chkManaPots.Size = new System.Drawing.Size(117, 17);
-            this.chkManaPots.TabIndex = 15;
+            this.chkManaPots.TabIndex = 6;
             this.chkManaPots.Text = "Use mana potions?";
             this.chkManaPots.UseVisualStyleBackColor = true;
             this.chkManaPots.CheckedChanged += new System.EventHandler(this.chkManaPots_CheckedChanged);
@@ -154,7 +156,7 @@
             this.cmbPotType.Location = new System.Drawing.Point(108, 155);
             this.cmbPotType.Name = "cmbPotType";
             this.cmbPotType.Size = new System.Drawing.Size(93, 21);
-            this.cmbPotType.TabIndex = 16;
+            this.cmbPotType.TabIndex = 7;
             this.cmbPotType.SelectedIndexChanged += new System.EventHandler(this.cmbPotType_SelectedIndexChanged);
             // 
             // lblInnervateOffset
@@ -171,7 +173,7 @@
             this.txtInnervateDelay.Location = new System.Drawing.Point(108, 106);
             this.txtInnervateDelay.Name = "txtInnervateDelay";
             this.txtInnervateDelay.Size = new System.Drawing.Size(93, 20);
-            this.txtInnervateDelay.TabIndex = 18;
+            this.txtInnervateDelay.TabIndex = 5;
             this.txtInnervateDelay.Leave += new System.EventHandler(this.txtInnervateDelay_Leave);
             // 
             // lblManaPotType
@@ -189,7 +191,7 @@
             this.chkInnervateWeapon.Location = new System.Drawing.Point(6, 182);
             this.chkInnervateWeapon.Name = "chkInnervateWeapon";
             this.chkInnervateWeapon.Size = new System.Drawing.Size(140, 17);
-            this.chkInnervateWeapon.TabIndex = 22;
+            this.chkInnervateWeapon.TabIndex = 8;
             this.chkInnervateWeapon.Text = "Use Innervate weapon?";
             this.chkInnervateWeapon.UseVisualStyleBackColor = true;
             this.chkInnervateWeapon.CheckedChanged += new System.EventHandler(this.chkInnervateWeapon_CheckedChanged);
@@ -199,7 +201,7 @@
             this.txtInnervateWeaponInt.Location = new System.Drawing.Point(108, 205);
             this.txtInnervateWeaponInt.Name = "txtInnervateWeaponInt";
             this.txtInnervateWeaponInt.Size = new System.Drawing.Size(93, 20);
-            this.txtInnervateWeaponInt.TabIndex = 23;
+            this.txtInnervateWeaponInt.TabIndex = 9;
             this.txtInnervateWeaponInt.Leave += new System.EventHandler(this.txtInnervateWeaponInt_Leave);
             // 
             // txtInnervateWeaponSpi
@@ -207,7 +209,7 @@
             this.txtInnervateWeaponSpi.Location = new System.Drawing.Point(108, 231);
             this.txtInnervateWeaponSpi.Name = "txtInnervateWeaponSpi";
             this.txtInnervateWeaponSpi.Size = new System.Drawing.Size(93, 20);
-            this.txtInnervateWeaponSpi.TabIndex = 24;
+            this.txtInnervateWeaponSpi.TabIndex = 10;
             this.txtInnervateWeaponSpi.Leave += new System.EventHandler(this.txtInnervateWeaponSpi_Leave);
             // 
             // lblInnervateWeaponInt
@@ -234,7 +236,7 @@
             this.rdbAldor.Location = new System.Drawing.Point(39, 353);
             this.rdbAldor.Name = "rdbAldor";
             this.rdbAldor.Size = new System.Drawing.Size(49, 17);
-            this.rdbAldor.TabIndex = 27;
+            this.rdbAldor.TabIndex = 13;
             this.rdbAldor.TabStop = true;
             this.rdbAldor.Text = "Aldor";
             this.rdbAldor.UseVisualStyleBackColor = true;
@@ -245,7 +247,7 @@
             this.rdbScryer.Location = new System.Drawing.Point(108, 353);
             this.rdbScryer.Name = "rdbScryer";
             this.rdbScryer.Size = new System.Drawing.Size(55, 17);
-            this.rdbScryer.TabIndex = 28;
+            this.rdbScryer.TabIndex = 14;
             this.rdbScryer.TabStop = true;
             this.rdbScryer.Text = "Scryer";
             this.rdbScryer.UseVisualStyleBackColor = true;
@@ -257,7 +259,7 @@
             this.trkReplenishmentUptime.Maximum = 100;
             this.trkReplenishmentUptime.Name = "trkReplenishmentUptime";
             this.trkReplenishmentUptime.Size = new System.Drawing.Size(76, 42);
-            this.trkReplenishmentUptime.TabIndex = 29;
+            this.trkReplenishmentUptime.TabIndex = 11;
             this.trkReplenishmentUptime.TickFrequency = 10;
             this.trkReplenishmentUptime.Value = 100;
             this.trkReplenishmentUptime.ValueChanged += new System.EventHandler(this.trkReplenishmentUptime_ValueChanged);
@@ -268,7 +270,7 @@
             this.trkTreantLifespan.Maximum = 100;
             this.trkTreantLifespan.Name = "trkTreantLifespan";
             this.trkTreantLifespan.Size = new System.Drawing.Size(73, 42);
-            this.trkTreantLifespan.TabIndex = 30;
+            this.trkTreantLifespan.TabIndex = 12;
             this.trkTreantLifespan.TickFrequency = 10;
             this.trkTreantLifespan.Value = 50;
             this.trkTreantLifespan.ValueChanged += new System.EventHandler(this.trkTreantLifespan_ValueChanged);
@@ -321,7 +323,7 @@
             this.cmbGlyph1.Location = new System.Drawing.Point(108, 376);
             this.cmbGlyph1.Name = "cmbGlyph1";
             this.cmbGlyph1.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph1.TabIndex = 35;
+            this.cmbGlyph1.TabIndex = 16;
             this.cmbGlyph1.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph1_SelectedIndexChanged);
             // 
             // cmbGlyph2
@@ -336,7 +338,7 @@
             this.cmbGlyph2.Location = new System.Drawing.Point(108, 403);
             this.cmbGlyph2.Name = "cmbGlyph2";
             this.cmbGlyph2.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph2.TabIndex = 36;
+            this.cmbGlyph2.TabIndex = 17;
             this.cmbGlyph2.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph2_SelectedIndexChanged);
             // 
             // lblGlyph1
@@ -369,7 +371,7 @@
             this.cmbGlyph3.Location = new System.Drawing.Point(108, 431);
             this.cmbGlyph3.Name = "cmbGlyph3";
             this.cmbGlyph3.Size = new System.Drawing.Size(93, 21);
-            this.cmbGlyph3.TabIndex = 41;
+            this.cmbGlyph3.TabIndex = 18;
             this.cmbGlyph3.SelectedIndexChanged += new System.EventHandler(this.cmbGlyph3_SelectedIndexChanged);
             // 
             // lblGlyph3
@@ -381,21 +383,10 @@
             this.lblGlyph3.TabIndex = 42;
             this.lblGlyph3.Text = "Major Glyph 3:";
             // 
-            // chkSmartSwitching
-            // 
-            this.chkSmartSwitching.AutoSize = true;
-            this.chkSmartSwitching.Location = new System.Drawing.Point(3, 458);
-            this.chkSmartSwitching.Name = "chkSmartSwitching";
-            this.chkSmartSwitching.Size = new System.Drawing.Size(186, 17);
-            this.chkSmartSwitching.TabIndex = 43;
-            this.chkSmartSwitching.Text = "Smart Spell Switching for Eclipse?";
-            this.chkSmartSwitching.UseVisualStyleBackColor = true;
-            this.chkSmartSwitching.CheckedChanged += new System.EventHandler(this.chkSmartSwitching_CheckedChanged);
-            // 
             // lblUserRotation
             // 
             this.lblUserRotation.AutoSize = true;
-            this.lblUserRotation.Location = new System.Drawing.Point(6, 482);
+            this.lblUserRotation.Location = new System.Drawing.Point(6, 512);
             this.lblUserRotation.Name = "lblUserRotation";
             this.lblUserRotation.Size = new System.Drawing.Size(75, 13);
             this.lblUserRotation.TabIndex = 44;
@@ -414,19 +405,53 @@
             "IS/MF/SF",
             "SF Spam",
             "W Spam"});
-            this.cmbUserRotation.Location = new System.Drawing.Point(108, 479);
+            this.cmbUserRotation.Location = new System.Drawing.Point(108, 509);
             this.cmbUserRotation.Name = "cmbUserRotation";
             this.cmbUserRotation.Size = new System.Drawing.Size(93, 21);
-            this.cmbUserRotation.TabIndex = 45;
+            this.cmbUserRotation.TabIndex = 21;
             this.cmbUserRotation.SelectedIndexChanged += new System.EventHandler(this.cmbUserRotation_SelectedIndexChanged);
+            // 
+            // lblEclipseType
+            // 
+            this.lblEclipseType.AutoSize = true;
+            this.lblEclipseType.Location = new System.Drawing.Point(3, 462);
+            this.lblEclipseType.Name = "lblEclipseType";
+            this.lblEclipseType.Size = new System.Drawing.Size(68, 13);
+            this.lblEclipseType.TabIndex = 46;
+            this.lblEclipseType.Text = "Eclipse Type";
+            // 
+            // cmbEclipseType
+            // 
+            this.cmbEclipseType.FormattingEnabled = true;
+            this.cmbEclipseType.Items.AddRange(new object[] {
+            "Lunar",
+            "Solar"});
+            this.cmbEclipseType.Location = new System.Drawing.Point(108, 459);
+            this.cmbEclipseType.Name = "cmbEclipseType";
+            this.cmbEclipseType.Size = new System.Drawing.Size(93, 21);
+            this.cmbEclipseType.TabIndex = 19;
+            this.cmbEclipseType.SelectedIndexChanged += new System.EventHandler(this.cmbEclipseType_SelectedIndexChanged);
+            // 
+            // chkMoonfireAlways
+            // 
+            this.chkMoonfireAlways.AutoSize = true;
+            this.chkMoonfireAlways.Location = new System.Drawing.Point(6, 486);
+            this.chkMoonfireAlways.Name = "chkMoonfireAlways";
+            this.chkMoonfireAlways.Size = new System.Drawing.Size(138, 17);
+            this.chkMoonfireAlways.TabIndex = 20;
+            this.chkMoonfireAlways.Text = "100% Moonfire Uptime?";
+            this.chkMoonfireAlways.UseVisualStyleBackColor = true;
+            this.chkMoonfireAlways.CheckedChanged += new System.EventHandler(this.chkMoonfireAlways_CheckedChanged);
             // 
             // CalculationOptionsPanelMoonkin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkMoonfireAlways);
+            this.Controls.Add(this.cmbEclipseType);
+            this.Controls.Add(this.lblEclipseType);
             this.Controls.Add(this.cmbUserRotation);
             this.Controls.Add(this.lblUserRotation);
-            this.Controls.Add(this.chkSmartSwitching);
             this.Controls.Add(this.lblGlyph3);
             this.Controls.Add(this.cmbGlyph3);
             this.Controls.Add(this.lblGlyph2);
@@ -459,7 +484,7 @@
             this.Controls.Add(this.cmbTargetLevel);
             this.Controls.Add(this.lblTargetLevel);
             this.Name = "CalculationOptionsPanelMoonkin";
-            this.Size = new System.Drawing.Size(204, 518);
+            this.Size = new System.Drawing.Size(204, 540);
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishmentUptime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkTreantLifespan)).EndInit();
             this.ResumeLayout(false);
@@ -500,9 +525,11 @@
         private System.Windows.Forms.Label lblGlyph2;
         private System.Windows.Forms.ComboBox cmbGlyph3;
         private System.Windows.Forms.Label lblGlyph3;
-        private System.Windows.Forms.CheckBox chkSmartSwitching;
         private System.Windows.Forms.Label lblUserRotation;
         private System.Windows.Forms.ComboBox cmbUserRotation;
+        private System.Windows.Forms.Label lblEclipseType;
+        private System.Windows.Forms.ComboBox cmbEclipseType;
+        private System.Windows.Forms.CheckBox chkMoonfireAlways;
 
     }
 }

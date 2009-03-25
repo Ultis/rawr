@@ -12,6 +12,20 @@ namespace Rawr.Moonkin
     class Spell
     {
         public Spell() { AllDamageModifier = 1.0f; CriticalDamageModifier = 1.0f; }
+        public Spell(Spell copy)
+        {
+            this.Name = copy.Name;
+            this.School = copy.School;
+            this.BaseCastTime = copy.BaseCastTime;
+            this.BaseDamage = copy.BaseDamage;
+            this.AllDamageModifier = copy.AllDamageModifier;
+            this.BaseManaCost = copy.BaseManaCost;
+            this.CriticalChanceModifier = copy.CriticalChanceModifier;
+            this.CriticalDamageModifier = copy.CriticalDamageModifier;
+            this.DotEffect = copy.DotEffect == null ? null : new DotEffect(copy.DotEffect);
+            this.IdolExtraSpellPower = copy.IdolExtraSpellPower;
+            this.SpellDamageModifier = copy.SpellDamageModifier;
+        }
         public string Name { get; set; }
         public float BaseDamage { get; set; }
         public SpellSchool School { get; set; }
@@ -31,6 +45,15 @@ namespace Rawr.Moonkin
     class DotEffect
     {
         public DotEffect() { AllDamageModifier = 1.0f; }
+        public DotEffect(DotEffect copy)
+        {
+            this.AllDamageModifier = copy.AllDamageModifier;
+            this.BaseDamage = copy.BaseDamage;
+            this.Duration = copy.Duration;
+            this.TickDamage = copy.TickDamage;
+            this.TickLength = copy.TickLength;
+            this.SpellDamageModifier = copy.SpellDamageModifier;
+        }
         public float Duration { get; set; }
         public float TickLength { get; set; }
         public float TickDamage { get; set; }
@@ -199,10 +222,6 @@ namespace Rawr.Moonkin
             mainNuke.CastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
             mainNuke.CastTime = (float)Math.Max(1.0f, mainNuke.CastTime / (1 + spellHaste)) + latency;
-            //float NGCastTime = (float)Math.Max(1.0f, (mainNuke.CastTime - NGReduction) / (1 + spellHaste)) + latency;
-            //if (mainNuke.Name == "W")
-                //NGCastTime += latency;    // Additional penalty for clipping GCD
-            //mainNuke.CastTime = totalCritChance * NGCastTime + (1 - totalCritChance) * baseCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
@@ -216,10 +235,6 @@ namespace Rawr.Moonkin
             mainNuke.CastTime = mainNuke.BaseCastTime;
             float totalCritChance = spellCrit + mainNuke.CriticalChanceModifier;
             mainNuke.CastTime = (float)Math.Max(1.0f, mainNuke.CastTime / (1 + spellHaste)) + latency;
-            //float NGCastTime = (float)Math.Max(1.0f, (mainNuke.CastTime - NGReduction) / (1 + spellHaste)) + latency;
-            //if (mainNuke.Name == "W")
-            //NGCastTime += latency;    // Additional penalty for clipping GCD
-            //mainNuke.CastTime = totalCritChance * NGCastTime + (1 - totalCritChance) * baseCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * (spellPower + mainNuke.IdolExtraSpellPower)) * mainNuke.AllDamageModifier;
             float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
@@ -277,7 +292,6 @@ namespace Rawr.Moonkin
                 // Nuke only
                 case 1:
                     Spell mainNuke = LocateSpell(Solver.SpellData, SpellsUsed[0]);
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     float omenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
@@ -310,7 +324,6 @@ namespace Rawr.Moonkin
                             mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                     }
                     // Calculate main nuke damage
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Set rotation duration
@@ -331,9 +344,6 @@ namespace Rawr.Moonkin
                         InsectSwarmTicks = DotTicks;
 
                     float manaFromJoW = (numNukeCasts + 1) / 4 * JoWProc * spellHit;
-                    /*float manaFromOoC = ((0.06f * 1.5f) * mainNuke.BaseManaCost
-                        + (numNukeCasts - 1) * (0.06f * mainNuke.BaseCastTime) * mainNuke.BaseManaCost
-                        + (0.06f * 3.5f) * DotEffectSpell.BaseManaCost) * spellHit;*/
                     float manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
                         + (numNukeCasts - 1) * (0.06f) * mainNuke.BaseManaCost
                         + (0.06f) * DotEffectSpell.BaseManaCost) * spellHit;
@@ -377,7 +387,6 @@ namespace Rawr.Moonkin
                             mainNuke.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                     }
                     // Calculate main nuke damage
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                     // Set rotation duration
@@ -400,11 +409,6 @@ namespace Rawr.Moonkin
                     InsectSwarmTicks = numISCasts * insectSwarm.DotEffect.NumberOfTicks;
 
                     manaFromJoW = (numNukeCasts + 1 + numISCasts) / 4 * JoWProc * spellHit;
-                    /*manaFromOoC = ((0.06f * 1.5f) * mainNuke.BaseManaCost
-                        + (numNukeCasts - 1 - numISCasts) * (0.06f * mainNuke.BaseCastTime) * mainNuke.BaseManaCost
-                        + (0.06f * mainNuke.BaseCastTime) * moonFire.BaseManaCost
-                        + (0.06f * mainNuke.BaseCastTime) * numISCasts * insectSwarm.BaseManaCost
-                        + (0.06f * 1.5f) * numISCasts * mainNuke.BaseManaCost) * spellHit;*/
                     manaFromOoC = ((0.06f) * mainNuke.BaseManaCost
                         + (numNukeCasts - 1 - numISCasts) * (0.06f) * mainNuke.BaseManaCost
                         + (0.06f) * moonFire.BaseManaCost
@@ -440,20 +444,172 @@ namespace Rawr.Moonkin
             float latency = calcs.Latency;
 
             float JoWProc = character.ActiveBuffsContains("Judgement of Wisdom") ? 0.02f * CalculationsMoonkin.BaseMana : 0.0f;
+            float omenOfClarityProcChance = character.DruidTalents.OmenOfClarity * 0.06f;
             float moonkinFormProc = (character.ActiveBuffsContains("Moonkin Form") && character.DruidTalents.MoonkinForm == 1) ? 0.02f * calcs.BasicStats.Mana : 0.0f;
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             bool starfireGlyph = calcOpts.glyph1 == "Starfire" || calcOpts.glyph2 == "Starfire" || calcOpts.glyph3 == "Starfire";
 
+            float moonfireCasts = SpellsUsed.Contains("MF") ? 1.0f + (calcOpts.MoonfireAlways ? 1.0f : 0.0f) : 0.0f;
+            float insectSwarmCasts = SpellsUsed.Contains("IS") ? 2.0f : 0.0f;
+
+            Spell moonfire = moonfireCasts > 0 ? LocateSpell(solver.SpellData, "MF") : null;
+            Spell insectSwarm = insectSwarmCasts > 0 ? LocateSpell(solver.SpellData, "IS") : null;
+
+            // Do SF glyph
+            if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration += 9.0f;
+
             float eclipseMultiplier = 0.3f + calcs.BasicStats.EclipseBonus;
 
+            float eclipseDuration = 15.0f;
+            float eclipseCooldown = 30.0f;
+
+            Spell preEclipseCast = LocateSpell(solver.SpellData, calcOpts.LunarEclipse ? "W" : "SF");
+
+            // Do improved Insect Swarm
+            if (preEclipseCast.Name == "W" && insectSwarm != null)
+                preEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            else if (preEclipseCast.Name == "SF" && moonfire != null)
+                preEclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+
+            Spell eclipseCast = new Spell(LocateSpell(solver.SpellData, calcOpts.LunarEclipse ? "SF" : "W"));
+
+            // Eclipse bonus and improved Insect Swarm
+            if (eclipseCast.Name == "W")
+            {
+                eclipseCast.AllDamageModifier *= 1.0f + eclipseMultiplier;
+                if (insectSwarm != null)
+                    eclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            }
+            else
+            {
+                eclipseCast.CriticalChanceModifier += eclipseMultiplier;
+                if (moonfire != null)
+                    eclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            }
+
+            Spell postEclipseCast = LocateSpell(solver.SpellData, SpellsUsed[SpellsUsed.Count - 1]);
+
+            DoMainNuke(character, calcs, ref preEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            DoMainNuke(character, calcs, ref eclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            if (preEclipseCast != postEclipseCast)
+            {
+                // Do improved Insect Swarm
+                if (postEclipseCast.Name == "W" && insectSwarm != null)
+                    postEclipseCast.AllDamageModifier *= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                else if (postEclipseCast.Name == "SF" && moonfire != null)
+                    postEclipseCast.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                DoMainNuke(character, calcs, ref postEclipseCast, spellPower, spellHit, spellCrit, spellHaste);
+            }
+
+            if (moonfire != null)
+                DoDotSpell(character, calcs, ref moonfire, spellPower, spellHit, spellCrit, spellHaste);
+            if (insectSwarm != null)
+                DoDotSpell(character, calcs, ref insectSwarm, spellPower, spellHit, spellCrit, spellHaste);
+
+            float eclipseProcChance = (spellCrit + preEclipseCast.CriticalChanceModifier) * spellHit * character.DruidTalents.Eclipse / 3.0f * (calcOpts.LunarEclipse ? 0.6f : 1.0f);
+            float preEclipseCritRate = ((1 - character.DruidTalents.Eclipse / 3.0f * (calcOpts.LunarEclipse ? 0.6f : 1.0f)) * (spellCrit + preEclipseCast.CriticalChanceModifier) * spellHit) / (1 - eclipseProcChance);
+
+            float expectedCastsToProc = 1.0f / eclipseProcChance;
+
+            float timeToProc = preEclipseCast.CastTime * (expectedCastsToProc - 0.5f);
+
+            float rotationLength = timeToProc + eclipseCooldown;
+
+            float preEclipseTime = timeToProc + preEclipseCast.CastTime;
+            float preEclipseDPS = preEclipseCast.DamagePerHit / preEclipseCast.CastTime;
+            float preEclipseManaUsed = preEclipseCast.BaseManaCost / preEclipseCast.CastTime * preEclipseTime;
+            float preEclipseManaGained = (preEclipseCast.BaseManaCost * omenOfClarityProcChance) + 
+                ((spellCrit + preEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) + 
+                (JoWProc / 4 * spellHit);
+
+            // Subtract the instant cast time in the following situations:
+            // 1) If insect swarm is ever cast during a rotation
+            // 2) If the rotation is MF/X AND Moonfire is specified to have 100% uptime
+            float eclipseTime = eclipseDuration - preEclipseCast.CastTime - 
+                (insectSwarm != null ? insectSwarm.CastTime : 0.0f) -
+                (SpellsUsed.Count == 2 && moonfire != null && calcOpts.MoonfireAlways ? moonfire.CastTime : 0.0f);
+            float eclipseDPS = eclipseCast.DamagePerHit / eclipseCast.CastTime;
+            float eclipseManaUsed = eclipseCast.BaseManaCost / eclipseCast.CastTime * eclipseTime;
+            float eclipseManaGained = (eclipseCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + eclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            // Subtract the instant cast time in the following situations:
+            // 1) If insect swarm is ever cast during a rotation
+            // 2) Once if moonfire is used in an MF/X rotation
+            // 3) Twice if moonfire is specified with 100% uptime in an IS/MF/X rotation
+            float postEclipseTime = eclipseCooldown - eclipseDuration -
+                (insectSwarm != null ? insectSwarm.CastTime : 0.0f) -
+                (moonfire != null ? moonfire.CastTime : 0.0f) -
+                (SpellsUsed.Count == 3 && calcOpts.MoonfireAlways ? moonfire.CastTime : 0.0f);
+            float postEclipseDPS = postEclipseCast.DamagePerHit / postEclipseCast.CastTime;
+            float postEclipseManaUsed = postEclipseCast.BaseManaCost / postEclipseCast.CastTime * postEclipseTime;
+            float postEclipseManaGained = (postEclipseCast.BaseManaCost * omenOfClarityProcChance) +
+                ((spellCrit + postEclipseCast.CriticalChanceModifier) * spellHit * moonkinFormProc) +
+                (JoWProc / 4 * spellHit);
+
+            // Moonfire tick calculation:
+            // Min(rotationLength, SFglyph + regMF + regMF) / tickLength if 100% uptime specified
+            float moonfireTicks = moonfire != null ? (calcOpts.MoonfireAlways ? 
+                (float)Math.Min(rotationLength, moonfire.DotEffect.Duration * 2 - (starfireGlyph ? 9.0f : 0.0f)) / moonfire.DotEffect.TickLength :
+                moonfire.DotEffect.NumberOfTicks) : 0.0f;
+            float insectSwarmTicks = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.NumberOfTicks : 0.0f;
+
+            float moonfireDamage = moonfire != null ? moonfireCasts * moonfire.DamagePerHit + (moonfire.DotEffect.DamagePerHit / moonfire.DotEffect.NumberOfTicks) * moonfireTicks : 0.0f;
+            float insectSwarmDamage = insectSwarm != null ? insectSwarmCasts * insectSwarm.DotEffect.DamagePerHit : 0.0f;
+
+            float moonfireTime = moonfire != null ? moonfireCasts * moonfire.CastTime : 0.0f;
+            float insectSwarmTime = insectSwarm != null ? insectSwarmCasts * insectSwarm.CastTime : 0.0f;
+
+            float moonfireManaUsed = moonfire != null ? moonfireCasts * moonfire.BaseManaCost : 0.0f;
+            float insectSwarmManaUsed = insectSwarm != null ? insectSwarmCasts * insectSwarm.BaseManaCost : 0.0f;
+
+            float damageDone = preEclipseTime * preEclipseDPS + eclipseTime * eclipseDPS + postEclipseTime * postEclipseDPS +
+                moonfireDamage + insectSwarmDamage;
+
+            Duration = preEclipseTime + eclipseTime + postEclipseTime + moonfireTime + insectSwarmTime;
+            DotTicks = moonfireTicks + insectSwarmTicks;
+            InsectSwarmTicks = insectSwarmTicks;
+            CastCount = expectedCastsToProc + (eclipseTime / eclipseCast.CastTime) + (postEclipseTime / postEclipseCast.CastTime);
+            ManaUsed = preEclipseManaUsed + eclipseManaUsed + postEclipseManaUsed + moonfireManaUsed + insectSwarmManaUsed;
+            ManaGained = preEclipseManaGained + eclipseManaGained + postEclipseManaGained;
+
+            float mfSavingsFromOoC = moonfire != null ? (moonfire.BaseManaCost - (moonfire.BaseManaCost *
+                (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
+            float isSavingsFromOoC = insectSwarm != null ? (insectSwarm.BaseManaCost - (insectSwarm.BaseManaCost *
+                (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
+            ManaGained += moonfire != null ? (moonfireCasts * (mfSavingsFromOoC + ((spellCrit + moonfire.CriticalChanceModifier) * moonkinFormProc * spellHit) + JoWProc * spellHit / 4.0f)) : 0.0f;
+            ManaGained += insectSwarm != null ? (insectSwarmCasts * (isSavingsFromOoC + JoWProc * spellHit / 4.0f)) : 0.0f;
+
+            RotationData.ManaGained = ManaGained;
+            RotationData.DPM = damageDone / ManaUsed;
+            ManaUsed -= ManaGained;
+            RotationData.ManaUsed = ManaUsed;
+
+            // Undo SF glyph
+            if (starfireGlyph && moonfire != null) moonfire.DotEffect.Duration -= 9.0f;
+
+            // Undo improved Insect Swarm
+            if (preEclipseCast.Name == "W" && insectSwarm != null)
+                preEclipseCast.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            else if (preEclipseCast.Name == "SF" && moonfire != null)
+                preEclipseCast.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            if (preEclipseCast != postEclipseCast)
+            {
+                if (postEclipseCast.Name == "W" && insectSwarm != null)
+                    postEclipseCast.AllDamageModifier /= 1 + 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+                else if (postEclipseCast.Name == "SF" && moonfire != null)
+                    postEclipseCast.CriticalChanceModifier -= 0.01f * character.DruidTalents.ImprovedInsectSwarm;
+            }
+
+            return damageDone;
+            /*
             switch (SpellsUsed.Count)
             {
                 // Nuke only
                 case 1:
                     Spell mainNuke = LocateSpell(solver.SpellData, SpellsUsed[0]);
                     Spell offNuke = LocateSpell(solver.SpellData, SpellsUsed[0] == "SF" ? "W" : "SF");
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     float preEclipseTime = 0.0f;
@@ -469,24 +625,19 @@ namespace Rawr.Moonkin
                     float postEclipseManaUsed = 0.0f;
                     float postEclipseManaGained = 0.0f;
                     float timeToProc = 0.0f;
-                    if (calcOpts.SmartSwitching)
+                    if (calcOpts.LunarEclipse)
                     {
-                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 3.5f / 60f * offNuke.BaseCastTime : 0;
-                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 3.5f / 60f * mainNuke.BaseCastTime : 0;
+                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
+                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
 
                         float eclipseProcChance = (spellCrit + offNuke.CriticalChanceModifier) * spellHit * (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
                         float effectiveCritRate = (1.0f - (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + offNuke.CriticalChanceModifier) * spellHit;
                         float castsToProc = 1.0f / eclipseProcChance;
-                        //float unhastedCastTime = offNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
-                        //float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
-                        //float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (offNuke.Name == "W" ? latency : 0.0f);
-                        //float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
                         float effectiveCastTime = offNuke.CastTime;
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
                         float rotationLength = 30.0f + timeToProc;
 
                         if (mainNuke.Name == "W") mainNuke.AllDamageModifier *= 1 + eclipseMultiplier;
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? eclipseMultiplier : 0.0f), spellHaste);
                         if (mainNuke.Name == "W") mainNuke.AllDamageModifier /= 1 + eclipseMultiplier;
                         float eclipseCastTime = mainNuke.CastTime;
@@ -503,7 +654,6 @@ namespace Rawr.Moonkin
 
                         postEclipseTime = 30.0f - 15.0f + 0.5f * eclipseCastTime;
 
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                         postEclipseDPS = mainNuke.DamagePerHit / mainNuke.CastTime;
@@ -522,22 +672,17 @@ namespace Rawr.Moonkin
                     }
                     else
                     {
-                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 3.5f / 60f * mainNuke.BaseCastTime : 0;
-                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 3.5f / 60f * offNuke.BaseCastTime : 0;
+                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
+                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
 
                         float eclipseProcChance = (spellCrit + mainNuke.CriticalChanceModifier) * spellHit * (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
                         float effectiveCritRate = (1.0f - (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + mainNuke.CriticalChanceModifier) * spellHit;
                         float castsToProc = 1.0f / eclipseProcChance;
-                        //float unhastedCastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
-                        //float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
-                        //float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (mainNuke.Name == "W" ? latency : 0.0f);
-                        //float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
                         float effectiveCastTime = mainNuke.CastTime;
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
                         float rotationLength = 30.0f + timeToProc;
 
                         if (offNuke.Name == "W") offNuke.AllDamageModifier *= 1 + eclipseMultiplier;
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? eclipseMultiplier : 0.0f), spellHaste);
                         if (offNuke.Name == "W") offNuke.AllDamageModifier /= 1 + eclipseMultiplier;
 
@@ -566,7 +711,6 @@ namespace Rawr.Moonkin
                             (eclipseManaGained / offNuke.CastTime * eclipseTime) +
                             (postEclipseManaGained / mainNuke.CastTime * postEclipseTime);
 
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     }
                     float damageDone = preEclipseDPS * preEclipseTime + eclipseDPS * eclipseTime + postEclipseDPS * postEclipseTime;
@@ -596,8 +740,6 @@ namespace Rawr.Moonkin
                             offNuke.CriticalChanceModifier += 0.01f * character.DruidTalents.ImprovedInsectSwarm;
                         }
                     }
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
-                    //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     DoDotSpell(character, calcs, ref moonFire, spellPower, spellHit, spellCrit, spellHaste);
@@ -619,10 +761,10 @@ namespace Rawr.Moonkin
                     float moonfireCasts = 0.0f;
                     float insectSwarmCasts = 0.0f;
                     float ratioSFtoW = 0.0f;
-                    if (calcOpts.SmartSwitching)
+                    if (calcOpts.LunarEclipse)
                     {
-                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f * offNuke.BaseCastTime : 0;
-                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f * mainNuke.BaseCastTime : 0;
+                        float preEclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
+                        float eclipseOmenProcChance = character.DruidTalents.OmenOfClarity == 1 ? 0.06f : 0;
 
                         // Casting main-nuke/off-nuke into SF/W terms for calculation of MF/IS Omen of Clarity savings
                         if (mainNuke.Name == "SF")
@@ -639,10 +781,6 @@ namespace Rawr.Moonkin
                         float eclipseProcChance = (spellCrit + offNuke.CriticalChanceModifier) * spellHit * (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
                         float effectiveCritRate = (1.0f - (offNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + offNuke.CriticalChanceModifier) * spellHit;
                         float castsToProc = 1.0f / eclipseProcChance;
-                        ///float unhastedCastTime = offNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
-                        //float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
-                        //float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (offNuke.Name == "W" ? latency : 0.0f);
-                        //float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
                         float effectiveCastTime = offNuke.CastTime;
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
 
@@ -653,7 +791,6 @@ namespace Rawr.Moonkin
                         float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
 
                         if (mainNuke.Name == "W") mainNuke.AllDamageModifier *= 1 + eclipseMultiplier;
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit + (mainNuke.Name == "SF" ? eclipseMultiplier : 0.0f), spellHaste);
                         if (mainNuke.Name == "W") mainNuke.AllDamageModifier /= 1 + eclipseMultiplier;
                         float eclipseCastTime = mainNuke.CastTime;
@@ -668,7 +805,6 @@ namespace Rawr.Moonkin
                         eclipseManaUsed = mainNuke.BaseManaCost / mainNuke.CastTime * eclipseTime;
                         eclipseManaGained = (mainNuke.BaseManaCost * eclipseOmenProcChance) + ((spellCrit + mainNuke.CriticalChanceModifier + (mainNuke.Name == "SF" ? 0.3f : 0.0f)) * spellHit * moonkinFormProc) + (JoWProc / 4 * spellHit);
 
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
                         DoMainNuke(character, calcs, ref mainNuke, spellPower, spellHit, spellCrit, spellHaste);
 
                         postEclipseTime = 30.0f - 15.0f + 0.5f * eclipseCastTime - (timeCastingDots * ((30.0f - 15.0f) / (30.0f + timeToProc)));
@@ -715,10 +851,6 @@ namespace Rawr.Moonkin
                         float eclipseProcChance = (spellCrit + mainNuke.CriticalChanceModifier) * spellHit * (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f);
                         float effectiveCritRate = (1.0f - (mainNuke.Name == "W" ? 0.2f * character.DruidTalents.Eclipse : character.DruidTalents.Eclipse / 3.0f)) * (spellCrit + mainNuke.CriticalChanceModifier) * spellHit;
                         float castsToProc = 1.0f / eclipseProcChance;
-                        //float unhastedCastTime = mainNuke.BaseCastTime - 0.1f * character.DruidTalents.StarlightWrath;
-                        //float baseCastTime = Math.Max(1.0f, unhastedCastTime / (1 + spellHaste)) + latency;
-                        //float NGCastTime = Math.Max(1.0f, (unhastedCastTime - NGReduction) / (1 + spellHaste)) + latency + (mainNuke.Name == "W" ? latency : 0.0f);
-                        //float effectiveCastTime = baseCastTime * (1 - effectiveCritRate) + NGCastTime * effectiveCritRate;
                         float effectiveCastTime = mainNuke.CastTime;
                         timeToProc = effectiveCastTime * (castsToProc - 0.5f);
 
@@ -729,7 +861,6 @@ namespace Rawr.Moonkin
                         float rotationLength = 30.0f + timeToProc + (timeCastingDots * (timeToProc / (timeToProc + 30.0f)));
 
                         if (offNuke.Name == "W") offNuke.AllDamageModifier *= 1 + eclipseMultiplier;
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? 0.3f : 0.0f), spellHaste);
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit + (offNuke.Name == "SF" ? eclipseMultiplier : 0.0f), spellHaste);
                         if (offNuke.Name == "W") offNuke.AllDamageModifier /= 1 + eclipseMultiplier;
                         float eclipseCastTime = offNuke.CastTime;
@@ -768,7 +899,6 @@ namespace Rawr.Moonkin
                             ratioSFtoW = (eclipseTime / eclipseCastTime) / (eclipseTime / eclipseCastTime + castsToProc + postEclipseTime / mainNuke.CastTime);
                         }
 
-                        //DoMainNuke(character, calcs, solver.NGReduction, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                         DoMainNuke(character, calcs, ref offNuke, spellPower, spellHit, spellCrit, spellHaste);
                     }
 
@@ -809,7 +939,7 @@ namespace Rawr.Moonkin
                     return damageDone;
                 default:
                     throw new Exception("Invalid rotation specified in rotation solver.");
-            }
+            }*/
         }
     }
 
@@ -1010,14 +1140,6 @@ namespace Rawr.Moonkin
                     else if (proc.Activate != null)
                     {
                         activatedEffects.Add(proc);
-                        /*
-                        proc.Activate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
-                        float tempDamage = rot.DamageDone(character, calcs, baseSpellPower, baseHit, baseCrit, baseHaste);
-                        float tempUpTime = proc.UpTime(rot, calcs);
-                        proc.Deactivate(calcs, ref baseSpellPower, ref baseHit, ref baseCrit, ref baseHaste);
-                        accumulatedDamage += tempDamage * tempUpTime;
-                        totalUpTime += tempUpTime;
-                         */
                     }
                     if (proc.CalculateMP5 != null)
                     {

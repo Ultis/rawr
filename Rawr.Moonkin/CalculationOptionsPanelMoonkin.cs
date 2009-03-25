@@ -44,8 +44,12 @@ namespace Rawr.Moonkin
             cmbGlyph1.SelectedItem = calcOpts.glyph1.ToString();
             cmbGlyph2.SelectedItem = calcOpts.glyph2.ToString();
             cmbGlyph3.SelectedItem = calcOpts.glyph3.ToString();
-            chkSmartSwitching.Checked = calcOpts.SmartSwitching;
             cmbUserRotation.SelectedItem = calcOpts.userRotation;
+            if (calcOpts.LunarEclipse)
+                cmbEclipseType.SelectedItem = "Lunar";
+            else
+                cmbEclipseType.SelectedItem = "Solar";
+            chkMoonfireAlways.Checked = calcOpts.MoonfireAlways;
         }
 
         private void cmbTargetLevel_SelectedIndexChanged(object sender, EventArgs e)
@@ -166,17 +170,24 @@ namespace Rawr.Moonkin
             Character.OnCalculationsInvalidated();
         }
 
-        private void chkSmartSwitching_CheckedChanged(object sender, EventArgs e)
-        {
-            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
-            calcOpts.SmartSwitching = chkSmartSwitching.Checked;
-            Character.OnCalculationsInvalidated();
-        }
-
         private void cmbUserRotation_SelectedIndexChanged(object sender, EventArgs e)
         {
             CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             calcOpts.userRotation = cmbUserRotation.SelectedItem.ToString();
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void cmbEclipseType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.LunarEclipse = cmbEclipseType.SelectedItem.ToString() == "Lunar";
+            Character.OnCalculationsInvalidated();
+        }
+
+        private void chkMoonfireAlways_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculationOptionsMoonkin calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
+            calcOpts.MoonfireAlways = chkMoonfireAlways.Checked;
             Character.OnCalculationsInvalidated();
         }
     }
@@ -319,7 +330,8 @@ namespace Rawr.Moonkin
         public string glyph1 = "Starfire";
         public string glyph2 = "Moonfire";
         public string glyph3 = "Insect Swarm";
-        public bool SmartSwitching = false;
+        public bool LunarEclipse = true;
+        public bool MoonfireAlways = true;
         public string userRotation = "None";
 	}
 }
