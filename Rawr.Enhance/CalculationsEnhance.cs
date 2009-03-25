@@ -547,8 +547,8 @@ namespace Rawr
 
             float meleeMultipliers = weaponMastery * (1 - damageReduction) * (1 - chanceWhiteMiss) * (1 + bonusPhysicalDamage);
 
-            float dpsMelee = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * hastedMHSpeed / unhastedMHSpeed +
-                              (dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * hastedOHSpeed / unhastedOHSpeed) * meleeMultipliers;
+            float dpsMelee = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * unhastedMHSpeed / hastedMHSpeed +
+                              (dpsOHMeleeNormal + dpsOHMeleeCrits + dpsOHMeleeGlances) * unhastedOHSpeed / hastedOHSpeed) * meleeMultipliers;
 
             //2: Stormstrike DPS
             float damageMHSwing = adjustedMHDPS * unhastedMHSpeed;
