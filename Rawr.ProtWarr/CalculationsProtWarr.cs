@@ -615,12 +615,13 @@ threat and limited threat scaled by the threat scale.",
                 Block = talents.ShieldSpecialization * 1.0f,
                 BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
                 BonusDamageMultiplier = talents.OneHandedWeaponSpecialization * 0.02f,
-                BonusStaminaMultiplier = talents.Vitality * 0.02f,
-                BonusStrengthMultiplier = talents.Vitality * 0.02f,
-                Expertise = talents.Vitality * 2.0f,
+                BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
+                Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
                 BonusShieldSlamDamage = talents.GagOrder * 0.05f,
                 DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
                 BaseArmorMultiplier = talents.Toughness * 0.02f,
+                PhysicalHaste = talents.BloodFrenzy * 0.03f,
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;

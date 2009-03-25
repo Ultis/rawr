@@ -44,7 +44,7 @@ namespace Rawr.ProtWarr
                         return 0.08f;
 
                 case HitResult.Dodge:
-                    return 0.065f;
+                    return 0.065f - (0.01f * character.WarriorTalents.WeaponMastery);
 
                 case HitResult.Parry:
                     if ((calcOpts.TargetLevel - character.Level) < 3)
