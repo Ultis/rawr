@@ -22,6 +22,7 @@ namespace Rawr.Enhance
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.BaseStats;
+            Stats buffs = calcs.BuffStats;
             float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + 
                                   StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * character.ShamanTalents.ThunderingStrikes;
             float chanceCrit = 100f * Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + stats.PhysicalCrit) + .00005f); //fudge factor for rounding
@@ -99,7 +100,7 @@ namespace Rawr.Enhance
             sb.AppendLine("trinket2                        " + _trinket2name);
             sb.AppendLine();
             sb.AppendLine("totem                           " + _totemname);
-            sb.AppendLine("set_bonus                       " + getSetBonus(character));
+            sb.AppendLine(getSetBonuses(character));
             sb.AppendLine("metagem                         " + _metagem);
             sb.AppendLine();
 
@@ -142,6 +143,8 @@ namespace Rawr.Enhance
             sb.AppendLine("lava_flows                      " + character.ShamanTalents.LavaFlows + "/3");
             sb.AppendLine("storm_earth_and_fire            " + character.ShamanTalents.StormEarthAndFire + "/3");
             sb.AppendLine("shamanism                       " + character.ShamanTalents.Shamanism + "/5");
+
+
 
             _configText = sb.ToString();
         }
@@ -466,11 +469,12 @@ namespace Rawr.Enhance
             }
         }
 
-        private String getSetBonus(Character character)
+        private String getSetBonuses(Character character)
         {
             Dictionary<string, int> setCounts = new Dictionary<string, int>();
             ItemInstance[] items = { character.Head, character.Chest, character.Hands, character.Shoulders, character.Legs,
                                      character.Wrist, character.Waist, character.Feet }; // last 3 are for tier 6 eight piece set
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
             for (int i = 0; i < items.Length; i++ )
             {
                 if ((object)items[i] != null && !string.IsNullOrEmpty(items[i].Item.SetName))
@@ -480,22 +484,47 @@ namespace Rawr.Enhance
                     setCounts[items[i].Item.SetName] = count + 1;
                 }
             }
+            int bonusCount = 0;
             if (setCounts.Count > 0)
             {
+                
                 foreach (KeyValuePair<string, int> kvp in setCounts)
                 {
                     switch (kvp.Key)
                     {
-                        case "Earthshatter Battlegear" :
+                        case "Earthshatter Battlegear":
                             if (kvp.Value >= 4)
-                                return "naxx_melee_4";
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      naxx_melee_4");
+                            }
                             if (kvp.Value >= 2)
-                                return "naxx_melee_2";
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      naxx_melee_2");
+                            }
                             break;
+                        case "Worldbreaker Battlegear":
+                            if (kvp.Value >= 4)
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_4");
+                            }
+                            if (kvp.Value >= 2)
+                            {
+                                bonusCount++;
+                                sb.AppendLine("set_bonus" + bonusCount + "                      ulduar_melee_2");
+                             }
+                           break;
                     }
                 }
             }
-            return "-";
+            while (bonusCount < 3)
+            {
+                bonusCount++;
+                sb.AppendLine("set_bonus" + bonusCount+ "                      -");
+            }
+            return sb.ToString();       
         }
     }
 }
