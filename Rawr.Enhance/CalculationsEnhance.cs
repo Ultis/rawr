@@ -415,7 +415,7 @@ namespace Rawr
             float glancingRate = 0.24f;
 
             float meleeCritModifier = stats.PhysicalCrit;
-            float baseMeleeCrit = .01f * (StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + TS);
+            float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * TS;
             float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
@@ -423,7 +423,7 @@ namespace Rawr
 
             float hitBonusSpell = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating);
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
-            float baseSpellCrit = .01f * (StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + TS);
+            float baseSpellCrit = StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + .01f * TS;
             float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
@@ -434,8 +434,7 @@ namespace Rawr
             float chanceWhiteCrit = Math.Min(chanceCrit, 1f - glancingRate - chanceWhiteMiss);
             float chanceYellowCrit = Math.Min(chanceCrit, 1f - chanceYellowMiss);
 
-            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, character.Class); //stats.HasteRating / 2522.3068823f;
-            // float hasteBonus = stats.HasteRating / 3278.998947f; // patch 3.08 level
+            float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, character.Class);
             float unhastedMHSpeed = character.MainHand == null ? 3.0f : character.MainHand.Item.Speed;
             float wdpsMH = character.MainHand == null ? 46.3f : character.MainHand.Item.DPS;
             float unhastedOHSpeed = character.OffHand == null ? 3.0f : character.OffHand.Item.Speed;
@@ -1305,8 +1304,8 @@ namespace Rawr
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Total Expertise",
-                String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise, {2} Expertise Rating, {3}% Dodged" : 
-                                                     "{0}*{1} Expertise, {2} Expertise Rating, {3}% Dodged"),
+                String.Format((TotalExpertise > 26 ? "{0} (Cap Exceeded)*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged" :
+                                                     "{0}*{1} Expertise\r\n{2} Expertise Rating\r\n{3}% Dodged"),
                 TotalExpertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
@@ -1323,7 +1322,7 @@ namespace Rawr
                 BasicStats.ArmorPenetrationRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
             float spellMiss = 100 - SpellHit;
-            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged, {2}% Spell Misses, {3}% White Misses",
+            dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Spell Misses\r\n{3}% White Misses",
                         AvoidedAttacks.ToString("F2", CultureInfo.InvariantCulture), 
                         DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture),
                         spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
