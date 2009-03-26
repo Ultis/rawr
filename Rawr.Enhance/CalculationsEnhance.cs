@@ -307,8 +307,8 @@ namespace Rawr
             float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + stats.BonusFlurryHaste;
             //patch 3.08 float flurryHasteBonus = .05f * character.ShamanTalents.Flurry + .05f * Math.Min(1, character.ShamanTalents.Flurry) + stats.BonusFlurryHaste;
             float edCritBonus = .03f * character.ShamanTalents.ElementalDevastation;
-            float critMultiplierMelee = 2f;
-            float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury;
+            float critMultiplierMelee = 2f + stats.BonusCritMultiplier;
+            float critMultiplierSpell = 1.5f + .1f * character.ShamanTalents.ElementalFury + stats.BonusSpellCritMultiplier;
             float mwPPM = 2 * character.ShamanTalents.MaelstromWeapon * (1 + stats.BonusMWFreq);
             int stormstrikeSpeed = 8;
             float weaponMastery = 1f;
@@ -348,7 +348,12 @@ namespace Rawr
             }
 
             float spellCritModifier = stats.SpellCrit;
-            if (calcOpts.OffhandImbue == "Flametongue" | calcOpts.MainhandImbue == "Flametongue")
+            if (calcOpts.MainhandImbue == "Flametongue")
+            {
+                spellCritModifier += calcOpts.GlyphFT ? .02f : 0f;
+                stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
+            }
+            if (calcOpts.OffhandImbue == "Flametongue")
             {
                 spellCritModifier += calcOpts.GlyphFT ? .02f : 0f;
                 stats.SpellPower += (float)Math.Floor(211f * (1 + character.ShamanTalents.ElementalWeapons * .1f));
@@ -416,7 +421,7 @@ namespace Rawr
 
             float meleeCritModifier = stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * TS;
-            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
+            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
@@ -424,7 +429,7 @@ namespace Rawr
             float hitBonusSpell = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating);
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + .01f * TS;
-            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritMultiplier) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
+            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
@@ -720,8 +725,8 @@ namespace Rawr
             {
                 Mana = 4116f,
                 AttackPower = 140f,
-                SpellCritRating = 101f,
-                CritMeleeRating = 134f
+//                SpellCritRating = 101f,
+//                CritMeleeRating = 134f
             };
 
             switch (character.Race)
@@ -837,7 +842,6 @@ namespace Rawr
 
         private Stats ApplyTalents(Character character, Stats stats) // also includes basic class benefits
         {
-            
             stats.Mana += 15f * stats.Intellect;
             stats.Health += 10f * stats.Stamina;
             stats.Expertise += 3 * character.ShamanTalents.UnleashedRage;
@@ -1299,8 +1303,14 @@ namespace Rawr
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Yellow Hit", YellowHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Melee Crit", MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Spell Crit", SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Melee Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
+                MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
+                (BasicStats.CritMeleeRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetCritFromRating(BasicStats.CritMeleeRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Spell Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
+                SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
+                (BasicStats.SpellCritRating + BasicStats.CritRating).ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromRating(BasicStats.SpellCritRating + BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Spellpower", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Total Expertise",
@@ -1310,11 +1320,11 @@ namespace Rawr
                 BasicStats.Expertise.ToString("F0", CultureInfo.InvariantCulture),
                 BasicStats.ExpertiseRating.ToString("F0", CultureInfo.InvariantCulture), 
                 DodgedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Physical Haste\r\n{2}% Spell Haste", 
+            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste", 
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, Character.CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Physical Hit\r\n{2}% Spell Hit",
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit",
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
