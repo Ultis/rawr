@@ -142,7 +142,6 @@ namespace Rawr.Mage
         public float SpellDamageRating { get; set; }
         public float SpellCritRating { get; set; }
         public float SpellHasteRating { get; set; }
-        public float Mp5OnCastFor20Sec { get; set; }
 
         private string buffLabel;
         public string BuffLabel
@@ -273,14 +272,12 @@ namespace Rawr.Mage
                 Stats t = character.Trinket1.Item.Stats;
                 SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
-                Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
             }
             if (trinket2)
             {
                 Stats t = character.Trinket2.Item.Stats;
                 SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
-                Mp5OnCastFor20Sec = t.Mp5OnCastFor20SecOnUse2Min;
             }
             if (manaGemEffect)
             {
@@ -611,8 +608,8 @@ namespace Rawr.Mage
         public LightweaveBolt LightweaveBolt { get; set; }
         public PendulumOfTelluricCurrents PendulumOfTelluricCurrents { get; set; }
 
-        private static int CycleIdCount;
-        private static int SpellIdCount;
+        //private static int CycleIdCount;
+        //private static int SpellIdCount;
 
         //static CastingState()
         //{
