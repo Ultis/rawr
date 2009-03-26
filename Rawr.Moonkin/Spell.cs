@@ -590,7 +590,7 @@ namespace Rawr.Moonkin
                 StarfireCount = (preEclipseTime / preEclipseCast.CastTime) + (postEclipseCast.Name == "SF" ? postEclipseTime / postEclipseCast.CastTime : 0.0f);
             }
             ManaUsed = preEclipseManaUsed + eclipseManaUsed + postEclipseManaUsed + moonfireManaUsed + insectSwarmManaUsed;
-            ManaGained = preEclipseManaGained + eclipseManaGained + postEclipseManaGained;
+            ManaGained = expectedCastsToProc * preEclipseManaGained + (eclipseTime / eclipseCast.CastTime) * eclipseManaGained + (postEclipseTime / postEclipseCast.CastTime) * postEclipseManaGained;
 
             float mfSavingsFromOoC = moonfire != null ? (moonfire.BaseManaCost - (moonfire.BaseManaCost *
                 (1 - StarfireCount / WrathCount * 0.06f - (1 - StarfireCount / WrathCount) * 0.06f))) : 0.0f;
