@@ -198,7 +198,8 @@ namespace Rawr.ProtPaladin
 
         public static float BlockReduction(Character character, Stats stats)
         {
-            return stats.BlockValue;
+            if (stats.JudgementBlockValue > 0) return stats.BlockValue + 5f / 9f * stats.JudgementBlockValue;
+            else return stats.BlockValue;
         }
 
         public static float MagicReduction(Character character, Stats stats, DamageType school)
