@@ -158,6 +158,7 @@ namespace Rawr
 
         public static Item GetItem(int id) { return GetItem("www", id.ToString(), true); }
         public static Item GetItem(int id, bool filter) { return GetItem("www", id.ToString(), filter); }
+        public static Item GetItem(int id, bool filter, string locale) { return GetItem(locale, id.ToString(), filter); }
         public static Item GetItem(string query, bool filter) { return GetItem("www", query, filter); }
 		public static Item GetItem(string site, string query, bool filter)
 		{
