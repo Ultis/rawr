@@ -141,6 +141,50 @@ namespace Rawr.ShadowPriest
             dictValues.Add("Haste", string.Format("{0}%*{1}% from {2} Haste rating\r\n{3}% ({3}) points in Enlightenment\r\n{4}% from Buffs\r\n{5}s Global Cooldown",
                 (BasicStats.SpellHaste * 100f).ToString("0.00"), (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f).ToString("0.00"), BasicStats.HasteRating.ToString(), character.PriestTalents.Enlightenment, (BasicStats.SpellHaste * 100f - StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating) * 100f - character.PriestTalents.Enlightenment).ToString("0.00"), Math.Max(1.0f, 1.5f / (1 + BasicStats.SpellHaste)).ToString("0.00")));
 
+            float[] Resistances = {
+                0,
+                BasicStats.ArcaneResistance + BasicStats.ArcaneResistanceBuff,
+                BasicStats.FireResistance + BasicStats.FireResistanceBuff,
+                BasicStats.FrostResistance + BasicStats.FrostResistanceBuff,
+                BasicStats.NatureResistance + BasicStats.NatureResistanceBuff,
+                BasicStats.ShadowResistance + BasicStats.ShadowResistanceBuff,
+            };
+
+            string[] ResistanceNames = {
+                "None",
+                "Arcane",
+                "Fire",
+                "Frost",
+                "Nature",
+                "Shadow",
+            };
+
+            string ResistanceString = "*Resistances:";
+
+            float MaxResist = Resistances[0];
+            int MaxResistIndex = 0;
+            float AvgResist = 0f;
+            for (int x = 1; x < Resistances.Length; x++)
+            {
+                AvgResist += Resistances[x];
+                if (Resistances[x] > MaxResist)
+                {
+                    MaxResist = Resistances[x];
+                    MaxResistIndex = x;
+                }
+                ResistanceString += string.Format("\r\n{0} : {1}", ResistanceNames[x], Resistances[x]);
+            }
+            AvgResist /= (Resistances.Length - 1);
+
+            if (AvgResist == 0)
+                ResistanceString = "None" + ResistanceString;
+            else if (MaxResist == AvgResist)
+                ResistanceString = string.Format("All : {0}", AvgResist.ToString("0")) + ResistanceString;
+            else
+                ResistanceString = string.Format("{0} : {1}", ResistanceNames[MaxResistIndex], MaxResist.ToString("0")) + ResistanceString;
+
+            dictValues.Add("Resistance", ResistanceString);
+
             SolverBase solver = GetSolver(character, BasicStats);
             solver.Calculate(this);
 
@@ -201,6 +245,16 @@ namespace Rawr.ShadowPriest
                     return basicStats.HitRating;
                 case "MF cast time (ms)":
                     return new MindFlay(basicStats, character).CastTime * 1000f;
+                case "Arcane Resistance":
+                    return basicStats.ArcaneResistance + basicStats.ArcaneResistanceBuff;
+                case "Fire Resistance":
+                    return basicStats.FireResistance + basicStats.FireResistanceBuff;
+                case "Frost Resistance":
+                    return basicStats.FrostResistance + basicStats.FrostResistance;
+                case "Nature Resistance":
+                    return basicStats.NatureResistance + basicStats.NatureResistanceBuff;
+                case "Shadow Resistance":
+                    return basicStats.ShadowResistance + basicStats.ShadowResistanceBuff;
             }
             return 0f;
         }

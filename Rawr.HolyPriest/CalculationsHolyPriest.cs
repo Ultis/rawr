@@ -213,6 +213,7 @@ namespace Rawr.HolyPriest
                     "Basic Stats:Spell Crit",
 					"Basic Stats:Healing Crit",
 					"Basic Stats:Spell Haste",
+                    "Basic Stats:Resistance",
                     "Simulation:Role",
                     "Simulation:Burst*This is the HPS you are expected to have if you are not limited by Mana.\r\nIn Custom Role, this displays your HPS when you dump all spells in 1 stream.",
                     "Simulation:Sustained*This is the HPS are expected to have when restricted by Mana.\r\nIf this value is lower than your Burst HPS, you are running out of mana in the simulation.\r\nIn Custom Role, this displays your HPS over the length of the fight, adjusted by the amount of mana available.",
@@ -253,6 +254,11 @@ namespace Rawr.HolyPriest
                     "GHeal Avg",
                     "FHeal Avg",
                     "CoH Avg",
+                    "Arcane Resistance",
+                    "Fire Resistance",
+                    "Frost Resistance",
+                    "Nature Resistance",
+                    "Shadow Resistance",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -792,6 +798,17 @@ namespace Rawr.HolyPriest
                 GLYPH_HolyNova = stats.GLYPH_HolyNova,
                 GLYPH_Lightwell = stats.GLYPH_Lightwell,
                 GLYPH_MassDispel = stats.GLYPH_MassDispel,
+
+                ArcaneResistance = stats.ArcaneResistance,
+                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                FireResistance = stats.FireResistance,
+                FireResistanceBuff = stats.FireResistanceBuff,
+                FrostResistance = stats.FrostResistance,
+                FrostResistanceBuff = stats.FrostResistanceBuff,
+                NatureResistance = stats.NatureResistance,
+                NatureResistanceBuff = stats.NatureResistanceBuff,
+                ShadowResistance = stats.ShadowResistance,
+                ShadowResistanceBuff = stats.ShadowResistanceBuff,
             };
         }
 
@@ -812,13 +829,13 @@ namespace Rawr.HolyPriest
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (
-                stats.Stamina + stats.Intellect + stats.Spirit + stats.Health + stats.Mana + stats.Mp5 + stats.SpellPower
+            bool Yes = (
+                stats.Intellect + stats.Spirit + stats.Mana + stats.Mp5 + stats.SpellPower
                 + stats.SpellHaste + stats.SpellCrit
-                + stats.Resilience +  + stats.CritRating + stats.HasteRating 
+                + stats.HasteRating + stats.CritRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
                 + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusManaPotion + stats.SpellCombatManaRegeneration
-                
+
                 + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
                 + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
                 + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
@@ -834,7 +851,28 @@ namespace Rawr.HolyPriest
                 + stats.GLYPH_CircleOfHealing + stats.GLYPH_Dispel + stats.GLYPH_FlashHeal
                 + stats.GLYPH_PowerWordShield + stats.GLYPH_PrayerOfHealing + stats.GLYPH_Renew
                 + stats.GLYPH_HolyNova + stats.GLYPH_Lightwell + stats.GLYPH_MassDispel
-                ) > 0;
+            ) > 0;
+
+            bool Maybe = (
+                stats.Stamina + stats.Health + stats.Resilience
+                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
+                + stats.FireResistance + stats.FireResistanceBuff
+                + stats.FrostResistance + stats.FrostResistanceBuff
+                + stats.NatureResistance + stats.NatureResistanceBuff
+                + stats.ShadowResistance + stats.ShadowResistanceBuff
+            ) > 0;
+
+            bool No = (
+                stats.Strength + stats.Agility + stats.AttackPower
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating
+                + stats.Expertise + stats.ExpertiseRating
+                + stats.Dodge + stats.DodgeRating
+                + stats.Parry + stats.ParryRating
+                + stats.Defense + stats.DefenseRating
+                + stats.SpellHit + stats.HitRating + stats.PhysicalHit
+            ) > 0;
+
+            return Yes || (Maybe && !No);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)

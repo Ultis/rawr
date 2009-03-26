@@ -184,6 +184,7 @@ namespace Rawr.ShadowPriest
 					"Basic Stats:Crit",
 					"Basic Stats:Hit",
 					"Basic Stats:Haste",
+                    "Basic Stats:Resistance",
                     "Simulation:Rotation",
                     "Simulation:DPS",
                     "Simulation:SustainDPS",
@@ -218,7 +219,12 @@ namespace Rawr.ShadowPriest
                     "Crit Rating",
                     "MB Crit %",
                     "Hit Rating",
-                    "MF cast time (ms)"
+                    "MF cast time (ms)",
+                    "Arcane Resistance",
+                    "Fire Resistance",
+                    "Frost Resistance",
+                    "Nature Resistance",
+                    "Shadow Resistance",
 					};
                 return _optimizableCalculationLabels;
             }
@@ -661,63 +667,67 @@ namespace Rawr.ShadowPriest
                 GLYPH_Shadow = stats.GLYPH_Shadow,
                 GLYPH_ShadowWordDeath = stats.GLYPH_ShadowWordDeath,
                 GLYPH_ShadowWordPain = stats.GLYPH_ShadowWordPain,
+
+                ArcaneResistance = stats.ArcaneResistance,
+                ArcaneResistanceBuff = stats.ArcaneResistanceBuff,
+                FireResistance = stats.FireResistance,
+                FireResistanceBuff = stats.FireResistanceBuff,
+                FrostResistance = stats.FrostResistance,
+                FrostResistanceBuff = stats.FrostResistanceBuff,
+                NatureResistance = stats.NatureResistance,
+                NatureResistanceBuff = stats.NatureResistanceBuff,
+                ShadowResistance = stats.ShadowResistance,
+                ShadowResistanceBuff = stats.ShadowResistanceBuff,
             };
         }
 
         public override bool HasRelevantStats(Stats stats)
         {
-            return (
-//                  stats.Stamina
-                stats.Health
-                + stats.Resilience
-                + stats.Intellect
-                + stats.Mana
-                + stats.Spirit
-                + stats.Mp5
-                + stats.SpellPower
-                + stats.SpellShadowDamageRating
-                + stats.SpellCritRating
-                + stats.CritRating
-                + stats.SpellCrit
-                + stats.SpellHitRating
-                + stats.HitRating
-                + stats.SpellHit
-                + stats.SpellHasteRating
-                + stats.SpellHaste
-                + stats.HasteRating
-                + stats.BonusSpiritMultiplier
-                + stats.SpellDamageFromSpiritPercentage
-                + stats.BonusIntellectMultiplier
-                + stats.BonusManaPotion
-                + stats.ThreatReductionMultiplier
-                + stats.BonusDamageMultiplier
-                + stats.BonusShadowDamageMultiplier
-                + stats.BonusHolyDamageMultiplier
+            bool Yes = (
+                stats.Intellect + stats.Mana + stats.Spirit + stats.Mp5 + stats.SpellPower
+                + stats.SpellShadowDamageRating + stats.SpellCritRating + stats.CritRating
+                + stats.SpellCrit + stats.SpellHitRating + stats.HitRating + stats.SpellHit
+                + stats.SpellHasteRating + stats.SpellHaste + stats.HasteRating
+                
+                + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
+                + stats.BonusIntellectMultiplier + stats.BonusManaPotion
+                + stats.ThreatReductionMultiplier + stats.BonusDamageMultiplier
+                + stats.BonusShadowDamageMultiplier + stats.BonusHolyDamageMultiplier
                 + stats.BonusDiseaseDamageMultiplier
-                + stats.SWPDurationIncrease
-                + stats.BonusMindBlastMultiplier
-                + stats.MindBlastCostReduction
-                + stats.ShadowWordDeathCritIncrease
-                + stats.WeakenedSoulDurationDecrease
-                + stats.ManaRestoreOnCast_5_15
-                + stats.ManaRestoreFromBaseManaPerHit
-                + stats.SpellPowerFor15SecOnUse90Sec
-                + stats.SpellPowerFor15SecOnUse2Min
-                + stats.SpellPowerFor20SecOnUse2Min
-                + stats.HasteRatingFor20SecOnUse2Min
-                + stats.HasteRatingFor20SecOnUse5Min
-                + stats.SpellPowerFor10SecOnCast_15_45
-                + stats.SpellPowerFor10SecOnHit_10_45
-                + stats.SpellHasteFor10SecOnCast_10_45
-                + stats.TimbalsProc
-                + stats.PendulumOfTelluricCurrentsProc
-                + stats.ExtractOfNecromanticPowerProc
+                
+                + stats.SWPDurationIncrease + stats.BonusMindBlastMultiplier
+                + stats.MindBlastCostReduction + stats.ShadowWordDeathCritIncrease
+                + stats.WeakenedSoulDurationDecrease + stats.ManaRestoreOnCast_5_15
+                + stats.ManaRestoreFromBaseManaPerHit + stats.SpellPowerFor15SecOnUse90Sec
+                + stats.SpellPowerFor15SecOnUse2Min + stats.SpellPowerFor20SecOnUse2Min
+                + stats.HasteRatingFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse5Min
+                + stats.SpellPowerFor10SecOnCast_15_45 + stats.SpellPowerFor10SecOnHit_10_45
+                + stats.SpellHasteFor10SecOnCast_10_45 + stats.TimbalsProc
+                + stats.PendulumOfTelluricCurrentsProc + stats.ExtractOfNecromanticPowerProc
                 + stats.BonusSpellCritMultiplier
 
-                + stats.GLYPH_Shadow
-                + stats.GLYPH_ShadowWordDeath
-                + stats.GLYPH_ShadowWordPain
-                ) > 0;
+                + stats.GLYPH_Shadow + stats.GLYPH_ShadowWordDeath + stats.GLYPH_ShadowWordPain
+            ) > 0;
+
+            bool Maybe = (
+                stats.Stamina + stats.Health + stats.Resilience
+                + stats.ArcaneResistance + stats.ArcaneResistanceBuff
+                + stats.FireResistance + stats.FireResistanceBuff
+                + stats.FrostResistance + stats.FrostResistanceBuff
+                + stats.NatureResistance + stats.NatureResistanceBuff
+                + stats.ShadowResistance + stats.ShadowResistanceBuff
+            ) > 0;
+
+            bool No = (
+                stats.Strength + stats.Agility + stats.AttackPower
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating
+                + stats.Expertise + stats.ExpertiseRating
+                + stats.Dodge + stats.DodgeRating
+                + stats.Parry + stats.ParryRating
+                + stats.Defense + stats.DefenseRating
+            ) > 0;
+
+            return Yes || (Maybe && !No);
         }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
