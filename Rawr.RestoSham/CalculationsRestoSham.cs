@@ -688,6 +688,7 @@ namespace Rawr.RestoSham
                 HasteRating = stats.HasteRating,
                 Mana = stats.Mana,
                 Mp5 = stats.Mp5,
+                Earthliving = stats.Earthliving,
                 #endregion
                 #region Trinkets
                 ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
@@ -713,7 +714,7 @@ namespace Rawr.RestoSham
                 stats.BonusIntellectMultiplier + stats.BonusCritHealMultiplier + stats.BonusManaPotion + stats.ManaRestoreOnCast_5_15 +
                 stats.ManaRestoreFromMaxManaPerSecond + stats.CHHWHealIncrease + stats.WaterShieldIncrease + stats.SpellHaste +
                 stats.BonusIntellectMultiplier + stats.BonusManaMultiplier + stats.ManacostReduceWithin15OnHealingCast + stats.CHCTDecrease +
-                stats.RTCDDecrease) > 0;
+                stats.RTCDDecrease + stats.Earthliving) > 0;
         }
 
         #endregion

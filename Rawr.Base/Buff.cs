@@ -657,7 +657,7 @@ namespace Rawr
                 Group = "Spell Power",
                 Stats = { SpellPower = 144f },
                 Improvements = { 
-					new Buff { Name = "Enhancing Totem", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
+					new Buff { Name = "Enhancing Totems", Stats = { SpellPower = (float)Math.Floor(144f * 0.15f) } }
                 },
             });
             defaultBuffs.Add(new Buff
@@ -1579,7 +1579,7 @@ namespace Rawr
             {
                 Name = "Earthliving Weapon",
                 Group = "Temporary Weapon Enchantment",
-                Stats = { SpellPower = 150 }
+                Stats = { Earthliving = 1 }
             });
             //defaultBuffs.Add(new Buff()
             //{
