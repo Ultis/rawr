@@ -277,7 +277,7 @@ namespace Rawr.Moonkin
         {
             float latency = calcs.Latency;
             dotSpell.CastTime = Math.Max(dotSpell.BaseCastTime / (1 + spellHaste), 1.0f + latency) + latency;
-            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * spellPower) * dotSpell.DotEffect.AllDamageModifier;
+            float damagePerTick = (dotSpell.DotEffect.TickDamage + dotSpell.DotEffect.SpellDamageModifierPerTick * (spellPower + dotSpell.IdolExtraSpellPower)) * dotSpell.DotEffect.AllDamageModifier;
             dotSpell.DotEffect.DamagePerHit = dotSpell.DotEffect.NumberOfTicks * damagePerTick * spellHit;
         }
 
@@ -1328,6 +1328,7 @@ namespace Rawr.Moonkin
             Starfire.IdolExtraSpellPower += stats.StarfireDmg;
             Moonfire.IdolExtraSpellPower += stats.MoonfireDmg;
             Wrath.BaseDamage += stats.WrathDmg;
+            InsectSwarm.IdolExtraSpellPower += stats.InsectSwarmDmg;
 
             float moonfireDDGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? -0.9f : 0.0f;
             float moonfireDotGlyph = (calcOpts.glyph1 == "Moonfire" || calcOpts.glyph2 == "Moonfire" || calcOpts.glyph3 == "Moonfire") ? 0.75f : 0.0f;

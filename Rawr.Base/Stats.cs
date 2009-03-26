@@ -74,6 +74,7 @@ namespace Rawr
         Hp5,
         IdolCritRating,
         InnervateCooldownReduction,
+        InsectSwarmDmg,
         Intellect,
         InterruptProtection,
         JudgementOfCommandAttackPowerBonus,
@@ -2654,6 +2655,16 @@ namespace Rawr
 
         #endregion
         #region Added by Rawr.Moonkin
+
+        // Insect Swarm idol
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Insect Swarm damage bonus")]
+        [Category("Equipment Procs")]
+        public float InsectSwarmDmg
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.InsectSwarmDmg]; }
+            set { _rawAdditiveData[(int)AdditiveStat.InsectSwarmDmg] = value; }
+        }
 
         // Moonfire idol
         [System.ComponentModel.DefaultValueAttribute(0f)]
