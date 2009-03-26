@@ -232,14 +232,14 @@ namespace Rawr.ProtPaladin
             }
         }
 
-        private void groupBoxGlyphs_Enter(object sender, EventArgs e)
+        private void checkBoxGlyphOfSealOfRighteousness_CheckedChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void groupBoxPaladinSkills_Enter(object sender, EventArgs e)
-        {
-
+            if (!_loadingCalculationOptions)
+            {
+                CalculationOptionsProtPaladin calcOpts = Character.CalculationOptions as CalculationOptionsProtPaladin;
+                calcOpts.GlyphSealRighteousness = checkBoxGlyphOfSealOfRighteousness.Checked;
+                Character.OnCalculationsInvalidated();
+            }
         }
 	}
 
@@ -265,6 +265,7 @@ namespace Rawr.ProtPaladin
         public float MitigationScale = 0.125f;
         public int RankingMode = 1;
         public bool GlyphSealVengeance = false;
+        public bool GlyphSealRighteousness = false;
         public bool GlyphJudgement = false;
         public bool GlyphExorcism = false;
         public bool GlyphDivinePlea = false;

@@ -85,7 +85,7 @@ namespace Rawr.ProtPaladin
             }
 
             // White Damage
-            float weaponHits = modelLength / ParryModel.WeaponSpeed; //Lookup.WeaponSpeed(Character, Stats);
+            float weaponHits = modelLength / ParryModel.WeaponSpeed / (1 - (float)Lookup.ReckoningUptime(Character, Stats, DefendTable)); //Lookup.WeaponSpeed(Character, Stats);
             modelThreat += Abilities[Ability.None].Threat * weaponHits;
             modelDamage += Abilities[Ability.None].Damage * weaponHits;
             modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;
@@ -112,7 +112,7 @@ namespace Rawr.ProtPaladin
 					break;
 			}
 
-            if (Options.UseHolyShield)
+            if (Options.UseHolyShield && Character.PaladinTalents.HolyShield != 0)
             {
                 // Holy Shield
                 // TODO: Model Holy Shield Charges

@@ -60,6 +60,7 @@ namespace Rawr.ProtPaladin
             this.labelBossAttackSpeed = new System.Windows.Forms.Label();
             this.trackBarBossAttackSpeed = new System.Windows.Forms.TrackBar();
             this.groupBoxGlyphs = new System.Windows.Forms.GroupBox();
+            this.checkBoxGlyphOfSealOfRighteousness = new System.Windows.Forms.CheckBox();
             this.checkBoxGlyphOfExorcism = new System.Windows.Forms.CheckBox();
             this.checkBoxGlyphOfDivinePlea = new System.Windows.Forms.CheckBox();
             this.checkBoxGlyphOfSealOfVengeance = new System.Windows.Forms.CheckBox();
@@ -151,7 +152,6 @@ namespace Rawr.ProtPaladin
             this.groupBoxPaladinSkills.TabIndex = 4;
             this.groupBoxPaladinSkills.TabStop = false;
             this.groupBoxPaladinSkills.Text = "Seal Choice";
-            this.groupBoxPaladinSkills.Enter += new System.EventHandler(this.groupBoxPaladinSkills_Enter);
             // 
             // radioButtonSoR
             // 
@@ -471,21 +471,31 @@ namespace Rawr.ProtPaladin
             // 
             this.groupBoxGlyphs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfSealOfRighteousness);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfExorcism);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfDivinePlea);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfSealOfVengeance);
             this.groupBoxGlyphs.Controls.Add(this.checkBoxGlyphOfJudgement);
             this.groupBoxGlyphs.Location = new System.Drawing.Point(12, 529);
             this.groupBoxGlyphs.Name = "groupBoxGlyphs";
-            this.groupBoxGlyphs.Size = new System.Drawing.Size(376, 115);
+            this.groupBoxGlyphs.Size = new System.Drawing.Size(376, 153);
             this.groupBoxGlyphs.TabIndex = 6;
             this.groupBoxGlyphs.TabStop = false;
             this.groupBoxGlyphs.Text = "Paladin Glyphs";
-            this.groupBoxGlyphs.Enter += new System.EventHandler(this.groupBoxGlyphs_Enter);
+            // 
+            // checkBoxGlyphOfSealOfRighteousness
+            // 
+            this.checkBoxGlyphOfSealOfRighteousness.Location = new System.Drawing.Point(95, 67);
+            this.checkBoxGlyphOfSealOfRighteousness.Name = "checkBoxGlyphOfSealOfRighteousness";
+            this.checkBoxGlyphOfSealOfRighteousness.Size = new System.Drawing.Size(216, 24);
+            this.checkBoxGlyphOfSealOfRighteousness.TabIndex = 12;
+            this.checkBoxGlyphOfSealOfRighteousness.Text = "Glyph of Seal of Righteousness";
+            this.checkBoxGlyphOfSealOfRighteousness.UseVisualStyleBackColor = true;
+            this.checkBoxGlyphOfSealOfRighteousness.CheckedChanged += new System.EventHandler(this.checkBoxGlyphOfSealOfRighteousness_CheckedChanged);
             // 
             // checkBoxGlyphOfExorcism
             // 
-            this.checkBoxGlyphOfExorcism.Location = new System.Drawing.Point(95, 63);
+            this.checkBoxGlyphOfExorcism.Location = new System.Drawing.Point(95, 91);
             this.checkBoxGlyphOfExorcism.Name = "checkBoxGlyphOfExorcism";
             this.checkBoxGlyphOfExorcism.Size = new System.Drawing.Size(216, 24);
             this.checkBoxGlyphOfExorcism.TabIndex = 11;
@@ -495,7 +505,7 @@ namespace Rawr.ProtPaladin
             // 
             // checkBoxGlyphOfDivinePlea
             // 
-            this.checkBoxGlyphOfDivinePlea.Location = new System.Drawing.Point(95, 85);
+            this.checkBoxGlyphOfDivinePlea.Location = new System.Drawing.Point(95, 115);
             this.checkBoxGlyphOfDivinePlea.Name = "checkBoxGlyphOfDivinePlea";
             this.checkBoxGlyphOfDivinePlea.Size = new System.Drawing.Size(216, 24);
             this.checkBoxGlyphOfDivinePlea.TabIndex = 10;
@@ -505,7 +515,7 @@ namespace Rawr.ProtPaladin
             // 
             // checkBoxGlyphOfSealOfVengeance
             // 
-            this.checkBoxGlyphOfSealOfVengeance.Location = new System.Drawing.Point(95, 41);
+            this.checkBoxGlyphOfSealOfVengeance.Location = new System.Drawing.Point(95, 43);
             this.checkBoxGlyphOfSealOfVengeance.Name = "checkBoxGlyphOfSealOfVengeance";
             this.checkBoxGlyphOfSealOfVengeance.Size = new System.Drawing.Size(216, 24);
             this.checkBoxGlyphOfSealOfVengeance.TabIndex = 9;
@@ -528,7 +538,7 @@ namespace Rawr.ProtPaladin
             this.groupBoxPaladinAbilities.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPaladinAbilities.Controls.Add(this.checkBoxUseHolyShield);
-            this.groupBoxPaladinAbilities.Location = new System.Drawing.Point(12, 650);
+            this.groupBoxPaladinAbilities.Location = new System.Drawing.Point(12, 688);
             this.groupBoxPaladinAbilities.Name = "groupBoxPaladinAbilities";
             this.groupBoxPaladinAbilities.Size = new System.Drawing.Size(376, 50);
             this.groupBoxPaladinAbilities.TabIndex = 8;
@@ -559,7 +569,7 @@ namespace Rawr.ProtPaladin
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxPaladinSkills);
             this.Name = "CalculationOptionsPanelProtPaladin";
-            this.Size = new System.Drawing.Size(403, 718);
+            this.Size = new System.Drawing.Size(403, 771);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTargetArmor)).EndInit();
             this.groupBoxPaladinSkills.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBossAttackValue)).EndInit();
@@ -617,5 +627,6 @@ namespace Rawr.ProtPaladin
         private System.Windows.Forms.CheckBox checkBoxGlyphOfDivinePlea;
         private System.Windows.Forms.GroupBox groupBoxPaladinAbilities;
         private System.Windows.Forms.CheckBox checkBoxUseHolyShield;
+        private System.Windows.Forms.CheckBox checkBoxGlyphOfSealOfRighteousness;
 	}
 }

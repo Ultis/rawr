@@ -100,4 +100,24 @@
     <Class>Shaman</Class>
     <Spec>000000000000000000000000305050330000000000000000000050035031055010501122301251</Spec>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>5/54/12 Prot: Seals of the Pure</Name>
+    <Class>Paladin</Class>
+    <Spec>050000000000000000000000000500513522310231333312321502300002000000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>0/54/17 Prot: 3/5 Conviction, 2/3 Crusade</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000000500513522310231333312321502300302002000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>0/54/17 Prot: 3/5 Conviction, 2/3 Crusade + 2/5 Reckoning</Name>
+    <Class>Paladin</Class>
+    <Spec>000000000000000000000000000500513520312231333312321502300302002000000000000000</Spec>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>5/54/12 Prot: SotP + 2/5 Reckoning</Name>
+    <Class>Paladin</Class>
+    <Spec>050000000000000000000000000500513520312231333312321502300002000000000000000000</Spec>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

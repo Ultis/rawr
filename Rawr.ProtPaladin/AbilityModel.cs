@@ -67,6 +67,10 @@ namespace Rawr.ProtPaladin
                     baseDamage = (Lookup.WeaponSpeed(Character, Stats) * 0.022f * Stats.AttackPower) + 
                                  (Lookup.WeaponSpeed(Character, Stats) * 0.044f * Stats.SpellPower);
                     DamageMultiplier *= (1.0f + 0.03f * Talents.SealsOfThePure);
+                    if (Options.GlyphSealRighteousness)
+                    {
+                        DamageMultiplier *= (1.0f + 0.1f);
+                    }
 					ArmorReduction = 0.0f;
 					break;
 				case Ability.JudgementOfRighteousness:
