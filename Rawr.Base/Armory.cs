@@ -178,7 +178,7 @@ namespace Rawr
 						break;
 					case Character.CharacterClass.Paladin:
 						character.PaladinTalents = new PaladinTalents(talentCode);
-						if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "Tankadin";
+						if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
 						else if (character.PaladinTalents.CrusaderStrike > 0) character.CurrentModel = "Retribution";
 						else character.CurrentModel = "Healadin";
 						break;
