@@ -301,7 +301,7 @@ namespace Rawr.Retribution
 
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
-            float judgeDamage = (calc.WeaponDamage * .26f + .11f * stats.SpellPower + .18f * stats.AttackPower) * aw
+            float judgeDamage = (calc.WeaponDamage * .26f + .18f * stats.SpellPower + .11f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * judgeCrit;
