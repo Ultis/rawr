@@ -741,7 +741,6 @@ namespace Rawr.Mage
         public virtual void Calculate(CastingState castingState)
         {
             this.castingState = castingState;
-            if (AreaEffect) TargetProcs *= castingState.CalculationOptions.AoeTargets;
             Cooldown = BaseCooldown;
 
             CostModifier = 1;
@@ -824,6 +823,7 @@ namespace Rawr.Mage
                     break;
             }
 
+            int playerLevel = castingState.CalculationOptions.PlayerLevel;
             int targetLevel = AreaEffect ? castingState.CalculationOptions.AoeTargetLevel : castingState.CalculationOptions.TargetLevel;
 
             // do not count debuffs for aoe effects, can't assume it will be up on all
@@ -840,7 +840,6 @@ namespace Rawr.Mage
                 }
 
                 float maxHitRate = 1.00f;
-                int playerLevel = castingState.CalculationOptions.PlayerLevel;
                 if (MagicSchool == MagicSchool.Arcane) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit + 0.01f * castingState.MageTalents.ArcaneFocus);
                 if (MagicSchool == MagicSchool.Fire) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit);
                 if (MagicSchool == MagicSchool.Frost) HitRate = Math.Min(maxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + castingState.SpellHit);
@@ -855,7 +854,7 @@ namespace Rawr.Mage
                 if (ClearcastingActive) CritRate += 0.15f * castingState.MageTalents.ArcanePotency;
             }
 
-            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / 350f * 0.75f) - ((targetLevel > castingState.CalculationOptions.PlayerLevel) ? ((targetLevel - castingState.CalculationOptions.PlayerLevel) * 0.02f) : 0f));
+            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - castingState.BaseStats.SpellPenetration / (5 * playerLevel) * 0.75f) - ((targetLevel > castingState.CalculationOptions.PlayerLevel) ? ((targetLevel - castingState.CalculationOptions.PlayerLevel) * 0.02f) : 0f));
         }
 
         public static float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
@@ -874,6 +873,372 @@ namespace Rawr.Mage
 
             if (CritRate < 0.0f) CritRate = 0.0f;
             if (CritRate > 1.0f) CritRate = 1.0f;
+
+            HitProcs = Ticks * HitRate;
+            CritProcs = HitProcs * CritRate;
+            TargetProcs = HitProcs;
+            if (AreaEffect) TargetProcs *= castingState.CalculationOptions.AoeTargets;
+
+            CastingSpeed = castingState.CastingSpeed;
+
+            if (Instant) InterruptProtection = 1;
+            if (castingState.IcyVeins) InterruptProtection = 1;
+            // interrupt factors of more than once per spell are not supported, so put a limit on it (up to twice is probably approximately correct)
+            float InterruptFactor = Math.Min(calculationOptions.InterruptFrequency, 2 * CastingSpeed / BaseCastTime);
+
+            float Haste = castingState.SpellHasteRating;
+            float levelScalingFactor;
+            levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (calculationOptions.PlayerLevel - 70) / 10f));
+
+            float maxPushback = 0.5f * Math.Max(0, 1 - InterruptProtection);
+            if (Channeled) maxPushback = 0.0f;
+            GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+            CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+            CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+            if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+
+            // Quagmirran
+            if (baseStats.SpellHasteFor6SecOnHit_10_45 > 0 && Ticks > 0)
+            {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor6SecOnHit_10_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + castingState.Latency;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
+
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                //discrete model
+                float castsAffected = 0;
+                for (int c = 0; c < Ticks; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / Ticks) / cast) / Ticks;
+                Haste += baseStats.SpellHasteFor6SecOnHit_10_45 * castsAffected * cast / (45f + CastTime / Ticks / 0.1f);
+                //continuous model
+                //Haste += castingState.BasicStats.SpellHasteFor6SecOnHit_10_45 * 6f / (45f + CastTime / HitProcs / 0.1f);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+
+                GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+            }
+
+            // MSD
+            if (baseStats.SpellHasteFor6SecOnCast_15_45 > 0 && CastProcs > 0)
+            {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + baseStats.SpellHasteFor6SecOnCast_15_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + castingState.Latency;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
+
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                float castsAffected = 0;
+                for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((6f - c * CastTime / CastProcs) / cast) / CastProcs;
+                Haste += baseStats.SpellHasteFor6SecOnCast_15_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.15f);
+                //Haste += castingState.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+
+                GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+            }
+
+            // Embrace of the Spider
+            float spellHasteFor10SecOnCast_10_45 = baseStats.SpellHasteFor10SecOnCast_10_45;
+            if (Name == "Arcane Missiles" && !calculationOptions.Mode31) spellHasteFor10SecOnCast_10_45 += baseStats.EggOfMortalEssenceArcaneMissilesProc;
+            if (spellHasteFor10SecOnCast_10_45 > 0 && CastProcs > 0)
+            {
+                // hasted casttime
+                float speed = CastingSpeed / (1 + Haste / 995f * levelScalingFactor) * (1 + (Haste + spellHasteFor10SecOnCast_10_45) / 995f * levelScalingFactor);
+                float gcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / speed);
+                float cast = BaseCastTime / speed + castingState.Latency;
+                cast = cast * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (cast < gcd + castingState.Latency) cast = gcd + castingState.Latency;
+
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                float castsAffected = 0;
+                for (int c = 0; c < CastProcs; c++) castsAffected += (float)Math.Ceiling((10f - c * CastTime / CastProcs) / cast) / CastProcs;
+                Haste += spellHasteFor10SecOnCast_10_45 * castsAffected * cast / (45f + CastTime / CastProcs / 0.1f);
+                //Haste += castingState.BasicStats.SpellHasteFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+
+                GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+            }
+
+            // AToI, first cast after proc is not affected for non-instant
+            if (baseStats.SpellHasteFor5SecOnCrit_50 > 0)
+            {
+                float rawHaste = Haste;
+
+                CastingSpeed /= (1 + Haste / 995f * levelScalingFactor);
+                float proccedSpeed = CastingSpeed * (1 + (rawHaste + baseStats.SpellHasteFor5SecOnCrit_50) / 995f * levelScalingFactor);
+                float proccedGcd = Math.Max(castingState.GlobalCooldownLimit, 1.5f / proccedSpeed);
+                float proccedCastTime = BaseCastTime / proccedSpeed + castingState.Latency;
+                proccedCastTime = proccedCastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (proccedCastTime < proccedGcd + castingState.Latency) proccedCastTime = proccedGcd + castingState.Latency;
+                int chancesToProc = (int)(((int)Math.Floor(5f / proccedCastTime) + 1) * Ticks);
+                if (!Instant) chancesToProc -= 1;
+                chancesToProc *= (int)(TargetProcs / Ticks);
+                Haste = rawHaste + baseStats.SpellHasteFor5SecOnCrit_50 * (1 - (float)Math.Pow(1 - 0.5f * CritRate, chancesToProc));
+                //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
+                CastingSpeed *= (1 + Haste / 995f * levelScalingFactor);
+                GlobalCooldown = Math.Max(castingState.GlobalCooldownLimit, 1.5f / CastingSpeed);
+                CastTime = BaseCastTime / CastingSpeed + castingState.Latency;
+                CastTime = CastTime * (1 + InterruptFactor * maxPushback) - (maxPushback * 0.5f + castingState.Latency) * maxPushback * InterruptFactor;
+                if (CastTime < GlobalCooldown + castingState.Latency) CastTime = GlobalCooldown + castingState.Latency;
+            }
+
+            // channeled pushback
+            if (Channeled && InterruptFactor > 0)
+            {
+                int maxLostTicks = (int)Math.Ceiling(Ticks * 0.25f * Math.Max(0, 1 - InterruptProtection));
+                // pushbacks that happen up to pushbackCastTime cut the cast time to pushbackCastTime
+                // pushbacks that happen after just terminate the channel
+                // [---|---X---|---|---]
+                float tickFactor = 0;
+                for (int i = 0; i < maxLostTicks; i++)
+                {
+                    tickFactor += InterruptFactor * CastTime / Ticks * (i + 1) / Ticks;
+                }
+                tickFactor += InterruptFactor * (Ticks - maxLostTicks) * CastTime / Ticks * maxLostTicks / Ticks;
+                CastTime *= (1 - tickFactor);
+            }
+
+            float spellPower = RawSpellDamage;
+            if (baseStats.SpellPowerFor15SecOnCast_50_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCast_50_45 * 15f / (45f + CastTime / CastProcs / 0.5f);
+            if (baseStats.SpellDamageFor10SecOnHit_5 > 0) spellPower += baseStats.SpellDamageFor10SecOnHit_5 * ProcBuffUp(1 - (float)Math.Pow(0.95, TargetProcs), 10, CastTime);
+            if (baseStats.SpellPowerFor6SecOnCrit > 0) spellPower += baseStats.SpellPowerFor6SecOnCrit * ProcBuffUp(CritProcs / Ticks, 6, CastTime / Ticks);
+            if (baseStats.SpellPowerFor10SecOnHit_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnHit_10_45 * 10f / (45f + CastTime / HitProcs / 0.1f);
+            if (baseStats.SpellPowerFor10SecOnCast_15_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_15_45 * 10f / (45f + CastTime / CastProcs / 0.15f);
+            if (baseStats.SpellPowerFor10SecOnCast_10_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCast_10_45 * 10f / (45f + CastTime / CastProcs / 0.1f);
+            if (baseStats.SpellPowerFor10SecOnResist > 0) spellPower += baseStats.SpellPowerFor10SecOnResist * ProcBuffUp(1 - HitProcs / Ticks, 10, CastTime / Ticks);
+            if (baseStats.SpellPowerFor15SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor15SecOnCrit_20_45 * 15f / (45f + CastTime / CritProcs / 0.2f);
+            if (baseStats.SpellPowerFor10SecOnCrit_20_45 > 0) spellPower += baseStats.SpellPowerFor10SecOnCrit_20_45 * 10f / (45f + CastTime / CritProcs / 0.2f);
+            if (baseStats.ShatteredSunAcumenProc > 0 && calculationOptions.Aldor) spellPower += 120 * 10f / (45f + CastTime / HitProcs / 0.1f);
+
+            if (!ForceMiss)
+            {
+                float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f + spellPower * SpellDamageCoefficient;
+                float critMultiplier = 1 + (CritBonus - 1) * Math.Max(0, CritRate - castingState.ResilienceCritRateReduction);
+                float resistMultiplier = (ForceHit ? 1.0f : HitRate) * PartialResistFactor;
+                int targets = 1;
+                if (AreaEffect) targets = calculationOptions.AoeTargets;
+                AverageDamage = baseAverage * SpellModifier * DirectDamageModifier * targets * (ForceHit ? 1.0f : HitRate);
+                if (AreaEffect && AverageDamage > AoeDamageCap) AverageDamage = AoeDamageCap;
+                AverageDamage = AverageDamage * critMultiplier * PartialResistFactor;
+                if (SpammedDot)
+                {
+                    AverageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier * CastTime / DotDuration;
+                }
+                else
+                {
+                    AverageDamage += targets * (BasePeriodicDamage + DotDamageCoefficient * spellPower) * SpellModifier * DotDamageModifier * resistMultiplier;
+                }
+                DamagePerSecond = AverageDamage / CastTime;
+                ThreatPerSecond = DamagePerSecond * ThreatMultiplier;
+            }
+
+            CostPerSecond = CalculateCost(mageTalents) / CastTime;
+
+            /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
+            float OO5SR = 0;
+            if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))
+            {
+                FSRCalc fsr = new FSRCalc();
+                fsr.AddSpell(CastTime - castingState.Latency, castingState.Latency, Channeled);
+                OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance, Name, casttimeHash);
+            }*/
+
+            if (outOfFiveSecondRule)
+            {
+                OO5SR = 1;
+            }
+
+            /*if (Cost > 0)
+            {
+                OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
+            }*/
+        }
+
+        private float CalculateCost(MageTalents mageTalents)
+        {
+            float cost = (float)Math.Floor(Math.Floor(BaseCost * CostAmplifier) * CostModifier);
+
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) cost += CritRate * cost * 0.01f * mageTalents.Burnout; // last I read Burnout works on final pre MOE cost
+
+            if (!ManualClearcasting || ClearcastingAveraged)
+            {
+                cost *= (1 - 0.02f * mageTalents.ArcaneConcentration);
+            }
+            else if (ClearcastingActive)
+            {
+                cost = 0;
+            }
+
+            // from what I know MOE works on base cost
+            // not tested, but I think if you get MOE proc on a spell while CC is active you still get mana return
+            cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
+            return cost;
+        }
+
+        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
+        {
+            SpellContribution contrib;
+            if (!dict.TryGetValue(Name, out contrib))
+            {
+                contrib = new SpellContribution() { Name = Name };
+                dict[Name] = contrib;
+            }
+            contrib.Hits += HitProcs * duration / CastTime;
+            contrib.Damage += AverageDamage * duration / CastTime;
+        }
+
+        public void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
+        {
+            float contrib;
+            dict.TryGetValue(Name, out contrib);
+            contrib += CostPerSecond * duration;
+            dict[Name] = contrib;
+        }
+    }
+
+    /*public abstract class SpellTemplate
+    {
+        public string Name;
+
+        public bool AffectedByFlameCap;
+        public bool ProvidesSnare;
+        public bool ProvidesScorch;
+        public bool AreaEffect;
+        public bool Channeled;
+        public float Ticks;
+
+        public bool Instant;
+        public int BaseCost;
+        public float BaseCastTime;
+        public float BaseCooldown;
+        public MagicSchool MagicSchool;
+        public float BaseMinDamage;
+        public float BaseMaxDamage;
+        public float BasePeriodicDamage;
+        public float SpellDamageCoefficient;
+        public float DotDamageCoefficient;
+        public float DotDuration;
+        public bool SpammedDot;
+        public float CastProcs;
+
+        public float RealResistance;
+        public float PartialResistFactor;
+
+        public float Cooldown;
+        public float BaseCostAmplifier;
+        public float BaseInterruptProtection;
+
+        public static Dictionary<int, int> BaseMana = new Dictionary<int, int>();
+        static SpellTemplate()
+        {
+            BaseMana[70] = 2241;
+            BaseMana[71] = 2343;
+            BaseMana[72] = 2446;
+            BaseMana[73] = 2549;
+            BaseMana[74] = 2652;
+            BaseMana[75] = 2754;
+            BaseMana[76] = 2857;
+            BaseMana[77] = 2960;
+            BaseMana[78] = 3063;
+            BaseMana[79] = 3166;
+            BaseMana[80] = 3268;
+        }
+
+        protected SpellTemplate() { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, 1, 1, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0, false) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, 0, false) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int range, float castTime, float cooldown, MagicSchool magicSchool, SpellData spellData, float hitProcs, float castProcs, float dotDuration, bool spammedDot) : this(name, channeled, instant, areaEffect, spellData.Cost, range, castTime, cooldown, magicSchool, spellData.MinDamage, spellData.MaxDamage, spellData.PeriodicDamage, hitProcs, castProcs, spellData.SpellDamageCoefficient, spellData.DotDamageCoefficient, dotDuration, spammedDot) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float spellDamageCoefficient) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, spellDamageCoefficient, 0, 0, false) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, 1, 1, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs) : this(name, channeled, instant, areaEffect, cost, range, castTime, cooldown, magicSchool, minDamage, maxDamage, periodicDamage, hitProcs, castProcs, instant ? (1.5f / 3.5f) : (castTime / 3.5f), 0, 0, false) { }
+        public SpellTemplate(string name, bool channeled, bool instant, bool areaEffect, int cost, int range, float castTime, float cooldown, MagicSchool magicSchool, float minDamage, float maxDamage, float periodicDamage, float hitProcs, float castProcs, float spellDamageCoefficient, float dotDamageCoefficient, float dotDuration, bool spammedDot)
+        {
+            Name = name;
+            Channeled = channeled;
+            Instant = instant;
+            AreaEffect = areaEffect;
+            BaseCost = cost;
+            BaseCastTime = castTime;
+            BaseCooldown = cooldown;
+            MagicSchool = magicSchool;
+            BaseMinDamage = minDamage;
+            BaseMaxDamage = maxDamage;
+            BasePeriodicDamage = periodicDamage;
+            SpellDamageCoefficient = spellDamageCoefficient;
+            Ticks = hitProcs;
+            CastProcs = castProcs;
+            DotDamageCoefficient = dotDamageCoefficient;
+            DotDuration = dotDuration;
+            SpammedDot = spammedDot;
+        }
+
+        public virtual void Calculate(Stats baseStats, MageTalents mageTalents, CalculationOptionsMage calculationOptions)
+        {
+            Cooldown = BaseCooldown;
+
+            BaseCostAmplifier = 1;
+            BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ElementalPrecision);
+            if (mageTalents.FrostChanneling > 0) BaseCostAmplifier *= (1.0f - 0.01f - 0.03f * mageTalents.FrostChanneling);
+            if (MagicSchool == MagicSchool.Arcane) BaseCostAmplifier *= (1.0f - 0.01f * mageTalents.ArcaneFocus);
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) AffectedByFlameCap = true;
+            if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) BaseInterruptProtection += 0.35f * mageTalents.BurningSoul;
+            BaseInterruptProtection += baseStats.InterruptProtection;
+
+            int playerLevel = calculationOptions.PlayerLevel;
+            int targetLevel = AreaEffect ? calculationOptions.AoeTargetLevel : calculationOptions.TargetLevel;
+
+            switch (MagicSchool)
+            {
+                case MagicSchool.Arcane:
+                    RealResistance = calculationOptions.ArcaneResist;
+                    break;
+                case MagicSchool.Fire:
+                    RealResistance = calculationOptions.FireResist;
+                    break;
+                case MagicSchool.FrostFire:
+                    RealResistance = Math.Min(calculationOptions.FireResist, calculationOptions.FrostResist);
+                    break;
+                case MagicSchool.Frost:
+                    RealResistance = calculationOptions.FrostResist;
+                    break;
+                case MagicSchool.Nature:
+                    RealResistance = calculationOptions.NatureResist;
+                    break;
+                case MagicSchool.Shadow:
+                    RealResistance = calculationOptions.ShadowResist;
+                    break;
+                case MagicSchool.Holy:
+                    RealResistance = calculationOptions.HolyResist;
+                    break;
+            }
+
+            PartialResistFactor = (RealResistance == 1) ? 0 : (1 - Math.Max(0f, RealResistance - baseStats.SpellPenetration / (5 * playerLevel) * 0.75f) - ((targetLevel > playerLevel) ? ((targetLevel - playerLevel) * 0.02f) : 0f));
+        }
+
+        public static float ProcBuffUp(float procChance, float buffDuration, float triggerInterval)
+        {
+            if (triggerInterval <= 0)
+                return 0;
+            else
+                return 1 - (float)Math.Pow(1 - procChance, buffDuration / triggerInterval);
+        }
+
+        protected void CalculateDerivedStats()
+        {
+            MageTalents mageTalents = castingState.MageTalents;
+            Stats baseStats = castingState.BaseStats;
+            CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
 
             CastingSpeed = castingState.CastingSpeed;
 
@@ -1044,24 +1409,10 @@ namespace Rawr.Mage
             HitProcs = Ticks * HitRate;
             CritProcs = HitProcs * CritRate;
 
-            /*float casttimeHash = castingState.ClearcastingChance * 100 + CastTime;
-            float OO5SR = 0;
-            if (!FSRCalc.TryGetCachedOO5SR(Name, casttimeHash, out OO5SR))
-            {
-                FSRCalc fsr = new FSRCalc();
-                fsr.AddSpell(CastTime - castingState.Latency, castingState.Latency, Channeled);
-                OO5SR = fsr.CalculateOO5SR(castingState.ClearcastingChance, Name, casttimeHash);
-            }*/
-
             if (outOfFiveSecondRule)
             {
                 OO5SR = 1;
             }
-
-            /*if (Cost > 0)
-            {
-                OO5SR = FSRCalc.CalculateSimpleOO5SR(castingState.ClearcastingChance, CastTime - castingState.Latency, castingState.Latency, Channeled);
-            }*/
         }
 
         private float CalculateCost(MageTalents mageTalents)
@@ -1084,27 +1435,7 @@ namespace Rawr.Mage
             cost -= CritRate * BaseCost * 0.1f * mageTalents.MasterOfElements;
             return cost;
         }
-
-        public void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration)
-        {
-            SpellContribution contrib;
-            if (!dict.TryGetValue(Name, out contrib))
-            {
-                contrib = new SpellContribution() { Name = Name };
-                dict[Name] = contrib;
-            }
-            contrib.Hits += HitProcs * duration / CastTime;
-            contrib.Damage += AverageDamage * duration / CastTime;
-        }
-
-        public void AddManaUsageContribution(Dictionary<string, float> dict, float duration)
-        {
-            float contrib;
-            dict.TryGetValue(Name, out contrib);
-            contrib += CostPerSecond * duration;
-            dict[Name] = contrib;
-        }
-    }
+    }*/
 
     #region Base Spells
     public class Waterbolt : Spell
