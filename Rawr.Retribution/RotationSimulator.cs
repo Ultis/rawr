@@ -14,7 +14,7 @@ namespace Rawr.Retribution
 
             RotationSolution sol = new RotationSolution();
             float currentTime = 0;
-            sol.FightLength = 1000;
+            sol.FightLength = 10000;
 
             int judgeCD = rot.T7_4pc ? 7 : 8;
             float judgeFirst = -1;

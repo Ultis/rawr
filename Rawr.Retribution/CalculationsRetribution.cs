@@ -301,7 +301,7 @@ namespace Rawr.Retribution
 
             #region Judgement
             float judgeCrit = stats.PhysicalCrit + .06f * talents.Fanaticism;
-            float judgeDamage = (calc.WeaponDamage * .36f + .25f * stats.SpellPower + .16f * stats.AttackPower) * aw
+            float judgeDamage = (calc.WeaponDamage * .26f + .11f * stats.SpellPower + .18f * stats.AttackPower) * aw
                 * spellPowerMulti * talentMulti * partialResist * aow * (calcOpts.GlyphJudgement ? 1.1f : 1f);
             float judgeAvgHit = judgeDamage * (1f + judgeCrit * critBonus - judgeCrit - calc.ToMiss);
             float judgeRightVen = judgeDamage * critBonus * rightVen * judgeCrit;
@@ -329,7 +329,7 @@ namespace Rawr.Retribution
             #endregion
 
             #region Seal
-            float sealDamage = calc.WeaponDamage * .27f * spellPowerMulti * talentMulti * partialResist * aw;
+            float sealDamage = calc.WeaponDamage * .48f * spellPowerMulti * talentMulti * partialResist * aw;
             float sealAvgHit = sealDamage * (1f + stats.PhysicalCrit * critBonus - stats.PhysicalCrit - calc.ToMiss - calc.ToDodge);
             float sealProcs = (unlimited.FightLength / calc.AttackSpeed + unlimited.CrusaderStrike + unlimited.DivineStorm) * (1f - calc.ToMiss - calc.ToDodge);
             calc.SealDPS = sealAvgHit * sealProcs * (1f - calc.ToMiss - calc.ToDodge) / unlimited.FightLength;
@@ -351,19 +351,14 @@ namespace Rawr.Retribution
                 float exoMana = baseMana * -.08f * benediction;
                 float consMana = baseMana * -.22f * benediction;
 
-                float unlimitedUsage = csMana / unlimited.CrusaderStrikeCD + judgeMana / unlimited.JudgementCD + dsMana / unlimited.DivineStormCD +
-                    howMana / unlimited.HammerOfWrathCD + exoMana / unlimited.ExorcismCD + consMana / unlimited.ConsecrationCD;
+                float unlimitedUsage = (judgeMana * unlimited.Judgement + csMana * unlimited.CrusaderStrike + dsMana * unlimited.DivineStorm +
+                    exoMana * unlimited.Exorcism + consMana * unlimited.Consecration + howMana * unlimited.HammerOfWrath) / unlimited.FightLength;
 
                 float limitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * limited.Judgement +
                     (csAvgHit + csRightVen) * limited.CrusaderStrike + (dsAvgHit + dsRightVen) * limited.DivineStorm + exoAvgHit * limited.Exorcism +
                     consAvgHit * limited.Consecration + howAvgHit * limited.HammerOfWrath) / limited.FightLength;
-                float limitedUsage = csMana / limited.CrusaderStrikeCD + judgeMana / limited.JudgementCD + dsMana / limited.DivineStormCD +
-                    howMana / limited.HammerOfWrathCD + exoMana / limited.ExorcismCD + consMana / limited.ConsecrationCD;
-                //float limitedDps = calc.WhiteDPS + calc.SealDPS + ((judgeAvgHit + judgeRightVen) * unlimited.Judgement +
-                //    csAvgHit * unlimited.CrusaderStrike + (dsAvgHit + dsRightVen) * unlimited.DivineStorm +
-                //    howAvgHit * unlimited.HammerOfWrath) / unlimited.FightLength;
-                //float limitedUsage = csMana / unlimited.CrusaderStrikeCD + judgeMana / unlimited.JudgementCD + dsMana / unlimited.DivineStormCD +
-                //    howMana / unlimited.HammerOfWrathCD;
+                float limitedUsage = (judgeMana * limited.Judgement + csMana * limited.CrusaderStrike + dsMana * limited.DivineStorm +
+                    exoMana * limited.Exorcism + consMana * limited.Consecration + howMana * limited.HammerOfWrath) / limited.FightLength;
 
                 float divinePleas = (float)Math.Ceiling((fightLength - 30) / 60);
                 float jowProcs = fightLength * (1 / calc.AttackSpeed + 1 / unlimited.CrusaderStrikeCD + 1 / unlimited.DivineStormCD +
@@ -466,7 +461,7 @@ namespace Rawr.Retribution
             float greatnessStr = stats.GreatnessProc * ((float)Math.Floor(fightLength / 50f) * 15f + (float)Math.Min(fightLength % 50f, 15f)) / fightLength;
             stats.Strength = (stats.Strength + greatnessStr) * (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
             stats.Intellect = stats.Intellect * (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .03f);
-            float libramAP = stats.APCrusaderStrike_6;// *6f * sol.CrusaderStrike / fightLength;
+            float libramAP = stats.APCrusaderStrike_6 * (float)Math.Min(1f, 6f * sol.CrusaderStrike / sol.FightLength);
             stats.AttackPower = (stats.AttackPower + berserkingAP + libramAP + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
             stats.Agility = stats.Agility * (1 + stats.BonusAgilityMultiplier);
             stats.Stamina = stats.Stamina * (1 + stats.BonusStaminaMultiplier) * (1f + talents.SacredDuty * .04f) * (1f + talents.CombatExpertise * .02f);
@@ -479,8 +474,8 @@ namespace Rawr.Retribution
             // Haste trinket (Meteorite Whetstone)
             stats.HasteRating += stats.HasteRatingOnPhysicalAttack * 10 / 45;
 
-            float libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / fightLength
-                + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / fightLength;
+            float libramCrit = stats.CritJudgement_5 * 5f * sol.Judgement / sol.FightLength
+                + stats.CritDivineStorm_8 * 8f * sol.DivineStorm / sol.FightLength;
             float talentCrit = talents.CombatExpertise * .02f + talents.Conviction * .01f + talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit = stats.PhysicalCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Agility / 5208.333333f + talentCrit;
             stats.SpellCrit = stats.SpellCrit + (stats.CritRating + libramCrit) / 4590.598679f + stats.Intellect / 16666.66709f + talentCrit;
