@@ -114,6 +114,7 @@
       <DependentUpon>ExtendedToolTipLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Enchant.cs" />
+    <Compile Include="Exports.cs" />
     <Compile Include="GemmingTemplate.cs">
       <SubType>Code</SubType>
     </Compile>

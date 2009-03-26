@@ -1786,5 +1786,24 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
             FormUpgradeComparison.Instance.BringToFront();
         }
 
-	}
+        #region Exports section
+        private void viewUpgradesOnWowheadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+                Help.ShowHelp(null, Wowhead.getWowheadWeightedReportURL(_character));
+        }
+
+        private void copyPAWNStringToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+                Exports.copyPawnString(_character);
+        }
+
+        private void viewUpgradesOnLootRankToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!_loadingCharacter && _character != null)
+                Help.ShowHelp(null, Exports.getLootRankURL(_character));
+        }
+        #endregion
+    }
 }

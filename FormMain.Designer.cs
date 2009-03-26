@@ -134,13 +134,13 @@ namespace Rawr
             this.optimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.batchToolsToolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.upgradeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyCharacterStatsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadInvetoryFromCharacterProfilerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.loadPossibleUpgradesFromArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPossibleUpgradesFromWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.usePTRDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateItemCacheArmoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateItemCacheWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -156,6 +156,11 @@ namespace Rawr
             this.batchToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.itemFilteringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTipMain = new System.Windows.Forms.ToolTip(this.components);
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewUpgradesOnWowheadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPAWNStringToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewUpgradesOnLootRankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculationDisplay1 = new Rawr.CalculationDisplay();
             this.talentPicker1 = new Rawr.TalentPicker();
             this.buffSelector1 = new Rawr.BuffSelector();
@@ -181,7 +186,6 @@ namespace Rawr
             this.itemButtonMainHand = new Rawr.ItemButtonWithEnchant();
             this.itemButtonWrist = new Rawr.ItemButtonWithEnchant();
             this.itemComparison1 = new Rawr.ItemComparison();
-            this.usePTRDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
@@ -1059,6 +1063,7 @@ namespace Rawr
             this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
+            this.exportToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
@@ -1171,7 +1176,6 @@ namespace Rawr
             this.optimizeToolStripMenuItem,
             this.batchToolsToolStripMenuItem6,
             this.upgradeListToolStripMenuItem,
-            this.copyCharacterStatsToClipboardToolStripMenuItem,
             this.toolStripSeparator11,
             this.reloadCurrentCharacterFromArmoryToolStripMenuItem,
             this.reloadInvetoryFromCharacterProfilerToolStripMenuItem,
@@ -1235,13 +1239,6 @@ namespace Rawr
             this.upgradeListToolStripMenuItem.Text = "Upgrade List...";
             this.upgradeListToolStripMenuItem.Click += new System.EventHandler(this.upgradeListToolStripMenuItem_Click);
             // 
-            // copyCharacterStatsToClipboardToolStripMenuItem
-            // 
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Name = "copyCharacterStatsToClipboardToolStripMenuItem";
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Text = "Copy Character Stats to Clipboard";
-            this.copyCharacterStatsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyCharacterStatsToClipboardToolStripMenuItem_Click);
-            // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
@@ -1281,6 +1278,13 @@ namespace Rawr
             this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Size = new System.Drawing.Size(322, 22);
             this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Text = "Load Possible Upgrades From Wowhead";
             this.loadPossibleUpgradesFromWowheadToolStripMenuItem.Click += new System.EventHandler(this.loadPossibleUpgradesFromWowheadToolStripMenuItem_Click);
+            // 
+            // usePTRDataToolStripMenuItem
+            // 
+            this.usePTRDataToolStripMenuItem.CheckOnClick = true;
+            this.usePTRDataToolStripMenuItem.Name = "usePTRDataToolStripMenuItem";
+            this.usePTRDataToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.usePTRDataToolStripMenuItem.Text = "Use PTR Data";
             // 
             // updateItemCacheArmoryToolStripMenuItem
             // 
@@ -1384,6 +1388,44 @@ namespace Rawr
             this.itemFilteringToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.itemFilteringToolStripMenuItem.Text = "  Item Filtering";
             this.itemFilteringToolStripMenuItem.Click += new System.EventHandler(this.itemFilteringToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.copyPAWNStringToClipboardToolStripMenuItem,
+            this.viewUpgradesOnWowheadToolStripMenuItem,
+            this.viewUpgradesOnLootRankToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(271, 22);
+            this.toolStripMenuItem1.Text = "Copy Character Stats to Clipboard";
+            // 
+            // viewUpgradesOnWowheadToolStripMenuItem
+            // 
+            this.viewUpgradesOnWowheadToolStripMenuItem.Name = "viewUpgradesOnWowheadToolStripMenuItem";
+            this.viewUpgradesOnWowheadToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.viewUpgradesOnWowheadToolStripMenuItem.Text = "View Weighted Upgrades on Wowhead";
+            this.viewUpgradesOnWowheadToolStripMenuItem.Click += new System.EventHandler(this.viewUpgradesOnWowheadToolStripMenuItem_Click);
+            // 
+            // copyPAWNStringToClipboardToolStripMenuItem
+            // 
+            this.copyPAWNStringToClipboardToolStripMenuItem.Name = "copyPAWNStringToClipboardToolStripMenuItem";
+            this.copyPAWNStringToClipboardToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.copyPAWNStringToClipboardToolStripMenuItem.Text = "Copy PAWN string to  Clipboard";
+            this.copyPAWNStringToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyPAWNStringToClipboardToolStripMenuItem_Click);
+            // 
+            // viewUpgradesOnLootRankToolStripMenuItem
+            // 
+            this.viewUpgradesOnLootRankToolStripMenuItem.Name = "viewUpgradesOnLootRankToolStripMenuItem";
+            this.viewUpgradesOnLootRankToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.viewUpgradesOnLootRankToolStripMenuItem.Text = "View Weighted Upgrades on LootRank";
+            this.viewUpgradesOnLootRankToolStripMenuItem.Click += new System.EventHandler(this.viewUpgradesOnLootRankToolStripMenuItem_Click);
             // 
             // calculationDisplay1
             // 
@@ -1734,13 +1776,6 @@ namespace Rawr
             this.itemComparison1.Sort = Rawr.ComparisonGraph.ComparisonSort.Overall;
             this.itemComparison1.TabIndex = 3;
             // 
-            // usePTRDataToolStripMenuItem
-            // 
-            this.usePTRDataToolStripMenuItem.CheckOnClick = true;
-            this.usePTRDataToolStripMenuItem.Name = "usePTRDataToolStripMenuItem";
-            this.usePTRDataToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.usePTRDataToolStripMenuItem.Text = "Use PTR Data";
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1817,7 +1852,6 @@ namespace Rawr
 		private ItemComparison itemComparison1;
 		private System.Windows.Forms.ToolStripMenuItem loadFromArmoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadFromCharacterProfilerToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem copyCharacterStatsToClipboardToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStripItemComparison;
 		private System.Windows.Forms.ToolStripLabel toolStripLabel1;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonSlot;
@@ -1931,6 +1965,11 @@ namespace Rawr
         private System.Windows.Forms.ToolStripMenuItem upgradeListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadPossibleUpgradesFromWowheadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usePTRDataToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem copyPAWNStringToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewUpgradesOnWowheadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewUpgradesOnLootRankToolStripMenuItem;
         
     }
 }
