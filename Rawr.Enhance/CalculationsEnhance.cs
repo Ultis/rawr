@@ -421,7 +421,7 @@ namespace Rawr
 
             float meleeCritModifier = stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(stats.CritMeleeRating + stats.CritRating) + StatConversion.GetCritFromAgility(stats.Agility, character.Class) + .01f * TS;
-            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .000001f); //fudge factor for rounding
+            float chanceCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseMeleeCrit + meleeCritModifier) + .00005f); //fudge factor for rounding
             float chanceDodge = Math.Max(0f, 0.065f - expertiseBonus);
             float chanceWhiteMiss = Math.Max(0f, 0.28f - hitBonus - .02f * DWS) + chanceDodge;
             float chanceYellowMiss = Math.Max(0f, 0.08f - hitBonus - .02f * DWS) + chanceDodge; // base miss 8% now
@@ -429,7 +429,7 @@ namespace Rawr
             float hitBonusSpell = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating);
             float chanceSpellMiss = Math.Max(0f, .17f - hitBonusSpell);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(stats.SpellCritRating + stats.CritRating) + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + .01f * TS;
-            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .000001f); //fudge factor for rounding
+            float chanceSpellCrit = Math.Min(0.75f, (1 + stats.BonusCritChance) * (baseSpellCrit + spellCritModifier) + .00005f); //fudge factor for rounding
             float spellDamage = stats.SpellPower * (1 + stats.BonusSpellPowerMultiplier);
             float bonusSpellDamage = stats.BonusDamageMultiplier;
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier) - 1f;
@@ -725,8 +725,8 @@ namespace Rawr
             {
                 Mana = 4116f,
                 AttackPower = 140f,
-//                SpellCritRating = 101f,
-//                CritMeleeRating = 134f
+                SpellCrit = 0.0220f, 
+                PhysicalCrit = 0.0292f
             };
 
             switch (character.Race)
