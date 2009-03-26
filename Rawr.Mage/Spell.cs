@@ -1585,7 +1585,7 @@ namespace Rawr.Mage
             CritRate += 0.02f * castingState.MageTalents.Incineration;
             if (castingState.CalculationOptions.Mode31)
             {
-                CritRate += 0.03f * castingState.MageTalents.ImprovedScorch;
+                CritRate += 0.01f * castingState.MageTalents.ImprovedScorch;
             }
             SpellModifier *= (1 + 0.02f * castingState.MageTalents.SpellImpact + 0.02f * castingState.MageTalents.FirePower) / (1 + 0.02f * castingState.MageTalents.FirePower);
             CalculateDerivedStats(castingState, false);
@@ -1747,6 +1747,10 @@ namespace Rawr.Mage
             {
                 DirectDamageModifier *= 1.05f;
             }
+            if (castingState.CalculationOptions.Mode31)
+            {
+                CritRate += 0.01f * castingState.MageTalents.WintersChill;
+            }
             BaseCastTime -= 0.1f * castingState.MageTalents.ImprovedFrostbolt;
             CritRate += 0.02f * castingState.MageTalents.EmpoweredFrostbolt;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
@@ -1803,6 +1807,10 @@ namespace Rawr.Mage
                 BasePeriodicDamage = 0.0f;
                 CritRate += 0.05f;
             }
+            if (castingState.CalculationOptions.Mode31)
+            {
+                CritRate += 0.01f * castingState.MageTalents.ImprovedScorch;
+            }
             SpammedDot = true;
             DotDuration = 8;
             InterruptProtection += castingState.BaseStats.AldorRegaliaInterruptProtection;
@@ -1852,6 +1860,10 @@ namespace Rawr.Mage
             {
                 CritRate += 0.02f;
                 DirectDamageModifier *= 1.02f;
+            }
+            if (castingState.CalculationOptions.Mode31)
+            {
+                CritRate += 0.01f * castingState.MageTalents.ImprovedScorch;
             }
             SpellModifier *= (1 + 0.04f * castingState.MageTalents.TormentTheWeak * castingState.SnaredTime) * (1 + 0.01f * castingState.MageTalents.ChilledToTheBone);
             SpellDamageCoefficient += 0.05f * castingState.MageTalents.EmpoweredFire;
@@ -1939,8 +1951,7 @@ namespace Rawr.Mage
             DirectDamageModifier *= (1 + 0.02f * castingState.MageTalents.FirePower);
             if (castingState.CalculationOptions.GlyphOfLivingBomb)
             {
-                float critBonus = (1 + (1.5f * (1 + castingState.BaseStats.BonusSpellCritMultiplier) - 1) * (1 + castingState.BaseStats.CritBonusDamage));
-                DotDamageModifier = (1 + (castingState.SpellCrit + 0.02f * castingState.MageTalents.CriticalMass) * (critBonus - 1));
+                DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, CritRate)) * (castingState.FireCritBonus - 1));
             }
             CalculateDerivedStats(castingState, false);
         }
