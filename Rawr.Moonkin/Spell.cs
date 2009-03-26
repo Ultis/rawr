@@ -579,6 +579,16 @@ namespace Rawr.Moonkin
             DotTicks = moonfireTicks + insectSwarmTicks;
             InsectSwarmTicks = insectSwarmTicks;
             CastCount = expectedCastsToProc + (eclipseTime / eclipseCast.CastTime) + (postEclipseTime / postEclipseCast.CastTime);
+            if (calcOpts.LunarEclipse)
+            {
+                StarfireCount = (eclipseTime / eclipseCast.CastTime) + (postEclipseCast.Name == "SF" ? postEclipseTime / postEclipseCast.CastTime : 0.0f);
+                WrathCount = (preEclipseTime / preEclipseCast.CastTime) + (postEclipseCast.Name == "W" ? postEclipseTime / postEclipseCast.CastTime : 0.0f);
+            }
+            else
+            {
+                WrathCount = (eclipseTime / eclipseCast.CastTime) + (postEclipseCast.Name == "W" ? postEclipseTime / postEclipseCast.CastTime : 0.0f);
+                StarfireCount = (preEclipseTime / preEclipseCast.CastTime) + (postEclipseCast.Name == "SF" ? postEclipseTime / postEclipseCast.CastTime : 0.0f);
+            }
             ManaUsed = preEclipseManaUsed + eclipseManaUsed + postEclipseManaUsed + moonfireManaUsed + insectSwarmManaUsed;
             ManaGained = preEclipseManaGained + eclipseManaGained + postEclipseManaGained;
 
