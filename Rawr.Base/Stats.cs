@@ -259,6 +259,7 @@ namespace Rawr
         LHWManaReduction,
         RTCDDecrease,
         CHCTDecrease,
+        Earthliving,
         #endregion
         #region Rawr.Healadin
         FlashOfLightSpellPower,
@@ -2614,6 +2615,13 @@ namespace Rawr
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CHCTDecrease]; }
             set { _rawAdditiveData[(int)AdditiveStat.CHCTDecrease] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName(" Instances of Earthliving Weapon active")]
+        public float Earthliving
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Earthliving]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Earthliving] = value; }
         }
         #endregion
         #region Added by Rawr.ProtPaladin
