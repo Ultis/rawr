@@ -326,7 +326,7 @@ namespace Rawr.Moonkin
 
             calcs.SpellCrit = stats.CritRating * critRatingMultiplier + stats.SpellCrit;
             calcs.SpellHit = stats.HitRating * hitRatingMultiplier + stats.SpellHit;
-            calcs.SpellHaste = (stats.HasteRating + stats.DrumsOfBattle) * hasteRatingMultiplier + stats.SpellHaste + stats.Bloodlust;
+            calcs.SpellHaste = (1 + (stats.HasteRating + stats.DrumsOfBattle) * hasteRatingMultiplier) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
 
             stats.SpellPower += stats.DrumsOfWar / 2.0f;
 
