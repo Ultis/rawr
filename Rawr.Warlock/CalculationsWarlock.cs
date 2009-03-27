@@ -134,13 +134,12 @@ namespace Rawr.Warlock
                     "Basic Stats:Spell Power",
                     "Basic Stats:Regen",
                     "Basic Stats:Crit",
-                    "Basic Stats:Hit",
+                    "Basic Stats:Miss Chance",
                     "Basic Stats:Haste",
                     "Shadow:Shadow Bolt",
                     "Shadow:Curse of Agony",
                     "Shadow:Curse of Doom",
                     "Shadow:Corruption",
-                    //"Shadow:Siphon Life",
                     "Shadow:Unstable Affliction",
                     "Shadow:Death Coil",
                     "Shadow:Drain Life",
@@ -184,7 +183,7 @@ namespace Rawr.Warlock
             get
 	    {
                 if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {"Hit",};
+                    _optimizableCalculationLabels = new string[] {"Miss chance",};
                 return _optimizableCalculationLabels;
             }
 	}
@@ -263,14 +262,17 @@ namespace Rawr.Warlock
                         comparison.Equipped = false;
                         comparisonList.Add(comparison);
                     }
-                    comparison = CreateNewComparisonCalculation();
-                    comparison.Name = dpssolver.CalculationOptions.Pet;
-                    comparison.SubPoints[0] = dpssolver.PetDPS;
-                    _currentChartTotal += comparison.SubPoints[0];
-                    comparison.OverallPoints = comparison.SubPoints[0];
-                    comparison.Equipped = false;
-                    comparisonList.Add(comparison);
-                    if (_currentChartTotal < dpssolver.TotalDPS)
+                    if (dpssolver.CalculationOptions.Pet != "None")
+                    {
+                        comparison = CreateNewComparisonCalculation();
+                        comparison.Name = dpssolver.CalculationOptions.Pet;
+                        comparison.SubPoints[0] = dpssolver.PetDPS;
+                        _currentChartTotal += comparison.SubPoints[0];
+                        comparison.OverallPoints = comparison.SubPoints[0];
+                        comparison.Equipped = false;
+                        comparisonList.Add(comparison);
+                    }
+                    if (dpssolver.TotalDPS - _currentChartTotal > 1)
                     {
                         comparison = CreateNewComparisonCalculation();
                         comparison.Name = "Other";
@@ -313,8 +315,9 @@ namespace Rawr.Warlock
                             comparison = CreateNewComparisonCalculation();
                             comparison.Name = GlyphListFriendly[index];
                             comparison.Equipped = true;
-                            comparison.SubPoints[0] = (glyphcalcs.OverallPoints - calc.OverallPoints);
-                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparison.SubPoints[0] = (glyphcalcs.DpsPoints - calc.DpsPoints);
+                            comparison.SubPoints[1] = (glyphcalcs.PetDPSPoints - calc.PetDPSPoints);
+                            comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
                             comparisonList.Add(comparison);
                         }
                         else
@@ -325,8 +328,9 @@ namespace Rawr.Warlock
                             comparison = CreateNewComparisonCalculation();
                             comparison.Name = GlyphListFriendly[index];
                             comparison.Equipped = false;
-                            comparison.SubPoints[0] = (calc.OverallPoints - glyphcalcs.OverallPoints);
-                            comparison.OverallPoints = comparison.SubPoints[0];
+                            comparison.SubPoints[0] = (calc.DpsPoints - glyphcalcs.DpsPoints);
+                            comparison.SubPoints[1] = (calc.PetDPSPoints - glyphcalcs.PetDPSPoints);
+                            comparison.OverallPoints = comparison.SubPoints[0] + comparison.SubPoints[1];
                             comparisonList.Add(comparison);
                         }
                         calcOpts.SetGlyphByName(glyph, glyphEnabled);

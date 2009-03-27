@@ -876,20 +876,20 @@ namespace Rawr.Warlock
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f)
-                      * (1 + stats.Warlock2T8);
+                      * (1 + stats.Warlock2T8 / 2);
 
             MaxDamage = (BaseMaxDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DirDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f)
-                      * (1 + stats.Warlock2T8);
+                      * (1 + stats.Warlock2T8 / 2);
 
             DotDamage = (BaseDotDamage + (stats.SpellPower + stats.SpellFireDamageRating) * DotDamageCoef)
                       * (1 + character.WarlockTalents.Emberstorm * 0.02f)
                       * (1 + character.WarlockTalents.Malediction * 0.01f + character.WarlockTalents.FireAndBrimstone * 0.03f)
                       * (1 + character.WarlockTalents.Aftermath * 0.02f)
                       * (1 + character.WarlockTalents.ImprovedImmolate * 0.1f)
-                      * (1 + stats.Warlock2T8);
+                      * (1 + stats.Warlock2T8 / 2);
 
             CritCoef = (BaseCritCoef * (1f + stats.BonusSpellCritMultiplier) - 1f) * (1f + character.WarlockTalents.Ruin * 0.2f) + 1f;
 
@@ -1077,7 +1077,7 @@ namespace Rawr.Warlock
     public class ChaosBolt : Spell
     {
         static readonly List<SpellData> SpellRankTable = new List<SpellData>() {
-            new SpellData(4, 80, 1036, 1314, 0)
+            new SpellData(4, 80, 1429, 1813, 0)
         };
 
         public ChaosBolt(Stats stats, Character character)
@@ -1244,7 +1244,6 @@ namespace Rawr.Warlock
 
             MaxDamage = BaseMaxDamage;
 
-            CritCoef += 0;
             CritChance = stats.SpellCrit;
 
             Range = (int)Math.Round(BaseRange * (1 /*+ character.PriestTalents.ShadowReach * 0.1f)*/));

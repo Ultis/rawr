@@ -2887,7 +2887,7 @@ namespace Rawr
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
-        [DisplayName("% damage on Unstable Affliction and Immolate")]
+        [DisplayName("% damage bonus on Unstable Affliction and 10% on Immolate")]
         [Category("Equipment Procs")]
         public float Warlock2T8
         {

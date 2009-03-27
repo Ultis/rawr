@@ -53,6 +53,7 @@ namespace Rawr.Warlock
             cbPet.SelectedItem = calcOpts.Pet;
 
             chbUseInfernal.Checked = calcOpts.UseInfernal;
+            chbImmoAura.Checked = calcOpts.UseImmoAura;
             chbGlyphChaosBolt.Checked = calcOpts.GlyphChaosBolt;
             chbGlyphConflag.Checked = calcOpts.GlyphConflag;
             chbGlyphCorruption.Checked = calcOpts.GlyphCorruption;
@@ -67,7 +68,6 @@ namespace Rawr.Warlock
             chbGlyphSearingPain.Checked = calcOpts.GlyphSearingPain;
             chbGlyphSB.Checked = calcOpts.GlyphSB;
             chbGlyphShadowburn.Checked = calcOpts.GlyphShadowburn;
-            chbGlyphSiphonLife.Checked = calcOpts.GlyphSiphonLife;
             chbGlyphUA.Checked = calcOpts.GlyphUA;
 
             loading = false;
@@ -82,7 +82,7 @@ namespace Rawr.Warlock
                 Character.OnCalculationsInvalidated();
             }
         }
-               
+
         private void bChangePriority_Click(object sender, EventArgs e)
         {
             CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
@@ -269,16 +269,6 @@ namespace Rawr.Warlock
             }
         }
 
-        private void chbGlyphSiphonLife_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!loading)
-            {
-                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
-                calcOpts.GlyphSiphonLife = chbGlyphSiphonLife.Checked;
-                Character.OnCalculationsInvalidated();
-            }
-        }
-
         private void chbGlyphUA_CheckedChanged(object sender, EventArgs e)
         {
             if (!loading)
@@ -348,6 +338,16 @@ namespace Rawr.Warlock
                 Character.OnCalculationsInvalidated();
             }
         }
+
+        private void chbImmoAura_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!loading)
+            {
+                CalculationOptionsWarlock calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+                calcOpts.UseImmoAura = chbImmoAura.Checked;
+                Character.OnCalculationsInvalidated();
+            }
+        }
     }
     [Serializable]
 	public class CalculationOptionsWarlock : ICalculationOptionBase
@@ -372,9 +372,9 @@ namespace Rawr.Warlock
         public float Replenishment { get; set; }
         public float JoW { get; set; }
         public float LTUsePercent { get; set; }
-        public float Survivability { get; set; }
         public String Pet { get; set; }
         public bool UseInfernal { get; set; }
+        public bool UseImmoAura { get; set; }
         public bool GlyphChaosBolt { get; set; }
         public bool GlyphConflag { get; set; }
         public bool GlyphCorruption { get; set; }
@@ -409,7 +409,7 @@ namespace Rawr.Warlock
             Delay = 100f;
             Replenishment = 100f;
             JoW = 100f;
-            Survivability = 2f;
+            Pet = "None";
 
             SpellPriority = null;
             ManaPot = 4;

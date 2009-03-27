@@ -2,7 +2,7 @@
 {
     partial class CalculationOptionsPanelWarlock
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
@@ -39,6 +39,22 @@
             this.chbUseInfernal = new System.Windows.Forms.CheckBox();
             this.tbAffEffects = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.chbGlyphMetamorphosis = new System.Windows.Forms.CheckBox();
+            this.chbGlyphChaosBolt = new System.Windows.Forms.CheckBox();
+            this.chbGlyphLifeTap = new System.Windows.Forms.CheckBox();
+            this.chbGlyphHaunt = new System.Windows.Forms.CheckBox();
+            this.chbGlyphIncinerate = new System.Windows.Forms.CheckBox();
+            this.chbGlyphCorruption = new System.Windows.Forms.CheckBox();
+            this.chbGlyphSearingPain = new System.Windows.Forms.CheckBox();
+            this.chbGlyphShadowburn = new System.Windows.Forms.CheckBox();
+            this.chbGlyphSB = new System.Windows.Forms.CheckBox();
+            this.chbGlyphUA = new System.Windows.Forms.CheckBox();
+            this.chbGlyphImp = new System.Windows.Forms.CheckBox();
+            this.chbGlyphImmolate = new System.Windows.Forms.CheckBox();
+            this.chbGlyphFelguard = new System.Windows.Forms.CheckBox();
+            this.chbGlyphCoA = new System.Windows.Forms.CheckBox();
+            this.chbGlyphConflag = new System.Windows.Forms.CheckBox();
+            this.chbImmoAura = new System.Windows.Forms.CheckBox();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabFight = new System.Windows.Forms.TabPage();
             this.lblDelay = new System.Windows.Forms.Label();
@@ -58,22 +74,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cbPet = new System.Windows.Forms.ComboBox();
             this.tabGlyphs = new System.Windows.Forms.TabPage();
-            this.chbGlyphMetamorphosis = new System.Windows.Forms.CheckBox();
-            this.chbGlyphChaosBolt = new System.Windows.Forms.CheckBox();
-            this.chbGlyphLifeTap = new System.Windows.Forms.CheckBox();
-            this.chbGlyphHaunt = new System.Windows.Forms.CheckBox();
-            this.chbGlyphIncinerate = new System.Windows.Forms.CheckBox();
-            this.chbGlyphCorruption = new System.Windows.Forms.CheckBox();
-            this.chbGlyphSearingPain = new System.Windows.Forms.CheckBox();
-            this.chbGlyphShadowburn = new System.Windows.Forms.CheckBox();
-            this.chbGlyphSB = new System.Windows.Forms.CheckBox();
-            this.chbGlyphSiphonLife = new System.Windows.Forms.CheckBox();
-            this.chbGlyphUA = new System.Windows.Forms.CheckBox();
-            this.chbGlyphImp = new System.Windows.Forms.CheckBox();
-            this.chbGlyphImmolate = new System.Windows.Forms.CheckBox();
-            this.chbGlyphFelguard = new System.Windows.Forms.CheckBox();
-            this.chbGlyphCoA = new System.Windows.Forms.CheckBox();
-            this.chbGlyphConflag = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.trkJoW)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkReplenishment)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trkFightLength)).BeginInit();
@@ -178,6 +178,203 @@
             this.label2.Text = "Affliction effects on target:";
             this.toolTip1.SetToolTip(this.label2, "Excluding your own Affliction effects");
             // 
+            // chbGlyphMetamorphosis
+            // 
+            this.chbGlyphMetamorphosis.AutoSize = true;
+            this.chbGlyphMetamorphosis.Location = new System.Drawing.Point(6, 225);
+            this.chbGlyphMetamorphosis.Name = "chbGlyphMetamorphosis";
+            this.chbGlyphMetamorphosis.Size = new System.Drawing.Size(139, 17);
+            this.chbGlyphMetamorphosis.TabIndex = 98;
+            this.chbGlyphMetamorphosis.Text = "Glyph of Metamorphosis";
+            this.toolTip1.SetToolTip(this.chbGlyphMetamorphosis, "Increases the duration of your Metamorphosis by 6 sec.");
+            this.chbGlyphMetamorphosis.UseVisualStyleBackColor = true;
+            this.chbGlyphMetamorphosis.CheckedChanged += new System.EventHandler(this.chbGlyphMetamorphosis_CheckedChanged);
+            // 
+            // chbGlyphChaosBolt
+            // 
+            this.chbGlyphChaosBolt.AutoSize = true;
+            this.chbGlyphChaosBolt.Location = new System.Drawing.Point(6, 18);
+            this.chbGlyphChaosBolt.Name = "chbGlyphChaosBolt";
+            this.chbGlyphChaosBolt.Size = new System.Drawing.Size(119, 17);
+            this.chbGlyphChaosBolt.TabIndex = 97;
+            this.chbGlyphChaosBolt.Text = "Glyph of Chaos Bolt";
+            this.toolTip1.SetToolTip(this.chbGlyphChaosBolt, "Reduces the cooldown on Chaos Bolt by 2 sec.");
+            this.chbGlyphChaosBolt.UseVisualStyleBackColor = true;
+            this.chbGlyphChaosBolt.CheckedChanged += new System.EventHandler(this.chbGlyphChaosBolt_CheckedChanged);
+            // 
+            // chbGlyphLifeTap
+            // 
+            this.chbGlyphLifeTap.AutoSize = true;
+            this.chbGlyphLifeTap.Location = new System.Drawing.Point(6, 248);
+            this.chbGlyphLifeTap.Name = "chbGlyphLifeTap";
+            this.chbGlyphLifeTap.Size = new System.Drawing.Size(107, 17);
+            this.chbGlyphLifeTap.TabIndex = 96;
+            this.chbGlyphLifeTap.Text = "Glyph of Life Tap";
+            this.toolTip1.SetToolTip(this.chbGlyphLifeTap, "When you use Life Tap, you gain 20% of your Spirit as spell power for 20 sec.");
+            this.chbGlyphLifeTap.UseVisualStyleBackColor = true;
+            this.chbGlyphLifeTap.CheckedChanged += new System.EventHandler(this.chbGlyphLifeTap_CheckedChanged);
+            // 
+            // chbGlyphHaunt
+            // 
+            this.chbGlyphHaunt.AutoSize = true;
+            this.chbGlyphHaunt.Location = new System.Drawing.Point(6, 133);
+            this.chbGlyphHaunt.Name = "chbGlyphHaunt";
+            this.chbGlyphHaunt.Size = new System.Drawing.Size(97, 17);
+            this.chbGlyphHaunt.TabIndex = 95;
+            this.chbGlyphHaunt.Text = "Glyph of Haunt";
+            this.toolTip1.SetToolTip(this.chbGlyphHaunt, "The bonus damage granted by your Haunt spell is increased by an additional 3%.");
+            this.chbGlyphHaunt.UseVisualStyleBackColor = true;
+            this.chbGlyphHaunt.CheckedChanged += new System.EventHandler(this.chbGlyphHaunt_CheckedChanged);
+            // 
+            // chbGlyphIncinerate
+            // 
+            this.chbGlyphIncinerate.AutoSize = true;
+            this.chbGlyphIncinerate.Location = new System.Drawing.Point(6, 202);
+            this.chbGlyphIncinerate.Name = "chbGlyphIncinerate";
+            this.chbGlyphIncinerate.Size = new System.Drawing.Size(115, 17);
+            this.chbGlyphIncinerate.TabIndex = 94;
+            this.chbGlyphIncinerate.Text = "Glyph of Incinerate";
+            this.toolTip1.SetToolTip(this.chbGlyphIncinerate, "Increases the damage done by Incinerate by 5%.");
+            this.chbGlyphIncinerate.UseVisualStyleBackColor = true;
+            this.chbGlyphIncinerate.CheckedChanged += new System.EventHandler(this.chbGlyphIncinerate_CheckedChanged);
+            // 
+            // chbGlyphCorruption
+            // 
+            this.chbGlyphCorruption.AutoSize = true;
+            this.chbGlyphCorruption.Location = new System.Drawing.Point(6, 64);
+            this.chbGlyphCorruption.Name = "chbGlyphCorruption";
+            this.chbGlyphCorruption.Size = new System.Drawing.Size(116, 17);
+            this.chbGlyphCorruption.TabIndex = 93;
+            this.chbGlyphCorruption.Text = "Glyph of Corruption";
+            this.toolTip1.SetToolTip(this.chbGlyphCorruption, "Your Corruption spell has a 4% chance to cause you to enter a Shadow Trance state" +
+                    " after damaging the opponent.  The Shadow Trance state reduces the casting time " +
+                    "of your next Shadow Bolt spell by 100%.");
+            this.chbGlyphCorruption.UseVisualStyleBackColor = true;
+            this.chbGlyphCorruption.CheckedChanged += new System.EventHandler(this.chbGlyphCorruption_CheckedChanged);
+            // 
+            // chbGlyphSearingPain
+            // 
+            this.chbGlyphSearingPain.AutoSize = true;
+            this.chbGlyphSearingPain.Location = new System.Drawing.Point(6, 271);
+            this.chbGlyphSearingPain.Name = "chbGlyphSearingPain";
+            this.chbGlyphSearingPain.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphSearingPain.TabIndex = 92;
+            this.chbGlyphSearingPain.Text = "Glyph of Searing Pain";
+            this.toolTip1.SetToolTip(this.chbGlyphSearingPain, "Increases the critical strike bonus of your Searing Pain by 20%.");
+            this.chbGlyphSearingPain.UseVisualStyleBackColor = true;
+            this.chbGlyphSearingPain.CheckedChanged += new System.EventHandler(this.chbGlyphSearingPain_CheckedChanged);
+            // 
+            // chbGlyphShadowburn
+            // 
+            this.chbGlyphShadowburn.AutoSize = true;
+            this.chbGlyphShadowburn.Enabled = false;
+            this.chbGlyphShadowburn.Location = new System.Drawing.Point(6, 317);
+            this.chbGlyphShadowburn.Name = "chbGlyphShadowburn";
+            this.chbGlyphShadowburn.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphShadowburn.TabIndex = 91;
+            this.chbGlyphShadowburn.Text = "Glyph of Shadowburn";
+            this.toolTip1.SetToolTip(this.chbGlyphShadowburn, "Increases the critical strike chance of Shadowburn by 20% when the target is belo" +
+                    "w 35% health.");
+            this.chbGlyphShadowburn.UseVisualStyleBackColor = true;
+            this.chbGlyphShadowburn.CheckedChanged += new System.EventHandler(this.chbGlyphShadowburn_CheckedChanged);
+            // 
+            // chbGlyphSB
+            // 
+            this.chbGlyphSB.AutoSize = true;
+            this.chbGlyphSB.Location = new System.Drawing.Point(6, 294);
+            this.chbGlyphSB.Name = "chbGlyphSB";
+            this.chbGlyphSB.Size = new System.Drawing.Size(128, 17);
+            this.chbGlyphSB.TabIndex = 90;
+            this.chbGlyphSB.Text = "Glyph of Shadow Bolt";
+            this.toolTip1.SetToolTip(this.chbGlyphSB, "Reduces the mana cost of your Shadow Bolt by 10%.");
+            this.chbGlyphSB.UseVisualStyleBackColor = true;
+            this.chbGlyphSB.CheckedChanged += new System.EventHandler(this.chbGlyphSB_CheckedChanged);
+            // 
+            // chbGlyphUA
+            // 
+            this.chbGlyphUA.AutoSize = true;
+            this.chbGlyphUA.Location = new System.Drawing.Point(6, 340);
+            this.chbGlyphUA.Name = "chbGlyphUA";
+            this.chbGlyphUA.Size = new System.Drawing.Size(153, 17);
+            this.chbGlyphUA.TabIndex = 88;
+            this.chbGlyphUA.Text = "Glyph of Unstable Affliction";
+            this.toolTip1.SetToolTip(this.chbGlyphUA, "Decreases the casting time of your Unstable Affliction by 0.2 sec.");
+            this.chbGlyphUA.UseVisualStyleBackColor = true;
+            this.chbGlyphUA.CheckedChanged += new System.EventHandler(this.chbGlyphUA_CheckedChanged);
+            // 
+            // chbGlyphImp
+            // 
+            this.chbGlyphImp.AutoSize = true;
+            this.chbGlyphImp.Location = new System.Drawing.Point(6, 179);
+            this.chbGlyphImp.Name = "chbGlyphImp";
+            this.chbGlyphImp.Size = new System.Drawing.Size(85, 17);
+            this.chbGlyphImp.TabIndex = 87;
+            this.chbGlyphImp.Text = "Glyph of Imp";
+            this.toolTip1.SetToolTip(this.chbGlyphImp, "Increases the damage done by your Imp\'s Firebolt spell by 20%.");
+            this.chbGlyphImp.UseVisualStyleBackColor = true;
+            this.chbGlyphImp.CheckedChanged += new System.EventHandler(this.chbGlyphImp_CheckedChanged);
+            // 
+            // chbGlyphImmolate
+            // 
+            this.chbGlyphImmolate.AutoSize = true;
+            this.chbGlyphImmolate.Location = new System.Drawing.Point(6, 156);
+            this.chbGlyphImmolate.Name = "chbGlyphImmolate";
+            this.chbGlyphImmolate.Size = new System.Drawing.Size(110, 17);
+            this.chbGlyphImmolate.TabIndex = 86;
+            this.chbGlyphImmolate.Text = "Glyph of Immolate";
+            this.toolTip1.SetToolTip(this.chbGlyphImmolate, "Increases the periodic damage of your Immolate by 10%.");
+            this.chbGlyphImmolate.UseVisualStyleBackColor = true;
+            this.chbGlyphImmolate.CheckedChanged += new System.EventHandler(this.chbGlyphImmolate_CheckedChanged);
+            // 
+            // chbGlyphFelguard
+            // 
+            this.chbGlyphFelguard.AutoSize = true;
+            this.chbGlyphFelguard.Location = new System.Drawing.Point(6, 110);
+            this.chbGlyphFelguard.Name = "chbGlyphFelguard";
+            this.chbGlyphFelguard.Size = new System.Drawing.Size(109, 17);
+            this.chbGlyphFelguard.TabIndex = 85;
+            this.chbGlyphFelguard.Text = "Glyph of Felguard";
+            this.toolTip1.SetToolTip(this.chbGlyphFelguard, "Increases the Felguard\'s total attack power by 20%.");
+            this.chbGlyphFelguard.UseVisualStyleBackColor = true;
+            this.chbGlyphFelguard.CheckedChanged += new System.EventHandler(this.chbGlyphFelguard_CheckedChanged);
+            // 
+            // chbGlyphCoA
+            // 
+            this.chbGlyphCoA.AutoSize = true;
+            this.chbGlyphCoA.Location = new System.Drawing.Point(6, 87);
+            this.chbGlyphCoA.Name = "chbGlyphCoA";
+            this.chbGlyphCoA.Size = new System.Drawing.Size(140, 17);
+            this.chbGlyphCoA.TabIndex = 84;
+            this.chbGlyphCoA.Text = "Glyph of Curse of Agony";
+            this.toolTip1.SetToolTip(this.chbGlyphCoA, "Increases the duration of your Curse of Agony by 4 sec.");
+            this.chbGlyphCoA.UseVisualStyleBackColor = true;
+            this.chbGlyphCoA.CheckedChanged += new System.EventHandler(this.chbGlyphCoA_CheckedChanged);
+            // 
+            // chbGlyphConflag
+            // 
+            this.chbGlyphConflag.AutoSize = true;
+            this.chbGlyphConflag.Location = new System.Drawing.Point(6, 41);
+            this.chbGlyphConflag.Name = "chbGlyphConflag";
+            this.chbGlyphConflag.Size = new System.Drawing.Size(122, 17);
+            this.chbGlyphConflag.TabIndex = 83;
+            this.chbGlyphConflag.Text = "Glyph of Conflagrate";
+            this.toolTip1.SetToolTip(this.chbGlyphConflag, "Your Conflagrate spell no longer consumes your Immolate or Shadowflame spell from" +
+                    " the target.");
+            this.chbGlyphConflag.UseVisualStyleBackColor = true;
+            this.chbGlyphConflag.CheckedChanged += new System.EventHandler(this.chbGlyphConflag_CheckedChanged);
+            // 
+            // chbImmoAura
+            // 
+            this.chbImmoAura.AutoSize = true;
+            this.chbImmoAura.Location = new System.Drawing.Point(18, 206);
+            this.chbImmoAura.Name = "chbImmoAura";
+            this.chbImmoAura.Size = new System.Drawing.Size(123, 17);
+            this.chbImmoAura.TabIndex = 67;
+            this.chbImmoAura.Text = "Use Immolation Aura";
+            this.toolTip1.SetToolTip(this.chbImmoAura, "Check if you want to use Immolation Aura when in Metamorphosis");
+            this.chbImmoAura.UseVisualStyleBackColor = true;
+            this.chbImmoAura.CheckedChanged += new System.EventHandler(this.chbImmoAura_CheckedChanged);
+            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tabFight);
@@ -187,7 +384,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(297, 698);
+            this.tabControl.Size = new System.Drawing.Size(297, 605);
             this.tabControl.TabIndex = 57;
             // 
             // tabFight
@@ -314,6 +511,7 @@
             // tabChar
             // 
             this.tabChar.AutoScroll = true;
+            this.tabChar.Controls.Add(this.chbImmoAura);
             this.tabChar.Controls.Add(this.gbSpellPriority);
             this.tabChar.Location = new System.Drawing.Point(4, 22);
             this.tabChar.Name = "tabChar";
@@ -379,6 +577,7 @@
             this.cbPet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPet.FormattingEnabled = true;
             this.cbPet.Items.AddRange(new object[] {
+            "None",
             "Imp",
             "Felhunter",
             "Felguard",
@@ -402,7 +601,6 @@
             this.tabGlyphs.Controls.Add(this.chbGlyphSearingPain);
             this.tabGlyphs.Controls.Add(this.chbGlyphShadowburn);
             this.tabGlyphs.Controls.Add(this.chbGlyphSB);
-            this.tabGlyphs.Controls.Add(this.chbGlyphSiphonLife);
             this.tabGlyphs.Controls.Add(this.chbGlyphUA);
             this.tabGlyphs.Controls.Add(this.chbGlyphImp);
             this.tabGlyphs.Controls.Add(this.chbGlyphImmolate);
@@ -412,187 +610,10 @@
             this.tabGlyphs.Location = new System.Drawing.Point(4, 22);
             this.tabGlyphs.Name = "tabGlyphs";
             this.tabGlyphs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGlyphs.Size = new System.Drawing.Size(289, 672);
+            this.tabGlyphs.Size = new System.Drawing.Size(289, 579);
             this.tabGlyphs.TabIndex = 4;
             this.tabGlyphs.Text = "Glyphs";
             this.tabGlyphs.UseVisualStyleBackColor = true;
-            // 
-            // chbGlyphMetamorphosis
-            // 
-            this.chbGlyphMetamorphosis.AutoSize = true;
-            this.chbGlyphMetamorphosis.Location = new System.Drawing.Point(6, 225);
-            this.chbGlyphMetamorphosis.Name = "chbGlyphMetamorphosis";
-            this.chbGlyphMetamorphosis.Size = new System.Drawing.Size(139, 17);
-            this.chbGlyphMetamorphosis.TabIndex = 98;
-            this.chbGlyphMetamorphosis.Text = "Glyph of Metamorphosis";
-            this.chbGlyphMetamorphosis.UseVisualStyleBackColor = true;
-            this.chbGlyphMetamorphosis.CheckedChanged += new System.EventHandler(this.chbGlyphMetamorphosis_CheckedChanged);
-            // 
-            // chbGlyphChaosBolt
-            // 
-            this.chbGlyphChaosBolt.AutoSize = true;
-            this.chbGlyphChaosBolt.Location = new System.Drawing.Point(6, 18);
-            this.chbGlyphChaosBolt.Name = "chbGlyphChaosBolt";
-            this.chbGlyphChaosBolt.Size = new System.Drawing.Size(119, 17);
-            this.chbGlyphChaosBolt.TabIndex = 97;
-            this.chbGlyphChaosBolt.Text = "Glyph of Chaos Bolt";
-            this.chbGlyphChaosBolt.UseVisualStyleBackColor = true;
-            this.chbGlyphChaosBolt.CheckedChanged += new System.EventHandler(this.chbGlyphChaosBolt_CheckedChanged);
-            // 
-            // chbGlyphLifeTap
-            // 
-            this.chbGlyphLifeTap.AutoSize = true;
-            this.chbGlyphLifeTap.Location = new System.Drawing.Point(6, 248);
-            this.chbGlyphLifeTap.Name = "chbGlyphLifeTap";
-            this.chbGlyphLifeTap.Size = new System.Drawing.Size(107, 17);
-            this.chbGlyphLifeTap.TabIndex = 96;
-            this.chbGlyphLifeTap.Text = "Glyph of Life Tap";
-            this.chbGlyphLifeTap.UseVisualStyleBackColor = true;
-            this.chbGlyphLifeTap.CheckedChanged += new System.EventHandler(this.chbGlyphLifeTap_CheckedChanged);
-            // 
-            // chbGlyphHaunt
-            // 
-            this.chbGlyphHaunt.AutoSize = true;
-            this.chbGlyphHaunt.Location = new System.Drawing.Point(6, 133);
-            this.chbGlyphHaunt.Name = "chbGlyphHaunt";
-            this.chbGlyphHaunt.Size = new System.Drawing.Size(97, 17);
-            this.chbGlyphHaunt.TabIndex = 95;
-            this.chbGlyphHaunt.Text = "Glyph of Haunt";
-            this.chbGlyphHaunt.UseVisualStyleBackColor = true;
-            this.chbGlyphHaunt.CheckedChanged += new System.EventHandler(this.chbGlyphHaunt_CheckedChanged);
-            // 
-            // chbGlyphIncinerate
-            // 
-            this.chbGlyphIncinerate.AutoSize = true;
-            this.chbGlyphIncinerate.Location = new System.Drawing.Point(6, 202);
-            this.chbGlyphIncinerate.Name = "chbGlyphIncinerate";
-            this.chbGlyphIncinerate.Size = new System.Drawing.Size(115, 17);
-            this.chbGlyphIncinerate.TabIndex = 94;
-            this.chbGlyphIncinerate.Text = "Glyph of Incinerate";
-            this.chbGlyphIncinerate.UseVisualStyleBackColor = true;
-            this.chbGlyphIncinerate.CheckedChanged += new System.EventHandler(this.chbGlyphIncinerate_CheckedChanged);
-            // 
-            // chbGlyphCorruption
-            // 
-            this.chbGlyphCorruption.AutoSize = true;
-            this.chbGlyphCorruption.Location = new System.Drawing.Point(6, 64);
-            this.chbGlyphCorruption.Name = "chbGlyphCorruption";
-            this.chbGlyphCorruption.Size = new System.Drawing.Size(116, 17);
-            this.chbGlyphCorruption.TabIndex = 93;
-            this.chbGlyphCorruption.Text = "Glyph of Corruption";
-            this.chbGlyphCorruption.UseVisualStyleBackColor = true;
-            this.chbGlyphCorruption.CheckedChanged += new System.EventHandler(this.chbGlyphCorruption_CheckedChanged);
-            // 
-            // chbGlyphSearingPain
-            // 
-            this.chbGlyphSearingPain.AutoSize = true;
-            this.chbGlyphSearingPain.Location = new System.Drawing.Point(6, 271);
-            this.chbGlyphSearingPain.Name = "chbGlyphSearingPain";
-            this.chbGlyphSearingPain.Size = new System.Drawing.Size(128, 17);
-            this.chbGlyphSearingPain.TabIndex = 92;
-            this.chbGlyphSearingPain.Text = "Glyph of Searing Pain";
-            this.chbGlyphSearingPain.UseVisualStyleBackColor = true;
-            this.chbGlyphSearingPain.CheckedChanged += new System.EventHandler(this.chbGlyphSearingPain_CheckedChanged);
-            // 
-            // chbGlyphShadowburn
-            // 
-            this.chbGlyphShadowburn.AutoSize = true;
-            this.chbGlyphShadowburn.Enabled = false;
-            this.chbGlyphShadowburn.Location = new System.Drawing.Point(6, 317);
-            this.chbGlyphShadowburn.Name = "chbGlyphShadowburn";
-            this.chbGlyphShadowburn.Size = new System.Drawing.Size(128, 17);
-            this.chbGlyphShadowburn.TabIndex = 91;
-            this.chbGlyphShadowburn.Text = "Glyph of Shadowburn";
-            this.chbGlyphShadowburn.UseVisualStyleBackColor = true;
-            this.chbGlyphShadowburn.CheckedChanged += new System.EventHandler(this.chbGlyphShadowburn_CheckedChanged);
-            // 
-            // chbGlyphSB
-            // 
-            this.chbGlyphSB.AutoSize = true;
-            this.chbGlyphSB.Location = new System.Drawing.Point(6, 294);
-            this.chbGlyphSB.Name = "chbGlyphSB";
-            this.chbGlyphSB.Size = new System.Drawing.Size(128, 17);
-            this.chbGlyphSB.TabIndex = 90;
-            this.chbGlyphSB.Text = "Glyph of Shadow Bolt";
-            this.chbGlyphSB.UseVisualStyleBackColor = true;
-            this.chbGlyphSB.CheckedChanged += new System.EventHandler(this.chbGlyphSB_CheckedChanged);
-            // 
-            // chbGlyphSiphonLife
-            // 
-            this.chbGlyphSiphonLife.AutoSize = true;
-            this.chbGlyphSiphonLife.Location = new System.Drawing.Point(6, 340);
-            this.chbGlyphSiphonLife.Name = "chbGlyphSiphonLife";
-            this.chbGlyphSiphonLife.Size = new System.Drawing.Size(121, 17);
-            this.chbGlyphSiphonLife.TabIndex = 89;
-            this.chbGlyphSiphonLife.Text = "Glyph of Siphon Life";
-            this.chbGlyphSiphonLife.UseVisualStyleBackColor = true;
-            this.chbGlyphSiphonLife.CheckedChanged += new System.EventHandler(this.chbGlyphSiphonLife_CheckedChanged);
-            // 
-            // chbGlyphUA
-            // 
-            this.chbGlyphUA.AutoSize = true;
-            this.chbGlyphUA.Location = new System.Drawing.Point(6, 363);
-            this.chbGlyphUA.Name = "chbGlyphUA";
-            this.chbGlyphUA.Size = new System.Drawing.Size(153, 17);
-            this.chbGlyphUA.TabIndex = 88;
-            this.chbGlyphUA.Text = "Glyph of Unstable Affliction";
-            this.chbGlyphUA.UseVisualStyleBackColor = true;
-            this.chbGlyphUA.CheckedChanged += new System.EventHandler(this.chbGlyphUA_CheckedChanged);
-            // 
-            // chbGlyphImp
-            // 
-            this.chbGlyphImp.AutoSize = true;
-            this.chbGlyphImp.Location = new System.Drawing.Point(6, 179);
-            this.chbGlyphImp.Name = "chbGlyphImp";
-            this.chbGlyphImp.Size = new System.Drawing.Size(85, 17);
-            this.chbGlyphImp.TabIndex = 87;
-            this.chbGlyphImp.Text = "Glyph of Imp";
-            this.chbGlyphImp.UseVisualStyleBackColor = true;
-            this.chbGlyphImp.CheckedChanged += new System.EventHandler(this.chbGlyphImp_CheckedChanged);
-            // 
-            // chbGlyphImmolate
-            // 
-            this.chbGlyphImmolate.AutoSize = true;
-            this.chbGlyphImmolate.Location = new System.Drawing.Point(6, 156);
-            this.chbGlyphImmolate.Name = "chbGlyphImmolate";
-            this.chbGlyphImmolate.Size = new System.Drawing.Size(110, 17);
-            this.chbGlyphImmolate.TabIndex = 86;
-            this.chbGlyphImmolate.Text = "Glyph of Immolate";
-            this.chbGlyphImmolate.UseVisualStyleBackColor = true;
-            this.chbGlyphImmolate.CheckedChanged += new System.EventHandler(this.chbGlyphImmolate_CheckedChanged);
-            // 
-            // chbGlyphFelguard
-            // 
-            this.chbGlyphFelguard.AutoSize = true;
-            this.chbGlyphFelguard.Location = new System.Drawing.Point(6, 110);
-            this.chbGlyphFelguard.Name = "chbGlyphFelguard";
-            this.chbGlyphFelguard.Size = new System.Drawing.Size(109, 17);
-            this.chbGlyphFelguard.TabIndex = 85;
-            this.chbGlyphFelguard.Text = "Glyph of Felguard";
-            this.chbGlyphFelguard.UseVisualStyleBackColor = true;
-            this.chbGlyphFelguard.CheckedChanged += new System.EventHandler(this.chbGlyphFelguard_CheckedChanged);
-            // 
-            // chbGlyphCoA
-            // 
-            this.chbGlyphCoA.AutoSize = true;
-            this.chbGlyphCoA.Location = new System.Drawing.Point(6, 87);
-            this.chbGlyphCoA.Name = "chbGlyphCoA";
-            this.chbGlyphCoA.Size = new System.Drawing.Size(140, 17);
-            this.chbGlyphCoA.TabIndex = 84;
-            this.chbGlyphCoA.Text = "Glyph of Curse of Agony";
-            this.chbGlyphCoA.UseVisualStyleBackColor = true;
-            this.chbGlyphCoA.CheckedChanged += new System.EventHandler(this.chbGlyphCoA_CheckedChanged);
-            // 
-            // chbGlyphConflag
-            // 
-            this.chbGlyphConflag.AutoSize = true;
-            this.chbGlyphConflag.Location = new System.Drawing.Point(6, 41);
-            this.chbGlyphConflag.Name = "chbGlyphConflag";
-            this.chbGlyphConflag.Size = new System.Drawing.Size(122, 17);
-            this.chbGlyphConflag.TabIndex = 83;
-            this.chbGlyphConflag.Text = "Glyph of Conflagrate";
-            this.chbGlyphConflag.UseVisualStyleBackColor = true;
-            this.chbGlyphConflag.CheckedChanged += new System.EventHandler(this.chbGlyphConflag_CheckedChanged);
             // 
             // CalculationOptionsPanelWarlock
             // 
@@ -610,6 +631,7 @@
             this.tabFight.ResumeLayout(false);
             this.tabFight.PerformLayout();
             this.tabChar.ResumeLayout(false);
+            this.tabChar.PerformLayout();
             this.gbSpellPriority.ResumeLayout(false);
             this.tabPet.ResumeLayout(false);
             this.tabPet.PerformLayout();
@@ -658,12 +680,12 @@
         private System.Windows.Forms.CheckBox chbGlyphSearingPain;
         private System.Windows.Forms.CheckBox chbGlyphShadowburn;
         private System.Windows.Forms.CheckBox chbGlyphSB;
-        private System.Windows.Forms.CheckBox chbGlyphSiphonLife;
         private System.Windows.Forms.CheckBox chbGlyphUA;
         private System.Windows.Forms.CheckBox chbGlyphImp;
         private System.Windows.Forms.CheckBox chbGlyphImmolate;
         private System.Windows.Forms.CheckBox chbGlyphFelguard;
         private System.Windows.Forms.CheckBox chbGlyphCoA;
         private System.Windows.Forms.CheckBox chbGlyphConflag;
+        private System.Windows.Forms.CheckBox chbImmoAura;
     }
 }

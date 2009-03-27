@@ -505,6 +505,16 @@ namespace Rawr.Warlock
                 }
             }
             #endregion
+            
+            #region Timing fixes
+            foreach (Spell spell in SpellPriority)
+            {
+                if (spell.DebuffDuration > 0)
+                {
+                    time -= ((spell.SpellStatistics.TickCount / (spell.DebuffDuration / spell.TimeBetweenTicks)) % 1) * GetCastTime(spell);
+                }
+            }
+            #endregion
 
             #region Variable calculation
             float corDrops = 0;
@@ -535,14 +545,28 @@ namespace Rawr.Warlock
                 pactUptime = (float)(pet.critCount * 12 / time);
                 if (pactUptime > 1) pactUptime = 1;
             }
+            float metaUptime = 0;
+            if (character.WarlockTalents.Metamorphosis > 0)
+            {
+                metaUptime = (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f));
+                if (metaUptime > 1) metaUptime = 1;
+            }
             #endregion
 
             #region Mana Recovery
             foreach (Spell spell in SpellPriority)
             {
                 float manaCost = spell.ManaCost * (spell.Name == "Shadow Bolt" && CalculationOptions.GlyphSB ? 0.9f : 1);
-                spell.SpellStatistics.ManaUsed += manaCost * spell.SpellStatistics.HitCount;
-                currentMana -= manaCost * spell.SpellStatistics.HitCount;
+                if (spell.DebuffDuration > 0)
+                {
+                    spell.SpellStatistics.ManaUsed += manaCost * spell.SpellStatistics.TickCount / (spell.DebuffDuration / spell.TimeBetweenTicks);
+                    currentMana -= manaCost * spell.SpellStatistics.TickCount / (spell.DebuffDuration / spell.TimeBetweenTicks);
+                }
+                else
+                {
+                    spell.SpellStatistics.ManaUsed += manaCost * spell.SpellStatistics.HitCount;
+                    currentMana -= manaCost * spell.SpellStatistics.HitCount;
+                }
             }
             if (corruption != null)
             {
@@ -744,10 +768,7 @@ namespace Rawr.Warlock
                     case "Immolate":
                         {
                             if (CalculationOptions.GlyphImmolate)
-                            {
-                                directDamage *= 0.9f;
-                                dotDamage *= 1.2f;
-                            }
+                                dotDamage *= 1.1f;
                             break;
                         }
                     case "Drain Life":
@@ -841,10 +862,13 @@ namespace Rawr.Warlock
                 }
                 if (CounterShadowEmbrace > 0 && spell.MagicSchool == MagicSchool.Shadow)
                     dotDamage *= 1 + (float)CounterShadowEmbrace / (float)CounterShadowDotTicks * character.WarlockTalents.ShadowEmbrace * 0.01f;
-                directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f
-                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f));
-                dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f
-                    * 1 + character.WarlockTalents.Metamorphosis * 0.2f * (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f));
+                directDamage *= 1 + simStats.WarlockGrandFirestone * 0.01f;
+                dotDamage *= 1 + simStats.WarlockGrandSpellstone * 0.01f;
+                if (character.WarlockTalents.Metamorphosis > 0)
+                {
+                    directDamage *= 1 + 0.2f * metaUptime;
+                    dotDamage *= 1 + 0.2f * metaUptime;
+                }
                 if (character.WarlockTalents.MasterDemonologist > 0 && CalculationOptions.Pet == "Felguard")
                 {
                     directDamage *= 1 + character.WarlockTalents.MasterDemonologist * 0.01f;
@@ -862,7 +886,7 @@ namespace Rawr.Warlock
             DPS = (float)(OverallDamage / time);
 
             #region Finalize procs
-            if (simStats.LightweaveEmbroideryProc > 0.0f)
+                        if (simStats.LightweaveEmbroideryProc > 0.0f)
             {   // 50% proc chance, 45s internal cd, shoots a Holy bolt
                 float ProcChance = 0.5f;
                 float ProcActual = 1f - (float)Math.Pow(1f - ProcChance, 1f / ProcChance); // This is the real procchance after the Cumulative chance.
@@ -889,9 +913,10 @@ namespace Rawr.Warlock
                 Spell Extract = new ExtractProc(simStats, character);
                 DPS += (Extract.AvgDamage / EffCooldown) * (1f + simStats.BonusShadowDamageMultiplier) * (1f + simStats.BonusDamageMultiplier) * HitChance / 100f;
             }
-            if (character.WarlockTalents.Metamorphosis > 0)
-                DPS += (30 + (CalculationOptions.GlyphMetamorphosis ? 1 : 0) * 6) / (180 * (1 - character.WarlockTalents.Nemesis * 0.1f))
-                     * GetCastTime(15) / 30 * (451 + simStats.SpellPower * 1.85f) / (float)time;
+            if (character.WarlockTalents.Metamorphosis > 0 && CalculationOptions.UseImmoAura)
+                if (CalculationOptions.GlyphMetamorphosis)
+                    DPS += metaUptime * 21 / 36 * (481 + simStats.SpellPower * 0.143f);
+                else DPS += metaUptime * 15 / 30 * (481 + simStats.SpellPower * 0.143f);
             #endregion
 
             calculatedStats.DpsPoints = DPS;

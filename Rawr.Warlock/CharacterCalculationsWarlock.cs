@@ -105,7 +105,8 @@ namespace Rawr.Warlock
             float RHitRating = 0.01f / StatConversion.GetSpellHitFromRating(1);
             float TalentHit = character.WarlockTalents.Suppression * 1f;
             float TotalHit = Hit + BonusHit;
-            dictValues.Add("Hit", string.Format("{0}%*{1}% from {2} Hit Rating\r\n{3}% from Buffs\r\n{4}{5}% from {6} points in Suppression\r\n{7}",
+            dictValues.Add("Miss Chance", string.Format("{0}%*{1}% Total hit\r\n{2}% from {3} Hit Rating\r\n{4}% from Buffs\r\n{5}{6}% from {7} points in Suppression\r\n{8}",
+                Math.Max(0, 100 - TotalHit).ToString("0.00"),
                 BonusHit.ToString("0.00"),
                 (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("0.00"),
                 BasicStats.HitRating,
