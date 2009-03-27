@@ -233,13 +233,13 @@ namespace Rawr.Cat
 
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-			float hasteBonus = stats.HasteRating * 1.3f / 32.78998947f / 100f;
+			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, Character.CharacterClass.Druid);//stats.HasteRating * 1.3f / 32.78998947f / 100f;
 			hasteBonus = (1f + hasteBonus) * (1f + stats.Bloodlust * 40f / Math.Max(calcOpts.Duration, 40f)) - 1f;
 			float attackSpeed = 1f / (1f + hasteBonus);
 			attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
 
-			float hitBonus = stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
-			float expertiseBonus = stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
+			float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating);//stats.HitRating / 32.78998947f / 100f + stats.PhysicalHit;
+			float expertiseBonus = (StatConversion.GetExpertiseFromRating(stats.ExpertiseRating) + stats.Expertise) * 0.0025f;//stats.ExpertiseRating / 32.78998947f / 100f + stats.Expertise * 0.0025f;
 
 			float chanceDodge = Math.Max(0f, 0.065f + .005f * (targetLevel - 83) - expertiseBonus);
 			float chanceMiss = Math.Max(0f, 0.08f - hitBonus);
@@ -278,7 +278,8 @@ namespace Rawr.Cat
 			float glanceMultiplier = .7f;
 			float chanceAvoided = chanceMiss + chanceDodge;
 			float chanceGlance = 0.24f;
-			float chanceCrit = (stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
+			float chanceCrit = StatConversion.GetCritFromRating(stats.CritRating) + stats.PhysicalCrit + 
+				StatConversion.GetCritFromAgility(stats.Agility, Character.CharacterClass.Druid) //(stats.CritRating / 45.90598679f + stats.Agility * 0.012f) / 100f + stats.PhysicalCrit 
 				- (0.006f * (targetLevel - character.Level) + (targetLevel == 83 ? 0.03f : 0f));
 			float chanceCritBleed = character.DruidTalents.PrimalGore > 0 ? chanceCrit : 0f;
 			float chanceHit = 1f - chanceCrit - chanceAvoided;
@@ -309,8 +310,7 @@ namespace Rawr.Cat
 										chanceHitNonGlance * meleeDamageRaw;
 			float mangleDamageAverage = (1f - chanceCrit) * mangleDamageRaw + chanceCrit * mangleDamageRaw * critMultiplier;
 			float shredDamageAverage = (1f - chanceCrit) * shredDamageRaw + chanceCrit * shredDamageRaw * critMultiplier;
-			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) +
-										((1f - chanceCritBleed) * rakeDamageDot + chanceCritBleed * rakeDamageDot * critMultiplierBleed);
+			float rakeDamageAverage = ((1f - chanceCrit) * rakeDamageRaw + chanceCrit * rakeDamageRaw * critMultiplier) + rakeDamageDot;
 			float ripDamageAverage = ((1f - chanceCritBleed) * ripDamageRaw + chanceCritBleed * ripDamageRaw * critMultiplierBleed);
 			float biteDamageAverage = (1f - chanceCritBite) * biteDamageRaw + chanceCritBite * biteDamageRaw * critMultiplier;
 			#endregion
@@ -621,7 +621,7 @@ namespace Rawr.Cat
 					Stamina = 96f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
+					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
 					PhysicalCrit = 0.07476f } : 
 				new Stats() {
 					Health = 7599f,
@@ -630,7 +630,7 @@ namespace Rawr.Cat
 					Stamina = 100f,
 					Dodge = 0.04951f,
 					AttackPower = 140f,
-					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.36f : 0.3f, //Savage Roar
+					BonusPhysicalDamageMultiplier = calcOpts.GlyphOfSavageRoar ? 0.33f : 0.3f, //Savage Roar
 					PhysicalCrit = 0.07476f
 				};
 
@@ -1002,7 +1002,6 @@ namespace Rawr.Cat
 					BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
 					BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
 					BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
-                    BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                     BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
 					Health = stats.Health,
 					MangleCatCostReduction = stats.MangleCatCostReduction,
@@ -1049,7 +1048,7 @@ namespace Rawr.Cat
 				stats.Strength + stats.CatFormStrength + stats.TerrorProc + stats.WeaponDamage + stats.ExposeWeakness + stats.Bloodlust +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.ShatteredSunMightProc + stats.MongooseProc +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BerserkingProc +
-				stats.BonusSpellPowerMultiplier + stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
+				stats.BonusArcaneDamageMultiplier + stats.ThreatReductionMultiplier + stats.AllResist +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.GreatnessProc +
 				stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusShredDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
