@@ -103,8 +103,8 @@ namespace Rawr.Mage
             calculationResult.BaseStats = characterStats;
             calculationResult.Character = Character;
             calculationResult.CalculationOptions = calculationOptions;
-            CastingState baseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, Character, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
-            CastingState apState = new CastingState(calculationResult, characterStats, calculationOptions, armor, Character, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+            CastingState baseState = new CastingState(calculationResult, armor, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+            CastingState apState = new CastingState(calculationResult, armor, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
 
             StringBuilder sb = new StringBuilder();
 

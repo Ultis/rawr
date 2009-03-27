@@ -88,6 +88,7 @@ namespace Rawr.Mage
         public Stats EvocationStats { get; set; }
         public CastingState BaseState { get; set; }
         public CalculationOptionsMage CalculationOptions { get; set; }
+        public MageTalents MageTalents { get; set; }
 
         public Character Character { get; set; }
 
@@ -161,6 +162,398 @@ namespace Rawr.Mage
 
         public float ChanceToDie { get; set; }
         public float MeanIncomingDps { get; set; }
+
+        #region Base State Stats
+        public float BaseSpellHit { get; set; }
+        public float BaseArcaneHitRate { get; set; }
+        public float BaseFireHitRate { get; set; }
+        public float BaseFrostHitRate { get; set; }
+        public float BaseNatureHitRate { get; set; }
+        public float BaseShadowHitRate { get; set; }
+        public float BaseFrostFireHitRate { get; set; }
+        public float BaseHolyHitRate { get; set; }
+
+        public float ArcaneThreatMultiplier { get; set; }
+        public float FireThreatMultiplier { get; set; }
+        public float FrostThreatMultiplier { get; set; }
+        public float NatureThreatMultiplier { get; set; }
+        public float ShadowThreatMultiplier { get; set; }
+        public float FrostFireThreatMultiplier { get; set; }
+        public float HolyThreatMultiplier { get; set; }
+
+        public float BaseArcaneSpellModifier { get; set; }
+        public float BaseFireSpellModifier { get; set; }
+        public float BaseFrostSpellModifier { get; set; }
+        public float BaseNatureSpellModifier { get; set; }
+        public float BaseShadowSpellModifier { get; set; }
+        public float BaseFrostFireSpellModifier { get; set; }
+        public float BaseHolySpellModifier { get; set; }
+
+        public float BaseCritRate { get; set; }
+        public float BaseArcaneCritRate { get; set; }
+        public float BaseFireCritRate { get; set; }
+        public float BaseFrostCritRate { get; set; }
+        public float BaseNatureCritRate { get; set; }
+        public float BaseShadowCritRate { get; set; }
+        public float BaseFrostFireCritRate { get; set; }
+        public float BaseHolyCritRate { get; set; }
+
+        public float BaseArcaneCritBonus { get; set; }
+        public float BaseFireCritBonus { get; set; }
+        public float BaseFrostCritBonus { get; set; }
+        public float BaseNatureCritBonus { get; set; }
+        public float BaseShadowCritBonus { get; set; }
+        public float BaseFrostFireCritBonus { get; set; }
+        public float BaseHolyCritBonus { get; set; }
+
+        public float BaseArcaneSpellPower { get; set; }
+        public float BaseFireSpellPower { get; set; }
+        public float BaseFrostSpellPower { get; set; }
+        public float BaseNatureSpellPower { get; set; }
+        public float BaseShadowSpellPower { get; set; }
+        public float BaseHolySpellPower { get; set; }
+
+        public float SpiritRegen { get; set; }
+        public float ManaRegen { get; set; }
+        public float ManaRegen5SR { get; set; }
+        public float ManaRegenDrinking { get; set; }
+        public float HealthRegen { get; set; }
+        public float HealthRegenCombat { get; set; }
+        public float HealthRegenEating { get; set; }
+        public float MeleeMitigation { get; set; }
+        public float Defense { get; set; }
+        public float PhysicalCritReduction { get; set; }
+        public float SpellCritReduction { get; set; }
+        public float CritDamageReduction { get; set; }
+        public float Dodge { get; set; }
+        #endregion
+
+        #region Spell Templates
+        private WaterboltTemplate _WaterboltTemplate;
+        public WaterboltTemplate WaterboltTemplate
+        {
+            get
+            {
+                if (_WaterboltTemplate == null)
+                {
+                    _WaterboltTemplate = new WaterboltTemplate();
+                }
+                return _WaterboltTemplate;
+            }
+        }
+
+        private FireBlastTemplate _FireBlastTemplate;
+        public FireBlastTemplate FireBlastTemplate
+        {
+            get
+            {
+                if (_FireBlastTemplate == null)
+                {
+                    _FireBlastTemplate = new FireBlastTemplate(this);
+                }
+                return _FireBlastTemplate;
+            }
+        }
+
+        private LightningBoltTemplate _LightningBoltTemplate;
+        public LightningBoltTemplate LightningBoltTemplate
+        {
+            get
+            {
+                if (_LightningBoltTemplate == null)
+                {
+                    _LightningBoltTemplate = new LightningBoltTemplate(this);
+                }
+                return _LightningBoltTemplate;
+            }
+        }
+
+        private ThunderBoltTemplate _ThunderBoltTemplate;
+        public ThunderBoltTemplate ThunderBoltTemplate
+        {
+            get
+            {
+                if (_ThunderBoltTemplate == null)
+                {
+                    _ThunderBoltTemplate = new ThunderBoltTemplate(this);
+                }
+                return _ThunderBoltTemplate;
+            }
+        }
+
+        private LightweaveBoltTemplate _LightweaveBoltTemplate;
+        public LightweaveBoltTemplate LightweaveBoltTemplate
+        {
+            get
+            {
+                if (_LightweaveBoltTemplate == null)
+                {
+                    _LightweaveBoltTemplate = new LightweaveBoltTemplate(this);
+                }
+                return _LightweaveBoltTemplate;
+            }
+        }
+
+        private ArcaneBoltTemplate _ArcaneBoltTemplate;
+        public ArcaneBoltTemplate ArcaneBoltTemplate
+        {
+            get
+            {
+                if (_ArcaneBoltTemplate == null)
+                {
+                    _ArcaneBoltTemplate = new ArcaneBoltTemplate(this);
+                }
+                return _ArcaneBoltTemplate;
+            }
+        }
+
+        private PendulumOfTelluricCurrentsTemplate _PendulumOfTelluricCurrentsTemplate;
+        public PendulumOfTelluricCurrentsTemplate PendulumOfTelluricCurrentsTemplate
+        {
+            get
+            {
+                if (_PendulumOfTelluricCurrentsTemplate == null)
+                {
+                    _PendulumOfTelluricCurrentsTemplate = new PendulumOfTelluricCurrentsTemplate(this);
+                }
+                return _PendulumOfTelluricCurrentsTemplate;
+            }
+        }
+
+        private FrostboltTemplate _FrostboltTemplate;
+        public FrostboltTemplate FrostboltTemplate
+        {
+            get
+            {
+                if (_FrostboltTemplate == null)
+                {
+                    _FrostboltTemplate = new FrostboltTemplate(this);
+                }
+                return _FrostboltTemplate;
+            }
+        }
+
+        private FrostfireBoltTemplate _FrostfireBoltTemplate;
+        public FrostfireBoltTemplate FrostfireBoltTemplate
+        {
+            get
+            {
+                if (_FrostfireBoltTemplate == null)
+                {
+                    _FrostfireBoltTemplate = new FrostfireBoltTemplate(this);
+                }
+                return _FrostfireBoltTemplate;
+            }
+        }
+
+        private ArcaneMissilesTemplate _ArcaneMissilesTemplate;
+        public ArcaneMissilesTemplate ArcaneMissilesTemplate
+        {
+            get
+            {
+                if (_ArcaneMissilesTemplate == null)
+                {
+                    _ArcaneMissilesTemplate = new ArcaneMissilesTemplate(this);
+                }
+                return _ArcaneMissilesTemplate;
+            }
+        }
+
+        private FireballTemplate _FireballTemplate;
+        public FireballTemplate FireballTemplate
+        {
+            get
+            {
+                if (_FireballTemplate == null)
+                {
+                    _FireballTemplate = new FireballTemplate(this);
+                }
+                return _FireballTemplate;
+            }
+        }
+
+        private PyroblastTemplate _PyroblastTemplate;
+        public PyroblastTemplate PyroblastTemplate
+        {
+            get
+            {
+                if (_PyroblastTemplate == null)
+                {
+                    _PyroblastTemplate = new PyroblastTemplate(this);
+                }
+                return _PyroblastTemplate;
+            }
+        }
+
+        private ScorchTemplate _ScorchTemplate;
+        public ScorchTemplate ScorchTemplate
+        {
+            get
+            {
+                if (_ScorchTemplate == null)
+                {
+                    _ScorchTemplate = new ScorchTemplate(this);
+                }
+                return _ScorchTemplate;
+            }
+        }
+
+        private ArcaneBarrageTemplate _ArcaneBarrageTemplate;
+        public ArcaneBarrageTemplate ArcaneBarrageTemplate
+        {
+            get
+            {
+                if (_ArcaneBarrageTemplate == null)
+                {
+                    _ArcaneBarrageTemplate = new ArcaneBarrageTemplate(this);
+                }
+                return _ArcaneBarrageTemplate;
+            }
+        }
+
+        private ArcaneBlastTemplate _ArcaneBlastTemplate;
+        public ArcaneBlastTemplate ArcaneBlastTemplate
+        {
+            get
+            {
+                if (_ArcaneBlastTemplate == null)
+                {
+                    _ArcaneBlastTemplate = new ArcaneBlastTemplate(this);
+                }
+                return _ArcaneBlastTemplate;
+            }
+        }
+
+        private IceLanceTemplate _IceLanceTemplate;
+        public IceLanceTemplate IceLanceTemplate
+        {
+            get
+            {
+                if (_IceLanceTemplate == null)
+                {
+                    _IceLanceTemplate = new IceLanceTemplate(this);
+                }
+                return _IceLanceTemplate;
+            }
+        }
+
+        private ArcaneExplosionTemplate _ArcaneExplosionTemplate;
+        public ArcaneExplosionTemplate ArcaneExplosionTemplate
+        {
+            get
+            {
+                if (_ArcaneExplosionTemplate == null)
+                {
+                    _ArcaneExplosionTemplate = new ArcaneExplosionTemplate(this);
+                }
+                return _ArcaneExplosionTemplate;
+            }
+        }
+
+        private FlamestrikeTemplate _FlamestrikeTemplate;
+        public FlamestrikeTemplate FlamestrikeTemplate
+        {
+            get
+            {
+                if (_FlamestrikeTemplate == null)
+                {
+                    _FlamestrikeTemplate = new FlamestrikeTemplate(this);
+                }
+                return _FlamestrikeTemplate;
+            }
+        }
+
+        private BlizzardTemplate _BlizzardTemplate;
+        public BlizzardTemplate BlizzardTemplate
+        {
+            get
+            {
+                if (_BlizzardTemplate == null)
+                {
+                    _BlizzardTemplate = new BlizzardTemplate(this);
+                }
+                return _BlizzardTemplate;
+            }
+        }
+
+        private BlastWaveTemplate _BlastWaveTemplate;
+        public BlastWaveTemplate BlastWaveTemplate
+        {
+            get
+            {
+                if (_BlastWaveTemplate == null)
+                {
+                    _BlastWaveTemplate = new BlastWaveTemplate(this);
+                }
+                return _BlastWaveTemplate;
+            }
+        }
+        
+        private DragonsBreathTemplate _DragonsBreathTemplate;
+        public DragonsBreathTemplate DragonsBreathTemplate
+        {
+            get
+            {
+                if (_DragonsBreathTemplate == null)
+                {
+                    _DragonsBreathTemplate = new DragonsBreathTemplate(this);
+                }
+                return _DragonsBreathTemplate;
+            }
+        }
+
+        private ConeOfColdTemplate _ConeOfColdTemplate;
+        public ConeOfColdTemplate ConeOfColdTemplate
+        {
+            get
+            {
+                if (_ConeOfColdTemplate == null)
+                {
+                    _ConeOfColdTemplate = new ConeOfColdTemplate(this);
+                }
+                return _ConeOfColdTemplate;
+            }
+        }
+
+        private SlowTemplate _SlowTemplate;
+        public SlowTemplate SlowTemplate
+        {
+            get
+            {
+                if (_SlowTemplate == null)
+                {
+                    _SlowTemplate = new SlowTemplate(this);
+                }
+                return _SlowTemplate;
+            }
+        }
+
+        private LivingBombTemplate _LivingBombTemplate;
+        public LivingBombTemplate LivingBombTemplate
+        {
+            get
+            {
+                if (_LivingBombTemplate == null)
+                {
+                    _LivingBombTemplate = new LivingBombTemplate(this);
+                }
+                return _LivingBombTemplate;
+            }
+        }
+
+        private ConjureManaGemTemplate _ConjureManaGemTemplate;
+        public ConjureManaGemTemplate ConjureManaGemTemplate
+        {
+            get
+            {
+                if (_ConjureManaGemTemplate == null)
+                {
+                    _ConjureManaGemTemplate = new ConjureManaGemTemplate(this);
+                }
+                return _ConjureManaGemTemplate;
+            }
+        }
+        #endregion
 
         public string ReconstructSequence()
         {
@@ -361,15 +754,15 @@ namespace Rawr.Mage
             dictValues.Add("Armor", BaseStats.Armor.ToString());
             dictValues.Add("Health", BaseStats.Health.ToString());
             dictValues.Add("Mana", BaseStats.Mana.ToString());
-            dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * Math.Max(0, BaseState.SpellCrit), BaseStats.CritRating));
+            dictValues.Add("Crit Rate", String.Format("{0:F}%*{1} Crit Rating", 100 * Math.Max(0, BaseState.CritRate), BaseStats.CritRating));
             float levelScalingFactor = (float)((52f / 82f) * Math.Pow(63f / 131f, (CalculationOptions.PlayerLevel - 70) / 10f));
             // hit rating = hitrate * 800 / levelScalingFactor
             dictValues.Add("Hit Rate", String.Format("{0:F}%*{1} Hit Rating\r\nArcane\t{2:F}%{3}\r\nFire\t{4:F}%{5}\r\nFrost\t{6:F}%{7}", 100 * BaseState.SpellHit, BaseStats.HitRating, 100 * BaseState.ArcaneHitRate, (BaseState.ArcaneHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.ArcaneHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FireHitRate, (BaseState.FireHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FireHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : "", 100 * BaseState.FrostHitRate, (BaseState.FrostHitRate < 1) ? (" (" + (int)Math.Ceiling((1 - BaseState.FrostHitRate) * 800 / levelScalingFactor) + " hit rating to cap)") : ""));
             dictValues.Add("Spell Penetration", BaseStats.SpellPenetration.ToString());
             dictValues.Add("Casting Speed", String.Format("{0}*{1} Haste Rating", BaseState.CastingSpeed, BaseState.SpellHasteRating));
-            dictValues.Add("Arcane Damage", BaseState.ArcaneDamage.ToString());
-            dictValues.Add("Fire Damage", BaseState.FireDamage.ToString());
-            dictValues.Add("Frost Damage", BaseState.FrostDamage.ToString());
+            dictValues.Add("Arcane Damage", BaseState.ArcaneSpellPower.ToString());
+            dictValues.Add("Fire Damage", BaseState.FireSpellPower.ToString());
+            dictValues.Add("Frost Damage", BaseState.FrostSpellPower.ToString());
             dictValues.Add("MP5", BaseStats.Mp5.ToString());
             dictValues.Add("Mana Regen", Math.Floor(BaseState.ManaRegen * 5).ToString() + String.Format("*Mana Regen in 5SR: {0}\r\nMana Regen Drinking: {1}", Math.Floor(BaseState.ManaRegen5SR * 5), Math.Floor(BaseState.ManaRegenDrinking * 5)));
             dictValues.Add("Health Regen", Math.Floor(BaseState.HealthRegenCombat * 5).ToString() + String.Format("*Health Regen Eating: {0}", Math.Floor(BaseState.HealthRegenEating * 5)));
@@ -385,8 +778,8 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<CycleId> cycleList = new List<CycleId>() { CycleId.ArcaneMissiles, CycleId.ABSpamMBAM, CycleId.ABAM, CycleId.FBSc, CycleId.FBFBlast, CycleId.ABABar0C, CycleId.FBABar, CycleId.FrBABar, CycleId.FFBABar, CycleId.ABarAM, CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FBScLBPyro, CycleId.FB2ABar, CycleId.FrB2ABar, CycleId.ScLBPyro, CycleId.ABABarSlow, CycleId.FBABarSlow, CycleId.FrBABarSlow, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.ABABar1C, CycleId.ABSpam3C, CycleId.AB3ABar3C, CycleId.FrBFBIL, CycleId.AB2ABar2C, CycleId.ABSpam3MBAM, CycleId.ABSpam03C, CycleId.AB2ABar2MBAM, CycleId.ABABar0MBAM, CycleId.ABABar, CycleId.AB2ABar3C, CycleId.ABABar3C, CycleId.ABABar2C, CycleId.ABABar2MBAM, CycleId.ABABar1MBAM, CycleId.AB3ABar3MBAM, CycleId.AB3AM, CycleId.AB3AM2MBAM, CycleId.AB3AMABar, CycleId.AB3AMABar2C };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.Wand, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.ABSpamMBAM, CycleId.ABAM, CycleId.FBSc, CycleId.FBFBlast, CycleId.ABABar0C, CycleId.FBABar, CycleId.FrBABar, CycleId.FFBABar, CycleId.ABarAM, CycleId.FBPyro, CycleId.FFBPyro, CycleId.FBScPyro, CycleId.FFBScPyro, CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FBScLBPyro, CycleId.FB2ABar, CycleId.FrB2ABar, CycleId.ScLBPyro, CycleId.ABABarSlow, CycleId.FBABarSlow, CycleId.FrBABarSlow, CycleId.FFBLBPyro, CycleId.FFBScLBPyro, CycleId.ABABar1C, CycleId.ABSpam3C, CycleId.AB3ABar3C, CycleId.FrBFBIL, CycleId.AB2ABar2C, CycleId.ABSpam3MBAM, CycleId.ABSpam03C, CycleId.AB2ABar2MBAM, CycleId.ABABar0MBAM, CycleId.ABABar, CycleId.AB2ABar3C, CycleId.ABABar3C, CycleId.ABABar2C, CycleId.ABABar2MBAM, CycleId.ABABar1MBAM, CycleId.AB3ABar3MBAM, CycleId.AB3AM, CycleId.AB3AM2MBAM, CycleId.AB3AMABar, CycleId.AB3AMABar2C };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.Wand, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSpammed, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);
@@ -405,9 +798,9 @@ namespace Rawr.Mage
                     dictValues.Add(bs.Name, string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
                 }
             }
-            bs = BaseState.GetSpell(SpellId.ArcaneBlast00);
+            bs = BaseState.GetSpell(SpellId.ArcaneBlast0);
             dictValues.Add("Arcane Blast(0)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
-            bs = BaseState.GetSpell(SpellId.ArcaneBlast33);
+            bs = BaseState.GetSpell(SpellId.ArcaneBlast3);
             dictValues.Add("Arcane Blast(3)", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
             bs = BaseState.GetSpell(SpellId.ArcaneMissilesMB);
             dictValues.Add("MBAM", string.Format(spellFormatString, bs.DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - BaseState.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage / bs.HitProcs, bs.MaxHitDamage / bs.HitProcs, bs.MinCritDamage / bs.HitProcs, bs.MaxCritDamage / bs.HitProcs, ((bs.DotDamage > 0) ? ("\n" + bs.DotDamage.ToString("F") + " Dot") : ""), bs.Cost));
@@ -620,7 +1013,7 @@ namespace Rawr.Mage
                             ManaSources["Innervate"] += (float)Solution[i] * (BaseState.SpiritRegen * (5 - BaseStats.SpellCombatManaRegeneration) * 20 * CalculationOptions.Innervate / CalculationOptions.FightDuration);
                             ManaSources["Mana Tide"] += (float)Solution[i] * CalculationOptions.ManaTide * 0.24f * BaseStats.Mana / CalculationOptions.FightDuration;
                             ManaSources["Replenishment"] += (float)Solution[i] * BaseStats.ManaRestoreFromMaxManaPerSecond * BaseStats.Mana;
-                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * Spell.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
+                            ManaUsage["Summon Water Elemental"] += (float)Solution[i] * (int)(0.16 * SpellTemplate.BaseMana[CalculationOptions.PlayerLevel]) / BaseState.GlobalCooldown;
                             if (segmentedOutput) sb.AppendLine(String.Format("{2} {0}: {1:F}x", "Summon Water Elemental", Solution[i] / BaseState.GlobalCooldown, SegmentList[SolutionVariable[i].Segment]));
                             break;
                         case VariableType.ConjureManaGem:

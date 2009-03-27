@@ -46,7 +46,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 foreach (SequenceItem item in Item)
                 {
-                    if (item.CastingState.ManaGemActivation) return true;
+                    if (item.CastingState.ManaGemEffect) return true;
                 }
                 return false;
             }

@@ -197,7 +197,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         SequenceItem kitem = sequence[j].SuperGroup.Item[k];
                         double kd = kitem.Duration;
-                        if (kitem.CastingState.ManaGemActivation && (k == 0 || (!sequence[j].SuperGroup.Item[k - 1].CastingState.ManaGemActivation && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaGem && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaPotion)))
+                        if (kitem.CastingState.ManaGemEffect && (k == 0 || (!sequence[j].SuperGroup.Item[k - 1].CastingState.ManaGemEffect && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaGem && sequence[j].SuperGroup.Item[k - 1].VariableType != VariableType.ManaPotion)))
                         {
                             projectMana += SequenceItem.Calculations.ManaGemValue * (1 + BaseStats.BonusManaGem);
                             if (projectMana - BaseStats.Mana > overflowBuffer)
@@ -248,7 +248,7 @@ namespace Rawr.Mage.SequenceReconstruction
                         {
                             if (MinTime(k, j - 1) <= t)
                             {
-                                if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0 && !sequence[k].CastingState.ManaGemActivation) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
+                                if (sequence[k].Group.Count == 0 && (minbuffer > eps || (overflowBuffer > eps && sequence[k].Mps > 0 && !sequence[k].CastingState.ManaGemEffect) || (threatBuffer > eps && sequence[k].Tps < maxTps)))
                                 {
                                     if (minbuffer > eps && sequence[k].Duration > minbuffer + eps)
                                     {
@@ -2610,7 +2610,7 @@ namespace Rawr.Mage.SequenceReconstruction
                     {
                         double d = sequence[i].Duration;
                         if (sequence[i].IsManaPotionOrGem) d = 0;
-                        if (d > 0 && t >= time && t < maxtime && sequence[i].CastingState.ManaGemActivation && (i == 0 || (!sequence[i - 1].CastingState.ManaGemActivation && sequence[i - 1].VariableType != VariableType.ManaGem && sequence[i - 1].VariableType != VariableType.ManaPotion)))
+                        if (d > 0 && t >= time && t < maxtime && sequence[i].CastingState.ManaGemEffect && (i == 0 || (!sequence[i - 1].CastingState.ManaGemEffect && sequence[i - 1].VariableType != VariableType.ManaGem && sequence[i - 1].VariableType != VariableType.ManaPotion)))
                         {
                             // make sure that we have verified time up to here (give some extra room to make sure overflow is accounted for)
                             if (t + d * 0.1 > targetTime + eps)

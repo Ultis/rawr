@@ -308,15 +308,16 @@ namespace Rawr.Mage
         {
             List<Buff> autoActivatedBuffs = new List<Buff>();
             Stats rawStats = calculations.GetRawStats(character, additionalItem, calculationOptions, autoActivatedBuffs, armor);
-            Stats characterStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
+            Stats baseStats = calculations.GetCharacterStats(character, additionalItem, rawStats, calculationOptions);
 
             //if (useSMP) calculationOptions.SmartOptimization = true;
 
             calculationResult = new CharacterCalculationsMage();
             calculationResult.Calculations = calculations;
-            calculationResult.BaseStats = characterStats;
+            calculationResult.BaseStats = baseStats;
             calculationResult.Character = character;
             calculationResult.CalculationOptions = calculationOptions;
+            calculationResult.MageTalents = talents;
 
             restrictThreat = segmentCooldowns && calculationOptions.TpsLimit != 5000f && calculationOptions.TpsLimit > 0f;
             powerInfusionAvailable = !calculationOptions.DisableCooldowns && calculationOptions.PowerInfusionAvailable;
@@ -334,7 +335,7 @@ namespace Rawr.Mage
             flameCapAvailable = !calculationOptions.DisableCooldowns && calculationOptions.FlameCap;
             drumsOfBattleAvailable = !calculationOptions.DisableCooldowns && calculationOptions.DrumsOfBattle;
             waterElementalAvailable = !calculationOptions.DisableCooldowns && (talents.SummonWaterElemental == 1);
-            manaGemEffectAvailable = calculationOptions.ManaGemEnabled && characterStats.SpellPowerFor15SecOnManaGem > 0;
+            manaGemEffectAvailable = calculationOptions.ManaGemEnabled && baseStats.SpellPowerFor15SecOnManaGem > 0;
             calculationResult.EvocationCooldown = (240.0 - 60.0 * talents.ArcaneFlows);
             calculationResult.ColdsnapCooldown = (8 * 60) * (1 - 0.1 * talents.ColdAsIce);
             calculationResult.ArcanePowerCooldown = 120.0 * (1 - 0.15 * talents.ArcaneFlows);
@@ -422,7 +423,7 @@ namespace Rawr.Mage
             }
             if (manaGemEffectAvailable)
             {
-                if (characterStats.SpellPowerFor15SecOnManaGem > 0)
+                if (baseStats.SpellPowerFor15SecOnManaGem > 0)
                 {
                     manaGemEffectDuration = 15;
                 }
@@ -437,7 +438,9 @@ namespace Rawr.Mage
                 else if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Ice Armor"))) armor = "Ice Armor";
             }
 
-            stateList = GetStateList(characterStats);
+            CalculateBaseStateStats(baseStats);
+
+            stateList = GetStateList(baseStats);
             spellList = GetSpellList();
 
             calculationResult.AutoActivatedBuffs.AddRange(autoActivatedBuffs);
@@ -445,7 +448,7 @@ namespace Rawr.Mage
 
             List<double> tpsList;
 
-            ConstructProblem(additionalItem, calculations, rawStats, characterStats, out tpsList);
+            ConstructProblem(additionalItem, calculations, rawStats, baseStats, out tpsList);
 
             if (requiresMIP)
             {
@@ -474,7 +477,7 @@ namespace Rawr.Mage
             {
                 calculationResult.SubPoints[0] = ((float)calculationResult.Solution[calculationResult.Solution.Length - 1] /*+ calculationResult.WaterElementalDamage*/) / calculationOptions.FightDuration;
             }
-            calculationResult.SubPoints[1] = EvaluateSurvivability(characterStats);
+            calculationResult.SubPoints[1] = EvaluateSurvivability(baseStats);
             calculationResult.OverallPoints = calculationResult.SubPoints[0] + calculationResult.SubPoints[1];
 
             float threat = 0;
@@ -485,6 +488,222 @@ namespace Rawr.Mage
             calculationResult.Tps = threat / calculationOptions.FightDuration;
 
             return calculationResult;
+        }
+
+        private void CalculateBaseStateStats(Stats baseStats)
+        {
+            calculationResult.BaseSpellHit = baseStats.HitRating * calculationOptions.LevelScalingFactor / 800f + baseStats.SpellHit + 0.01f * talents.ElementalPrecision;
+
+            int targetLevel = calculationOptions.TargetLevel;
+            int playerLevel = calculationOptions.PlayerLevel;
+
+            calculationResult.BaseArcaneHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit + 0.01f * talents.ArcaneFocus);
+            calculationResult.BaseFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseFrostHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseNatureHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseShadowHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseFrostFireHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+            calculationResult.BaseHolyHitRate = Math.Min(Spell.MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + calculationResult.BaseSpellHit);
+
+            float threatFactor = (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
+
+            calculationResult.ArcaneThreatMultiplier = threatFactor * (1 - character.MageTalents.ArcaneSubtlety * 0.2f);
+            calculationResult.FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f);
+            calculationResult.FrostThreatMultiplier = threatFactor * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
+            calculationResult.FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
+            calculationResult.NatureThreatMultiplier = threatFactor;
+            calculationResult.ShadowThreatMultiplier = threatFactor;
+            calculationResult.HolyThreatMultiplier = threatFactor;
+
+            float baseSpellModifier = (1 + 0.01f * talents.ArcaneInstability) * (1 + 0.01f * talents.PlayingWithFire) * (1 + baseStats.BonusDamageMultiplier);
+            calculationResult.BaseArcaneSpellModifier = baseSpellModifier * (1 + baseStats.BonusArcaneDamageMultiplier);
+            calculationResult.BaseFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + baseStats.BonusFireDamageMultiplier);
+            calculationResult.BaseFrostSpellModifier = baseSpellModifier * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * (1 + baseStats.BonusFrostDamageMultiplier);
+            calculationResult.BaseNatureSpellModifier = baseSpellModifier * (1 + baseStats.BonusNatureDamageMultiplier);
+            calculationResult.BaseShadowSpellModifier = baseSpellModifier * (1 + baseStats.BonusShadowDamageMultiplier);
+            calculationResult.BaseHolySpellModifier = baseSpellModifier * (1 + baseStats.BonusHolyDamageMultiplier);
+            calculationResult.BaseFrostFireSpellModifier = baseSpellModifier * (1 + 0.02f * talents.FirePower) * (1 + 0.02f * talents.PiercingIce) * (1 + 0.01f * talents.ArcticWinds) * Math.Max(1 + baseStats.BonusFireDamageMultiplier, 1 + baseStats.BonusFrostDamageMultiplier);
+
+            float spellCritPerInt = 0f;
+            float spellCritBase = 0f;
+            float baseRegen = 0f;
+            if (calculationOptions.Mode31)
+            {
+                switch (playerLevel)
+                {
+                    case 70:
+                        spellCritPerInt = 0.0125f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.005596f;
+                        break;
+                    case 71:
+                        spellCritPerInt = 0.0116f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.005316f;
+                        break;
+                    case 72:
+                        spellCritPerInt = 0.0108f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.005049f;
+                        break;
+                    case 73:
+                        spellCritPerInt = 0.0101f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.004796f;
+                        break;
+                    case 74:
+                        spellCritPerInt = 0.0093f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.004555f;
+                        break;
+                    case 75:
+                        spellCritPerInt = 0.0087f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.004327f;
+                        break;
+                    case 76:
+                        spellCritPerInt = 0.0081f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.004110f;
+                        break;
+                    case 77:
+                        spellCritPerInt = 0.0075f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.003903f;
+                        break;
+                    case 78:
+                        spellCritPerInt = 0.007f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.003708f;
+                        break;
+                    case 79:
+                        spellCritPerInt = 0.0065f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.003522f;
+                        break;
+                    case 80:
+                        spellCritPerInt = 0.006f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.003345f;
+                        break;
+                }
+            }
+            else
+            {
+                switch (playerLevel)
+                {
+                    case 70:
+                        spellCritPerInt = 0.0125f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.009327f;
+                        break;
+                    case 71:
+                        spellCritPerInt = 0.0116f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.008859f;
+                        break;
+                    case 72:
+                        spellCritPerInt = 0.0108f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.008415f;
+                        break;
+                    case 73:
+                        spellCritPerInt = 0.0101f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.007993f;
+                        break;
+                    case 74:
+                        spellCritPerInt = 0.0093f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.007592f;
+                        break;
+                    case 75:
+                        spellCritPerInt = 0.0087f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.007211f;
+                        break;
+                    case 76:
+                        spellCritPerInt = 0.0081f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.006849f;
+                        break;
+                    case 77:
+                        spellCritPerInt = 0.0075f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.006506f;
+                        break;
+                    case 78:
+                        spellCritPerInt = 0.007f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.006179f;
+                        break;
+                    case 79:
+                        spellCritPerInt = 0.0065f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.005869f;
+                        break;
+                    case 80:
+                        spellCritPerInt = 0.006f;
+                        spellCritBase = 0.9075f;
+                        baseRegen = 0.005575f;
+                        break;
+                }
+            }
+            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * talents.ArcaneInstability + 0.15f * 0.02f * talents.ArcaneConcentration * talents.ArcanePotency + baseStats.CritRating / 1400f * calculationOptions.LevelScalingFactor + baseStats.SpellCrit + talents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * talents.Pyromaniac;
+
+            calculationResult.BaseCritRate = spellCrit;
+            calculationResult.BaseArcaneCritRate = spellCrit;
+            calculationResult.BaseFireCritRate = spellCrit + 0.02f * talents.CriticalMass;
+            calculationResult.BaseFrostFireCritRate = spellCrit + 0.02f * talents.CriticalMass;
+            calculationResult.BaseFrostCritRate = spellCrit;
+            calculationResult.BaseNatureCritRate = spellCrit;
+            calculationResult.BaseShadowCritRate = spellCrit;
+            calculationResult.BaseHolyCritRate = spellCrit;
+
+            float levelScalingFactor = calculationOptions.LevelScalingFactor;
+            calculationResult.SpiritRegen = 0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect);
+            calculationResult.ManaRegen = calculationResult.SpiritRegen + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+            calculationResult.ManaRegen5SR = calculationResult.SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + calculationResult.SpiritRegen * (5 - baseStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * baseStats.Mana / calculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+            calculationResult.HealthRegen = 0.0312f * baseStats.Spirit + baseStats.Hp5 / 5f;
+            calculationResult.HealthRegenCombat = baseStats.Hp5 / 5f;
+            if (playerLevel < 75)
+            {
+                calculationResult.ManaRegenDrinking = calculationResult.ManaRegen + 240f;
+                calculationResult.HealthRegenEating = calculationResult.HealthRegen + 250f;
+            }
+            else if (playerLevel < 80)
+            {
+                calculationResult.ManaRegenDrinking = calculationResult.ManaRegen + 306f;
+                calculationResult.HealthRegenEating = calculationResult.HealthRegen + 440f;
+            }
+            else
+            {
+                calculationResult.ManaRegenDrinking = calculationResult.ManaRegen + 432f;
+                calculationResult.HealthRegenEating = calculationResult.HealthRegen + 500f;
+            }
+            calculationResult.MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
+            calculationResult.Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
+            int molten = (armor == "Molten Armor") ? 1 : 0;
+            calculationResult.PhysicalCritReduction = (0.04f * (calculationResult.Defense - 5 * calculationOptions.PlayerLevel) / 100 + baseStats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
+            calculationResult.SpellCritReduction = (baseStats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
+            calculationResult.CritDamageReduction = (baseStats.Resilience / 2500f * 2.2f * levelScalingFactor);
+            calculationResult.Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (calculationResult.Defense - 5 * playerLevel)) / 100f + baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
+
+            calculationResult.BaseArcaneCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage));
+            calculationResult.BaseFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
+            calculationResult.BaseFrostCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + talents.IceShards / 3.0f + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage));
+            calculationResult.BaseFrostFireCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + talents.IceShards / 3.0f + 0.25f * talents.SpellPower + 0.1f * talents.Burnout + baseStats.CritBonusDamage)) * (1 + 0.08f * talents.Ignite);
+            calculationResult.BaseNatureCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage)); // unknown if affected by burnout
+            calculationResult.BaseShadowCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
+            calculationResult.BaseHolyCritBonus = (1 + (1.5f * (1 + baseStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * talents.SpellPower + baseStats.CritBonusDamage));
+
+            calculationResult.BaseArcaneSpellPower = baseStats.SpellArcaneDamageRating + baseStats.SpellPower;
+            calculationResult.BaseFireSpellPower = baseStats.SpellFireDamageRating + baseStats.SpellPower;
+            calculationResult.BaseFrostSpellPower = baseStats.SpellFrostDamageRating + baseStats.SpellPower;
+            calculationResult.BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower;
+            calculationResult.BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
+            calculationResult.BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
         }
 
         private float EvaluateSurvivability(Stats characterStats)
@@ -807,7 +1026,7 @@ namespace Rawr.Mage
                 if (character.Ranged != null && character.Ranged.Item.Type == Item.ItemType.Wand)
                 {
                     int wandSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    Spell w = new Wand(calculationResult.BaseState, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed);
+                    Spell w = new WandTemplate(calculationResult, (MagicSchool)character.Ranged.Item.DamageType, character.Ranged.Item.MinDamage, character.Ranged.Item.MaxDamage, character.Ranged.Item.Speed).GetSpell(calculationResult.BaseState);
                     calculationResult.BaseState.SetSpell(SpellId.Wand, w);
                     Cycle wand = w;
                     manaRegen = wand.ManaPerSecond;
@@ -920,20 +1139,12 @@ namespace Rawr.Mage
                     }
                     CastingState evoState = calculationResult.BaseState.Clone();
                     evoState.Cooldown |= Cooldown.Evocation;
-                    evoState.Evocation = true;
                     CastingState evoStateIV = calculationResult.BaseState.Clone();
                     evoStateIV.Cooldown |= Cooldown.Evocation | Cooldown.IcyVeins;
-                    evoStateIV.Evocation = true;
-                    evoStateIV.IcyVeins = true;
                     CastingState evoStateHero = calculationResult.BaseState.Clone();
                     evoStateHero.Cooldown |= Cooldown.Evocation | Cooldown.Heroism;
-                    evoStateHero.Evocation = true;
-                    evoStateHero.Heroism = true;
                     CastingState evoStateIVHero = calculationResult.BaseState.Clone();
                     evoStateIVHero.Cooldown |= Cooldown.Evocation | Cooldown.IcyVeins | Cooldown.Heroism;
-                    evoStateIVHero.Evocation = true;
-                    evoStateIVHero.IcyVeins = true;
-                    evoStateIVHero.Heroism = true;
                     for (int segment = 0; segment < evocationSegments; segment++)
                     {
                         // base evocation
@@ -1338,7 +1549,7 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false));
+                        drumsStates.Add(new CastingState(calculationResult, armor, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false));
                     }
                     if (flameCapAvailable)
                     {
@@ -1354,7 +1565,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            drumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false));
+                            drumsStates.Add(new CastingState(calculationResult, armor, false, false, false, false, false, false, true, false, false, false, true, false, false, false, false));
                         }
                     }
                     if (moltenFuryAvailable)
@@ -1371,7 +1582,7 @@ namespace Rawr.Mage
                         }
                         if (!found)
                         {
-                            mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false));
+                            mfDrumsStates.Add(new CastingState(calculationResult, armor, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false));
                         }
                         if (flameCapAvailable)
                         {
@@ -1387,7 +1598,7 @@ namespace Rawr.Mage
                             }
                             if (!found)
                             {
-                                mfDrumsStates.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false));
+                                mfDrumsStates.Add(new CastingState(calculationResult, armor, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false));
                             }
                         }
                     }
@@ -1451,7 +1662,7 @@ namespace Rawr.Mage
                 if (waterElementalAvailable)
                 {
                     int waterElementalSegments = segmentList.Count; // always segment, we need it to guarantee each block has activation
-                    manaRegen = (int)(0.16 * Spell.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseState.GlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
+                    manaRegen = (int)(0.16 * SpellTemplate.BaseMana[calculationOptions.PlayerLevel]) / calculationResult.BaseState.GlobalCooldown - calculationResult.BaseState.ManaRegen5SR;
                     List<CastingState> states = new List<CastingState>();
                     bool found = false;
                     // WE = 0x100
@@ -1466,13 +1677,13 @@ namespace Rawr.Mage
                     }
                     if (!found)
                     {
-                        states.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false));
+                        states.Add(new CastingState(calculationResult, armor, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false));
                     }
                     for (int segment = 0; segment < waterElementalSegments; segment++)
                     {
                         foreach (CastingState state in states)
                         {
-                            Spell waterbolt = new Waterbolt(state, state.FrostDamage);
+                            Spell waterbolt = calculationResult.WaterboltTemplate.GetSpell(state);
                             solutionVariable.Add(new SolutionVariable() { Type = VariableType.SummonWaterElemental, Segment = segment, State = state });
                             column = lp.AddColumnUnsafe();
                             if (waterElementalSegments > 1) lp.SetColumnUpperBound(column, calculationResult.BaseState.GlobalCooldown);
@@ -1596,7 +1807,7 @@ namespace Rawr.Mage
                 if (conjureManaGem)
                 {
                     int conjureSegments = (restrictManaUse) ? segmentList.Count : 1;
-                    Cycle spell = new ConjureManaGem(calculationResult.BaseState);
+                    Cycle spell = calculationResult.ConjureManaGemTemplate.GetSpell(calculationResult.BaseState);
                     calculationResult.ConjureManaGem = spell;
                     calculationResult.MaxConjureManaGem = (int)((calculationOptions.FightDuration - 300.0f) / 360.0f) + 1;
                     manaRegen = spell.ManaPerSecond;
@@ -2331,8 +2542,8 @@ namespace Rawr.Mage
             if (cycle.AreaEffect) lp.SetElementUnsafe(rowAoe, column, 1.0);
             if (cycle.AreaEffect)
             {
-                Flamestrike fs = cycle.AoeSpell as Flamestrike;
-                if (fs != null)
+                Spell fs = cycle.AoeSpell;
+                if (fs.SpellTemplate is FlamestrikeTemplate)
                 {
                     if (!fs.SpammedDot) lp.SetElementUnsafe(rowFlamestrike, column, fs.DotDuration / fs.CastTime);
                 }
@@ -2340,8 +2551,8 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowFlamestrike, column, -1.0);
                 }
-                ConeOfCold coc = cycle.AoeSpell as ConeOfCold;
-                if (coc != null)
+                Spell coc = cycle.AoeSpell;
+                if (coc.SpellTemplate is ConeOfColdTemplate)
                 {
                     lp.SetElementUnsafe(rowConeOfCold, column, (coc.Cooldown / coc.CastTime - 1.0));
                 }
@@ -2349,8 +2560,8 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowConeOfCold, column, -1.0);
                 }
-                BlastWave bw = cycle.AoeSpell as BlastWave;
-                if (bw != null)
+                Spell bw = cycle.AoeSpell;
+                if (bw.SpellTemplate is BlastWaveTemplate)
                 {
                     lp.SetElementUnsafe(rowBlastWave, column, (bw.Cooldown / bw.CastTime - 1.0));
                 }
@@ -2358,8 +2569,8 @@ namespace Rawr.Mage
                 {
                     lp.SetElementUnsafe(rowBlastWave, column, -1);
                 }
-                DragonsBreath db = cycle.AoeSpell as DragonsBreath;
-                if (db != null)
+                Spell db = cycle.AoeSpell;
+                if (db.SpellTemplate is DragonsBreathTemplate)
                 {
                     lp.SetElementUnsafe(rowDragonsBreath, column, (db.Cooldown / db.CastTime - 1.0));
                 }
@@ -2836,7 +3047,7 @@ namespace Rawr.Mage
                                     {
                                         if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism && index == 0)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                         {
-                                            list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
+                                            list.Add(new CastingState(calculationResult, armor, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
                                             if (incrementalSetIndex == 0 && index == 0)
                                             {
                                                 calculationResult.BaseState = list[list.Count - 1];
@@ -2848,7 +3059,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, characterStats, calculationOptions, armor, character, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
+                if (calculationResult.BaseState == null) calculationResult.BaseState = new CastingState(calculationResult, armor, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false);
             }
             else
             {
@@ -2879,7 +3090,7 @@ namespace Rawr.Mage
                                 {
                                     if ((calculationOptions.HeroismControl != 1 || !heroism || !mf) && (calculationOptions.HeroismControl != 2 || !heroism || (incrementalSetIndex == Cooldown.Heroism)) && (calculationOptions.HeroismControl != 3 || !moltenFuryAvailable || !heroism || mf))
                                     {
-                                        list.Add(new CastingState(calculationResult, characterStats, calculationOptions, armor, character, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
+                                        list.Add(new CastingState(calculationResult, armor, ap, mf, iv, heroism, powm, pos, flameCap, trinket1, trinket2, combustion, drums, we, mg, pi, false));
                                         if (incrementalSetIndex == 0)
                                         {
                                             calculationResult.BaseState = list[list.Count - 1];

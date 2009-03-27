@@ -31,153 +31,88 @@ namespace Rawr.Mage
 
     public sealed class CastingState
     {
-        private CharacterCalculationsMage calculations;
+        public CharacterCalculationsMage Calculations { get; private set; }
 
         public CalculationOptionsMage CalculationOptions { get; private set; }
         public MageTalents MageTalents { get; private set; }
         public Stats BaseStats { get; private set; }
 
-        public float SpellCrit { get; set; }
+        public float SpellHit { get { return Calculations.BaseSpellHit; } }
+        public float ArcaneHitRate { get { return Calculations.BaseArcaneHitRate; } }
+        public float FireHitRate { get { return Calculations.BaseFireHitRate; } }
+        public float FrostHitRate { get { return Calculations.BaseFrostHitRate; } }
+        public float NatureHitRate { get { return Calculations.BaseNatureHitRate; } }
+        public float ShadowHitRate { get { return Calculations.BaseShadowHitRate; } }
+        public float FrostFireHitRate { get { return Calculations.BaseFrostFireHitRate; } }
+        public float HolyHitRate { get { return Calculations.BaseHolyHitRate; } }
 
-        public const float MaxHitRate = 1.0f;
-
-        public float SpellHit
-        {
-            get
-            {
-                return BaseStats.HitRating * CalculationOptions.LevelScalingFactor / 800f + BaseStats.SpellHit + 0.01f * MageTalents.ElementalPrecision;
-            }
-        }
-
-        public float ArcaneHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit + 0.01f * MageTalents.ArcaneFocus);
-            }
-        }
-
-        public float FireHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
-
-        public float FrostHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
-
-        public float NatureHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
-
-        public float ShadowHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
-
-        public float FrostFireHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
-
-        public float HolyHitRate
-        {
-            get
-            {
-                int targetLevel = CalculationOptions.TargetLevel;
-                int playerLevel = CalculationOptions.PlayerLevel;
-                return Math.Min(MaxHitRate, ((targetLevel <= playerLevel + 2) ? (0.96f - (targetLevel - playerLevel) * 0.01f) : (0.94f - (targetLevel - playerLevel - 2) * 0.11f)) + SpellHit);
-            }
-        }
+        public float ArcaneThreatMultiplier { get { return Calculations.ArcaneThreatMultiplier; } }
+        public float FireThreatMultiplier { get { return Calculations.FireThreatMultiplier; } }
+        public float FrostThreatMultiplier { get { return Calculations.FrostThreatMultiplier; } }
+        public float NatureThreatMultiplier { get { return Calculations.NatureThreatMultiplier; } }
+        public float ShadowThreatMultiplier { get { return Calculations.ShadowThreatMultiplier; } }
+        public float FrostFireThreatMultiplier { get { return Calculations.FrostFireThreatMultiplier; } }
+        public float HolyThreatMultiplier { get { return Calculations.HolyThreatMultiplier; } }
 
         public float CastingSpeed { get; set; }
         public float GlobalCooldown { get; set; }
 
-        public float ArcaneDamage { get; set; }
-        public float FireDamage { get; set; }
-        public float FrostDamage { get; set; }
-        public float NatureDamage { get; set; }
-        public float ShadowDamage { get; set; }
-        public float FrostFireDamage { get; set; }
-        public float HolyDamage { get; set; }
+        public float StateSpellPower { get; set; }
 
-        public float SpiritRegen { get; set; }
-        public float ManaRegen { get; set; }
-        public float ManaRegen5SR { get; set; }
-        public float ManaRegenDrinking { get; set; }
-        public float HealthRegen { get; set; }
-        public float HealthRegenCombat { get; set; }
-        public float HealthRegenEating { get; set; }
-        public float MeleeMitigation { get; set; }
-        public float Defense { get; set; }
-        public float PhysicalCritReduction { get; set; }
-        public float SpellCritReduction { get; set; }
-        public float CritDamageReduction { get; set; }
-        public float Dodge { get; set; }
+        public float ArcaneSpellPower { get { return Calculations.BaseArcaneSpellPower + StateSpellPower; } }
+        public float FireSpellPower { get { return Calculations.BaseFireSpellPower + StateSpellPower + (FlameCap ? 80.0f : 0.0f); } }
+        public float FrostSpellPower { get { return Calculations.BaseFrostSpellPower + StateSpellPower; } }
+        public float NatureSpellPower { get { return Calculations.BaseNatureSpellPower + StateSpellPower; } }
+        public float ShadowSpellPower { get { return Calculations.BaseShadowSpellPower + StateSpellPower; } }
+        public float FrostFireSpellPower { get { return Math.Max(FrostSpellPower, FireSpellPower); } }
+        public float HolySpellPower { get { return Calculations.BaseHolySpellPower + StateSpellPower; } }
 
-        public float ArcaneSpellModifier { get; set; }
-        public float FireSpellModifier { get; set; }
-        public float FrostSpellModifier { get; set; }
-        public float NatureSpellModifier { get; set; }
-        public float ShadowSpellModifier { get; set; }
-        public float FrostFireSpellModifier { get; set; }
-        public float HolySpellModifier { get; set; }
+        public float SpiritRegen { get { return Calculations.SpiritRegen; } }
+        public float ManaRegen { get { return Calculations.ManaRegen; } }
+        public float ManaRegen5SR { get { return Calculations.ManaRegen5SR; } }
+        public float ManaRegenDrinking { get { return Calculations.ManaRegenDrinking; } }
+        public float HealthRegen { get { return Calculations.HealthRegen; } }
+        public float HealthRegenCombat { get { return Calculations.HealthRegenCombat; } }
+        public float HealthRegenEating { get { return Calculations.HealthRegenEating; } }
+        public float MeleeMitigation { get { return Calculations.MeleeMitigation; } }
+        public float Defense { get { return Calculations.Defense; } }
+        public float PhysicalCritReduction { get { return Calculations.PhysicalCritReduction; } }
+        public float SpellCritReduction { get { return Calculations.SpellCritReduction; } }
+        public float CritDamageReduction { get { return Calculations.CritDamageReduction; } }
+        public float Dodge { get { return Calculations.Dodge; } }
 
-        public float ArcaneCritBonus { get; set; }
-        public float FireCritBonus { get; set; }
-        public float FrostCritBonus { get; set; }
-        public float NatureCritBonus { get; set; }
-        public float ShadowCritBonus { get; set; }
-        public float FrostFireCritBonus { get; set; }
-        public float HolyCritBonus { get; set; }
+        public float StateSpellModifier { get; set; }
 
-        public float ArcaneCritRate { get; set; }
-        public float FireCritRate { get; set; }
-        public float FrostCritRate { get; set; }
-        public float NatureCritRate { get; set; }
-        public float ShadowCritRate { get; set; }
-        public float FrostFireCritRate { get; set; }
-        public float HolyCritRate { get; set; }
+        public float ArcaneSpellModifier { get { return StateSpellModifier * Calculations.BaseArcaneSpellModifier; } }
+        public float FireSpellModifier { get { return StateSpellModifier * Calculations.BaseFireSpellModifier; } }
+        public float FrostSpellModifier { get { return StateSpellModifier * Calculations.BaseFrostSpellModifier; } }
+        public float NatureSpellModifier { get { return StateSpellModifier * Calculations.BaseNatureSpellModifier; } }
+        public float ShadowSpellModifier { get { return StateSpellModifier * Calculations.BaseShadowSpellModifier; } }
+        public float FrostFireSpellModifier { get { return StateSpellModifier * Calculations.BaseFrostFireSpellModifier; } }
+        public float HolySpellModifier { get { return StateSpellModifier * Calculations.BaseHolySpellModifier; } }
 
-        public float ArcaneThreatMultiplier { get; set; }
-        public float FireThreatMultiplier { get; set; }
-        public float FrostThreatMultiplier { get; set; }
-        public float NatureThreatMultiplier { get; set; }
-        public float ShadowThreatMultiplier { get; set; }
-        public float FrostFireThreatMultiplier { get; set; }
-        public float HolyThreatMultiplier { get; set; }
+        public float ArcaneCritBonus { get { return Calculations.BaseArcaneCritBonus; } }
+        public float FireCritBonus { get { return Calculations.BaseFireCritBonus; } }
+        public float FrostCritBonus { get { return Calculations.BaseFrostCritBonus; } }
+        public float NatureCritBonus { get { return Calculations.BaseNatureCritBonus; } }
+        public float ShadowCritBonus { get { return Calculations.BaseShadowCritBonus; } }
+        public float FrostFireCritBonus { get { return Calculations.BaseFrostFireCritBonus; } }
+        public float HolyCritBonus { get { return Calculations.BaseHolyCritBonus; } }
+
+        public float StateCritRate { get; set; }
+
+        public float CritRate { get { return StateCritRate + Calculations.BaseCritRate; } }
+        public float ArcaneCritRate { get { return StateCritRate + Calculations.BaseArcaneCritRate; } }
+        public float FireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Calculations.BaseFireCritRate; } }
+        public float FrostCritRate { get { return StateCritRate + Calculations.BaseFrostCritRate; } }
+        public float NatureCritRate { get { return StateCritRate + Calculations.BaseNatureCritRate; } }
+        public float ShadowCritRate { get { return StateCritRate + Calculations.BaseShadowCritRate; } }
+        public float FrostFireCritRate { get { return Combustion ? 3 / CombustionDuration : StateCritRate + Calculations.BaseFrostFireCritRate; } }
+        public float HolyCritRate { get { return StateCritRate + Calculations.BaseHolyCritRate; } }
 
         public float ResilienceCritDamageReduction { get; set; }
         public float ResilienceCritRateReduction { get; set; }
+
         public float Latency
         {
             get
@@ -186,8 +121,6 @@ namespace Rawr.Mage
             }
         }
 
-        public float ClearcastingChance { get; set; }
-
         public float SnaredTime { get; set; }
 
         public bool GetCooldown(Cooldown cooldown)
@@ -195,30 +128,27 @@ namespace Rawr.Mage
             return (cooldown & Cooldown) == cooldown;
         }
 
-        public bool Evocation { get; set; }
-        public bool ArcanePower { get; set; }
-        public bool IcyVeins { get; set; }
-        public bool MoltenFury { get; set; }
-        public bool Heroism { get; set; }
-        public bool PotionOfWildMagic { get; set; }
-        public bool PotionOfSpeed { get; set; }
-        public bool FlameCap { get; set; }
-        public bool Trinket1 { get; set; }
-        public bool Trinket2 { get; set; }
-        public bool ManaGemEffect { get; set; }
-        public bool ManaGemActivation { get; set; }
-        public bool DrumsOfBattle { get; set; }
-        public bool Combustion { get; set; }
-        public bool WaterElemental { get; set; }
-        public bool PowerInfusion { get; set; }
+        public bool Evocation { get { return GetCooldown(Cooldown.Evocation); } }
+        public bool ArcanePower { get { return GetCooldown(Cooldown.ArcanePower); } }
+        public bool IcyVeins { get { return GetCooldown(Cooldown.IcyVeins); } }
+        public bool MoltenFury { get { return GetCooldown(Cooldown.MoltenFury); } }
+        public bool Heroism { get { return GetCooldown(Cooldown.Heroism); } }
+        public bool PotionOfWildMagic { get { return GetCooldown(Cooldown.PotionOfWildMagic); } }
+        public bool PotionOfSpeed { get { return GetCooldown(Cooldown.PotionOfSpeed); } }
+        public bool FlameCap { get { return GetCooldown(Cooldown.FlameCap); } }
+        public bool Trinket1 { get { return GetCooldown(Cooldown.Trinket1); } }
+        public bool Trinket2 { get { return GetCooldown(Cooldown.Trinket2); } }
+        public bool ManaGemEffect { get { return GetCooldown(Cooldown.ManaGemEffect); } }
+        public bool DrumsOfBattle { get { return GetCooldown(Cooldown.DrumsOfBattle); } }
+        public bool Combustion { get { return GetCooldown(Cooldown.Combustion); } }
+        public bool WaterElemental { get { return GetCooldown(Cooldown.WaterElemental); } }
+        public bool PowerInfusion { get { return GetCooldown(Cooldown.PowerInfusion); } }
         public bool Frozen { get; set; }
         public string MageArmor { get; set; }
 
         public Cooldown Cooldown { get; set; }
 
         public float CombustionDuration { get; set; }
-        public float SpellDamageRating { get; set; }
-        public float SpellCritRating { get; set; }
         public float SpellHasteRating { get; set; }
 
         private string buffLabel;
@@ -236,8 +166,8 @@ namespace Rawr.Mage
                     if (Combustion) buffList.Add("Combustion");
                     if (DrumsOfBattle) buffList.Add("Drums of Battle");
                     if (FlameCap) buffList.Add("Flame Cap");
-                    if (Trinket1) buffList.Add(calculations.Trinket1Name);
-                    if (Trinket2) buffList.Add(calculations.Trinket2Name);
+                    if (Trinket1) buffList.Add(Calculations.Trinket1Name);
+                    if (Trinket2) buffList.Add(Calculations.Trinket2Name);
                     if (PotionOfWildMagic) buffList.Add("Potion of Wild Magic");
                     if (PotionOfSpeed) buffList.Add("Potion of Speed");
                     if (WaterElemental) buffList.Add("Water Elemental");
@@ -311,33 +241,33 @@ namespace Rawr.Mage
                     }
                     else
                     {
-                        frozenState = new CastingState(calculations, BaseStats, CalculationOptions, MageArmor, calculations.Character, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, PowerInfusion, true);
+                        frozenState = new CastingState(Calculations, MageArmor, ArcanePower, MoltenFury, IcyVeins, Heroism, PotionOfWildMagic, PotionOfSpeed, FlameCap, Trinket1, Trinket2, Combustion, DrumsOfBattle, WaterElemental, ManaGemEffect, PowerInfusion, true);
                     }
                 }
                 return frozenState;
             }
         }
 
-        public CastingState(CharacterCalculationsMage calculations, Stats characterStats, CalculationOptionsMage calculationOptions, string armor, Character character, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool powerInfusion, bool frozen)
+        public CastingState(CharacterCalculationsMage calculations, string armor, bool arcanePower, bool moltenFury, bool icyVeins, bool heroism, bool potionOfWildMagic, bool potionOfSpeed, bool flameCap, bool trinket1, bool trinket2, bool combustion, bool drums, bool waterElemental, bool manaGemEffect, bool powerInfusion, bool frozen)
         {
-            MageTalents = calculations.Character.MageTalents;
+            MageTalents = calculations.MageTalents;
             BaseStats = calculations.BaseStats; // == characterStats
             CalculationOptions = calculations.CalculationOptions;
-            this.calculations = calculations;
+            Character character = calculations.Character;
+            this.Calculations = calculations;
 
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
 
             SnaredTime = CalculationOptions.SnaredTime;
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
-            SpellDamageRating = characterStats.SpellPower;
-            SpellCritRating = characterStats.CritRating;
-            SpellHasteRating = characterStats.HasteRating;
+            float stateCritRating = 0.0f;
+            SpellHasteRating = BaseStats.HasteRating;
 
             if (potionOfWildMagic)
             {
-                SpellDamageRating += 200;
-                SpellCritRating += 200;
+                StateSpellPower += 200;
+                stateCritRating += 200;
             }
             if (potionOfSpeed)
             {
@@ -347,19 +277,18 @@ namespace Rawr.Mage
             if (trinket1)
             {
                 Stats t = character.Trinket1.Item.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
+                StateSpellPower += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
             }
             if (trinket2)
             {
                 Stats t = character.Trinket2.Item.Stats;
-                SpellDamageRating += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
+                StateSpellPower += t.SpellPowerFor20SecOnUse2Min + t.SpellPowerFor20SecOnUse5Min + t.SpellPowerFor15SecOnUse90Sec + t.SpellPowerFor15SecOnUse2Min;
                 SpellHasteRating += t.HasteRatingFor20SecOnUse2Min + t.HasteRatingFor20SecOnUse5Min;
             }
             if (manaGemEffect)
             {
-                SpellDamageRating += BaseStats.SpellPowerFor15SecOnManaGem;
-                ManaGemActivation = true;
+                StateSpellPower += BaseStats.SpellPowerFor15SecOnManaGem;
             }
             if (drums)
             {
@@ -367,188 +296,17 @@ namespace Rawr.Mage
             }
 
             CastingSpeed = 1 + SpellHasteRating / 995f * levelScalingFactor;
-            ArcaneDamage = characterStats.SpellArcaneDamageRating + SpellDamageRating;
-            FireDamage = characterStats.SpellFireDamageRating + SpellDamageRating + (flameCap ? 80.0f : 0.0f);
-            FrostDamage = characterStats.SpellFrostDamageRating + SpellDamageRating;
-            NatureDamage = characterStats.SpellNatureDamageRating + SpellDamageRating;
-            ShadowDamage = characterStats.SpellShadowDamageRating + SpellDamageRating;
-            HolyDamage = /* characterStats.SpellHolyDamageRating + */ SpellDamageRating;
-            FrostFireDamage = Math.Max(FireDamage, FrostDamage);
 
-            float spellCritPerInt = 0f;
-            float spellCritBase = 0f;
-            float baseRegen = 0f;
-            if (calculationOptions.Mode31)
-            {
-                switch (calculationOptions.PlayerLevel)
-                {
-                    case 70:
-                        spellCritPerInt = 0.0125f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005596f;
-                        break;
-                    case 71:
-                        spellCritPerInt = 0.0116f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005316f;
-                        break;
-                    case 72:
-                        spellCritPerInt = 0.0108f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005049f;
-                        break;
-                    case 73:
-                        spellCritPerInt = 0.0101f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004796f;
-                        break;
-                    case 74:
-                        spellCritPerInt = 0.0093f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004555f;
-                        break;
-                    case 75:
-                        spellCritPerInt = 0.0087f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004327f;
-                        break;
-                    case 76:
-                        spellCritPerInt = 0.0081f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.004110f;
-                        break;
-                    case 77:
-                        spellCritPerInt = 0.0075f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003903f;
-                        break;
-                    case 78:
-                        spellCritPerInt = 0.007f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003708f;
-                        break;
-                    case 79:
-                        spellCritPerInt = 0.0065f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003522f;
-                        break;
-                    case 80:
-                        spellCritPerInt = 0.006f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.003345f;
-                        break;
-                }
-            }
-            else
-            {
-                switch (calculationOptions.PlayerLevel)
-                {
-                    case 70:
-                        spellCritPerInt = 0.0125f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.009327f;
-                        break;
-                    case 71:
-                        spellCritPerInt = 0.0116f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.008859f;
-                        break;
-                    case 72:
-                        spellCritPerInt = 0.0108f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.008415f;
-                        break;
-                    case 73:
-                        spellCritPerInt = 0.0101f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007993f;
-                        break;
-                    case 74:
-                        spellCritPerInt = 0.0093f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007592f;
-                        break;
-                    case 75:
-                        spellCritPerInt = 0.0087f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.007211f;
-                        break;
-                    case 76:
-                        spellCritPerInt = 0.0081f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006849f;
-                        break;
-                    case 77:
-                        spellCritPerInt = 0.0075f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006506f;
-                        break;
-                    case 78:
-                        spellCritPerInt = 0.007f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.006179f;
-                        break;
-                    case 79:
-                        spellCritPerInt = 0.0065f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005869f;
-                        break;
-                    case 80:
-                        spellCritPerInt = 0.006f;
-                        spellCritBase = 0.9075f;
-                        baseRegen = 0.005575f;
-                        break;
-                }
-            }
-            SpellCrit = 0.01f * (characterStats.Intellect * spellCritPerInt + spellCritBase) + 0.01f * character.MageTalents.ArcaneInstability + 0.15f * 0.02f * character.MageTalents.ArcaneConcentration * character.MageTalents.ArcanePotency + SpellCritRating / 1400f * levelScalingFactor + characterStats.SpellCrit + character.MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - calculationOptions.FocusMagicTargetCritRate, 10.0)) + 0.01f * character.MageTalents.Pyromaniac;
-            if (frozen) SpellCrit += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
+            StateCritRate = stateCritRating / 1400f * levelScalingFactor;
+            if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
 
-            int playerLevel = CalculationOptions.PlayerLevel;
-
-            SpiritRegen = 0.001f + characterStats.Spirit * baseRegen * (float)Math.Sqrt(characterStats.Intellect);
-            ManaRegen = SpiritRegen + characterStats.Mp5 / 5f + SpiritRegen * 4 * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
-            ManaRegen5SR = SpiritRegen * characterStats.SpellCombatManaRegeneration + characterStats.Mp5 / 5f + SpiritRegen * (5 - characterStats.SpellCombatManaRegeneration) * 20 * calculationOptions.Innervate / calculationOptions.FightDuration + calculationOptions.ManaTide * 0.24f * characterStats.Mana / calculationOptions.FightDuration + characterStats.ManaRestoreFromMaxManaPerSecond * characterStats.Mana;
-            HealthRegen = 0.0312f * characterStats.Spirit + characterStats.Hp5 / 5f;
-            HealthRegenCombat = characterStats.Hp5 / 5f;
-            if (playerLevel < 75)
+            if (combustion)
             {
-                ManaRegenDrinking = ManaRegen + 240f;
-                HealthRegenEating = HealthRegen + 250f;
+                CombustionDuration = ComputeCombustion(calculations.BaseFireCritRate + StateCritRate);
             }
-            else if (playerLevel < 80)
-            {
-                ManaRegenDrinking = ManaRegen + 306f;
-                HealthRegenEating = HealthRegen + 440f;
-            }
-            else
-            {
-                ManaRegenDrinking = ManaRegen + 432f;
-                HealthRegenEating = HealthRegen + 500f;
-            }
-            MeleeMitigation = (1 - 1 / (1 + 0.1f * characterStats.Armor / (8.5f * (calculationOptions.TargetLevel + 4.5f * (calculationOptions.TargetLevel - 59)) + 40)));
-            Defense = 5 * calculationOptions.PlayerLevel + characterStats.DefenseRating / 4.918498039f; // this is for level 80 only
-            int molten = (armor == "Molten Armor") ? 1 : 0;
-            PhysicalCritReduction = (0.04f * (Defense - 5 * calculationOptions.PlayerLevel) / 100 + characterStats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
-            SpellCritReduction = (characterStats.Resilience / 2500f * levelScalingFactor + molten * 0.05f);
-            CritDamageReduction = (characterStats.Resilience / 2500f * 2.2f * levelScalingFactor);
-            Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (Defense - 5 * calculationOptions.PlayerLevel)) / 100f + characterStats.DodgeRating / 1200 * levelScalingFactor + (characterStats.Agility - 46f) * 0.0195f));
 
             // spell calculations
 
-            ArcanePower = arcanePower;
-            MoltenFury = moltenFury;
-            IcyVeins = icyVeins;
-            Heroism = heroism;
-            PotionOfWildMagic = potionOfWildMagic;
-            PotionOfSpeed = potionOfSpeed;
-            FlameCap = flameCap;
-            Trinket1 = trinket1;
-            Trinket2 = trinket2;
-            Combustion = combustion;
-            DrumsOfBattle = drums;
-            WaterElemental = waterElemental;
-            ManaGemEffect = manaGemEffect;
-            PowerInfusion = powerInfusion;
             Frozen = frozen;
             MageArmor = armor;
 
@@ -581,96 +339,51 @@ namespace Rawr.Mage
             {
                 CastingSpeed *= 1.2f;
             }
-            CastingSpeed *= (1f + characterStats.SpellHaste);
+            CastingSpeed *= (1f + BaseStats.SpellHaste);
             CastingSpeed *= (1f + 0.02f * character.MageTalents.NetherwindPresence);
-
-            ClearcastingChance = 0.02f * character.MageTalents.ArcaneConcentration;
 
             GlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / CastingSpeed);
 
-            ArcaneSpellModifier = (1 + 0.01f * character.MageTalents.ArcaneInstability) * (1 + 0.01f * character.MageTalents.PlayingWithFire) * (1 + characterStats.BonusDamageMultiplier);
+            StateSpellModifier = 1.0f;
             if (arcanePower)
             {
-                ArcaneSpellModifier *= 1.2f;
+                StateSpellModifier *= 1.2f;
             }
             if (moltenFury)
             {
-                ArcaneSpellModifier *= (1 + 0.06f * character.MageTalents.MoltenFury);
+                StateSpellModifier *= (1 + 0.06f * MageTalents.MoltenFury);
             }
-            FireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower);
-            FrostSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds);
-            NatureSpellModifier = ArcaneSpellModifier;
-            ShadowSpellModifier = ArcaneSpellModifier;
-            HolySpellModifier = ArcaneSpellModifier;
-            FrostFireSpellModifier = ArcaneSpellModifier * (1 + 0.02f * character.MageTalents.FirePower) * (1 + 0.02f * character.MageTalents.PiercingIce) * (1 + 0.01f * character.MageTalents.ArcticWinds) * Math.Max(1 + characterStats.BonusFireDamageMultiplier, 1 + characterStats.BonusFrostDamageMultiplier);
-            ArcaneSpellModifier *= (1 + characterStats.BonusArcaneDamageMultiplier);
-            FireSpellModifier *= (1 + characterStats.BonusFireDamageMultiplier);
-            FrostSpellModifier *= (1 + characterStats.BonusFrostDamageMultiplier);
-            NatureSpellModifier *= (1 + characterStats.BonusNatureDamageMultiplier);
-            ShadowSpellModifier *= (1 + characterStats.BonusShadowDamageMultiplier);
-            HolySpellModifier *= (1 + characterStats.BonusHolyDamageMultiplier);
 
             ResilienceCritDamageReduction = 1;
             ResilienceCritRateReduction = 0;
 
-            ArcaneCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
-            FireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
-            FrostCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
-            FrostFireCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + character.MageTalents.IceShards / 3.0f + 0.25f * character.MageTalents.SpellPower + 0.1f * character.MageTalents.Burnout + characterStats.CritBonusDamage)) * (1 + 0.08f * character.MageTalents.Ignite) * ResilienceCritDamageReduction;
-            NatureCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction; // unknown if affected by burnout
-            ShadowCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
-            HolyCritBonus = (1 + (1.5f * (1 + characterStats.BonusSpellCritMultiplier) - 1) * (1 + 0.25f * character.MageTalents.SpellPower + characterStats.CritBonusDamage)) * ResilienceCritDamageReduction;
-
-            ArcaneCritRate = SpellCrit;
-            FireCritRate = SpellCrit + 0.02f * character.MageTalents.CriticalMass;
-            if (combustion)
-            {
-                CombustionDuration = ComputeCombustion(FireCritRate);
-                FireCritRate = 3 / CombustionDuration;
-            }
-            FrostFireCritRate = FireCritRate;
-            FrostCritRate = SpellCrit;
-            NatureCritRate = SpellCrit;
-            ShadowCritRate = SpellCrit;
-            HolyCritRate = SpellCrit;
-
-            float threatFactor = (1 + characterStats.ThreatIncreaseMultiplier) * (1 - characterStats.ThreatReductionMultiplier);
-
-            ArcaneThreatMultiplier = threatFactor * (1 - character.MageTalents.ArcaneSubtlety * 0.2f);
-            FireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f);
-            FrostThreatMultiplier = threatFactor * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
-            FrostFireThreatMultiplier = threatFactor * (1 - character.MageTalents.BurningSoul * 0.05f) * (1 - ((character.MageTalents.FrostChanneling > 0) ? (0.01f + 0.03f * character.MageTalents.FrostChanneling) : 0f));
-            NatureThreatMultiplier = threatFactor;
-            ShadowThreatMultiplier = threatFactor;
-            HolyThreatMultiplier = threatFactor;
-
             if (BaseStats.LightningCapacitorProc > 0)
             {
-                LightningBolt = new LightningBolt(this);
+                LightningBolt = calculations.LightningBoltTemplate.GetSpell(this);
             }
             if (BaseStats.ThunderCapacitorProc > 0)
             {
-                ThunderBolt = new ThunderBolt(this);
+                ThunderBolt = calculations.ThunderBoltTemplate.GetSpell(this);
             }
             if (BaseStats.LightweaveEmbroideryProc > 0)
             {
-                LightweaveBolt = new LightweaveBolt(this);
+                LightweaveBolt = calculations.LightweaveBoltTemplate.GetSpell(this);
             }
             if (BaseStats.ShatteredSunAcumenProc > 0 && !CalculationOptions.Aldor)
             {
-                ArcaneBolt = new ArcaneBolt(this);
+                ArcaneBolt = calculations.ArcaneBoltTemplate.GetSpell(this);
             }
             if (BaseStats.PendulumOfTelluricCurrentsProc > 0)
             {
-                PendulumOfTelluricCurrents = new PendulumOfTelluricCurrents(this);
+                PendulumOfTelluricCurrents = calculations.PendulumOfTelluricCurrentsTemplate.GetSpell(this);
             }
         }
 
-        public ArcaneBolt ArcaneBolt { get; set; }
-        public LightningBolt LightningBolt { get; set; }
-        public ThunderBolt ThunderBolt { get; set; }
-        public LightweaveBolt LightweaveBolt { get; set; }
-        public PendulumOfTelluricCurrents PendulumOfTelluricCurrents { get; set; }
+        public Spell ArcaneBolt { get; set; }
+        public Spell LightningBolt { get; set; }
+        public Spell ThunderBolt { get; set; }
+        public Spell LightweaveBolt { get; set; }
+        public Spell PendulumOfTelluricCurrents { get; set; }
 
         //private static int CycleIdCount;
         //private static int SpellIdCount;
@@ -750,7 +463,7 @@ namespace Rawr.Mage
                     c = new AB3MBAMABarSc(this);
                     break;
                 case CycleId.ArcaneBlastSpam:
-                    c = GetSpell(SpellId.ArcaneBlast33);
+                    c = GetSpell(SpellId.ArcaneBlast3);
                     break;
                 case CycleId.ABarAM:
                     c = new ABarAM(this);
@@ -860,7 +573,7 @@ namespace Rawr.Mage
                 case CycleId.FFBABar:
                     c = new FFBABar(this);
                     break;
-                case CycleId.ABAMP:
+                /*case CycleId.ABAMP:
                     c = new ABAMP(this);
                     break;
                 case CycleId.AB3AMSc:
@@ -898,7 +611,7 @@ namespace Rawr.Mage
                     break;
                 case CycleId.AB3Sc:
                     c = new AB3Sc(this);
-                    break;
+                    break;*/
                 case CycleId.FBSc:
                     c = new FBSc(this);
                     break;
@@ -982,181 +695,166 @@ namespace Rawr.Mage
             switch (spellId)
             {
                 case SpellId.FrostboltFOF:
-                    s = new Frostbolt(this, false, false, false, true);
+                    s = Calculations.FrostboltTemplate.GetSpell(this, false, false, false, true);
                     break;
                 case SpellId.FrostfireBoltFOF:
-                    s = new FrostfireBolt(this, false, true);
+                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, true);
                     break;
                 case SpellId.ArcaneMissiles:
-                    s = new ArcaneMissiles(this, false, 0);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 0);
                     break;
                 case SpellId.ArcaneMissiles1:
-                    s = new ArcaneMissiles(this, false, 1);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 1);
                     break;
                 case SpellId.ArcaneMissiles2:
-                    s = new ArcaneMissiles(this, false, 2);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 2);
                     break;
                 case SpellId.ArcaneMissiles3:
-                    s = new ArcaneMissiles(this, false, 3);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, 3);
                     break;
                 case SpellId.ArcaneMissilesMB:
-                    s = new ArcaneMissiles(this, true, 0);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 0);
                     break;
                 case SpellId.ArcaneMissilesMB1:
-                    s = new ArcaneMissiles(this, true, 1);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 1);
                     break;
                 case SpellId.ArcaneMissilesMB2:
-                    s = new ArcaneMissiles(this, true, 2);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 2);
                     break;
                 case SpellId.ArcaneMissilesMB3:
-                    s = new ArcaneMissiles(this, true, 3);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, true, 3);
                     break;
                 case SpellId.ArcaneMissilesNoProc:
-                    s = new ArcaneMissiles(this, false, true, false, false, 0, 5);
+                    s = Calculations.ArcaneMissilesTemplate.GetSpell(this, false, true, false, false, 0, 5);
                     break;
                 case SpellId.Frostbolt:
-                    s = new Frostbolt(this);
+                    s = Calculations.FrostboltTemplate.GetSpell(this);
                     break;
                 case SpellId.FrostboltNoCC:
-                    s = new Frostbolt(this, true, false, false, false);
+                    s = Calculations.FrostboltTemplate.GetSpell(this, true, false, false, false);
                     break;
                 case SpellId.Fireball:
-                    s = new Fireball(this, false, false);
+                    s = Calculations.FireballTemplate.GetSpell(this, false, false);
                     break;
                 case SpellId.FireballBF:
-                    s = new Fireball(this, false, true);
+                    s = Calculations.FireballTemplate.GetSpell(this, false, true);
                     break;
                 case SpellId.FrostfireBolt:
-                    s = new FrostfireBolt(this, false, false);
+                    s = Calculations.FrostfireBoltTemplate.GetSpell(this, false, false);
                     break;
                 case SpellId.Pyroblast:
-                    s = new Pyroblast(this, false);
+                    s = Calculations.PyroblastTemplate.GetSpell(this, false);
                     break;
                 case SpellId.FireBlast:
-                    s = new FireBlast(this);
+                    s = Calculations.FireBlastTemplate.GetSpell(this);
                     break;
                 case SpellId.Scorch:
-                    s = new Scorch(this);
+                    s = Calculations.ScorchTemplate.GetSpell(this);
                     break;
                 case SpellId.ScorchNoCC:
-                    s = new Scorch(this, false);
+                    s = Calculations.ScorchTemplate.GetSpell(this, false);
                     break;
                 case SpellId.ArcaneBarrage:
-                    s = new ArcaneBarrage(this, 0);
+                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 0);
                     break;
                 case SpellId.ArcaneBarrage1:
-                    s = new ArcaneBarrage(this, 1);
+                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 1);
                     break;
                 case SpellId.ArcaneBarrage2:
-                    s = new ArcaneBarrage(this, 2);
+                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 2);
                     break;
                 case SpellId.ArcaneBarrage3:
-                    s = new ArcaneBarrage(this, 3);
+                    s = Calculations.ArcaneBarrageTemplate.GetSpell(this, 3);
                     break;
-                case SpellId.ArcaneBlast33:
-                    s = new ArcaneBlast(this, 3, 3);
+                case SpellId.ArcaneBlast3:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3);
                     break;
-                case SpellId.ArcaneBlast33NoCC:
-                    s = new ArcaneBlast(this, 3, 3, true, false, false);
+                case SpellId.ArcaneBlast3NoCC:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true, false, false);
                     break;
-                case SpellId.ArcaneBlast00:
-                    s = new ArcaneBlast(this, 0, 0);
+                case SpellId.ArcaneBlast0:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0);
                     break;
-                case SpellId.ArcaneBlast00NoCC:
-                    s = new ArcaneBlast(this, 0, 0, true, false, false);
+                case SpellId.ArcaneBlast0NoCC:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true, false, false);
                     break;
-                case SpellId.ArcaneBlast10:
-                    s = new ArcaneBlast(this, 1, 0);
+                case SpellId.ArcaneBlast1:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1);
                     break;
-                case SpellId.ArcaneBlast01:
-                    s = new ArcaneBlast(this, 0, 1);
+                case SpellId.ArcaneBlast1NoCC:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true, false, false);
                     break;
-                case SpellId.ArcaneBlast11:
-                    s = new ArcaneBlast(this, 1, 1);
+                case SpellId.ArcaneBlast2:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2);
                     break;
-                case SpellId.ArcaneBlast11NoCC:
-                    s = new ArcaneBlast(this, 1, 1, true, false, false);
-                    break;
-                case SpellId.ArcaneBlast22:
-                    s = new ArcaneBlast(this, 2, 2);
-                    break;
-                case SpellId.ArcaneBlast22NoCC:
-                    s = new ArcaneBlast(this, 2, 2, true, false, false);
-                    break;
-                case SpellId.ArcaneBlast12:
-                    s = new ArcaneBlast(this, 1, 2);
-                    break;
-                case SpellId.ArcaneBlast23:
-                    s = new ArcaneBlast(this, 2, 3);
-                    break;
-                case SpellId.ArcaneBlast30:
-                    s = new ArcaneBlast(this, 3, 0);
+                case SpellId.ArcaneBlast2NoCC:
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true, false, false);
                     break;
                 case SpellId.ArcaneBlast0Hit:
-                    s = new ArcaneBlast(this, 0, 0, true);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, true);
                     break;
                 case SpellId.ArcaneBlast1Hit:
-                    s = new ArcaneBlast(this, 1, 1, true);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, true);
                     break;
                 case SpellId.ArcaneBlast2Hit:
-                    s = new ArcaneBlast(this, 2, 2, true);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, true);
                     break;
                 case SpellId.ArcaneBlast3Hit:
-                    s = new ArcaneBlast(this, 3, 3, true);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, true);
                     break;
                 case SpellId.ArcaneBlast0Miss:
-                    s = new ArcaneBlast(this, 0, 0, false);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false);
                     break;
                 case SpellId.ArcaneBlast1Miss:
-                    s = new ArcaneBlast(this, 1, 1, false);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 1, false);
                     break;
                 case SpellId.ArcaneBlast2Miss:
-                    s = new ArcaneBlast(this, 2, 2, false);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 2, false);
                     break;
                 case SpellId.ArcaneBlast3Miss:
-                    s = new ArcaneBlast(this, 3, 3, false);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 3, false);
                     break;
                 case SpellId.IceLance:
-                    s = new IceLance(this);
+                    s = Calculations.IceLanceTemplate.GetSpell(this);
                     break;
                 case SpellId.ArcaneExplosion:
-                    s = new ArcaneExplosion(this);
+                    s = Calculations.ArcaneExplosionTemplate.GetSpell(this);
                     break;
                 case SpellId.FlamestrikeSpammed:
-                    s = new Flamestrike(this, true);
+                    s = Calculations.FlamestrikeTemplate.GetSpell(this, true);
                     break;
                 case SpellId.FlamestrikeSingle:
-                    s = new Flamestrike(this, false);
+                    s = Calculations.FlamestrikeTemplate.GetSpell(this, false);
                     break;
                 case SpellId.Blizzard:
-                    s = new Blizzard(this);
+                    s = Calculations.BlizzardTemplate.GetSpell(this);
                     break;
                 case SpellId.BlastWave:
-                    s = new BlastWave(this);
+                    s = Calculations.BlastWaveTemplate.GetSpell(this);
                     break;
                 case SpellId.DragonsBreath:
-                    s = new DragonsBreath(this);
+                    s = Calculations.DragonsBreathTemplate.GetSpell(this);
                     break;
                 case SpellId.ConeOfCold:
-                    s = new ConeOfCold(this);
+                    s = Calculations.ConeOfColdTemplate.GetSpell(this);
                     break;
                 case SpellId.ArcaneBlast0POM:
-                    s = new ArcaneBlast(this, 0, 0, false, false, true);
+                    s = Calculations.ArcaneBlastTemplate.GetSpell(this, 0, false, false, true);
                     break;
                 case SpellId.FireballPOM:
-                    s = new Fireball(this, true, false);
+                    s = Calculations.FireballTemplate.GetSpell(this, true, false);
                     break;
                 case SpellId.Slow:
-                    s = new Slow(this);
+                    s = Calculations.SlowTemplate.GetSpell(this);
                     break;
                 case SpellId.FrostboltPOM:
-                    s = new Frostbolt(this, false, false, true, false);
+                    s = Calculations.FrostboltTemplate.GetSpell(this, false, false, true, false);
                     break;
                 case SpellId.PyroblastPOM:
-                    s = new Pyroblast(this, true);
+                    s = Calculations.PyroblastTemplate.GetSpell(this, true);
                     break;
                 case SpellId.LivingBomb:
-                    s = new LivingBomb(this);
+                    s = Calculations.LivingBombTemplate.GetSpell(this);
                     break;
             }
             if (s != null)
