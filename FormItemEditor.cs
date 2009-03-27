@@ -405,6 +405,11 @@ namespace Rawr
                     newItem = Wowhead.GetItem(id.ToString(), true);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
+                if ((newItem == null) && useWowhead)
+                {
+                    newItem = Wowhead.GetItem("ptr", id.ToString(), true);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
+                }
 
                 if (newItem == null)
                 {

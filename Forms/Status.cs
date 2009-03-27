@@ -49,7 +49,7 @@ namespace Rawr.Forms
 
         private void StatusMessaging_StatusError(StatusErrorEventArgs args)
         {
-            if (!this.IsDisposed)
+            if (!this.IsDisposed && this.Visible)
             {
                 _StatusErrors.Add(args);
                 Invoke((RefreshErrorListDelegate)RefreshErrorList, args);
