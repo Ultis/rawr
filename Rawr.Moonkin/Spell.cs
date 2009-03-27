@@ -1104,7 +1104,7 @@ namespace Rawr.Moonkin
                             SpellDamageModifier = r.Solver.Starfire.SpellDamageModifier
                         };
                         r.DoSpecialStarfire(c, ref newSF, sp, sHi, sc, sHa);
-                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.03f;
+                        float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.TickLength / 0.05f;
                         float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
                         float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
                         return (replaceWrathWithSFDPS * (r.WrathCount / (r.WrathCount + r.StarfireCount)) + 

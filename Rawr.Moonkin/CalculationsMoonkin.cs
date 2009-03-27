@@ -330,7 +330,7 @@ namespace Rawr.Moonkin
 
 			calcs.SpellCrit = StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit;
 			calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
-			calcs.SpellHaste = StatConversion.GetSpellHasteFromRating(stats.HasteRating) + stats.SpellHaste;
+			calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) * (1 + stats.Bloodlust) - 1;
             stats.SpellPower += stats.DrumsOfWar / 2.0f;
 
             // All spells: Damage +(0.04 * Lunar Guidance * Int)
