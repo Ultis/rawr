@@ -76,7 +76,10 @@ namespace Rawr
 		[XmlElement("SocketBonus")]
 		public Stats _socketBonus = new Stats();
 
-		public ItemLocation LocationInfo
+        [XmlElement("LocalizedName")]
+        public string _localizedName;
+        
+        public ItemLocation LocationInfo
 		{
 			get
 			{
@@ -333,8 +336,14 @@ namespace Rawr
 			get { return _socketBonus; }
 			set { _socketBonus = value; }
 		}
+        [XmlIgnore]
+        public string LocalizedName
+        {
+            get { return _localizedName; }
+            set { _localizedName = value; }
+        }
 
-		public enum ItemDamageType
+        public enum ItemDamageType
 		{
 			Physical = 0,
 			Holy,
@@ -874,21 +883,25 @@ namespace Rawr
 		}
 
 
-
 		public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false); }
-		public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, false, true, false, "www"); }
+		public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead) { return LoadFromId(id, false, true, false, "en"); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, string locale)
 		{
 			Item cachedItem = ItemCache.FindItemById(id);
 			if (cachedItem != null && !forceRefresh) return cachedItem;
 			else
 			{
-				Item newItem = useWowhead ? Wowhead.GetItem(id, false, locale) : Armory.GetItem(id);
-				if (newItem != null)
-				{
-					ItemCache.AddItem(newItem, raiseEvent);
-				}
-
+				Item newItem = useWowhead ? Wowhead.GetItem(id, false) : Armory.GetItem(id);
+                if (newItem != null)
+                {
+                    if (!locale.Equals("en"))
+                    {
+                        Item localItem = Wowhead.GetItem(id, false, locale);
+                        if (localItem != null)
+                            newItem.LocalizedName = localItem.Name;
+                    }
+                    ItemCache.AddItem(newItem, raiseEvent);
+                }
 				return ItemCache.FindItemById(id);
 			}
 		}

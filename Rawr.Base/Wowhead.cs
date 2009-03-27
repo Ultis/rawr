@@ -162,6 +162,7 @@ namespace Rawr
         public static Item GetItem(string query, bool filter) { return GetItem("www", query, filter); }
 		public static Item GetItem(string site, string query, bool filter)
 		{
+            if (site.Equals("en")) site = "www";
 			WebRequestWrapper wrw = new WebRequestWrapper();
             XmlDocument docItem = wrw.DownloadItemWowhead(site, query);
 			if (docItem.InnerXml.Contains("Item not found!")) return null;

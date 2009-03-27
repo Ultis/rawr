@@ -10,20 +10,46 @@ namespace Rawr.UserControls.Options
 {
 	public partial class GeneralSettings : UserControl, IOptions
 	{
+        string _locale = "en";
+
         public GeneralSettings()
 		{
 			InitializeComponent();
 			//cannot be in load, because its possible this tab won't show, and the values will not be initialized.
 			//if this happens, then the users settings will be cleared.
             checkBoxUseMultithreading.Checked = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            setLocale(Rawr.Properties.GeneralSettings.Default.Locale);
         }
 
+        private void setLocale(string locale)
+        {
+            _locale = locale;
+            switch (locale)
+            {
+                case "en": 
+                    rbEnglish.Checked = true;
+                    break;
+                case "de":
+                    rbGerman.Checked = true;
+                    break;
+                case "fr":
+                    rbFrench.Checked = true;
+                    break;
+                case "es":
+                    rbSpanish.Checked = true;
+                    break;
+                case "ru":
+                    rbRussian.Checked = true;
+                    break;
+            }
+        }
 
 		#region IOptions Members
 
 		public void Save()
 		{
 			Rawr.Properties.GeneralSettings.Default.UseMultithreading = checkBoxUseMultithreading.Checked;
+            Rawr.Properties.GeneralSettings.Default.Locale = _locale;
 			Rawr.Properties.GeneralSettings.Default.Save();
 		}
 
@@ -78,5 +104,30 @@ namespace Rawr.UserControls.Options
 		}
 
 		#endregion
+
+        private void rbEnglish_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "en";
+        }
+
+        private void rbGerman_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "de";
+        }
+
+        private void rbFrench_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "fr";
+        }
+
+        private void rbSpanish_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "es";
+        }
+
+        private void rbRussian_CheckedChanged(object sender, EventArgs e)
+        {
+            _locale = "ru";
+        }
 	}
 }

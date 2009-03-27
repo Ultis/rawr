@@ -58,7 +58,6 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 		private Status _statusForm;
 		private string _formatWindowTitle = "Rawr v{0}";
 		private System.Threading.Timer _timerCheckForUpdates;
-        private string _locale = "www";
 
         private FormRelevantItemRefinement _itemRefinement;
         public FormRelevantItemRefinement ItemRefinement
@@ -1304,12 +1303,12 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
 			for (int i = 0; i < ItemCache.AllItems.Length; i++)
 			{
 				Item item = ItemCache.AllItems[i];
-				StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
+                StatusMessaging.UpdateStatus("Update All Items from Wowhead", "Updating " + i + " of " + ItemCache.AllItems.Length + " items");
 				if (item.Id < 90000)
 				{
 					try
 					{
-						Item.LoadFromId(item.Id, true, false, true, _locale);
+                        Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale);
 					}
 					catch (Exception ex)
 					{
@@ -1807,54 +1806,5 @@ complete, please contact me at cnervig@hotmail.com. Thanks!";
         }
         #endregion
 
-        private void englishToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _locale = "www";
-            englishToolStripMenuItem.Checked = true;
-            germanToolStripMenuItem.Checked = false;
-            frenchToolStripMenuItem.Checked = false;
-            spanishToolStripMenuItem.Checked = false;
-            russianToolStripMenuItem.Checked = false;
-        }
-
-        private void germanToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _locale = "de";
-            englishToolStripMenuItem.Checked = false;
-            germanToolStripMenuItem.Checked = true;
-            frenchToolStripMenuItem.Checked = false;
-            spanishToolStripMenuItem.Checked = false;
-            russianToolStripMenuItem.Checked = false;
-        }
-
-        private void frenchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _locale = "fr";
-            englishToolStripMenuItem.Checked = false;
-            germanToolStripMenuItem.Checked = false;
-            frenchToolStripMenuItem.Checked = true;
-            spanishToolStripMenuItem.Checked = false;
-            russianToolStripMenuItem.Checked = false;
-        }
-
-        private void spanishToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _locale = "es";
-            englishToolStripMenuItem.Checked = false;
-            germanToolStripMenuItem.Checked = false;
-            frenchToolStripMenuItem.Checked = false;
-            spanishToolStripMenuItem.Checked = true;
-            russianToolStripMenuItem.Checked = false;
-        }
-
-        private void russianToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _locale = "ru";
-            englishToolStripMenuItem.Checked = false;
-            germanToolStripMenuItem.Checked = false;
-            frenchToolStripMenuItem.Checked = false;
-            spanishToolStripMenuItem.Checked = false;
-            russianToolStripMenuItem.Checked = true;
-        }
     }
 }
