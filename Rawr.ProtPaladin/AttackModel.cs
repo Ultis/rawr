@@ -85,7 +85,8 @@ namespace Rawr.ProtPaladin
             }
 
             // White Damage
-            float weaponHits = modelLength / ParryModel.WeaponSpeed / (1 - (float)Lookup.ReckoningUptime(Character, Stats, DefendTable)); //Lookup.WeaponSpeed(Character, Stats);
+            float reckoningUptime = 1f - (float)Math.Pow((1f - 0.02f * Character.PaladinTalents.Reckoning * DefendTable.AnyHit), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / ParryModel.BossAttackSpeed));
+            float weaponHits = modelLength / ParryModel.WeaponSpeed / (1 - reckoningUptime); //Lookup.WeaponSpeed(Character, Stats);
             modelThreat += Abilities[Ability.None].Threat * weaponHits;
             modelDamage += Abilities[Ability.None].Damage * weaponHits;
             modelCrits  += Abilities[Ability.None].CritPercentage * weaponHits;

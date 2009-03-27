@@ -299,13 +299,5 @@ namespace Rawr.ProtPaladin
                 default: return "";
             }
         }
-
-        
-        public static double ReckoningUptime(Character character, Stats stats, DefendTable defendtable)
-        {
-            PaladinTalents talents = character.PaladinTalents;
-            ParryModel ParryModel = new ParryModel(character, stats);
-            return 1f - Math.Pow((1f - 0.02f * talents.Reckoning * defendtable.AnyHit), (Math.Min(8f, 4f * ParryModel.WeaponSpeed) / ParryModel.BossAttackSpeed));
-        }
     }
 }
