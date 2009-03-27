@@ -481,7 +481,7 @@ namespace Rawr
 			// Restores 7 mana per 5 sec.
 			// Check to see if the desc contains the token 'mana'.  Items like Frostwolf Insignia
 			// and Essense Infused Shroom Restore health.
-			else if (isArmory && line.StartsWith("Restores ") && line.Contains("mana") && !line.Contains("when you kill a target that gives experience"))
+			else if (isArmory && line.StartsWith("Restores ") && line.Contains("mana") && !line.Contains("kill a target"))
 			{
 				line = line.Substring("Restores ".Length);
 				line = line.Substring(0, line.IndexOf(" mana"));
